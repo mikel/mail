@@ -13,25 +13,34 @@ module Mail
   #     "unfolding" as described in section 2.2.3).
   class UnstructuredField
     
-    def initialize(name, value = '')
-      @name = name.to_s
-      @value = value.to_s
+    def initialize(raw_value, name, value = '')
+      self.raw_value = raw_value
+      self.name = name
+      self.value = value
     end
     
-    def valid?
-      true unless value.blank?
+    def raw_value=(value)
+      @raw_value = value
+    end
+    
+    def raw_value
+      @raw_value
+    end
+    
+    def name=(value)
+      @name = value
     end
     
     def name
       @name
     end
     
-    def value
-      @value
-    end
-    
     def value=(value)
       @value = value
+    end
+    
+    def value
+      @value
     end
     
     def to_s

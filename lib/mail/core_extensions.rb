@@ -43,6 +43,15 @@ class String #:nodoc:
   def blank?
     self !~ /\S/
   end
+  
+  def to_crlf
+    self.gsub(/\n|\r\n|\r/) { "\r\n" }
+  end
+
+  def to_lf
+    self.gsub(/\n|\r\n|\r/) { "\n" }
+  end
+  
 end
 
 class Numeric #:nodoc:

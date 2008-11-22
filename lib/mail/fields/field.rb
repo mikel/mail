@@ -27,16 +27,44 @@ module Mail
     require 'fields/structured_field'
     require 'fields/unstructured_field'
     
-    def Field.new(name, value = '')
+    def initialize(raw_field)
+      name, value = split(raw_field)
       if STRUCTURED_FIELDS.include?(name.downcase)
-        @field = Mail::StructuredField.new(name, value)
+        self.field = Mail::StructuredField.new(raw_field, name, value)
       else
-        @field = Mail::UnstructuredField.new(name, value)
+        self.field = Mail::UnstructuredField.new(raw_field, name, value)
       end
     end
+
+    def field=(value)
+      @field = value
+    end
     
-    def valid?
-      @field.valid?
+    def field
+      @field
+    end
+    
+    def name
+      field.name
+    end
+    
+    def name=(value)
+      field.name = value
+    end
+    
+    def value
+      field.value
+    end
+    
+    def value=(value)
+      field.value = value
+    end
+    
+    private
+    
+    def split(raw_field)
+      match_data = raw_field.match(/^(.+):\s(.*)$/)
+      [match_data[1], match_data[2]]
     end
     
   end

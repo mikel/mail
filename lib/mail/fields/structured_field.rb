@@ -18,12 +18,42 @@ module Mail
   #     bodies is given along with their syntax.
   class StructuredField
     
-    def initialize(name, value = '')
-      
+    def initialize(raw_value, name, value = '')
+      self.raw_value = raw_value
+      self.name = name
+      self.value = value
     end
     
-    def valid?
-      true
+    def raw_value=(value)
+      @raw_value = value
+    end
+    
+    def raw_value
+      @raw_value
+    end
+    
+    def name=(value)
+      @name = value
+    end
+    
+    def name
+      @name
+    end
+    
+    def value=(value)
+      @value = value
+    end
+    
+    def value
+      @value
+    end
+    
+    def to_s
+      value.blank? ? '' : "#{name}: #{value}"
+    end
+    
+    def encoded
+      to_s.blank? ? nil : to_s
     end
     
   end

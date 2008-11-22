@@ -99,5 +99,6 @@ describe Mail::Message do
     end
     
   end
+
 end
 
