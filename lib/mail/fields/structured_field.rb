@@ -22,5 +22,9 @@ module Mail
       
     end
     
+    def valid?
+      true
+    end
+    
   end
 end

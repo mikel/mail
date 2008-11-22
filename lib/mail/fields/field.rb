@@ -29,36 +29,16 @@ module Mail
     
     def Field.new(name, value = '')
       if STRUCTURED_FIELDS.include?(name.downcase)
-        Mail::StructuredField.new(name, value)
+        @field = Mail::StructuredField.new(name, value)
       else
-        Mail::UnstructuredField.new(name, value)
+        @field = Mail::UnstructuredField.new(name, value)
       end
     end
     
-  end
-  
-  module Fields
-    
-    module ClassMethods
-      
+    def valid?
+      @field.valid?
     end
     
-    module InstanceMethods
-      
-      def name_valid_characters?
-        
-      end
-
-      def body_valid_characters?
-        
-      end
-      
-    end
-    
-    def self.included(receiver)
-      receiver.extend         ClassMethods
-      receiver.send :include, InstanceMethods
-    end
   end
   
 end

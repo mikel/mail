@@ -25,7 +25,7 @@ describe Mail::UnstructuredField do
   describe "validation" do
     
     it "should be valid with a name specified" do
-      field = Mail::UnstructuredField.new('subject')
+      field = Mail::UnstructuredField.new('subject', 'Hello there')
       field.should be_valid
     end
     

@@ -5,15 +5,15 @@ require 'mail'
 describe Mail::Message do
   
   @basic_email = "To: mikel\nFrom: bob\nSubject: Hello!\n\nemail message\n"
-  
-  before(:each) do
-    @mail = Mail::Message.new
-  end
-  
+
   describe "initialization" do
     
-    it "should be instantiated" do
-      doing {Mail::Message.new}.should_not raise_error
+    it "should instantiate empty" do
+      Mail::Message.new.class.should == Mail::Message
+    end
+    
+    it "should instantiate with a string" do
+      Mail::Message.new(@basic_email).class.should == Mail::Message
     end
     
     it "should allow us to pass it a block" do
@@ -49,6 +49,10 @@ describe Mail::Message do
   end
   
   describe "directly setting the values of a simple email" do
+
+    before(:each) do
+      @mail = Mail::Message.new
+    end
 
     describe "with :method=" do
       it "should return the to field" do

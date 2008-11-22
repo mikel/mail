@@ -19,7 +19,7 @@ module Mail
     end
     
     def valid?
-      true if field_valid?
+      true unless value.blank?
     end
     
     def name

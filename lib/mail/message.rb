@@ -51,8 +51,8 @@ module Mail
     end
 
     # Creates a new Mail::Message object through .new
-    def initialize(raw_source, &block)
-      @raw_source = raw_source
+    def initialize(*args, &block)
+      @raw_source = args[0]
       if block_given?
         instance_eval(&block)
       end
