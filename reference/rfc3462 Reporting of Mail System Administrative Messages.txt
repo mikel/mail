@@ -1,0 +1,396 @@
+
+
+
+
+
+Network Working Group                                       G. Vaudreuil
+Request for Comments: 3462                           Lucent Technologies
+Obsoletes: 1892                                             January 2003
+Category: Standards Track
+
+
+                   The Multipart/Report Content Type
+                         for the Reporting of
+                  Mail System Administrative Messages
+
+Status of this Memo
+
+   This document specifies an Internet standards track protocol for the
+   Internet community, and requests discussion and suggestions for
+   improvements.  Please refer to the current edition of the "Internet
+   Official Protocol Standards" (STD 1) for the standardization state
+   and status of this protocol.  Distribution of this memo is unlimited.
+
+Copyright Notice
+
+   Copyright (C) The Internet Society (2003).  All Rights Reserved.
+
+Abstract
+
+   The Multipart/Report Multipurpose Internet Mail Extensions (MIME)
+   content-type is a general "family" or "container" type for electronic
+   mail reports of any kind.  Although this memo defines only the use of
+   the Multipart/Report content-type with respect to delivery status
+   reports, mail processing programs will benefit if a single content-
+   type is used to for all kinds of reports.
+
+   This document is part of a four document set describing the delivery
+   status report service.  This collection includes the Simple Mail
+   Transfer Protocol (SMTP) extensions to request delivery status
+   reports, a MIME content for the reporting of delivery reports, an
+   enumeration of extended status codes, and a multipart container for
+   the delivery report, the original message, and a human-friendly
+   summary of the failure.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 1]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+Table of Contents
+
+   Document Conventions................................................2
+   1. The Multipart/Report Content Type................................2
+   2. The Text/RFC822-Headers..........................................4
+   3. Security Considerations..........................................4
+   4. Normative References.............................................5
+   Appendix A - Changes from RFC 1893..................................6
+   Author's Address....................................................6
+   Full Copyright Statement............................................7
+
+Document Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in BCP 14, RFC 2119
+   [RFC2119].
+
+1. The Multipart/Report Content Type
+
+   The Multipart/Report MIME content-type is a general "family" or
+   "container" type for electronic mail reports of any kind. Although
+   this memo defines only the use of the Multipart/Report content-type
+   with respect to delivery status reports, mail processing programs
+   will benefit if a single content-type is used to for all kinds of
+   reports.
+
+   The Multipart/Report content-type is defined as follows:
+
+      MIME type name: multipart
+      MIME subtype name: report
+      Required parameters: boundary, report-type
+      Optional parameters: none
+      Encoding considerations: 7bit should always be adequate
+      Security considerations: see section 3 of this memo
+
+   The syntax of Multipart/Report is identical to the Multipart/Mixed
+   content type defined in [MIME].  When used to send a report, the
+   Multipart/Report content-type must be the top-level MIME content type
+   for any report message.  The report-type parameter identifies the
+   type of report.  The parameter is the MIME content sub-type of the
+   second body part of the Multipart/Report.
+
+   User agents and gateways must be able to automatically determine that
+   a message is a mail system report and should be processed as such.
+   Placing the Multipart/Report as the outermost content provides a
+   mechanism whereby an auto-processor may detect through parsing the
+   RFC 822 headers that the message is a report.
+
+
+
+Vaudreuil                   Standards Track                     [Page 2]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+   The Multipart/Report content-type contains either two or three sub-
+   parts, in the following order:
+
+   1) [Required] The first body part contains human readable message.
+   The purpose of this message is to provide an easily understood
+   description of the condition(s) that caused the report to be
+   generated, for a human reader who may not have a user agent capable
+   of interpreting the second section of the Multipart/Report.
+
+   The text in the first section may be in any MIME standards-track
+   content-type, charset, or language.  Where a description of the error
+   is desired in several languages or several media, a
+   Multipart/Alternative construct may be used.
+
+   This body part may also be used to send detailed information that
+   cannot be easily formatted into a Message/Report body part.
+
+   (2) [Required] A machine parsable body part containing an account of
+   the reported message handling event. The purpose of this body part is
+   to provide a machine-readable description of the condition(s) that
+   caused the report to be generated, along with details not present in
+   the first body part that may be useful to human experts.  An initial
+   body part, Message/delivery-status is defined in [DSN].
+
+   (3) [Optional] A body part containing the returned message or a
+   portion thereof.  This information may be useful to aid human experts
+   in diagnosing problems.  (Although it may also be useful to allow the
+   sender to identify the message which the report was issued, it is
+   hoped that the envelope-id and original-recipient-address returned in
+   the Message/Report body part will replace the traditional use of the
+   returned content for this purpose.)
+
+   Return of content may be wasteful of network bandwidth and a variety
+   of implementation strategies can be used.  Generally the sender
+   should choose the appropriate strategy and inform the recipient of
+   the required level of returned content required.  In the absence of
+   an explicit request for level of return of content such as that
+   provided in [DRPT], the agent that generated the delivery service
+   report should return the full message content.
+
+   When 8-bit or binary data not encoded in a 7 bit form is to be
+   returned, and the return path is not guaranteed to be 8-bit or binary
+   capable, two options are available.  The original message MAY be re-
+   encoded into a legal 7-bit MIME message or the Text/RFC822-Headers
+   content-type MAY be used to return only the original message headers.
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 3]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+2. The Text/RFC822-Headers content-type
+
+   The Text/RFC822-Headers MIME content-type provides a mechanism to
+   label and return only the RFC 822 headers of a failed message.  These
+   headers are not the complete message and should not be returned as a
+   Message/RFC822. The returned headers are useful for identifying the
+   failed message and for diagnostics based on the received lines.
+
+   The Text/RFC822-Headers content-type is defined as follows:
+
+      MIME type name: Text
+      MIME subtype name: RFC822-Headers
+      Required parameters: None
+      Optional parameters: None
+      Encoding considerations: 7 bit is sufficient for normal RFC822
+                headers, however, if the headers are broken and require
+                encoding to make them legal 7 bit content, they may be
+                encoded in quoted-printable.
+      Security considerations: See section 3 of this memo.
+
+   The Text/RFC822-Headers body part should contain all the RFC822
+   header lines from the message which caused the report.  The RFC822
+   headers include all lines prior to the blank line in the message.
+   They include the MIME-Version and MIME Content-Headers.
+
+3. Security Considerations
+
+   Automated use of report types without authentication presents several
+   security issues.  Forging negative reports presents the opportunity
+   for denial-of-service attacks when the reports are used for automated
+   maintenance of directories or mailing lists.  Forging positive
+   reports may cause the sender to incorrectly believe a message was
+   delivered when it was not.
+
+   A signature covering the entire multipart/report structure could be
+   used to prevent such forgeries; such a signature scheme is, however,
+   beyond the scope of this document.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 4]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+4. Normative References
+
+   [SMTP]     Postel, J., "Simple Mail Transfer Protocol", STD 10, RFC
+              821, August 1982.
+
+   [DSN]      Moore, K., and G. Vaudreuil, "An Extensible Message Format
+              for Delivery Status Notifications", RFC 3464, January
+              2003.
+
+   [RFC822]   Crocker, D., "Standard for the format of ARPA Internet
+              Text Messages", STD 11, RFC 822, August 1982.
+
+   [MIME]     Borenstein, N. and N. Freed, "Multipurpose Internet Mail
+              Extensions (MIME) Part Two: Media Types", RFC 2046,
+              November 1996.
+
+   [DRPT]     Moore, K., "SMTP Service Extension for Delivery Status
+              Notifications", RFC 3461, January 2003.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 5]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+Appendix A - Changes from RFC 1892
+
+   Changed Authors contact information
+
+   Updated required standards boilerplate
+
+   Edited the text to make it spell-checker and grammar checker
+   compliant
+
+Author's Address
+
+   Gregory M. Vaudreuil
+   Lucent Technologies
+   7291 Williamson Rd
+   Dallas Tx, 75214
+
+   Phone: +1 214 823 9325
+   EMail: GregV@ieee.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 6]
+
+RFC 3462                    Multipart/Report                January 2003
+
+
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2003).  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph are
+   included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+Acknowledgement
+
+   Funding for the RFC Editor function is currently provided by the
+   Internet Society.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vaudreuil                   Standards Track                     [Page 7]
+
+
+

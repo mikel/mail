@@ -1,0 +1,24 @@
+Mail is an internet library for Ruby that is designed to handle emails
+generation, parsing and sending in a simple, rubyesque manner.
+
+The purpose of this library is to provide a single point of access to handle
+all email functions, including sending and receiving emails.  All network
+type actions are done through proxy methods to Net::SMTP, Net::POP3 etc.
+
+All major mail functions should be able to happen from the Mail:: module.
+
+For example, to send an email from your ruby application should just take:
+
+ require 'mail'
+ 
+ Mail.defaults({:smtp => 127.0.0.1})
+ 
+ Mail::Message.send do
+       from 'me@me.com'
+         to 'you@you.com'
+    subject 'Here is the image you wanted'
+       body File.read('body.txt')
+   add_file 'New Header Image', '/somefile.png'
+ end
+
+
