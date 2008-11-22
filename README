@@ -5,15 +5,26 @@ The purpose of this library is to provide a single point of access to handle
 all email functions, including sending and receiving emails.  All network
 type actions are done through proxy methods to Net::SMTP, Net::POP3 etc.
 
+Built from my experience with TMail, it is designed to be a pure ruby
+implementation that makes generating, sending and parsing emails a no
+brainer.
+
+It is also designed form the ground up to work with Ruby 1.9.  This is because
+Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
+these features have been taken full advantage of in this library allowing
+Mail to handle a lot more messages than TMail ever could or will.
+
 All major mail functions should be able to happen from the Mail:: module.
 
-For example, to send an email from your ruby application should just take:
+This is totally a work in progress, but here is what is planned:
+
+Sending an email:
 
  require 'mail'
- 
- Mail.defaults({:smtp => 127.0.0.1})
- 
- Mail::Message.send do
+
+ Mail.defaults { smtp 127.0.0.1 }
+
+ Mail.send do
        from 'me@me.com'
          to 'you@you.com'
     subject 'Here is the image you wanted'
@@ -21,4 +32,42 @@ For example, to send an email from your ruby application should just take:
    add_file 'New Header Image', '/somefile.png'
  end
 
+Getting an email from a pop server:
+
+ require 'mail'
+ 
+ Mail.defaults do
+   pop3 mail.myhost.com.au
+   user mikel
+   pass mypass
+ end
+ 
+ emails = Mail.get_all_mail
+ 
+ emails.length #=> 12
+
+Creating a new mail object that you can work with:
+
+ require 'mail'
+ 
+ @mail = Mail.new
+ 
+ @mail.from     = 'mikel@me.com'
+ @mail.to       = 'mikel@you.com'
+ @mail.subject  = 'Hello!'
+ 
+ @mail.to_s #=> 'From: mikel@me.com\nTo: mikel@you.com\nSubject: Hello!'
+
+Getting error reports from an email:
+
+ require 'mail'
+ 
+ @mail = Mail.read('/path/to/bounce_message.eml')
+ 
+ @mail.bounced?         #=> true
+ @mail.final_recipient  #=> rfc822;mikel@dont.exist.com
+ @mail.action           #=> failed
+ @mail.error_status     #=> 5.5.0
+ @mail.diagnostic_code  #=> smtp;550 Requested action not taken: mailbox unavailable 
+ @mail.retryable?       #=> false
 
