@@ -41,6 +41,20 @@ module Mail
       @fields = raw_fields.map { |field| Field.new(field) }
     end
     
+    def [](name)
+      field = fields.select { |f| f.name == name }.first
+      field ? field.value : nil
+    end
+    
+    def []=(name, value)
+      field = fields.select { |f| f.name == name }.first
+      if field
+        field.value = value
+      else
+        self.fields << Field.new("#{name}: #{value}")
+      end
+    end
+    
     private
 
     # 2.2.3. Long Header Fields

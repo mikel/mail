@@ -45,6 +45,29 @@ describe Mail::Header do
       header.fields[1].value.should == "bob"
     end
     
+    it "should allow you to reference each field and value by literal string name" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header['To'].should == "Mikel"
+      header['From'].should == "bob"
+    end
+
+    it "should return nil if no value in the header" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header['Subject'].should be_nil
+    end
+    
+    it "should reset the value of a field if it already exists" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header['To'] = 'George'
+      header['To'].should == "George"
+    end
+    
+    it "should add a new field if the field does not exist" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header['Subject'] = "G'Day!"
+      header['Subject'].should == "G'Day!"
+    end
+    
   end
 
 end
