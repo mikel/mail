@@ -45,10 +45,24 @@ describe Mail::Header do
       header.fields[1].value.should == "bob"
     end
     
+    it "should preserve the order of the fields it is given" do
+      header = Mail::Header.new
+      header.fields = ['From: mikel@me.com', 'To: bob@you.com', 'Subject: This is a badly formed email']
+      header.fields[0].name.should == 'From'
+      header.fields[1].name.should == 'To'
+      header.fields[2].name.should == 'Subject'
+    end
+    
     it "should allow you to reference each field and value by literal string name" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header['To'].should == "Mikel"
       header['From'].should == "bob"
+    end
+
+    it "should return an array of fields if there is more than one match" do
+      header = Mail::Header.new
+      header.fields = ['From: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 23']
+      header['X-Mail-SPAM'].should == ['15', '23']
     end
 
     it "should return nil if no value in the header" do
@@ -66,6 +80,13 @@ describe Mail::Header do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header['Subject'] = "G'Day!"
       header['Subject'].should == "G'Day!"
+    end
+    
+    it "should allow you to pass in an array of raw fields" do
+      header = Mail::Header.new
+      header.fields = ['From: mikel@me.com', 'To: bob@you.com']
+      header['To'].should == 'bob@you.com'
+      header['From'].should == 'mikel@me.com'
     end
     
   end

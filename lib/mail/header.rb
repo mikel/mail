@@ -20,32 +20,101 @@ module Mail
     require 'utilities'
     include Utilities
     
+    # Creates a new header object.
+    # 
+    # Accepts raw text or nothing.  If given raw text will attempt to parse
+    # it and split it into the various fields, instantiating each field as
+    # it goes.
+    # 
+    # If it finds a field that should be a structured field (such as content
+    # type), but it fails to parse it, it will simply make it an unstructured
+    # field and leave it along.  This will mean that the data is preserved but
+    # no automatic processing of that field will happen.  If you find one of
+    # these cases, please make a patch and send it in, or at the lease, send
+    # me the example so we can fix it.
     def initialize(header_text = nil)
       self.raw_source = header_text
       split_header if header_text
     end
     
+    # The preserved raw source of the header as you passed it in, untouched
+    # for your Regexing glory.
     def raw_source
       @raw_source
     end
     
-    def raw_source=(val)
-      @raw_source = val
-    end
-    
+    # Returns an array of all the fields in the header in order that they
+    # were read in.
     def fields
       @fields
     end
     
-    def fields=(raw_fields)
-      @fields = raw_fields.map { |field| Field.new(field) }
+    #  3.6. Field definitions
+    #  
+    #   It is important to note that the header fields are not guaranteed to
+    #   be in a particular order.  They may appear in any order, and they
+    #   have been known to be reordered occasionally when transported over
+    #   the Internet.  However, for the purposes of this standard, header
+    #   fields SHOULD NOT be reordered when a message is transported or
+    #   transformed.  More importantly, the trace header fields and resent
+    #   header fields MUST NOT be reordered, and SHOULD be kept in blocks
+    #   prepended to the message.  See sections 3.6.6 and 3.6.7 for more
+    #   information.
+    # 
+    # Populates the fields container with Field objects in the order it
+    # receives them in.
+    #
+    # Acceps an array of field string values, for example:
+    # 
+    #  h = Header.new
+    #  h.fields = ['From: mikel@me.com', 'To: bob@you.com']
+    def fields=(unfolded_fields)
+      @fields = unfolded_fields.map { |field| Field.new(field) }
     end
     
+    #  3.6. Field definitions
+    #  
+    #   The following table indicates limits on the number of times each
+    #   field may occur in a message header as well as any special
+    #   limitations on the use of those fields.  An asterisk next to a value
+    #   in the minimum or maximum column indicates that a special restriction
+    #   appears in the Notes column.
+    #
+    #   <snip table from 3.6>
+    #
+    # As per RFC, many fields can appear more than once, we will return a string
+    # of the value if there is only one header, or if there is more than one 
+    # matching header, will return an array of values in order that they appear
+    # in the header ordered from top to bottom.
+    # 
+    # Example:
+    # 
+    #  h = Header.new
+    #  h.fields = ['To: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
+    #  h['To']          #=> 'mikel@me.com'
+    #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      field = fields.select { |f| f.name == name }.first
-      field ? field.value : nil
+      field = fields.select { |f| f.name == name }
+      case
+      when field.length > 1
+        field.map { |f| f.value }
+      when !field.blank?
+        field.first.value
+      else
+        nil
+      end
     end
     
+    # Sets the FIRST matching field in the header to passed value.
+    # 
+    # Example:
+    # 
+    #  h = Header.new
+    #  h.fields = ['To: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
+    #  h['To'] = 'bob@you.com'
+    #  h['To']    #=> 'bob@you.com'
+    #  h['X-Mail-SPAM'] = '10000'
+    #  h['X-Mail-SPAM']    #=> ['1000', '20']
     def []=(name, value)
       field = fields.select { |f| f.name == name }.first
       if field
@@ -56,6 +125,10 @@ module Mail
     end
     
     private
+
+    def raw_source=(val)
+      @raw_source = val
+    end
 
     # 2.2.3. Long Header Fields
     # 
@@ -99,10 +172,14 @@ module Mail
       string.gsub(/\n([\t\s]+)/, '\1')
     end
     
+    # Returns the header with all the folds removed and all line breaks
+    # converted to \n only.
     def unfolded_header
       @unfolded_header ||= unfold(raw_source.to_lf)
     end
     
+    # Splits an unfolded and line break cleaned header into individual field
+    # strings.
     def split_header
       self.fields = unfolded_header.split("\n")
     end

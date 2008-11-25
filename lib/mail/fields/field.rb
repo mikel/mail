@@ -19,6 +19,19 @@ module Mail
   #  
   class Field
     
+    # Generic Field Exception
+    class FieldError < StandardError
+    end
+
+    # Raised when a parsing error has occurred (ie, a StructuredField has tried
+    # to parse a field that is invalid or improperly written)
+    class ParseError < FieldError #:nodoc:
+    end
+
+    # Raised when attempting to set a structured field's contents to an invalid syntax
+    class SyntaxError < FieldError #:nodoc:
+    end
+
     STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
                             references keywords resent-date resent-from resent-sender
                             resent-to resent-cc resent-bcc resent-message-id 
@@ -29,9 +42,13 @@ module Mail
     
     def initialize(raw_field)
       name, value = split(raw_field)
-      if STRUCTURED_FIELDS.include?(name.downcase)
-        self.field = Mail::StructuredField.new(raw_field, name, value)
-      else
+      begin
+        if STRUCTURED_FIELDS.include?(name.downcase)
+          self.field = Mail::StructuredField.new(raw_field, name, value)
+        else
+          self.field = Mail::UnstructuredField.new(raw_field, name, value)
+        end
+      rescue
         self.field = Mail::UnstructuredField.new(raw_field, name, value)
       end
     end
@@ -58,6 +75,10 @@ module Mail
     
     def value=(value)
       field.value = value
+    end
+    
+    def to_s
+      field.to_s
     end
     
     private

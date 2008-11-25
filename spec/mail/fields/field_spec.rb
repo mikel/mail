@@ -43,6 +43,22 @@ describe Mail::Field do
       field.name.should == 'To'
       field.value.should == 'Bob'
     end
+    
+    it "should return an unstuctured field if the structured field parsing raises an error" do
+      Mail::StructuredField.should_receive(:new).and_raise(Mail::Field::ParseError)
+      field = Mail::Field.new('To: Bob, ,,, Frank, Smith')
+      field.field.class.should == Mail::UnstructuredField
+      field.name.should == 'To'
+      field.value.should == 'Bob, ,,, Frank, Smith'
+    end
+    
+    it "should call to_s on it's field when sent to_s" do
+      @field_type = Mail::UnstructuredField
+      @field_type.should_receive(:to_s)
+      Mail::UnstructuredField.should_receive(:new).and_return(@field_type)
+      Mail::Field.new('Subject: Hello bob').to_s
+    end
+    
   end
 
 

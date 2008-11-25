@@ -56,6 +56,10 @@ describe Mail::StructuredField do
       @field.encoded.should == nil
     end
     
+    it "should return the field name and value in proper format when called to_s" do
+      @field.to_s.should == 'From: bob@me.com'
+    end
+    
   end
 
 end
