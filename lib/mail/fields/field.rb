@@ -31,26 +31,20 @@ module Mail
     # Raised when attempting to set a structured field's contents to an invalid syntax
     class SyntaxError < FieldError #:nodoc:
     end
-
-    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
-                            references keywords resent-date resent-from resent-sender
-                            resent-to resent-cc resent-bcc resent-message-id 
-                            return-path received ]
     
     require 'fields/structured_field'
     require 'fields/unstructured_field'
     
-    def initialize(raw_field)
-      name, value = split(raw_field)
-      begin
-        if STRUCTURED_FIELDS.include?(name.downcase)
-          self.field = Mail::StructuredField.new(raw_field, name, value)
-        else
-          self.field = Mail::UnstructuredField.new(raw_field, name, value)
-        end
-      rescue
-        self.field = Mail::UnstructuredField.new(raw_field, name, value)
-      end
+    # Accepts a text string in the format of:
+    # 
+    #  "field-name: field data"
+    # 
+    # Note, does not want a terminating carriage return.  Returns
+    # self appropriately parsed
+    def initialize(raw_field_text)
+      name, value = split(raw_field_text)
+      create_field(raw_field_text, name, value)
+      return self
     end
 
     def field=(value)
@@ -88,6 +82,29 @@ module Mail
       [match_data[1], match_data[2]]
     end
     
+    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
+                            references keywords resent-date resent-from resent-sender
+                            resent-to resent-cc resent-bcc resent-message-id 
+                            return-path received ]
+
+    # Attempts to parse the field as a structured field if it is of the 
+    # appropriate type, if this fails, parses it as a plain field to keep
+    # the data, otherwise, if it is not a structured field, parses it as
+    # an unstructured field.... You'll understand if you read the code :)
+    # The idea is to ALWAYS parse the data and return the data, not to
+    # dump and delete on unknown headers.
+    def create_field(raw_field, name, value)
+      if STRUCTURED_FIELDS.include?(name.downcase)
+        begin
+          self.field = Mail::StructuredField.new(raw_field, name, value)
+        rescue
+          self.field = Mail::UnstructuredField.new(raw_field, name, value)
+        end
+      else
+        self.field = Mail::UnstructuredField.new(raw_field, name, value)
+      end
+    end
+
   end
   
 end

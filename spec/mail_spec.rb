@@ -22,7 +22,7 @@ describe "mail" do
     message.from.should    == 'mikel@me.com'
     message.to.should      == 'mikel@you.com'
     message.subject.should == 'Hello there Mikel'
-    message.body.should    == 'This is a body of text'
+    message.body.to_s.should    == 'This is a body of text'
   end
   
 end

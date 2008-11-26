@@ -86,5 +86,15 @@ describe Object do
     end
     
   end
- 
+
+  describe "methods on NilClass" do
+    it "should return empty string on to_crlf" do
+      nil.to_crlf.should == ''
+    end
+
+    it "should return empty string on to_lf" do
+      nil.to_lf.should == ''
+    end
+  end
+
 end

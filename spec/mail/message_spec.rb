@@ -4,7 +4,9 @@ require 'mail'
 
 describe Mail::Message do
   
-  @basic_email = "To: mikel\nFrom: bob\nSubject: Hello!\n\nemail message\n"
+  def basic_email
+    "To: mikel\r\nFrom: bob\r\nSubject: Hello!\r\n\r\nemail message\r\n"
+  end
 
   describe "initialization" do
     
@@ -13,14 +15,22 @@ describe Mail::Message do
     end
     
     it "should instantiate with a string" do
-      Mail::Message.new(@basic_email).class.should == Mail::Message
+      Mail::Message.new(basic_email).class.should == Mail::Message
     end
     
     it "should allow us to pass it a block" do
       mail = Mail::Message.new do
         from 'mikel@me.com'
+        to 'lindsaar@you.com'
       end
       mail.from.should == 'mikel@me.com'
+      mail.to.should == 'lindsaar@you.com'
+    end
+    
+    it "should initialize a body and header class even if called with nothing to begin with" do
+      Mail::Header.should_receive(:new)
+      Mail::Body.should_receive(:new)
+      mail = Mail::Message.new
     end
     
   end
@@ -28,13 +38,13 @@ describe Mail::Message do
   describe "accepting a plain text string email" do
 
     it "should accept some email text to parse and return an email" do
-      mail = Mail::Message.parse(@basic_email)
+      mail = Mail::Message.new(basic_email)
       mail.class.should == Mail::Message
     end
 
     it "should set a raw source instance variable to equal the passed in message" do
-      mail = Mail::Message.parse(@basic_email)
-      mail.raw_source.should == @basic_email
+      mail = Mail::Message.new(basic_email)
+      mail.raw_source.should == basic_email
     end
 
     it "should set the raw source instance variable to nil if no message is passed in" do
@@ -42,8 +52,24 @@ describe Mail::Message do
       mail.raw_source.should == nil
     end
   
-    it "should parse the from address in the email" do
-      
+    it "should give the header class the header to parse" do
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      mail = Mail::Message.new(basic_email)
+    end
+
+    it "should give the header class the header to parse even if there is no body" do
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+    end
+  
+    it "should give the body class the body to parse" do
+      Mail::Body.should_receive(:new).with("email message\r\n")
+      mail = Mail::Message.new(basic_email)
+    end
+  
+    it "should still ask the body for a new instance even though these is nothing to parse, yet" do
+      Mail::Body.should_receive(:new)
+      mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
   
   end
@@ -71,8 +97,8 @@ describe Mail::Message do
       end
 
       it "should return the body" do
-        @mail.body = "email message\n"
-        @mail.body.should == "email message\n"
+        @mail.body = "email message\r\n"
+        @mail.body.to_s.should == "email message\r\n"
       end
     end
     
@@ -93,8 +119,8 @@ describe Mail::Message do
       end
 
       it "should return the body" do
-        @mail.body "email message\n"
-        @mail.body.should == "email message\n"
+        @mail.body "email message\r\n"
+        @mail.body.to_s.should == "email message\r\n"
       end
     end
     

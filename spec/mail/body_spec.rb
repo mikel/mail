@@ -10,6 +10,11 @@ describe Mail::Body do
       doing {Mail::Body.new}.should_not raise_error
     end
     
+    it "should accept text as raw source data" do
+      body = Mail::Body.new('this is some text')
+      body.to_s.should == 'this is some text'
+    end
+    
   end
 
 end
