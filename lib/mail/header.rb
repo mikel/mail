@@ -105,7 +105,8 @@ module Mail
       end
     end
     
-    # Sets the FIRST matching field in the header to passed value.
+    # Sets the FIRST matching field in the header to passed value, or deletes
+    # the FIRST field matched from the header if passed nil
     # 
     # Example:
     # 
@@ -115,11 +116,16 @@ module Mail
     #  h['To']    #=> 'bob@you.com'
     #  h['X-Mail-SPAM'] = '10000'
     #  h['X-Mail-SPAM']    #=> ['1000', '20']
+    #  h['X-Mail-SPAM'] = nil
+    #  h['X-Mail-SPAM']    #=> ['1000']
     def []=(name, value)
       field = fields.select { |f| f.name == name }.first
-      if field
+      case
+      when field && value == nil  # User wants to delete the field
+        fields.delete_if { |f| f == field }
+      when field                  # User wants to change the field
         field.value = value
-      else
+      else                        # User wants to create the field
         self.fields << Field.new("#{name}: #{value}")
       end
     end

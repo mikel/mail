@@ -24,5 +24,11 @@ describe "mail" do
     message.subject.should == 'Hello there Mikel'
     message.body.to_s.should    == 'This is a body of text'
   end
+
+  it "should be able to arbitrarily set a header" do
+    message = Mail::Message.new
+    message['foo'] = '1234'
+    message['foo'].should == '1234'
+  end
   
 end

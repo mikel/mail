@@ -188,6 +188,29 @@ module Mail
       value ? self.subject = value : header['subject']
     end
 
+    # Allows you to add an arbitrary header
+    # 
+    # Example:
+    #
+    #  mail['foo'] = '1234'
+    def []=(name, value)
+      header[name] = value
+    end
+
+    # Allows you to read an arbitrary header
+    # 
+    # Example:
+    #
+    #  mail['foo'] = '1234'
+    #  mail['foo'] #=> '1234'
+    def [](name)
+      header[name]
+    end
+
+    def header_fields
+      header.fields
+    end
+
     private
 
     #  2.1. General Description

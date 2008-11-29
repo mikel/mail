@@ -80,6 +80,26 @@ describe Mail::Message do
       @mail = Mail::Message.new
     end
 
+    describe "accessing fields directly" do
+      it "should allow you to grab field objects if you really want to" do
+        @mail.header_fields.class.should == Array
+      end
+      
+      it "should give you back the fields in the header" do
+        @mail['bar'] = 'abcd'
+        @mail.header_fields.length.should == 1
+        @mail['foo'] = '4321'
+        @mail.header_fields.length.should == 2
+      end
+      
+      it "should delete a field if it is set to nil" do
+        @mail['foo'] = '4321'
+        @mail.header_fields.length.should == 1
+        @mail['foo'] = nil
+        @mail.header_fields.length.should == 0
+      end
+    end
+
     describe "with :method=" do
       it "should return the to field" do
         @mail.to = "mikel"
@@ -124,6 +144,21 @@ describe Mail::Message do
       end
     end
     
+    describe "setting arbitrary headers" do
+      it "should allow you to set them" do
+        doing {@mail['foo'] = 1234}.should_not raise_error
+      end
+      
+      it "should allow you to read arbitrary headers" do
+        @mail['foo'] = 1234
+        @mail['foo'].should == '1234'
+      end
+      
+      it "should instantiate a new Header" do
+        @mail['foo'] = 1234
+        @mail.header_fields.first.class.should == Mail::Field
+      end
+    end
   end
 
 end
