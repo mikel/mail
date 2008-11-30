@@ -7,7 +7,7 @@ describe Mail::UnstructuredField do
   describe "initialization" do
     
     it "should be instantiated" do
-      doing {Mail::UnstructuredField.new("Subject: Value", "Name", "Value")}.should_not raise_error
+      doing {Mail::UnstructuredField.new("Name", "Value")}.should_not raise_error
     end
     
   end
@@ -15,11 +15,11 @@ describe Mail::UnstructuredField do
   describe "manipulation" do
     
     before(:each) do
-      @field = Mail::UnstructuredField.new("Subject: Hello Frank", "Subject", "Hello Frank")
+      @field = Mail::UnstructuredField.new("Subject", "Hello Frank")
     end
     
     it "should allow us to set a text value at initialization" do
-      doing{Mail::UnstructuredField.new("Subject: Value", "Subject", "Value")}.should_not raise_error
+      doing{Mail::UnstructuredField.new("Subject", "Value")}.should_not raise_error
     end
     
     it "should provide access to the text of the field once set" do
@@ -35,7 +35,7 @@ describe Mail::UnstructuredField do
   describe "displaying" do
     
     before(:each) do
-      @field = Mail::UnstructuredField.new("Subject: Hello Frank", "Subject", "Hello Frank")
+      @field = Mail::UnstructuredField.new("Subject", "Hello Frank")
     end
     
     it "should provide a to_s function that returns the field name and value" do
@@ -57,4 +57,32 @@ describe Mail::UnstructuredField do
     end
     
   end
+
+  describe "folding" do
+    it "should not fold itself if it is 78 chracters long" do
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters long")
+      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters long"
+    end
+    
+    it "should fold itself if it is 79 chracters long" do
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 79 characters long.")
+      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\t long."
+    end
+
+    it "should fold itself if it is 997 chracters long" do
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. And this makes it 998 long.")
+      lines = @field.encoded.split("\r\n\t")
+      lines.each { |line| line.length.should < 78 }
+    end
+    
+    it "should raise a syntax error if given a line that is longer than 998" do
+      value = "This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. And this makes it 999 long.."
+      doing { Mail::UnstructuredField.new("Subject", value) }.should raise_error(Mail::Field::SyntaxError)
+    end
+    
+  end
+
 end
+
+
+

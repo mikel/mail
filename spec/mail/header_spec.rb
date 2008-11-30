@@ -118,12 +118,16 @@ describe Mail::Header do
       header.fields.length.should == 0
     end
     
-    it "should delete the first field found if there are multiple options" do
+    it "should delete all matching fields found if there are multiple options" do
       header = Mail::Header.new
       header.fields = ['X-SPAM: 1000', 'X-SPAM: 20']
       header['X-SPAM'] = nil
-      header.fields.length.should == 1
-      header['X-SPAM'].should == '20'
+      header.fields.length.should == 0
+    end
+    
+    it "should return nil if asked for the value of a non existent field" do
+      header = Mail::Header.new
+      header['Bobs-Field'].should == nil
     end
     
   end

@@ -119,13 +119,13 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM']    #=> ['1000']
     def []=(name, value)
-      field = fields.select { |f| f.name == name }.first
+      selected = fields.select { |f| f.name == name }
       case
-      when field && value == nil  # User wants to delete the field
-        fields.delete_if { |f| f == field }
-      when field                  # User wants to change the field
-        field.value = value
-      else                        # User wants to create the field
+      when !selected.blank? && value == nil # User wants to delete the field
+        fields.delete_if { |f| selected.include?(f) }
+      when !selected.blank?                 # User wants to change the field
+        selected.first.value = value
+      else                                  # User wants to create the field
         self.fields << Field.new("#{name}: #{value}")
       end
     end

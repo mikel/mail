@@ -7,7 +7,7 @@ describe Mail::StructuredField do
   describe "initialization" do
     
     it "should be instantiated" do
-      doing {Mail::StructuredField.new("From: bob@me.com", "From", "bob@me.com")}.should_not raise_error
+      doing {Mail::StructuredField.new("From", "bob@me.com")}.should_not raise_error
     end
     
   end
@@ -15,11 +15,11 @@ describe Mail::StructuredField do
   describe "manipulation" do
     
     before(:each) do
-      @field = Mail::StructuredField.new("From: bob@me.com", "From", "bob@me.com")
+      @field = Mail::StructuredField.new("From", "bob@me.com")
     end
     
     it "should allow us to set a text value at initialization" do
-      doing{Mail::StructuredField.new("From: bob@me.com", "From", "bob@me.com")}.should_not raise_error
+      doing{Mail::StructuredField.new("From", "bob@me.com")}.should_not raise_error
     end
     
     it "should provide access to the text of the field once set" do
@@ -35,7 +35,7 @@ describe Mail::StructuredField do
   describe "displaying" do
     
     before(:each) do
-      @field = Mail::StructuredField.new("From: bob@me.com", "From", "bob@me.com")
+      @field = Mail::StructuredField.new("From", "bob@me.com")
     end
     
     it "should provide a to_s function that returns the field name and value" do

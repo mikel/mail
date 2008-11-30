@@ -43,7 +43,7 @@ module Mail
     # self appropriately parsed
     def initialize(raw_field_text)
       name, value = split(raw_field_text)
-      create_field(raw_field_text, name, value)
+      create_field(name, value)
       return self
     end
 
@@ -93,15 +93,15 @@ module Mail
     # an unstructured field.... You'll understand if you read the code :)
     # The idea is to ALWAYS parse the data and return the data, not to
     # dump and delete on unknown headers.
-    def create_field(raw_field, name, value)
+    def create_field(name, value)
       if STRUCTURED_FIELDS.include?(name.downcase)
         begin
-          self.field = Mail::StructuredField.new(raw_field, name, value)
+          self.field = Mail::StructuredField.new(name, value)
         rescue
-          self.field = Mail::UnstructuredField.new(raw_field, name, value)
+          self.field = Mail::UnstructuredField.new(name, value)
         end
       else
-        self.field = Mail::UnstructuredField.new(raw_field, name, value)
+        self.field = Mail::UnstructuredField.new(name, value)
       end
     end
 

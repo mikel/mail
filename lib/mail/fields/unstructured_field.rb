@@ -13,18 +13,11 @@ module Mail
   #     "unfolding" as described in section 2.2.3).
   class UnstructuredField
     
-    def initialize(raw_value, name, value = '')
-      self.raw_value = raw_value
+    def initialize(name, value = '')
       self.name = name
       self.value = value
-    end
-    
-    def raw_value=(value)
-      @raw_value = value
-    end
-    
-    def raw_value
-      @raw_value
+      raise Mail::Field::SyntaxError if to_s.length > 998
+      self
     end
     
     def name=(value)
@@ -48,7 +41,44 @@ module Mail
     end
     
     def encoded
-      to_s.blank? ? nil : to_s
+      to_s.blank? ? nil : do_encode
+    end
+    
+    private
+    
+    # 2.2.3. Long Header Fields
+    # 
+    #  Each header field is logically a single line of characters comprising
+    #  the field name, the colon, and the field body.  For convenience
+    #  however, and to deal with the 998/78 character limitations per line,
+    #  the field body portion of a header field can be split into a multiple
+    #  line representation; this is called "folding".  The general rule is
+    #  that wherever this standard allows for folding white space (not
+    #  simply WSP characters), a CRLF may be inserted before any WSP.
+    def do_encode
+      case
+      when to_s.length <= 78
+        to_s
+      when to_s.length <= 998
+        @folded_line = []
+        @unfolded_line = to_s
+        wspp = @unfolded_line =~ /[\s\t]/
+        fold
+        @folded_line.join("\r\n\t")
+      else
+      end
+    end
+    
+    def fold
+      # Get the last whitespace character, OR we'll just choose 
+      # 78 if there is no whitespace
+      wspp = @unfolded_line.slice(0..78) =~ /[\s\t][\S\T]*$/ || 78
+      @folded_line << @unfolded_line.slice!(0...wspp)
+      if @unfolded_line.length > 78
+        fold
+      else
+        @folded_line << @unfolded_line
+      end
     end
     
   end
