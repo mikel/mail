@@ -16,7 +16,6 @@ module Mail
     def initialize(name, value = '')
       self.name = name
       self.value = value
-      raise Mail::Field::SyntaxError if to_s.length > 998
       self
     end
     
@@ -59,20 +58,19 @@ module Mail
       case
       when to_s.length <= 78
         to_s
-      when to_s.length <= 998
+      when to_s.length > 78
         @folded_line = []
         @unfolded_line = to_s
-        wspp = @unfolded_line =~ /[\s\t]/
+        wspp = @unfolded_line =~ /[ \t]/
         fold
         @folded_line.join("\r\n\t")
-      else
       end
     end
     
     def fold
       # Get the last whitespace character, OR we'll just choose 
       # 78 if there is no whitespace
-      wspp = @unfolded_line.slice(0..78) =~ /[\s\t][\S\T]*$/ || 78
+      wspp = @unfolded_line.slice(0..78) =~ /[ \t][^ \T]*$/ || 78
       @folded_line << @unfolded_line.slice!(0...wspp)
       if @unfolded_line.length > 78
         fold

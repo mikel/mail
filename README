@@ -22,7 +22,9 @@ Sending an email:
 
  require 'mail'
 
- Mail.defaults { smtp 127.0.0.1 }
+ Mail.defaults do
+   smtp '127.0.0.1'
+ end
 
  Mail.send do
        from 'me@me.com'
@@ -37,9 +39,9 @@ Getting an email from a pop server:
  require 'mail'
  
  Mail.defaults do
-   pop3 mail.myhost.com.au
-   user mikel
-   pass mypass
+   pop3 'mail.myhost.com.au'
+   user 'mikel'
+   pass 'mypass'
  end
  
  emails = Mail.get_all_mail

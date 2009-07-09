@@ -16,6 +16,8 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
+    require 'patterns'
+    include Patterns
     require 'fields/field'
     require 'utilities'
     include Utilities
@@ -33,7 +35,7 @@ module Mail
     # these cases, please make a patch and send it in, or at the lease, send
     # me the example so we can fix it.
     def initialize(header_text = nil)
-      self.raw_source = header_text
+      self.raw_source = header_text.to_crlf
       split_header if header_text
     end
     
@@ -115,20 +117,30 @@ module Mail
     #  h['To'] = 'bob@you.com'
     #  h['To']    #=> 'bob@you.com'
     #  h['X-Mail-SPAM'] = '10000'
-    #  h['X-Mail-SPAM']    #=> ['1000', '20']
+    #  h['X-Mail-SPAM'] # => ['15', '20', '10000']
     #  h['X-Mail-SPAM'] = nil
-    #  h['X-Mail-SPAM']    #=> ['1000']
+    #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
       selected = fields.select { |f| f.name == name }
       case
-      when !selected.blank? && value == nil # User wants to delete the field
+      # User wants to delete the field
+      when !selected.blank? && value == nil 
         fields.delete_if { |f| selected.include?(f) }
-      when !selected.blank?                 # User wants to change the field
+
+      # User wants to change the field
+      when !selected.blank? && LIMITED_FIELDS.include?(name.downcase) 
         selected.first.value = value
-      else                                  # User wants to create the field
+
+      # User wants to create the field
+      else
         self.fields << Field.new("#{name}: #{value}")
       end
     end
+    
+    LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
+                           message-id in-reply-to references subject ]
+    
+    
     
     private
 
@@ -175,19 +187,18 @@ module Mail
     #  treated in its unfolded form for further syntactic and semantic
     #  evaluation.
     def unfold(string)
-      string.gsub(/\n([\t\s]+)/, '\1')
+      string.gsub(/#{CRLF}#{WSP}+/, ' ').gsub(/#{WSP}+/, ' ')
     end
     
-    # Returns the header with all the folds removed and all line breaks
-    # converted to \n only.
+    # Returns the header with all the folds removed
     def unfolded_header
-      @unfolded_header ||= unfold(raw_source.to_lf)
+      @unfolded_header ||= unfold(raw_source)
     end
     
     # Splits an unfolded and line break cleaned header into individual field
     # strings.
     def split_header
-      self.fields = unfolded_header.split("\n")
+      self.fields = unfolded_header.split(CRLF)
     end
     
   end

@@ -91,12 +91,6 @@ describe Mail::Header do
       header['Subject'].should be_nil
     end
     
-    it "should reset the value of a field if it already exists" do
-      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
-      header['To'] = 'George'
-      header['To'].should == "George"
-    end
-    
     it "should add a new field if the field does not exist" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header['Subject'] = "G'Day!"
@@ -108,6 +102,12 @@ describe Mail::Header do
       header.fields = ['From: mikel@me.com', 'To: bob@you.com']
       header['To'].should == 'bob@you.com'
       header['From'].should == 'mikel@me.com'
+    end
+    
+    it "should reset the value of a single-only field if it already exists" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header['To'] = 'George'
+      header['To'].should == "George"
     end
     
     it "should allow you to delete a field by setting it to nil" do
@@ -130,6 +130,85 @@ describe Mail::Header do
       header['Bobs-Field'].should == nil
     end
     
+  end
+
+  describe "folding and unfolding" do
+    it "should unfold a header" do
+      header = Mail::Header.new("To: Mikel,\r\n Lindsaar, Bob")
+      header['To'].should == 'Mikel, Lindsaar, Bob'
+    end
+    
+    it "should remove multiple spaces during unfolding a header" do
+      header = Mail::Header.new("To: Mikel,\r\n   Lindsaar,     Bob")
+      header['To'].should == 'Mikel, Lindsaar, Bob'
+    end
+    
+    it "should handle a crazy long folded header" do
+      header_text =<<HERE
+Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
+	by smtp.totallyrandom.com with esmtp (Exim 4.68)
+	(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)
+	id 1K4JeQ-0005Nd-Ij
+	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
+HERE
+      header = Mail::Header.new(header_text.gsub(/\n/, "\r\n"))
+      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+    end
+    
+    it "should convert all lonesome LFs to CRLF" do
+      header_text =<<HERE
+Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
+	by smtp.totallyrandom.com with esmtp (Exim 4.68)
+	(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)
+	id 1K4JeQ-0005Nd-Ij
+	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
+HERE
+      header = Mail::Header.new(header_text.gsub(/\n/, "\n"))
+      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+    end
+    
+    it "should convert all lonesome CRs to CRLF" do
+      header_text =<<HERE
+Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
+	by smtp.totallyrandom.com with esmtp (Exim 4.68)
+	(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)
+	id 1K4JeQ-0005Nd-Ij
+	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
+HERE
+      header = Mail::Header.new(header_text.gsub(/\n/, "\r"))
+      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+    end
+    
+  end
+  
+  describe "handling fields with multiple values" do
+    it "should know which fields can only appear once" do
+      %w[ orig-date from sender reply-to to cc bcc 
+          message-id in-reply-to references subject ].each do |field|
+        header = Mail::Header.new
+        header[field] = "1234"
+        header[field] = "5678"
+        header[field].should == "5678"
+      end
+    end
+    
+    it "should add additional fields that can appear more than once" do
+      %w[ comments keywords x-spam].each do |field|
+        header = Mail::Header.new
+        header[field] = "1234"
+        header[field] = "5678"
+        header[field].should == ["1234", "5678"]
+      end
+    end
+    
+    it "should delete all references to a field" do
+      header = Mail::Header.new
+      header.fields = ['X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
+      header['X-Mail-SPAM'] = '10000'
+      header['X-Mail-SPAM'].should == ['15', '20', '10000']
+      header['X-Mail-SPAM'] = nil
+      header['X-Mail-SPAM'].should == nil
+    end
   end
 
 end

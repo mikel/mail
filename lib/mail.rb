@@ -1,4 +1,7 @@
 module Mail
+  
+  raise "Requires Ruby 1.9.1 or higher, try TMail" unless RUBY_VERSION >= '1.9.1'
+  
   require 'mail/message'
   require 'mail/core_extensions'
   

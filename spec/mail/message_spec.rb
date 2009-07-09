@@ -71,7 +71,19 @@ describe Mail::Message do
       Mail::Body.should_receive(:new)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
+
+    it "should give the header the part before the line without spaces and the body the part without" do
+      Mail::Header.should_receive(:new).with("To: mikel")
+      Mail::Body.should_receive(:new).with("G'Day!")
+      mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
+    end
   
+    it "should give allow for whitespace on the gap line between header and body" do
+      Mail::Header.should_receive(:new).with("To: mikel")
+      Mail::Body.should_receive(:new).with("G'Day!")
+      mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
+    end
+
   end
   
   describe "directly setting the values of a simple email" do
@@ -162,4 +174,3 @@ describe Mail::Message do
   end
 
 end
-

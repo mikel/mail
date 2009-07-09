@@ -32,7 +32,7 @@ describe Mail::Field do
     end
     
     it "should say anything that is not a structured field is an unstructured field" do
-      unstructured_fields = %[ Subject Comments Random X-Mail ]
+      unstructured_fields = %w[ Subject Comments Random X-Mail MySpecialField ]
       unstructured_fields.each do |sf|
         Mail::Field.new("#{sf}: Value").field.class.should == Mail::UnstructuredField
       end
