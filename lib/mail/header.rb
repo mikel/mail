@@ -16,10 +16,10 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
-    require 'patterns'
+    require File.join(File.dirname(__FILE__), 'patterns')
     include Patterns
-    require 'fields/field'
-    require 'utilities'
+    require File.join(File.dirname(__FILE__), 'fields/field')
+    require File.join(File.dirname(__FILE__), 'utilities')
     include Utilities
     
     # Creates a new header object.
@@ -96,7 +96,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      field = fields.select { |f| f.name == name }
+      field = fields.select { |f| f.name.downcase.to_sym == name.downcase.to_sym }
       case
       when field.length > 1
         field.map { |f| f.value }

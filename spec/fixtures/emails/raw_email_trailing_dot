@@ -1,0 +1,21 @@
+Delivered-To: xxx@xxx.com
+Received: by 10.67.31.8 with SMTP id i8cs1195ugj;
+        Mon, 22 Sep 2008 13:45:18 -0700 (PDT)
+Received: by 10.100.207.5 with SMTP id e5mr3483815ang.104.1222110393505;
+        Mon, 22 Sep 2008 12:06:33 -0700 (PDT)
+Return-Path: <noreply@rubyforge.org>
+Received: from rubyforge.org (rubyforge.org [205.234.109.19])
+        by mx.google.com with ESMTP id c2si899474ana.10.2008.09.22.12.06.28;
+        Mon, 22 Sep 2008 12:06:33 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of noreply@rubyforge.org designates 205.234.109.19 as permitted sender) client-ip=205.234.109.19;
+Authentication-Results: mx.google.com; spf=pass (google.com: best guess record for domain of noreply@rubyforge.org designates 205.234.109.19 as permitted sender) smtp.mail=noreply@rubyforge.org
+Received: by rubyforge.org (Postfix, from userid 502)
+	id 8FB1518581AC; Mon, 22 Sep 2008 15:06:28 -0400 (EDT)
+To: noreply@rubyforge.org
+From: Sandy M. <noreply@rubyforge.org> 
+Subject: [skynet-help][60666] How are intermediate files handled in SkyNet?
+Content-type: text/plain; charset=UTF-8
+Message-Id: <20080922190628.8FB1518581AC@rubyforge.org>
+Date: Mon, 22 Sep 2008 15:06:28 -0400 (EDT)
+
+Testing, testing, 123.

@@ -47,9 +47,9 @@ describe Mail::Message do
       mail.raw_source.should == basic_email
     end
 
-    it "should set the raw source instance variable to nil if no message is passed in" do
+    it "should set the raw source instance variable to '' if no message is passed in" do
       mail = Mail::Message.new
-      mail.raw_source.should == nil
+      mail.raw_source.should == ""
     end
   
     it "should give the header class the header to parse" do
@@ -84,6 +84,13 @@ describe Mail::Message do
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
     end
 
+  end
+
+  describe "stripping of the envelope string" do
+    it "should strip off the envelope from if present" do
+      message = Mail::Message.new(File.read(fixture('emails/raw_email')))
+      message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
+    end
   end
   
   describe "directly setting the values of a simple email" do

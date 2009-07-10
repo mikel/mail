@@ -1,0 +1,58 @@
+From email_test@me.nowhere
+Return-Path: <email_test@me.nowhere>
+Received: from omta05sl.mx.bigpond.com by me.nowhere.else with ESMTP id 632BD5758 for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:21 +1000
+Received: from oaamta05sl.mx.bigpond.com by omta05sl.mx.bigpond.com with ESMTP id <20071021093820.HSPC16667.omta05sl.mx.bigpond.com@oaamta05sl.mx.bigpond.com> for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:20 +1000
+Received: from mikel091a by oaamta05sl.mx.bigpond.com with SMTP id <20071021093820.JFMT24025.oaamta05sl.mx.bigpond.com@mikel091a> for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:20 +1000
+Date: Sun, 21 Oct 2007 19:38:13 +1000
+From: Mikel Lindsaar <email_test@me.nowhere>
+Reply-To: Mikel Lindsaar <email_test@me.nowhere>
+To: mikel@me.nowhere
+Message-Id: <009601c813c6$19df3510$0437d30a@mikel091a>
+Subject: Testing outlook
+Mime-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_NextPart_000_0093_01C81419.EB75E850"
+X-Get_mail_default: mikel@me.nowhere.else
+X-Priority: 3
+X-Original-To: mikel@me.nowhere
+X-Mailer: Microsoft Outlook Express 6.00.2900.3138
+Delivered-To: mikel@me.nowhere
+X-Mimeole: Produced By Microsoft MimeOLE V6.00.2900.3138
+X-Msmail-Priority: Normal
+
+This is a multi-part message in MIME format.
+
+
+------=_NextPart_000_0093_01C81419.EB75E850
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: Quoted-printable
+
+Hello
+This is an outlook test
+
+So there.
+
+Me.
+
+------=_NextPart_000_0093_01C81419.EB75E850
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: Quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.6000.16525" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><STRONG>This is an outlook=20
+test</STRONG></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><STRONG></STRONG></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2><STRONG>So there.</STRONG></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Me.</FONT></DIV></BODY></HTML>
+
+
+------=_NextPart_000_0093_01C81419.EB75E850--
+

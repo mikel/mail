@@ -43,12 +43,16 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
     
-    require 'header'
-    require 'body'
+    require File.join(File.dirname(__FILE__), 'patterns')
+    include Patterns
+    
+    require File.join(File.dirname(__FILE__), 'header')
+    require File.join(File.dirname(__FILE__), 'body')
 
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
-      @raw_source = args.flatten[0]
+      self.raw_source = args.flatten[0]
+      set_envelope_header
       parse_message 
       if block_given?
         instance_eval(&block)
@@ -68,6 +72,17 @@ module Mail
       @raw_source
     end
     
+    def raw_source=(value)
+      @raw_source = value.to_crlf
+    end
+    
+    # The raw_envelope is the From mikel@me.com Mon May  2 16:07:05 2009
+    # type field that you can see at the top of any email that has come
+    # from a mailbox
+    def raw_envelope
+      @raw_envelope
+    end
+    
     # Sets the header of the message object.
     # 
     # Example:
@@ -78,26 +93,27 @@ module Mail
       @header = Mail::Header.new(value)
     end
 
-    # Returns the header of the message object. Or, if passed
+    # Returns the header object of the message object. Or, if passed
     # a parameter sets the value.
     # 
     # Example:
     # 
-    #  mail.header = 'This is the header'
-    #  mail.header #=> 'This is the header'
+    #  mail = Mail::Message.new('To: mikel\r\nFrom: you')
+    #  mail.header #=> #<Mail::Header:0x13ce14 @raw_source="To: mikel\r\nFr...
     # 
-    #  mail.header 'This is another header'
-    #  mail.header #=> 'This is another header'
+    #  mail.header #=> nil
+    #  mail.header 'To: mikel\r\nFrom: you'
+    #  mail.header #=> #<Mail::Header:0x13ce14 @raw_source="To: mikel\r\nFr...
     def header(value = nil)
       value ? self.header = value : @header
     end
     
-    # Sets the body of the message object.
+    # Sets the body object of the message object.
     # 
     # Example:
     # 
     #  mail.body = 'This is the body'
-    #  mail.body #=> 'This is the body'
+    #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
     def body=(value)
       @body = Mail::Body.new(value)
     end
@@ -107,11 +123,11 @@ module Mail
     # 
     # Example:
     # 
-    #  mail.body = 'This is the body'
-    #  mail.body #=> 'This is the body'
+    #  mail = Mail::Message.new('To: mikel\r\n\r\nThis is the body')
+    #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
     # 
     #  mail.body 'This is another body'
-    #  mail.body #=> 'This is another body'
+    #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is anothe...
     def body(value = nil)
       value ? self.body = value : @body
     end
@@ -123,7 +139,7 @@ module Mail
     #  mail.to = '"Mikel Lindsaar" <mikel@me.com>'
     #  mail.to #=> '"Mikel Lindsaar" <mikel@me.com>'
     def to=(value)
-      header['to'] = value
+      header[:to] = value
     end
     
     # Returns the to field in the message header. Or, if passed
@@ -137,7 +153,7 @@ module Mail
     #  mail.to '"M L" <mikel@you.com>'
     #  mail.to #=> '"M L" <mikel@you.com>'
     def to(value = nil)
-      value ? self.to = value : header['to']
+      value ? self.to = value : header[:to]
     end
 
     # Sets the from field in the message header.
@@ -147,7 +163,7 @@ module Mail
     #  mail.from = '"Mikel Lindsaar" <mikel@me.com>'
     #  mail.from #=> '"Mikel Lindsaar" <mikel@me.com>'
     def from=(value)
-      header['from'] = value
+      header[:from] = value
     end
     
     # Returns the from field in the message header. Or, if passed
@@ -161,7 +177,7 @@ module Mail
     #  mail.from '"M L" <mikel@you.com>'
     #  mail.from #=> '"M L" <mikel@you.com>'
     def from(value = nil)
-      value ? self.from = value : header['from']
+      value ? self.from = value : header[:from]
     end
     
     # Sets the subject field in the message header.
@@ -171,7 +187,7 @@ module Mail
     #  mail.subject = 'This is the subject'
     #  mail.subject #=> 'This is the subject'
     def subject=(value)
-      header['subject'] = value
+      header[:subject] = value
     end
     
     # Returns the subject field in the message header. Or, if passed
@@ -185,7 +201,7 @@ module Mail
     #  mail.subject 'This is another subject'
     #  mail.subject #=> 'This is another subject'
     def subject(value = nil)
-      value ? self.subject = value : header['subject']
+      value ? self.subject = value : header[:subject]
     end
 
     # Allows you to add an arbitrary header
@@ -224,9 +240,16 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.to_crlf.split(/\r\n[ \t]*\r\n/m, 2)
+      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
       self.header = header_part
       self.body   = body_part
+    end
+    
+    def set_envelope_header
+      if match_data = raw_source.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
+        @raw_envelope   = match_data[1]
+        self.raw_source = match_data[2]
+      end
     end
 
   end

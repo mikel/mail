@@ -19,6 +19,9 @@ module Mail
   #  
   class Field
     
+    require File.join(File.dirname(__FILE__), '..', 'patterns')
+    include Patterns
+    
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -32,8 +35,15 @@ module Mail
     class SyntaxError < FieldError #:nodoc:
     end
     
-    require 'fields/structured_field'
-    require 'fields/unstructured_field'
+    require File.join(File.dirname(__FILE__), 'structured_field')
+    require File.join(File.dirname(__FILE__), 'unstructured_field')
+
+    # Load in all header field types
+    TypeFiles = Dir.glob(File.join(File.dirname(__FILE__), "types/*.rb"))
+    
+    TypeFiles.each do |field|
+      require field
+    end
     
     # Accepts a text string in the format of:
     # 
@@ -78,8 +88,10 @@ module Mail
     private
     
     def split(raw_field)
-      match_data = raw_field.match(/^(.+):\s(.*)$/)
+      match_data = raw_field.match(/^(#{FIELD_NAME}):\s(#{FIELD_BODY})$/)
       [match_data[1], match_data[2]]
+    rescue
+      STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
     end
     
     STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
@@ -87,22 +99,65 @@ module Mail
                             resent-to resent-cc resent-bcc resent-message-id 
                             return-path received ]
 
-    # Attempts to parse the field as a structured field if it is of the 
-    # appropriate type, if this fails, parses it as a plain field to keep
-    # the data, otherwise, if it is not a structured field, parses it as
-    # an unstructured field.... You'll understand if you read the code :)
-    # The idea is to ALWAYS parse the data and return the data, not to
-    # dump and delete on unknown headers.
     def create_field(name, value)
-      if STRUCTURED_FIELDS.include?(name.downcase)
-        begin
-          self.field = Mail::StructuredField.new(name, value)
-        rescue
-          self.field = Mail::UnstructuredField.new(name, value)
-        end
-      else
+      begin
+        self.field = new_field(name, value)
+      rescue
         self.field = Mail::UnstructuredField.new(name, value)
       end
+    end
+
+    def new_field(name, value)
+      # Could do this with constantize et al, but a simple case is less krufty
+      case name.downcase
+      when /^to$/
+        ToField.new(name,value)
+      when /^cc$/
+        CcField.new(name,value)
+      when /^bcc$/
+        BccField.new(name, value)
+      when /^message-id$/
+        MessageIdField.new(name, value)
+      when /^in-reply-to$/
+        InReplyToField.new(name, value)
+      when /^references$/
+        ReferencesField.new(name, value)
+      when /^subject$/
+        SubjectField.new(name, value)
+      when /^comments$/
+        CommentsField.new(name, value)
+      when /^keywords$/
+        KeywordsField.new(name, value)
+      when /^date$/
+        DateField.new(name, value)
+      when /^from$/
+        FromField.new(name, value)
+      when /^sender$/
+        SenderField.new(name, value)
+      when /^reply-to$/
+        ReplyToField.new(name, value)
+      when /^resent-date$/
+        ResentDateField.new(name, value)
+      when /^resent-from$/
+        ResentFromField.new(name, value)
+      when /^resent-sender$/ 
+        ResentSenderField.new(name, value)
+      when /^resent-to$/
+        ResentToField.new(name, value)
+      when /^resent-cc$/
+        ResentCcField.new(name, value)
+      when /^resent-bcc$/
+        ResentBccField.new(name, value)
+      when /^resent-msg-id$/
+        ResentMsgIdField.new(name, value)
+      when /^return-path$/
+        ReturnPathField.new(name, value)
+      when /^received$/
+        ReceivedField.new(name, value)
+      else 
+        OptionalField.new(name, value)
+      end
+      
     end
 
   end

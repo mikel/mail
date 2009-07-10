@@ -1,3 +1,4 @@
+puts "Running Specs under Ruby Version #{RUBY_VERSION}"
 require 'rubygems'
 require 'spec'
 

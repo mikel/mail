@@ -11,30 +11,34 @@ describe Mail::Field do
       doing {Mail::Field.new('To: Mikel')}.should_not raise_error
     end
     
-    it "should know which fields are structured" do
+    it "should match up fields to class names" do
       structured_fields = %w[ Date From Sender Reply-To To Cc Bcc Message-ID In-Reply-To
                               References Keywords Resent-Date Resent-From Resent-Sender
-                              Resent-To Resent-Cc Resent-Bcc Resent-Message-ID 
-                              Return-Path Received ]
+                              Resent-To Resent-Cc Resent-Bcc Resent-Msg-ID
+                              Return-Path Received Subject Comments ]
       structured_fields.each do |sf|
-        Mail::Field.new("#{sf}: Value").field.class.should == Mail::StructuredField
+        words = sf.split("-").map { |a| a.capitalize }
+        klass = "#{words.join}Field"
+        Mail::Field.new("#{sf}: Value").field.class.should == Mail.const_get(klass)
       end
     end
     
-    it "should know which fields are structured regardless of case" do
+    it "should match up fields to class names regardless of case" do
       structured_fields = %w[ dATE fROM sENDER REPLY-TO TO CC BCC MESSAGE-ID IN-REPLY-TO
                               REFERENCES KEYWORDS resent-date resent-from rESENT-sENDER
-                              rESENT-tO rESent-cc resent-bcc resENT-mESSAGE-id 
-                              rEtURN-pAtH rEcEiVeD ]
+                              rESENT-tO rESent-cc resent-bcc reSent-MSG-iD 
+                              rEtURN-pAtH rEcEiVeD Subject Comments ]
       structured_fields.each do |sf|
-        Mail::Field.new("#{sf}: Value").field.class.should == Mail::StructuredField
+        words = sf.split("-").map { |a| a.capitalize }
+        klass = "#{words.join}Field"
+        Mail::Field.new("#{sf}: Value").field.class.should == Mail.const_get(klass)
       end
     end
     
-    it "should say anything that is not a structured field is an unstructured field" do
-      unstructured_fields = %w[ Subject Comments Random X-Mail MySpecialField ]
+    it "should say anything that is not a known field is an optional field" do
+      unstructured_fields = %w[ Too Becc bccc Random X-Mail MySpecialField ]
       unstructured_fields.each do |sf|
-        Mail::Field.new("#{sf}: Value").field.class.should == Mail::UnstructuredField
+        Mail::Field.new("#{sf}: Value").field.class.should == Mail::OptionalField
       end
     end
     
@@ -45,7 +49,7 @@ describe Mail::Field do
     end
     
     it "should return an unstuctured field if the structured field parsing raises an error" do
-      Mail::StructuredField.should_receive(:new).and_raise(Mail::Field::ParseError)
+      Mail::ToField.should_receive(:new).and_raise(Mail::Field::ParseError)
       field = Mail::Field.new('To: Bob, ,,, Frank, Smith')
       field.field.class.should == Mail::UnstructuredField
       field.name.should == 'To'
@@ -60,7 +64,5 @@ describe Mail::Field do
     end
     
   end
-
-
 
 end

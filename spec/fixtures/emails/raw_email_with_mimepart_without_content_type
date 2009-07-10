@@ -1,0 +1,94 @@
+X-Gmail-Received: b2c98353cc39d93e4204831226f778c200d28109
+Delivered-To: roor32@gmail.com
+Received: by 10.64.10.4 with SMTP id 4cs594808qbj;
+        Fri, 20 Oct 2006 01:53:34 -0700 (PDT)
+Received: by 10.65.224.11 with SMTP id b11mr149813qbr;
+        Fri, 20 Oct 2006 01:53:34 -0700 (PDT)
+Return-Path: <>
+Received: from anis.telecom.uqam.ca (anis.telecom.uqam.ca [132.208.250.6])
+        by mx.google.com with ESMTP id e13si1575402qbe.2006.10.20.01.53.34;
+        Fri, 20 Oct 2006 01:53:34 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of anis.telecom.uqam.ca designates 132.208.250.6 as permitted sender)
+Received: from anis4.telecom.uqam.ca (anis4.telecom.uqam.ca [132.208.250.236])
+	by sortant.uqam.ca (8.13.6/8.12.1) with SMTP id k9K8SIwA023763
+	for <roor32@gmail.com>; Fri, 20 Oct 2006 04:28:33 -0400 (EDT)
+Received: from antivirus.uqam.ca ([127.0.0.1])
+ by anis4.telecom.uqam.ca (SAVSMTP 3.1.1.32) with SMTP id M2006102004283404041
+ for <roor32@gmail.com>; Fri, 20 Oct 2006 04:28:34 -0400
+Received: from localhost (localhost)
+	by antivirus.uqam.ca (8.13.6/8.12.1) id k9JMDbg4005560;
+	Fri, 20 Oct 2006 04:28:33 -0400 (EDT)
+Date: Fri, 20 Oct 2006 04:28:33 -0400 (EDT)
+From: Mail Delivery Subsystem <MAILER-DAEMON@antivirus.uqam.ca>
+Message-Id: <200610200828.k9JMDbg4005560@antivirus.uqam.ca>
+To: <roor32@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="k9JMDbg4005560.1161332913/antivirus.uqam.ca"
+Subject: Warning: could not send message for past 1 day
+Auto-Submitted: auto-generated (warning-timeout)
+
+This is a MIME-encapsulated message
+
+--k9JMDbg4005560.1161332913/antivirus.uqam.ca
+
+    **********************************************
+    **      THIS IS A WARNING MESSAGE ONLY      **
+    **  YOU DO NOT NEED TO RESEND YOUR MESSAGE  **
+    **********************************************
+
+The original message was received at Thu, 19 Oct 2006 01:23:47 -0400 (EDT)
+from py-out-1112.google.com [64.233.166.178]
+
+   ----- Transcript of session follows -----
+<larose.julie@courrier.uqam.ca>... Deferred
+Warning: message still undelivered after 1 day
+Will keep trying until message is 5 days old
+
+--k9JMDbg4005560.1161332913/antivirus.uqam.ca
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; antivirus.uqam.ca
+Arrival-Date: Thu, 19 Oct 2006 01:23:47 -0400 (EDT)
+
+Final-Recipient: RFC822; larose.julie@courrier.uqam.ca
+Action: delayed
+Status: 4.5.0
+Diagnostic-Code: SMTP; 
+Last-Attempt-Date: Fri, 20 Oct 2006 04:28:33 -0400 (EDT)
+Will-Retry-Until: Tue, 24 Oct 2006 01:23:47 -0400 (EDT)
+
+--k9JMDbg4005560.1161332913/antivirus.uqam.ca
+Content-Type: message/rfc822
+
+Return-Path: <roor32@gmail.com>
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.178])
+	by intrant.uqam.ca (8.13.6/8.12.2/uqam-filtres) with SMTP id k9J5Ni8o007263
+	for <larose.julie@courrier.uqam.ca>; Thu, 19 Oct 2006 01:23:47 -0400 (EDT)
+X-UQAM-Spam-Filter: Filtre-Uqam re:  abuse@uqam.ca
+Received: by py-out-1112.google.com with SMTP id t32so610221pyc
+        for <larose.julie@courrier.uqam.ca>; Wed, 18 Oct 2006 22:23:33 -0700 (PDT)
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
+        s=beta; d=gmail.com;
+        h=received:message-id:date:from:to:subject:mime-version:content-type:content-transfer-encoding:content-disposition;
+        b=Fwt0k1kaMU+1kM1iTG0q4Xf94p9alSohgM7QQN0CSjfBYUUhT+J4Y6+ZWotaaSffV3gX86RE/n97n0yQ/33EgYKIifuEpa0hi2mg3KTmcDqlCjiDfih58Z998GEFfbhu0he2jsoB+k6AgVRFPwP6LMRi6T66vr2f7IOAmX2IHiU=
+Received: by 10.65.241.20 with SMTP id t20mr15391984qbr;
+        Wed, 18 Oct 2006 15:10:03 -0700 (PDT)
+Received: by 10.64.10.4 with HTTP; Wed, 18 Oct 2006 15:10:03 -0700 (PDT)
+Message-ID: <89d7557c0610181510r6fa5ebd8n66a7deec71ade118@mail.gmail.com>
+Date: Wed, 18 Oct 2006 18:10:03 -0400
+From: "=?ISO-8859-1?Q?RogE9?=" <roor32@gmail.com>
+To: larose.julie@courrier.uqam.ca
+Subject: Est-ce toi ?
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Salut,
+je ne suis pas sur de m'adresser a la bonne personne.
+Mais si jamais tu me reconnais :p, peux-tu repondre a ce mail ?
+Merci.
+Roger
+
+--k9JMDbg4005560.1161332913/antivirus.uqam.ca--

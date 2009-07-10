@@ -1,0 +1,32 @@
+Return-Path: <xxxxxxxx@xxx.org>
+Received: from me ([unix socket])
+	 by xxxxx1.xxxx.net (Cyrus v2.2.12) with LMTPA;
+	 Sun, 18 Nov 2007 00:56:33 -0800
+Received: from smtp.xxxx.org (unknown [127.0.0.1])
+	by xxxxx1.xxxx.net (Postfix) with ESMTP id F128477EB5;
+	Sun, 18 Nov 2007 00:56:32 -0800 (PST)
+Received: from omta02sl.mx.bigpond.com (omta02sl.mx.bigpond.com [144.140.93.154])
+	by smtp.xxxx.org (Postfix) with ESMTP id 2D567ACC08;
+	Sun, 18 Nov 2007 00:56:28 -0800 (PST)
+Received: from oaamta05sl.mx.bigpond.com ([124.183.219.10])
+          by omta02sl.mx.bigpond.com with ESMTP
+          id <20071118085627.YVPI22254.omta02sl.mx.bigpond.com@oaamta05sl.mx.bigpond.com>;
+          Sun, 18 Nov 2007 08:56:27 +0000
+Received: from [10.0.0.1] (really [124.183.219.10])
+          by oaamta05sl.mx.bigpond.com with ESMTP
+          id <20071118085627.TQWF6995.oaamta05sl.mx.bigpond.com@[10.0.0.1]>;
+          Sun, 18 Nov 2007 08:56:27 +0000
+Message-ID: <473FFE27.20003@xxx.org>
+Date: Sun, 18 Nov 2007 19:56:07 +1100
+From: Testing <xxxxxxxx@xxx.org>
+User-Agent: Mozilla Thunderbird 1.0.6 (Windows/20050716)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+To: Mikel Lindsaar <mikel@xxxx.net>
+Subject: Re: Test reply email
+References: <473FF3B8.9020707@xxx.org> <348F04F142D69C21-291E56D292BC@xxxx.net>
+In-Reply-To: <348F04F142D69C21-291E56D292BC@xxxx.net>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Message body

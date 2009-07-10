@@ -1,3 +1,4 @@
+# encoding: utf-8 
 require File.dirname(__FILE__) + "/spec_helper"
 
 require 'mail'
@@ -29,6 +30,34 @@ describe "mail" do
     message = Mail::Message.new
     message['foo'] = '1234'
     message['foo'].should == '1234'
+  end
+  
+  it "should be able to parse a basic email" do
+    doing { Mail::Message.new(File.read(fixture('emails/basic_email'))) }.should_not raise_error
+  end
+
+  it "should be able to parse every email example we have without raising an exception" do
+    emails = Dir.glob(File.join(File.dirname(__FILE__), 'fixtures/emails/*'))
+    # Don't want to get noisy about any warnings
+    STDERR.stub!(:puts)
+    emails.each do |email|
+      doing { Mail::Message.new(File.read(email)) }.should_not raise_error
+    end
+  end
+
+  it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
+    STDERR.should_receive(:puts)
+    Mail::Message.new(File.read(fixture('emails/raw_email_string_in_date_field')))
+  end
+  
+  it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
+    STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
+    Mail::Message.new(File.read(fixture('emails/raw_email_incorrect_header')))
+  end
+  
+  it "should read in an email message and basically parse it" do
+    mail = Mail::Message.new(File.read(fixture('emails/basic_email')))
+    mail.to.should == "Mikel Lindsaar <raasdnil@gmail.com>"
   end
   
 end

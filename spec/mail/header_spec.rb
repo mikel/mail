@@ -25,8 +25,8 @@ describe Mail::Header do
     
   end
 
-  describe "parsing a header" do
-    
+  describe "parsing" do
+
     it "should split the header into separate fields" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header.fields.length.should == 2
@@ -43,8 +43,8 @@ describe Mail::Header do
     #  characters that have values between 33 and 126, inclusive), except
     #  colon.
     it "should accept any valid header field name" do
-      test_name = ascii.reject { |c| c == ':' }
-      doing {Mail::Header.new("#{test_name}: This is a crazy name")}.should_not raise_error
+      test_name = ascii.reject { |c| c == ':' }.join
+      doing { Mail::Header.new("#{test_name}: This is a crazy name") }.should_not raise_error
     end
 
     # A field body may be composed of any US-ASCII characters,
