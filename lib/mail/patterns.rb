@@ -18,5 +18,18 @@ module Mail
     WSP        = /[#{white_space}]/
     FWS        = /#{CRLF}#{WSP}+/
     
+    module ClassMethods
+      
+    end
+  
+    module InstanceMethods
+      
+    end
+    
+    def self.included(receiver)
+      receiver.extend         ClassMethods
+      receiver.send :include, InstanceMethods
+    end
+    
   end
 end

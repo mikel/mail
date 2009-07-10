@@ -12,7 +12,12 @@ brainer.
 It is also designed form the ground up to work with Ruby 1.9.  This is because
 Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
 these features have been taken full advantage of in this library allowing
-Mail to handle a lot more messages than TMail ever could or will.
+Mail to handle a lot more messages more cleanly than TMail.  Mail will not
+work on any Ruby version prior to 1.9.1
+
+Finally, Mail has been designed with a very simple object oriented system
+that really opens up the email messages you are parsing, if you know what
+you are doing, you can fiddle with every last bit of your email directly.
 
 All major mail functions should be able to happen from the Mail:: module.
 

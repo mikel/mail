@@ -18,9 +18,9 @@ module Mail
   class Header
     require File.join(File.dirname(__FILE__), 'patterns')
     include Patterns
-    require File.join(File.dirname(__FILE__), 'fields/field')
     require File.join(File.dirname(__FILE__), 'utilities')
     include Utilities
+    require File.join(File.dirname(__FILE__), 'fields/field')
     
     # Creates a new header object.
     # 

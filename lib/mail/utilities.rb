@@ -1,14 +1,16 @@
-module Utilities
-  module ClassMethods
+module Mail
+  module Utilities
+    module ClassMethods
     
-  end
+    end
   
-  module InstanceMethods
+    module InstanceMethods
 
-  end
+    end
   
-  def self.included(receiver)
-    receiver.extend         ClassMethods
-    receiver.send :include, InstanceMethods
+    def self.included(receiver)
+      receiver.extend         ClassMethods
+      receiver.send :include, InstanceMethods
+    end
   end
 end

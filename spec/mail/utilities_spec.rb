@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 require 'utilities'
-include Utilities
+include Mail::Utilities
 
 describe "Utilities Module" do
 
