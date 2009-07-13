@@ -1,4 +1,7 @@
 puts "Running Specs under Ruby Version #{RUBY_VERSION}"
+
+MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
+
 require 'rubygems'
 require 'spec'
 require 'treetop'

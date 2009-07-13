@@ -6,6 +6,10 @@ module Mail
   
   dir_name = File.join(File.dirname(__FILE__), 'mail')
 
+  Treetop.load(File.join(dir_name, 'parsers', 'common'))
+  Treetop.load(File.join(dir_name, 'parsers', 'address_list'))
+  Treetop.load(File.join(dir_name, 'parsers', 'mailbox_list'))
+
   require File.join(dir_name, 'core_extensions')
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')

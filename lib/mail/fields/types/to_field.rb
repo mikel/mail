@@ -7,11 +7,7 @@ module Mail
     include Mail::Patterns
     
     def addresses
-      get_addresses(value)
-    end
-    
-    def get_addresses
-      
+      AddressListParser.new.parse(value).addresses
     end
     
   end

@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../../../spec_helper'
+require File.dirname(__FILE__) + '/../../spec_helper'
 
-Treetop.load(File.dirname(__FILE__) + '/../../../../lib/mail/fields/parsers/common')
-Treetop.load(File.dirname(__FILE__) + '/../../../../lib/mail/fields/parsers/address_list')
+Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/common'))
+Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/address_list'))
 
 describe 'Addres List parser' do
   it "should parse an address list" do
