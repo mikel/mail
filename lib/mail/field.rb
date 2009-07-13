@@ -1,7 +1,7 @@
 module Mail
   # Provides a single class to call to create a new structured or unstructured
-  # field.  Works out per RFC what type of field it is being given and returns
-  # the correct type of class back on new.
+  # field.  Works out per RFC what field of field it is being given and returns
+  # the correct field of class back on new.
   # 
   # ===Per RFC 2822
   #  
@@ -72,6 +72,10 @@ module Mail
     
     def to_s
       field.to_s
+    end
+    
+    def method_missing(name, *args, &block)
+      field.send(name)
     end
     
     private

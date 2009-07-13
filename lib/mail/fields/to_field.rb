@@ -6,8 +6,15 @@ module Mail
     
     include Mail::Patterns
     
+    
     def addresses
-      AddressListParser.new.parse(value).addresses
+      result = AddressListParser.new.parse(value)
+      
+      if result
+        result.addresses
+      else
+        raise Field::ParseError, "Can not understand <#{value}>"
+      end
     end
     
   end

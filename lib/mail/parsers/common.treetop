@@ -1,6 +1,8 @@
 module Mail
   grammar Common
   
+    include Obsolete
+  
     rule ALPHA
       [a-zA-Z]
     end
@@ -8,9 +10,17 @@ module Mail
     rule DIGIT
       [0-9]
     end
-  
+    
     rule DQUOTE
       '"'
+    end
+    
+    rule LF
+      "\n"
+    end
+    
+    rule CR
+      "\r"
     end
 
     rule CRLF
@@ -21,9 +31,8 @@ module Mail
       [\x09\x20]
     end
   
-    rule FWS
-      (WSP* CRLF)? WSP+     # Folding white space
-      # / obs-FWS
+    rule FWS    # Folding white space
+      (WSP* CRLF)? WSP+ / obs_FWS
     end
 
     rule CFWS
@@ -41,8 +50,8 @@ module Mail
     rule text
       [\x01-\x09]     /       # Characters excluding CR and LF
       [\x0b-\x0c]     /
-      [\x0e-\x7e]
-      # / obs-text
+      [\x0e-\x7e]     / 
+      obs_text
     end
   
     rule specials
@@ -56,7 +65,7 @@ module Mail
     end
   
     rule quoted_pair
-      "\\" text # / obs-qp
+      "\\" text / obs_qp
     end
   
     rule qtext
@@ -112,15 +121,31 @@ module Mail
     end
   
     rule dot_atom_text
-      atext+ ("." atext+ )*
+      domain_text ("." domain_text)*
     end
-  
+    
+    rule domain_text
+      (DQUOTE (FWS? quoted_domain)+ FWS? DQUOTE) / atext+
+    end
+    
+    rule quoted_domain
+      qdcontent / "\\" text
+    end
+    
+    rule qdcontent
+      NO_WS_CTL /     # Non white space controls
+      [\x21] /        # The rest of the US-ASCII
+      [\x23-\x45] /   # characters not including "\"
+      [\x47-\x5b] /   # or the "." or the 
+      [\x5d-\x7e]     # double quote character
+    end
+    
     rule word
       atom / quoted_string
     end
   
     rule phrase 
-      word+ # / obs-phrase
+      word+ / obs_phrase
     end
 
     rule domain_literal
@@ -138,17 +163,21 @@ module Mail
     end
 
     rule angle_addr
-      CFWS? "<" addr_spec ">" CFWS? # / obs-angle-addr
+      CFWS? "<" addr_spec ">" CFWS? / obs_angle_addr
     end
 
     rule addr_spec
-      local_name:local_part "@" domain_name:domain {
+      local_name:local_part "@"? domain_name:domain? {
         def local_name_value
           local_name.text_value.strip
         end
 
         def domain_name_value
-          domain_name.text_value.strip
+          if domain_name
+            domain_name.text_value.strip
+          else
+            ''
+          end
         end
       }
     end
@@ -162,11 +191,11 @@ module Mail
     end
   
     rule local_part
-      dot_atom / quoted_string  # / obs_local_part
+      dot_atom / quoted_string  / obs_local_part
     end
   
     rule domain
-      dot_atom / domain_literal # / obs_domain
+      dot_atom / domain_literal / obs_domain
     end
   
     rule group
@@ -177,12 +206,16 @@ module Mail
       phrase
     end
   
+    rule mailbox_list
+      (mailbox ("," mailbox)*) / obs_mbox_list
+    end
+  
     rule mailbox
-      name_addr / addr_spec {
-        def format
-          "#{name_addr.text_value} <#{addr_spec.text_value}>"
-        end
-      }
+      name_addr / addr_spec
+    end
+
+    rule address_list
+      (first_address:address other_addresses:("," FWS* address_value:address)*) 
     end
 
     rule address
