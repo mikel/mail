@@ -4,5 +4,15 @@
 module Mail
   class ToField < StructuredField
     
+    include Mail::Patterns
+    
+    def addresses
+      get_addresses(value)
+    end
+    
+    def get_addresses
+      
+    end
+    
   end
 end

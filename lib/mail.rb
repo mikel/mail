@@ -2,10 +2,27 @@ module Mail
   
   raise "Requires Ruby 1.9.1 or higher, try TMail" unless RUBY_VERSION >= '1.9.1'
   
-
-  require File.join(File.dirname(__FILE__), 'mail/message')
-  require File.join(File.dirname(__FILE__), 'mail/core_extensions')
+  require 'treetop'
   
+  dir_name = File.join(File.dirname(__FILE__), 'mail')
+
+  require File.join(dir_name, 'core_extensions')
+  require File.join(dir_name, 'patterns')
+  require File.join(dir_name, 'utilities')
+
+  require File.join(dir_name, 'message')
+  require File.join(dir_name, 'header')
+  require File.join(dir_name, 'body')
+  require File.join(dir_name, 'field')
+  require File.join(dir_name, 'fields', 'structured_field')
+  require File.join(dir_name, 'fields', 'unstructured_field')
+
+  # Load in all header field types
+  field_types = Dir.glob(File.join(dir_name, 'fields', 'types', '*.rb'))
+  field_types.each do |field|
+    require field
+  end
+
   def Mail.message(*args, &block)
     if block_given?
       Mail::Message.new(args, &block)

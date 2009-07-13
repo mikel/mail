@@ -87,9 +87,15 @@ describe Mail::Message do
   end
 
   describe "stripping of the envelope string" do
-    it "should strip off the envelope from if present" do
+    it "should strip off the envelope from field if present" do
       message = Mail::Message.new(File.read(fixture('emails/raw_email')))
       message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
+      message.from.should == "Jamis Buck <jamis@37signals.com>"
+    end
+
+    it "should not cause any problems if there is no envelope from present" do
+      message = Mail::Message.new(File.read(fixture('emails/basic_email')))
+      message.from.should == "Mikel Lindsaar <test@lindsaar.net>"
     end
   end
   

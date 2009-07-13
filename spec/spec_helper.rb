@@ -1,6 +1,7 @@
 puts "Running Specs under Ruby Version #{RUBY_VERSION}"
 require 'rubygems'
 require 'spec'
+require 'treetop'
 
 $:.unshift "#{File.dirname(__FILE__)}/mail"
 $:.unshift "#{File.dirname(__FILE__)}/../lib"

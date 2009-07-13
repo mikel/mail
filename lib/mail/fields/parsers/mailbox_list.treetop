@@ -1,0 +1,11 @@
+module Mail
+  grammar MailboxList
+
+    include Common
+
+    rule mailbox_list
+      (mailbox ("," mailbox)*) #/ obs-mbox-list
+    end
+
+  end
+end

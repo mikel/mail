@@ -19,7 +19,6 @@ module Mail
   #  
   class Field
     
-    require File.join(File.dirname(__FILE__), '..', 'patterns')
     include Patterns
     
     # Generic Field Exception
@@ -33,16 +32,6 @@ module Mail
 
     # Raised when attempting to set a structured field's contents to an invalid syntax
     class SyntaxError < FieldError #:nodoc:
-    end
-    
-    require File.join(File.dirname(__FILE__), 'structured_field')
-    require File.join(File.dirname(__FILE__), 'unstructured_field')
-
-    # Load in all header field types
-    TypeFiles = Dir.glob(File.join(File.dirname(__FILE__), "types/*.rb"))
-    
-    TypeFiles.each do |field|
-      require field
     end
     
     # Accepts a text string in the format of:
@@ -108,7 +97,8 @@ module Mail
     end
 
     def new_field(name, value)
-      # Could do this with constantize et al, but a simple case is less krufty
+      # Could do this with constantize and make it as DRY as, but a simple case is,
+      # well, simpler... 
       case name.downcase
       when /^to$/
         ToField.new(name,value)

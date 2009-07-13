@@ -16,11 +16,8 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
-    require File.join(File.dirname(__FILE__), 'patterns')
     include Patterns
-    require File.join(File.dirname(__FILE__), 'utilities')
     include Utilities
-    require File.join(File.dirname(__FILE__), 'fields/field')
     
     # Creates a new header object.
     # 

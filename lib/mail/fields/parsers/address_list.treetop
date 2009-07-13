@@ -1,0 +1,51 @@
+module Mail
+  grammar AddressList
+
+    include Common
+
+#    rule address_list
+#      address ("," address)* #/ obs-addr-list
+#    end
+    
+    rule address_list
+      first_address:address other_addresses:("," FWS* address_value:address)* {
+        def address_nodes
+          additional = other_addresses.elements.map { |elem|
+            elem.address_value
+          }
+        
+          [first_address] + additional
+        end
+        
+        def addresses
+          address_nodes.map { |elem| elem.text_value }
+        end
+
+        def format
+          address_nodes.map { |elem| elem.text_value }
+        end
+        
+        def display_names
+          address_nodes.map { |elem|
+            elem.display_name_value
+          }
+        end
+        
+        def local_names
+          address_nodes.map { |elem|
+            elem.angle_addr.addr_spec.local_name_value
+          }
+        end
+        
+        def domain_names
+          address_nodes.map { |elem|
+            elem.angle_addr.addr_spec.domain_name_value
+          }
+        end
+        
+      }
+      
+    end
+    
+  end
+end

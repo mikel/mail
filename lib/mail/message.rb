@@ -43,12 +43,8 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
     
-    require File.join(File.dirname(__FILE__), 'patterns')
     include Patterns
     
-    require File.join(File.dirname(__FILE__), 'header')
-    require File.join(File.dirname(__FILE__), 'body')
-
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
       self.raw_source = args.flatten[0]
