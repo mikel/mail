@@ -1,12 +1,13 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe Mail::ToField do
+
+describe Mail::CcField do
   it "should initialize" do
-    doing { Mail::ToField.new("To", "Mikel") }.should_not raise_error
+    doing { Mail::CcField.new("Cc", "Mikel") }.should_not raise_error
   end
   
   it "should mix in the AddressField module" do
-    Mail::ToField.included_modules.should include(Mail::AddressField::InstanceMethods) 
+    Mail::CcField.included_modules.should include(Mail::AddressField::InstanceMethods) 
   end
   
   # Actual testing of AddressField methods occurs in the address field spec file

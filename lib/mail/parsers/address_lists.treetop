@@ -1,0 +1,15 @@
+module Mail
+  grammar AddressLists
+
+    include Common
+
+    rule primary
+      address_list {
+        def addresses
+          [first_addr] + other_addr.elements.map { |o| o.addr_value }
+        end
+      } / obs_addr_list
+    end
+    
+  end
+end

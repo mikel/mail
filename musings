@@ -1,0 +1,12 @@
+
+To field gets a string.
+To field parses an address list, gets the number of groups and addresses
+For each group, create a Group parsing the string
+  Group then creates an address for each address
+For each address, create an Address parsing the string
+
+
+so... need an address_list parser that splits up a list into an array of address nodes and an array of group nodes
+
+
+Need to make an AddressLists class that takes a string, and returns the above output (array of addresses and hash of groups)
