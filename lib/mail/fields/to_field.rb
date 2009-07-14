@@ -4,18 +4,7 @@
 module Mail
   class ToField < StructuredField
     
-    include Mail::Patterns
-    
-    
-    def addresses
-      result = AddressListParser.new.parse(value)
-      
-      if result
-        result.addresses
-      else
-        raise Field::ParseError, "Can not understand <#{value}>"
-      end
-    end
+    include Mail::AddressField
     
   end
 end

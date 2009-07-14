@@ -5,6 +5,8 @@
 #    content of the message may not be directed at them.
 module Mail
   class CcField < StructuredField
+
+    include Mail::AddressField
     
   end
 end

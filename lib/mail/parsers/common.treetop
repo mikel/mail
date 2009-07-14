@@ -167,31 +167,15 @@ module Mail
     end
 
     rule addr_spec
-      local_name:local_part "@"? domain_name:domain? {
-        def local_name_value
-          local_name.text_value.strip
-        end
-
-        def domain_name_value
-          if domain_name
-            domain_name.text_value.strip
-          else
-            ''
-          end
-        end
-      }
+      local_part "@" domain
     end
 
     rule name_addr
-      name:display_name? angle_addr {
-        def display_name_value
-          name.text_value.strip
-        end
-      }
+      (display_name angle_addr) / angle_addr
     end
   
     rule local_part
-      dot_atom / quoted_string  / obs_local_part
+      dot_atom / quoted_string / obs_local_part
     end
   
     rule domain
@@ -199,28 +183,36 @@ module Mail
     end
   
     rule group
-      display_name ":" (mailbox_list / CFWS)? ";" (CFWS)
+      group_name:display_name ":" group_list:(mailbox_list_group / CFWS)? ";" CFWS?
     end
 
     rule display_name
       phrase
     end
+    
+    rule mailbox_list_group
+      mailbox_list {
+        def addresses
+          [first_addr] + other_addr.elements.map { |o| o.addr_value }
+        end
+      }
+    end
   
     rule mailbox_list
-      (mailbox ("," mailbox)*) / obs_mbox_list
+      (first_addr:mailbox other_addr:("," addr_value:mailbox)*) / obs_mbox_list
     end
   
     rule mailbox
       name_addr / addr_spec
     end
 
-    rule address_list
-      (first_address:address other_addresses:("," FWS* address_value:address)*) 
-    end
-
     rule address
-      mailbox / group
+      group / mailbox
     end
   
+    rule address_list
+      first_addr:address other_addr:("," FWS* addr_value:address)*
+    end
+    
   end
 end

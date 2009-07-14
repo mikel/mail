@@ -20,6 +20,8 @@
 #    Considerations" section of this document for a discussion of each.
 module Mail
   class BccField < StructuredField
+
+    include Mail::AddressField
     
   end
 end
