@@ -1,8 +1,11 @@
 module Mail
   class Address
+    
+    include Mail::Utilities
+    
     def initialize(value)
       if value.class == String
-        self.tree = Mail::AddressListsParser.new.parse(value).first_addr
+        self.tree = Mail::AddressList.new(value).address_nodes.first
       else
         self.tree = value
       end
@@ -18,14 +21,24 @@ module Mail
     
     def format
       if display_name
-        "#{display_name} <#{address}>"
+        "#{quote_phrase(display_name)} <#{address}>#{format_comments}"
       else
-        address
+        "#{address}#{format_comments}"
+      end
+    end
+    
+    def format_comments
+      if comments
+        " (#{comments.map {|c| escape_paren(c) }.join(' ').squeeze(" ")})"
+      else
+        nil
       end
     end
 
     def local
-      if tree.respond_to?(:angle_addr)
+      if tree.respond_to?(:local_dot_atom_text)
+        tree.local_dot_atom_text.text_value.strip
+      elsif tree.respond_to?(:angle_addr)
         tree.angle_addr.addr_spec.local_part.text_value.strip
       else
         tree.local_part.text_value.strip
@@ -34,23 +47,51 @@ module Mail
     
     def domain
       if tree.respond_to?(:angle_addr)
-        tree.angle_addr.addr_spec.domain.text_value.strip
+        domain_text = tree.angle_addr.addr_spec.domain.text_value.strip
+        strip_comments(domain_text)
+      elsif tree.respond_to?(:domain)
+        domain_text = tree.domain.text_value.strip
+        strip_comments(domain_text)
       else
-        tree.domain.text_value.strip
+        nil
       end
+    end
+
+    def strip_comments(value)
+      unless comments.blank?
+        comments.each { |comment| value.gsub!("(#{comment})", '') }
+      end
+      value.strip
     end
     
     def address
-      "#{local}@#{domain}"
+      domain ? "#{local}@#{domain}" : local
     end
     
     def comments
-      
+      if get_comments.empty?
+        nil
+      else
+        get_comments.map { |c| c.squeeze(" ") }
+      end
+    end
+    
+    def get_comments
+      if tree.respond_to?(:comments)
+        @comments ||= tree.comments.map { |c| strip_parens(c.text_value) } 
+      else
+        @comments = []
+      end
+    end
+    
+    def strip_parens(text)
+      text.gsub(/^\(/, '').gsub(/\)$/, '')
     end
     
     def display_name
       if tree.respond_to?(:display_name)
-        tree.display_name.text_value.strip
+        name = unquote(tree.display_name.text_value.strip)
+        strip_comments(name)
       else
         nil
       end

@@ -1,7 +1,7 @@
 module Mail
   grammar AddressLists
 
-    include Common
+    include RFC2822
 
     rule primary
       address_list {

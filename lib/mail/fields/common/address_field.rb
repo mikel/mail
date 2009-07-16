@@ -37,8 +37,6 @@ module Mail
         end
       end
 
-      
-
     end
     
     def self.included(receiver)

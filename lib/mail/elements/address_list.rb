@@ -1,7 +1,12 @@
 module Mail
   class AddressList
     def initialize(string)
-      @address_nodes = Mail::AddressListsParser.new.parse(string).addresses
+      parser = Mail::AddressListsParser.new
+      if tree = parser.parse(string)
+        @address_nodes = tree.addresses
+      else
+        raise Mail::Field::ParseError, "Can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+      end
     end
     
     def address_nodes

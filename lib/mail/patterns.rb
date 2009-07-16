@@ -6,12 +6,22 @@ module Mail
     field_name  = %Q|\x21-\x39\x3b-\x7e|
     field_body  = text
     
+    aspecial     = %Q|()<>[]:;.\\,"|
+    tspecial     = %Q|()<>[];:\\,"/?=|
+    lwsp         = %Q| \t\r\n|
+    control      = %Q|\x00-\x1f\x7f-\xff|
+    
     TEXT       = /[#{text}]/ # + obs-text
     FIELD_NAME = /[#{field_name}]+/
     FIELD_BODY = /[#{field_body}]+/
     CRLF       = /\r\n/
     WSP        = /[#{white_space}]/
     FWS        = /#{CRLF}#{WSP}+/
+
+    CONTROL_CHAR  = /[#{control}]/n
+    ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{lwsp}]/n
+    PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
+    TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{lwsp}]/n
     
     module ClassMethods
       

@@ -10,6 +10,12 @@ $:.unshift "#{File.dirname(__FILE__)}/mail"
 $:.unshift "#{File.dirname(__FILE__)}/../lib"
 $:.unshift "#{File.dirname(__FILE__)}/../lib/mail"
 
+require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
+
+Spec::Runner.configure do |config|  
+  config.include(CustomMatchers)  
+end
+
 def fixture(name)
   File.join(File.dirname(__FILE__), 'fixtures', name)
 end

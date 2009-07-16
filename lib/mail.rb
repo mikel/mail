@@ -17,10 +17,9 @@ module Mail
   require File.join(dir_name, 'fields', 'structured_field')
   require File.join(dir_name, 'fields', 'unstructured_field')
 
-  Treetop.load(File.join(dir_name, 'parsers', 'obsolete'))
-  Treetop.load(File.join(dir_name, 'parsers', 'common'))
+  Treetop.load(File.join(dir_name, 'parsers', 'rfc2822_obsolete'))
+  Treetop.load(File.join(dir_name, 'parsers', 'rfc2822'))
   Treetop.load(File.join(dir_name, 'parsers', 'address_lists'))
-  Treetop.load(File.join(dir_name, 'parsers', 'mailbox_list'))
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))

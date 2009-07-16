@@ -6,7 +6,6 @@ describe Mail::BccField do
     doing { Mail::BccField.new("Bcc", "Mikel") }.should_not raise_error
   end
   
-  
   it "should mix in the AddressField module" do
     Mail::BccField.included_modules.should include(Mail::AddressField::InstanceMethods) 
   end
