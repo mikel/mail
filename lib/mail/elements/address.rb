@@ -40,6 +40,8 @@ module Mail
         tree.local_dot_atom_text.text_value.strip
       elsif tree.respond_to?(:angle_addr)
         tree.angle_addr.addr_spec.local_part.text_value.strip
+      elsif tree.respond_to?(:addr_spec)
+        tree.addr_spec.local_part.text_value.strip
       else
         tree.local_part.text_value.strip
       end

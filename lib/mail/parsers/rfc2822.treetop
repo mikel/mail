@@ -201,7 +201,7 @@ module Mail
     end
     
     rule name_addr
-      display_name angle_addr # / angle_addr
+      display_name angle_addr / angle_addr
     end
     
     rule mailbox_list
