@@ -1,13 +1,14 @@
 module Mail
   module Utilities
     
-    include Patterns
-    
     module ClassMethods
     
     end
   
     module InstanceMethods
+    
+      include Patterns
+      
       # Returns true if the string supplied is free from characters not allowed as an ATOM
       def atom_safe?( str )
         not ATOM_UNSAFE === str

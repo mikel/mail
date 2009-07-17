@@ -53,7 +53,7 @@ module Mail
     end
 
     rule CFWS
-      (FWS* comment)* FWS*
+      (FWS* comment)* FWS?
     end
 
     rule ctext
@@ -98,11 +98,11 @@ module Mail
     end
     
     rule dot_atom_text
-      domain_text ("." domain_text)*
+      (domain_text "."?)+
     end
     
     rule local_dot_atom_text
-      "."* domain_text ("."* domain_text)*
+      ("."* domain_text)+
     end
     
     rule domain_text
@@ -232,7 +232,7 @@ module Mail
 
       } /
       mailbox {
-  
+
       def dig_comments(comments, elements)
         elements.each { |elem|
           if elem.respond_to?(:comment)
@@ -241,7 +241,7 @@ module Mail
           dig_comments(comments, elem.elements) if elem.elements
          }
       end
-  
+
       def comments
         comments = []
         dig_comments(comments, elements)
