@@ -3,8 +3,11 @@ module Mail
     
     include Mail::Utilities
     
-    def initialize(value)
-      if value.class == String
+    def initialize(value = nil)
+      case 
+      when nil
+        return
+      when value.class == String
         self.tree = Mail::AddressList.new(value).address_nodes.first
       else
         self.tree = value
@@ -17,6 +20,10 @@ module Mail
     
     def tree
       @tree
+    end
+    
+    def raw
+      tree.text_value
     end
     
     def format
@@ -61,6 +68,8 @@ module Mail
         @domain_text ||= tree.angle_addr.addr_spec.domain.text_value.strip
       elsif tree.respond_to?(:domain)
         @domain_text ||= tree.domain.text_value.strip
+      elsif tree.respond_to?(:addr_spec)
+        tree.addr_spec.domain.text_value.strip
       else
         nil
       end
@@ -90,6 +99,10 @@ module Mail
       domain ? "#{local}@#{domain}" : local
     end
     
+    def address=(value)
+      self.tree = Mail::AddressList.new(value).address_nodes.first
+    end
+    
     def comments
       if get_comments.empty?
         nil
@@ -108,6 +121,10 @@ module Mail
     
     def display_name
       @display_name ||= get_display_name
+    end
+    
+    def display_name=(value)
+      @display_name = value
     end
     
     def get_display_name
@@ -132,7 +149,7 @@ module Mail
     end
     
     def name
-      @name ||= get_name
+      get_name
     end
     
     def get_name
@@ -154,6 +171,10 @@ module Mail
     
     def to_s
       format
+    end
+    
+    def inspect
+      "#<#{self.class}:#{self.object_id} Address: |#{to_s}| >"
     end
     
   end

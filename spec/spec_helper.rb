@@ -1,6 +1,8 @@
-puts "Running Specs under Ruby Version #{RUBY_VERSION}"
+unless defined?(MAIL_ROOT)
+  STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
 
-MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
+  MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
+end
 
 require 'rubygems'
 require 'spec'

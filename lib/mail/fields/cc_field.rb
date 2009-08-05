@@ -5,8 +5,14 @@
 #    content of the message may not be directed at them.
 module Mail
   class CcField < StructuredField
-
+    
     include Mail::AddressField
+    
+    FIELD_NAME = 'cc'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
     
   end
 end

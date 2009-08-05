@@ -93,7 +93,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      field = fields.select { |f| f.name.downcase.to_sym == name.downcase.to_sym }
+      field = fields.select { |f| match_to_s(f.name, name.to_s) }
       case
       when field.length > 1
         field.map { |f| f.value }
@@ -118,13 +118,14 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
-      selected = fields.select { |f| f.name == name }
+      selected = fields.select { |f| f.name.downcase == name.downcase }
       case
       # User wants to delete the field
       when !selected.blank? && value == nil 
         fields.delete_if { |f| selected.include?(f) }
 
       # User wants to change the field
+
       when !selected.blank? && LIMITED_FIELDS.include?(name.downcase) 
         selected.first.value = value
 
@@ -136,9 +137,7 @@ module Mail
     
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject ]
-    
-    
-    
+
     private
 
     def raw_source=(val)

@@ -20,8 +20,14 @@
 #    Considerations" section of this document for a discussion of each.
 module Mail
   class BccField < StructuredField
-
+    
     include Mail::AddressField
+    
+    FIELD_NAME = 'bcc'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
     
   end
 end

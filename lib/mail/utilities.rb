@@ -46,13 +46,13 @@ module Mail
           str
         end
       end
-
+      
       # Unwraps supplied string from inside double quotes
       # Returns unquoted string
       def unquote( str )
         str =~ /^"(.*?)"$/ ? $1 : str
       end
-
+      
       # Wraps a string in parenthesis 
       def paren( str )
         unless str =~ /^\(.*?\)$/
@@ -66,14 +66,21 @@ module Mail
       def unparen( str )
         str =~ /^\((.*?)\)$/ ? $1 : str
       end
-
-      # Escapes any parenthesis in a string that are unescaped
+      
+      # Escapes any parenthesis in a string that are unescaped this uses
+      # a Ruby 1.9.1 regexp feature of negative look behind
       def escape_paren( str )
-        str.gsub(/[\(\)]/n) {|s| '\\' + s }
+        re = /(?<!\\)([\(\)])/          # Only match unescaped parens
+        str.gsub(re) { |s| '\\' + s }
+      end
+      
+      # Matches two objects with their to_s values case insensitively
+      def match_to_s( obj1, obj2 )
+        obj1.to_s.downcase == obj2.to_s.downcase
       end
       
     end
-  
+    
     def self.included(receiver)
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods

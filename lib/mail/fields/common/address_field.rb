@@ -8,7 +8,7 @@ module Mail
     module InstanceMethods
       
       def tree
-        @tree ||= AddressList.new(value) 
+        @tree ||= AddressList.new(value)
       end
       
       def addresses
@@ -35,6 +35,10 @@ module Mail
         group_addresses.map do |address_tree|
           Mail::Address.new(address_tree)
         end
+      end
+    
+      def strip_field(field_name, string)
+        string.to_s.gsub(/#{field_name}:\s+/i, '')
       end
 
     end

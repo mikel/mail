@@ -18,13 +18,13 @@ module Mail
   #     bodies is given along with their syntax.
   class StructuredField
     
-    def initialize(name, value = '')
-      self.name = name
-      self.value = value
+    def initialize(*args)
+      self.name = args.first
+      self.value = args.last
     end
     
     def name=(value)
-      @name = value
+      @name = value.split("-").map { |v| v.capitalize }.join("-")
     end
     
     def name

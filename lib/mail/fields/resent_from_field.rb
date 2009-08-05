@@ -3,5 +3,13 @@
 module Mail
   class ResentFromField < StructuredField
     
+    include Mail::AddressField
+    
+    FIELD_NAME = 'resent-from'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

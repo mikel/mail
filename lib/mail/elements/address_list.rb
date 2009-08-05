@@ -9,14 +9,14 @@ module Mail
       end
     end
     
-    def address_nodes
-      @address_nodes
-    end
-    
     def addresses
       @addresses ||= get_addresses.map do |address_tree|
         Mail::Address.new(address_tree)
       end
+    end
+    
+    def address_nodes
+      @address_nodes
     end
     
     def get_addresses
