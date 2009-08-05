@@ -124,6 +124,10 @@ module Mail
     rule word
       atom / quoted_string
     end
+    
+    rule phrase_list
+      first_phrase:phrase other_phrases:("," FWS* phrase_value:phrase)*
+    end
   
     rule phrase
       word+ / obs_phrase

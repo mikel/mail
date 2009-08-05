@@ -3,7 +3,7 @@ module Mail
 
     include RFC2822
 
-    rule primary
+    rule primary_address
       address_list {
         def addresses
           [first_addr] + other_addr.elements.map { |o| o.addr_value }

@@ -28,17 +28,18 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2822_obsolete'))
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2822'))
   Treetop.load(File.join(dir_name, 'parsers', 'address_lists'))
-
-  # Load in all header fields
-  fields = Dir.glob(File.join(dir_name, 'fields', '*.rb'))
-  fields.each do |field|
-    require field
-  end
+  Treetop.load(File.join(dir_name, 'parsers', 'phrase_lists'))
 
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
   elems.each do |elem|
     require elem
+  end
+
+  # Load in all header fields
+  fields = Dir.glob(File.join(dir_name, 'fields', '*.rb'))
+  fields.each do |field|
+    require field
   end
 
   def Mail.message(*args, &block)
