@@ -1,19 +1,39 @@
+require 'rake'
+require 'rake/rdoctask'
+require 'rake/testtask'
 require 'rubygems'
-require 'rspec'
+require 'spec/rake/spectask'
 require 'cucumber/rake/task'
- 
+
+task :default => :spec
+
 Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = "--format pretty"
+  t.cucumber_opts = "spec/features --format pretty"
 end
 
-multiruby_path = `which multiruby`.chomp
-if multiruby_path.length > 0 && Spec::Rake::SpecTask.instance_methods.include?("ruby_cmd")
-  namespace :spec do
-      desc "Run all specs with multiruby and ActiveSupport"
-      Spec::Rake::SpecTask.new(:multi) do |t|
-        t.spec_opts = ['--options', "spec/spec.opts"]
-        t.spec_files = FileList['spec/**/*_spec.rb']
-        t.ruby_cmd = multiruby_path
-       end
-   end
+Spec::Rake::SpecTask.new(:rcov) do |t|
+  gem 'relevance-rcov', '>= 0.8.4.1'
+  t.spec_files = FileList['**/test/**/tc_*.rb', '**/spec/**/*_spec.rb']
+  t.rcov = true
+  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
 end
+
+Spec::Rake::SpecTask.new(:spec) do |t|
+  t.spec_files = FileList['**/spec/**/*_spec.rb']
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'test'
+  t.pattern = '**/test/**/tc_*.rb'
+  t.verbose = true
+  t.warning = false
+end
+
+Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'Mail'
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
