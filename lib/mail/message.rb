@@ -240,6 +240,7 @@ module Mail
     #  mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
     #  mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
     def method_missing(name, *args, &block)
+      #:nodoc:
       # Only take the structured fields, as we could take _anything_ really
       # as it could become an optional field... "but therin lies the dark side"
       field_name = name.to_s.gsub('_', '-')
@@ -254,6 +255,7 @@ module Mail
       else
         super # otherwise pass it on 
       end 
+      #:startdoc:
     end 
 
     # Allows you to add an arbitrary header

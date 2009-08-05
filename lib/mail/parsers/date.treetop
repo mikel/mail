@@ -1,0 +1,10 @@
+module Mail
+  grammar Date
+
+    include RFC2822
+
+    rule primary
+    end
+    
+  end
+end

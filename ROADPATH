@@ -1,0 +1,50 @@
+=Mail Development Road Path
+-------------------------------------------------------------
+
+==Basic Email Handling
+
+* Everything so far [DONE - ML]
+
+* Address parsing working with all TMail tests passing [DONE - ML]
+
+* All address fields handling addresses correctly [DONE - ML]
+
+* Mail able to instantiate on any known header type, use method missing [DONE - ML]
+
+* Keywords and comments fields working (low hanging fruit)
+
+* Date parsing working
+
+* Date fields handling dates correctly
+
+* Trace fields decided on method to handle
+
+* Trace fields parsing correctly
+
+* All trace field functionality working
+
+* All TMail tests relating to RFC2822 passing
+
+==Multipart Email Handling
+
+ (need to break down into smaller steps when we get here)
+
+* Initial stages of RFC 2045 implemented (content-type and 2046, 2047)
+
+* Multipart/Report parsing done
+
+* Multipart/Report reporting done
+
+* Implement true "multicultralism" into Mail, get it handling the major types of incoming encoding, with view to handle any incoming encoding (make this easy to extend)
+
+* Implement all helper methods on adding and deleting parts and attachments
+
+==Basic Email Sending & Receiving
+
+* Wrap up Net/SMTP
+
+* Wrap up Net/POP3
+
+* Wrap up Net/IMAP (if we really want to...)
+
+* Get a mbox parser and handler written
