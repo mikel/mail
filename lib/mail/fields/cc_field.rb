@@ -7,7 +7,7 @@
 module Mail
   class CcField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'cc'
     

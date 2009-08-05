@@ -6,8 +6,8 @@ describe Mail::ToField do
     doing { Mail::ToField.new("To", "Mikel") }.should_not raise_error
   end
   
-  it "should mix in the AddressField module" do
-    Mail::ToField.included_modules.should include(Mail::AddressField::InstanceMethods) 
+  it "should mix in the CommonAddress module" do
+    Mail::ToField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
   end
 
   it "should accept two strings with the field separate" do
@@ -28,7 +28,7 @@ describe Mail::ToField do
     t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
   end
   
-  # Actual testing of AddressField methods occurs in the address field spec file
+  # Actual testing of CommonAddress methods occurs in the address field spec file
   
   it "should return an address" do
     t = Mail::ToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')

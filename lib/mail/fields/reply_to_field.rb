@@ -5,7 +5,7 @@
 module Mail
   class ReplyToField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'reply-to'
     

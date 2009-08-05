@@ -4,7 +4,7 @@
 module Mail
   class ResentSenderField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'resent-sender'
 

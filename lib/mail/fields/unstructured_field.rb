@@ -14,30 +14,12 @@ module Mail
   #     "unfolding" as described in section 2.2.3).
   class UnstructuredField
     
-    def initialize(name, value = '')
-      self.name = name
-      self.value = value
+    include Mail::CommonField
+    
+    def initialize(*args)
+      self.name = args.first
+      self.value = args.last
       self
-    end
-    
-    def name=(value)
-      @name = value
-    end
-    
-    def name
-      @name
-    end
-    
-    def value=(value)
-      @value = value
-    end
-    
-    def value
-      @value
-    end
-    
-    def to_s
-      value.blank? ? '' : "#{name}: #{value}"
     end
     
     def encoded

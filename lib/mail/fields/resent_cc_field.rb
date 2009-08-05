@@ -4,7 +4,7 @@
 module Mail
   class ResentCcField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'resent-cc'
     

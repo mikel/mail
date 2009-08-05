@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
-describe Mail::AddressField do
+describe Mail::CommonAddress do
   
   describe "mixin methods" do
   

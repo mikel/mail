@@ -19,29 +19,12 @@ module Mail
   #     bodies is given along with their syntax.
   class StructuredField
     
+    include Mail::CommonField
+    
     def initialize(*args)
       self.name = args.first
       self.value = args.last
-    end
-    
-    def name=(value)
-      @name = value.split("-").map { |v| v.capitalize }.join("-")
-    end
-    
-    def name
-      @name
-    end
-    
-    def value=(value)
-      @value = value
-    end
-    
-    def value
-      @value
-    end
-    
-    def to_s
-      value.blank? ? '' : "#{name}: #{value}"
+      self
     end
     
     def encoded

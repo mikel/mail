@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Mail
-  module AddressField
+  module CommonAddress
     
     module ClassMethods
       
@@ -36,10 +36,6 @@ module Mail
         group_addresses.map do |address_tree|
           Mail::Address.new(address_tree)
         end
-      end
-    
-      def strip_field(field_name, string)
-        string.to_s.gsub(/#{field_name}:\s+/i, '')
       end
 
     end

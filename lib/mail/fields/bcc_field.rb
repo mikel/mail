@@ -22,7 +22,7 @@
 module Mail
   class BccField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'bcc'
     

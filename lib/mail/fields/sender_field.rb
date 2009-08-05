@@ -5,7 +5,7 @@
 module Mail
   class SenderField < StructuredField
     
-    include Mail::AddressField
+    include Mail::CommonAddress
     
     FIELD_NAME = 'sender'
 
