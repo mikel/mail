@@ -1,6 +1,6 @@
 module Mail
   
-#  raise "Requires Ruby 1.9.1 or higher, try TMail" unless RUBY_VERSION >= '1.9.1'
+  raise "Requires Ruby 1.9.1 or higher, try TMail" unless RUBY_VERSION >= '1.9.1'
   
   require 'treetop'
   

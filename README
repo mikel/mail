@@ -59,8 +59,8 @@ Creating a new mail object that you can work with:
  
  @mail = Mail.new
  
- @mail.from     = 'mikel@me.com'
- @mail.to       = 'mikel@you.com'
+ @mail.from     = ['mikel@me.com']
+ @mail.to       = ['mikel@you.com']
  @mail.subject  = 'Hello!'
  
  @mail.to_s #=> 'From: mikel@me.com\nTo: mikel@you.com\nSubject: Hello!'

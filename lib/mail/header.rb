@@ -93,12 +93,12 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      field = fields.select { |f| match_to_s(f.name, name.to_s) }
+      field = fields.select { |f| match_to_s(f.name, name) }
       case
       when field.length > 1
-        field.map { |f| f.value }
+        field.map { |f| f }
       when !field.blank?
-        field.first.value
+        field.first
       else
         nil
       end

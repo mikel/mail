@@ -13,11 +13,13 @@ describe "mail" do
     Mail.message.class.should == Mail::Message
   end
   
-  it "should accept simple headers" do
+  it "should accept headers and body" do
+    # Full test in Message Spec
     message = Mail.message do
       from    'mikel@me.com'
       to      'mikel@you.com'
       subject 'Hello there Mikel'
+      resent_message_id '<1234@resent-id.lindsaar.net>'
       body    'This is a body of text'
     end
     message.from.should    == 'mikel@me.com'
@@ -26,12 +28,6 @@ describe "mail" do
     message.body.to_s.should    == 'This is a body of text'
   end
 
-  it "should be able to arbitrarily set a header" do
-    message = Mail::Message.new
-    message['foo'] = '1234'
-    message['foo'].should == '1234'
-  end
-  
   it "should be able to parse a basic email" do
     doing { Mail::Message.new(File.read(fixture('emails/basic_email'))) }.should_not raise_error
   end

@@ -176,7 +176,7 @@ describe Mail::Message do
       
       it "should allow you to read arbitrary headers" do
         @mail['foo'] = 1234
-        @mail['foo'].should == '1234'
+        @mail['foo'].value.should == '1234'
       end
       
       it "should instantiate a new Header" do
@@ -184,6 +184,58 @@ describe Mail::Message do
         @mail.header_fields.first.class.should == Mail::Field
       end
     end
+    
+    describe "setting headers in block form" do
+      it "should accept all standard headers" do
+        message = Mail.message do
+          bcc           'mikel@bcc.lindsaar.net'
+          cc            'mikel@cc.lindsaar.net'
+          comments      'this is a comment'
+          date          '12 Aug 2009 00:00:01 GMT'
+          from          'mikel@from.lindsaar.net'
+          in_reply_to   '<1234@in_reply_to.lindsaar.net>'
+          keywords      'test, "of the new mail", system'
+          message_id    '<1234@message_id.lindsaar.net>'
+          received      '12 Aug 2009 00:00:02 GMT'
+          references    '<1234@references.lindsaar.net>'
+          reply_to      'mikel@reply-to.lindsaar.net'
+          resent_bcc    'mikel@resent-bcc.lindsaar.net'
+          resent_cc     'mikel@resent-cc.lindsaar.net'
+          resent_date   '12 Aug 2009 00:00:03 GMT'
+          resent_from   'mikel@resent-from.lindsaar.net'
+          resent_message_id '<1234@resent_message_id.lindsaar.net>'
+          resent_sender 'mikel@resent-sender.lindsaar.net'
+          resent_to     'mikel@resent-to.lindsaar.net'
+          sender        'mikel@sender.lindsaar.net'
+          subject       'Hello there Mikel'
+          to            'mikel@to.lindsaar.net'
+          body          'This is a body of text'
+        end
+        message.bcc.should           == 'mikel@bcc.lindsaar.net'
+        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.comments.should      == 'this is a comment'
+        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.from.should          == 'mikel@from.lindsaar.net'
+        message.in_reply_to.should   == '<1234@in_reply_to.lindsaar.net>'
+        message.keywords.should      == 'test, "of the new mail", system'
+        message.message_id.should    == '<1234@message_id.lindsaar.net>'
+        message.received.should      == '12 Aug 2009 00:00:02 GMT'
+        message.references.should    == '<1234@references.lindsaar.net>'
+        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
+        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
+        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_message_id.should == '<1234@resent_message_id.lindsaar.net>'
+        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
+        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.sender.should        == 'mikel@sender.lindsaar.net'
+        message.subject.should       == 'Hello there Mikel'
+        message.to.should            == 'mikel@to.lindsaar.net'
+        message.body.to_s.should     == 'This is a body of text'
+      end
+    end
+    
   end
 
 end

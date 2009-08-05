@@ -149,7 +149,7 @@ module Mail
     #  mail.to '"M L" <mikel@you.com>'
     #  mail.to #=> '"M L" <mikel@you.com>'
     def to(value = nil)
-      value ? self.to = value : header[:to]
+      value ? self.to = value : header[:to].value
     end
 
     # Sets the from field in the message header.
@@ -173,7 +173,7 @@ module Mail
     #  mail.from '"M L" <mikel@you.com>'
     #  mail.from #=> '"M L" <mikel@you.com>'
     def from(value = nil)
-      value ? self.from = value : header[:from]
+      value ? self.from = value : header[:from].value
     end
     
     # Sets the subject field in the message header.
@@ -197,8 +197,64 @@ module Mail
     #  mail.subject 'This is another subject'
     #  mail.subject #=> 'This is another subject'
     def subject(value = nil)
-      value ? self.subject = value : header[:subject]
+      value ? self.subject = value : header[:subject].value
     end
+    
+    # Method Missing in this implementation allows you to set any of the
+    # standard fields directly as you would the "to", "subject" etc.
+    # 
+    # Those fields used most often (to, subject et al) are given their
+    # own method for ease of documentation and also to avoid the hook 
+    # call to method missing.
+    # 
+    # This will only catch the known fields listed in:
+    #
+    #  Mail::Field::KNOWN_FIELDS
+    #
+    # as per RFC 2822, any ruby string or method name could pretty much
+    # be a field name, so we don't want to just catch ANYTHING sent to
+    # a message object and interpret it as a header.
+    # 
+    # This method provides all three types of header call to set, read
+    # and explicitly set with the = operator
+    # 
+    # Examples:
+    # 
+    #  mail.comments = 'These are some comments'
+    #  mail.comments #=> 'These are some comments'
+    # 
+    #  mail.comments 'These are other comments'
+    #  mail.comments #=> 'These are other comments'
+    # 
+    # 
+    #  mail.date = 'These are some comments'
+    #  mail.date #=> 'These are some comments'
+    # 
+    #  mail.date 'These are other comments'
+    #  mail.date #=> 'These are other comments'
+    # 
+    #
+    #  mail.resent_msg_id = '<1234@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id #=> '<1234@resent_msg_id.lindsaar.net>'
+    # 
+    #  mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
+    def method_missing(name, *args, &block)
+      # Only take the structured fields, as we could take _anything_ really
+      # as it could become an optional field... "but therin lies the dark side"
+      field_name = name.to_s.gsub('_', '-')
+      if Mail::Field::KNOWN_FIELDS.include?(field_name)
+        if args.empty?
+          header[name].value
+        else
+          header[name] = args.first
+        end
+      elsif Mail::Field::KNOWN_FIELDS.include?(field_name.chomp("="))
+        header[name] = args.first
+      else
+        super # otherwise pass it on 
+      end 
+    end 
 
     # Allows you to add an arbitrary header
     # 

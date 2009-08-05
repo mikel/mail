@@ -76,14 +76,14 @@ describe Mail::Header do
     
     it "should allow you to reference each field and value by literal string name" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
-      header['To'].should == "Mikel"
-      header['From'].should == "bob"
+      header['To'].value.should == "Mikel"
+      header['From'].value.should == "bob"
     end
 
     it "should return an array of fields if there is more than one match" do
       header = Mail::Header.new
       header.fields = ['From: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 23']
-      header['X-Mail-SPAM'].should == ['15', '23']
+      header['X-Mail-SPAM'].map { |x| x.value }.should == ['15', '23']
     end
 
     it "should return nil if no value in the header" do
@@ -94,20 +94,20 @@ describe Mail::Header do
     it "should add a new field if the field does not exist" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header['Subject'] = "G'Day!"
-      header['Subject'].should == "G'Day!"
+      header['Subject'].value.should == "G'Day!"
     end
     
     it "should allow you to pass in an array of raw fields" do
       header = Mail::Header.new
       header.fields = ['From: mikel@me.com', 'To: bob@you.com']
-      header['To'].should == 'bob@you.com'
-      header['From'].should == 'mikel@me.com'
+      header['To'].value.should == 'bob@you.com'
+      header['From'].value.should == 'mikel@me.com'
     end
     
     it "should reset the value of a single-only field if it already exists" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header['To'] = 'George'
-      header['To'].should == "George"
+      header['To'].value.should == "George"
     end
     
     it "should allow you to delete a field by setting it to nil" do
@@ -135,12 +135,12 @@ describe Mail::Header do
   describe "folding and unfolding" do
     it "should unfold a header" do
       header = Mail::Header.new("To: Mikel,\r\n Lindsaar, Bob")
-      header['To'].should == 'Mikel, Lindsaar, Bob'
+      header['To'].value.should == 'Mikel, Lindsaar, Bob'
     end
     
     it "should remove multiple spaces during unfolding a header" do
       header = Mail::Header.new("To: Mikel,\r\n   Lindsaar,     Bob")
-      header['To'].should == 'Mikel, Lindsaar, Bob'
+      header['To'].value.should == 'Mikel, Lindsaar, Bob'
     end
     
     it "should handle a crazy long folded header" do
@@ -152,7 +152,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\r\n"))
-      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      header['Received'].value.should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
     end
     
     it "should convert all lonesome LFs to CRLF" do
@@ -164,7 +164,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\n"))
-      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      header['Received'].value.should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
     end
     
     it "should convert all lonesome CRs to CRLF" do
@@ -176,7 +176,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\r"))
-      header['Received'].should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      header['Received'].value.should == 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
     end
     
   end
@@ -188,7 +188,7 @@ HERE
         header = Mail::Header.new
         header[field] = "1234"
         header[field] = "5678"
-        header[field].should == "5678"
+        header[field].value.should == "5678"
       end
     end
     
@@ -197,7 +197,7 @@ HERE
         header = Mail::Header.new
         header[field] = "1234"
         header[field] = "5678"
-        header[field].should == ["1234", "5678"]
+        header[field].map { |x| x.value }.should == ["1234", "5678"]
       end
     end
     
@@ -205,7 +205,7 @@ HERE
       header = Mail::Header.new
       header.fields = ['X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
       header['X-Mail-SPAM'] = '10000'
-      header['X-Mail-SPAM'].should == ['15', '20', '10000']
+      header['X-Mail-SPAM'].map { |x| x.value }.should == ['15', '20', '10000']
       header['X-Mail-SPAM'] = nil
       header['X-Mail-SPAM'].should == nil
     end

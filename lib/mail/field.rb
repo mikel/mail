@@ -21,6 +21,13 @@ module Mail
     
     include Patterns
     
+    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
+                            references keywords resent-date resent-from resent-sender
+                            resent-to resent-cc resent-bcc resent-message-id 
+                            return-path received ]
+
+    KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments']
+    
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -86,11 +93,6 @@ module Mail
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
     end
-    
-    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
-                            references keywords resent-date resent-from resent-sender
-                            resent-to resent-cc resent-bcc resent-message-id 
-                            return-path received ]
 
     def create_field(name, value)
       begin
@@ -142,8 +144,8 @@ module Mail
         ResentCcField.new(name, value)
       when /^resent-bcc$/
         ResentBccField.new(name, value)
-      when /^resent-msg-id$/
-        ResentMsgIdField.new(name, value)
+      when /^resent-message-id$/
+        ResentMessageIdField.new(name, value)
       when /^return-path$/
         ReturnPathField.new(name, value)
       when /^received$/
