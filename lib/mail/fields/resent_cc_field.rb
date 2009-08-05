@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # resent-cc       =       "Resent-Cc:" address-list CRLF
 module Mail

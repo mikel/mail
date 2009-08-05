@@ -1,6 +1,6 @@
+# encoding: utf-8
 require File.dirname(__FILE__) + '/../spec_helper'
 
-# encoding: ASCII-8BIT
 require 'mail'
 
 describe Mail::Field do

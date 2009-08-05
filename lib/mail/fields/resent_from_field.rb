@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # resent-from     =       "Resent-From:" mailbox-list CRLF
 module Mail

@@ -1,3 +1,4 @@
+# encoding: utf-8
 #:nodoc:
 # From the nice guys at rubyonrails.org -> ActiveSupport
 class ::Object

@@ -1,3 +1,4 @@
+# encoding: utf-8
 unless defined?(MAIL_ROOT)
   STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
 

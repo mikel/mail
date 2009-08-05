@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 #    The "Cc:" field (where the "Cc" means "Carbon Copy" in the sense of
 #    making a copy on a typewriter using carbon paper) contains the

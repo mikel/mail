@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # resent-sender   =       "Resent-Sender:" mailbox CRLF
 module Mail

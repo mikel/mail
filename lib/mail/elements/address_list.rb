@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   class AddressList
     def initialize(string)

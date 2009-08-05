@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # resent-msg-id   =       "Resent-Message-ID:" msg-id CRLF
 module Mail

@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   # The Message class provides a single point of access to all things to do with an
   # email message.

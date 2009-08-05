@@ -1,3 +1,4 @@
+# encoding: utf-8
 module CustomMatchers
   class BreakDownTo
     def initialize(expected)

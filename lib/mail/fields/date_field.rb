@@ -1,3 +1,4 @@
+# encoding: utf-8
 #    The origination date field consists of the field name "Date" followed
 #    by a date-time specification.
 # 

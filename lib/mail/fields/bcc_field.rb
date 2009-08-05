@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 #    The "Bcc:" field (where the "Bcc" means "Blind Carbon Copy") contains
 #    addresses of recipients of the message whose addresses are not to be

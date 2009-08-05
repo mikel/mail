@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   # Provides a single class to call to create a new structured or unstructured
   # field.  Works out per RFC what field of field it is being given and returns

@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # sender          =       "Sender:" mailbox CRLF
 # 

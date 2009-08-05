@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 #    The "Message-ID:" field provides a unique message identifier that
 #    refers to a particular version of a particular message.  The

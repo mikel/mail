@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # resent-bcc      =       "Resent-Bcc:" (address-list / [CFWS]) CRLF
 module Mail

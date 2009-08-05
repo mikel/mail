@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   # Provides access to an unstructured header field
   #

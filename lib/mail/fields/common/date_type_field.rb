@@ -1,5 +1,6 @@
+# encoding: utf-8
 module Mail
-  module DateField
+  module DateTypeField
     
     module ClassMethods
       

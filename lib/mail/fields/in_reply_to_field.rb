@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 #    The "In-Reply-To:" field will contain the contents of the "Message-
 #    ID:" field of the message to which this one is a reply (the "parent

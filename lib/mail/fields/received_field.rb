@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # trace           =       [return]
 #                         1*received

@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # subject         =       "Subject:" unstructured CRLF
 module Mail

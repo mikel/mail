@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 # reply-to        =       "Reply-To:" address-list CRLF
 # 

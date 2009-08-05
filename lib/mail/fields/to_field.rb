@@ -1,3 +1,4 @@
+# encoding: utf-8
   # 
   #    The "To:" field contains the address(es) of the primary recipient(s)
   #    of the message.

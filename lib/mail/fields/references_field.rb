@@ -1,3 +1,4 @@
+# encoding: utf-8
 # 
 #    The "References:" field will contain the contents of the parent's
 #    "References:" field (if any) followed by the contents of the parent's
