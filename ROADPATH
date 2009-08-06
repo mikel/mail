@@ -11,7 +11,7 @@
 
 * Mail able to instantiate on any known header type, use method missing [DONE - ML]
 
-* Keywords and comments fields working (low hanging fruit)
+* Keywords and comments fields working (low hanging fruit) [DONE - ML]
 
 * Date parsing working
 
