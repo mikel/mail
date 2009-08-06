@@ -213,6 +213,14 @@ HERE
     end
   end
 
+  describe "handling trace fields" do
+    it "should instantiate one trace field object per header" do
+      header = Mail::Header.new("")
+      header['To'].value.should == 'Mikel, Lindsaar, Bob'
+      
+    end
+  end
+
   describe "encoding" do
     it "should output a parsed version of itself to US-ASCII on encoded and tidy up" do
       header = Mail::Header.new("To: Mikel\r\n\tLindsaar\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
