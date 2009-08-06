@@ -68,11 +68,10 @@ module Mail
         str =~ /^\((.*?)\)$/ ? $1 : str
       end
       
-      # Escapes any parenthesis in a string that are unescaped this uses
-      # a Ruby 1.9.1 regexp feature of negative look behind
-      def escape_paren( str )
-        re = /(?<!\\)([\(\)])/          # Only match unescaped parens
-        str.gsub(re) { |s| '\\' + s }
+      if RUBY_VERSION >= "1.9.1"
+        load File.join(File.dirname(__FILE__), 'ruby_version_specific', 'escape_paren_1_9.rb')
+      else
+        load File.join(File.dirname(__FILE__), 'ruby_version_specific', 'escape_paren_1_8.rb')
       end
       
       # Matches two objects with their to_s values case insensitively

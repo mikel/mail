@@ -119,7 +119,7 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
-      selected = fields.select { |f| f.name.downcase == name.downcase }
+      selected = fields.select { |f| match_to_s(f.name, name) }
       case
       # User wants to delete the field
       when !selected.blank? && value == nil 
