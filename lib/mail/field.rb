@@ -48,7 +48,7 @@ module Mail
     # 
     # Note, does not want a terminating carriage return.  Returns
     # self appropriately parsed
-    def initialize(raw_field_text)
+    def initialize(raw_field_text) 
       name, value = split(raw_field_text)
       create_field(name, value)
       return self
@@ -66,16 +66,12 @@ module Mail
       field.name
     end
     
-    def name=(value)
-      field.name = value
-    end
-    
     def value
       field.value
     end
     
-    def value=(value)
-      field.value = value
+    def value=(str)
+      create_field(name, str)
     end
     
     def to_s

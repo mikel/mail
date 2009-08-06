@@ -79,6 +79,14 @@ module Mail
         obj1.to_s.downcase == obj2.to_s.downcase
       end
       
+      def capitalize_field( str )
+        str.to_s.split("-").map { |v| v.capitalize }.join("-")
+      end
+      
+      def underscoreize( str )
+        str.to_s.downcase.gsub('_', '-')
+      end
+      
     end
     
     def self.included(receiver)

@@ -69,6 +69,13 @@ describe Mail::Field do
       field.addresses
     end
 
+    it "should change it's type if you change the name" do
+      field = Mail::Field.new("To: mikel@me.com")
+      field.field.class.should == Mail::ToField
+      field.value = "bob@me.com"
+      field.field.class.should == Mail::ToField
+    end
+
   end
 
 end

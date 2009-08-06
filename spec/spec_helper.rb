@@ -4,8 +4,8 @@ unless defined?(MAIL_ROOT)
 
   MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
 end
-
 require 'rubygems'
+require 'ruby-debug' if RUBY_VERSION < '1.9'
 require 'spec'
 require 'treetop'
 

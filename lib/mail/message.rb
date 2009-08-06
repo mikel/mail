@@ -45,6 +45,7 @@ module Mail
   class Message
     
     include Patterns
+    include Utilities
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
@@ -244,15 +245,13 @@ module Mail
       #:nodoc:
       # Only take the structured fields, as we could take _anything_ really
       # as it could become an optional field... "but therin lies the dark side"
-      field_name = name.to_s.gsub('_', '-')
+      field_name = underscoreize(name).chomp("=")
       if Mail::Field::KNOWN_FIELDS.include?(field_name)
         if args.empty?
-          header[name].value
+          header[field_name].value
         else
-          header[name] = args.first
+          header[field_name] = args.first
         end
-      elsif Mail::Field::KNOWN_FIELDS.include?(field_name.chomp("="))
-        header[name] = args.first
       else
         super # otherwise pass it on 
       end 
@@ -265,7 +264,11 @@ module Mail
     #
     #  mail['foo'] = '1234'
     def []=(name, value)
-      header[name] = value
+      if name.to_s == 'body'
+        self.body = value
+      else
+        header[underscoreize(name)] = value
+      end
     end
 
     # Allows you to read an arbitrary header
@@ -275,7 +278,7 @@ module Mail
     #  mail['foo'] = '1234'
     #  mail['foo'] #=> '1234'
     def [](name)
-      header[name]
+      header[underscoreize(name)]
     end
 
     def header_fields

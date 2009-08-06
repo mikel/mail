@@ -20,6 +20,7 @@ module Mail
   class StructuredField
     
     include Mail::CommonField
+    include Mail::Utilities
     
     def initialize(*args)
       self.name = args.first

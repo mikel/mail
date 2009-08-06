@@ -5,6 +5,10 @@ describe Mail::Address do
 
   describe "functionality" do
 
+    it "should allow us to instantiate an empty address object" do
+      doing { Mail::Address.new }.should_not raise_error
+    end
+
     it "should give it's address back on :to_s if there is no display name" do
       parse_text  = 'test@lindsaar.net'
       result      = 'test@lindsaar.net'

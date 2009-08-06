@@ -13,7 +13,7 @@ module Mail
       end
       
       def name=(value)
-        @name = value.to_s.split("-").map { |v| v.capitalize }.join("-")
+        @name = capitalize_field(value)
       end
       
       def name
@@ -38,6 +38,7 @@ module Mail
 
       private
 
+
       # 2.2.3. Long Header Fields
       # 
       #  Each header field is logically a single line of characters comprising
@@ -46,7 +47,24 @@ module Mail
       #  the field body portion of a header field can be split into a multiple
       #  line representation; this is called "folding".  The general rule is
       #  that wherever this standard allows for folding white space (not
-      #  simply WSP characters), a CRLF may be inserted before any WSP.
+      #  simply WSP characters), a CRLF may be inserted before any WSP.  For
+      #  example, the header field:
+      #  
+      #          Subject: This is a test
+      #  
+      #  can be represented as:
+      #  
+      #          Subject: This
+      #           is a test
+      #  
+      #  Note: Though structured field bodies are defined in such a way that
+      #  folding can take place between many of the lexical tokens (and even
+      #  within some of the lexical tokens), folding SHOULD be limited to
+      #  placing the CRLF at higher-level syntactic breaks.  For instance, if
+      #  a field body is defined as comma-separated values, it is recommended
+      #  that folding occur after the comma separating the structured items in
+      #  preference to other places where the field could be folded, even if
+      #  it is allowed elsewhere.
       def do_encode
         case
         when to_s.length <= 78

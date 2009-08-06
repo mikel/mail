@@ -9,6 +9,16 @@ describe Mail::AddressList do
       doing { Mail::AddressList.new(parse_text) }.should_not raise_error
     end
 
+    it "should raise an error if the input is useless" do
+      parse_text = nil
+      doing { Mail::AddressList.new(parse_text) }.should raise_error
+    end
+
+    it "should raise an error if the input is useless" do
+      parse_text = "This ( is an invalid address!"
+      doing { Mail::AddressList.new(parse_text) }.should raise_error
+    end
+
     it "should give the address passed in" do
       parse_text  = 'test@lindsaar.net'
       result      = 'test@lindsaar.net'
