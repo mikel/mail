@@ -139,6 +139,16 @@ module Mail
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject ]
 
+    def encoded
+      buffer = ''
+      fields.each do |field|
+        buffer << field.encoded
+      end
+      buffer
+    end
+
+    alias :to_s :encoded
+
     private
 
     def raw_source=(val)

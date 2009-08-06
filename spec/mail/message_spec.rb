@@ -237,6 +237,18 @@ describe Mail::Message do
       end
     end
     
+    it "should make an email and allow you to call :to_s on it to get a string" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      result ="From: mikel@test.lindsaar.net\r\nTo: you@test.lindsaar.net\r\nSubject: This is a test email\r\n\r\nThis is a body of the email"
+      
+      mail.to_s.should == result
+    end
+    
   end
 
 end

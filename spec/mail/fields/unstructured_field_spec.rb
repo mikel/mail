@@ -49,7 +49,7 @@ describe Mail::UnstructuredField do
     end
     
     it "should give an encoded value ready to insert into an email" do
-      @field.encoded.should == "Subject: Hello Frank"
+      @field.encoded.should == "Subject: Hello Frank\r\n"
     end
     
     it "should return nil on encoded if it has no value" do
@@ -62,12 +62,12 @@ describe Mail::UnstructuredField do
   describe "folding" do
     it "should not fold itself if it is 78 chracters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters long")
-      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters long"
+      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters long\r\n"
     end
     
     it "should fold itself if it is 79 chracters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 79 characters long.")
-      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\t long."
+      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\t long.\r\n"
     end
 
     it "should fold itself if it is 997 chracters long" do

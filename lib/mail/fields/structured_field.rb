@@ -27,9 +27,5 @@ module Mail
       self
     end
     
-    def encoded
-      to_s.blank? ? nil : to_s
-    end
-    
   end
 end

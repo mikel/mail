@@ -134,6 +134,7 @@ describe Mail::Header do
   end
 
   describe "folding and unfolding" do
+    
     it "should unfold a header" do
       header = Mail::Header.new("To: Mikel,\r\n Lindsaar, Bob")
       header['To'].value.should == 'Mikel, Lindsaar, Bob'
@@ -209,6 +210,14 @@ HERE
       header['X-Mail-SPAM'].map { |x| x.value }.should == ['15', '20', '10000']
       header['X-Mail-SPAM'] = nil
       header['X-Mail-SPAM'].should == nil
+    end
+  end
+
+  describe "encoding" do
+    it "should output a parsed version of itself to US-ASCII on encoded and tidy up" do
+      header = Mail::Header.new("To: Mikel\r\n\tLindsaar\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
+      result = "To: Mikel Lindsaar\r\nFrom: bob\r\nSubject: This is a long badly formatted field\r\n"
+      header.encoded.should == result
     end
   end
 

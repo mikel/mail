@@ -1,3 +1,7 @@
+= Mail
+
+== Introduction
+
 Mail is an internet library for Ruby that is designed to handle emails
 generation, parsing and sending in a simple, rubyesque manner.
 
@@ -12,18 +16,55 @@ brainer.
 It is also designed form the ground up to work with Ruby 1.9.  This is because
 Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
 these features have been taken full advantage of in this library allowing
-Mail to handle a lot more messages more cleanly than TMail.  Mail will not
-work on any Ruby version prior to 1.9.1
+Mail to handle a lot more messages more cleanly than TMail.  Mail does run on
+Ruby 1.8.x... it's just not as fun to code.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
+== Installation
+
+If you are using this in production right now, you either _really_ know
+what you are doing, or are insane.  This is well spec'd and tested alpha
+code.
+
+If you need instructions beyond "go get it from my git repo" then you
+probably shouldn't be playing with Mail yet.  Wait till we've wrapped it
+up into a gem.
+
+== Usage
+
 All major mail functions should be able to happen from the Mail:: module.
 
-This is totally a work in progress, but here is what is planned:
+=== Making an email
 
-Sending an email:
+ require 'mail'
+ 
+ mail = Mail.message do
+      from 'mikel@test.lindsaar.net'
+        to 'you@test.lindsaar.net'
+   subject 'This is a test email'
+      body File.read('body.txt')
+ end
+
+ mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+
+=== Making an email, different attribute writers:
+
+ require 'mail'
+ 
+ mail = Mail.message do
+   body File.read('body.txt')
+ end
+
+ mail['from'] = 'mikel@test.lindsaar.net'
+ mail[:to]    = 'you@test.lindsaar.net'
+ mail.subject = 'This is a test email'
+ 
+ mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+
+=== Sending an email:
 
  require 'mail'
 
@@ -32,14 +73,14 @@ Sending an email:
  end
 
  Mail.send do
-       from 'me@me.com'
-         to 'you@you.com'
+       from 'me@test.lindsaar.net'
+         to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
    add_file 'New Header Image', '/somefile.png'
  end
 
-Getting an email from a pop server:
+=== Getting an email from a pop server:
 
  require 'mail'
  
@@ -53,19 +94,7 @@ Getting an email from a pop server:
  
  emails.length #=> 12
 
-Creating a new mail object that you can work with:
-
- require 'mail'
- 
- @mail = Mail.new
- 
- @mail.from     = ['mikel@me.com']
- @mail.to       = ['mikel@you.com']
- @mail.subject  = 'Hello!'
- 
- @mail.to_s #=> 'From: mikel@me.com\nTo: mikel@you.com\nSubject: Hello!'
-
-Getting error reports from an email:
+=== Getting error reports from an email:
 
  require 'mail'
  

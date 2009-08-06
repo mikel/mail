@@ -282,6 +282,18 @@ module Mail
       header.fields
     end
 
+    # Outputs an encoded string representation of the mail message including
+    # all headers, attachments, etc.  This is an encoded email in US-ASCII,
+    # so it is able to be directly sent to an email server.
+    def encoded
+      buffer = header.encoded
+      buffer << "\r\n"
+      buffer << body.encoded
+      buffer
+    end
+    
+    alias :to_s :encoded
+    
     private
 
     #  2.1. General Description

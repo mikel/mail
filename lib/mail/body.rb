@@ -17,9 +17,11 @@ module Mail
       @raw_source
     end
     
-    def to_s
+    def encoded
       raw_source
     end
+    
+    alias :to_s :encoded
     
     private
     

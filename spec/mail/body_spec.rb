@@ -15,7 +15,12 @@ describe Mail::Body do
       body = Mail::Body.new('this is some text')
       body.to_s.should == 'this is some text'
     end
-    
+
+    it "should accept text as raw source data" do
+      body = Mail::Body.new('this is some text')
+      body.encoded.should == 'this is some text'
+    end
+
   end
 
 end
