@@ -4,5 +4,11 @@
 module Mail
   class ResentDateField < StructuredField
     
+    FIELD_NAME = 'resent-date'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

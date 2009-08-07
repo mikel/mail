@@ -78,9 +78,37 @@ module Mail
       field.to_s
     end
     
-    def method_missing(name, *args, &block)
-      field.send(name)
+    def responsible_for?( val )
+      name.to_s.downcase == val.to_s.downcase
     end
+    
+    def update(name, value)
+      create_field(name, value)
+    end
+    
+    def same( other )
+      match_to_s(other.name, field.name)
+    end
+    
+    def <=>( other )
+      self_order = FIELD_ORDER.rindex(self.name.downcase) || 100
+      other_order = FIELD_ORDER.rindex(other.name.downcase) || 100
+      self_order <=> other_order
+    end
+    
+    def method_missing(name, *args, &block)
+      field.send(name, *args, &block)
+    end
+    
+    FIELD_ORDER = %w[ return-path received
+                      resent-date resent-from resent-sender resent-to
+                      resent-cc resent-bcc resent-message-id
+                      date from sender reply-to to cc bcc
+                      message-id in-reply-to references
+                      subject comments keywords
+                      mime-version content-type content-transfer-encoding
+                      content-disposition content-description ]
+    
     
     private
     

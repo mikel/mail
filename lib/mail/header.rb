@@ -28,9 +28,9 @@ module Mail
     # 
     # If it finds a field that should be a structured field (such as content
     # type), but it fails to parse it, it will simply make it an unstructured
-    # field and leave it along.  This will mean that the data is preserved but
+    # field and leave it alone.  This will mean that the data is preserved but
     # no automatic processing of that field will happen.  If you find one of
-    # these cases, please make a patch and send it in, or at the lease, send
+    # these cases, please make a patch and send it in, or at the least, send
     # me the example so we can fix it.
     def initialize(header_text = nil)
       self.raw_source = header_text.to_crlf
@@ -69,7 +69,10 @@ module Mail
     #  h = Header.new
     #  h.fields = ['From: mikel@me.com', 'To: bob@you.com']
     def fields=(unfolded_fields)
-      @fields = unfolded_fields.map { |field| Field.new(field) }
+      @fields = Mail::FieldList.new
+      unfolded_fields.each do |field|
+        @fields << Field.new(field)
+      end
     end
     
     #  3.6. Field definitions
@@ -94,12 +97,12 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      field = fields.select { |f| match_to_s(f.name, name) }
+      selected = fields.select { |f| f.responsible_for?(name) }
       case
-      when field.length > 1
-        field.map { |f| f }
-      when !field.blank?
-        field.first
+      when selected.length > 1
+        selected.map { |f| f }
+      when !selected.blank?
+        selected.first
       else
         nil
       end
@@ -119,25 +122,26 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
-      selected = fields.select { |f| match_to_s(f.name, name) }
+      selected = fields.select { |f| f.responsible_for?(name) }
       case
       # User wants to delete the field
-      when !selected.blank? && value == nil 
+      when !selected.blank? && value == nil
         fields.delete_if { |f| selected.include?(f) }
 
       # User wants to change the field
-
-      when !selected.blank? && LIMITED_FIELDS.include?(name.downcase) 
-        selected.first.value = value
+      when !selected.blank? && LIMITED_FIELDS.include?(name.downcase)
+        selected.first.update(name, value)
 
       # User wants to create the field
       else
+        # Need to insert in correct order for trace fields
         self.fields << Field.new("#{name}: #{value}")
       end
     end
     
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
-                           message-id in-reply-to references subject ]
+                           message-id in-reply-to references subject
+                           return-path ]
 
     def encoded
       buffer = ''
@@ -150,7 +154,7 @@ module Mail
     alias :to_s :encoded
 
     private
-
+    
     def raw_source=(val)
       @raw_source = val
     end

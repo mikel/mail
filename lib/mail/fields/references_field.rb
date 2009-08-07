@@ -13,5 +13,11 @@
 module Mail
   class ReferencesField < StructuredField
     
+    FIELD_NAME = 'references'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

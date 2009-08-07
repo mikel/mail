@@ -15,6 +15,8 @@ $:.unshift "#{File.dirname(__FILE__)}/../lib/mail"
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
+require 'mail'
+
 Spec::Runner.configure do |config|  
   config.include(CustomMatchers)  
 end

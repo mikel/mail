@@ -10,5 +10,11 @@
 module Mail
   class InReplyToField < StructuredField
     
+    FIELD_NAME = 'in-reply-to'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

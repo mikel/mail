@@ -61,10 +61,10 @@ describe Mail::Header do
     
     it "should split each field into an name and value" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
-      header.fields[0].name.should == "To"
-      header.fields[0].value.should == "Mikel"
-      header.fields[1].name.should == "From"
-      header.fields[1].value.should == "bob"
+      header.fields[0].name.should == "From"
+      header.fields[0].value.should == "bob"
+      header.fields[1].name.should == "To"
+      header.fields[1].value.should == "Mikel"
     end
     
     it "should preserve the order of the fields it is given" do
@@ -214,17 +214,35 @@ HERE
   end
 
   describe "handling trace fields" do
-    it "should instantiate one trace field object per header" do
-      header = Mail::Header.new("")
-      header['To'].value.should == 'Mikel, Lindsaar, Bob'
-      
+    
+    before(:each) do
+      trace_header =<<TRACEHEADER
+Return-Path: <xxx@xxxx.xxxtest>
+Received: from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id 6AAEE3B4D23 for <xxx@xxxx.xxx>; Sun, 8 May 2005 12:30:23 -0500
+Received: from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id j48HUC213279 for <xxx@xxxx.xxx>; Sun, 8 May 2005 12:30:13 -0500
+Received: from conversion-xxx.xxxx.xxx.net by xxx.xxxx.xxx id <0IG600901LQ64I@xxx.xxxx.xxx> for <xxx@xxxx.xxx>; Sun, 8 May 2005 12:30:12 -0500
+Received: from agw1 by xxx.xxxx.xxx with ESMTP id <0IG600JFYLYCAxxx@xxxx.xxx> for <xxx@xxxx.xxx>; Sun, 8 May 2005 12:30:12 -0500
+TRACEHEADER
+      @traced_header = Mail::Header.new(trace_header)
     end
+    
+    it "should instantiate one trace field object per header" do
+      @traced_header.fields.length.should == 5
+    end
+    
+    it "should add a new received header after the other received headers if they exist" do
+      @traced_header['To'] = "Mikel"
+      @traced_header['Received'] = "from agw2 by xxx.xxxx.xxx"
+      @traced_header.fields[5].field.class.should == Mail::ReceivedField
+      @traced_header.fields[6].field.class.should == Mail::ToField
+    end
+    
   end
 
   describe "encoding" do
-    it "should output a parsed version of itself to US-ASCII on encoded and tidy up" do
+    it "should output a parsed version of itself to US-ASCII on encoded and tidy up and sort correctly" do
       header = Mail::Header.new("To: Mikel\r\n\tLindsaar\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
-      result = "To: Mikel Lindsaar\r\nFrom: bob\r\nSubject: This is a long badly formatted field\r\n"
+      result = "From: bob\r\nTo: Mikel Lindsaar\r\nSubject: This is a long badly formatted field\r\n"
       header.encoded.should == result
     end
   end

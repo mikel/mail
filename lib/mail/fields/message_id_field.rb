@@ -25,5 +25,11 @@
 module Mail
   class MessageIdField < StructuredField
     
+    FIELD_NAME = 'message-id'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

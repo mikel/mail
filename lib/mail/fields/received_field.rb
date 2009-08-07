@@ -22,5 +22,11 @@
 module Mail
   class ReceivedField < StructuredField
     
+    FIELD_NAME = 'received'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end

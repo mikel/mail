@@ -78,4 +78,35 @@ describe Mail::Field do
 
   end
 
+  describe "helper methods" do
+    it "should reply if it is responsible for a field name as a capitalized string - structured field" do
+      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field.responsible_for?("To").should be_true
+    end
+
+    it "should reply if it is responsible for a field as a lower case string - structured field" do
+      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field.responsible_for?("to").should be_true
+    end
+
+    it "should reply if it is responsible for a field as a symbol - structured field" do
+      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field.responsible_for?(:to).should be_true
+    end
+
+    it "should say it is == to another if their field names match" do
+      Mail::Field.new("To: mikel").same(Mail::Field.new("To: bob")).should be_true
+    end
+
+    it "should say it is not == to another if their field names do not match" do
+      Mail::Field.new("From: mikel").should_not == Mail::Field.new("To: bob")
+    end
+
+    it "should sort according to the field order" do
+      list = [Mail::Field.new("To: mikel"), Mail::Field.new("Return-Path: bob")]
+      list.sort[0].name.should == "Return-Path"
+    end
+
+  end
+
 end

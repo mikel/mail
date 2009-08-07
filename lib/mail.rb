@@ -13,6 +13,7 @@ module Mail
   require File.join(dir_name, 'header')
   require File.join(dir_name, 'body')
   require File.join(dir_name, 'field')
+  require File.join(dir_name, 'field_list')
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))

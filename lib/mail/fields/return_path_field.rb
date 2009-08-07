@@ -22,5 +22,11 @@
 module Mail
   class ReturnPathField < StructuredField
     
+    FIELD_NAME = 'return-path'
+    
+    def initialize(*args)
+      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
   end
 end
