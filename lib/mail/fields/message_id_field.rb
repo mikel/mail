@@ -1,5 +1,33 @@
 # encoding: utf-8
-# 
+# 3.6.4. Identification fields
+#  
+#   Though optional, every message SHOULD have a "Message-ID:" field.
+#   Furthermore, reply messages SHOULD have "In-Reply-To:" and
+#   "References:" fields as appropriate, as described below.
+#   
+#   The "Message-ID:" field contains a single unique message identifier.
+#   The "References:" and "In-Reply-To:" field each contain one or more
+#   unique message identifiers, optionally separated by CFWS.
+#   
+#   The message identifier (msg-id) is similar in syntax to an angle-addr
+#   construct without the internal CFWS.
+#  
+#  message-id      =       "Message-ID:" msg-id CRLF
+#  
+#  in-reply-to     =       "In-Reply-To:" 1*msg-id CRLF
+#  
+#  references      =       "References:" 1*msg-id CRLF
+#  
+#  msg-id          =       [CFWS] "<" id-left "@" id-right ">" [CFWS]
+#  
+#  id-left         =       dot-atom-text / no-fold-quote / obs-id-left
+#  
+#  id-right        =       dot-atom-text / no-fold-literal / obs-id-right
+#  
+#  no-fold-quote   =       DQUOTE *(qtext / quoted-pair) DQUOTE
+#  
+#  no-fold-literal =       "[" *(dtext / quoted-pair) "]"
+#  
 #    The "Message-ID:" field provides a unique message identifier that
 #    refers to a particular version of a particular message.  The
 #    uniqueness of the message identifier is guaranteed by the host that
@@ -8,7 +36,7 @@
 #    identifier pertains to exactly one instantiation of a particular
 #    message; subsequent revisions to the message each receive new message
 #    identifiers.
-# 
+#     
 #    Note: There are many instances when messages are "changed", but those
 #    changes do not constitute a new instantiation of that message, and
 #    therefore the message would not get a new message identifier.  For
@@ -25,10 +53,16 @@
 module Mail
   class MessageIdField < StructuredField
     
+    include Mail::CommonMessageId
+    
     FIELD_NAME = 'message-id'
     
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
+    def name
+      'Message-ID'
     end
     
   end

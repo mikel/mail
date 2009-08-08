@@ -37,6 +37,7 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'phrase_lists'))
   Treetop.load(File.join(dir_name, 'parsers', 'date_time'))
   Treetop.load(File.join(dir_name, 'parsers', 'received'))
+  Treetop.load(File.join(dir_name, 'parsers', 'message_ids'))
 
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
