@@ -28,5 +28,22 @@ module Mail
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
     end
     
+    def tree
+      @element ||= ReceivedElement.new(value)
+      @tree ||= @element.tree
+    end
+    
+    def element
+      @element ||= ReceivedElement.new(value)
+    end
+    
+    def date_time
+      ::DateTime.parse("#{element.date_time}")
+    end
+
+    def info
+      element.info
+    end
+    
   end
 end

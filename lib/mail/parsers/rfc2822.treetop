@@ -260,7 +260,7 @@ module Mail
     end
     
     rule date_time
-      ( day_of_week "," )? date FWS time CFWS?
+      ( day_of_week ",")? date FWS time CFWS?
     end
 
     rule day_of_week
@@ -271,7 +271,7 @@ module Mail
       "Mon" / "Tue" / "Wed" / "Thu" /
       "Fri" / "Sat" / "Sun"
     end
-    
+
     rule date
       day month year
     end
@@ -316,6 +316,34 @@ module Mail
     
     rule zone
       (( "+" / "-" ) DIGIT DIGIT DIGIT DIGIT) / obs_zone
+    end
+    
+    rule return
+      path CRLF
+    end
+    
+    rule path
+      ((CFWS)? "<" ((CFWS)? / addr_spec) ">" (CFWS)?) / obs_path
+    end
+    
+    rule received
+      name_val_list ";" date_time CRLF
+    end
+    
+    rule name_val_list
+      (CFWS)? (name_val_pair (CFWS name_val_pair)*)
+    end
+    
+    rule name_val_pair
+      item_name CFWS item_value
+    end
+    
+    rule item_name
+      ALPHA (("-")? (ALPHA / DIGIT))*
+    end
+    
+    rule item_value
+      (angle_addr)+ / addr_spec / atom / domain / msg_id
     end
     
   end

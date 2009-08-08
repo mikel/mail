@@ -17,11 +17,13 @@
 
 * Date fields handling dates correctly
 
-* Trace fields decided on method to handle
+* Trace fields decided on method to handle [DONE - ML]
 
-* Trace fields parsing correctly
+* Trace fields parsing correctly [DONE - ML]
 
-* All trace field functionality working
+* All trace field functionality working [DONE - ML]
+
+* Message ID fields generating and handling correctly
 
 * All TMail tests relating to RFC2822 passing
 

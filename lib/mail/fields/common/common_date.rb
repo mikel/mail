@@ -8,6 +8,19 @@ module Mail
     
     module InstanceMethods
       
+      def tree
+        @element ||= DateTimeElement.new(value)
+        @tree ||= @element.tree
+      end
+      
+      def element
+        @element ||= DateTimeElement.new(value)
+      end
+      
+      def date_time
+        ::DateTime.parse("#{element.date} #{element.time}")
+      end
+      
     end
     
     def self.included(receiver)

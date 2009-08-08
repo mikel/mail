@@ -4,6 +4,8 @@
 module Mail
   class ResentDateField < StructuredField
     
+    include Mail::CommonDate
+    
     FIELD_NAME = 'resent-date'
     
     def initialize(*args)

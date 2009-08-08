@@ -19,6 +19,8 @@
 module Mail
   class DateField < StructuredField
     
+    include Mail::CommonDate
+    
     FIELD_NAME = 'date'
     
     def initialize(*args)
