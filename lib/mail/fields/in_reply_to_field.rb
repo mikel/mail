@@ -10,6 +10,8 @@
 module Mail
   class InReplyToField < StructuredField
     
+    include Mail::CommonMessageId
+    
     FIELD_NAME = 'in-reply-to'
     
     def initialize(*args)

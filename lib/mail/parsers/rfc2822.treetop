@@ -345,6 +345,43 @@ module Mail
     rule item_value
       (angle_addr)+ / addr_spec / atom / domain / msg_id
     end
+
+    rule message_ids
+      first_msg_id:msg_id other_msg_ids:((CFWS)? msg_id_value:msg_id)*
+    end
+    
+    rule msg_id
+      (CFWS)? "<" msg_id_value ">" (CFWS)?
+    end
+    
+    rule msg_id_value
+      id_left "@" id_right
+    end
+    
+    rule id_left
+      dot_atom_text / no_fold_quote / obs_id_left
+    end
+    
+    rule id_right
+      dot_atom_text / no_fold_literal / obs_id_right
+    end
+
+    rule no_fold_quote
+      DQUOTE (qtext / quoted_pair)+ DQUOTE
+    end
+
+    rule no_fold_literal
+      "[" (dtext / quoted_pair)+ "]"
+    end
+    
+    rule obs_id_left
+      local_part
+    end
+
+    rule obs_id_right
+      domain
+    end
+
     
   end
 end
