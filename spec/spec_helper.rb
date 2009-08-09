@@ -44,3 +44,32 @@ def ascii(from = 33, to = 126)
     ('P'..'Y').to_a + ('1'..'4').to_a + ('6'..'8').to_a
   chars - boring
 end
+
+# Original mockup from ActionMailer
+class MockSMTP
+  def self.deliveries
+    @@deliveries
+  end
+
+  def initialize
+    @@deliveries = []
+  end
+
+  def sendmail(mail, from, to)
+    @@deliveries << [mail, from, to]
+  end
+
+  def start(*args)
+    yield self
+  end
+  
+  def enable_starttls
+    true
+  end
+end
+class Net::SMTP
+  def self.new(*args)
+    MockSMTP.new
+  end
+end
+

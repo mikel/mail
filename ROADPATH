@@ -43,9 +43,11 @@
 
 ==Basic Email Sending & Receiving
 
-* Wrap up Net/SMTP
+* Wrap up Net/SMTP [NF] (missing STMPS and Authentication Schemes support)
 
 * Wrap up Net/POP3
+
+* Provide SMTP/POP3/IMAP default configurations for all known webmails
 
 * Wrap up Net/IMAP (if we really want to...)
 
