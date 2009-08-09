@@ -17,6 +17,6 @@ module Mail
     def keywords
       phrase_list.phrases
     end
-
+    
   end
 end

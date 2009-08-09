@@ -67,6 +67,14 @@ describe Mail::Header do
       header.fields[1].value.should == "Mikel"
     end
     
+    it "should split each field into an name and value - even if whitespace is missing" do
+      header = Mail::Header.new("To: Mikel\r\nFrom:bob\r\n")
+      header.fields[0].name.should == "From"
+      header.fields[0].value.should == "bob"
+      header.fields[1].name.should == "To"
+      header.fields[1].value.should == "Mikel"
+    end
+    
     it "should preserve the order of the fields it is given" do
       header = Mail::Header.new
       header.fields = ['From: mikel@me.com', 'To: bob@you.com', 'Subject: This is a badly formed email']

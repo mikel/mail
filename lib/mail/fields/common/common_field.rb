@@ -29,11 +29,15 @@ module Mail
       end
       
       def to_s
-        value.blank? ? '' : "#{name}: #{value}"
+        value.blank? ? '' : value
       end
       
       def encoded
         value.blank? ? nil : "#{do_encode}\r\n"
+      end
+
+      def encoded_to_s
+        value.blank? ? '' : "#{name}: #{value}"
       end
 
       private
@@ -67,11 +71,11 @@ module Mail
       #  it is allowed elsewhere.
       def do_encode
         case
-        when to_s.length <= 78
-          to_s
-        when to_s.length > 78
+        when encoded_to_s.length <= 78
+          encoded_to_s
+        when encoded_to_s.length > 78
           @folded_line = []
-          @unfolded_line = to_s
+          @unfolded_line = encoded_to_s
           wspp = @unfolded_line =~ /[ \t]/
           fold
           @folded_line.join("\r\n\t")

@@ -40,7 +40,7 @@ describe Mail::UnstructuredField do
     end
     
     it "should provide a to_s function that returns the field name and value" do
-      @field.to_s.should == "Subject: Hello Frank"
+      @field.to_s.should == "Hello Frank"
     end
     
     it "should return '' on to_s if there is no value" do

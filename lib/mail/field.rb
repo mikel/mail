@@ -113,7 +113,7 @@ module Mail
     private
     
     def split(raw_field)
-      match_data = raw_field.match(/^(#{FIELD_NAME}):\s(#{FIELD_BODY})$/)
+      match_data = raw_field.match(/^(#{FIELD_NAME}):\s?(#{FIELD_BODY})$/)
       [match_data[1], match_data[2]]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
