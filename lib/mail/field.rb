@@ -21,6 +21,7 @@ module Mail
   class Field
     
     include Patterns
+    include Comparable
     
     STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
                             references keywords resent-date resent-from resent-sender
