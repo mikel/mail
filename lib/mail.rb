@@ -1,12 +1,11 @@
 # encoding: utf-8
 module Mail
-  
+
   require 'treetop'
   require 'net/smtp'
+  require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
-
-  require File.join(dir_name, 'network', 'smtp_tls') if RUBY_VERSION <= '1.8.6'
 
   require File.join(dir_name, 'core_extensions')
   require File.join(dir_name, 'patterns')

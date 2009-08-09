@@ -1,2 +1,2 @@
 treetop: we need to include this in the gem spec
-smtp_tls: if ruby < 1.8.6... can we make optional?
+tlsmail: if ruby < 1.8.6... we could make it optional, or embed it in Mail
