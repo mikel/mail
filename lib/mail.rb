@@ -89,7 +89,7 @@ module Mail
     end
     
     smtp.start(helo = 'localhost.localdomain', config.user, config.pass, authentication = :plain) do |smtp|
-      smtp.sendmail(message.encoded, message.from, message.to)
+      smtp.sendmail(message.encoded, message.from.addresses.first, message.to.addresses)
     end
     
     message
