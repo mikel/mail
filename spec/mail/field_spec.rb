@@ -81,6 +81,11 @@ describe Mail::Field do
       field.value = "bob@me.com"
       field.field.class.should == Mail::ToField
     end
+    
+    it "should create a field without trying to parse if given a symbol" do
+      field = Mail::Field.new('Message-ID')
+      field.field.class.should == Mail::MessageIdField
+    end
 
   end
 

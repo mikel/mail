@@ -42,6 +42,11 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       m.encoded.should == "Message-ID: <1234@test.lindsaar.net>\r\n"
     end
+    
+    it "should respond to :responsible_for?" do
+      m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
+      m.should respond_to(:responsible_for?)
+    end
   end
 
   describe "generating a message id" do

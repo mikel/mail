@@ -153,6 +153,10 @@ module Mail
 
     alias :to_s :encoded
 
+    def has_message_id?
+      !fields.select { |f| f.responsible_for?('Message-ID') }.empty?
+    end
+
     private
     
     def raw_source=(val)

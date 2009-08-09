@@ -428,9 +428,44 @@ describe Mail::Message do
         subject 'This is a test email'
            body 'This is a body of the email'
       end
-      result ="From: mikel@test.lindsaar.net\r\nTo: you@test.lindsaar.net\r\nSubject: This is a test email\r\n\r\nThis is a body of the email"
+      result =""
       
-      mail.to_s.should == result
+      mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
+      mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
+      mail.to_s.should =~ /Subject: This is a test email\r\n/
+      mail.to_s.should =~ /This is a body of the email/
+
+    end
+    
+    it "should say if it has a message id" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      mail.should_not be_has_message_id
+    end
+    
+    it "should make an email and inject a message ID if none was set if told to_s" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
+    end
+    
+    it "should add the message id to the message permanently once sent to_s" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      mail.to_s
+      mail.should be_has_message_id
     end
     
   end

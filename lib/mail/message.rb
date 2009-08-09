@@ -287,10 +287,19 @@ module Mail
       header.fields
     end
 
+    def has_message_id?
+      header.has_message_id?
+    end
+    
+    def add_message_id
+      header.fields << MessageIdField.new
+    end
+    
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
+      add_message_id unless has_message_id?
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded

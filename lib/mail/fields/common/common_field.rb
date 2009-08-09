@@ -40,6 +40,10 @@ module Mail
         value.blank? ? '' : "#{name}: #{value}"
       end
 
+      def responsible_for?( val )
+        name.to_s.downcase == val.to_s.downcase
+      end
+
       private
 
 
