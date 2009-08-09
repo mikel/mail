@@ -58,11 +58,33 @@ module Mail
     FIELD_NAME = 'message-id'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      @uniq = 1
+      if args.last.blank?
+        self.name = FIELD_NAME
+        self.value = generate_message_id
+        self
+      else
+        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      end
     end
     
     def name
       'Message-ID'
+    end
+    
+    private
+    
+    def generate_message_id
+      fqdn ||= ::Socket.gethostname
+      "<#{random_tag}@#{fqdn}.mail>"
+    end
+    
+    def random_tag
+      @uniq += 1
+      t = Time.now
+      sprintf('%x%x_%x%x%d%x',
+              t.to_i, t.tv_usec,
+              $$, Thread.current.object_id, @uniq, rand(255))
     end
     
   end
