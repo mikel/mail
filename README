@@ -72,7 +72,7 @@ All major mail functions should be able to happen from the Mail:: module.
    smtp '127.0.0.1'
  end
 
- Mail.send do
+ Mail.deliver do
        from 'me@test.lindsaar.net'
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
