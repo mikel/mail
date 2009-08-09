@@ -53,7 +53,7 @@
 
 * Wrap up Net/SMTP [NF] (missing STMPS and Authentication Schemes support)
 
-* Wrap up Net/POP3
+* Wrap up Net/POP3 [NF] (missing APOP support)
 
 * Provide SMTP/POP3/IMAP default configurations for all known webmails
 

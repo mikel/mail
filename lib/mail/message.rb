@@ -47,6 +47,7 @@ module Mail
     include Patterns
     include Utilities
     include Sendable
+    include RetrieveViaPop3
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
@@ -332,6 +333,15 @@ module Mail
         @raw_envelope   = match_data[1]
         self.raw_source = match_data[2]
       end
+    end
+
+    class << self
+
+      # Only POP3 is supported for now
+      def get_all_mail(&block)
+        self.pop3_get_all_mail(&block)
+      end
+
     end
 
   end

@@ -53,4 +53,19 @@ describe "Mail" do
     MockSMTP.deliveries[0][2].should == ["marcel@amont.com"]
   end
   
+  it "should retrieve all emails via POP3" do
+    config = Mail.defaults do
+      pop3 'pop.mockup.com'
+      enable_tls
+    end
+    
+    messages = Mail.get_all_mail
+    
+    messages.should_not be_empty
+    for message in messages
+      message.should be_instance_of(Mail::Message)
+      message.raw_source.should =~ /test./
+    end
+  end
+  
 end

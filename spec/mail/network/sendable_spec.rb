@@ -42,4 +42,12 @@ describe "Sendable" do
     MockSMTP.deliveries[0][2].should == sendable.to.addresses
   end
   
+  it "should raise if the SMTP configuration is not set" do
+    config = Mail.defaults do
+      smtp ''
+    end
+    
+    doing { @sendable.new.deliver }.should raise_error
+  end
+  
 end

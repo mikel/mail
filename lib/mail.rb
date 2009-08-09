@@ -3,6 +3,7 @@ module Mail
 
   require 'treetop'
   require 'net/smtp'
+  require 'net/pop'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
@@ -12,6 +13,7 @@ module Mail
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
   require File.join(dir_name, 'network', 'sendable')
+  require File.join(dir_name, 'network', 'retrieve_via_pop3')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'header')
@@ -75,6 +77,10 @@ module Mail
   # Send an email using the default configuration
   def Mail.deliver(*args, &block)
     Mail.message(args, &block).deliver
+  end
+
+  def Mail.get_all_mail(&block)
+    Message::get_all_mail(&block)
   end
 
 end
