@@ -74,7 +74,7 @@ module Mail
       @raw_source = value.to_crlf
     end
     
-    # The raw_envelope is the From mikel@me.com Mon May  2 16:07:05 2009
+    # The raw_envelope is the From mikel@test.lindsaar.net Mon May  2 16:07:05 2009
     # type field that you can see at the top of any email that has come
     # from a mailbox
     def raw_envelope
@@ -85,7 +85,7 @@ module Mail
     # 
     # Example:
     # 
-    #  mail.header = 'To: mikel@me.com\r\nFrom: Bob@bob.com'
+    #  mail.header = 'To: mikel@test.lindsaar.net\r\nFrom: Bob@bob.com'
     #  mail.header #=> <#Mail::Header
     def header=(value)
       @header = Mail::Header.new(value)
@@ -134,8 +134,8 @@ module Mail
     # 
     # Example:
     # 
-    #  mail.to = '"Mikel Lindsaar" <mikel@me.com>'
-    #  mail.to #=> '"Mikel Lindsaar" <mikel@me.com>'
+    #  mail.to = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+    #  mail.to #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
     def to=(value)
       header[:to] = value
     end
@@ -145,21 +145,20 @@ module Mail
     # 
     # Example:
     # 
-    #  mail.to = '"Mikel Lindsaar" <mikel@me.com>'
-    #  mail.to #=> '"Mikel Lindsaar" <mikel@me.com>'
-    #
-    #  mail.to '"M L" <mikel@you.com>'
-    #  mail.to #=> '"M L" <mikel@you.com>'
+    #  mail.to = '"M L" <mikel@test.lindsaar.net>'
+    #  mail.to.to_s #=> '"M L" <mikel@test.lindsaar.net>'
+    #  mail.to.formatted #=> ['"M L" <mikel@test.lindsaar.net>']
+    #  mail.to.addresses #=> ['mikel@test.lindsaar.net']
     def to(value = nil)
-      value ? self.to = value : header[:to].value
+      value ? self.to = value : header[:to]
     end
 
     # Sets the from field in the message header.
     # 
     # Example:
     # 
-    #  mail.from = '"Mikel Lindsaar" <mikel@me.com>'
-    #  mail.from #=> '"Mikel Lindsaar" <mikel@me.com>'
+    #  mail.from = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+    #  mail.from.to_s #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
     def from=(value)
       header[:from] = value
     end
@@ -169,13 +168,15 @@ module Mail
     # 
     # Example:
     # 
-    #  mail.from = '"Mikel Lindsaar" <mikel@me.com>'
-    #  mail.from #=> '"Mikel Lindsaar" <mikel@me.com>'
+    #  mail.from = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+    #  mail.from.to_s #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
     # 
-    #  mail.from '"M L" <mikel@you.com>'
-    #  mail.from #=> '"M L" <mikel@you.com>'
+    #  mail.from '"M L" <mikel@test.lindsaar.net>'
+    #  mail.from.to_s #=> '"M L" <mikel@test.lindsaar.net>'
+    #  mail.from.formatted #=> ['"M L" <mikel@test.lindsaar.net>']
+    #  mail.from.addresses #=> ['mikel@test.lindsaar.net']
     def from(value = nil)
-      value ? self.from = value : header[:from].value
+      value ? self.from = value : header[:from]
     end
     
     # Sets the subject field in the message header.
@@ -183,7 +184,7 @@ module Mail
     # Example:
     # 
     #  mail.subject = 'This is the subject'
-    #  mail.subject #=> 'This is the subject'
+    #  mail.subject.to_s #=> 'This is the subject'
     def subject=(value)
       header[:subject] = value
     end
@@ -194,12 +195,36 @@ module Mail
     # Example:
     # 
     #  mail.subject = 'This is the subject'
-    #  mail.subject #=> 'This is the subject'
+    #  mail.subject.to_s #=> 'This is the subject'
     # 
     #  mail.subject 'This is another subject'
-    #  mail.subject #=> 'This is another subject'
+    #  mail.subject.to_s #=> 'This is another subject'
     def subject(value = nil)
-      value ? self.subject = value : header[:subject].value
+      value ? self.subject = value : header[:subject]
+    end
+    
+    # Allows you to add an arbitrary header
+    # 
+    # Example:
+    #
+    #  mail['foo'] = '1234'
+    #  mail['foo'].to_s #=> '1234'
+    def []=(name, value)
+      if name.to_s == 'body'
+        self.body = value
+      else
+        header[underscoreize(name)] = value
+      end
+    end
+
+    # Allows you to read an arbitrary header
+    # 
+    # Example:
+    #
+    #  mail['foo'] = '1234'
+    #  mail['foo'].to_s #=> '1234'
+    def [](name)
+      header[underscoreize(name)]
     end
     
     # Method Missing in this implementation allows you to set any of the
@@ -223,24 +248,24 @@ module Mail
     # Examples:
     # 
     #  mail.comments = 'These are some comments'
-    #  mail.comments #=> 'These are some comments'
+    #  mail.comments.to_s #=> 'These are some comments'
     # 
     #  mail.comments 'These are other comments'
-    #  mail.comments #=> 'These are other comments'
+    #  mail.comments.to_s #=> 'These are other comments'
     # 
     # 
-    #  mail.date = 'These are some comments'
-    #  mail.date #=> 'These are some comments'
+    #  mail.date = 'Tue, 1 Jul 2003 10:52:37 +0200'
+    #  mail.date.to_s #=> 'Tue, 1 Jul 2003 10:52:37 +0200'
     # 
-    #  mail.date 'These are other comments'
-    #  mail.date #=> 'These are other comments'
+    #  mail.date 'Tue, 1 Jul 2003 10:52:37 +0200'
+    #  mail.date.to_s #=> 'Tue, 1 Jul 2003 10:52:37 +0200'
     # 
     #
     #  mail.resent_msg_id = '<1234@resent_msg_id.lindsaar.net>'
-    #  mail.resent_msg_id #=> '<1234@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id.to_s #=> '<1234@resent_msg_id.lindsaar.net>'
     # 
     #  mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
-    #  mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id.to_s #=> '<4567@resent_msg_id.lindsaar.net>'
     def method_missing(name, *args, &block)
       #:nodoc:
       # Only take the structured fields, as we could take _anything_ really
@@ -248,7 +273,7 @@ module Mail
       field_name = underscoreize(name).chomp("=")
       if Mail::Field::KNOWN_FIELDS.include?(field_name)
         if args.empty?
-          header[field_name].value
+          header[field_name]
         else
           header[field_name] = args.first
         end
@@ -258,37 +283,23 @@ module Mail
       #:startdoc:
     end 
 
-    # Allows you to add an arbitrary header
-    # 
-    # Example:
-    #
-    #  mail['foo'] = '1234'
-    def []=(name, value)
-      if name.to_s == 'body'
-        self.body = value
-      else
-        header[underscoreize(name)] = value
-      end
-    end
-
-    # Allows you to read an arbitrary header
-    # 
-    # Example:
-    #
-    #  mail['foo'] = '1234'
-    #  mail['foo'] #=> '1234'
-    def [](name)
-      header[underscoreize(name)]
-    end
-
     def header_fields
       header.fields
     end
 
+    def has_message_id?
+      header.has_message_id?
+    end
+    
+    def add_message_id
+      header.fields << MessageIdField.new
+    end
+    
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
+      add_message_id unless has_message_id?
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded

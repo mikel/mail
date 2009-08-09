@@ -48,9 +48,14 @@ module Mail
     # 
     # Note, does not want a terminating carriage return.  Returns
     # self appropriately parsed
-    def initialize(raw_field_text) 
-      name, value = split(raw_field_text)
-      create_field(name, value)
+    def initialize(raw_field_text)
+      if raw_field_text !~ /:/
+        name = raw_field_text
+        create_field(name, nil)
+      else
+        name, value = split(raw_field_text)
+        create_field(name, value)
+      end
       return self
     end
 
@@ -76,10 +81,6 @@ module Mail
     
     def to_s
       field.to_s
-    end
-    
-    def responsible_for?( val )
-      name.to_s.downcase == val.to_s.downcase
     end
     
     def update(name, value)
@@ -113,7 +114,7 @@ module Mail
     private
     
     def split(raw_field)
-      match_data = raw_field.match(/^(#{FIELD_NAME}):\s(#{FIELD_BODY})$/)
+      match_data = raw_field.match(/^(#{FIELD_NAME}):\s?(#{FIELD_BODY})$/)
       [match_data[1], match_data[2]]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"

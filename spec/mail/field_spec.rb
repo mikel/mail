@@ -48,6 +48,12 @@ describe Mail::Field do
       field.value.should == 'Bob'
     end
     
+    it "should split the name and values out of the raw field passed in if missing whitespace" do
+      field = Mail::Field.new('To:Bob')
+      field.name.should == 'To'
+      field.value.should == 'Bob'
+    end
+    
     it "should return an unstuctured field if the structured field parsing raises an error" do
       Mail::ToField.should_receive(:new).and_raise(Mail::Field::ParseError)
       field = Mail::Field.new('To: Bob, ,,, Frank, Smith')
@@ -74,6 +80,11 @@ describe Mail::Field do
       field.field.class.should == Mail::ToField
       field.value = "bob@me.com"
       field.field.class.should == Mail::ToField
+    end
+    
+    it "should create a field without trying to parse if given a symbol" do
+      field = Mail::Field.new('Message-ID')
+      field.field.class.should == Mail::MessageIdField
     end
 
   end

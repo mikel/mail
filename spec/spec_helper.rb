@@ -1,9 +1,14 @@
 # encoding: utf-8
+
 unless defined?(MAIL_ROOT)
   STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
-
   MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
 end
+
+unless defined?(SPEC_ROOT)
+  SPEC_ROOT = File.join(File.dirname(__FILE__))
+end
+
 require 'rubygems'
 require 'ruby-debug' if RUBY_VERSION < '1.9'
 require 'spec'
@@ -22,7 +27,7 @@ Spec::Runner.configure do |config|
 end
 
 def fixture(name)
-  File.join(File.dirname(__FILE__), 'fixtures', name)
+  File.join(SPEC_ROOT, 'fixtures', name)
 end
 
 alias doing lambda

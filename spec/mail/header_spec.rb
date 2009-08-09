@@ -17,11 +17,21 @@ describe Mail::Header do
 
   end
 
-  describe "accessor methods" do
+  describe "instance methods" do
     
     it "should save away the raw source of the header that it is passed" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header.raw_source.should == "To: Mikel\r\nFrom: bob\r\n"
+    end
+    
+    it "should say if it has a message_id field defined" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header.should_not be_has_message_id
+    end
+    
+    it "should say if it has a message_id field defined" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nMessage-ID: 1234")
+      header.should be_has_message_id
     end
     
   end
@@ -61,6 +71,14 @@ describe Mail::Header do
     
     it "should split each field into an name and value" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header.fields[0].name.should == "From"
+      header.fields[0].value.should == "bob"
+      header.fields[1].name.should == "To"
+      header.fields[1].value.should == "Mikel"
+    end
+    
+    it "should split each field into an name and value - even if whitespace is missing" do
+      header = Mail::Header.new("To: Mikel\r\nFrom:bob\r\n")
       header.fields[0].name.should == "From"
       header.fields[0].value.should == "bob"
       header.fields[1].name.should == "To"

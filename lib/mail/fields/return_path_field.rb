@@ -22,6 +22,8 @@
 module Mail
   class ReturnPathField < StructuredField
     
+    include CommonAddress
+    
     FIELD_NAME = 'return-path'
     
     def initialize(*args)

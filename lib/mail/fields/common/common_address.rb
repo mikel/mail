@@ -12,12 +12,18 @@ module Mail
         @tree ||= AddressList.new(value)
       end
       
-      def addresses
-        result = tree.addresses
+      def each
+        tree.addresses.each do |address|
+          yield
+        end
       end
 
-      def address_strings
-        addresses.map { |a| a.address }
+      def addresses
+        tree.addresses.map { |a| a.address }
+      end
+
+      def formatted
+        tree.addresses.map { |a| a.format }
       end
 
       def group_names

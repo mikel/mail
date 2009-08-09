@@ -13,9 +13,9 @@
 
 * Keywords and comments fields working (low hanging fruit) [DONE - ML]
 
-* Date parsing working
+* Date parsing working [DONE - ML]
 
-* Date fields handling dates correctly
+* Date fields handling dates correctly [DONE - ML]
 
 * Trace fields decided on method to handle [DONE - ML]
 
@@ -23,9 +23,17 @@
 
 * All trace field functionality working [DONE - ML]
 
-* Message ID fields generating and handling correctly
+* Message ID fields handling correctly [DONE - ML]
+
+* Message ID fields generating correctly
+
+* Work out basic API on address fields [DONE - ML]
+
+* All RFC 2822 example emails passing [DONE - ML]
 
 * All TMail tests relating to RFC2822 passing
+
+* All RFC 2822 obsolete example emails passing
 
 ==Multipart Email Handling
 

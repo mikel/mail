@@ -1,0 +1,2 @@
+treetop: we need to include this in the gem spec
+smtp_tls: if ruby < 1.8.6... can we make optional?

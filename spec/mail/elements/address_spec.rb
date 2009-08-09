@@ -418,6 +418,22 @@ describe Mail::Address do
             :raw          => '(foo@bar.com (foobar), ned@foo.com (nedfoo) ) <kevin@goess.org>'})
       end
       
+      it "should handle |Pete(A wonderful ) chap) <pete(his account)@silly.test(his host)>|" do
+        address = Mail::Address.new('Pete(A wonderful \) chap) <pete(his account)@silly.test(his host)>')
+        address.should break_down_to({
+            :name         => 'Pete',
+            :display_name => 'Pete',
+            :address      => 'pete(his account)@silly.test',
+            :comments     => ['A wonderful \) chap', 'his account', 'his host'],
+            :domain       => 'silly.test',
+            :local        => 'pete(his account)',
+            :format       => 'Pete <pete(his account)@silly.test> (A wonderful \) chap his account his host)',
+            :raw          => 'Pete(A wonderful \) chap) <pete(his account)@silly.test(his host)>'})
+      end
+
+
+
+      
     end
     
   end
