@@ -3,12 +3,10 @@ module Mail
   
   require 'treetop'
   require 'net/smtp'
-  if RUBY_VERSION <= '1.8.6'
-    gem 'smtp_tls', '>= 0' # avoids loading 'smtp_tls.rb' from adzap-ar_mailer
-    require 'smtp_tls'
-  end
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
+
+  require File.join(dir_name, 'network', 'smtp_tls') if RUBY_VERSION <= '1.8.6'
 
   require File.join(dir_name, 'core_extensions')
   require File.join(dir_name, 'patterns')

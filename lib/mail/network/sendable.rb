@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# Include this module to make an class sendable.
+# Include this module to make a class "sendable".
 # It uses the defaults set in Configuration to retrieve SMTP settings.
 module Mail
   module Sendable
