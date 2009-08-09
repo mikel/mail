@@ -250,8 +250,12 @@ TRACEHEADER
     
     it "should add a new received header after the other received headers if they exist" do
       @traced_header['To'] = "Mikel"
-      @traced_header['Received'] = "from agw2 by xxx.xxxx.xxx"
-      @traced_header.fields[5].field.class.should == Mail::ReceivedField
+      @traced_header['Received'] = "from agw2 by xxx.xxxx.xxx; Sun, 8 May 2005 12:30:13 -0500"
+      @traced_header.fields[0].addresses.should == ['xxx@xxxx.xxxtest']
+      @traced_header.fields[1].info.should == 'from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id 6AAEE3B4D23 for <xxx@xxxx.xxx>'
+      @traced_header.fields[2].info.should == 'from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id j48HUC213279 for <xxx@xxxx.xxx>'
+      @traced_header.fields[3].info.should == 'from conversion-xxx.xxxx.xxx.net by xxx.xxxx.xxx id <0IG600901LQ64I@xxx.xxxx.xxx> for <xxx@xxxx.xxx>'
+      @traced_header.fields[5].info.should == "from agw2 by xxx.xxxx.xxx"
       @traced_header.fields[6].field.class.should == Mail::ToField
     end
     
