@@ -46,6 +46,7 @@ module Mail
     
     include Patterns
     include Utilities
+    include Sendable
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)

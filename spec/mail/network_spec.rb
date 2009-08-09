@@ -11,6 +11,7 @@ describe "Mail" do
       pop3 'pop.myhost.com'
       user 'roger'
       pass 'moore'
+      disable_tls
       
       smtp.should == ['smtp.myhost.com', 25]
       pop3.should == ['pop.myhost.com', 110]
@@ -39,7 +40,7 @@ describe "Mail" do
     config.smtp.should == ['smtp.mockup.com', 587]
     config.tls?.should == true
     
-    message = Mail.send do
+    message = Mail.deliver do
       from 'roger@moore.com'
       to 'marcel@amont.com'
       subject 'Re: No way!'

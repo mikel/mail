@@ -13,6 +13,8 @@ module Mail
   require File.join(dir_name, 'core_extensions')
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')
+  require File.join(dir_name, 'configuration')
+  require File.join(dir_name, 'network', 'sendable')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'header')
@@ -20,7 +22,6 @@ module Mail
   require File.join(dir_name, 'field')
   require File.join(dir_name, 'field_list')
 
-  require File.join(dir_name, 'configuration')
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))
@@ -75,24 +76,8 @@ module Mail
   end
 
   # Send an email using the default configuration
-  def Mail.send(*args, &block)
-    message = Mail.message(args, &block)
-    
-    config = Mail::Configuration.instance
-    raise ArgumentError.new('Please call +Mail.defaults+ to set the SMTP configuration') unless config.smtp
-    
-    smtp = Net::SMTP.new(config.smtp[0], config.smtp[1])
-    if config.tls?
-      smtp.enable_starttls
-    else
-      smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto)
-    end
-    
-    smtp.start(helo = 'localhost.localdomain', config.user, config.pass, authentication = :plain) do |smtp|
-      smtp.sendmail(message.encoded, message.from.addresses.first, message.to.addresses)
-    end
-    
-    message
+  def Mail.deliver(*args, &block)
+    Mail.message(args, &block).deliver
   end
 
 end
