@@ -69,7 +69,7 @@ All major mail functions should be able to happen from the Mail:: module.
  require 'mail'
 
  Mail.defaults do
-   smtp '127.0.0.1'
+   smtp '127.0.0.1', 25
  end
 
  Mail.deliver do
@@ -85,7 +85,7 @@ All major mail functions should be able to happen from the Mail:: module.
  require 'mail'
  
  Mail.defaults do
-   pop3 'mail.myhost.com.au'
+   pop3 'mail.myhost.com.au', 110
    user 'mikel'
    pass 'mypass'
  end
