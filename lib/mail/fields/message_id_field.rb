@@ -75,7 +75,7 @@ module Mail
     private
     
     def generate_message_id
-      fqdn ||= ::Socket.gethostname
+      fqdn = ::Socket.gethostname
       "<#{random_tag}@#{fqdn}.mail>"
     end
     
