@@ -78,4 +78,8 @@ module Mail
     Mail.message(args, &block).deliver
   end
 
+  def Mail.read(filename)
+    Mail.message(File.read(filename))
+  end
+  
 end
