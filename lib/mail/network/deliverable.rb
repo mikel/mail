@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-# Include this module to make a class "sendable".
+# Include this module to make a class "deliverable".
 # It uses the defaults set in Configuration to retrieve SMTP settings.
 module Mail
-  module Sendable
+  module Deliverable
 
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
@@ -13,8 +13,8 @@ module Mail
       raise ArgumentError.new('An author -from- is required to send a message') if from.blank?
       to ||= self.to.addresses if self.respond_to?(:to) && self.to
       raise ArgumentError.new('At least one recipient -from- is required to send a message') if to.blank?
-      rfc8222 ||= self.encoded if self.respond_to?(:encoded)
-      raise ArgumentError.new('A encoded content is required to send a message') if rfc8222.blank?
+      rfc2822 ||= self.encoded if self.respond_to?(:encoded)
+      raise ArgumentError.new('A encoded content is required to send a message') if rfc2822.blank?
       
       config = Mail::Configuration.instance
       raise ArgumentError.new('Please call +Mail.defaults+ to set the SMTP configuration') unless config.smtp

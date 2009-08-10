@@ -64,6 +64,19 @@ describe Mail::Message do
 
   end
   
+  describe "envelope handling" do
+    it "should respond to 'envelope from'" do
+      Mail::Message.new.should respond_to(:envelope_from)
+    end
+    
+    it "should strip off the envelope from field if present" do
+      message = Mail::Message.new(File.read(fixture('emails/raw_email')))
+      message.envelope_from.should == "jamis_buck@byu.edu"
+      message.envelope_date.should == ::DateTime.parse("Mon May  2 16:07:05 2005")
+    end
+
+  end
+  
   describe "accepting a plain text string email" do
 
     it "should accept some email text to parse and return an email" do
@@ -445,6 +458,29 @@ describe Mail::Message do
            body 'This is a body of the email'
       end
       mail.should_not be_has_message_id
+    end
+    
+    it "should preserve any message id that you pass it if add_message_id is called explicitly" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      mail.add_message_id("ThisIsANonUniqueMessageId")
+      mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
+    end
+    
+    it "should generate a random message ID if nothing is passed to add_message_id" do
+      mail = Mail.message do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      mail.add_message_id
+      fqdn ||= ::Socket.gethostname
+      mail.to_s.should =~ /Message-ID: <[\d\w_]+@#{fqdn}.mail>\r\n/
     end
     
     it "should make an email and inject a message ID if none was set if told to_s" do

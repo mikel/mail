@@ -11,14 +11,13 @@ module Mail
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
-  require File.join(dir_name, 'network', 'sendable')
+  require File.join(dir_name, 'network', 'deliverable')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'header')
   require File.join(dir_name, 'body')
   require File.join(dir_name, 'field')
   require File.join(dir_name, 'field_list')
-
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))
@@ -28,6 +27,7 @@ module Mail
 
   require File.join(dir_name, 'fields', 'structured_field')
   require File.join(dir_name, 'fields', 'unstructured_field')
+  require File.join(dir_name, 'envelope')
 
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2822_obsolete'))
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2822'))
@@ -36,6 +36,7 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'date_time'))
   Treetop.load(File.join(dir_name, 'parsers', 'received'))
   Treetop.load(File.join(dir_name, 'parsers', 'message_ids'))
+  Treetop.load(File.join(dir_name, 'parsers', 'envelope_from'))
 
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
