@@ -50,7 +50,7 @@ All major mail functions should be able to happen from the Mail:: module.
 
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 
-=== Making an email, different attribute writers:
+=== Making an email, have it your way:
 
  require 'mail'
  
@@ -63,6 +63,37 @@ All major mail functions should be able to happen from the Mail:: module.
  mail.subject = 'This is a test email'
  
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+
+=== Don't Worry About Message IDs:
+
+ require 'mail'
+ 
+ mail = Mail.message do
+     to 'you@test.lindsaar.net'
+   body 'Some simple body'
+ end
+
+ mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
+ 
+Mail will automatically add a Message-ID field if it is missing and
+give it a unique, random Message-ID along the lines of:
+
+ <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
+ 
+=== Or do worry about Message-IDs:
+
+ require 'mail'
+ 
+ mail = Mail.message do
+          to 'you@test.lindsaar.net'
+  message_id '<ThisIsMyMessageId@some.domain.com>'
+        body 'Some simple body'
+ end
+ 
+ mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
+
+Mail will take the message_id you assign to it trusting that you know
+what you are doing.
 
 === Sending an email:
 
@@ -93,6 +124,24 @@ All major mail functions should be able to happen from the Mail:: module.
  emails = Mail.get_all_mail
  
  emails.length #=> 12
+
+=== Reading an Email
+
+ require 'mail'
+ 
+ mail = Mail::Message.new(File.read(email))
+ 
+ mail.envelope.from   #=> 'mikel@test.lindsaar.net'
+ mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+ mail.sender.address  #=> 'mikel@test.lindsaar.net'
+ mail.to.addresses    #=> ['bob@test.lindsaar.net']
+ mail.cc.addresses    #=> ['sam@test.lindsaar.net']
+ mail.subject.to_s    #=> "This is the subject"
+ mail.date.to_s       #=> '21 Nov 1997 09:55:06 -0600'
+ mail.message_id      #=> '<4D6AA7EB.6490534@xxx.xxx>'
+ mail.body            #=> 'This is the body of the email...
+
+Many more methods available.
 
 === Getting error reports from an email:
 
