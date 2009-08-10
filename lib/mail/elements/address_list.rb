@@ -6,7 +6,7 @@ module Mail
       if tree = parser.parse(string)
         @address_nodes = tree.addresses
       else
-        raise Mail::Field::ParseError, "Can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError, "AddressListsParser can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
       end
     end
     

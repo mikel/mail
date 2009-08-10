@@ -9,7 +9,7 @@ module Mail
       if tree = parser.parse(string)
         @message_ids = tree.message_ids.map { |msg_id| clean_msg_id(msg_id.text_value) }
       else
-        raise Mail::Field::ParseError, "Can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError, "MessageIdsElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
       end
     end
     
