@@ -10,7 +10,7 @@ module Mail
         @address = tree.addr_spec.text_value.strip
         @date_time = ::DateTime.parse("#{tree.ctime_date.text_value}")
       else
-        raise Mail::Field::ParseError, "Can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError, "EnvelopeFromElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
       end
     end
     
