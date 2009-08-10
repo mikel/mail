@@ -26,7 +26,7 @@ Spec::Runner.configure do |config|
   config.include(CustomMatchers)  
 end
 
-def fixture(name)
+def fixture(*name)
   File.join(SPEC_ROOT, 'fixtures', name)
 end
 

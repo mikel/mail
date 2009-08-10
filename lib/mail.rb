@@ -81,7 +81,10 @@ module Mail
   end
 
   def Mail.get_all_mail(&block)
-    Message::get_all_mail(&block)
+    Mail::Message.get_all_mail(&block)
   end
 
+  def Mail.read(filename)
+    Mail.message(File.read(filename))
+  end
 end

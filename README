@@ -129,7 +129,7 @@ what you are doing.
 
  require 'mail'
  
- mail = Mail::Message.new(File.read(email))
+ mail = Mail.read('/path/to/message.eml')
  
  mail.envelope.from   #=> 'mikel@test.lindsaar.net'
  mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']

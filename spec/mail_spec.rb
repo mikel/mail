@@ -27,4 +27,10 @@ describe "mail" do
     message.body.to_s.should    == 'This is a body of text'
   end
 
+  it "should read a file" do
+    wrap_method = Mail.read(fixture('emails', 'raw_email')).to_s
+    file_method = Mail.message(File.read(fixture('emails', 'raw_email'))).to_s
+    wrap_method.should == file_method
+  end
+
 end
