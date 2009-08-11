@@ -20,11 +20,11 @@ describe "Deliverable" do
   it "should send emails from given settings" do
     from = 'roger@moore.com'
     to = 'marcel@amont.com'
-    rfc8222 = 'invalid RFC8222'
+    rfc2822 = 'invalid RFC2822'
     
-    @deliverable.new.deliver(from, to, rfc8222)
+    @deliverable.new.deliver(from, to, rfc2822)
     
-    MockSMTP.deliveries[0][0].should == rfc8222
+    MockSMTP.deliveries[0][0].should == rfc2822
     MockSMTP.deliveries[0][1].should == from
     MockSMTP.deliveries[0][2].should == to
   end

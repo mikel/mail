@@ -7,7 +7,7 @@ module Mail
 
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
-    def deliver(from = nil, to = nil, rfc8222 = nil)
+    def deliver(from = nil, to = nil, rfc2822 = nil)
       # TODO: use the "return-path" field by default instead of the "from" field ? (see ActionMailer)
       from ||= self.from.addresses.first if self.respond_to?(:from) && self.from
       raise ArgumentError.new('An author -from- is required to send a message') if from.blank?

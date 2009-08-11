@@ -33,7 +33,7 @@ module Mail
     #  end
     def smtp(*args)
       if args.size > 0
-        @smtp = [args[0], args[1].to_i || 25]
+        @smtp = [args[0], args[1] || 25]
       end
       @smtp
     end
