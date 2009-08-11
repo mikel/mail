@@ -3053,7 +3053,7 @@ Attdl-Protocol = Atom
    applications in which mail is sent by one user on behalf of another
    or in which error (or normal) replies should be directed to a special
    address.  (Systems that provide convenient ways for users to alter
-   these fields on a per-message basis should attempt to establish a
+   these fields on a per-message basis should accept to establish a
    primary and permanent mailbox address for the user so that Sender
    fields within the message data can be generated sensibly.)
 

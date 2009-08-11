@@ -16,19 +16,19 @@ describe Mail::FromField do
       Mail::FromField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aFromept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::FromField.new('From', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aFromept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::FromField.new('From: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aFromept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::FromField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

@@ -954,4 +954,22 @@ EMAILEND
 
   end
 
+  describe "MIME Emails" do
+    it "should read a mime version from an email" do
+      mail = Mail.new("Mime-Version: 1.0")
+      mail.mime_version.should == '1.0'
+    end
+    
+    it "should return nil if the email has no mime version" do
+      mail = Mail.new("To: bob")
+      mail.mime_version.should == nil
+    end
+    
+    it "should read the content-transfer-encoding" do
+      mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
+      mail.content_transfer_encoding.should == 'quoted-printable'
+    end
+    
+  end
+  
 end

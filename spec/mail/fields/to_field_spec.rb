@@ -16,19 +16,19 @@ describe Mail::ToField do
       Mail::ToField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aToept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::ToField.new('To', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aToept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::ToField.new('To: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aToept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::ToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

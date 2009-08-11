@@ -349,6 +349,17 @@ module Mail
     
     alias :to_s :encoded
     
+    # Mime Version returns the version string out of the Mime-Version header
+    # field if present, otherwise returns nil
+    def mime_version
+      header.mime_version
+    end
+    
+    # Returns the content transfer encoding of the email
+    def content_transfer_encoding
+      header.content_transfer_encoding
+    end
+    
     private
 
     #  2.1. General Description

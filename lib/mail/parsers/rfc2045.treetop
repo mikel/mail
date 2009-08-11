@@ -1,0 +1,20 @@
+module Mail
+  grammar RFC2045
+
+    rule tspecials
+      "(" / ")" / "<" / ">" / "@" /
+      "," / ";" / ":" / '\\' / "<" / ">" /
+      "/" / "[" / "]" / "?" / "="
+    end
+    
+    rule token
+      [\x21-\x27] /
+      [\x2a-\x2b] /
+      [\x2c-\x2e] /
+      [\x30-\x39] /
+      [\x41-\x5a] /
+      [\x5e-\x7e]
+    end
+    
+  end
+end

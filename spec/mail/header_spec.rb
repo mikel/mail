@@ -286,5 +286,28 @@ TRACEHEADER
       Mail::Header.new('Date: Mon, 24 Nov 1997 14:22:01 -0800').should be_has_date
     end
   end
+  
+  describe "mime version handling" do
+    it "should return the mime version of the email" do
+      Mail::Header.new("Mime-Version: 1.0").mime_version.should == '1.0'
+    end
+    
+    it "should return nil if no mime-version header field" do
+      Mail::Header.new('To: bob').mime_version.should == nil
+    end
+    
+    it "should return the mime version of the email" do
+      header = Mail::Header.new("Content-Transfer-Encoding: Base64")
+      header.content_transfer_encoding.should == 'base64'
+    end
+    
+    it "should return nil if no mime-version header field" do
+      header = Mail::Header.new
+      header.content_transfer_encoding.should == '7bit'
+    end
+    
+    
+    
+  end
 
 end

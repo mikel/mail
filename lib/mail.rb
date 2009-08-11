@@ -38,6 +38,9 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'received'))
   Treetop.load(File.join(dir_name, 'parsers', 'message_ids'))
   Treetop.load(File.join(dir_name, 'parsers', 'envelope_from'))
+  Treetop.load(File.join(dir_name, 'parsers', 'rfc2045'))
+  Treetop.load(File.join(dir_name, 'parsers', 'mime_version'))
+  Treetop.load(File.join(dir_name, 'parsers', 'content_transfer_encoding'))
 
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))

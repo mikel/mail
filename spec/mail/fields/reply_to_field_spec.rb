@@ -16,19 +16,19 @@ describe Mail::ReplyToField do
       Mail::ReplyToField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aReplyToept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::ReplyToField.new('Reply-To', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Reply-To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aReplyToept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::ReplyToField.new('Reply-To: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Reply-To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aReplyToept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::ReplyToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Reply-To'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

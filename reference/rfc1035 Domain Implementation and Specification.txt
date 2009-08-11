@@ -1300,7 +1300,7 @@ forum where general discussion of design issues takes place.
 
 In general, a new type is appropriate when new information is to be
 added to the database about an existing object, or we need new data
-formats for some totally new object.  Designers should attempt to define
+formats for some totally new object.  Designers should accept to define
 types and their RDATA formats that are generally applicable to all
 classes, and which avoid duplication of information.  New classes are
 appropriate when the DNS is to be used for a new protocol, etc which

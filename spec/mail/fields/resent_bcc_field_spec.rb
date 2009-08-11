@@ -15,19 +15,19 @@ describe Mail::ResentBccField do
       Mail::ResentBccField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aResentBccept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::ResentBccField.new('Resent-Bcc', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-Bcc'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aResentBccept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::ResentBccField.new('Resent-Bcc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-Bcc'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aResentBccept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::ResentBccField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-Bcc'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

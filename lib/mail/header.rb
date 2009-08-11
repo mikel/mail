@@ -164,6 +164,18 @@ module Mail
       !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
+    # Returns the mime version of the header if it exists, else nil
+    def mime_version
+      mime_version = fields.select { |f| f.responsible_for?('Mime-Version') }.first
+      mime_version ? mime_version.version : nil
+    end
+    
+    # Returns the content transfer encoding of the header if it exists, else '7bit'
+    def content_transfer_encoding
+      cte = fields.select { |f| f.responsible_for?('Content-Transfer-Encoding') }.first
+      cte ? cte.encoding : '7bit'
+    end
+
     private
     
     def raw_source=(val)

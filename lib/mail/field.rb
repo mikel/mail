@@ -177,6 +177,10 @@ module Mail
         ReturnPathField.new(name, value)
       when /^received$/
         ReceivedField.new(name, value)
+      when /^mime-version$/
+        MimeVersionField.new(name, value)
+      when /^content-transfer-encoding$/
+        ContentTransferEncodingField.new(name, value)
       else 
         OptionalField.new(name, value)
       end

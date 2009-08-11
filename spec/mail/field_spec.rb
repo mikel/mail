@@ -15,7 +15,8 @@ describe Mail::Field do
       structured_fields = %w[ Date From Sender Reply-To To Cc Bcc Message-ID In-Reply-To
                               References Keywords Resent-Date Resent-From Resent-Sender
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
-                              Return-Path Received Subject Comments ]
+                              Return-Path Received Subject Comments Mime-Version
+                              Content-Transfer-Encoding ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
@@ -27,7 +28,8 @@ describe Mail::Field do
       structured_fields = %w[ dATE fROM sENDER REPLY-TO TO CC BCC MESSAGE-ID IN-REPLY-TO
                               REFERENCES KEYWORDS resent-date resent-from rESENT-sENDER
                               rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD 
-                              rEtURN-pAtH rEcEiVeD Subject Comments ]
+                              rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn 
+                              cOntenT-transfer-EnCoDiNg]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
