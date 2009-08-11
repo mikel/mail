@@ -3,7 +3,7 @@ Given /^a basic email in a string$/ do
 end
 
 When /^I parse the basic email$/ do
-  @mail = Mail.message(@string)
+  @mail = Mail.new(@string)
 end
 
 Then /^the '(.+)' field should be '(.+)'$/ do |attribute, value|

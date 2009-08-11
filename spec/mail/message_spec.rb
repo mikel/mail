@@ -232,7 +232,7 @@ describe Mail::Message do
     describe "setting headers" do
       
       it "should accept them in block form" do
-        message = Mail.message do
+        message = Mail.new do
           bcc           'mikel@bcc.lindsaar.net'
           cc            'mikel@cc.lindsaar.net'
           comments      'this is a comment'
@@ -282,7 +282,7 @@ describe Mail::Message do
       end
 
       it "should accept them in assignment form" do
-        message = Mail.message
+        message = Mail.new
         message.bcc =           'mikel@bcc.lindsaar.net'
         message.cc =            'mikel@cc.lindsaar.net'
         message.comments =      'this is a comment'
@@ -331,7 +331,7 @@ describe Mail::Message do
       end
       
       it "should accept them in key, value form as symbols" do
-        message = Mail.message
+        message = Mail.new
         message[:bcc] =           'mikel@bcc.lindsaar.net'
         message[:cc] =            'mikel@cc.lindsaar.net'
         message[:comments] =      'this is a comment'
@@ -380,7 +380,7 @@ describe Mail::Message do
       end
       
       it "should accept them in key, value form as strings" do
-        message = Mail.message
+        message = Mail.new
         message['bcc'] =           'mikel@bcc.lindsaar.net'
         message['cc'] =            'mikel@cc.lindsaar.net'
         message['comments'] =      'this is a comment'
@@ -435,7 +435,7 @@ describe Mail::Message do
   describe "output" do
     
     it "should make an email and allow you to call :to_s on it to get a string" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'
@@ -451,7 +451,7 @@ describe Mail::Message do
     end
     
     it "should say if it has a message id" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'
@@ -461,7 +461,7 @@ describe Mail::Message do
     end
     
     it "should preserve any message id that you pass it if add_message_id is called explicitly" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'
@@ -472,7 +472,7 @@ describe Mail::Message do
     end
     
     it "should generate a random message ID if nothing is passed to add_message_id" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'
@@ -484,7 +484,7 @@ describe Mail::Message do
     end
     
     it "should make an email and inject a message ID if none was set if told to_s" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'
@@ -494,7 +494,7 @@ describe Mail::Message do
     end
     
     it "should add the message id to the message permanently once sent to_s" do
-      mail = Mail.message do
+      mail = Mail.new do
            from 'mikel@test.lindsaar.net'
              to 'you@test.lindsaar.net'
         subject 'This is a test email'

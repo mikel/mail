@@ -4,7 +4,7 @@ module Mail
   # email message.
   # 
   # You create a new email message by calling the Mail::Message.new method, or just
-  # Mail.message
+  # Mail.new
   # 
   # A Message object by default has the following objects inside it:
   # 
