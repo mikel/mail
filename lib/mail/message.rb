@@ -46,7 +46,7 @@ module Mail
     
     include Patterns
     include Utilities
-    include Sendable
+    include Deliverable
     include RetrieveViaPop3
     
     # Creates a new Mail::Message object through .new

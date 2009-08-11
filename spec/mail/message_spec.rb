@@ -954,4 +954,24 @@ EMAILEND
 
   end
 
+  describe "handling wild emails" do
+    
+    it "should return an 'encoded' version without raising a SystemStackError" do
+      # ./lib/mail/fields/common/common_field.rb:94:in `fold': stack level too deep (SystemStackError)
+      #   from ./lib/mail/fields/common/common_field.rb:95:in `fold'
+      #   from ./lib/mail/fields/common/common_field.rb:84:in `do_encode'
+      #   from ./lib/mail/fields/common/common_field.rb:36:in `encoded'
+      #   from ./lib/mail/field.rb:101:in `send'
+      #   from ./lib/mail/field.rb:101:in `method_missing'
+      #   from ./lib/mail/header.rb:149:in `encoded'
+      #   from ./lib/mail/header.rb:148:in `each'
+      #   from ./lib/mail/header.rb:148:in `encoded'
+      #   from ./lib/mail/message.rb:305:in `encoded'
+      
+      message = Mail::Message.new(File.read(fixture('emails/raw_email_encoded_stack_level_too_deep')))
+      doing { message.encoded }.should_not raise_error
+    end
+    
+  end
+
 end

@@ -47,7 +47,7 @@ describe "Deliverable" do
       smtp ''
     end
     
-    doing { @sendable.new.deliver }.should raise_error
+    doing { @deliverable.new.deliver }.should raise_error
   end
   
 end

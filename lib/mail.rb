@@ -12,11 +12,7 @@ module Mail
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
-<<<<<<< HEAD:lib/mail.rb
-  require File.join(dir_name, 'network', 'sendable')
-=======
   require File.join(dir_name, 'network', 'deliverable')
->>>>>>> Added POP3 support. Not very proud of the module name, any idea ?:lib/mail.rb
   require File.join(dir_name, 'network', 'retrieve_via_pop3')
 
   require File.join(dir_name, 'message')
