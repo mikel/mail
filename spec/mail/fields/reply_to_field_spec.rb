@@ -1,5 +1,8 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
+# 
+# reply-to        =       "Reply-To:" address-list CRLF
+# 
 
 describe Mail::ReplyToField do
   

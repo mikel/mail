@@ -32,10 +32,5 @@ describe "mail" do
     file_method = Mail.new(File.read(fixture('emails', 'raw_email'))).to_s
     wrap_method.should == file_method
   end
-  
-  it "should make a new mail object by calling :new" do
-    mail = Mail.new
-    mail.class.should == Mail::Message
-  end
 
 end

@@ -1,5 +1,7 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
+# 
+# resent-cc       =       "Resent-Cc:" address-list CRLF
 
 describe Mail::ResentCcField do
   

@@ -449,59 +449,121 @@ describe Mail::Message do
       mail.to_s.should =~ /This is a body of the email/
 
     end
+  
+  end
+  
+  describe "handling missing required fields:" do
     
-    it "should say if it has a message id" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
+    describe "Message-ID" do
+      it "should say if it has a message id" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.should_not be_has_message_id
       end
-      mail.should_not be_has_message_id
+
+      it "should preserve any message id that you pass it if add_message_id is called explicitly" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_message_id("ThisIsANonUniqueMessageId")
+        mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
+      end
+
+      it "should generate a random message ID if nothing is passed to add_message_id" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_message_id
+        fqdn ||= ::Socket.gethostname
+        mail.to_s.should =~ /Message-ID: <[\d\w_]+@#{fqdn}.mail>\r\n/
+      end
+
+      it "should make an email and inject a message ID if none was set if told to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
+      end
+
+      it "should add the message id to the message permanently once sent to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.to_s
+        mail.should be_has_message_id
+      end
     end
+
     
-    it "should preserve any message id that you pass it if add_message_id is called explicitly" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
+    describe "Date" do
+      it "should say if it has a date" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.should_not be_has_date
       end
-      mail.add_message_id("ThisIsANonUniqueMessageId")
-      mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
-    end
-    
-    it "should generate a random message ID if nothing is passed to add_message_id" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
+
+      it "should preserve any date that you pass it if add_date is called explicitly" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_date("Mon, 24 Nov 1997 14:22:01 -0800")
+        mail.to_s.should =~ /Date: Mon, 24 Nov 1997 14:22:01 -0800/
       end
-      mail.add_message_id
-      fqdn ||= ::Socket.gethostname
-      mail.to_s.should =~ /Message-ID: <[\d\w_]+@#{fqdn}.mail>\r\n/
-    end
-    
-    it "should make an email and inject a message ID if none was set if told to_s" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
+
+      it "should generate a current date if nothing is passed to add_date" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_date
+        mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
       end
-      (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
-    end
-    
-    it "should add the message id to the message permanently once sent to_s" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
+
+      it "should make an email and inject a date if none was set if told to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
       end
-      mail.to_s
-      mail.should be_has_message_id
+
+      it "should add the message id to the message permanently once sent to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.to_s
+        mail.should be_has_date
+      end
     end
     
   end

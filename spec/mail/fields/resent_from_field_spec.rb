@@ -1,5 +1,7 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
+# 
+# resent-from     =       "Resent-From:" mailbox-list CRLF
 
 describe Mail::ResentFromField do
   
