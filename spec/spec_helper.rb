@@ -66,6 +66,10 @@ class MockSMTP
   def enable_starttls
     true
   end
+  
+  def enable_tls(type = nil)
+    true
+  end
 end
 class Net::SMTP
   def self.new(*args)
