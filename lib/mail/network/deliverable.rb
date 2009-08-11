@@ -27,7 +27,7 @@ module Mail
       end
       
       smtp.start(helo = 'localhost.localdomain', config.user, config.pass, authentication = :plain) do |smtp|
-        smtp.sendmail(rfc8222, from, to)
+        smtp.sendmail(rfc2822, from, to)
       end
       
       self

@@ -29,11 +29,11 @@ describe "Deliverable" do
     MockSMTP.deliveries[0][2].should == to
   end
   
-  it "should send emails and get from/to/rfc8222 for the includer object" do
+  it "should send emails and get from/to/rfc2822 for the includer object" do
     deliverable = @deliverable.new
     deliverable.from = Mail::FromField.new('marcel@amont.com')
     deliverable.to = Mail::ToField.new('marcel@amont.com')
-    deliverable.encoded = 'really invalide RFC8222'
+    deliverable.encoded = 'really invalid RFC2822'
     
     deliverable.deliver
     
