@@ -1,6 +1,9 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
 
+# 
+# from            =       "From:" mailbox-list CRLF
+
 describe Mail::FromField do
   
   describe "initialization" do

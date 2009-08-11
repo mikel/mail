@@ -21,6 +21,8 @@ module Mail
       end
       
       def value=(value)
+        @tree = nil
+        @element = nil
         @value = value
       end
       
@@ -35,7 +37,7 @@ module Mail
       def encoded
         value.blank? ? nil : "#{do_encode}\r\n"
       end
-
+      
       def encoded_to_s
         value.blank? ? '' : "#{name}: #{value}"
       end

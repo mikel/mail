@@ -1,12 +1,32 @@
 # encoding: utf-8
 # 
-#    The "In-Reply-To:" field will contain the contents of the "Message-
-#    ID:" field of the message to which this one is a reply (the "parent
-#    message").  If there is more than one parent message, then the "In-
-#    Reply-To:" field will contain the contents of all of the parents'
-#    "Message-ID:" fields.  If there is no "Message-ID:" field in any of
-#    the parent messages, then the new message will have no "In-Reply-To:"
-#    field.
+# = In-Reply-To Field
+# 
+# The In-Reply-To field inherits from StructuredField and handles the 
+# In-Reply-To: header field in the email.
+# 
+# Sending in_reply_to to a mail message will instantiate a Mail::Field object that
+# has a InReplyToField as it's field type.  This includes all Mail::CommonMessageId
+# module instance metods.
+# 
+# Note that, the #message_ids method will return an array of message IDs without the
+# enclosing angle brackets which per RFC are not syntactically part of the message id.
+# 
+# Only one InReplyTo field can appear in a header, though it can have multiple
+# Message IDs.
+# 
+# == Examples:
+# 
+#  mail = Mail.new
+#  mail.in_reply_to = '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
+#  mail.in_reply_to    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
+#  mail[:in_reply_to]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
+#  mail['in_reply_to'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
+#  mail['In-Reply-To'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
+# 
+#  mail.in_reply_to.to_s  #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
+#  mail.in_reply_to.message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
+# 
 module Mail
   class InReplyToField < StructuredField
     

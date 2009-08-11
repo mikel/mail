@@ -1,5 +1,7 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
+# 
+# resent-bcc      =       "Resent-Bcc:" (address-list / [CFWS]) CRLF
 
 describe Mail::ResentBccField do
   

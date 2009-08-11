@@ -1,15 +1,32 @@
 # encoding: utf-8
 # 
-#    The "References:" field will contain the contents of the parent's
-#    "References:" field (if any) followed by the contents of the parent's
-#    "Message-ID:" field (if any).  If the parent message does not contain
-#    a "References:" field but does have an "In-Reply-To:" field
-#    containing a single message identifier, then the "References:" field
-#    will contain the contents of the parent's "In-Reply-To:" field
-#    followed by the contents of the parent's "Message-ID:" field (if
-#    any).  If the parent has none of the "References:", "In-Reply-To:",
-#    or "Message-ID:" fields, then the new message will have no
-#    "References:" field.
+# = References Field
+# 
+# The References field inherits references StructuredField and handles the References: header
+# field in the email.
+# 
+# Sending references to a mail message will instantiate a Mail::Field object that
+# has a ReferencesField as it's field type.  This includes all Mail::CommonAddress
+# module instance metods.
+# 
+# Note that, the #message_ids method will return an array of message IDs without the
+# enclosing angle brackets which per RFC are not syntactically part of the message id.
+# 
+# Only one References field can appear in a header, though it can have multiple
+# Message IDs.
+# 
+# == Examples:
+# 
+#  mail = Mail.new
+#  mail.references = '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
+#  mail.references    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
+#  mail[:references]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
+#  mail['references'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
+#  mail['References'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
+# 
+#  mail.references.to_s  #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
+#  mail.references.message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
+# 
 module Mail
   class ReferencesField < StructuredField
     
