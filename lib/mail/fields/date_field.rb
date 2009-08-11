@@ -1,21 +1,28 @@
 # encoding: utf-8
-#    The origination date field consists of the field name "Date" followed
-#    by a date-time specification.
 # 
-# orig-date       =       "Date:" date-time CRLF
+# = Date Field
 # 
-#    The origination date specifies the date and time at which the creator
-#    of the message indicated that the message was complete and ready to
-#    enter the mail delivery system.  For instance, this might be the time
-#    that a user pushes the "send" or "submit" button in an application
-#    program.  In any case, it is specifically not intended to convey the
-#    time that the message is actually transported, but rather the time at
-#    which the human or other creator of the message has put the message
-#    into its final form, ready for transport.  (For example, a portable
-#    computer user who is not connected to a network might queue a message
-#    for delivery.  The origination date is intended to contain the date
-#    and time that the user queued the message, not the time when the user
-#    connected to the network to send the message.)
+# The Date field inherits from StructuredField and handles the Date: header
+# field in the email.
+# 
+# Sending date to a mail message will instantiate a Mail::Field object that
+# has a DateField as it's field type.  This includes all Mail::CommonAddress
+# module instance methods.
+# 
+# There must be excatly one Date field in an RFC2822 email.
+# 
+# == Examples:
+# 
+#  mail = Mail.new
+#  mail.date = 'Mon, 24 Nov 1997 14:22:01 -0800'
+#  mail.date    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+#  mail[:date]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+#  mail['date'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+#  mail['Date'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+# 
+#  mail.date.to_s  #=> 'Mon, 24 Nov 1997 14:22:01 -0800'
+#  mail.date.date_time #=> #<DateTime: 211747170121/86400,-1/3,2299161>
+# 
 module Mail
   class DateField < StructuredField
     
@@ -24,7 +31,13 @@ module Mail
     FIELD_NAME = 'date'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      if args.last.blank?
+        self.name = FIELD_NAME
+        self.value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
+        self
+      else
+        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      end
     end
     
   end

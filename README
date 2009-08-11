@@ -41,7 +41,7 @@ All major mail functions should be able to happen from the Mail:: module.
 
  require 'mail'
  
- mail = Mail.message do
+ mail = Mail.new do
       from 'mikel@test.lindsaar.net'
         to 'you@test.lindsaar.net'
    subject 'This is a test email'
@@ -54,7 +54,7 @@ All major mail functions should be able to happen from the Mail:: module.
 
  require 'mail'
  
- mail = Mail.message do
+ mail = Mail.new do
    body File.read('body.txt')
  end
 
@@ -68,7 +68,7 @@ All major mail functions should be able to happen from the Mail:: module.
 
  require 'mail'
  
- mail = Mail.message do
+ mail = Mail.new do
      to 'you@test.lindsaar.net'
    body 'Some simple body'
  end
@@ -84,7 +84,7 @@ give it a unique, random Message-ID along the lines of:
 
  require 'mail'
  
- mail = Mail.message do
+ mail = Mail.new do
           to 'you@test.lindsaar.net'
   message_id '<ThisIsMyMessageId@some.domain.com>'
         body 'Some simple body'

@@ -347,7 +347,7 @@ module Mail
     end
 
     rule message_ids
-      first_msg_id:msg_id other_msg_ids:((CFWS)? msg_id_value:msg_id)*
+      first_msg_id:msg_id other_msg_ids:( CFWS msg_id_value:msg_id )*
     end
     
     rule msg_id

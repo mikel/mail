@@ -154,8 +154,14 @@ module Mail
 
     alias :to_s :encoded
 
+    # Returns true if the header has a Message-Id defined (empty or not)
     def has_message_id?
       !fields.select { |f| f.responsible_for?('Message-ID') }.empty?
+    end
+
+    # Returns true if the header has a Date defined (empty or not)
+    def has_date?
+      !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
     private

@@ -2,6 +2,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe Mail::ToField do
+  # 
+  #    The "To:" field contains the address(es) of the primary recipient(s)
+  #    of the message.
   
   describe "initialization" do
 

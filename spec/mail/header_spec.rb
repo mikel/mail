@@ -268,5 +268,23 @@ TRACEHEADER
       header.encoded.should == result
     end
   end
+  
+  describe "detecting required fields" do
+    it "should not say it has a message id if it doesn't" do
+      Mail::Header.new.should_not be_has_message_id
+    end
+
+    it "should say it has a message id if it does" do
+      Mail::Header.new('Message-ID: 1234').should be_has_message_id
+    end
+
+    it "should not say it has a date if it doesn't" do
+      Mail::Header.new.should_not be_has_date
+    end
+
+    it "should say it has a date id if it does" do
+      Mail::Header.new('Date: Mon, 24 Nov 1997 14:22:01 -0800').should be_has_date
+    end
+  end
 
 end

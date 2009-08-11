@@ -50,7 +50,7 @@ module Mail
     require field
   end
 
-  def Mail.message(*args, &block)
+  def Mail.new(*args, &block)
     if block_given?
       Mail::Message.new(args, &block)
     else
@@ -75,11 +75,11 @@ module Mail
 
   # Send an email using the default configuration
   def Mail.deliver(*args, &block)
-    Mail.message(args, &block).deliver
+    Mail.new(args, &block).deliver
   end
 
   def Mail.read(filename)
-    Mail.message(File.read(filename))
+    Mail.new(File.read(filename))
   end
   
 end
