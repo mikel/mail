@@ -1,6 +1,7 @@
 # encoding: utf-8
 module Mail
 
+  require 'date'
   require 'treetop'
   require 'net/smtp'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
