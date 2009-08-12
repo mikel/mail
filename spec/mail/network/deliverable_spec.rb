@@ -41,5 +41,13 @@ describe "Deliverable" do
     MockSMTP.deliveries[0][1].should == deliverable.from.addresses.first
     MockSMTP.deliveries[0][2].should == deliverable.to.addresses
   end
+
+  it "should raise if the SMTP configuration is not set" do
+    config = Mail.defaults do
+      smtp ''
+    end
+    
+    doing { @deliverable.new.deliver }.should raise_error
+  end
   
 end

@@ -13,6 +13,7 @@ module Mail
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
   require File.join(dir_name, 'network', 'deliverable')
+  require File.join(dir_name, 'network', 'retrieve_via_pop3')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'header')
@@ -85,6 +86,10 @@ module Mail
   # Send an email using the default configuration
   def Mail.deliver(*args, &block)
     Mail.new(args, &block).deliver
+  end
+
+  def Mail.get_all_mail(&block)
+    Mail::Message.get_all_mail(&block)
   end
 
   def Mail.read(filename)

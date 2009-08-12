@@ -63,6 +63,10 @@ class MockSMTP
     yield self
   end
   
+  def enable_tls(*args)
+    true
+  end
+
   def enable_starttls
     true
   end
@@ -77,3 +81,61 @@ class Net::SMTP
   end
 end
 
+class MockPopMail
+  def initialize(rfc2822)
+    @rfc2822 = rfc2822
+  end
+  
+  def pop
+    @rfc2822
+  end
+end
+class MockPOP3
+  @@start = false
+  
+  def initialize
+    @@popmails = [
+      MockPopMail.new('test1'),
+      MockPopMail.new('test2'),
+    ]
+  end
+
+  def self.popmails
+    @@popmails
+  end
+  
+  def each_mail(*args)
+    @@popmails.each do |popmail|
+      yield popmail
+    end
+  end
+
+  def start(*args)
+    @@start = true
+    block_given? ? yield(self) : self
+  end
+  
+  def enable_ssl(*args)
+    true
+  end
+
+  def started?
+    @@start == true
+  end
+
+  def self.started?
+    @@start == true
+  end
+
+  def reset
+  end
+  
+  def finish
+    @@start = false
+  end
+end
+class Net::POP3
+  def self.new(*args)
+    MockPOP3.new
+  end
+end
