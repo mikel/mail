@@ -183,6 +183,8 @@ module Mail
         ContentTransferEncodingField.new(name, value)
       when /^content-description$/
         ContentDescriptionField.new(name, value)
+      when /^content-type$/
+        ContentTypeField.new(name, value)
       else 
         OptionalField.new(name, value)
       end

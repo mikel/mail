@@ -87,47 +87,48 @@ describe Mail::ContentTypeField do
     end
 
     it "should accept a string without the field name" do
-      m = Mail::ContentTypeField.new('text/plain')
-      m.name.should == 'Content-Type'
-      m.value.should == 'text/plain'
+      c = Mail::ContentTypeField.new('text/plain')
+      c.name.should == 'Content-Type'
+      c.value.should == 'text/plain'
     end
 
     it "should accept a nil value and generate a content_type" do
-      m = Mail::ContentTypeField.new('Content-Type', nil)
-      m.name.should == 'Content-Type'
-      m.value.should_not be_nil
+      c = Mail::ContentTypeField.new('Content-Type', nil)
+      c.name.should == 'Content-Type'
+      c.value.should_not be_nil
     end
 
   end
 
   describe "instance methods" do
-    it "should return a type" do
-      m = Mail::ContentTypeField.new('text/plain')
-      m.type.should == 'text'
+    it "should return a content_type" do
+      c = Mail::ContentTypeField.new('text/plain')
+      c.content_type.should == 'text/plain'
+    end
+
+    it "should return a main_type" do
+      c = Mail::ContentTypeField.new('text/plain')
+      c.main_type.should == 'text'
     end
 
     it "should return a sub_type" do
-      m = Mail::ContentTypeField.new('text/plain')
-      m.sub_type.should == 'plain'
+      c = Mail::ContentTypeField.new('text/plain')
+      c.main_type.should == 'text'
     end
     
     it "should return a parameter as a hash" do
-      m = Mail::ContentTypeField.new('text/plain; charset=US-ASCII')
-      m.sub_type.should == 'plain'
-      m.parameters.should == {'charset' => 'US-ASCII'}
+      c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII')
+      c.parameters.should == {'charset' => 'US-ASCII'}
     end
     
     it "should return multipl parameters as a hash" do
-      m = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
-      m.sub_type.should == 'plain'
-      m.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+      c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
+      c.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
     end
     
     it "should return boundry parameters" do
-      m = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple-Mail-13-196941151')
-      m.type.should == 'multipart'
-      m.sub_type.should == 'mixed'
-      m.parameters.should == {'boundary' => 'Apple-Mail-13-196941151'}
+      c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple-Mail-13-196941151')
+      c.parameters.should == {'boundary' => 'Apple-Mail-13-196941151'}
     end
   
   end
@@ -137,7 +138,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3'" do
       string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/octet-stream'
+      c.main_type.should == 'application'
       c.sub_type.should == 'octet-stream'
       c.parameters.should == {'name*' => "iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3"}
     end
@@ -145,7 +147,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/pdf;'" do
       string = %q{application/pdf;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/pdf'
+      c.main_type.should == 'application'
       c.sub_type.should == 'pdf'
       c.parameters.should == {}
     end
@@ -153,7 +156,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/pdf; name=\"broken.pdf\"'" do
       string = %q{application/pdf; name="broken.pdf"}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/pdf'
+      c.main_type.should == 'application'
       c.sub_type.should == 'pdf'
       c.parameters.should == {"name" => "broken.pdf"}
     end
@@ -161,7 +165,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/pkcs7-signature;'" do
       string = %q{application/pkcs7-signature;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/pkcs7-signature'
+      c.main_type.should == 'application'
       c.sub_type.should == 'pkcs7-signature'
       c.parameters.should == {}
     end
@@ -169,7 +174,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/pkcs7-signature; name=smime.p7s'" do
       string = %q{application/pkcs7-signature; name=smime.p7s}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/pkcs7-signature'
+      c.main_type.should == 'application'
       c.sub_type.should == 'pkcs7-signature'
       c.parameters.should == {"name" => "smime.p7s"}
     end
@@ -177,7 +183,8 @@ describe Mail::ContentTypeField do
     it "should handle 'application/x-gzip; NAME=blah.gz'" do
       string = %q{application/x-gzip; NAME=blah.gz}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'application'
+      c.content_type.should == 'application/x-gzip'
+      c.main_type.should == 'application'
       c.sub_type.should == 'x-gzip'
       c.parameters.should == {"NAME" => "blah.gz"}
     end
@@ -185,7 +192,8 @@ describe Mail::ContentTypeField do
     it "should handle 'image/jpeg'" do
       string = %q{image/jpeg}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'image'
+      c.content_type.should == 'image/jpeg'
+      c.main_type.should == 'image'
       c.sub_type.should == 'jpeg'
       c.parameters.should == {}
     end
@@ -193,7 +201,8 @@ describe Mail::ContentTypeField do
     it "should handle 'image/jpeg'" do
       string = %q{image/jpeg}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'image'
+      c.content_type.should == 'image/jpeg'
+      c.main_type.should == 'image'
       c.sub_type.should == 'jpeg'
       c.parameters.should == {}
     end
@@ -201,7 +210,8 @@ describe Mail::ContentTypeField do
     it "should handle 'image/jpeg;'" do
       string = %q{image/jpeg}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'image'
+      c.content_type.should == 'image/jpeg'
+      c.main_type.should == 'image'
       c.sub_type.should == 'jpeg'
       c.parameters.should == {}
     end
@@ -209,7 +219,8 @@ describe Mail::ContentTypeField do
     it "should handle 'image/png;'" do
       string = %q{image/png}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'image'
+      c.content_type.should == 'image/png'
+      c.main_type.should == 'image'
       c.sub_type.should == 'png'
       c.parameters.should == {}
     end
@@ -217,7 +228,8 @@ describe Mail::ContentTypeField do
     it "should handle 'message/delivery-status'" do
       string = %q{message/delivery-status}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'message'
+      c.content_type.should == 'message/delivery-status'
+      c.main_type.should == 'message'
       c.sub_type.should == 'delivery-status'
       c.parameters.should == {}
     end
@@ -225,7 +237,8 @@ describe Mail::ContentTypeField do
     it "should handle 'message/rfc822'" do
       string = %q{message/rfc822}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'message'
+      c.content_type.should == 'message/rfc822'
+      c.main_type.should == 'message'
       c.sub_type.should == 'rfc822'
       c.parameters.should == {}
     end
@@ -233,7 +246,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/alternative;'" do
       string = %q{multipart/alternative;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'alternative'
       c.parameters.should == {}
     end
@@ -241,7 +255,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/alternative; boundary=\"----=_NextPart_000_0093_01C81419.EB75E850\"'" do
       string = %q{multipart/alternative; boundary="----=_NextPart_000_0093_01C81419.EB75E850"}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'alternative'
       c.parameters.should == {"boundary" =>"----=_NextPart_000_0093_01C81419.EB75E850"}
     end
@@ -249,7 +264,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/alternative; boundary=----=_NextPart_000_0093_01C81419.EB75E850'" do
       string = %q{multipart/alternative; boundary="----=_NextPart_000_0093_01C81419.EB75E850"}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'alternative'
       c.parameters.should == {"boundary" =>"----=_NextPart_000_0093_01C81419.EB75E850"}
     end
@@ -257,7 +273,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/mixed'" do
       string = %q{multipart/mixed}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/mixed'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'mixed'
       c.parameters.should == {}
     end
@@ -265,7 +282,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/mixed;'" do
       string = %q{multipart/mixed;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/mixed'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'mixed'
       c.parameters.should == {}
     end
@@ -273,7 +291,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/mixed; boundary=Apple-Mail-13-196941151'" do
       string = %q{multipart/mixed; boundary=Apple-Mail-13-196941151}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/mixed'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'mixed'
       c.parameters.should == {"boundary" => "Apple-Mail-13-196941151"}
     end
@@ -281,7 +300,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/mixed; boundary=mimepart_427e4cb4ca329_133ae40413c81ef'" do
       string = %q{multipart/mixed; boundary=mimepart_427e4cb4ca329_133ae40413c81ef}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/mixed'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'mixed'
       c.parameters.should == {"boundary" => "mimepart_427e4cb4ca329_133ae40413c81ef"}
     end
@@ -289,7 +309,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/report; report-type=delivery-status;'" do
       string = %q{multipart/report; report-type=delivery-status;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/report'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'report'
       c.parameters.should == {"report-type" => "delivery-status"}
     end
@@ -297,7 +318,8 @@ describe Mail::ContentTypeField do
     it "should handle 'multipart/signed;'" do
       string = %q{multipart/signed;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'multipart'
+      c.content_type.should == 'multipart/signed'
+      c.main_type.should == 'multipart'
       c.sub_type.should == 'signed'
       c.parameters.should == {}
     end
@@ -305,7 +327,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/enriched;'" do
       string = %q{text/enriched;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/enriched'
+      c.main_type.should == 'text'
       c.sub_type.should == 'enriched'
       c.parameters.should == {}
     end
@@ -313,7 +336,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/html;'" do
       string = %q{text/html;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/html'
+      c.main_type.should == 'text'
       c.sub_type.should == 'html'
       c.parameters.should == {}
     end
@@ -321,7 +345,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/html; charset=iso-8859-1;'" do
       string = %q{text/html; charset=iso-8859-1;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/html'
+      c.main_type.should == 'text'
       c.sub_type.should == 'html'
       c.parameters.should == {'charset' => 'iso-8859-1'}
     end
@@ -329,7 +354,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain'" do
       string = %q{text/plain}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {}
     end
@@ -337,7 +363,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain;'" do
       string = %q{text/plain;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {}
     end
@@ -345,7 +372,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=ISO-8859-1'" do
       string = %q{text/plain; charset=ISO-8859-1}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'ISO-8859-1'}
     end
@@ -353,7 +381,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=ISO-8859-1;'" do
       string = %q{text/plain; charset=ISO-8859-1; format=flowed}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'ISO-8859-1', 'format' => 'flowed'}
     end
@@ -361,7 +390,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=us-ascii;'" do
       string = %q{text/plain; charset=us-ascii}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'us-ascii'}
     end
@@ -369,7 +399,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=US-ASCII; format=flowed'" do
       string = %q{text/plain; charset=US-ASCII; format=flowed}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
     end
@@ -377,7 +408,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=US-ASCII; format=flowed'" do
       string = %q{text/plain; charset=US-ASCII; format=flowed}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
     end
@@ -385,7 +417,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=utf-8'" do
       string = %q{text/plain; charset=utf-8}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'utf-8'}
     end
@@ -393,7 +426,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain; charset=utf-8'" do
       string = %q{text/plain; charset=X-UNKNOWN}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/plain'
+      c.main_type.should == 'text'
       c.sub_type.should == 'plain'
       c.parameters.should == {'charset' => 'X-UNKNOWN'}
     end
@@ -401,7 +435,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/x-ruby-script;'" do
       string = %q{text/x-ruby-script;}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/x-ruby-script'
+      c.main_type.should == 'text'
       c.sub_type.should == 'x-ruby-script'
       c.parameters.should == {}
     end
@@ -409,7 +444,8 @@ describe Mail::ContentTypeField do
     it "should handle 'text/x-ruby-script; name=\"hello.rb\"'" do
       string = %q{text/x-ruby-script; name="hello.rb"}
       c = Mail::ContentTypeField.new(string)
-      c.type.should == 'text'
+      c.content_type.should == 'text/x-ruby-script'
+      c.main_type.should == 'text'
       c.sub_type.should == 'x-ruby-script'
       c.parameters.should == {'name' => 'hello.rb'}
     end

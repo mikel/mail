@@ -316,7 +316,17 @@ TRACEHEADER
       header.description.should == nil
     end
     
+    it "should return the content-type of the email" do
+      header = Mail::Header.new("Content-Type: text/plain")
+      header.main_type.should == 'text'
+      header.sub_type.should == 'plain'
+    end
     
+    it "should return nil if no content-type header field" do
+      header = Mail::Header.new()
+      header.main_type.should == nil
+      header.sub_type.should == nil
+    end
     
   end
 

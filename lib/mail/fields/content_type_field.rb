@@ -21,12 +21,16 @@ module Mail
       @element ||= Mail::ContentTypeElement.new(value)
     end
     
-    def type
-      element.type
+    def main_type
+      element.main_type
     end
 
     def sub_type
       element.sub_type
+    end
+    
+    def content_type
+      "#{main_type}/#{sub_type}"
     end
     
     def parameters

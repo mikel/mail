@@ -975,6 +975,21 @@ EMAILEND
       mail.description.should == 'This is a description'
     end
     
+    it "should return the content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.content_type.should == 'text/plain'
+    end
+    
+    it "should return the main content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.main_type.should == 'text'
+    end
+    
+    it "should return the sub content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.sub_type.should == 'plain'
+    end
+    
   end
   
 end

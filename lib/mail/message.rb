@@ -365,6 +365,21 @@ module Mail
       header.description
     end
     
+    # Returns the content type
+    def content_type
+      header.content_type
+    end
+    
+    # Returns the main content type
+    def main_type
+      header.main_type
+    end
+    
+    # Returns the sub content type
+    def sub_type
+      header.sub_type
+    end
+    
     private
 
     #  2.1. General Description

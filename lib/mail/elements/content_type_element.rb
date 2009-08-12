@@ -7,7 +7,7 @@ module Mail
     def initialize( string )
       parser = Mail::ContentTypeParser.new
       if tree = parser.parse(cleaned(string))
-        @type = tree.type.text_value
+        @main_type = tree.main_type.text_value
         @sub_type = tree.sub_type.text_value
         @parameters = tree.parameters
       else
@@ -15,8 +15,8 @@ module Mail
       end
     end
     
-    def type
-      @type
+    def main_type
+      @main_type
     end
     
     def sub_type
@@ -28,7 +28,7 @@ module Mail
     end
     
     def to_s(*args)
-      "#{@info}; #{@date_time.to_s(*args)}"
+
     end
     
     def cleaned(string)
