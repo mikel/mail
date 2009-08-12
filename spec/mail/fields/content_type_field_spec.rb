@@ -449,6 +449,42 @@ describe Mail::ContentTypeField do
       c.sub_type.should == 'x-ruby-script'
       c.parameters.should == {'name' => 'hello.rb'}
     end
+
+    it "should handle 'multipart/mixed; boundary=\"=_NextPart_Lycos_15031600484464_ID\"" do
+      string = %q{multipart/mixed; boundary="=_NextPart_Lycos_15031600484464_ID"}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/mixed'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'mixed'
+      c.parameters.should == {'boundary' => '=_NextPart_Lycos_15031600484464_ID'}
+    end
+
+    it "should handle 'multipart/alternative; boundary=----=_=NextPart_000_0093_01C81419.EB75E850" do
+      string = %q{multipart/alternative; boundary=----=_=NextPart_000_0093_01C81419.EB75E850}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'alternative'
+      c.parameters.should == {'boundary' => '----=_=NextPart_000_0093_01C81419.EB75E850'}
+    end
+
+    it "should handle 'multipart/alternative; boundary=\"----=_=NextPart_000_0093_01C81419.EB75E850\"" do
+      string = %q{multipart/alternative; boundary="----=_=NextPart_000_0093_01C81419.EB75E850"}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'alternative'
+      c.parameters.should == {'boundary' => '----=_=NextPart_000_0093_01C81419.EB75E850'}
+    end
+
+    it "should handle 'multipart/related;boundary=1_4626B816_9F1690;Type=\"application/smil\";Start=\"<mms.smil.txt>\"'" do
+      string = %q{multipart/related;boundary=1_4626B816_9F1690;Type="application/smil";Start="<mms.smil.txt>"}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/related'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'related'
+      c.parameters.should == {'boundary' => '1_4626B816_9F1690', 'Type' => 'application/smil', 'Start' => '<mms.smil.txt>'}
+    end
     
   end
 

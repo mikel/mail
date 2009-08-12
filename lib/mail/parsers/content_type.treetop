@@ -51,7 +51,7 @@ module Mail
         def text_value
           quoted_content.text_value
         end
-      } / token+
+      } / (token / [\x3d])+
     end
 
   end
