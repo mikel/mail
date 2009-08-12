@@ -101,6 +101,10 @@ module Mail
       (domain_text "."?)+
     end
     
+    rule dot_atom_text
+      (domain_text "."?)+
+    end
+    
     rule local_dot_atom_text
       ("."* domain_text)+
     end
@@ -363,7 +367,29 @@ module Mail
     end
     
     rule id_right
-      dot_atom_text / no_fold_literal / obs_id_right
+      msg_id_dot_atom_text / no_fold_literal / obs_id_right
+    end
+    
+    rule msg_id_dot_atom_text
+      (msg_id_domain_text "."?)+
+    end
+
+    rule msg_id_domain_text
+      (DQUOTE (FWS? quoted_domain)+ FWS? DQUOTE) / msg_id_atext+
+    end
+
+    rule msg_id_atext
+      ALPHA / DIGIT / # Any character except controls,
+      "!" / "#" /     #  SP, and specials.
+      "$" / "%" /     #  Used for atoms
+      "&" / "'" /
+      "*" / "+" /
+      "-" / "/" /
+      "=" / "?" /
+      "^" / "_" /
+      "`" / "{" /
+      "|" / "}" /
+      "~" / "@"
     end
 
     rule no_fold_quote

@@ -75,7 +75,7 @@ module Mail
     def raw_source=(value)
       @raw_source = value.to_crlf
     end
-    require 'ruby-debug'
+    
     def set_envelope( val )
       @raw_envelope = val
       @envelope = Mail::Envelope.new( val )

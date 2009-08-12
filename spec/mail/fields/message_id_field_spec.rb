@@ -139,4 +139,11 @@ describe Mail::MessageIdField do
       end
     end
   end
+  
+  describe "weird message IDs" do
+    it "should be able to parse <000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>" do
+      m = Mail::MessageIdField.new('<000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>')
+      m.message_id.should == '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
+    end
+  end
 end
