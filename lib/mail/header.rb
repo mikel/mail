@@ -171,9 +171,14 @@ module Mail
     end
     
     # Returns the content transfer encoding of the header if it exists, else '7bit'
-    def content_transfer_encoding
+    def transfer_encoding
       cte = fields.select { |f| f.responsible_for?('Content-Transfer-Encoding') }.first
       cte ? cte.encoding : '7bit'
+    end
+
+    def description
+      cte = fields.select { |f| f.responsible_for?('Content-Description') }.first
+      cte ? cte.value : nil
     end
 
     private

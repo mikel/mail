@@ -3,7 +3,7 @@
 # 
 # 
 module Mail
-  class ContentDescriptionField < StructuredField
+  class ContentDescriptionField < UnstructuredField
     
     FIELD_NAME = 'content-description'
 

@@ -356,8 +356,13 @@ module Mail
     end
     
     # Returns the content transfer encoding of the email
-    def content_transfer_encoding
-      header.content_transfer_encoding
+    def transfer_encoding
+      header.transfer_encoding
+    end
+    
+    # Returns the content description of the email
+    def description
+      header.description
     end
     
     private

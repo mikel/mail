@@ -181,6 +181,8 @@ module Mail
         MimeVersionField.new(name, value)
       when /^content-transfer-encoding$/
         ContentTransferEncodingField.new(name, value)
+      when /^content-description$/
+        ContentDescriptionField.new(name, value)
       else 
         OptionalField.new(name, value)
       end

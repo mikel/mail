@@ -16,7 +16,7 @@ describe Mail::Field do
                               References Keywords Resent-Date Resent-From Resent-Sender
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
                               Return-Path Received Subject Comments Mime-Version
-                              Content-Transfer-Encoding ]
+                              Content-Transfer-Encoding Content-Description ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
@@ -29,7 +29,7 @@ describe Mail::Field do
                               REFERENCES KEYWORDS resent-date resent-from rESENT-sENDER
                               rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD 
                               rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn 
-                              cOntenT-transfer-EnCoDiNg]
+                              cOntenT-transfer-EnCoDiNg Content-Description]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"

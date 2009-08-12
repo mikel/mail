@@ -967,7 +967,12 @@ EMAILEND
     
     it "should read the content-transfer-encoding" do
       mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
-      mail.content_transfer_encoding.should == 'quoted-printable'
+      mail.transfer_encoding.should == 'quoted-printable'
+    end
+    
+    it "should read the content-description" do
+      mail = Mail.new("Content-Description: This is a description")
+      mail.description.should == 'This is a description'
     end
     
   end

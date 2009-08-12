@@ -296,14 +296,24 @@ TRACEHEADER
       Mail::Header.new('To: bob').mime_version.should == nil
     end
     
-    it "should return the mime version of the email" do
+    it "should return the transfer-encoding of the email" do
       header = Mail::Header.new("Content-Transfer-Encoding: Base64")
-      header.content_transfer_encoding.should == 'base64'
+      header.transfer_encoding.should == 'base64'
     end
     
-    it "should return nil if no mime-version header field" do
+    it "should return nil if no transfer-encoding header field" do
       header = Mail::Header.new
-      header.content_transfer_encoding.should == '7bit'
+      header.transfer_encoding.should == '7bit'
+    end
+    
+    it "should return the content-description of the email" do
+      header = Mail::Header.new("Content-Description: This is a description")
+      header.description.should == 'This is a description'
+    end
+    
+    it "should return nil if no content-description header field" do
+      header = Mail::Header.new
+      header.description.should == nil
     end
     
     

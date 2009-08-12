@@ -61,6 +61,10 @@ module Mail
       Mail::Message.new(args)
     end
   end
+  
+  def Mail.uniq
+    @@uniq += 1
+  end
 
   # Set the default configuration to send and receive emails
   #
@@ -85,5 +89,13 @@ module Mail
   def Mail.read(filename)
     Mail.new(File.read(filename))
   end
+  
+  private
+
+  def Mail.something_random
+    (Thread.current.object_id * rand(255) / Time.now.to_f).to_s.slice(-3..-1).to_i
+  end
+  
+  @@uniq = Mail.something_random
   
 end
