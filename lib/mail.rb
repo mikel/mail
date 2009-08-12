@@ -40,20 +40,21 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'envelope_from'))
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2045'))
   Treetop.load(File.join(dir_name, 'parsers', 'mime_version'))
+  Treetop.load(File.join(dir_name, 'parsers', 'content_type'))
   Treetop.load(File.join(dir_name, 'parsers', 'content_transfer_encoding'))
-
+  
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
   elems.each do |elem|
     require elem
   end
-
+  
   # Load in all header fields
   fields = Dir.glob(File.join(dir_name, 'fields', '*.rb'))
   fields.each do |field|
     require field
   end
-
+  
   def Mail.new(*args, &block)
     if block_given?
       Mail::Message.new(args, &block)

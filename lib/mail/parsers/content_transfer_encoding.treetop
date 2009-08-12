@@ -21,13 +21,5 @@ module Mail
       "quoted-printable" / "base64"
     end
     
-    rule ietf_token
-      token+
-    end
-    
-    rule x_token
-      [xX] "-" token+
-    end
-    
   end
 end
