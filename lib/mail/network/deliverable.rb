@@ -7,7 +7,7 @@ module Mail
 
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
-    def deliver(from = nil, to = nil, rfc8222 = nil)
+    def deliver(from = nil, to = nil, rfc2822 = nil)
       config = Mail::Configuration.instance
       if config.smtp.blank? || config.smtp[0].blank?
         raise ArgumentError.new('Please call +Mail.defaults+ to set the SMTP configuration')
@@ -29,7 +29,7 @@ module Mail
       end
       
       smtp.start(helo = 'localhost.localdomain', config.user, config.pass, authentication = :plain) do |smtp|
-        smtp.sendmail(rfc8222, from, to)
+        smtp.sendmail(rfc2822, from, to)
       end
       
       self

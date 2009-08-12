@@ -15,19 +15,19 @@ describe Mail::SenderField do
       Mail::SenderField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aSenderept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::SenderField.new('Sender', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Sender'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aSenderept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Sender'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aSenderept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Sender'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

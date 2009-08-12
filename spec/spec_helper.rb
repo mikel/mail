@@ -70,6 +70,10 @@ class MockSMTP
   def enable_starttls
     true
   end
+  
+  def enable_tls(type = nil)
+    true
+  end
 end
 class Net::SMTP
   def self.new(*args)
@@ -78,12 +82,12 @@ class Net::SMTP
 end
 
 class MockPopMail
-  def initialize(rfc8222)
-    @rfc8222 = rfc8222
+  def initialize(rfc2822)
+    @rfc2822 = rfc2822
   end
   
   def pop
-    @rfc8222
+    @rfc2822
   end
 end
 class MockPOP3

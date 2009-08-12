@@ -1,9 +1,9 @@
 # encoding: utf-8
 module Mail
 
+  require 'date'
   require 'treetop'
   require 'net/smtp'
-  require 'net/pop'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
@@ -39,25 +39,33 @@ module Mail
   Treetop.load(File.join(dir_name, 'parsers', 'received'))
   Treetop.load(File.join(dir_name, 'parsers', 'message_ids'))
   Treetop.load(File.join(dir_name, 'parsers', 'envelope_from'))
-
+  Treetop.load(File.join(dir_name, 'parsers', 'rfc2045'))
+  Treetop.load(File.join(dir_name, 'parsers', 'mime_version'))
+  Treetop.load(File.join(dir_name, 'parsers', 'content_type'))
+  Treetop.load(File.join(dir_name, 'parsers', 'content_transfer_encoding'))
+  
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
   elems.each do |elem|
     require elem
   end
-
+  
   # Load in all header fields
   fields = Dir.glob(File.join(dir_name, 'fields', '*.rb'))
   fields.each do |field|
     require field
   end
-
+  
   def Mail.new(*args, &block)
     if block_given?
       Mail::Message.new(args, &block)
     else
       Mail::Message.new(args)
     end
+  end
+  
+  def Mail.uniq
+    @@uniq += 1
   end
 
   # Set the default configuration to send and receive emails
@@ -87,4 +95,13 @@ module Mail
   def Mail.read(filename)
     Mail.new(File.read(filename))
   end
+  
+  private
+
+  def Mail.something_random
+    (Thread.current.object_id * rand(255) / Time.now.to_f).to_s.slice(-3..-1).to_i
+  end
+  
+  @@uniq = Mail.something_random
+  
 end

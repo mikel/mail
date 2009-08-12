@@ -1,0 +1,25 @@
+module Mail
+  grammar ContentTransferEncoding
+
+    include RFC2822
+    include RFC2045
+
+    rule primary
+      CFWS encoding CFWS
+    end
+    
+    rule encoding
+      known_tokens / ietf_token / x_token {
+        def encoding
+          known_tokens.text_value || ietf_token.text_value || x_token.text_value
+        end
+      }
+    end
+    
+    rule known_tokens
+      "7bit" / "8bit" / "binary" / 
+      "quoted-printable" / "base64"
+    end
+    
+  end
+end

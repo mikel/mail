@@ -286,5 +286,58 @@ TRACEHEADER
       Mail::Header.new('Date: Mon, 24 Nov 1997 14:22:01 -0800').should be_has_date
     end
   end
+  
+  describe "mime version handling" do
+    it "should return the mime version of the email" do
+      Mail::Header.new("Mime-Version: 1.0").mime_version.should == '1.0'
+    end
+    
+    it "should return nil if no mime-version header field" do
+      Mail::Header.new('To: bob').mime_version.should == nil
+    end
+    
+    it "should return the transfer-encoding of the email" do
+      header = Mail::Header.new("Content-Transfer-Encoding: Base64")
+      header.transfer_encoding.should == 'base64'
+    end
+    
+    it "should return nil if no transfer-encoding header field" do
+      header = Mail::Header.new
+      header.transfer_encoding.should == '7bit'
+    end
+    
+    it "should return the content-description of the email" do
+      header = Mail::Header.new("Content-Description: This is a description")
+      header.description.should == 'This is a description'
+    end
+    
+    it "should return nil if no content-description header field" do
+      header = Mail::Header.new
+      header.description.should == nil
+    end
+    
+    it "should return the content-type of the email" do
+      header = Mail::Header.new("Content-Type: text/plain")
+      header.main_type.should == 'text'
+      header.sub_type.should == 'plain'
+    end
+    
+    it "should return nil if no content-type header field" do
+      header = Mail::Header.new()
+      header.main_type.should == nil
+      header.sub_type.should == nil
+    end
+    
+    it "should return the mime parameters of the email" do
+      header = Mail::Header.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
+      header.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+    end
+    
+    it "should return nil if no mime parameters header field" do
+      header = Mail::Header.new()
+      header.mime_parameters.should == nil
+    end
+    
+  end
 
 end

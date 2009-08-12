@@ -15,19 +15,19 @@ describe Mail::ResentFromField do
       Mail::ResentFromField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should aResentFromept two strings with the field separate" do
+    it "should accept two strings with the field separate" do
       t = Mail::ResentFromField.new('Resent-From', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aResentFromept a string with the field name" do
+    it "should accept a string with the field name" do
       t = Mail::ResentFromField.new('Resent-From: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
-    it "should aResentFromept a string without the field name" do
+    it "should accept a string without the field name" do
       t = Mail::ResentFromField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-From'
       t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'

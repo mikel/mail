@@ -974,4 +974,47 @@ EMAILEND
     
   end
 
+  describe "MIME Emails" do
+    it "should read a mime version from an email" do
+      mail = Mail.new("Mime-Version: 1.0")
+      mail.mime_version.should == '1.0'
+    end
+    
+    it "should return nil if the email has no mime version" do
+      mail = Mail.new("To: bob")
+      mail.mime_version.should == nil
+    end
+    
+    it "should read the content-transfer-encoding" do
+      mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
+      mail.transfer_encoding.should == 'quoted-printable'
+    end
+    
+    it "should read the content-description" do
+      mail = Mail.new("Content-Description: This is a description")
+      mail.description.should == 'This is a description'
+    end
+    
+    it "should return the content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.content_type.should == 'text/plain'
+    end
+    
+    it "should return the main content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.main_type.should == 'text'
+    end
+    
+    it "should return the sub content-type" do
+      mail = Mail.new("Content-Type: text/plain")
+      mail.sub_type.should == 'plain'
+    end
+    
+    it "should return the content-type parameters" do
+      mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
+      mail.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+    end
+    
+  end
+  
 end

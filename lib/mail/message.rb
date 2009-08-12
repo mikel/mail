@@ -81,6 +81,11 @@ module Mail
       @envelope = Mail::Envelope.new( val )
     end
     
+    def set_envelope( val )
+      @raw_envelope = val
+      @envelope = Mail::Envelope.new( val )
+    end
+    
     # The raw_envelope is the From mikel@test.lindsaar.net Mon May  2 16:07:05 2009
     # type field that you can see at the top of any email that has come
     # from a mailbox
@@ -349,6 +354,42 @@ module Mail
     end
     
     alias :to_s :encoded
+    
+    # Mime Version returns the version string out of the Mime-Version header
+    # field if present, otherwise returns nil
+    def mime_version
+      header.mime_version
+    end
+    
+    # Returns the content transfer encoding of the email
+    def transfer_encoding
+      header.transfer_encoding
+    end
+    
+    # Returns the content description of the email
+    def description
+      header.description
+    end
+    
+    # Returns the content type
+    def content_type
+      header.content_type
+    end
+    
+    # Returns the main content type
+    def main_type
+      header.main_type
+    end
+    
+    # Returns the sub content type
+    def sub_type
+      header.sub_type
+    end
+    
+    # Returns the content type parameters
+    def mime_parameters
+      header.mime_parameters
+    end
     
     private
 

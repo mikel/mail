@@ -175,7 +175,7 @@ module Mail
       }
     end
     rule quoted_string
-      CFWS? DQUOTE (FWS? qcontent)+ FWS? DQUOTE CFWS?
+      CFWS? DQUOTE quoted_content:(FWS? qcontent)+ FWS? DQUOTE CFWS?
     end
 
     rule qcontent
