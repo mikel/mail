@@ -990,6 +990,11 @@ EMAILEND
       mail.sub_type.should == 'plain'
     end
     
+    it "should return the content-type parameters" do
+      mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
+      mail.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+    end
+    
   end
   
 end

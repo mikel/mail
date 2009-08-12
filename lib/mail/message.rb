@@ -380,6 +380,11 @@ module Mail
       header.sub_type
     end
     
+    # Returns the content type parameters
+    def mime_parameters
+      header.mime_parameters
+    end
+    
     private
 
     #  2.1. General Description

@@ -328,6 +328,16 @@ TRACEHEADER
       header.sub_type.should == nil
     end
     
+    it "should return the mime parameters of the email" do
+      header = Mail::Header.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
+      header.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+    end
+    
+    it "should return nil if no mime parameters header field" do
+      header = Mail::Header.new()
+      header.mime_parameters.should == nil
+    end
+    
   end
 
 end

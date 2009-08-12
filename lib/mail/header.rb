@@ -200,6 +200,10 @@ module Mail
       ct ? ct.sub_type : nil
     end
     
+    def mime_parameters
+      ct = fields.select { |f| f.responsible_for?('Content-Type') }.first
+      ct ? ct.parameters : nil
+    end
 
     private
     
