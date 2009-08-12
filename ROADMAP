@@ -39,15 +39,47 @@
 
  (need to break down into smaller steps when we get here)
 
-* Initial stages of RFC 2045 implemented (content-type and 2046, 2047)
+* Initial stages of RFC 2045 implemented (content-type and 2046, 2047) [DONE - ML]
+
+* Mime-Version field parsing [DONE - ML]
+
+* Mime-Version field setting [DONE - ML]
+
+* Content-ID field parsing [DONE - ML]
+
+* Content-ID field setting [DONE - ML]
+
+* Content-Description field parsing [DONE - ML]
+
+* Content-Description field setting [DONE - ML]
+
+* Content-Transfer-Encoding parsing [DONE - ML]
+
+* Content-Transfer-Encoding setting [DONE - ML]
+
+* Content-Type field parsing [DONE - ML]
+
+* Content-Type field setting
+
+* Multipart email support
+
+* Reading multipart emails
+
+* Creating multipart emails
 
 * Multipart/Report parsing done
 
 * Multipart/Report reporting done
 
-* Implement true "multicultralism" into Mail, get it handling the major types of incoming encoding, with view to handle any incoming encoding (make this easy to extend)
-
 * Implement all helper methods on adding and deleting parts and attachments
+
+==Encoding/Decoding
+
+* Support for content-transport-encoding handling
+
+* Handle non us-ascii in Subject, keywords, header fields in general
+
+* handle encoding and decoding of multipart emails
 
 ==Basic Email Sending & Receiving
 
