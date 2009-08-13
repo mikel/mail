@@ -47,4 +47,43 @@ describe Mail::Body do
 
   end
 
+  describe "splitting up a multipart document" do
+    it "should respond to split" do
+      body = Mail::Body.new('this is some text')
+      body.should respond_to(:split)
+    end
+
+    it "should split at the boundry string given returning two message bodies" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split('------=_Part_2192_32400445').length.should == 2
+    end
+
+    it "should keep the preamble text as it's own preamble" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split('------=_Part_2192_32400445')
+      body.preamble.should == "this is some text\r\n\r\n"
+    end
+    
+    it "should return the parts as their own messages" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split('------=_Part_2192_32400445')[0].class.should == Mail::Message
+      body.split('------=_Part_2192_32400445')[1].class.should == Mail::Message
+    end
+    
+    it "should return the first part as it's own message" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split('------=_Part_2192_32400445')[0].content_type.should == "text/plain"
+    end
+    
+    it "should return the first part as it's own message" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split('------=_Part_2192_32400445')[1].content_type.should == "text/html"
+    end
+  end
+
 end

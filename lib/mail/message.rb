@@ -53,7 +53,8 @@ module Mail
     def initialize(*args, &block)
       self.raw_source = args.flatten[0]
       set_envelope_header
-      parse_message 
+      parse_message
+      separate_parts if multipart?
       if block_given?
         instance_eval(&block)
       end
@@ -358,37 +359,47 @@ module Mail
     # Mime Version returns the version string out of the Mime-Version header
     # field if present, otherwise returns nil
     def mime_version
-      header.mime_version
+      header ? header.mime_version : nil
     end
     
     # Returns the content transfer encoding of the email
     def transfer_encoding
-      header.transfer_encoding
+      header ? header.transfer_encoding : nil
     end
     
     # Returns the content description of the email
     def description
-      header.description
+      header ? header.description : nil
     end
     
     # Returns the content type
     def content_type
-      header.content_type
+      header ? header.content_type : nil
     end
     
     # Returns the main content type
     def main_type
-      header.main_type
+      header ? header.main_type : nil
     end
     
     # Returns the sub content type
     def sub_type
-      header.sub_type
+      header ? header.sub_type : nil
     end
     
     # Returns the content type parameters
     def mime_parameters
-      header.mime_parameters
+      header ? header.mime_parameters : nil
+    end
+    
+    # Returns true if the message is multipart
+    def multipart?
+      main_type =~ /^multipart$/i
+    end
+    
+    # Returns an array of parts in the message
+    def parts
+      @parts
     end
     
     private
@@ -414,6 +425,10 @@ module Mail
         set_envelope(match_data[1])
         self.raw_source = match_data[2]
       end
+    end
+
+    def separate_parts
+      @parts = body.split(mime_parameters['boundary'])
     end
 
     class << self
