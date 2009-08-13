@@ -23,11 +23,40 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
+== Basic Status
+
+=== Targets For Version 1:
+
+o RFC2822 Support, Reading and Writing - DONE
+o RFC2045-2049 Support (MIME), Reading - In Testing
+o RFC2045-2049 Support (MIME), Writing - I/P
+o Content Encoding, Reading - Queued
+o Content Encoding, Writing - Queued
+o Wrappers for File, Net/POP3, Net/SMTP, Net/IMAP - I/P
+
+=== What this means:
+
+Mail is pretty much RFC2822 compliant now, that is, it can parse and generate
+valid US-ASCII emails.  It also is quite robust, meaning, if it finds something
+it doesn't understand it will not crash, instead, it will skip the problem and
+keep parsing.  In the case of a header it doesn't understand, it will initialize
+the header as an optional unstructured field and continue parsing.
+
+This means Mail won't (ever) crunch your data (we think).
+
+Part of getting mail tested will be running it through an archive of thousands
+emails that are sitting in a cloud of the developers and making sure they parse,
+by round tripping them through mail and comparing with the original, this isn't
+done yet, but will be done soon.
+
+We have also gotten basic mime parsing and multipart parsing working.  Mail won't
+create a multipart email yet... well.. actually it can, but the API sucks right
+now.
+
 == Installation
 
-If you are using this in production right now, you either _really_ know
-what you are doing, or are insane.  This is well spec'd and tested alpha
-code.
+If you are using this in production right now, you must _really_ know
+what you are doing.  This is well spec'd and tested alpha code.
 
 If you need instructions beyond "go get it from my git repo" then you
 probably shouldn't be playing with Mail yet.  Wait till we've wrapped it
@@ -142,6 +171,27 @@ what you are doing.
  mail.body            #=> 'This is the body of the email...
 
 Many more methods available.
+
+=== Reading a Multipart Email
+
+ require 'mail'
+ 
+ mail = Mail.read('multipart_email')
+ 
+ mail.multipart?          #=> true
+ mail.parts.length        #=> 2
+ mail.preamble            #=> "Text before the first part"
+ mail.epilogue            #=> "Text after the last part"
+ mail.parts.map { |p| p.content_type }  #=> ['text/plain', 'application/pdf']
+ mail.parts.map { |p| p.class }         #=> [Mail::Message, Mail::Message]
+ mail.parts[0].mime_parameters          #=> {'charset' => 'ISO-8859-1'}
+ mail.parts[1].mime_parameters          #=> {'name' => 'my.pdf'}
+
+Mail generates a tree of parts.  Each message has many or no parts.  Each part
+is another message which can have many or no parts.
+
+A message will only have parts if it is a mixed/multipart or mixed/related 
+content type and has a boundary defined.
 
 === Getting error reports from an email:
 

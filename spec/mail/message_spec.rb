@@ -1028,6 +1028,7 @@ EMAILEND
         mail.parts[0].content_type.should == 'text/plain'
         mail.parts[1].content_type.should == 'application/pdf'
       end
+
     end
     
   end

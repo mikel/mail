@@ -63,11 +63,9 @@
 
 * Multipart email support
 
-* Reading multipart emails
+* Reading multipart emails [DONE - ML]
 
 * Creating multipart emails
-
-* Multipart/Report parsing done
 
 * Multipart/Report reporting done
 
