@@ -61,6 +61,10 @@ class String #:nodoc:
     self.gsub(/\n|\r\n|\r/) { "\n" }
   end
   
+  def guess_encoding
+    
+  end
+  
 end
 
 class Numeric #:nodoc:

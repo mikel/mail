@@ -648,6 +648,11 @@ describe Mail::Message do
         mail.content_type.should == 'text/plain'
       end
 
+      it "should return the charset" do
+        mail = Mail.new("Content-Type: text/plain; charset=utf-8")
+        mail.charset.should == 'utf-8'
+      end
+
       it "should return the main content-type" do
         mail = Mail.new("Content-Type: text/plain")
         mail.main_type.should == 'text'
@@ -687,7 +692,118 @@ describe Mail::Message do
 
     end
     
-    describe "generation" do
+    describe "email generation" do
+      describe "plain text emails" do
+        
+        describe "content type" do
+          
+          it "should say if it has a content type" do
+            mail = Mail.new('Content-Type: text/plain')
+            mail.should be_has_content_type
+          end
+
+          it "should say if it does not have a content type" do
+            mail = Mail.new
+            mail.should_not be_has_content_type
+          end
+
+          it "should say if it has a charset" do
+            mail = Mail.new('Content-Type: text/plain; charset=US-ASCII')
+            mail.should be_has_charset
+          end
+
+          it "should say if it has a charset" do
+            mail = Mail.new('Content-Type: text/plain')
+            mail.should_not be_has_charset
+          end
+
+          it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
+            body = "This is plain text US-ASCII"
+            mail = Mail.new
+            mail.body = body
+            STDERR.should_not_receive(:puts)
+            mail.to_s 
+          end
+
+          it "should set the content type to text/plain; charset=us-ascii" do
+            body = "This is plain text US-ASCII"
+            mail = Mail.new
+            mail.body = body
+            mail.to_s =~ %r{Content-Type: text/plain; charset=us-ascii}
+          end
+
+          it "should raise a warning if there is no content type and there is non ascii chars" do
+            body = "This is NOT plain text ASCII　− かきくけこ"
+            mail = Mail.new
+            mail.body = body
+            mail.content_transfer_encoding = "8bit"
+            STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nPlease add a content-type header with the correct charset defined.")
+            mail.to_s 
+          end
+
+          it "should raise a warning if there is no charset parameter and there is non ascii chars" do
+            body = "This is NOT plain text ASCII　− かきくけこ"
+            mail = Mail.new
+            mail.body = body
+            mail.content_type = "text/plain"
+            mail.content_transfer_encoding = "8bit"
+            STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nPlease add a content-type header with the correct charset defined.")
+            mail.to_s 
+          end
+
+          it "should not raise a warning if there is a charset defined and there is non ascii chars" do
+            body = "This is NOT plain text ASCII　− かきくけこ"
+            mail = Mail.new
+            mail.body = body
+            mail.content_transfer_encoding = "8bit"
+            mail.content_type = "text/plain; charset=utf-8"
+            STDERR.should_not_receive(:puts)
+            mail.to_s 
+          end
+          
+        end
+        
+        describe "content-transfer-encoding" do
+
+          it "should not raise a warning if there is no content-transfer-encoding and only US-ASCII chars" do
+            body = "This is plain text US-ASCII"
+            mail = Mail.new
+            mail.body = body
+            STDERR.should_not_receive(:puts)
+            mail.to_s 
+          end
+
+          it "should set the content-transfer-encoding to 7bit" do
+            body = "This is plain text US-ASCII"
+            mail = Mail.new
+            mail.body = body
+            mail.to_s =~ %r{Content-Transfer-Encoding: 7bit}
+          end
+
+          it "should raise a warning if there is no content-transfer-encoding and there is non ascii chars" do
+            body = "This is NOT plain text ASCII　− かきくけこ"
+            mail = Mail.new
+            mail.body = body
+            mail.content_type = "text/plain; charset=utf-8"
+            mail.should be_has_content_type
+            mail.should be_has_charset
+            STDERR.should_receive(:puts).with("Non US-ASCII detected and no content-transfer-encoding defined.\nPlease add a content-transfer-encoding header with the correct type defined.")
+            mail.to_s 
+          end
+
+          it "should not raise a warning if there is a content-transfer-encoding defined and there is non ascii chars" do
+            body = "This is NOT plain text ASCII　− かきくけこ"
+            mail = Mail.new
+            mail.body = body
+            mail.content_type = "text/plain; charset=utf-8"
+            mail.content_transfer_encoding = "8bit"
+            STDERR.should_not_receive(:puts)
+            mail.to_s 
+          end
+
+        end
+
+      end
 
     end
     

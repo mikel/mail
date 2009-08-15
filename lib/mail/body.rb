@@ -31,6 +31,10 @@ module Mail
       self.epilogue = $1 if parts[-1].to_s =~ /^--(.*)/
       parts[1...-1].map { |part| Mail.new(part) }
     end
+    
+    def only_us_ascii?
+      !!raw_source.to_s.ascii_only?
+    end
 
     private
     

@@ -9,3 +9,11 @@ def escape_paren( str )
   re = /([\(\)])/          # Only match unescaped parens
   str.gsub(re) { |s| '\\' + s }
 end
+
+
+class String
+  US_ASCII_REGEXP = %Q{\x00-\x7f}
+  def ascii_only?
+    !(self =~ /[^#{US_ASCII_REGEXP}]/)
+  end
+end

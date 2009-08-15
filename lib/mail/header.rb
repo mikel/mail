@@ -164,7 +164,7 @@ module Mail
       !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
-    # Returns true if the header has a Date defined (empty or not)
+    # Returns true if the header has a message_id defined (empty or not)
     def has_mime_version?
       !!mime_version
     end
@@ -178,7 +178,7 @@ module Mail
     # Returns the content transfer encoding of the header if it exists, else '7bit'
     def transfer_encoding
       cte = fields.select { |f| f.responsible_for?('Content-Transfer-Encoding') }.first
-      cte ? cte.encoding : '7bit'
+      cte ? cte.encoding : nil
     end
 
     # Returns the content description of the header if it exists, else nil

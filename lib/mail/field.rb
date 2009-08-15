@@ -26,7 +26,8 @@ module Mail
     STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
                             references keywords resent-date resent-from resent-sender
                             resent-to resent-cc resent-bcc resent-message-id 
-                            return-path received ]
+                            return-path received content-type content-transfer-encoding
+                            mime-version ]
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments']
     

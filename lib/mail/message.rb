@@ -328,6 +328,18 @@ module Mail
       header.has_mime_version?
     end
 
+    def has_content_type?
+      !!content_type
+    end
+    
+    def has_charset?
+      !!charset
+    end
+    
+    def has_transfer_encoding?
+      transfer_encoding
+    end
+
     # Creates a new empty Message-ID field and inserts it in the correct order
     # into the Header.  The MessageIdField object will automatically generate
     # a unique message ID if you try and encode it or output it to_s without
@@ -358,20 +370,27 @@ module Mail
       header.fields << MimeVersionField.new(data)
     end
     
-    # Outputs an encoded string representation of the mail message including
-    # all headers, attachments, etc.  This is an encoded email in US-ASCII,
-    # so it is able to be directly sent to an email server.
-    def encoded
-      add_message_id unless has_message_id?
-      add_date unless has_date?
-      add_mime_version unless has_mime_version?
-      buffer = header.encoded
-      buffer << "\r\n"
-      buffer << body.encoded
-      buffer
+    # Adds a content type and charset if the body is US-ASCII
+    # 
+    # Otherwise raises a warning
+    def add_content_type_and_charset
+      if body.only_us_ascii?
+        self.content_type = 'text/plain; charset=US-ASCII'
+      else
+        STDERR.puts("Non US-ASCII detected and no charset defined.\nPlease add a content-type header with the correct charset defined.")
+      end
     end
     
-    alias :to_s :encoded
+    # Adds a transfer encoding
+    # 
+    # Otherwise raises a warning
+    def add_transfer_encoding
+      if body.only_us_ascii?
+        self.content_transfer_encoding = '7bit'
+      else
+        STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nPlease add a content-transfer-encoding header with the correct type defined.")
+      end
+    end
     
     # Mime Version returns the version string out of the Mime-Version header
     # field if present, otherwise returns nil
@@ -392,6 +411,11 @@ module Mail
     # Returns the content type
     def content_type
       header ? header.content_type : nil
+    end
+    
+    # Returns the character set defined in the content type field
+    def charset
+      content_type ? header['content-type'].parameters['charset'] : nil
     end
     
     # Returns the main content type
@@ -418,6 +442,23 @@ module Mail
     def parts
       @parts
     end
+    
+    # Outputs an encoded string representation of the mail message including
+    # all headers, attachments, etc.  This is an encoded email in US-ASCII,
+    # so it is able to be directly sent to an email server.
+    def encoded
+      add_message_id                unless has_message_id?
+      add_date                      unless has_date?
+      add_mime_version              unless has_mime_version?
+      add_content_type_and_charset  unless has_content_type? && has_charset?
+      add_transfer_encoding         unless has_transfer_encoding?
+      buffer = header.encoded
+      buffer << "\r\n"
+      buffer << body.encoded
+      buffer
+    end
+    
+    alias :to_s :encoded
     
     private
 
@@ -447,7 +488,7 @@ module Mail
     def separate_parts
       @parts = body.split(mime_parameters['boundary'])
     end
-
+    
     class << self
 
       # Only POP3 is supported for now

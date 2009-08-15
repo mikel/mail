@@ -86,4 +86,21 @@ describe Mail::Body do
     end
   end
 
+  describe "detecting non ascii" do
+    it "should say an empty string is all ascii" do
+      body = Mail::Body.new
+      body.should be_only_us_ascii
+    end
+
+    it "should say if a body is ascii" do
+      body = Mail::Body.new('This is ASCII')
+      body.should be_only_us_ascii
+    end
+
+    it "should say if a body is not ascii" do
+      body = Mail::Body.new("This is NOT plain text ASCII　− かきくけこ")
+      body.should_not be_only_us_ascii
+    end
+  end
+
 end
