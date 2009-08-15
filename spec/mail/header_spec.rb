@@ -311,7 +311,7 @@ TRACEHEADER
     
     it "should return nil if no transfer-encoding header field" do
       header = Mail::Header.new
-      header.transfer_encoding.should == '7bit'
+      header.transfer_encoding.should == nil
     end
     
     it "should return the content-description of the email" do

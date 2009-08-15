@@ -377,7 +377,8 @@ module Mail
       if body.only_us_ascii?
         self.content_type = 'text/plain; charset=US-ASCII'
       else
-        STDERR.puts("Non US-ASCII detected and no charset defined.\nPlease add a content-type header with the correct charset defined.")
+        STDERR.puts("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+        self.content_type = 'text/plain; charset=UTF-8'
       end
     end
     
@@ -388,7 +389,8 @@ module Mail
       if body.only_us_ascii?
         self.content_transfer_encoding = '7bit'
       else
-        STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nPlease add a content-transfer-encoding header with the correct type defined.")
+        STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
+        self.content_transfer_encoding = '8bit'
       end
     end
     
