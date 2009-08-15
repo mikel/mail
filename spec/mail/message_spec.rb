@@ -510,7 +510,6 @@ describe Mail::Message do
       end
     end
 
-    
     describe "Date" do
       it "should say if it has a date" do
         mail = Mail.new do
@@ -554,7 +553,7 @@ describe Mail::Message do
         mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
       end
 
-      it "should add the message id to the message permanently once sent to_s" do
+      it "should add the date to the message permanently once sent to_s" do
         mail = Mail.new do
              from 'mikel@test.lindsaar.net'
                to 'you@test.lindsaar.net'
@@ -566,10 +565,64 @@ describe Mail::Message do
       end
     end
     
+    describe "Mime-Version" do
+      it "should say if it has a mime-version" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.should_not be_has_mime_version
+      end
+
+      it "should preserve any date that you pass it if add_date is called explicitly" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_mime_version("3.0 (This is an unreal version number)")
+        mail.to_s.should =~ /Mime-Version: 3.0 \(This is an unreal version number\)\r\n/
+      end
+
+      it "should generate a current date if nothing is passed to add_date" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.add_mime_version
+        mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+      end
+
+      it "should make an email and inject a mime_version if none was set if told to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+      end
+
+      it "should add the mime version to the message permanently once sent to_s" do
+        mail = Mail.new do
+             from 'mikel@test.lindsaar.net'
+               to 'you@test.lindsaar.net'
+          subject 'This is a test email'
+             body 'This is a body of the email'
+        end
+        mail.to_s
+        mail.should be_has_mime_version
+      end
+    end
   end
 
   describe "MIME Emails" do
-    describe "basic field recognition" do
+    describe "field recognition" do
       it "should read a mime version from an email" do
         mail = Mail.new("Mime-Version: 1.0")
         mail.mime_version.should == '1.0'
@@ -609,9 +662,7 @@ describe Mail::Message do
         mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
         mail.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
       end
-    end
 
-    describe "multipart emails" do
       it "should recognize a multipart email" do
         mail = Mail.read(fixture('emails', 'multipart_email'))
         mail.should be_multipart
@@ -633,6 +684,10 @@ describe Mail::Message do
         mail.parts[0].content_type.should == 'text/plain'
         mail.parts[1].content_type.should == 'application/pdf'
       end
+
+    end
+    
+    describe "generation" do
 
     end
     

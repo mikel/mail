@@ -285,6 +285,14 @@ TRACEHEADER
     it "should say it has a date id if it does" do
       Mail::Header.new('Date: Mon, 24 Nov 1997 14:22:01 -0800').should be_has_date
     end
+
+    it "should not say it has a mime-version if it doesn't" do
+      Mail::Header.new.should_not be_has_mime_version
+    end
+
+    it "should say it has a date id if it does" do
+      Mail::Header.new('Mime-Version: 1.0').should be_has_mime_version
+    end
   end
   
   describe "mime version handling" do

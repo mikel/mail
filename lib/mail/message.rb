@@ -322,6 +322,12 @@ module Mail
       header.has_date?
     end
 
+    # Returns true if the message has a Date field, the field may or may
+    # not have a value, but the field exists or not.
+    def has_mime_version?
+      header.has_mime_version?
+    end
+
     # Creates a new empty Message-ID field and inserts it in the correct order
     # into the Header.  The MessageIdField object will automatically generate
     # a unique message ID if you try and encode it or output it to_s without
@@ -342,12 +348,23 @@ module Mail
       header.fields << DateField.new(date)
     end
     
+    # Creates a new empty Mime Version field and inserts it in the correct order
+    # into the Header.  The MimeVersion object will automatically generate
+    # DateTime.now's date if you try and encode it or output it to_s without
+    # specifying a date yourself.
+    # 
+    # It will preserve any date you specify if you do.
+    def add_mime_version(data = nil)
+      header.fields << MimeVersionField.new(data)
+    end
+    
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
       add_message_id unless has_message_id?
       add_date unless has_date?
+      add_mime_version unless has_mime_version?
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded

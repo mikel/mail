@@ -8,7 +8,13 @@ module Mail
     FIELD_NAME = 'mime-version'
 
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      if args.last.blank?
+        self.name = FIELD_NAME
+        self.value = '1.0'
+        self
+      else
+        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      end
     end
     
     def tree

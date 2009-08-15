@@ -151,6 +151,12 @@ describe Mail::MimeVersionField do
       t = Mail::MimeVersionField.new('1.0 (This is a comment)')
       t.version.should == '1.0'
     end
+    
+    it "should accept nil as a value" do
+      t = Mail::MimeVersionField.new('Date', nil)
+      t.version.should_not be_nil
+    end
+    
   end
 
 end

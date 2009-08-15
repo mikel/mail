@@ -164,6 +164,11 @@ module Mail
       !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
+    # Returns true if the header has a Date defined (empty or not)
+    def has_mime_version?
+      !!mime_version
+    end
+
     # Returns the mime version of the header if it exists, else nil
     def mime_version
       mime_version = fields.select { |f| f.responsible_for?('Mime-Version') }.first
