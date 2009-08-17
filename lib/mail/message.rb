@@ -47,7 +47,7 @@ module Mail
     include Patterns
     include Utilities
     include Deliverable
-    include RetrieveViaPop3
+    include Retrievable
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)

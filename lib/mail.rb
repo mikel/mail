@@ -13,7 +13,7 @@ module Mail
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
   require File.join(dir_name, 'network', 'deliverable')
-  require File.join(dir_name, 'network', 'retrieve_via_pop3')
+  require File.join(dir_name, 'network', 'retrievable')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'header')
