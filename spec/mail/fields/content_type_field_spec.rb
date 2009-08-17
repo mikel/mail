@@ -133,6 +133,22 @@ describe Mail::ContentTypeField do
   
   end
   
+  describe "class methods" do
+    it "should give back an initialized instance with a unique boundary" do
+      boundary = Mail::ContentTypeField.multipart_alternative_with_boundary
+      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\t boundary=--==_mimepart_[\w\d]+_[\w\d]+\r\n}
+    end
+
+    it "should give unique boundaries" do
+      boundary1 = Mail::ContentTypeField.multipart_alternative_with_boundary.parameters['boundary']
+      0.upto(250) do
+        boundary2 = Mail::ContentTypeField.multipart_alternative_with_boundary.parameters['boundary']
+        boundary1.should_not == boundary2
+      end
+    end
+
+  end
+  
   describe "Testing a bunch of email Content-Type fields" do
     
     it "should handle 'application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3'" do

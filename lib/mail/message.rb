@@ -51,7 +51,7 @@ module Mail
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
-      self.raw_source = args.flatten[0]
+      self.raw_source = args.flatten[0].to_s.strip
       set_envelope_header
       parse_message
       separate_parts if multipart?
@@ -346,8 +346,8 @@ module Mail
     # specifying a message id.
     # 
     # It will preserve the message ID you specify if you do.
-    def add_message_id(msg_id = nil)
-      header.fields << MessageIdField.new(msg_id)
+    def add_message_id(msg_id_val = '')
+      header['message-id'] = msg_id_val
     end
     
     # Creates a new empty Date field and inserts it in the correct order
@@ -356,8 +356,8 @@ module Mail
     # specifying a date yourself.
     # 
     # It will preserve any date you specify if you do.
-    def add_date(date = nil)
-      header.fields << DateField.new(date)
+    def add_date(date_val = '')
+      header['date'] = date_val
     end
     
     # Creates a new empty Mime Version field and inserts it in the correct order
@@ -366,19 +366,26 @@ module Mail
     # specifying a date yourself.
     # 
     # It will preserve any date you specify if you do.
-    def add_mime_version(data = nil)
-      header.fields << MimeVersionField.new(data)
+    def add_mime_version(ver_val = '')
+      header['mime-version'] = ver_val
     end
     
     # Adds a content type and charset if the body is US-ASCII
     # 
     # Otherwise raises a warning
-    def add_content_type_and_charset
+    def add_content_type
+      header['Content-Type'] = 'text/plain'
+    end
+    
+    # Adds a content type and charset if the body is US-ASCII
+    # 
+    # Otherwise raises a warning
+    def add_charset
       if body.only_us_ascii?
-        self.content_type = 'text/plain; charset=US-ASCII'
+        header.mime_parameters['charset'] = 'US-ASCII'
       else
         STDERR.puts("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
-        self.content_type = 'text/plain; charset=UTF-8'
+        header.mime_parameters['charset'] = 'UTF-8'
       end
     end
     
@@ -387,10 +394,10 @@ module Mail
     # Otherwise raises a warning
     def add_transfer_encoding
       if body.only_us_ascii?
-        self.content_transfer_encoding = '7bit'
+        header['Content-Transfer-Encoding'] = '7bit'
       else
         STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
-        self.content_transfer_encoding = '8bit'
+        header['Content-Transfer-Encoding'] = '8bit'
       end
     end
     
@@ -417,7 +424,7 @@ module Mail
     
     # Returns the character set defined in the content type field
     def charset
-      content_type ? header['content-type'].parameters['charset'] : nil
+      content_type ? header.mime_parameters['charset'] : nil
     end
     
     # Returns the main content type
@@ -440,23 +447,69 @@ module Mail
       main_type =~ /^multipart$/i
     end
     
+    # Returns the current boundary for this message part
+    def boundary
+      mime_parameters ? mime_parameters['boundary'] : nil
+    end
+    
     # Returns an array of parts in the message
     def parts
-      @parts
+      @parts ||= []
+    end
+    
+    # Accessor for html_part
+    def html_part
+      @html_part
+    end
+    
+    # Accessor for text_part
+    def text_part
+      @text_part
+    end
+    
+    # Helper to add a html part to a multipart/alternative email.  If this and
+    # text_part are both defined in a message, then it will be a multipart/alternative
+    # message and set itself that way.
+    def html_part=(msg = nil)
+      if msg
+        @html_part = msg
+      else
+        @html_part = Mail::Message.new('Content-Type: text/html;')
+      end
+      add_part(@html_part)
+    end
+    
+    # Helper to add a text part to a multipart/alternative email.  If this and
+    # html_part are both defined in a message, then it will be a multipart/alternative
+    # message and set itself that way.
+    def text_part=(msg = nil)
+      if msg
+        @text_part = msg
+      else
+        @text_part = Mail::Message.new('Content-Type: text/plain;')
+      end
+      add_part(@text_part)
+    end
+
+    # Adds a part to the parts list or creates the part list
+    def add_part(part)
+      @parts ? @parts << part : @parts = [part]
     end
     
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
-      add_message_id                unless has_message_id?
-      add_date                      unless has_date?
-      add_mime_version              unless has_mime_version?
-      add_content_type_and_charset  unless has_content_type? && has_charset?
-      add_transfer_encoding         unless has_transfer_encoding?
+      add_multipart_header if html_part && text_part
+      add_required_fields
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded
+      if multipart?
+        buffer << boundary_line
+        buffer << parts.map {|part| part.encoded}.join("#{boundary_line}")
+        buffer << "\r\n--#{boundary}--\r\n"
+      end
       buffer
     end
     
@@ -480,6 +533,10 @@ module Mail
       self.body   = body_part
     end
     
+    def boundary_line
+      "\r\n--#{boundary}\r\n"
+    end
+    
     def set_envelope_header
       if match_data = raw_source.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
@@ -488,7 +545,21 @@ module Mail
     end
 
     def separate_parts
-      @parts = body.split(mime_parameters['boundary'])
+      @parts = body.split("--#{mime_parameters['boundary']}")
+    end
+    
+    def add_required_fields
+      @body = Mail::Body.new('')    if body.nil?
+      add_message_id                unless has_message_id?
+      add_date                      unless has_date?
+      add_mime_version              unless has_mime_version?
+      add_content_type              unless has_content_type?
+      add_charset                   unless has_charset?
+      add_transfer_encoding         unless has_transfer_encoding?
+    end
+    
+    def add_multipart_header
+      header['content-type'] = ContentTypeField.multipart_alternative_with_boundary
     end
     
     class << self

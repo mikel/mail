@@ -11,7 +11,6 @@ module Mail
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
     end
     
-    
     def tree
       @element ||= Mail::ContentTypeElement.new(value)
       @tree ||= @element.tree
@@ -37,6 +36,14 @@ module Mail
       @parameters = Hash.new
       element.parameters.each { |p| @parameters.merge!(p) }
       @parameters
+    end
+
+    def ContentTypeField.multipart_alternative_with_boundary
+      new("multipart/alternative; boundary=#{generate_boundary}")
+    end
+    
+    def ContentTypeField.generate_boundary
+      "--==_mimepart_#{Mail.random_tag}"
     end
 
   end

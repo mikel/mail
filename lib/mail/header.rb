@@ -128,21 +128,26 @@ module Mail
       # User wants to delete the field
       when !selected.blank? && value == nil
         fields.delete_if { |f| selected.include?(f) }
-
+        
       # User wants to change the field
       when !selected.blank? && LIMITED_FIELDS.include?(name.downcase)
         selected.first.update(name, value)
-
+        
       # User wants to create the field
       else
         # Need to insert in correct order for trace fields
-        self.fields << Field.new("#{name}: #{value}")
+        if value.blank?
+          self.fields << Field.new(name)
+        else
+          self.fields << Field.new("#{name}: #{value}")
+        end
       end
     end
     
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject
-                           return-path ]
+                           return-path content-type mime-version
+                           content-transfer-encoding ]
 
     def encoded
       buffer = ''

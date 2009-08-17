@@ -63,14 +63,7 @@ module Mail
     
     def generate_message_id
       fqdn = ::Socket.gethostname
-      "<#{random_tag}@#{fqdn}.mail>"
-    end
-    
-    def random_tag
-      t = Time.now
-      sprintf('%x%x_%x%x%d%x',
-              t.to_i, t.tv_usec,
-              $$, Thread.current.object_id, Mail.uniq, rand(255))
+      "<#{Mail.random_tag}@#{fqdn}.mail>"
     end
     
   end

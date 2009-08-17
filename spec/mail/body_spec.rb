@@ -35,6 +35,11 @@ describe Mail::Body do
       body = Mail::Body.new('this is some text')
       body.to_s.should == 'this is some text'
     end
+    
+    it "should accept nil as a value and return an empty body" do
+      body = Mail::Body.new
+      body.to_s.should == ''
+    end
 
   end
 
@@ -63,7 +68,7 @@ describe Mail::Body do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split('------=_Part_2192_32400445')
-      body.preamble.should == "this is some text\r\n\r\n"
+      body.preamble.should == "this is some text\r\n"
     end
     
     it "should return the parts as their own messages" do

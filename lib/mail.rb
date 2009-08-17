@@ -63,10 +63,6 @@ module Mail
       Mail::Message.new(args)
     end
   end
-  
-  def Mail.uniq
-    @@uniq += 1
-  end
 
   # Set the default configuration to send and receive emails
   #
@@ -96,10 +92,21 @@ module Mail
     Mail.new(File.read(filename))
   end
   
+  def Mail.random_tag
+    t = Time.now
+    sprintf('%x%x_%x%x%d%x',
+            t.to_i, t.tv_usec,
+            $$, Thread.current.object_id, Mail.uniq, rand(255))
+  end
+  
   private
 
   def Mail.something_random
     (Thread.current.object_id * rand(255) / Time.now.to_f).to_s.slice(-3..-1).to_i
+  end
+  
+  def Mail.uniq
+    @@uniq += 1
   end
   
   @@uniq = Mail.something_random

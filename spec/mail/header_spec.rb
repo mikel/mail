@@ -204,7 +204,9 @@ HERE
   describe "handling fields with multiple values" do
     it "should know which fields can only appear once" do
       %w[ orig-date from sender reply-to to cc bcc 
-          message-id in-reply-to references subject ].each do |field|
+          message-id in-reply-to references subject
+          content-type content-transfer-encoding
+          mime-version ].each do |field|
         header = Mail::Header.new
         header[field] = "1234"
         header[field] = "5678"

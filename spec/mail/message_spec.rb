@@ -86,7 +86,7 @@ describe Mail::Message do
 
     it "should set a raw source instance variable to equal the passed in message" do
       mail = Mail::Message.new(basic_email)
-      mail.raw_source.should == basic_email
+      mail.raw_source.should == basic_email.strip
     end
 
     it "should set the raw source instance variable to '' if no message is passed in" do
@@ -105,7 +105,7 @@ describe Mail::Message do
     end
   
     it "should give the body class the body to parse" do
-      Mail::Body.should_receive(:new).with("email message\r\n")
+      Mail::Body.should_receive(:new).with("email message")
       mail = Mail::Message.new(basic_email)
     end
   
@@ -126,6 +126,12 @@ describe Mail::Message do
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
     end
 
+    it "should allow for whitespace at the start of the email" do
+      mail = Mail.new("\r\n\r\nFrom: mikel\r\n\r\nThis is the body")
+      mail.from.value.should == 'mikel'
+      mail.body.to_s.should == 'This is the body'
+    end
+
   end
 
   describe "stripping of the envelope string" do
@@ -140,6 +146,7 @@ describe Mail::Message do
       message = Mail::Message.new(File.read(fixture('emails/basic_email')))
       message.from.formatted.should == ["Mikel Lindsaar <test@lindsaar.net>"]
     end
+    
   end
   
   describe "directly setting the values of a simple email" do
@@ -441,7 +448,6 @@ describe Mail::Message do
         subject 'This is a test email'
            body 'This is a body of the email'
       end
-      result =""
       
       mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
       mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
@@ -508,6 +514,12 @@ describe Mail::Message do
         mail.to_s
         mail.should be_has_message_id
       end
+      
+      it "should add a body part if it is missing" do
+        mail = Mail.new
+        mail.to_s
+        mail.body.class.should == Mail::Body
+      end
     end
 
     describe "Date" do
@@ -564,7 +576,8 @@ describe Mail::Message do
         mail.should be_has_date
       end
     end
-
+  end
+  
   describe "MIME Emails" do
     describe "field recognition" do
       it "should read a mime version from an email" do
@@ -800,7 +813,121 @@ describe Mail::Message do
         end
 
       end
+      
+      describe "multi part emails" do
+        
+        it "should know what it's boundary is if it is a multipart document" do
+          mail = Mail.new('Content-Type: multitype/mixed; boundary="--==Boundary"')
+          mail.boundary.should == "--==Boundary"
+        end
+        
+        it "should return nil if there is no boundary defined" do
+          mail = Mail.new('Content-Type: multitype/mixed')
+          mail.boundary.should == nil
+        end
+        
+        it "should return nil if there is no content-type defined" do
+          mail = Mail.new
+          mail.boundary.should == nil
+        end
+        
+        it "should allow you to assign a text part" do
+          mail = Mail.new
+          text_mail = Mail.new("This is Text")
+          doing { mail.text_part = text_mail }.should_not raise_error
+        end
+        
+        it "should assign the text part and allow you to reference" do
+          mail = Mail.new
+          text_mail = Mail.new("This is Text")
+          mail.text_part = text_mail
+          mail.text_part.should == text_mail
+        end
+        
+        it "should allow you to assign a html part" do
+          mail = Mail.new
+          html_mail = Mail.new("<b>This is HTML</b>")
+          doing { mail.text_part = html_mail }.should_not raise_error
+        end
+        
+        it "should assign the html part and allow you to reference" do
+          mail = Mail.new
+          html_mail = Mail.new("<b>This is HTML</b>")
+          mail.html_part = html_mail
+          mail.html_part.should == html_mail
+        end
 
+        it "should add the html part and text part" do
+          mail = Mail.new
+          mail.text_part = Mail.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail.new do
+            content_type = "text/html; charset=US-ASCII"
+            body = "<b>This is HTML</b>"
+          end
+          mail.parts.length.should == 2
+          mail.parts.first.class.should == Mail::Message
+          mail.parts.last.class.should == Mail::Message
+        end
+        
+        it "should set a boundary when called with to_s" do
+          mail = Mail.new
+          mail.text_part = Mail.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          mail.to_s
+          mail.boundary.should =~ /--==_mimepart_[\w\d]+_[\w\d]+/
+          mail.send(:boundary_line).should =~ /--==_mimepart_[\w\d]+_[\w\d]+/
+        end
+        
+        it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
+          mail = Mail.new
+          mail.text_part = Mail.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary=#{mail.boundary}|
+        end
+        
+        it "should add the end boundary tag" do
+          mail = Mail.new
+          mail.text_part = Mail.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          mail.to_s.should =~ %r|#{mail.boundary}--|
+        end
+        
+        it "should round trip a basic email" do
+          mail = Mail.new('Subject: FooBar')
+          mail.text_part = Mail.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          parsed_mail = Mail.new(mail.to_s)
+          parsed_mail.content_type.should == 'multipart/alternative'
+          parsed_mail.boundary.should == mail.boundary
+          parsed_mail.parts.length.should == 2
+          parsed_mail.parts[0].body.to_s.should == "This is Text"
+          parsed_mail.parts[1].body.to_s.should == "<b>This is HTML</b>"
+        end
+
+      end
+      
     end
     
   end
