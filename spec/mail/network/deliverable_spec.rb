@@ -22,7 +22,7 @@ describe "Deliverable" do
     to = 'marcel@amont.com'
     rfc2822 = 'invalid RFC2822'
     
-    @deliverable.new.deliver(from, to, rfc2822)
+    @deliverable.new.deliver!(from, to, rfc2822)
     
     MockSMTP.deliveries[0][0].should == rfc2822
     MockSMTP.deliveries[0][1].should == from
@@ -35,7 +35,7 @@ describe "Deliverable" do
     deliverable.to = Mail::ToField.new('marcel@amont.com')
     deliverable.encoded = 'really invalid RFC2822'
     
-    deliverable.deliver
+    deliverable.deliver!
     
     MockSMTP.deliveries[0][0].should == deliverable.encoded
     MockSMTP.deliveries[0][1].should == deliverable.from.addresses.first
@@ -47,7 +47,7 @@ describe "Deliverable" do
       smtp ''
     end
     
-    doing { @deliverable.new.deliver }.should raise_error
+    doing { @deliverable.new.deliver! }.should raise_error
   end
   
 end

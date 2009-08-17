@@ -81,7 +81,7 @@ module Mail
 
   # Send an email using the default configuration
   def Mail.deliver(*args, &block)
-    Mail.new(args, &block).deliver
+    Mail.new(args, &block).deliver!
   end
 
   def Mail.get_all_mail(&block)

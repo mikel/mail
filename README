@@ -140,6 +140,22 @@ what you are doing.
    add_file 'New Header Image', '/somefile.png'
  end
 
+or
+ 
+ Mail.defaults do
+   smtp '127.0.0.1' # Port 25 defult
+ end
+
+ mail = Mail.new do
+       from 'me@test.lindsaar.net'
+         to 'you@test.lindsaar.net'
+    subject 'Here is the image you wanted'
+       body File.read('body.txt')
+   add_file 'New Header Image', '/somefile.png'
+ end
+ 
+ mail.deliver!
+
 === Getting an email from a pop server:
 
  require 'mail'
