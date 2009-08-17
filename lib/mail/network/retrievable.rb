@@ -3,7 +3,7 @@
 # Include this module to retrieve emails via POP3. Each email retrieved is given to a new instance of the "includer".
 # This module uses the defaults set in Configuration to retrieve POP3 settings.
 module Mail
-  module RetrieveViaPop3
+  module Retrievable
     
     module ClassMethods
     
@@ -16,24 +16,32 @@ module Mail
           raise ArgumentError.new('Please call +Mail.defaults+ to set the POP3 configuration')
         end
         
-        pop3 = Net::POP3.new(config.pop3[0], config.pop3[1] || 110, isapop = false)
-        
-        pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if config.tls?
-        
-        pop3.start(config.user, config.pass)
-        
-        if block_given?
-          pop3.each_mail do |pop_mail|
-            yield self.new(pop_mail.pop)
+        pop3_start do |pop3|
+          if block_given?
+            pop3.each_mail do |pop_mail|
+              yield self.new(pop_mail.pop)
+            end
+          else
+            emails = []
+            pop3.each_mail do |pop_mail|
+              emails << self.new(pop_mail.pop)
+            end
+            emails
           end
-        else
-          emails = []
-          pop3.each_mail do |pop_mail|
-            emails << self.new(pop_mail.pop)
-          end
-          emails
         end
         
+      end
+      
+    private
+      
+      def pop3_start(config = Mail::Configuration.instance, &block)
+        raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
+        
+        pop3 = Net::POP3.new(config.pop3[0], config.pop3[1] || 110, isapop = false)
+        pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if config.tls?
+        pop3.start(config.user, config.pass)
+        
+        yield pop3
       ensure
         if defined?(pop3) && pop3 && pop3.started?
           pop3.reset # This clears all "deleted" marks from messages.
