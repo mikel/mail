@@ -27,7 +27,7 @@ module Mail
                             references keywords resent-date resent-from resent-sender
                             resent-to resent-cc resent-bcc resent-message-id 
                             return-path received content-type content-transfer-encoding
-                            mime-version ]
+                            mime-version content-description content-id ]
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments']
     

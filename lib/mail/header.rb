@@ -171,48 +171,7 @@ module Mail
 
     # Returns true if the header has a message_id defined (empty or not)
     def has_mime_version?
-      !!mime_version
-    end
-
-    # Returns the mime version of the header if it exists, else nil
-    def mime_version
-      mime_version = fields.select { |f| f.responsible_for?('Mime-Version') }.first
-      mime_version ? mime_version.version : nil
-    end
-    
-    # Returns the content transfer encoding of the header if it exists, else '7bit'
-    def transfer_encoding
-      cte = fields.select { |f| f.responsible_for?('Content-Transfer-Encoding') }.first
-      cte ? cte.encoding : nil
-    end
-
-    # Returns the content description of the header if it exists, else nil
-    def description
-      des = fields.select { |f| f.responsible_for?('Content-Description') }.first
-      des ? des.value : nil
-    end
-    
-    # Returns the content type
-    def content_type
-      ct = fields.select { |f| f.responsible_for?('Content-Type') }.first
-      ct ? ct.content_type : nil
-    end
-    
-    # Returns the main content type
-    def main_type
-      ct = fields.select { |f| f.responsible_for?('Content-Type') }.first
-      ct ? ct.main_type : nil
-    end
-    
-    # Returns the sub content type
-    def sub_type
-      ct = fields.select { |f| f.responsible_for?('Content-Type') }.first
-      ct ? ct.sub_type : nil
-    end
-    
-    def mime_parameters
-      ct = fields.select { |f| f.responsible_for?('Content-Type') }.first
-      ct ? ct.parameters : nil
+      !fields.select { |f| f.responsible_for?('Mime-Version') }.empty?
     end
 
     private

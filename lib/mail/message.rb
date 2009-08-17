@@ -382,10 +382,10 @@ module Mail
     # Otherwise raises a warning
     def add_charset
       if body.only_us_ascii?
-        header.mime_parameters['charset'] = 'US-ASCII'
+        content_type.parameters['charset'] = 'US-ASCII'
       else
         STDERR.puts("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
-        header.mime_parameters['charset'] = 'UTF-8'
+        content_type.parameters['charset'] = 'UTF-8'
       end
     end
     
@@ -401,45 +401,34 @@ module Mail
       end
     end
     
-    # Mime Version returns the version string out of the Mime-Version header
-    # field if present, otherwise returns nil
-    def mime_version
-      header ? header.mime_version : nil
-    end
-    
     # Returns the content transfer encoding of the email
     def transfer_encoding
-      header ? header.transfer_encoding : nil
-    end
-    
-    # Returns the content description of the email
-    def description
-      header ? header.description : nil
+      content_transfer_encoding
     end
     
     # Returns the content type
-    def content_type
-      header ? header.content_type : nil
+    def message_content_type
+      content_type ? content_type.content_type : nil
     end
     
     # Returns the character set defined in the content type field
     def charset
-      content_type ? header.mime_parameters['charset'] : nil
+      content_type ? content_type.parameters['charset'] : nil
     end
     
     # Returns the main content type
     def main_type
-      header ? header.main_type : nil
+      has_content_type? ? content_type.main_type : nil
     end
     
     # Returns the sub content type
     def sub_type
-      header ? header.sub_type : nil
+      has_content_type? ? content_type.sub_type : nil
     end
     
     # Returns the content type parameters
     def mime_parameters
-      header ? header.mime_parameters : nil
+      has_content_type? ? content_type.parameters : nil
     end
     
     # Returns true if the message is multipart

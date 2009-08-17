@@ -29,9 +29,9 @@ describe Mail::Message do
     end
     
     it "should initialize a body and header class even if called with nothing to begin with" do
-      Mail::Header.should_receive(:new)
-      Mail::Body.should_receive(:new)
       mail = Mail::Message.new
+      mail.header.class.should == Mail::Header
+      mail.body.class.should == Mail::Body
     end
     
     it "should be able to parse a basic email" do
@@ -95,17 +95,20 @@ describe Mail::Message do
     end
   
     it "should give the header class the header to parse" do
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!").and_return(header)
       mail = Mail::Message.new(basic_email)
     end
 
     it "should give the header class the header to parse even if there is no body" do
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!").and_return(header)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
   
     it "should give the body class the body to parse" do
-      Mail::Body.should_receive(:new).with("email message")
+      body = Mail::Body.new("email message")
+      Mail::Body.should_receive(:new).with("email message").and_return(body)
       mail = Mail::Message.new(basic_email)
     end
   
@@ -115,14 +118,18 @@ describe Mail::Message do
     end
 
     it "should give the header the part before the line without spaces and the body the part without" do
-      Mail::Header.should_receive(:new).with("To: mikel")
-      Mail::Body.should_receive(:new).with("G'Day!")
+      header = Mail::Header.new("To: mikel")
+      body = Mail::Body.new("G'Day!")
+      Mail::Header.should_receive(:new).with("To: mikel").and_return(header)
+      Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
     end
   
     it "should give allow for whitespace on the gap line between header and body" do
-      Mail::Header.should_receive(:new).with("To: mikel")
-      Mail::Body.should_receive(:new).with("G'Day!")
+      header = Mail::Header.new("To: mikel")
+      body = Mail::Body.new("G'Day!")
+      Mail::Header.should_receive(:new).with("To: mikel").and_return(header)
+      Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
     end
 
@@ -261,6 +268,11 @@ describe Mail::Message do
           sender        'mikel@sender.lindsaar.net'
           subject       'Hello there Mikel'
           to            'mikel@to.lindsaar.net'
+          content_type  'text/plain; charset=UTF-8'
+          content_transfer_encoding '7bit'
+          content_description       'This is a test'
+          content_id                '12345678'
+          mime_version  '1.0'
           body          'This is a body of text'
         end
         
@@ -285,6 +297,11 @@ describe Mail::Message do
         message.sender.to_s.should        == 'mikel@sender.lindsaar.net'
         message.subject.to_s.should       == 'Hello there Mikel'
         message.to.to_s.should            == 'mikel@to.lindsaar.net'
+        message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.to_s.should == '7bit'
+        message.content_description.to_s.should       == 'This is a test'
+        message.content_id.to_s.should                == '12345678'
+        message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
 
@@ -311,6 +328,11 @@ describe Mail::Message do
         message.sender =        'mikel@sender.lindsaar.net'
         message.subject =       'Hello there Mikel'
         message.to =            'mikel@to.lindsaar.net'
+        message.content_type =  'text/plain; charset=UTF-8'
+        message.content_transfer_encoding = '7bit'
+        message.content_description =       'This is a test'
+        message.content_id =                '12345678'
+        message.mime_version =  '1.0'
         message.body =          'This is a body of text'
 
         message.bcc.to_s.should           == 'mikel@bcc.lindsaar.net'
@@ -334,6 +356,11 @@ describe Mail::Message do
         message.sender.to_s.should        == 'mikel@sender.lindsaar.net'
         message.subject.to_s.should       == 'Hello there Mikel'
         message.to.to_s.should            == 'mikel@to.lindsaar.net'
+        message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.to_s.should == '7bit'
+        message.content_description.to_s.should       == 'This is a test'
+        message.content_id.to_s.should                == '12345678'
+        message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
       
@@ -360,6 +387,11 @@ describe Mail::Message do
         message[:sender] =        'mikel@sender.lindsaar.net'
         message[:subject] =       'Hello there Mikel'
         message[:to] =            'mikel@to.lindsaar.net'
+        message[:content_type] =  'text/plain; charset=UTF-8'
+        message[:content_transfer_encoding] = '7bit'
+        message[:content_description] =       'This is a test'
+        message[:content_id] =                '12345678'
+        message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
         
         message.bcc.to_s.should           == 'mikel@bcc.lindsaar.net'
@@ -383,6 +415,11 @@ describe Mail::Message do
         message.sender.to_s.should        == 'mikel@sender.lindsaar.net'
         message.subject.to_s.should       == 'Hello there Mikel'
         message.to.to_s.should            == 'mikel@to.lindsaar.net'
+        message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.to_s.should == '7bit'
+        message.content_description.to_s.should       == 'This is a test'
+        message.content_id.to_s.should                == '12345678'
+        message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
       
@@ -409,6 +446,11 @@ describe Mail::Message do
         message['sender'] =        'mikel@sender.lindsaar.net'
         message['subject'] =       'Hello there Mikel'
         message['to'] =            'mikel@to.lindsaar.net'
+        message['content_type'] =  'text/plain; charset=UTF-8'
+        message['content_transfer_encoding'] = '7bit'
+        message['content_description'] =       'This is a test'
+        message['content_id'] =                '12345678'
+        message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
         
         message.bcc.to_s.should           == 'mikel@bcc.lindsaar.net'
@@ -432,6 +474,11 @@ describe Mail::Message do
         message.sender.to_s.should        == 'mikel@sender.lindsaar.net'
         message.subject.to_s.should       == 'Hello there Mikel'
         message.to.to_s.should            == 'mikel@to.lindsaar.net'
+        message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.to_s.should == '7bit'
+        message.content_description.to_s.should       == 'This is a test'
+        message.content_id.to_s.should                == '12345678'
+        message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
 
@@ -582,7 +629,7 @@ describe Mail::Message do
     describe "field recognition" do
       it "should read a mime version from an email" do
         mail = Mail.new("Mime-Version: 1.0")
-        mail.mime_version.should == '1.0'
+        mail.mime_version.to_s.should == '1.0'
       end
 
       it "should return nil if the email has no mime version" do
@@ -592,17 +639,17 @@ describe Mail::Message do
 
       it "should read the content-transfer-encoding" do
         mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
-        mail.transfer_encoding.should == 'quoted-printable'
+        mail.content_transfer_encoding.to_s.should == 'quoted-printable'
       end
 
       it "should read the content-description" do
         mail = Mail.new("Content-Description: This is a description")
-        mail.description.should == 'This is a description'
+        mail.content_description.to_s.should == 'This is a description'
       end
 
       it "should return the content-type" do
         mail = Mail.new("Content-Type: text/plain")
-        mail.content_type.should == 'text/plain'
+        mail.message_content_type.should == 'text/plain'
       end
 
       it "should return the charset" do
@@ -642,9 +689,9 @@ describe Mail::Message do
       
       it "should give the content_type of each part" do
         mail = Mail.read(fixture('emails', 'multipart_email'))
-        mail.content_type.should == 'multipart/mixed'
-        mail.parts[0].content_type.should == 'text/plain'
-        mail.parts[1].content_type.should == 'application/pdf'
+        mail.message_content_type.should == 'multipart/mixed'
+        mail.parts[0].message_content_type.should == 'text/plain'
+        mail.parts[1].message_content_type.should == 'application/pdf'
       end
 
     end
@@ -919,7 +966,7 @@ describe Mail::Message do
             body "<b>This is HTML</b>"
           end
           parsed_mail = Mail.new(mail.to_s)
-          parsed_mail.content_type.should == 'multipart/alternative'
+          parsed_mail.message_content_type.should == 'multipart/alternative'
           parsed_mail.boundary.should == mail.boundary
           parsed_mail.parts.length.should == 2
           parsed_mail.parts[0].body.to_s.should == "This is Text"

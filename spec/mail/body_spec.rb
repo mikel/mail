@@ -81,13 +81,13 @@ describe Mail::Body do
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[0].content_type.should == "text/plain"
+      body.split('------=_Part_2192_32400445')[0].content_type.content_type.should == "text/plain"
     end
     
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[1].content_type.should == "text/html"
+      body.split('------=_Part_2192_32400445')[1].content_type.content_type.should == "text/html"
     end
   end
 
