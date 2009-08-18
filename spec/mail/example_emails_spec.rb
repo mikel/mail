@@ -346,7 +346,6 @@ EMAILEND
     # day-of-week is missing, that is not specific to the obsolete syntax;
     # it is optional in the current syntax as well.
     it "should handle the rfc obsolete dates" do
-      pending
       email =<<EMAILEND
 From: John Doe <jdoe@machine.example>
 To: Mary Smith <mary@example.net>
@@ -373,7 +372,6 @@ EMAILEND
     # addresses, dates, and message identifiers are all part of the
     # obsolete syntax.
     it "should handle the rfc obsolete whitespace email" do
-      pending
       email =<<EMAILEND
 From  : John Doe <jdoe@machine(comment).  example>
 To    : Mary Smith
@@ -397,7 +395,5 @@ EMAILEND
       doing { message.encoded }.should_not raise_error
     end
   end
-
-  
   
 end
