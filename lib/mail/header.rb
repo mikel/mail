@@ -147,7 +147,8 @@ module Mail
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject
                            return-path content-type mime-version
-                           content-transfer-encoding ]
+                           content-transfer-encoding content-description 
+                           content-id content-type]
 
     def encoded
       buffer = ''
@@ -159,9 +160,14 @@ module Mail
 
     alias :to_s :encoded
 
-    # Returns true if the header has a Message-Id defined (empty or not)
+    # Returns true if the header has a Message-ID defined (empty or not)
     def has_message_id?
       !fields.select { |f| f.responsible_for?('Message-ID') }.empty?
+    end
+
+    # Returns true if the header has a Content-ID defined (empty or not)
+    def has_content_id?
+      !fields.select { |f| f.responsible_for?('Content-ID') }.empty?
     end
 
     # Returns true if the header has a Date defined (empty or not)

@@ -463,7 +463,7 @@ module Mail
       if msg
         @html_part = msg
       else
-        @html_part = Mail::Message.new('Content-Type: text/html;')
+        @html_part = Mail::Part.new('Content-Type: text/html;')
       end
       add_part(@html_part)
     end
@@ -475,7 +475,7 @@ module Mail
       if msg
         @text_part = msg
       else
-        @text_part = Mail::Message.new('Content-Type: text/plain;')
+        @text_part = Mail::Part.new('Content-Type: text/plain;')
       end
       add_part(@text_part)
     end
@@ -539,7 +539,7 @@ module Mail
     
     def add_required_fields
       @body = Mail::Body.new('')    if body.nil?
-      add_message_id                unless has_message_id?
+      add_message_id                unless (has_message_id? || self.class == Mail::Part)
       add_date                      unless has_date?
       add_mime_version              unless has_mime_version?
       add_content_type              unless has_content_type?

@@ -271,7 +271,7 @@ describe Mail::Message do
           content_type  'text/plain; charset=UTF-8'
           content_transfer_encoding '7bit'
           content_description       'This is a test'
-          content_id                '12345678'
+          content_id                '<1234@message_id.lindsaar.net>'
           mime_version  '1.0'
           body          'This is a body of text'
         end
@@ -300,7 +300,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
-        message.content_id.to_s.should                == '12345678'
+        message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
@@ -331,7 +331,7 @@ describe Mail::Message do
         message.content_type =  'text/plain; charset=UTF-8'
         message.content_transfer_encoding = '7bit'
         message.content_description =       'This is a test'
-        message.content_id =                '12345678'
+        message.content_id =                '<1234@message_id.lindsaar.net>'
         message.mime_version =  '1.0'
         message.body =          'This is a body of text'
 
@@ -359,7 +359,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
-        message.content_id.to_s.should                == '12345678'
+        message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
@@ -390,7 +390,7 @@ describe Mail::Message do
         message[:content_type] =  'text/plain; charset=UTF-8'
         message[:content_transfer_encoding] = '7bit'
         message[:content_description] =       'This is a test'
-        message[:content_id] =                '12345678'
+        message[:content_id] =                '<1234@message_id.lindsaar.net>'
         message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
         
@@ -418,7 +418,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
-        message.content_id.to_s.should                == '12345678'
+        message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
@@ -449,7 +449,7 @@ describe Mail::Message do
         message['content_type'] =  'text/plain; charset=UTF-8'
         message['content_transfer_encoding'] = '7bit'
         message['content_description'] =       'This is a test'
-        message['content_id'] =                '12345678'
+        message['content_id'] =                '<1234@message_id.lindsaar.net>'
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
         
@@ -477,7 +477,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
-        message.content_id.to_s.should                == '12345678'
+        message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
@@ -906,24 +906,24 @@ describe Mail::Message do
 
         it "should add the html part and text part" do
           mail = Mail.new
-          mail.text_part = Mail.new do
+          mail.text_part = Mail::Part.new do
             body "This is Text"
           end
-          mail.html_part = Mail.new do
+          mail.html_part = Mail::Part.new do
             content_type = "text/html; charset=US-ASCII"
             body = "<b>This is HTML</b>"
           end
           mail.parts.length.should == 2
-          mail.parts.first.class.should == Mail::Message
-          mail.parts.last.class.should == Mail::Message
+          mail.parts.first.class.should == Mail::Part
+          mail.parts.last.class.should == Mail::Part
         end
         
         it "should set a boundary when called with to_s" do
           mail = Mail.new
-          mail.text_part = Mail.new do
+          mail.text_part = Mail::Part.new do
             body "This is Text"
           end
-          mail.html_part = Mail.new do
+          mail.html_part = Mail::Part.new do
             content_type = "text/html; charset=US-ASCII"
             body "<b>This is HTML</b>"
           end
@@ -934,10 +934,10 @@ describe Mail::Message do
         
         it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
           mail = Mail.new
-          mail.text_part = Mail.new do
+          mail.text_part = Mail::Part.new do
             body "This is Text"
           end
-          mail.html_part = Mail.new do
+          mail.html_part = Mail::Part.new do
             content_type = "text/html; charset=US-ASCII"
             body "<b>This is HTML</b>"
           end
@@ -946,10 +946,10 @@ describe Mail::Message do
         
         it "should add the end boundary tag" do
           mail = Mail.new
-          mail.text_part = Mail.new do
+          mail.text_part = Mail::Part.new do
             body "This is Text"
           end
-          mail.html_part = Mail.new do
+          mail.html_part = Mail::Part.new do
             content_type = "text/html; charset=US-ASCII"
             body "<b>This is HTML</b>"
           end
@@ -958,10 +958,10 @@ describe Mail::Message do
         
         it "should round trip a basic email" do
           mail = Mail.new('Subject: FooBar')
-          mail.text_part = Mail.new do
+          mail.text_part = Mail::Part.new do
             body "This is Text"
           end
-          mail.html_part = Mail.new do
+          mail.html_part = Mail::Part.new do
             content_type = "text/html; charset=US-ASCII"
             body "<b>This is HTML</b>"
           end
@@ -971,6 +971,34 @@ describe Mail::Message do
           parsed_mail.parts.length.should == 2
           parsed_mail.parts[0].body.to_s.should == "This is Text"
           parsed_mail.parts[1].body.to_s.should == "<b>This is HTML</b>"
+        end
+        
+        it "should put content-ids into parts" do
+          mail = Mail.new('Subject: FooBar')
+          mail.text_part = Mail::Part.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail::Part.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          mail.to_s
+          mail.parts.first.content_id.should_not be_nil
+          mail.parts.last.content_id.should_not be_nil
+        end
+
+        it "should not put message-ids into parts" do
+          mail = Mail.new('Subject: FooBar')
+          mail.text_part = Mail::Part.new do
+            body "This is Text"
+          end
+          mail.html_part = Mail::Part.new do
+            content_type = "text/html; charset=US-ASCII"
+            body "<b>This is HTML</b>"
+          end
+          mail.to_s
+          mail.parts.first.message_id.should be_nil
+          mail.parts.last.message_id.should be_nil
         end
 
       end

@@ -74,8 +74,8 @@ describe Mail::Body do
     it "should return the parts as their own messages" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[0].class.should == Mail::Message
-      body.split('------=_Part_2192_32400445')[1].class.should == Mail::Message
+      body.split('------=_Part_2192_32400445')[0].class.should == Mail::Part
+      body.split('------=_Part_2192_32400445')[1].class.should == Mail::Part
     end
     
     it "should return the first part as it's own message" do

@@ -23,13 +23,15 @@ module Mail
     include Patterns
     include Comparable
     
-    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
-                            references keywords resent-date resent-from resent-sender
-                            resent-to resent-cc resent-bcc resent-message-id 
-                            return-path received content-type content-transfer-encoding
-                            mime-version content-description content-id ]
+    STRUCTURED_FIELDS = %w[ bcc cc content-description content-id 
+                            content-transfer-encoding content-type 
+                            date from in-reply-to keywords message-id
+                            mime-version received references reply-to
+                            resent-bcc resent-cc resent-date resent-from
+                            resent-message-id resent-sender resent-to
+                            return-path sender to ]
 
-    KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments']
+    KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
     
     # Generic Field Exception
     class FieldError < StandardError
@@ -186,6 +188,8 @@ module Mail
         ContentDescriptionField.new(name, value)
       when /^content-type$/
         ContentTypeField.new(name, value)
+      when /^content-id$/
+        ContentIdField.new(name, value)
       else 
         OptionalField.new(name, value)
       end

@@ -34,7 +34,171 @@ describe Mail::Header do
       header.should be_has_message_id
     end
     
+    it "should say if it has a content_id field defined" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header.should_not be_has_content_id
+    end
+    
+    it "should say if it has a content_id field defined" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nContent-ID: 1234")
+      header.should be_has_content_id
+    end
+    
   end
+
+  describe "creating fields" do
+      it "should recognise a bcc field" do
+        header = Mail::Header.new
+        header['bcc'] = 'mikel@test.lindsaar.net'
+        header['bcc'].field.class.should == Mail::BccField
+      end
+      
+      it "should recognise a cc field" do
+        header = Mail::Header.new
+        header['cc'] = 'mikel@test.lindsaar.net'
+        header['cc'].field.class.should == Mail::CcField
+      end
+      
+      it "should recognise a content-description field" do
+        header = Mail::Header.new
+        header['content-description'] = 'Text'
+        header['content-description'].field.class.should == Mail::ContentDescriptionField
+      end
+      
+      it "should recognise a content-id field" do
+        header = Mail::Header.new
+        header['content-id'] = '1234'
+        header['content-id'].field.class.should == Mail::ContentIdField
+      end
+      
+      it "should recognise a content-transfer-encoding field" do
+        header = Mail::Header.new
+        header['content-transfer-encoding'] = '7bit'
+        header['content-transfer-encoding'].field.class.should == Mail::ContentTransferEncodingField
+      end
+      
+      it "should recognise a content-type field" do
+        header = Mail::Header.new
+        header['content-type'] = 'text/plain'
+        header['content-type'].field.class.should == Mail::ContentTypeField
+      end
+      
+      it "should recognise a date field" do
+        header = Mail::Header.new
+        header['date'] = 'Fri, 21 Nov 1997 09:55:06 -0600'
+        header['date'].field.class.should == Mail::DateField
+      end
+      
+      it "should recognise a from field" do
+        header = Mail::Header.new
+        header['from'] = 'mikel@test.lindsaar.net'
+        header['from'].field.class.should == Mail::FromField
+      end
+      
+      it "should recognise a in-reply-to field" do
+        header = Mail::Header.new
+        header['in-reply-to'] = '1234@mail.baci.local'
+        header['in-reply-to'].field.class.should == Mail::InReplyToField
+      end
+      
+      it "should recognise a keywords field" do
+        header = Mail::Header.new
+        header['keywords'] = 'mikel@test.lindsaar.net'
+        header['keywords'].field.class.should == Mail::KeywordsField
+      end
+      
+      it "should recognise a message-id field" do
+        header = Mail::Header.new
+        header['message-id'] = '1234@mail.baci.local'
+        header['message-id'].field.class.should == Mail::MessageIdField
+      end
+      
+      it "should recognise a mime-version field" do
+        header = Mail::Header.new
+        header['mime-version'] = '1.0'
+        header['mime-version'].field.class.should == Mail::MimeVersionField
+      end
+      
+      it "should recognise a received field" do
+        header = Mail::Header.new
+        header['received'] = 'from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id C1B953B4CB6 for <xxxxx@Exxx.xxxx.xxx>; Tue, 10 May 2005 15:27:05 -0500'
+        header['received'].field.class.should == Mail::ReceivedField
+      end
+      
+      it "should recognise a references field" do
+        header = Mail::Header.new
+        header['references'] = '1234@mail.baci.local'
+        header['references'].field.class.should == Mail::ReferencesField
+      end
+      
+      it "should recognise a reply-to field" do
+        header = Mail::Header.new
+        header['reply-to'] = 'mikel@test.lindsaar.net'
+        header['reply-to'].field.class.should == Mail::ReplyToField
+      end
+      
+      it "should recognise a resent-bcc field" do
+        header = Mail::Header.new
+        header['resent-bcc'] = 'mikel@test.lindsaar.net'
+        header['resent-bcc'].field.class.should == Mail::ResentBccField
+      end
+      
+      it "should recognise a resent-cc field" do
+        header = Mail::Header.new
+        header['resent-cc'] = 'mikel@test.lindsaar.net'
+        header['resent-cc'].field.class.should == Mail::ResentCcField
+      end
+      
+      it "should recognise a resent-date field" do
+        header = Mail::Header.new
+        header['resent-date'] = 'Fri, 21 Nov 1997 09:55:06 -0600'
+        header['resent-date'].field.class.should == Mail::ResentDateField
+      end
+      
+      it "should recognise a resent-from field" do
+        header = Mail::Header.new
+        header['resent-from'] = 'mikel@test.lindsaar.net'
+        header['resent-from'].field.class.should == Mail::ResentFromField
+      end
+      
+      it "should recognise a resent-message-id field" do
+        header = Mail::Header.new
+        header['resent-message-id'] = '1234@mail.baci.local'
+        header['resent-message-id'].field.class.should == Mail::ResentMessageIdField
+      end
+      
+      it "should recognise a resent-sender field" do
+        header = Mail::Header.new
+        header['resent-sender'] = 'mikel@test.lindsaar.net'
+        header['resent-sender'].field.class.should == Mail::ResentSenderField
+      end
+      
+      it "should recognise a resent-to field" do
+        header = Mail::Header.new
+        header['resent-to'] = 'mikel@test.lindsaar.net'
+        header['resent-to'].field.class.should == Mail::ResentToField
+      end
+      
+      it "should recognise a return-path field" do
+        header = Mail::Header.new
+        header['return-path'] = '<mikel@me.com>'
+        header['return-path'].field.class.should == Mail::ReturnPathField
+      end
+      
+      it "should recognise a sender field" do
+        header = Mail::Header.new
+        header['sender'] = 'mikel@test.lindsaar.net'
+        header['sender'].field.class.should == Mail::SenderField
+      end
+      
+      it "should recognise a to field" do
+        header = Mail::Header.new
+        header['to'] = 'mikel@test.lindsaar.net'
+        header['to'].field.class.should == Mail::ToField
+      end
+      
+    end
+  
 
   describe "parsing" do
 
@@ -118,9 +282,9 @@ describe Mail::Header do
     
     it "should allow you to pass in an array of raw fields" do
       header = Mail::Header.new
-      header.fields = ['From: mikel@me.com', 'To: bob@you.com']
+      header.fields = ['From: mikel@test.lindsaar.net', 'To: bob@you.com']
       header['To'].value.should == 'bob@you.com'
-      header['From'].value.should == 'mikel@me.com'
+      header['From'].value.should == 'mikel@test.lindsaar.net'
     end
     
     it "should reset the value of a single-only field if it already exists" do

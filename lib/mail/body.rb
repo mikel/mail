@@ -33,7 +33,7 @@ module Mail
       self.preamble = parts[0].to_s.chomp
       # Make the epilogue equal to the preamble (if any)
       self.epilogue = parts[-1].to_s.chomp.chomp('--')
-      parts[1...-1].map { |part| Mail.new(part) }
+      parts[1...-1].map { |part| Mail::Part.new(part) }
     end
     
     def only_us_ascii?

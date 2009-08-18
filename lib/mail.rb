@@ -16,6 +16,7 @@ module Mail
   require File.join(dir_name, 'network', 'retrieve_via_pop3')
 
   require File.join(dir_name, 'message')
+  require File.join(dir_name, 'part')
   require File.join(dir_name, 'header')
   require File.join(dir_name, 'body')
   require File.join(dir_name, 'field')
