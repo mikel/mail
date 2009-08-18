@@ -430,10 +430,47 @@ describe Mail::Address do
             :format       => 'Pete <pete(his account)@silly.test> (A wonderful \) chap his account his host)',
             :raw          => 'Pete(A wonderful \) chap) <pete(his account)@silly.test(his host)>'})
       end
-
-
-
       
+      it "should handle |Joe Q. Public <john.q.public@example.com>|" do
+        address = Mail::Address.new('Joe Q. Public <john.q.public@example.com>')
+        address.should break_down_to({
+            :name         => 'Joe Q. Public',
+            :display_name => 'Joe Q. Public',
+            :address      => 'john.q.public@example.com',
+            :comments     => nil,
+            :domain       => 'example.com',
+            :local        => 'john.q.public',
+            :format       => '"Joe Q. Public" <john.q.public@example.com>',
+            :raw          => 'Joe Q. Public <john.q.public@example.com>'})
+      end
+      
+      it "should handle |Mary Smith <@machine.tld:mary@example.net>|" do
+        address = Mail::Address.new('Mary Smith <@machine.tld:mary@example.net>')
+        address.should break_down_to({
+            :name         => 'Mary Smith',
+            :display_name => 'Mary Smith',
+            :address      => '@machine.tld:mary@example.net',
+            :comments     => nil,
+            :domain       => 'example.net',
+            :local        => '@machine.tld:mary',
+            :format       => 'Mary Smith <@machine.tld:mary@example.net>',
+            :raw          => 'Mary Smith <@machine.tld:mary@example.net>'})
+      end
+
+      it "should handle |jdoe@test   . example|" do
+        pending
+        address = Mail::Address.new('jdoe@test   . example')
+        address.should break_down_to({
+            :name         => 'jdoe@test.example',
+            :display_name => 'jdoe@test.example',
+            :address      => 'jdoe@test.example',
+            :comments     => nil,
+            :domain       => 'test.example',
+            :local        => 'jdoe',
+            :format       => 'jdoe@test.example',
+            :raw          => 'jdoe@test.example'})
+      end
+
     end
     
   end

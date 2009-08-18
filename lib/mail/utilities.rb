@@ -86,7 +86,7 @@ module Mail
       def underscoreize( str )
         str.to_s.downcase.gsub('_', '-')
       end
-      
+
     end
     
     def self.included(receiver)

@@ -43,20 +43,38 @@ module Mail
         nil
       end
     end
+    
+    def address
+      domain ? "#{local}@#{domain}" : local
+    end
+    
+    def address=(value)
+      self.tree = Mail::AddressList.new(value).address_nodes.first
+    end
 
     def local
-      get_local
+      "#{obs_domain_list}#{get_local.strip}"
+    end
+
+    def obs_domain_list
+      if tree.respond_to?(:angle_addr)
+        obs = tree.angle_addr.elements.select { |e| e.respond_to?(:obs_domain_list) }
+        !obs.empty? ? obs.first.text_value : nil
+      else
+        nil
+      end
     end
     
     def get_local
-      if tree.respond_to?(:local_dot_atom_text)
-        tree.local_dot_atom_text.text_value.strip
-      elsif tree.respond_to?(:angle_addr)
-        tree.angle_addr.addr_spec.local_part.text_value.strip
-      elsif tree.respond_to?(:addr_spec)
-        tree.addr_spec.local_part.text_value.strip
+      case
+      when tree.respond_to?(:local_dot_atom_text)
+        tree.local_dot_atom_text.text_value
+      when tree.respond_to?(:angle_addr)
+        tree.angle_addr.addr_spec.local_part.text_value
+      when tree.respond_to?(:addr_spec)
+        tree.addr_spec.local_part.text_value
       else
-        tree.local_part.text_value.strip
+        tree.local_part.text_value
       end
     end
     
@@ -94,14 +112,6 @@ module Mail
         end
       end
       value.to_s.strip
-    end
-    
-    def address
-      domain ? "#{local}@#{domain}" : local
-    end
-    
-    def address=(value)
-      self.tree = Mail::AddressList.new(value).address_nodes.first
     end
     
     def comments

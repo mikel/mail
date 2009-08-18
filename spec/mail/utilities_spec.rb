@@ -28,5 +28,5 @@ describe "Utilities Module" do
     result = 'This is not \(\)escaped\(\)'
     Mail::TestCase.new.send(:escape_paren, test).should == result
   end
-
+  
 end

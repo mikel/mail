@@ -70,6 +70,14 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.addresses.length.should == 3
     end
+    
+    it "should handle a really nasty obsolete address list" do
+      pending
+      psycho_obsolete = "Mary Smith <@machine.tld:mary@example.net>, , jdoe@test   . example"
+      list = Mail::AddressList.new(psycho_obsolete)
+      list.addresses.length.should == 2
+    end
+    
 
     it "should create an address instance for each address returned" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
@@ -82,6 +90,7 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.group_names.should == ["my_group"]
     end
+    
   end
   
 end
