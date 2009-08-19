@@ -11,68 +11,82 @@ describe Mail::Message do
 
   describe "initialization" do
     
-    it "should instantiate empty" do
-      Mail::Message.new.class.should == Mail::Message
-    end
+    describe "plain text emails" do
     
-    it "should instantiate with a string" do
-      Mail::Message.new(basic_email).class.should == Mail::Message
-    end
-    
-    it "should allow us to pass it a block" do
-      mail = Mail::Message.new do
-        from 'mikel@me.com'
-        to 'lindsaar@you.com'
+      it "should instantiate empty" do
+        Mail::Message.new.class.should == Mail::Message
       end
-      mail.from.addresses.should == ['mikel@me.com']
-      mail.to.addresses.should == ['lindsaar@you.com']
-    end
     
-    it "should initialize a body and header class even if called with nothing to begin with" do
-      mail = Mail::Message.new
-      mail.header.class.should == Mail::Header
-      mail.body.class.should == Mail::Body
-    end
-    
-    it "should be able to parse a basic email" do
-      doing { Mail::Message.new(File.read(fixture('emails/basic_email'))) }.should_not raise_error
-    end
-
-    it "should be able to parse every email example we have without raising an exception" do
-      emails = Dir.glob(fixture('emails/*'))
-      # Don't want to get noisy about any warnings
-      STDERR.stub!(:puts)
-      emails.each do |email|
-        doing { Mail::Message.new(File.read(email)) }.should_not raise_error
+      it "should instantiate with a string" do
+        Mail::Message.new(basic_email).class.should == Mail::Message
       end
-    end
+    
+      it "should allow us to pass it a block" do
+        mail = Mail::Message.new do
+          from 'mikel@me.com'
+          to 'lindsaar@you.com'
+        end
+        mail.from.addresses.should == ['mikel@me.com']
+        mail.to.addresses.should == ['lindsaar@you.com']
+      end
+    
+      it "should initialize a body and header class even if called with nothing to begin with" do
+        mail = Mail::Message.new
+        mail.header.class.should == Mail::Header
+        mail.body.class.should == Mail::Body
+      end
+    
+      it "should be able to parse a basic email" do
+        doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email'))) }.should_not raise_error
+      end
 
-    it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
-      STDERR.should_receive(:puts)
-      Mail::Message.new(File.read(fixture('emails/raw_email_string_in_date_field')))
-    end
+      it "should be able to parse every email example we have without raising an exception" do
+        emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
+        STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+        emails.each do |email|
+          doing { Mail::Message.new(File.read(email)) }.should_not raise_error
+        end
+      end
 
-    it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-      STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
-      Mail::Message.new(File.read(fixture('emails/raw_email_incorrect_header')))
-    end
+      it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
+        STDERR.should_receive(:puts)
+        Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field')))
+      end
 
-    it "should read in an email message and basically parse it" do
-      mail = Mail::Message.new(File.read(fixture('emails/basic_email')))
-      mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
+      it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
+        STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
+        Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header')))
+      end
+
+      it "should read in an email message and basically parse it" do
+        mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
+        mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
+      end
+
     end
 
   end
   
-  describe "envelope handling" do
+  describe "envelope line handling" do
     it "should respond to 'envelope from'" do
       Mail::Message.new.should respond_to(:envelope_from)
     end
     
     it "should strip off the envelope from field if present" do
-      message = Mail::Message.new(File.read(fixture('emails/raw_email')))
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email')))
       message.envelope_from.should == "jamis_buck@byu.edu"
       message.envelope_date.should == ::DateTime.parse("Mon May  2 16:07:05 2005")
+    end
+    
+    it "should strip off the envelope from field if present" do
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email')))
+      message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
+      message.from.formatted.should == ["Jamis Buck <jamis@37signals.com>"]
+    end
+
+    it "should not cause any problems if there is no envelope from present" do
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
+      message.from.formatted.should == ["Mikel Lindsaar <test@lindsaar.net>"]
     end
 
   end
@@ -140,23 +154,8 @@ describe Mail::Message do
     end
 
   end
-
-  describe "stripping of the envelope string" do
-    
-    it "should strip off the envelope from field if present" do
-      message = Mail::Message.new(File.read(fixture('emails/raw_email')))
-      message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
-      message.from.formatted.should == ["Jamis Buck <jamis@37signals.com>"]
-    end
-
-    it "should not cause any problems if there is no envelope from present" do
-      message = Mail::Message.new(File.read(fixture('emails/basic_email')))
-      message.from.formatted.should == ["Mikel Lindsaar <test@lindsaar.net>"]
-    end
-    
-  end
   
-  describe "directly setting the values of a simple email" do
+  describe "directly setting values of a message" do
 
     before(:each) do
       @mail = Mail::Message.new
@@ -485,383 +484,83 @@ describe Mail::Message do
     end
     
   end
-
-  describe "output" do
-    
-    it "should make an email and allow you to call :to_s on it to get a string" do
-      mail = Mail.new do
-           from 'mikel@test.lindsaar.net'
-             to 'you@test.lindsaar.net'
-        subject 'This is a test email'
-           body 'This is a body of the email'
-      end
-      
-      mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
-      mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
-      mail.to_s.should =~ /Subject: This is a test email\r\n/
-      mail.to_s.should =~ /This is a body of the email/
-
-    end
-  
-  end
-  
-  describe "handling missing required fields:" do
-    
-    describe "Message-ID" do
-      it "should say if it has a message id" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.should_not be_has_message_id
-      end
-
-      it "should preserve any message id that you pass it if add_message_id is called explicitly" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.add_message_id("ThisIsANonUniqueMessageId")
-        mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
-      end
-
-      it "should generate a random message ID if nothing is passed to add_message_id" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.add_message_id
-        fqdn ||= ::Socket.gethostname
-        mail.to_s.should =~ /Message-ID: <[\d\w_]+@#{fqdn}.mail>\r\n/
-      end
-
-      it "should make an email and inject a message ID if none was set if told to_s" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
-      end
-
-      it "should add the message id to the message permanently once sent to_s" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.to_s
-        mail.should be_has_message_id
-      end
-      
-      it "should add a body part if it is missing" do
-        mail = Mail.new
-        mail.to_s
-        mail.body.class.should == Mail::Body
-      end
-    end
-
-    describe "Date" do
-      it "should say if it has a date" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.should_not be_has_date
-      end
-
-      it "should preserve any date that you pass it if add_date is called explicitly" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.add_date("Mon, 24 Nov 1997 14:22:01 -0800")
-        mail.to_s.should =~ /Date: Mon, 24 Nov 1997 14:22:01 -0800/
-      end
-
-      it "should generate a current date if nothing is passed to add_date" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.add_date
-        mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
-      end
-
-      it "should make an email and inject a date if none was set if told to_s" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
-      end
-
-      it "should add the date to the message permanently once sent to_s" do
-        mail = Mail.new do
-             from 'mikel@test.lindsaar.net'
-               to 'you@test.lindsaar.net'
-          subject 'This is a test email'
-             body 'This is a body of the email'
-        end
-        mail.to_s
-        mail.should be_has_date
-      end
-    end
-  end
   
   describe "MIME Emails" do
-    describe "field recognition" do
-      it "should read a mime version from an email" do
-        mail = Mail.new("Mime-Version: 1.0")
-        mail.mime_version.to_s.should == '1.0'
-      end
-
-      it "should return nil if the email has no mime version" do
-        mail = Mail.new("To: bob")
-        mail.mime_version.should == nil
-      end
-
-      it "should read the content-transfer-encoding" do
-        mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
-        mail.content_transfer_encoding.to_s.should == 'quoted-printable'
-      end
-
-      it "should read the content-description" do
-        mail = Mail.new("Content-Description: This is a description")
-        mail.content_description.to_s.should == 'This is a description'
-      end
-
-      it "should return the content-type" do
-        mail = Mail.new("Content-Type: text/plain")
-        mail.message_content_type.should == 'text/plain'
-      end
-
-      it "should return the charset" do
-        mail = Mail.new("Content-Type: text/plain; charset=utf-8")
-        mail.charset.should == 'utf-8'
-      end
-
-      it "should return the main content-type" do
-        mail = Mail.new("Content-Type: text/plain")
-        mail.main_type.should == 'text'
-      end
-
-      it "should return the sub content-type" do
-        mail = Mail.new("Content-Type: text/plain")
-        mail.sub_type.should == 'plain'
-      end
-
-      it "should return the content-type parameters" do
-        mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
-        mail.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
-      end
-
-      it "should recognize a multipart email" do
-        mail = Mail.read(fixture('emails', 'multipart_email'))
-        mail.should be_multipart
-      end
-      
-      it "should recognize a non multipart email" do
-        mail = Mail.read(fixture('emails', 'basic_email'))
-        mail.should_not be_multipart
-      end
-      
-      it "should give how may (top level) parts there are" do
-        mail = Mail.read(fixture('emails', 'multipart_email'))
-        mail.parts.length.should == 2
-      end
-      
-      it "should give the content_type of each part" do
-        mail = Mail.read(fixture('emails', 'multipart_email'))
-        mail.message_content_type.should == 'multipart/mixed'
-        mail.parts[0].message_content_type.should == 'text/plain'
-        mail.parts[1].message_content_type.should == 'application/pdf'
-      end
-
-    end
-
+    
     describe "email generation" do
       
-      describe "Mime-Version" do
-        it "should say if it has a mime-version" do
-          mail = Mail.new do
-               from 'mikel@test.lindsaar.net'
-                 to 'you@test.lindsaar.net'
-            subject 'This is a test email'
-               body 'This is a body of the email'
-          end
-          mail.should_not be_has_mime_version
+      describe "mime emails" do
+
+        it "should read a mime version from an email" do
+          mail = Mail.new("Mime-Version: 1.0")
+          mail.mime_version.to_s.should == '1.0'
         end
 
-        it "should preserve any mime version that you pass it if add_mime_version is called explicitly" do
-          mail = Mail.new do
-               from 'mikel@test.lindsaar.net'
-                 to 'you@test.lindsaar.net'
-            subject 'This is a test email'
-               body 'This is a body of the email'
-          end
-          mail.add_mime_version("3.0 (This is an unreal version number)")
-          mail.to_s.should =~ /Mime-Version: 3.0 \(This is an unreal version number\)\r\n/
+        it "should return nil if the email has no mime version" do
+          mail = Mail.new("To: bob")
+          mail.mime_version.should == nil
         end
 
-        it "should generate a mime version if nothing is passed to add_date" do
-          mail = Mail.new do
-               from 'mikel@test.lindsaar.net'
-                 to 'you@test.lindsaar.net'
-            subject 'This is a test email'
-               body 'This is a body of the email'
-          end
-          mail.add_mime_version
-          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+        it "should read the content-transfer-encoding" do
+          mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
+          mail.content_transfer_encoding.to_s.should == 'quoted-printable'
         end
 
-        it "should make an email and inject a mime_version if none was set if told to_s" do
-          mail = Mail.new do
-               from 'mikel@test.lindsaar.net'
-                 to 'you@test.lindsaar.net'
-            subject 'This is a test email'
-               body 'This is a body of the email'
-          end
-          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+        it "should read the content-description" do
+          mail = Mail.new("Content-Description: This is a description")
+          mail.content_description.to_s.should == 'This is a description'
         end
 
-        it "should add the mime version to the message permanently once sent to_s" do
-          mail = Mail.new do
-               from 'mikel@test.lindsaar.net'
-                 to 'you@test.lindsaar.net'
-            subject 'This is a test email'
-               body 'This is a body of the email'
-          end
-          mail.to_s
-          mail.should be_has_mime_version
-        end
-      end
-      
-      describe "content type" do
-        
-        it "should say if it has a content type" do
-          mail = Mail.new('Content-Type: text/plain')
-          mail.should be_has_content_type
+        it "should return the content-type" do
+          mail = Mail.new("Content-Type: text/plain")
+          mail.message_content_type.should == 'text/plain'
         end
 
-        it "should say if it does not have a content type" do
-          mail = Mail.new
-          mail.should_not be_has_content_type
+        it "should return the charset" do
+          mail = Mail.new("Content-Type: text/plain; charset=utf-8")
+          mail.charset.should == 'utf-8'
         end
 
-        it "should say if it has a charset" do
-          mail = Mail.new('Content-Type: text/plain; charset=US-ASCII')
-          mail.should be_has_charset
+        it "should return the main content-type" do
+          mail = Mail.new("Content-Type: text/plain")
+          mail.main_type.should == 'text'
         end
 
-        it "should say if it has a charset" do
-          mail = Mail.new('Content-Type: text/plain')
-          mail.should_not be_has_charset
+        it "should return the sub content-type" do
+          mail = Mail.new("Content-Type: text/plain")
+          mail.sub_type.should == 'plain'
         end
 
-        it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
-          body = "This is plain text US-ASCII"
-          mail = Mail.new
-          mail.body = body
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+        it "should return the content-type parameters" do
+          mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
+          mail.mime_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
         end
 
-        it "should set the content type to text/plain; charset=us-ascii" do
-          body = "This is plain text US-ASCII"
-          mail = Mail.new
-          mail.body = body
-          mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
+        it "should recognize a multipart email" do
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail.should be_multipart
         end
 
-        it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
-          body = "This is NOT plain text ASCII　− かきくけこ"
-          mail = Mail.new
-          mail.body = body
-          mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+        it "should recognize a non multipart email" do
+          mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email'))
+          mail.should_not be_multipart
         end
 
-        it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
-          body = "This is NOT plain text ASCII　− かきくけこ"
-          mail = Mail.new
-          mail.body = body
-          mail.content_type = "text/plain"
-          mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+        it "should give how may (top level) parts there are" do
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail.parts.length.should == 2
         end
 
-        it "should not raise a warning if there is a charset defined and there is non ascii chars" do
-          body = "This is NOT plain text ASCII　− かきくけこ"
-          mail = Mail.new
-          mail.body = body
-          mail.content_transfer_encoding = "8bit"
-          mail.content_type = "text/plain; charset=UTF-8"
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
-        end
-        
-      end
-      
-      describe "content-transfer-encoding" do
-
-        it "should not raise a warning if there is no content-transfer-encoding and only US-ASCII chars" do
-          body = "This is plain text US-ASCII"
-          mail = Mail.new
-          mail.body = body
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
-        end
-
-        it "should set the content-transfer-encoding to 7bit" do
-          body = "This is plain text US-ASCII"
-          mail = Mail.new
-          mail.body = body
-          mail.to_s =~ %r{Content-Transfer-Encoding: 7bit}
-        end
-
-        it "should raise a warning if there is no content-transfer-encoding and there is non ascii chars and default to 8bit" do
-          body = "This is NOT plain text ASCII　− かきくけこ"
-          mail = Mail.new
-          mail.body = body
-          mail.content_type = "text/plain; charset=utf-8"
-          mail.should be_has_content_type
-          mail.should be_has_charset
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
-          mail.to_s =~ %r{Content-Transfer-Encoding: 8bit}
-        end
-
-        it "should not raise a warning if there is a content-transfer-encoding defined and there is non ascii chars" do
-          body = "This is NOT plain text ASCII　− かきくけこ"
-          mail = Mail.new
-          mail.body = body
-          mail.content_type = "text/plain; charset=utf-8"
-          mail.content_transfer_encoding = "8bit"
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+        it "should give the content_type of each part" do
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail.message_content_type.should == 'multipart/mixed'
+          mail.parts[0].message_content_type.should == 'text/plain'
+          mail.parts[1].message_content_type.should == 'application/pdf'
         end
 
       end
       
-      describe "multi part emails" do
+      describe "multipart/alternative emails" do
         
         it "should know what it's boundary is if it is a multipart document" do
           mail = Mail.new('Content-Type: multitype/mixed; boundary="--==Boundary"')
@@ -972,20 +671,6 @@ describe Mail::Message do
           parsed_mail.parts[0].body.to_s.should == "This is Text"
           parsed_mail.parts[1].body.to_s.should == "<b>This is HTML</b>"
         end
-        
-        it "should put content-ids into parts" do
-          mail = Mail.new('Subject: FooBar')
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          mail.to_s
-          mail.parts.first.content_id.should_not be_nil
-          mail.parts.last.content_id.should_not be_nil
-        end
 
         it "should not put message-ids into parts" do
           mail = Mail.new('Subject: FooBar')
@@ -1002,9 +687,320 @@ describe Mail::Message do
         end
 
       end
+
+    end
+    
+  end
+  
+  describe "handling missing required fields:" do
+    
+    describe "every email" do
+    
+      describe "Message-ID" do
+        it "should say if it has a message id" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.should_not be_has_message_id
+        end
+
+        it "should preserve any message id that you pass it if add_message_id is called explicitly" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_message_id("ThisIsANonUniqueMessageId")
+          mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
+        end
+
+        it "should generate a random message ID if nothing is passed to add_message_id" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_message_id
+          fqdn ||= ::Socket.gethostname
+          mail.to_s.should =~ /Message-ID: <[\d\w_]+@#{fqdn}.mail>\r\n/
+        end
+
+        it "should make an email and inject a message ID if none was set if told to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
+        end
+
+        it "should add the message id to the message permanently once sent to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.to_s
+          mail.should be_has_message_id
+        end
+      
+        it "should add a body part if it is missing" do
+          mail = Mail.new
+          mail.to_s
+          mail.body.class.should == Mail::Body
+        end
+      end
+
+      describe "Date" do
+        it "should say if it has a date" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.should_not be_has_date
+        end
+
+        it "should preserve any date that you pass it if add_date is called explicitly" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_date("Mon, 24 Nov 1997 14:22:01 -0800")
+          mail.to_s.should =~ /Date: Mon, 24 Nov 1997 14:22:01 -0800/
+        end
+
+        it "should generate a current date if nothing is passed to add_date" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_date
+          mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
+        end
+
+        it "should make an email and inject a date if none was set if told to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
+        end
+
+        it "should add the date to the message permanently once sent to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.to_s
+          mail.should be_has_date
+        end
+      end
+
+    end
+    
+    describe "mime emails" do
+      
+      describe "mime-version" do
+        it "should say if it has a mime-version" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.should_not be_has_mime_version
+        end
+
+        it "should preserve any mime version that you pass it if add_mime_version is called explicitly" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_mime_version("3.0 (This is an unreal version number)")
+          mail.to_s.should =~ /Mime-Version: 3.0 \(This is an unreal version number\)\r\n/
+        end
+
+        it "should generate a mime version if nothing is passed to add_date" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.add_mime_version
+          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+        end
+
+        it "should make an email and inject a mime_version if none was set if told to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+        end
+
+        it "should add the mime version to the message permanently once sent to_s" do
+          mail = Mail.new do
+               from 'mikel@test.lindsaar.net'
+                 to 'you@test.lindsaar.net'
+            subject 'This is a test email'
+               body 'This is a body of the email'
+          end
+          mail.to_s
+          mail.should be_has_mime_version
+        end
+      end
+      
+      describe "content type" do
+      
+        it "should say if it has a content type" do
+          mail = Mail.new('Content-Type: text/plain')
+          mail.should be_has_content_type
+        end
+
+        it "should say if it does not have a content type" do
+          mail = Mail.new
+          mail.should_not be_has_content_type
+        end
+
+        it "should say if it has a charset" do
+          mail = Mail.new('Content-Type: text/plain; charset=US-ASCII')
+          mail.should be_has_charset
+        end
+
+        it "should say if it has a charset" do
+          mail = Mail.new('Content-Type: text/plain')
+          mail.should_not be_has_charset
+        end
+
+        it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          STDERR.should_not_receive(:puts)
+          mail.to_s 
+        end
+
+        it "should set the content type to text/plain; charset=us-ascii" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
+        end
+
+        it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
+          body = "This is NOT plain text ASCII　− かきくけこ"
+          mail = Mail.new
+          mail.body = body
+          mail.content_transfer_encoding = "8bit"
+          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+        end
+
+        it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
+          body = "This is NOT plain text ASCII　− かきくけこ"
+          mail = Mail.new
+          mail.body = body
+          mail.content_type = "text/plain"
+          mail.content_transfer_encoding = "8bit"
+          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+        end
+
+        it "should not raise a warning if there is a charset defined and there is non ascii chars" do
+          body = "This is NOT plain text ASCII　− かきくけこ"
+          mail = Mail.new
+          mail.body = body
+          mail.content_transfer_encoding = "8bit"
+          mail.content_type = "text/plain; charset=UTF-8"
+          STDERR.should_not_receive(:puts)
+          mail.to_s 
+        end
+      
+      end
+      
+      describe "content-transfer-encoding" do
+
+        it "should not raise a warning if there is no content-transfer-encoding and only US-ASCII chars" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          STDERR.should_not_receive(:puts)
+          mail.to_s 
+        end
+
+        it "should set the content-transfer-encoding to 7bit" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          mail.to_s =~ %r{Content-Transfer-Encoding: 7bit}
+        end
+
+        it "should raise a warning if there is no content-transfer-encoding and there is non ascii chars and default to 8bit" do
+          body = "This is NOT plain text ASCII　− かきくけこ"
+          mail = Mail.new
+          mail.body = body
+          mail.content_type = "text/plain; charset=utf-8"
+          mail.should be_has_content_type
+          mail.should be_has_charset
+          STDERR.should_receive(:puts).with("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
+          mail.to_s =~ %r{Content-Transfer-Encoding: 8bit}
+        end
+
+        it "should not raise a warning if there is a content-transfer-encoding defined and there is non ascii chars" do
+          body = "This is NOT plain text ASCII　− かきくけこ"
+          mail = Mail.new
+          mail.body = body
+          mail.content_type = "text/plain; charset=utf-8"
+          mail.content_transfer_encoding = "8bit"
+          STDERR.should_not_receive(:puts)
+          mail.to_s 
+        end
+
+      end
       
     end
     
+  end
+  
+  describe "output" do
+    
+    it "should make an email and allow you to call :to_s on it to get a string" do
+      mail = Mail.new do
+           from 'mikel@test.lindsaar.net'
+             to 'you@test.lindsaar.net'
+        subject 'This is a test email'
+           body 'This is a body of the email'
+      end
+      
+      mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
+      mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
+      mail.to_s.should =~ /Subject: This is a test email\r\n/
+      mail.to_s.should =~ /This is a body of the email/
+
+    end
+
   end
   
 end

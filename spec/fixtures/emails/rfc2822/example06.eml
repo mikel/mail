@@ -1,0 +1,10 @@
+From: Mary Smith <mary@example.net>
+To: John Doe <jdoe@machine.example>
+Reply-To: "Mary Smith: Personal Account" <smith@home.example>
+Subject: Re: Saying Hello
+Date: Fri, 21 Nov 1997 10:01:10 -0600
+Message-ID: <3456@example.net>
+In-Reply-To: <1234@local.machine.example>
+References: <1234@local.machine.example>
+
+This is a reply to your hello.

@@ -28,8 +28,8 @@ describe "mail" do
   end
 
   it "should read a file" do
-    wrap_method = Mail.read(fixture('emails', 'raw_email')).to_s
-    file_method = Mail.new(File.read(fixture('emails', 'raw_email'))).to_s
+    wrap_method = Mail.read(fixture('emails', 'plain_emails', 'raw_email')).to_s
+    file_method = Mail.new(File.read(fixture('emails', 'plain_emails', 'raw_email'))).to_s
     wrap_method.should == file_method
   end
 

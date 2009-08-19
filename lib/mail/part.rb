@@ -1,5 +1,6 @@
 module Mail
   class Part < Message
+    
     def initialize(*args, &block)
       super
     end
