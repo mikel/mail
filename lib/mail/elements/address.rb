@@ -4,7 +4,13 @@ module Mail
     
     include Mail::Utilities
     
-    # Provides a way to create a new Mail::Address object
+    # Mail::Address handles all email addresses in Mail.  It takes an email address string
+    # and parses it, breaking it down into it's component parts and allowing you to get the
+    # address, comments, display name, name, local part, domain part and fully formatted
+    # address.
+    # 
+    # Mail::Address requires a correctly formatted email address per RFC2822 or RFC822.  It
+    # handles all obsolete versions including obsolete domain routing on the local part.
     # 
     #  a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
     #  a.format       #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'

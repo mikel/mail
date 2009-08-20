@@ -8,17 +8,20 @@ module Mail
     
     module InstanceMethods # :doc:
       
-      def tree
-        @element ||= DateTimeElement.new(value)
-        @tree ||= @element.tree
-      end
-      
-      def element
-        @element ||= DateTimeElement.new(value)
-      end
-      
+      # Returns a date time object of the parsed date
       def date_time
-        ::DateTime.parse("#{element.date} #{element.time}")
+        ::DateTime.parse("#{element.date_string} #{element.time_string}")
+      end
+
+      private
+
+      def element
+        @element ||= Mail::DateTimeElement.new(value)
+      end
+      
+      # Returns the syntax tree of the Date
+      def tree
+        @tree ||= element.tree
       end
       
     end

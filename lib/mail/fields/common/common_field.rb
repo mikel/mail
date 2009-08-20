@@ -8,10 +8,6 @@ module Mail
     
     module InstanceMethods # :doc:
       
-      def strip_field(field_name, string)
-        string.to_s.gsub(/#{field_name}:\s+/i, '')
-      end
-      
       def name=(value)
         @name = capitalize_field(value)
       end
@@ -41,12 +37,16 @@ module Mail
       def encoded_to_s
         value.blank? ? '' : "#{name}: #{value}"
       end
-
+      
       def responsible_for?( val )
         name.to_s.downcase == val.to_s.downcase
       end
 
       private
+
+      def strip_field(field_name, string) 
+        string.to_s.gsub(/#{field_name}:\s+/i, '')
+      end
 
 
       # 2.2.3. Long Header Fields

@@ -7,8 +7,6 @@ module Mail
   # this as a string.  It provides a raw_source accessor.
   class Body
 
-    attr_accessor :preamble, :epilogue
-    
     def initialize(string = '')
       if string.blank?
         @raw_source = ''
@@ -17,15 +15,39 @@ module Mail
       end
     end
     
+    # Returns the raw source that the body was initialized with, without
+    # any tampering
     def raw_source
       @raw_source
     end
     
+    # Returns a US-ASCII 7-bit compliant body.  Right now just returns the
+    # raw source.  Need to implement
     def encoded
       raw_source
     end
     
     alias :to_s :encoded
+
+    # Returns the preamble (any text that is before the first MIME boundary)
+    def preamble
+      @preamble
+    end
+
+    # Sets the preamble to a string (adds text before the first mime boundary)
+    def preamble=( val )
+      @preamble = val
+    end
+    
+    # Returns the epilogue (any text that is after the last MIME boundary)
+    def epilogue
+      @epilogue
+    end
+    
+    # Sets the epilogue to a string (adds text after the last mime boundary)
+    def epilogue=( val )
+      @epilogue = val
+    end
     
     def split(boundary)
       parts = raw_source.split(boundary)

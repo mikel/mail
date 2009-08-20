@@ -8,28 +8,24 @@ module Mail
   
     module InstanceMethods # :doc:
       
-      def tree
-        @tree ||= AddressList.new(value)
-      end
-      
+      # Allows you to iterate through each address object in the syntax tree
       def each
         tree.addresses.each do |address|
           yield
         end
       end
 
+      # Returns the address string of all the addresses in the address list
       def addresses
         tree.addresses.map { |a| a.address }
       end
 
+      # Returns the formatted string of all the addresses in the address list
       def formatted
         tree.addresses.map { |a| a.format }
       end
-
-      def group_names
-        tree.group_names
-      end
       
+      # Returns a hash of group name => address strings for the address list
       def groups
         @groups = Hash.new
         tree.group_recipients.each do |group|
@@ -38,6 +34,18 @@ module Mail
         @groups
       end
 
+      # Returns the name of all the groups in a string
+      def group_names # :nodoc:
+        tree.group_names
+      end
+
+      private
+      
+      # Returns the syntax tree of the Addresses
+      def tree # :nodoc:
+        @tree ||= AddressList.new(value)
+      end
+      
       def get_group_addresses(group_addresses)
         group_addresses.map do |address_tree|
           Mail::Address.new(address_tree)

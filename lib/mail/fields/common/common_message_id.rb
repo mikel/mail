@@ -9,8 +9,7 @@ module Mail
     module InstanceMethods # :doc:
       
       def tree
-        @element ||= Mail::MessageIdsElement.new(value)
-        @tree ||= @element.tree
+        @tree ||= element.tree
       end
       
       def element

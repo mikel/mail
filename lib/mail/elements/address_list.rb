@@ -1,6 +1,22 @@
 # encoding: utf-8
 module Mail
-  class AddressList
+  class AddressList # :nodoc:
+    
+    # Mail::AddressList is the class that parses To, From and other address fields from
+    # emails passed into Mail.
+    # 
+    # AddressList provides a way to query the groups and mailbox lists of the passed in
+    # string.
+    # 
+    # It can supply all addresses in an array, or return each address as an address object.
+    # 
+    # Mail::AddressList requires a correctly formatted group or mailbox list per RFC2822 or
+    # RFC822.  It also handles all obsolete versions in those RFCs.
+    # 
+    #  list = 'ada@test.lindsaar.net, My Group: mikel@test.lindsaar.net, Bob <bob@test.lindsaar.net>;'
+    #  a = AddressList.new(list)
+    #  a.addresses    #=> [#<Mail::Address:14943130 Address: |ada@test.lindsaar.net...
+    #  a.group_names  #=> ["My Group"]
     def initialize(string)
       parser = Mail::AddressListsParser.new
       if tree = parser.parse(string)
@@ -10,30 +26,37 @@ module Mail
       end
     end
     
+    # Returns a list of address objects from the parsed line
     def addresses
       @addresses ||= get_addresses.map do |address_tree|
         Mail::Address.new(address_tree)
       end
     end
     
-    def address_nodes
-      @address_nodes
-    end
-    
-    def get_addresses
-      (individual_recipients + group_recipients.map { |g| g.group_list.addresses }).flatten
-    end
-    
-    def group_recipients
-      @group_recipients ||= @address_nodes.select { |an| an.respond_to?(:group_name) }
-    end
-    
-    def individual_recipients
+    # Returns a list of all recipient syntax trees that are not part of a group
+    def individual_recipients # :nodoc:
       @individual_recipients ||= @address_nodes - group_recipients
     end
     
-    def group_names
+    # Returns a list of all recipient syntax trees that are part of a group
+    def group_recipients # :nodoc:
+      @group_recipients ||= @address_nodes.select { |an| an.respond_to?(:group_name) }
+    end
+    
+    # Returns the names as an array of strings of all groups
+    def group_names # :nodoc:
       group_recipients.map { |g| g.group_name.text_value }
+    end
+    
+    # Returns a list of address syntax trees
+    def address_nodes # :nodoc:
+      @address_nodes
+    end
+    
+    private
+    
+    def get_addresses
+      (individual_recipients + group_recipients.map { |g| g.group_list.addresses }).flatten
     end
   end
 end
