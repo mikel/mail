@@ -1,12 +1,12 @@
 # encoding: utf-8
 module Mail
-  module CommonField
+  module CommonField # :nodoc:
     
-    module ClassMethods
+    module ClassMethods # :nodoc:
       
     end
     
-    module InstanceMethods
+    module InstanceMethods # :doc:
       
       def strip_field(field_name, string)
         string.to_s.gsub(/#{field_name}:\s+/i, '')
@@ -75,7 +75,7 @@ module Mail
       #  that folding occur after the comma separating the structured items in
       #  preference to other places where the field could be folded, even if
       #  it is allowed elsewhere.
-      def do_encode
+      def do_encode # :nodoc:
         case
         when encoded_to_s.length <= 78
           encoded_to_s
@@ -88,7 +88,7 @@ module Mail
         end
       end
 
-      def fold
+      def fold # :nodoc:
         # Get the last whitespace character, OR we'll just choose 
         # 78 if there is no whitespace
         wspp = @unfolded_line.slice(0..78) =~ /[ \t][^ \T]*$/ || 78
@@ -103,7 +103,7 @@ module Mail
 
     end
     
-    def self.included(receiver)
+    def self.included(receiver) # :nodoc:
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end

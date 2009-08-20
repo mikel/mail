@@ -7,7 +7,7 @@ module Mail
     end
   
     module InstanceMethods
-    
+      
       include Patterns
       
       # Returns true if the string supplied is free from characters not allowed as an ATOM
@@ -38,14 +38,12 @@ module Mail
         (TOKEN_UNSAFE === str) ? dquote(str) : str
       end
 
-      # Wraps supplied string in double quotes unless it is already wrapped
-      # Returns double quoted string
-      def dquote( str ) #:nodoc:
-        unless str =~ /^".*?"$/
-          '"' + str.gsub(/["\\]/n) {|s| '\\' + s } + '"'
-        else
-          str
-        end
+      # Wraps supplied string in double quotes unless it is already wrapped.
+      # 
+      # Additionally will escape any double quotation marks in the string with a single
+      # backslash in front of the '"' character.
+      def dquote( str )
+        RubyVer.dquote( str )
       end
       
       # Unwraps supplied string from inside double quotes
@@ -68,10 +66,8 @@ module Mail
         str =~ /^\((.*?)\)$/ ? $1 : str
       end
       
-      if RUBY_VERSION >= "1.9.1"
-        load File.join(File.dirname(__FILE__), 'ruby_version_specific', 'escape_paren_1_9.rb')
-      else
-        load File.join(File.dirname(__FILE__), 'ruby_version_specific', 'escape_paren_1_8.rb')
+      def escape_paren( str )
+        RubyVer.escape_paren( str )
       end
       
       # Matches two objects with their to_s values case insensitively
@@ -86,7 +82,7 @@ module Mail
       def underscoreize( str )
         str.to_s.downcase.gsub('_', '-')
       end
-
+      
     end
     
     def self.included(receiver)

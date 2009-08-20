@@ -1,12 +1,12 @@
 # encoding: utf-8
 module Mail
-  module CommonDate
+  module CommonDate # :nodoc:
     
-    module ClassMethods
+    module ClassMethods # :nodoc:
       
     end
     
-    module InstanceMethods
+    module InstanceMethods # :doc:
       
       def tree
         @element ||= DateTimeElement.new(value)
@@ -23,7 +23,7 @@ module Mail
       
     end
     
-    def self.included(receiver)
+    def self.included(receiver) # :nodoc:
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end

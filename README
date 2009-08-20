@@ -23,35 +23,24 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
-== Basic Status
+== Current Capabilities of Mail
 
-=== Targets For Version 1:
+* RFC2822 Support, Reading and Writing
+* RFC2045-2049 Support (MIME)
+* Content Encoding, Reading (I/P)
+* Content Encoding, Writing (I/P)
+* Wrappers for File, Net/POP3, Net/SMTP
 
-o RFC2822 Support, Reading and Writing - DONE
-o RFC2045-2049 Support (MIME), Reading - In Testing
-o RFC2045-2049 Support (MIME), Writing - I/P
-o Content Encoding, Reading - Queued
-o Content Encoding, Writing - Queued
-o Wrappers for File, Net/POP3, Net/SMTP, Net/IMAP - I/P
-
-=== What this means:
-
-Mail is pretty much RFC2822 compliant now, that is, it can parse and generate
-valid US-ASCII emails.  It also is quite robust, meaning, if it finds something
-it doesn't understand it will not crash, instead, it will skip the problem and
-keep parsing.  In the case of a header it doesn't understand, it will initialize
-the header as an optional unstructured field and continue parsing.
+Mail is much RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
+emails.  There are a few obsoleted syntax emails that it will have problems with, but
+it also is quite robust, meaning, if it finds something it doesn't understand it will
+not crash, instead, it will skip the problem and keep parsing.  In the case of a header
+it doesn't understand, it will initialize the header as an optional unstructured
+field and continue parsing.
 
 This means Mail won't (ever) crunch your data (we think).
 
-Part of getting mail tested will be running it through an archive of thousands
-emails that are sitting in a cloud of the developers and making sure they parse,
-by round tripping them through mail and comparing with the original, this isn't
-done yet, but will be done soon.
-
-We have also gotten basic mime parsing and multipart parsing working.  Mail won't
-create a multipart email yet... well.. actually it can, but the API sucks right
-now.
+You can also create a MIME email.  It is manual at the moment, but it does work.
 
 == Installation
 

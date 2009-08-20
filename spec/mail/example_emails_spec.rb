@@ -47,22 +47,13 @@ describe "Test emails" do
     # also that jdoe@example.org and boss@nil.test have no display names
     # associated with them at all, and jdoe@example.org uses the simpler
     # address form without the angle brackets.
+    # 
+    # "Giant; \"Big\" Box" <sysservices@example.net>
     it "should handle multiple recipients test email" do
-      email =<<HERE
-From: "Joe Q. Public" <john.q.public@example.com>
-To: Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>
-Cc: <boss@nil.test>, "Giant; \"Big\" Box" <sysservices@example.net>
-Date: Tue, 1 Jul 2003 10:52:37 +0200
-Message-ID: <5678.21-Nov-1997@example.com>
-
-Hi everyone.
-HERE
-      # Doing a File.read seems to escape the \"Big\" in the above example, causing more trouble...
-      # mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
-      mail = Mail.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
       mail.from.formatted.should == ['"Joe Q. Public" <john.q.public@example.com>']
       mail.to.formatted.should == ['Mary Smith <mary@x.test>', 'jdoe@example.org', 'Who? <one@y.test>']
-      mail.cc.formatted.should == ['boss@nil.test', '"Giant; \"Big\" Box" <sysservices@example.net>']
+      mail.cc.formatted.should == ['boss@nil.test', "\"Giant; \\\"Big\\\" Box\" <sysservices@example.net>"]
       mail.message_id.to_s.should == '<5678.21-Nov-1997@example.com>'
       mail.date.date_time.should == ::DateTime.parse('1 Jul 2003 10:52:37 +0200')
     end
@@ -195,26 +186,7 @@ HERE
     # seconds in the time of the date field; and (5) the white space before
     # (but not within) the identifier in the "Message-ID:" field.
     it "should handle the rfc whitespace test email" do
-      email =<<HERE
-From: Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>
-To:A Group(Some people)
-     :Chris Jones <c@(Chris's host.)public.example>,
-         joe@example.org,
-  John <jdoe@one.test> (my dear friend); (the end of the group)
-Cc:(Empty list)(start)Undisclosed recipients  :(nobody(that I know))  ;
-Date: Thu,
-      13
-        Feb
-          1969
-      23:32
-               -0330 (Newfoundland Time)
-Message-ID:              <testabcd.1234@silly.test>
-
-Testing.
-HERE
-      # Doing a File.read seems to escape the \\ in the above example, causing more trouble...
-      # mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
-      mail = Mail.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
       mail.from.addresses.should == ['pete(his account)@silly.test']
       mail.to.addresses.should == ["c@(Chris's host.)public.example", 'joe@example.org', 'jdoe@one.test']
       mail.cc.group_names.should == ['(Empty list)(start)Undisclosed recipients ']

@@ -60,12 +60,20 @@ class String #:nodoc:
   def to_lf
     self.gsub(/\n|\r\n|\r/) { "\n" }
   end
-  
-  def guess_encoding
+
+  if RUBY_VERSION <= "1.9"
+
+    # Provides all strings with the Ruby 1.9 method of .ascii_only? and
+    # returns true or false
+    US_ASCII_REGEXP = %Q{\x00-\x7f}
+    def ascii_only?
+      !(self =~ /[^#{US_ASCII_REGEXP}]/)
+    end
     
   end
   
 end
+
 
 class Numeric #:nodoc:
   def blank?
