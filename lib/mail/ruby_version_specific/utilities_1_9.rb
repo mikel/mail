@@ -7,10 +7,11 @@ module Mail
       re = /(?<!\\)([\(\)])/          # Only match unescaped parens
       str.gsub(re) { |s| '\\' + s }
     end
-    
-    def Ruby19.dquote( str ) #:nodoc:
-      re = /(?<!\\)(")/
-      '"' + str.gsub(re) { |s| '\\' + s } + '"'
+
+    def Ruby19.paren( str )
+      str = $1 if str =~ /^\((.*)?\)$/
+      str = escape_paren( str )
+      '(' + str + ')'
     end
 
   end

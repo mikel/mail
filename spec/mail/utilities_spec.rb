@@ -43,12 +43,6 @@ describe "Utilities Module" do
       result = '"this needs \"escaping"'
       Mail::TestCase.new.send(:dquote, test).should == result
     end
-
-    it "should quote correctly a phrase with a quote in it" do
-      test = 'this needs "quoting'
-      result = '"this needs \"quoting"'
-      Mail::TestCase.new.send(:dquote, test).should == result
-    end
     
     it "should quote correctly a phrase with an escaped quote in it" do
       test = 'this needs \"quoting'
@@ -63,5 +57,68 @@ describe "Utilities Module" do
     end
   end
   
+  
+  describe "parenthesizing phrases" do
+    it "should parenthesize a phrase" do
+      test = 'this.needs parenthesizing'
+      result = '(this.needs parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+
+    it "should properly parenthesize a string, and escape properly" do
+      test = 'this needs (escaping'
+      result = '(this needs \(escaping)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+
+    it "should properly parenthesize a string, and escape properly (other way)" do
+      test = 'this needs )escaping'
+      result = '(this needs \)escaping)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+
+    it "should properly parenthesize a string, even if parenthesized but not escaped properly" do
+      test = '(this needs (escaping)'
+      result = '(this needs \(escaping)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+
+    it "should properly parenthesize a string, even if parenthesized but not escaped properly (other way)" do
+      test = '(this needs )escaping)'
+      result = '(this needs \)escaping)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+    
+    it "should parenthesize correctly a phrase with an escaped parentheses in it" do
+      test = 'this needs \(parenthesizing'
+      result = '(this needs \(parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+    
+    it "should parenthesize correctly a phrase with an escaped parentheses in it (other way)" do
+      test = 'this needs \)parenthesizing'
+      result = '(this needs \)parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+    
+    it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it" do
+      test = 'this needs \\\(parenthesizing'
+      result = '(this needs \\\(parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+    
+    it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it (other way)" do
+      test = 'this needs \\\)parenthesizing'
+      result = '(this needs \\\)parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+
+    it "should parenthesize correctly a phrase with a set of parentheses" do
+      test = 'this (needs) parenthesizing'
+      result = '(this \(needs\) parenthesizing)'
+      Mail::TestCase.new.send(:paren, test).should == result
+    end
+    
+  end
   
 end

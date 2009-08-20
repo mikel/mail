@@ -12,14 +12,12 @@ module Mail
       re = /([\(\)])/          # Only match unescaped parens
       str.gsub(re) { |s| '\\' + s }
     end
-
-    def Ruby18.dquote( str ) #:nodoc:
-      str = $1 if str =~ /^"(.*)?"$/
-      # First remove all escaped double quotes:
-      str = str.gsub(/\\"/, '"')
-      # Then wrap and re-escape all double quotes
-      '"' + str.gsub(/["]/n) {|s| '\\' + s } + '"'
+    
+    def Ruby18.paren( str )
+      str = $1 if str =~ /^\((.*)?\)$/
+      str = escape_paren( str )
+      '(' + str + ')'
     end
-
+    
   end
 end

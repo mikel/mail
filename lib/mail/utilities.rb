@@ -2,7 +2,7 @@
 module Mail
   module Utilities
     
-    module ClassMethods
+    module ClassMethods # :nodoc:
     
     end
   
@@ -43,49 +43,87 @@ module Mail
       # Additionally will escape any double quotation marks in the string with a single
       # backslash in front of the '"' character.
       def dquote( str )
-        RubyVer.dquote( str )
+        str = $1 if str =~ /^"(.*)?"$/
+        # First remove all escaped double quotes:
+        str = str.gsub(/\\"/, '"')
+        # Then wrap and re-escape all double quotes
+        '"' + str.gsub(/["]/n) {|s| '\\' + s } + '"'
       end
       
-      # Unwraps supplied string from inside double quotes
-      # Returns unquoted string
+      # Unwraps supplied string from inside double quotes.
+      # 
+      # Example:
+      # 
+      #  string = '"This is a string"'
+      #  unquote(string) #=> 'This is a string'
       def unquote( str )
         str =~ /^"(.*?)"$/ ? $1 : str
       end
       
-      # Wraps a string in parenthesis 
+      # Wraps a string in parenthesis and escapes any that are in the string itself.
+      # 
+      # Example:
+      # 
+      #  string
       def paren( str )
-        unless str =~ /^\(.*?\)$/
-          '(' + str.gsub(/[\(\)]/n) {|s| '\\' + s } + ')'
-        else
-          str
-        end
+        RubyVer.paren( str )
       end
       
-      # Unwraps a string in parenthesis 
+      # Unwraps a string from being wrapped in parenthesis
+      # 
+      # Example:
+      # 
+      #  str = '(This is a string)'
+      #  unparen( str ) #=> 'This is a string'
       def unparen( str )
         str =~ /^\((.*?)\)$/ ? $1 : str
       end
       
+      # Escape parenthesies in a string
+      # 
+      # Example:
+      # 
+      #  str = 'This is (a) string'
+      #  escape_paren( str ) #=> 'This is \(a\) string'
       def escape_paren( str )
         RubyVer.escape_paren( str )
       end
       
       # Matches two objects with their to_s values case insensitively
+      # 
+      # Example:
+      # 
+      #  obj2 = "This_is_An_object"
+      #  obj1 = :this_IS_an_object
+      #  match_to_s( obj1, obj2 ) #=> true
       def match_to_s( obj1, obj2 )
         obj1.to_s.downcase == obj2.to_s.downcase
       end
       
+      # Capitalizes a string that is joined by hyphens correctly.
+      # 
+      # Example:
+      # 
+      #  string = 'resent-from-field'
+      #  capitalize_field( string ) #=> 'Resent-From-Field'
       def capitalize_field( str )
         str.to_s.split("-").map { |v| v.capitalize }.join("-")
       end
-      
+
+      # Swaps out all hyphens (-) for underscores (_) good for symbolizing
+      # a field name.
+      # 
+      # Example:
+      # 
+      #  string = 'Resent-From-Field'
+      #  underscoreize ( string ) #=> 'resent_from_field'
       def underscoreize( str )
         str.to_s.downcase.gsub('_', '-')
       end
       
     end
     
-    def self.included(receiver)
+    def self.included(receiver) # :nodoc:
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end
