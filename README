@@ -202,14 +202,14 @@ content type and has a boundary defined.
 
  require 'mail'
 
- Mail.new do
+ mail = Mail.new do
    to 'nicolas.fouche@gmail.com'
    from 'Mikel Lindsaar <raasdnil@gmail.com>'
    subject 'First multipart email sent with Mail'
-   text_part = Mail.new do
+   text_part do
      body 'This is plain text'
    end
-   html_part = Mail.new do
+   html_part do
      content_type 'text/html; charset=UTF-8'
      body '<h1>This is HTML</h1>'
    end

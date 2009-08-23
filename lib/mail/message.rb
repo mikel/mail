@@ -447,13 +447,23 @@ module Mail
     end
     
     # Accessor for html_part
-    def html_part
-      @html_part
+    def html_part(&block)
+      if block_given?
+        @html_part = Mail::Part.new(&block)
+        add_part(@html_part)
+      else
+        @html_part
+      end
     end
     
     # Accessor for text_part
-    def text_part
-      @text_part
+    def text_part(&block)
+      if block_given?
+        @text_part = Mail::Part.new(&block)
+        add_part(@text_part)
+      else
+        @text_part
+      end
     end
     
     # Helper to add a html part to a multipart/alternative email.  If this and
@@ -482,14 +492,18 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      @parts ? @parts << part : @parts = [part]
+      add_multipart_header if html_part && text_part
+      if @parts
+        @parts << part
+      else
+        @parts = [part]
+      end
     end
     
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
-      add_multipart_header if html_part && text_part
       add_required_fields
       buffer = header.encoded
       buffer << "\r\n"

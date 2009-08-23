@@ -691,15 +691,14 @@ describe Mail::Message do
             to 'nicolas.fouche@gmail.com'
             from 'Mikel Lindsaar <raasdnil@gmail.com>'
             subject 'First multipart email sent with Mail'
-            text_part = Mail::Part.new do
+            text_part do
               body 'This is plain text'
             end
-            html_part = Mail::Part.new do
+            html_part do
               content_type 'text/html; charset=UTF-8'
               body '<h1>This is HTML</h1>'
             end
           end
-          mail.to_s
           mail.should be_multipart
           mail.parts.length.should == 2
           mail.text_part.class.should == Mail::Part
