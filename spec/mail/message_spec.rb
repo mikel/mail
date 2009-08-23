@@ -686,6 +686,28 @@ describe Mail::Message do
           mail.parts.last.message_id.should be_nil
         end
 
+        it "should create a multipart/alternative email through a block" do
+          mail = Mail.new do
+            to 'nicolas.fouche@gmail.com'
+            from 'Mikel Lindsaar <raasdnil@gmail.com>'
+            subject 'First multipart email sent with Mail'
+            text_part = Mail::Part.new do
+              body 'This is plain text'
+            end
+            html_part = Mail::Part.new do
+              content_type 'text/html; charset=UTF-8'
+              body '<h1>This is HTML</h1>'
+            end
+          end
+          mail.to_s
+          mail.should be_multipart
+          mail.parts.length.should == 2
+          mail.text_part.class.should == Mail::Part
+          mail.text_part.body.to_s.should == 'This is plain text'
+          mail.html_part.class.should == Mail::Part
+          mail.html_part.body.to_s.should == '<h1>This is HTML</h1>'
+        end
+
       end
 
     end
