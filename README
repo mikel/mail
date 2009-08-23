@@ -198,23 +198,22 @@ is another message which can have many or no parts.
 A message will only have parts if it is a multipart/mixed or related/mixed
 content type and has a boundary defined.
 
-=== Writing a multipart/alternative (html and text) email
+=== Writing and sending a multipart/alternative (html and text) email
 
- mail = Mail.new do
+ require 'mail'
+
+ Mail.new do
    to 'nicolas.fouche@gmail.com'
    from 'Mikel Lindsaar <raasdnil@gmail.com>'
    subject 'First multipart email sent with Mail'
+   text_part = Mail.new do
+     body 'This is plain text'
+   end
+   html_part = Mail.new do
+     content_type 'text/html; charset=UTF-8'
+     body '<h1>This is HTML</h1>'
+   end
  end
- 
- text_part = Mail.new
- text_part[:body] = 'This is plain text'
- 
- html_part = Mail.new
- html_part[:content_type] = 'text/html; charset=UTF-8'
- html_part[:body] = '<h1>This is HTML</h1>'
- 
- mail.text_part = text_part
- mail.html_part = html_part
 
 === Getting error reports from an email:
 
