@@ -26,12 +26,11 @@ you are doing, you can fiddle with every last bit of your email directly.
 == Current Capabilities of Mail
 
 * RFC2822 Support, Reading and Writing
-* RFC2045-2049 Support (MIME)
-* Content Encoding, Reading (I/P)
-* Content Encoding, Writing (I/P)
+* RFC2045-2049 Support for multipart emails (no smarts yet)
+* Support for creating multipart alternate emails (see below)
 * Wrappers for File, Net/POP3, Net/SMTP
 
-Mail is much RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
+Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
 emails.  There are a few obsoleted syntax emails that it will have problems with, but
 it also is quite robust, meaning, if it finds something it doesn't understand it will
 not crash, instead, it will skip the problem and keep parsing.  In the case of a header
@@ -40,7 +39,42 @@ field and continue parsing.
 
 This means Mail won't (ever) crunch your data (we think).
 
-You can also create a MIME email.  It is manual at the moment, but it does work.
+You can also create a MIME email.  There are helper methods for making a 
+multipart/alternate email for text/plain and text/html (the most common pair)
+and you can manually create any other type of MIME email.
+
+== Roadmap
+
+Next TODO:
+
+* Finish MIME multipart handling. Add easy helpers for images and files etc.
+* Include MIME file type detection for default file attachment and detachment
+behaviour
+* Add encoding support for bodies that intelligently decodes body text based on 
+content-type and content-transfer-encoding headers
+* Add multilingual MIME support for non US-ASCII headers
+* Add IMAP wrapper
+* Release Mail as a Gem and bask in it's glitter
+
+== Testing Policy
+
+Basically... we do BDD on Mail.  No method gets written in Mail without a
+corresponding or covering spec.  We expect as a minimum 100% coverage
+measured by RCov.  While this is not perfect by any measure, it is pretty
+good.  Additionally, all functional tests from TMail are to be passing before
+the gem gets released.
+
+It also means you can be sure Mail will behave correctly.
+
+== API Policy
+
+Right now Mail is still under development for a 1.0 release.
+
+The API will change between now and 1.0.  How much?  Not sure.  Basically though
+once 1.0 is released, no API removals within a single point release.  All removals
+to be depreciated with warnings for at least one point release before removal.
+
+Also, all private or protected methods to be declared as such.
 
 == Installation
 
@@ -54,6 +88,7 @@ up into a gem.
 == Usage
 
 All major mail functions should be able to happen from the Mail:: module.
+So, you should be able to just "require 'mail'" to get started.
 
 === Making an email
 
@@ -200,11 +235,18 @@ content type and has a boundary defined.
 
 === Writing and sending a multipart/alternative (html and text) email
 
+Mail makes some basic assumptions and makes doing the common thing as 
+simple as possible.... (asking a lot from a mail library)
+
  require 'mail'
 
- mail = Mail.new do
-   to 'nicolas.fouche@gmail.com'
-   from 'Mikel Lindsaar <raasdnil@gmail.com>'
+ Mail.defaults do
+   smtp '127.0.0.1' # Port 25 defult
+ end
+
+ mail = Mail.deliver do
+   to 'nicolas@test.lindsaar.net.au'
+   from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
    subject 'First multipart email sent with Mail'
    text_part do
      body 'This is plain text'
@@ -214,6 +256,49 @@ content type and has a boundary defined.
      body '<h1>This is HTML</h1>'
    end
  end
+ 
+Mail then delivers the email at the end of the block and returns the
+resulting Mail::Message object, which you can then inspect if you
+so desire...
+
+ puts mail.to_s #=>
+
+ To: nicolas@test.lindsaar.net.au
+ From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
+ Subject: First multipart email sent with Mail
+ Content-Type: multipart/alternative;
+   boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
+ Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
+ Date: Mon, 24 Aug 2009 00:15:46 +1000
+ Mime-Version: 1.0
+ Content-Transfer-Encoding: 7bit
+
+
+ ----==_mimepart_4a914f0c911be_6f0f1ab8026659
+ Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
+ Date: Mon, 24 Aug 2009 00:15:46 +1000
+ Mime-Version: 1.0
+ Content-Type: text/plain
+ Content-Transfer-Encoding: 7bit
+
+ This is plain text
+ ----==_mimepart_4a914f0c911be_6f0f1ab8026659
+ Content-Type: text/html; charset=UTF-8
+ Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
+ Date: Mon, 24 Aug 2009 00:15:46 +1000
+ Mime-Version: 1.0
+ Content-Transfer-Encoding: 7bit
+
+ <h1>This is HTML</h1>
+ ----==_mimepart_4a914f0c911be_6f0f1ab8026659--
+
+Notice how Mail inserts for you the content transfer encoding,
+the mime version, the content-id's as well as makes the main email
+have the correct content-type and boundary.
+
+Mail assumes that if your text in the body is only us-ascii, that your
+transfer encoding is 7bit and it is text/plain.  You can override this
+by explicitly declaring it.
 
 === Getting error reports from an email:
 
