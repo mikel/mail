@@ -28,6 +28,7 @@ you are doing, you can fiddle with every last bit of your email directly.
 * RFC2822 Support, Reading and Writing
 * RFC2045-2049 Support for multipart emails (no smarts yet)
 * Support for creating multipart alternate emails (see below)
+* Support for reading multipart/report emails & getting details from such
 * Wrappers for File, Net/POP3, Net/SMTP
 
 Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII

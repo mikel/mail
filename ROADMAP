@@ -59,15 +59,15 @@
 
 * Content-Type field parsing [DONE - ML]
 
-* Content-Type field setting
+* Content-Type field setting [DONE - ML]
 
-* Multipart email support
+* Multipart email support [DONE - ML]
 
 * Reading multipart emails [DONE - ML]
 
-* Creating multipart emails
+* Creating multipart emails [DONE - ML]
 
-* Multipart/Report reporting done
+* Multipart/Report reporting done [DONE - ML]
 
 * Implement all helper methods on adding and deleting parts and attachments
 
