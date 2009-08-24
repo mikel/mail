@@ -10,59 +10,55 @@ describe Mail::Message do
   end
   
   describe "initialization" do
-    
-    describe "plain text emails" do
-    
-      it "should instantiate empty" do
-        Mail::Message.new.class.should == Mail::Message
+  
+    it "should instantiate empty" do
+      Mail::Message.new.class.should == Mail::Message
+    end
+  
+    it "should instantiate with a string" do
+      Mail::Message.new(basic_email).class.should == Mail::Message
+    end
+  
+    it "should allow us to pass it a block" do
+      mail = Mail::Message.new do
+        from 'mikel@me.com'
+        to 'lindsaar@you.com'
       end
-    
-      it "should instantiate with a string" do
-        Mail::Message.new(basic_email).class.should == Mail::Message
-      end
-    
-      it "should allow us to pass it a block" do
-        mail = Mail::Message.new do
-          from 'mikel@me.com'
-          to 'lindsaar@you.com'
-        end
-        mail.from.addresses.should == ['mikel@me.com']
-        mail.to.addresses.should == ['lindsaar@you.com']
-      end
-    
-      it "should initialize a body and header class even if called with nothing to begin with" do
-        mail = Mail::Message.new
-        mail.header.class.should == Mail::Header
-        mail.body.class.should == Mail::Body
-      end
-    
-      it "should be able to parse a basic email" do
-        doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email'))) }.should_not raise_error
-      end
+      mail.from.addresses.should == ['mikel@me.com']
+      mail.to.addresses.should == ['lindsaar@you.com']
+    end
+  
+    it "should initialize a body and header class even if called with nothing to begin with" do
+      mail = Mail::Message.new
+      mail.header.class.should == Mail::Header
+      mail.body.class.should == Mail::Body
+    end
+  
+    it "should be able to parse a basic email" do
+      doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email'))) }.should_not raise_error
+    end
 
-      it "should be able to parse every email example we have without raising an exception" do
-        emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
-        STDERR.stub!(:puts) # Don't want to get noisy about any warnings
-        emails.each do |email|
-          doing { Mail::Message.new(File.read(email)) }.should_not raise_error
-        end
+    it "should be able to parse every email example we have without raising an exception" do
+      emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
+      STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+      emails.each do |email|
+        doing { Mail::Message.new(File.read(email)) }.should_not raise_error
       end
+    end
 
-      it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
-        STDERR.should_receive(:puts)
-        Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field')))
-      end
+    it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
+      STDERR.should_receive(:puts)
+      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field')))
+    end
 
-      it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-        STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
-        Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header')))
-      end
+    it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
+      STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
+      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header')))
+    end
 
-      it "should read in an email message and basically parse it" do
-        mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
-        mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
-      end
-
+    it "should read in an email message and basically parse it" do
+      mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
+      mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
     end
 
   end
@@ -486,10 +482,8 @@ describe Mail::Message do
   end
   
   describe "MIME Emails" do
-    
-    describe "email generation" do
       
-      describe "mime emails" do
+      describe "general helper methods" do
 
         it "should read a mime version from an email" do
           mail = Mail.new("Mime-Version: 1.0")
@@ -708,8 +702,99 @@ describe Mail::Message do
         end
 
       end
+    
+      describe "multipart/report emails" do
+        
+        it "should know if it is a multipart report type" do
+          mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+          mail.should be_multipart_report
+        end
+        
+        describe "delivery-status reports" do
+          
+          it "should know if it is a deliver-status report" do
+            mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+            mail.should be_delivery_status_report
+          end
 
-    end
+          it "should find it's message/delivery-status part" do
+            mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+            mail.delivery_status_part.should_not be_nil
+          end
+
+          describe "temporary failure" do
+            
+            before(:each) do
+              @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+            end
+            
+            it "should be bounced" do
+              @mail.should_not be_bounced
+            end
+            
+            it "should say action 'delayed'" do
+              @mail.action.should == 'delayed'
+            end
+            
+            it "should give a final recipient" do
+              @mail.final_recipient.should == 'RFC822; fraser@oooooooo.com.au'
+            end
+            
+            it "should give an error code" do
+              @mail.error_status.should == '4.2.2'
+            end
+            
+            it "should give a diagostic code" do
+              @mail.diagnostic_code.should == 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
+            end
+            
+            it "should give a remote-mta" do
+              @mail.remote_mta.should == 'DNS; mail.oooooooo.com.au'
+            end
+            
+            it "should be retryable" do
+              @mail.should be_retryable
+            end
+          end
+
+          describe "permanent failure" do
+            
+            before(:each) do
+              @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_530.eml'))
+            end
+            
+            it "should be bounced" do
+              @mail.should be_bounced
+            end
+            
+            it "should say action 'failed'" do
+              @mail.action.should == 'failed'
+            end
+            
+            it "should give a final recipient" do
+              @mail.final_recipient.should == 'RFC822; edwin@zzzzzzz.com'
+            end
+            
+            it "should give an error code" do
+              @mail.error_status.should == '5.3.0'
+            end
+            
+            it "should give a diagostic code" do
+              @mail.diagnostic_code.should == 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
+            end
+            
+            it "should give a remote-mta" do
+              @mail.remote_mta.should == 'DNS; mail.zzzzzz.com'
+            end
+            
+            it "should be retryable" do
+              @mail.should_not be_retryable
+            end
+          end
+
+        end
+
+      end
     
   end
   

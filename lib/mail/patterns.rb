@@ -14,6 +14,7 @@ module Mail
     TEXT       = /[#{text}]/ # + obs-text
     FIELD_NAME = /[#{field_name}]+/
     FIELD_BODY = /[#{field_body}]+/
+    FIELD_LINE = /^[#{field_name}]+:[#{field_body}]+$/
     CRLF       = /\r\n/
     WSP        = /[#{white_space}]/
     FWS        = /#{CRLF}#{WSP}+/

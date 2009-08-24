@@ -436,6 +436,49 @@ module Mail
       main_type =~ /^multipart$/i
     end
     
+    # Returns true if the message is a multipart/report
+    def multipart_report?
+      multipart? && sub_type =~ /^report$/i
+    end
+    
+    # Returns true if the message is a multipart/report; report-type=delivery-status;
+    def delivery_status_report?
+      multipart_report? && mime_parameters['report-type'] =~ /^delivery-status$/i
+    end
+    
+    # returns the part in a multipart/report email that has the content-type delivery-status
+    def delivery_status_part
+      @delivery_stats_part ||= parts.select { |p| p.delivery_status_report_part? }.first
+    end
+    
+    def bounced?
+      delivery_status_part.bounced?
+    end
+    
+    def action
+      delivery_status_part.action
+    end
+    
+    def final_recipient
+      delivery_status_part.final_recipient
+    end
+    
+    def error_status
+      delivery_status_part.error_status
+    end
+
+    def diagnostic_code
+      delivery_status_part.diagnostic_code
+    end
+    
+    def remote_mta
+      delivery_status_part.remote_mta
+    end
+    
+    def retryable?
+      delivery_status_part.retryable?
+    end
+    
     # Returns the current boundary for this message part
     def boundary
       mime_parameters ? mime_parameters['boundary'] : nil
