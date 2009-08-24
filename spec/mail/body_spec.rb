@@ -53,42 +53,87 @@ describe Mail::Body do
   end
 
   describe "splitting up a multipart document" do
-    it "should respond to split" do
-      body = Mail::Body.new('this is some text')
-      body.should respond_to(:split)
+    
+    it "should store the boundary passed in" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      body.boundary.should == '----=_Part_2192_32400445'
     end
 
     it "should split at the boundry string given returning two message bodies" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445').length.should == 2
+      body.split!('----=_Part_2192_32400445').parts.length.should == 2
     end
 
     it "should keep the preamble text as it's own preamble" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')
-      body.preamble.should == "this is some text\r\n"
+      body.split!('----=_Part_2192_32400445')
+      body.preamble.should == "this is some text"
     end
     
     it "should return the parts as their own messages" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[0].class.should == Mail::Part
-      body.split('------=_Part_2192_32400445')[1].class.should == Mail::Part
+      body.split!('----=_Part_2192_32400445')
+      body.parts[0].class.should == Mail::Part
+      body.parts[1].class.should == Mail::Part
     end
     
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[0].content_type.content_type.should == "text/plain"
+      body.split!('----=_Part_2192_32400445')
+      body.parts[0].content_type.content_type.should == "text/plain"
     end
     
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
-      body.split('------=_Part_2192_32400445')[1].content_type.content_type.should == "text/html"
+      body.split!('----=_Part_2192_32400445')
+      body.parts[1].content_type.content_type.should == "text/html"
     end
+
+    it "should separate out it's parts" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      body.should be_multipart
+    end
+
+    it "should keep track of it's parts" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      body.parts.length.should == 2
+    end
+
+    it "should round trip it's parts" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      body.preamble = "Really! this is some text"
+      body.epilogue = "And this is the end"
+      new_body = Mail::Body.new(body.to_s)
+      new_body.split!('----=_Part_2192_32400445')
+      new_body.parts.length.should == 2
+      new_body.preamble.should == "Really! this is some text"
+      new_body.epilogue.should == "And this is the end"
+    end
+
+    it "should allow you to change the boundary" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      body.boundary = '------=_MIMEPART'
+      new_body = Mail::Body.new(body.to_s)
+      new_body.split!('------=_MIMEPART')
+      new_body.parts.length.should == 2
+      new_body.preamble.should == "this is some text"
+    end
+
   end
 
   describe "detecting non ascii" do
@@ -105,6 +150,15 @@ describe Mail::Body do
     it "should say if a body is not ascii" do
       body = Mail::Body.new("This is NOT plain text ASCII　− かきくけこ")
       body.should_not be_only_us_ascii
+    end
+  end
+
+  describe "adding parts" do
+    it "should allow you to add a part" do
+      body = Mail::Body.new('')
+      body << Mail::Part.new('')
+      body.parts.length.should == 1
+      body.should be_multipart
     end
   end
 

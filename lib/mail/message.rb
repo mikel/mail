@@ -433,7 +433,7 @@ module Mail
     
     # Returns true if the message is multipart
     def multipart?
-      main_type =~ /^multipart$/i
+      !!(main_type =~ /^multipart$/i)
     end
     
     # Returns true if the message is a multipart/report
@@ -486,7 +486,7 @@ module Mail
     
     # Returns an array of parts in the message
     def parts
-      @parts ||= []
+      body.parts
     end
     
     # Accessor for html_part
@@ -536,11 +536,7 @@ module Mail
     # Adds a part to the parts list or creates the part list
     def add_part(part)
       add_multipart_header if html_part && text_part
-      if @parts
-        @parts << part
-      else
-        @parts = [part]
-      end
+      self.body << part
     end
     
     # Outputs an encoded string representation of the mail message including
@@ -551,11 +547,6 @@ module Mail
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded
-      if multipart?
-        buffer << boundary_line
-        buffer << parts.map {|part| part.encoded}.join("#{boundary_line}")
-        buffer << "\r\n--#{boundary}--\r\n"
-      end
       buffer
     end
     
@@ -579,10 +570,6 @@ module Mail
       self.body   = body_part
     end
     
-    def boundary_line
-      "\r\n--#{boundary}\r\n"
-    end
-    
     def set_envelope_header
       if match_data = raw_source.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
@@ -591,7 +578,7 @@ module Mail
     end
 
     def separate_parts
-      @parts = body.split("--#{mime_parameters['boundary']}")
+      body.split!(boundary)
     end
     
     def add_required_fields
@@ -606,6 +593,7 @@ module Mail
     
     def add_multipart_header
       header['content-type'] = ContentTypeField.multipart_alternative_with_boundary
+      body.boundary = boundary
     end
     
     class << self

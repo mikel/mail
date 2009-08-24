@@ -611,20 +611,6 @@ describe Mail::Message do
           mail.parts.last.class.should == Mail::Part
         end
         
-        it "should set a boundary when called with to_s" do
-          mail = Mail.new
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          mail.to_s
-          mail.boundary.should =~ /--==_mimepart_[\w\d]+_[\w\d]+/
-          mail.send(:boundary_line).should =~ /--==_mimepart_[\w\d]+_[\w\d]+/
-        end
-        
         it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
           mail = Mail.new
           mail.text_part = Mail::Part.new do
