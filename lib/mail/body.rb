@@ -32,6 +32,7 @@ module Mail
       else
         @raw_source = string
       end
+      set_charset
     end
     
     # Returns the raw source that the body was initialized with, without
@@ -52,6 +53,22 @@ module Mail
     end
     
     alias :to_s :encoded
+
+    def charset
+      @charset
+    end
+    
+    def charset=( val )
+      @charset = val
+    end
+
+    def encoding
+      @encoding
+    end
+    
+    def encoding=( val )
+      @encoding = val
+    end
 
     # Returns the preamble (any text that is before the first MIME boundary)
     def preamble
@@ -123,6 +140,10 @@ module Mail
     
     def end_boundary
       "\r\n\r\n--#{boundary}--\r\n"
+    end
+    
+    def set_charset
+      raw_source.ascii_only? ? @charset = 'US-ASCII' : @charset = nil
     end
   end
 end

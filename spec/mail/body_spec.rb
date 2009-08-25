@@ -49,6 +49,23 @@ describe Mail::Body do
       body = Mail::Body.new('this is some text')
       body.encoded.should == 'this is some text'
     end
+    
+    it "should set it's own encoding to us_ascii if it is ascii only body" do
+      body = Mail::Body.new('This is some text')
+      body.charset.should == 'US-ASCII'
+    end
+    
+    it "should allow you to set it's encoding" do
+      body = Mail::Body.new('')
+      body.charset = 'UTF-8'
+      body.charset.should == 'UTF-8'
+    end
+
+    it "should allow you to specify an encoding" do
+      body = Mail::Body.new('')
+      body.encoding = 'base64'
+      body.encoding.should == 'base64'
+    end
 
   end
 
