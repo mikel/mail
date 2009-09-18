@@ -350,11 +350,11 @@ to guess the mime_type and will encode the file in Base64 for you.
   
   @mail = Mail.new
   @mail.add_file(:filename => "/path/to/file.jpg")
-  @mail.parts.first.has_attachment? #=> true
-  @mail.parts.first.content_transfer_encoding #=> 'base64'
+  @mail.parts.first.attachment? #=> true
+  @mail.parts.first.content_transfer_encoding.to_s #=> 'base64'
   @mail.attachments.first.mime_type #=> 'image/jpg'
   @mail.attachments.first.filename #=> 'file.jpg'
-  @mail.attachments.first.data == File.read('/path/to/file.jpg') #=> true
+  @mail.attachments.first.decoded == File.read('/path/to/file.jpg') #=> true
 
 Or You can pass in file_data and give it a filename, again, mail
 will try and guess the mime_type for you.
@@ -362,9 +362,9 @@ will try and guess the mime_type for you.
   @mail = Mail.new
   file_data = File.read('path/to/myfile.pdf')
   @mail.add_file(:filename => 'myfile.pdf', :data => file_data)
-  @mail.parts.first.has_attachment? #=> true
-  @mail.parts.first.mime_type #=> 'application/pdf'
-  @mail.attachments.first.data == File.read('path/to/myfile.pdf') #=> true
+  @mail.parts.first.attachment? #=> true
+  @mail.attachments.first.mime_type #=> 'application/pdf'
+  @mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true
 
 You can also override the guessed mime type if you really know better
 than mail (this should be rarely needed)
@@ -376,4 +376,24 @@ than mail (this should be rarely needed)
                  :mime_type => 'application/x-pdf')
   @mail.parts.first.mime_type #=> 'application/x-pdf'
 
+Of course... Mail will round trip an attachment as well
+
+  @mail = Mail.new do
+    to 'nicolas@test.lindsaar.net.au'
+    from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+    subject 'First multipart email sent with Mail'
+    text_part do
+      body 'Here is the attachment you wanted'
+    end
+    html_part do
+      content_type 'text/html; charset=UTF-8'
+      body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
+    end
+    add_file :filename => '/path/to/myfile.pdf'
+  end
+
+  @round_tripped_mail = Mail.new(@mail.encoded)
+  
+  @round_tripped_mail.attachments.length #=> 1
+  @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 
