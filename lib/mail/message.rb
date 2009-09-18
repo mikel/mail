@@ -489,6 +489,10 @@ module Mail
       body.parts
     end
     
+    def attachments
+      body.parts.select { |p| p.attachment? }.map { |p| p.attachment }
+    end
+    
     # Accessor for html_part
     def html_part(&block)
       if block_given?
@@ -535,15 +539,39 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      add_multipart_header if html_part && text_part
+      add_multipart_alternate_header
       self.body << part
+    end
+    
+    # Adds a part to the parts list or creates the part list
+    def add_file(options)
+      add_multipart_mixed_header
+      if options.is_a?(Hash)
+        self.body << Mail::Part.new(options)
+      else
+        self.body << Mail::Part.new(:filename => options)
+      end
+    end
+
+    # Encodes the message, calls encode on all it's parts, gets an email message
+    # ready to send
+    def encode!
+      parts.each { |part| part.encode! }
+      add_required_fields
+    end
+
+    # Decodes the message, calls decode on all it's parts, gets an email message
+    # ready to send
+    def decode!
+      parts.each { |part| part.decode! }
+      add_required_fields
     end
     
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
-      add_required_fields
+      encode!
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded
@@ -571,7 +599,7 @@ module Mail
     end
     
     def set_envelope_header
-      if match_data = raw_source.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
+      if match_data = raw_source.to_s.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
         self.raw_source = match_data[2]
       end
@@ -591,9 +619,20 @@ module Mail
       add_transfer_encoding         unless has_transfer_encoding?
     end
     
-    def add_multipart_header
-      header['content-type'] = ContentTypeField.multipart_alternative_with_boundary
-      body.boundary = boundary
+    def add_multipart_alternate_header
+      if html_part && text_part
+        unless header['content-type']
+          header['content-type'] = ContentTypeField.with_boundary('multipart/alternative')
+          body.boundary = boundary
+        end
+      end
+    end
+    
+    def add_multipart_mixed_header
+      unless header['content-type']
+        header['content-type'] = ContentTypeField.with_boundary('multipart/mixed')
+        body.boundary = boundary
+      end
     end
     
     class << self

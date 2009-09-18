@@ -23,8 +23,8 @@ module Mail
     include Patterns
     include Comparable
     
-    STRUCTURED_FIELDS = %w[ bcc cc content-description content-id 
-                            content-transfer-encoding content-type 
+    STRUCTURED_FIELDS = %w[ bcc cc content-description content-disposition
+                            content-id content-transfer-encoding content-type 
                             date from in-reply-to keywords message-id
                             mime-version received references reply-to
                             resent-bcc resent-cc resent-date resent-from
@@ -114,7 +114,6 @@ module Mail
                       mime-version content-type content-transfer-encoding
                       content-disposition content-description ]
     
-    
     private
     
     def split(raw_field)
@@ -186,6 +185,8 @@ module Mail
         ContentTransferEncodingField.new(name, value)
       when /^content-description$/
         ContentDescriptionField.new(name, value)
+      when /^content-disposition$/
+        ContentDispositionField.new(name, value)
       when /^content-type$/
         ContentTypeField.new(name, value)
       when /^content-id$/

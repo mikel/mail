@@ -11,7 +11,7 @@ Received-SPF: neutral (google.com: 203.12.160.161 is neither permitted nor denie
 Authentication-Results: mx.google.com; spf=neutral (google.com: 203.12.160.161 is neither permitted nor denied by domain of test@lindsaar.net) smtp.mail=test@lindsaar.net
 X-TPG-Junk-Status: Message not scanned
 X-TPG-Antivirus: Passed
-Received: from [192.168.4.253] (60-241-138-146.static.tpgi.com.au [60.241.138.146])
+Received: from [192.0.0.253] (60-241-138-146.static.tpgi.com.au [60.0.0.146])
 	by mail11.tpgi.com.au (envelope-from test@lindsaar.net) (8.14.3/8.14.3) with ESMTP id mAM44xew022221
 	for <raasdnil@gmail.com>; Sat, 22 Nov 2008 15:05:01 +1100
 Message-Id: <6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@scientology.net>

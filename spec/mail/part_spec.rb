@@ -100,4 +100,45 @@ ENDPART
 
   end
 
+  describe "adding a file" do
+    it "should read a file name if given one" do
+      filename = fixture('attachments', 'test.png')
+      doing { Mail::Part.new(:filename => filename) }.should_not raise_error
+    end
+
+    it "should set it's content type intelligently for png files" do
+      filename = fixture('attachments', 'test.png')
+      part = Mail::Part.new(:filename => filename)
+      part.content_type.content_type.should == 'image/png'
+    end
+    
+    it "should know it is an attachment" do
+      filename = fixture('attachments', 'test.png')
+      part = Mail::Part.new(:filename => filename)
+      part.should be_attachment
+    end
+
+    it "should be able to detatch a file" do
+      filename = fixture('attachments', 'test.png')
+      part = Mail::Part.new(:filename => filename)
+      part.attachment.decoded.should == File.read(filename)
+    end
+
+    it "should set it's encoding to base64 if given an attachment" do
+      filename = fixture('attachments', 'test.png')
+      part = Mail::Part.new(:filename => filename)
+      part.encode!
+      part.content_transfer_encoding.to_s.should == 'base64'
+    end
+
+    it "should round trip an image attachment" do
+      filename = fixture('attachments', 'test.png')
+      part = Mail::Part.new(:filename => filename)
+      part.encode!
+      new_part = Mail::Part.new(part.to_s)
+      new_part.attachment.decoded.should == File.read(filename)
+    end
+
+  end
+
 end

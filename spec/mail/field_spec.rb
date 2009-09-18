@@ -17,7 +17,7 @@ describe Mail::Field do
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
                               Return-Path Received Subject Comments Mime-Version
                               Content-Transfer-Encoding Content-Description
-                              Content-Type ]
+                              Content-Disposition Content-Type ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
@@ -31,7 +31,7 @@ describe Mail::Field do
                               rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD 
                               rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn 
                               cOntenT-transfer-EnCoDiNg Content-Description
-                              cOnTENt-TyPe ]
+                              Content-Disposition cOnTENt-TyPe ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"

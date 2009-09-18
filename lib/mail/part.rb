@@ -2,7 +2,22 @@ module Mail
   class Part < Message
     
     def initialize(*args, &block)
-      super
+      if args.flatten[0].is_a?(Hash)
+        options_hash = args.flatten[0]
+        super
+        @attachment = Mail::Attachment.new(options_hash)
+        self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""
+        self.content_transfer_encoding = "Base64"
+        self.content_disposition = "attachment; filename=\"#{attachment.filename}\""
+        self.body = attachment.encoded
+      else
+        super
+        if content_type.parameters['filename']
+          @attachment = Mail::Attachment.new(:filename => content_type.parameters['filename'],
+                                             :data => body.to_s,
+                                             :encoding => content_transfer_encoding.to_s)
+        end
+      end
     end
     
     # Creates a new empty Content-ID field and inserts it in the correct order
@@ -15,6 +30,25 @@ module Mail
       header['content-id'] = content_id_val
     end
     
+    # Returns true if this part is an attachment
+    def attachment?
+      @attachment ? true : false
+    end
+    
+    # Returns the attachment data if there is any
+    def attachment
+      @attachment
+    end
+    
+    # Returns the filename of the attachment
+    def filename
+      if attachment?
+        attachment.filename
+      else
+        nil
+      end
+    end
+    
     # Returns true if the part has a content ID field, the field may or may
     # not have a value, but the field exists or not.
     def has_content_id?
@@ -22,12 +56,12 @@ module Mail
     end
 
     def add_required_fields
-      add_content_id                unless has_content_id?
+      add_content_id unless has_content_id?
       super
     end
     
     def delivery_status_report_part?
-      main_type =~ /message/i && sub_type  =~ /delivery-status/i
+      main_type =~ /message/i && sub_type =~ /delivery-status/i
     end
     
     def delivery_status_data
@@ -79,6 +113,7 @@ module Mail
     def parse_delivery_status_report
       @delivery_status_data ||= Header.new(body.to_s.gsub("\r\n\r\n", "\r\n"))
     end
+
   end
   
 end

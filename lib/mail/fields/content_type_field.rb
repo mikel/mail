@@ -38,8 +38,8 @@ module Mail
       @parameters
     end
 
-    def ContentTypeField.multipart_alternative_with_boundary
-      new("multipart/alternative; boundary=#{generate_boundary}")
+    def ContentTypeField.with_boundary(type)
+      new("#{type}; boundary=#{generate_boundary}")
     end
     
     def ContentTypeField.generate_boundary

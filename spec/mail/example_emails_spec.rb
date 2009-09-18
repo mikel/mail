@@ -253,10 +253,12 @@ describe "Test emails" do
   end
 
   describe "from the wild" do
+
     it "should return an 'encoded' version without raising a SystemStackError" do
-      message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep')))
+      message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml')))
       doing { message.encoded }.should_not raise_error
     end
+
   end
   
 end

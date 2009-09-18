@@ -148,7 +148,7 @@ module Mail
                            message-id in-reply-to references subject
                            return-path content-type mime-version
                            content-transfer-encoding content-description 
-                           content-id content-type]
+                           content-id content-type content-disposition]
 
     def encoded
       buffer = ''

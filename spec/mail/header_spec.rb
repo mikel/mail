@@ -65,6 +65,12 @@ describe Mail::Header do
         header['content-description'].field.class.should == Mail::ContentDescriptionField
       end
       
+      it "should recognise a content-disposition field" do
+        header = Mail::Header.new
+        header['content-disposition'] = 'attachment; filename=File'
+        header['content-disposition'].field.class.should == Mail::ContentDispositionField
+      end
+      
       it "should recognise a content-id field" do
         header = Mail::Header.new
         header['content-id'] = '1234'

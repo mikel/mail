@@ -35,7 +35,7 @@ describe Mail::Message do
     end
   
     it "should be able to parse a basic email" do
-      doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email'))) }.should_not raise_error
+      doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
 
     it "should be able to parse every email example we have without raising an exception" do
@@ -48,16 +48,16 @@ describe Mail::Message do
 
     it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
       STDERR.should_receive(:puts)
-      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field')))
+      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')))
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
       STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
-      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header')))
+      Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')))
     end
 
     it "should read in an email message and basically parse it" do
-      mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
+      mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
     end
 
@@ -69,19 +69,19 @@ describe Mail::Message do
     end
     
     it "should strip off the envelope from field if present" do
-      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email')))
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email.eml')))
       message.envelope_from.should == "jamis_buck@byu.edu"
       message.envelope_date.should == ::DateTime.parse("Mon May  2 16:07:05 2005")
     end
     
     it "should strip off the envelope from field if present" do
-      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email')))
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email.eml')))
       message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
       message.from.formatted.should == ["Jamis Buck <jamis@37signals.com>"]
     end
 
     it "should not cause any problems if there is no envelope from present" do
-      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email')))
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       message.from.formatted.should == ["Mikel Lindsaar <test@lindsaar.net>"]
     end
 
@@ -266,6 +266,7 @@ describe Mail::Message do
           content_type  'text/plain; charset=UTF-8'
           content_transfer_encoding '7bit'
           content_description       'This is a test'
+          content_disposition       'attachment; filename=File'
           content_id                '<1234@message_id.lindsaar.net>'
           mime_version  '1.0'
           body          'This is a body of text'
@@ -295,6 +296,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
+        message.content_disposition.to_s.should       == 'attachment; filename=File'
         message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
@@ -326,6 +328,7 @@ describe Mail::Message do
         message.content_type =  'text/plain; charset=UTF-8'
         message.content_transfer_encoding = '7bit'
         message.content_description =       'This is a test'
+        message.content_disposition =       'attachment; filename=File'
         message.content_id =                '<1234@message_id.lindsaar.net>'
         message.mime_version =  '1.0'
         message.body =          'This is a body of text'
@@ -354,6 +357,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
+        message.content_disposition.to_s.should       == 'attachment; filename=File'
         message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
@@ -385,6 +389,7 @@ describe Mail::Message do
         message[:content_type] =  'text/plain; charset=UTF-8'
         message[:content_transfer_encoding] = '7bit'
         message[:content_description] =       'This is a test'
+        message[:content_disposition] =       'attachment; filename=File'
         message[:content_id] =                '<1234@message_id.lindsaar.net>'
         message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
@@ -413,6 +418,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
+        message.content_disposition.to_s.should       == 'attachment; filename=File'
         message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
@@ -444,6 +450,7 @@ describe Mail::Message do
         message['content_type'] =  'text/plain; charset=UTF-8'
         message['content_transfer_encoding'] = '7bit'
         message['content_description'] =       'This is a test'
+        message['content_disposition'] =       'attachment; filename=File'
         message['content_id'] =                '<1234@message_id.lindsaar.net>'
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
@@ -472,6 +479,7 @@ describe Mail::Message do
         message.content_type.to_s.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.to_s.should == '7bit'
         message.content_description.to_s.should       == 'This is a test'
+        message.content_disposition.to_s.should       == 'attachment; filename=File'
         message.content_id.to_s.should                == '<1234@message_id.lindsaar.net>'
         message.mime_version.to_s.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
@@ -531,22 +539,22 @@ describe Mail::Message do
         end
 
         it "should recognize a multipart email" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
           mail.should be_multipart
         end
 
         it "should recognize a non multipart email" do
-          mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email'))
+          mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
           mail.should_not be_multipart
         end
 
         it "should give how may (top level) parts there are" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
           mail.parts.length.should == 2
         end
 
         it "should give the content_type of each part" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email'))
+          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
           mail.message_content_type.should == 'multipart/mixed'
           mail.parts[0].message_content_type.should == 'text/plain'
           mail.parts[1].message_content_type.should == 'application/pdf'
@@ -782,6 +790,106 @@ describe Mail::Message do
 
       end
     
+      describe "adding a file attachment" do
+        it "should allow you to just call 'add_attachment'" do
+          mail = Mail::Message.new
+          mail.add_file(fixture('attachments', 'test.png'))
+          mail.content_type.content_type.should == 'multipart/mixed'
+        end
+
+        it "should add a part given a filename" do
+          mail = Mail::Message.new
+          mail.add_file(fixture('attachments', 'test.png'))
+          mail.parts.length.should == 1
+        end
+
+        it "should give the part the right content type" do
+          mail = Mail::Message.new
+          mail.add_file(fixture('attachments', 'test.png'))
+          mail.parts.first.content_type.content_type.should == 'image/png'
+        end
+
+        it "should return attachment objects" do
+          mail = Mail::Message.new
+          mail.add_file(fixture('attachments', 'test.png'))
+          mail.attachments.first.class.should == Mail::Attachment
+        end
+        
+        it "should be return an aray of attachments" do
+          mail = Mail::Message.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.jpg')
+            add_file fixture('attachments', 'test.pdf')
+            add_file fixture('attachments', 'test.zip')
+          end
+          mail.attachments.length.should == 4
+          mail.attachments.each { |a| a.class.should == Mail::Attachment }
+        end
+        
+        it "should return the filename of each attachment" do
+          mail = Mail::Message.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.jpg')
+            add_file fixture('attachments', 'test.pdf')
+            add_file fixture('attachments', 'test.zip')
+          end
+          mail.attachments[0].filename.should == 'test.png'
+          mail.attachments[1].filename.should == 'test.jpg'
+          mail.attachments[2].filename.should == 'test.pdf'
+          mail.attachments[3].filename.should == 'test.zip'
+        end
+
+        it "should return the mime/type of each attachment" do
+          mail = Mail::Message.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.jpg')
+            add_file fixture('attachments', 'test.pdf')
+            add_file fixture('attachments', 'test.zip')
+          end
+          mail.attachments[0].mime_type.should == 'image/png'
+          mail.attachments[1].mime_type.should == 'image/jpeg'
+          mail.attachments[2].mime_type.should == 'application/pdf'
+          mail.attachments[3].mime_type.should == 'application/zip'
+        end
+
+        it "should return the content of each attachment" do
+          mail = Mail::Message.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.jpg')
+            add_file fixture('attachments', 'test.pdf')
+            add_file fixture('attachments', 'test.zip')
+          end
+          mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
+          mail.attachments[1].decoded.should == File.read(fixture('attachments', 'test.jpg'))
+          mail.attachments[2].decoded.should == File.read(fixture('attachments', 'test.pdf'))
+          mail.attachments[3].decoded.should == File.read(fixture('attachments', 'test.zip'))
+        end
+
+        it "should allow you to send in file data instead of having to read it" do
+          file_data = File.read(fixture('attachments', 'test.png'))
+          mail = Mail::Message.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file(:filename => 'test.png', :data => file_data)
+          end
+          mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
+        end
+
+      end
+      
   end
   
   describe "handling missing required fields:" do

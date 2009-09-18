@@ -4,6 +4,8 @@ module Mail # :doc:
   require 'date'
   require 'treetop'
   require 'net/smtp'
+  require 'mime/types'
+  require 'base64'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
@@ -29,6 +31,7 @@ module Mail # :doc:
   require File.join(dir_name, 'body')
   require File.join(dir_name, 'field')
   require File.join(dir_name, 'field_list')
+  require File.join(dir_name, 'attachment')
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))
@@ -51,6 +54,7 @@ module Mail # :doc:
   Treetop.load(File.join(dir_name, 'parsers', 'rfc2045'))
   Treetop.load(File.join(dir_name, 'parsers', 'mime_version'))
   Treetop.load(File.join(dir_name, 'parsers', 'content_type'))
+  Treetop.load(File.join(dir_name, 'parsers', 'content_disposition'))
   Treetop.load(File.join(dir_name, 'parsers', 'content_transfer_encoding'))
   
   # Load in all header field elements
