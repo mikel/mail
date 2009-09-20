@@ -5,7 +5,6 @@ module Mail # :doc:
   require 'treetop'
   require 'net/smtp'
   require 'mime/types'
-  require 'base64'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')

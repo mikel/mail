@@ -539,7 +539,7 @@ describe Mail::Message do
         end
 
         it "should recognize a multipart email" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
+          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
           mail.should be_multipart
         end
 
@@ -549,15 +549,15 @@ describe Mail::Message do
         end
 
         it "should give how may (top level) parts there are" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
+          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
           mail.parts.length.should == 2
         end
 
         it "should give the content_type of each part" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'multipart_email.eml'))
-          mail.message_content_type.should == 'multipart/mixed'
+          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email11.eml'))
+          mail.message_content_type.should == 'multipart/alternative'
           mail.parts[0].message_content_type.should == 'text/plain'
-          mail.parts[1].message_content_type.should == 'application/pdf'
+          mail.parts[1].message_content_type.should == 'text/enriched'
         end
 
       end

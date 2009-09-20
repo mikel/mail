@@ -13,6 +13,14 @@ module Mail
       str = escape_paren( str )
       '(' + str + ')'
     end
+    
+    def Ruby19.decode_base64(str)
+      str.unpack( 'm' ).first
+    end
+    
+    def Ruby19.encode_base64(str)
+      [str].pack( 'm' )
+    end
 
   end
 end

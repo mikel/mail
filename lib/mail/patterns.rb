@@ -11,13 +11,14 @@ module Mail
     lwsp         = %Q| \t\r\n|
     control      = %Q|\x00-\x1f\x7f-\xff|
     
-    TEXT       = /[#{text}]/ # + obs-text
-    FIELD_NAME = /[#{field_name}]+/
-    FIELD_BODY = /[#{field_body}]+/
-    FIELD_LINE = /^[#{field_name}]+:[#{field_body}]+$/
-    CRLF       = /\r\n/
-    WSP        = /[#{white_space}]/
-    FWS        = /#{CRLF}#{WSP}+/
+    CRLF          = /\r\n/
+    WSP           = /[#{white_space}]/
+    FWS           = /#{CRLF}#{WSP}*/
+    TEXT          = /[#{text}]/ # + obs-text
+    FIELD_NAME    = /[#{field_name}]+/
+    FIELD_BODY    = /[#{field_body}]+/
+    FIELD_LINE    = /^[#{field_name}]+:\s*[#{field_body}]+$/
+    HEADER_LINE   = /^([#{field_name}]+:\s*[#{field_body}]+)/
 
     CONTROL_CHAR  = /[#{control}]/n
     ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{lwsp}]/n

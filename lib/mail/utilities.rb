@@ -123,12 +123,12 @@ module Mail
       
       # Decode the string from Base64
       def decode_base64(str)
-        Base64.decode64(str)
+        RubyVer.decode_base64( str )
       end
       
       # Encode the string to Base64
       def encode_base64(str)
-        Base64.encode64(str)
+        RubyVer.encode_base64( str )
       end
       
       # Decode the string from Quoted-Printable

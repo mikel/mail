@@ -4,7 +4,7 @@ module Mail
     def initialize(*args, &block)
       if args.flatten[0].is_a?(Hash)
         options_hash = args.flatten[0]
-        super
+        super('') # Make an empty message, we are dealing with an attachment
         @attachment = Mail::Attachment.new(options_hash)
         self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""
         self.content_transfer_encoding = "Base64"
@@ -101,7 +101,7 @@ module Mail
     # A part may not have a header.... so, just init a body if no header
     def parse_message
       header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-      if header_part =~ FIELD_LINE
+      if header_part =~ HEADER_LINE
         self.header = header_part
         self.body   = body_part
       else

@@ -1,5 +1,6 @@
 module Mail
   class Ruby18
+    require 'base64'
 
     # Escapes any parenthesis in a string that are unescaped. This can't
     # use the Ruby 1.9.1 regexp feature of negative look behind so we have
@@ -17,6 +18,14 @@ module Mail
       str = $1 if str =~ /^\((.*)?\)$/
       str = escape_paren( str )
       '(' + str + ')'
+    end
+    
+    def Ruby18.decode_base64(str)
+      Base64.decode64(str)
+    end
+    
+    def Ruby18.encode_base64(str)
+      Base64.encode64(str)
     end
     
   end
