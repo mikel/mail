@@ -3,22 +3,18 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 require 'mail'
 
-# Decode the string from Base64
-def decode_base64(str)
-  Base64.decode64(str)
-end
-
-# Encode the string to Base64
-def encode_base64(str)
-  Base64.encode64(str)
-end
+include Mail::Utilities
 
 describe "creating an attachment" do
   
   it "should create an attachment from an absolute path" do
     file_data = File.read(filename = fixture('attachments', 'test.png'))
     att = Mail::Attachment.new(:filename => fixture('attachments', 'test.png'))
-    att.decoded.should == file_data
+    if RUBY_VERSION >= '1.9'
+      att.decoded.should == file_data.force_encoding(Encoding::BINARY)
+    else
+      att.decoded.should == file_data
+    end
   end
   
   it "should work out it's filename" do
@@ -41,7 +37,11 @@ describe "creating an attachment" do
     file_data = File.read(filename = fixture('attachments', 'test.png'))
     att = Mail::Attachment.new(:filename => 'test.png',
                                :data => file_data)
-    att.decoded.should == file_data
+    if RUBY_VERSION >= '1.9'
+      att.decoded.should == file_data.force_encoding(Encoding::BINARY)
+    else
+      att.decoded.should == file_data
+    end
   end
   
   it "should allow you to pass in a mime type and file data" do
@@ -50,7 +50,11 @@ describe "creating an attachment" do
                                :data => file_data,
                                :mime_type => 'image/jpg')
     att.mime_type.should == 'image/jpg'
-    att.decoded.should == file_data
+    if RUBY_VERSION >= '1.9'
+      att.decoded.should == file_data.force_encoding(Encoding::BINARY)
+    else
+      att.decoded.should == file_data
+    end
   end
   
   it "should encode it's body to base64 when you call 'encoded'" do
@@ -67,7 +71,11 @@ describe "creating an attachment" do
                                :data => encoded_data,
                                :encoding => 'base64')
     att.encoded.should == encoded_data
-    att.decoded.should == file_data
+    if RUBY_VERSION >= '1.9'
+      att.decoded.should == file_data.force_encoding(Encoding::BINARY)
+    else
+      att.decoded.should == file_data
+    end
   end
   
   it "should allow you to pass in an encoded attachment with an unknown encoding" do

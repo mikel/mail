@@ -121,7 +121,13 @@ ENDPART
     it "should be able to detatch a file" do
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
-      part.attachment.decoded.should == File.read(filename)
+      if RUBY_VERSION >= '1.9'
+        tripped = part.attachment.decoded.force_encoding(Encoding::BINARY)
+        original = File.read(filename).force_encoding(Encoding::BINARY)
+        tripped.should == original
+      else
+        part.attachment.decoded.should == File.read(filename)
+      end
     end
 
     it "should set it's encoding to base64 if given an attachment" do
@@ -136,7 +142,13 @@ ENDPART
       part = Mail::Part.new(:filename => filename)
       part.encode!
       new_part = Mail::Part.new(part.to_s)
-      new_part.attachment.decoded.should == File.read(filename)
+      if RUBY_VERSION >= '1.9'
+        tripped = part.attachment.decoded.force_encoding(Encoding::BINARY)
+        original = File.read(filename).force_encoding(Encoding::BINARY)
+        tripped.should == original
+      else
+        part.attachment.decoded.should == File.read(filename)
+      end
     end
 
   end

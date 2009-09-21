@@ -871,10 +871,25 @@ describe Mail::Message do
             add_file fixture('attachments', 'test.pdf')
             add_file fixture('attachments', 'test.zip')
           end
-          mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
-          mail.attachments[1].decoded.should == File.read(fixture('attachments', 'test.jpg'))
-          mail.attachments[2].decoded.should == File.read(fixture('attachments', 'test.pdf'))
-          mail.attachments[3].decoded.should == File.read(fixture('attachments', 'test.zip'))
+          if RUBY_VERSION >= '1.9'
+            tripped = mail.attachments[0].decoded
+            original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
+            tripped.should == original
+            tripped = mail.attachments[1].decoded
+            original = File.read(fixture('attachments', 'test.jpg')).force_encoding(Encoding::BINARY)
+            tripped.should == original
+            tripped = mail.attachments[2].decoded
+            original = File.read(fixture('attachments', 'test.pdf')).force_encoding(Encoding::BINARY)
+            tripped.should == original
+            tripped = mail.attachments[3].decoded
+            original = File.read(fixture('attachments', 'test.zip')).force_encoding(Encoding::BINARY)
+            tripped.should == original
+          else
+            mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
+            mail.attachments[1].decoded.should == File.read(fixture('attachments', 'test.jpg'))
+            mail.attachments[2].decoded.should == File.read(fixture('attachments', 'test.pdf'))
+            mail.attachments[3].decoded.should == File.read(fixture('attachments', 'test.zip'))
+          end
         end
 
         it "should allow you to send in file data instead of having to read it" do
@@ -885,7 +900,13 @@ describe Mail::Message do
             to      'mikel@to.lindsaar.net'
             add_file(:filename => 'test.png', :data => file_data)
           end
-          mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
+          if RUBY_VERSION >= '1.9'
+            tripped = mail.attachments[0].decoded
+            original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
+            tripped.should == original
+          else
+            mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
+          end
         end
 
       end
