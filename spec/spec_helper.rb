@@ -16,7 +16,6 @@ require 'treetop'
 
 $:.unshift "#{File.dirname(__FILE__)}/mail"
 $:.unshift "#{File.dirname(__FILE__)}/../lib"
-$:.unshift "#{File.dirname(__FILE__)}/../lib/mail"
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
@@ -75,6 +74,7 @@ class MockSMTP
     true
   end
 end
+
 class Net::SMTP
   def self.new(*args)
     MockSMTP.new
@@ -90,6 +90,7 @@ class MockPopMail
     @rfc2822
   end
 end
+
 class MockPOP3
   @@start = false
   
@@ -134,6 +135,7 @@ class MockPOP3
     @@start = false
   end
 end
+
 class Net::POP3
   def self.new(*args)
     MockPOP3.new
