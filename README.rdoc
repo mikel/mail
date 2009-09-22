@@ -48,11 +48,6 @@ and you can manually create any other type of MIME email.
 
 Next TODO:
 
-* Finish MIME multipart handling. Add easy helpers for images and files etc.
-* Include MIME file type detection for default file attachment and detachment
-behaviour
-* Add encoding support for bodies that intelligently decodes body text based on 
-content-type and content-transfer-encoding headers
 * Add multilingual MIME support for non US-ASCII headers
 * Add IMAP wrapper
 * Release Mail as a Gem and bask in it's glitter
