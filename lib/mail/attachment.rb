@@ -54,8 +54,8 @@ module Mail
     end
     
     def decoded
-      if Mail::TransferEncodings.defined?(@encoding)
-        Mail::TransferEncodings.get_encoding(@encoding).decode(@encoded_data)
+      if Mail::Encodings.defined?(@encoding)
+        Mail::Encodings.get_encoding(@encoding).decode(@encoded_data)
       else
         raise UnknownEncodingType, "Don't know how to decode #{@encoding}, please call #encoded and decode it yourself."
       end
@@ -80,7 +80,7 @@ module Mail
         @encoded_data = data
         @encoding = encoding.to_s
       else # this is raw data
-        @encoded_data = Mail::TransferEncodings::Base64.encode(data)
+        @encoded_data = Mail::Encodings::Base64.encode(data)
         @encoding = 'base64'
       end
     end

@@ -1,5 +1,5 @@
 module Mail
-  module TransferEncodings
+  module Encodings
     class Base64
       
       # Decode the string from Base64

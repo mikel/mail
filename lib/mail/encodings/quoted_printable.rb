@@ -1,5 +1,5 @@
 module Mail
-  module TransferEncodings
+  module Encodings
     class QuotedPrintable
     
       # Decode the string from Quoted-Printable
