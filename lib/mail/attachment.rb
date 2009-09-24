@@ -54,8 +54,8 @@ module Mail
     end
     
     def decoded
-      if @encoding == 'base64'
-        decode_base64(@encoded_data)
+      if Mail::TransferEncodings.defined?(@encoding)
+        Mail::TransferEncodings.get_encoding(@encoding).decode(@encoded_data)
       else
         raise UnknownEncodingType, "Don't know how to decode #{@encoding}, please call #encoded and decode it yourself."
       end
@@ -78,9 +78,9 @@ module Mail
     def add_file(data, encoding)
       if encoding # We are being given encoded data
         @encoded_data = data
-        @encoding = encoding.to_s.downcase
+        @encoding = encoding.to_s
       else # this is raw data
-        @encoded_data = encode_base64(data)
+        @encoded_data = Mail::TransferEncodings::Base64.encode(data)
         @encoding = 'base64'
       end
     end

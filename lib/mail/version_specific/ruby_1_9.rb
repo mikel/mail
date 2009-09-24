@@ -21,6 +21,14 @@ module Mail
     def Ruby19.encode_base64(str)
       [str].pack( 'm' )
     end
+    
+    def Ruby19.has_constant?(klass, string)
+      klass.constants.include?( string.to_sym )
+    end
+    
+    def Ruby19.get_constant(klass, string)
+      klass.const_get( string.to_sym )
+    end
 
   end
 end

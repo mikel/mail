@@ -3,7 +3,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 require 'mail'
 
-include Mail::Utilities
+def encode_base64( str )
+  Mail::TransferEncodings::Base64.encode(str)
+end
+
 
 describe "creating an attachment" do
   

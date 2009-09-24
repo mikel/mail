@@ -28,5 +28,13 @@ module Mail
       Base64.encode64(str)
     end
     
+    def Ruby18.has_constant?(klass, string)
+      klass.constants.include?( string )
+    end
+    
+    def Ruby18.get_constant(klass, string)
+      klass.const_get( string )
+    end
+
   end
 end

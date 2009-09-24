@@ -13,10 +13,10 @@ module Mail # :doc:
   dir_name = File.join(File.dirname(__FILE__), 'mail')
 
   if RUBY_VERSION >= "1.9.1"
-    require File.join(dir_name, 'ruby_version_specific', 'utilities_1_9.rb')
+    require File.join(dir_name, 'version_specific', 'ruby_1_9.rb')
     RubyVer = Mail::Ruby19
   else
-    require File.join(dir_name, 'ruby_version_specific', 'utilities_1_8.rb')
+    require File.join(dir_name, 'version_specific', 'ruby_1_8.rb')
     RubyVer = Mail::Ruby18
   end
 
@@ -71,7 +71,13 @@ module Mail # :doc:
   fields.each do |field|
     require field
   end
-
+  
+  # Load in all transfer encodings
+  elems = Dir.glob(File.join(dir_name, 'transfer_encodings', '*.rb'))
+  elems.each do |elem|
+    require elem
+  end
+  
   # Finally... require all the Mail.methods
   require File.join(dir_name, 'mail')
 
