@@ -36,5 +36,21 @@ module Mail
       klass.const_get( string )
     end
 
+    def Ruby18.b_encode(str, encoding)
+      # Ruby 1.8 requires an encoding to work
+      raise ArgumentError, "Must supply an encoding" if encoding.nil?
+      encoding = encoding.to_s.upcase.gsub('_', '-')
+      string = Encodings::Base64.encode(str)
+      "=?#{encoding}?B?#{string.chomp}?="
+    end
+
+    def Ruby18.q_encode(str, encoding)
+      # Ruby 1.8 requires an encoding to work
+      raise ArgumentError, "Must supply an encoding" if encoding.nil?
+      encoding = encoding.to_s.upcase.gsub('_', '-')
+      string = Encodings::QuotedPrintable.encode(str)
+      "=?#{encoding}?Q?#{string.chomp}?="
+    end
+
   end
 end

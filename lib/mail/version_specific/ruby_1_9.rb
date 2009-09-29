@@ -29,6 +29,18 @@ module Mail
     def Ruby19.get_constant(klass, string)
       klass.const_get( string.to_sym )
     end
+    
+    def Ruby19.b_encode(str, encoding = nil)
+      encoding = str.encoding.to_s
+      string = Encodings::Base64.encode(str)
+      "=?#{encoding}?B?#{string.chomp}?="
+    end
+    
+    def Ruby19.q_encode(str, encoding = nil)
+      encoding = str.encoding.to_s
+      string = Encodings::QuotedPrintable.encode(str)
+      "=?#{encoding}?Q?#{string.chomp}?="
+    end
 
   end
 end

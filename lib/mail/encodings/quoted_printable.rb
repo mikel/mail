@@ -7,12 +7,8 @@ module Mail
         str.unpack("M*").first
       end
 
-      # Convert the given text into quoted printable format, with an instruction
-      # that the text be eventually interpreted in the given charset.
-      def self.encode(text, charset)
-        text = text.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }.
-                    gsub( / /, "_" )
-        "=?#{charset}?Q?#{text}?="
+      def self.encode(str)
+        str.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }.gsub( / /, "_" )
       end
 
       private
