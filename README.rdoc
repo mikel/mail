@@ -26,8 +26,8 @@ you are doing, you can fiddle with every last bit of your email directly.
 == Current Capabilities of Mail
 
 * RFC2822 Support, Reading and Writing
-* RFC2045-2049 Support for multipart emails (no smarts yet)
-* Support for creating multipart alternate emails (see below)
+* RFC2045-2049 Support for multipart emails
+* Support for creating multipart alternate emails
 * Support for reading multipart/report emails & getting details from such
 * Wrappers for File, Net/POP3, Net/SMTP
 
@@ -35,12 +35,12 @@ Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
 emails.  There are a few obsoleted syntax emails that it will have problems with, but
 it also is quite robust, meaning, if it finds something it doesn't understand it will
 not crash, instead, it will skip the problem and keep parsing.  In the case of a header
-it doesn't understand, it will initialize the header as an optional unstructured
+it doesn't understand, it will initialise the header as an optional unstructured
 field and continue parsing.
 
-This means Mail won't (ever) crunch your data (we think).
+This means Mail won't (ever) crunch your data (I think).
 
-You can also create a MIME email.  There are helper methods for making a 
+You can also create MIME emails.  There are helper methods for making a 
 multipart/alternate email for text/plain and text/html (the most common pair)
 and you can manually create any other type of MIME email.
 
@@ -78,21 +78,21 @@ If you are using this in production right now, you must _really_ know
 what you are doing.  This is well spec'd and tested alpha code.
 
 If you need instructions beyond "go get it from my git repo" then you
-probably shouldn't be playing with Mail yet.  Wait till we've wrapped it
+probably shouldn't be playing with Mail yet.  Wait till I've wrapped it
 up into a gem.
 
 == Contributing
 
 Please do!  Contributing is easy in Mail:
 
-1) Check the Reference RFCs, they are in the References directory, so no excuses.
-2) Open a ticket on github, maybe someone else has the problem too
-3) Make a fork of my github repository
-4) Make a spec driven change to the code base
-5) Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
-6) Update the README if needed to reflect your change / addition
-7) With all specs passing push your changes back to your fork
-8) Send me a pull request
+# Check the Reference RFCs, they are in the References directory, so no excuses.
+# Open a ticket on github, maybe someone else has the problem too
+# Make a fork of my github repository
+# Make a spec driven change to the code base
+# Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
+# Update the README if needed to reflect your change / addition
+# With all specs passing push your changes back to your fork
+# Send me a pull request
 
 == Usage
 
