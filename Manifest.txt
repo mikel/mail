@@ -6,6 +6,9 @@ lib/mail/attachment.rb
 lib/mail/body.rb
 lib/mail/configuration.rb
 lib/mail/core_extensions.rb
+lib/mail/core_extensions/blank.rb
+lib/mail/core_extensions/nil.rb
+lib/mail/core_extensions/string.rb
 lib/mail/elements/address.rb
 lib/mail/elements/address_list.rb
 lib/mail/elements/content_disposition_element.rb
@@ -88,4 +91,9 @@ lib/mail/part.rb
 lib/mail/patterns.rb
 lib/mail/ruby_version_specific/utilities_1_8.rb
 lib/mail/ruby_version_specific/utilities_1_9.rb
+lib/mail/ruby_version_specific/ruby_1_8_string.rb
+lib/mail/ruby_version_specific/multibyte.rb
+lib/mail/ruby_version_specific/multibyte/chars.rb
+lib/mail/ruby_version_specific/multibyte/exceptions.rb
+lib/mail/ruby_version_specific/multibyte/unicode_database.rb
 lib/mail/utilities.rb
