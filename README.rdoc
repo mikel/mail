@@ -85,14 +85,14 @@ up into a gem.
 
 Please do!  Contributing is easy in Mail:
 
-# Check the Reference RFCs, they are in the References directory, so no excuses.
-# Open a ticket on github, maybe someone else has the problem too
-# Make a fork of my github repository
-# Make a spec driven change to the code base
-# Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
-# Update the README if needed to reflect your change / addition
-# With all specs passing push your changes back to your fork
-# Send me a pull request
+1. Check the Reference RFCs, they are in the References directory, so no excuses.
+2. Open a ticket on github, maybe someone else has the problem too
+3. Make a fork of my github repository
+4. Make a spec driven change to the code base
+5. Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
+6. Update the README if needed to reflect your change / addition
+7. With all specs passing push your changes back to your fork
+8. Send me a pull request
 
 == Usage
 
