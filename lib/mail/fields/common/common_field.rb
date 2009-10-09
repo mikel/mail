@@ -17,6 +17,7 @@ module Mail
       end
       
       def value=(value)
+        @length = nil
         @tree = nil
         @element = nil
         @value = value
@@ -26,16 +27,20 @@ module Mail
         @value
       end
       
-      def to_s
-        value.blank? ? '' : value
-      end
-      
       def encoded
-        value.blank? ? nil : "#{do_encode}\r\n"
+        value.blank? ? nil : "#{wrapped_value}\r\n"
       end
       
-      def encoded_to_s
-        value.blank? ? '' : "#{name}: #{value}"
+      def decoded
+        value.blank? ? nil : "#{name}: #{value}\r\n"
+      end
+      
+      def to_s
+        decoded.to_s
+      end
+      
+      def field_length
+        @length ||= name.length + value.length + ': '.length
       end
       
       def responsible_for?( val )
@@ -75,30 +80,43 @@ module Mail
       #  that folding occur after the comma separating the structured items in
       #  preference to other places where the field could be folded, even if
       #  it is allowed elsewhere.
-      def do_encode # :nodoc:
+      def wrapped_value # :nodoc:
         case
-        when encoded_to_s.length <= 78
-          encoded_to_s
-        when encoded_to_s.length > 78
+        when decoded.ascii_only? && field_length <= 78
+          "#{name}: #{value}"
+        when field_length <= 28 # non usascii chars take a LOT of chars to represent
+          "#{name}: #{encode(value)}"
+        else
           @folded_line = []
-          @unfolded_line = encoded_to_s
-          wspp = @unfolded_line =~ /[ \t]/
-          fold
-          @folded_line.join("\r\n\t")
+          @unfolded_line = value.clone
+          fold("#{name}: ".length)
+          folded = @folded_line.compact.join("\r\n\t")
+          "#{name}: #{folded}"
         end
       end
 
-      def fold # :nodoc:
+      def fold(prepend = 0) # :nodoc:
         # Get the last whitespace character, OR we'll just choose 
         # 78 if there is no whitespace
-        wspp = @unfolded_line.slice(0..78) =~ /[ \t][^ \T]*$/ || 78
-        @folded_line << @unfolded_line.slice!(0...wspp)
-        if @unfolded_line.length > 78
+        @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 28 - prepend)
+        wspp = @unfolded_line.slice(0..limit) =~ /[ \t][^ \T]*$/ || limit
+        wspp = limit if wspp == 0
+        @folded_line << encode(@unfolded_line.slice!(0...wspp))
+        if @unfolded_line.length > limit
           fold
         else
-          @folded_line << @unfolded_line
+          @folded_line << encode(@unfolded_line)
         end
       end
+
+      def encode(value)
+        if RUBY_VERSION < '1.9'
+          Encodings.q_encode(value, $KCODE)
+        else
+          Encodings.q_encode(value, @value.encoding)
+        end
+      end
+      
 
 
     end

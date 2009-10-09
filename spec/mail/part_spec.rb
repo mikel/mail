@@ -134,7 +134,7 @@ ENDPART
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
       part.encode!
-      part.content_transfer_encoding.to_s.should == 'base64'
+      part.content_transfer_encoding.value.should == 'base64'
     end
 
     it "should round trip an image attachment" do

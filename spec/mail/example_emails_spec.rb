@@ -15,9 +15,9 @@ describe "Test emails" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example01.eml'))
       mail.from.formatted.should == ['John Doe <jdoe@machine.example>']
       mail.to.formatted.should == ['Mary Smith <mary@example.net>']
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -29,9 +29,9 @@ describe "Test emails" do
       mail.from.formatted.should == ['John Doe <jdoe@machine.example>']
       mail.sender.formatted.should == ['Michael Jones <mjones@machine.example>']
       mail.to.formatted.should == ['Mary Smith <mary@example.net>']
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -54,7 +54,7 @@ describe "Test emails" do
       mail.from.formatted.should == ['"Joe Q. Public" <john.q.public@example.com>']
       mail.to.formatted.should == ['Mary Smith <mary@x.test>', 'jdoe@example.org', 'Who? <one@y.test>']
       mail.cc.formatted.should == ['boss@nil.test', "\"Giant; \\\"Big\\\" Box\" <sysservices@example.net>"]
-      mail.message_id.to_s.should == '<5678.21-Nov-1997@example.com>'
+      mail.message_id.value.should == '<5678.21-Nov-1997@example.com>'
       mail.date.date_time.should == ::DateTime.parse('1 Jul 2003 10:52:37 +0200')
     end
 
@@ -68,7 +68,7 @@ describe "Test emails" do
       mail.from.formatted.should == ['Pete <pete@silly.example>']
       mail.to.formatted.should == ['Chris Jones <c@a.test>', 'joe@where.test', 'John <jdoe@one.test>']
       mail.cc.group_names.should == ['Undisclosed recipients']
-      mail.message_id.to_s.should == '<testabcd.1234@silly.example>'
+      mail.message_id.value.should == '<testabcd.1234@silly.example>'
       mail.date.date_time.should == ::DateTime.parse('Thu, 13 Feb 1969 23:32:54 -0330')
     end
 
@@ -86,8 +86,8 @@ describe "Test emails" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example05.eml'))
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.subject.value.should == 'Saying Hello'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
     end
 
@@ -102,8 +102,8 @@ describe "Test emails" do
       mail.from.addresses.should == ['mary@example.net']
       mail.to.addresses.should == ['jdoe@machine.example']
       mail.reply_to.addresses.should == ['smith@home.example']
-      mail.subject.to_s.should == 'Re: Saying Hello'
-      mail.message_id.to_s.should == '<3456@example.net>'
+      mail.subject.value.should == 'Re: Saying Hello'
+      mail.message_id.value.should == '<3456@example.net>'
       mail.in_reply_to.message_ids.should == ['1234@local.machine.example']
       mail.references.message_ids.should == ['1234@local.machine.example']
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 10:01:10 -0600')
@@ -115,10 +115,10 @@ describe "Test emails" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example07.eml'))
       mail.to.addresses.should == ['smith@home.example']
       mail.from.addresses.should == ['jdoe@machine.example']
-      mail.subject.to_s.should == 'Re: Saying Hello'
+      mail.subject.value.should == 'Re: Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 11:00:00 -0600')
-      mail.message_id.to_s.should == '<abcd.1234@local.machine.tld>'
-      mail.in_reply_to.to_s.should == '<3456@example.net>'
+      mail.message_id.value.should == '<abcd.1234@local.machine.tld>'
+      mail.in_reply_to.value.should == '<3456@example.net>'
       mail.references.message_ids.should == ['1234@local.machine.example', '3456@example.net']
     end
 
@@ -140,12 +140,12 @@ describe "Test emails" do
       mail.resent_from.addresses.should == ['mary@example.net']
       mail.resent_to.addresses.should == ['j-brown@other.example']
       mail.resent_date.date_time.should == ::DateTime.parse('Mon, 24 Nov 1997 14:22:01 -0800')
-      mail.resent_message_id.to_s.should == '<78910@example.net>'
+      mail.resent_message_id.value.should == '<78910@example.net>'
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.4. Messages with trace fields
@@ -162,9 +162,9 @@ describe "Test emails" do
       mail.received[1].date_time.should == ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.5. White space, comments, and other oddities
@@ -191,7 +191,7 @@ describe "Test emails" do
       mail.to.addresses.should == ["c@(Chris's host.)public.example", 'joe@example.org', 'jdoe@one.test']
       mail.cc.group_names.should == ['(Empty list)(start)Undisclosed recipients ']
       mail.date.date_time.should == ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
-      mail.message_id.to_s.should == '<testabcd.1234@silly.test>'
+      mail.message_id.value.should == '<testabcd.1234@silly.test>'
     end
 
     # A.6. Obsoleted forms
@@ -210,7 +210,7 @@ describe "Test emails" do
       mail.from.formatted.should == ['"Joe Q. Public" <john.q.public@example.com>']
       mail.to.addresses.should == ["@machine.tld:mary@example.net", 'jdoe@test.example']
       mail.date.date_time.should == ::DateTime.parse('Tue, 1 Jul 2003 10:52:37 +0200')
-      mail.message_id.to_s.should == '<5678.21-Nov-1997@example.com>'
+      mail.message_id.value.should == '<5678.21-Nov-1997@example.com>'
     end
 
     # A.6.2. Obsolete dates
@@ -225,7 +225,7 @@ describe "Test emails" do
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
       mail.date.date_time.should == ::DateTime.parse('21 Nov 97 09:55:06 GMT')
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.6.3. Obsolete white space and comments
@@ -246,7 +246,7 @@ describe "Test emails" do
       mail.from.addresses.should == ['John Doe <jdoe@machine(comment).example>']
       mail.to.addresses.should == ['Mary Smith <mary@example.net>']
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.to_s.should == '<1234@local(blah).machine.example>'
+      mail.message_id.value.should == '<1234@local(blah).machine.example>'
       doing { Mail::Message.new(email) }.should_not raise_error
     end
 

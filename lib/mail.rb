@@ -17,6 +17,7 @@ module Mail # :doc:
     RubyVer = Mail::Ruby19
   else
     require File.join(dir_name, 'version_specific', 'ruby_1_8.rb')
+    require File.join(dir_name, 'version_specific', 'ruby_1_8_string.rb')
     RubyVer = Mail::Ruby18
   end
 

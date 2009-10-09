@@ -622,7 +622,7 @@ module Mail
     def add_multipart_alternate_header
       if html_part && text_part
         unless header['content-type']
-          header['content-type'] = ContentTypeField.with_boundary('multipart/alternative')
+          header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
           body.boundary = boundary
         end
       end
@@ -630,7 +630,7 @@ module Mail
     
     def add_multipart_mixed_header
       unless header['content-type']
-        header['content-type'] = ContentTypeField.with_boundary('multipart/mixed')
+        header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
         body.boundary = boundary
       end
     end

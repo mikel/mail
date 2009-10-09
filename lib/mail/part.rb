@@ -73,23 +73,23 @@ module Mail
     end
     
     def action
-      delivery_status_data['action'].to_s
+      delivery_status_data['action'].value
     end
     
     def final_recipient
-      delivery_status_data['final-recipient'].to_s
+      delivery_status_data['final-recipient'].value
     end
     
     def error_status
-      delivery_status_data['status'].to_s
+      delivery_status_data['status'].value
     end
 
     def diagnostic_code
-      delivery_status_data['diagnostic-code'].to_s
+      delivery_status_data['diagnostic-code'].value
     end
     
     def remote_mta
-      delivery_status_data['remote-mta'].to_s
+      delivery_status_data['remote-mta'].value
     end
     
     def retryable?

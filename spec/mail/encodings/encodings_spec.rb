@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 require 'mail'
@@ -81,33 +82,33 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.b_encode(string).should == '=?US-ASCII?B?VGhpcyBpcyBhIHN0cmluZw==?='
+        Mail::Encodings.b_encode(string).should == "This is a string"
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.b_encode(string, encoding).should == '=?US-ASCII?B?VGhpcyBpcyBhIHN0cmluZw==?='
+        Mail::Encodings.b_encode(string, encoding).should == "This is a string"
       end
     end
     
     it "should raise an argument error if no encoding is passed to less than Ruby 1.9" do
       if RUBY_VERSION >= "1.9.1"
-        string = "This is a string"
+        string = "This is あ string"
         doing {Mail::Encodings.b_encode(string)}.should_not raise_error
       else
-        string = "This is a string"
+        string = "This is あ string"
         doing {Mail::Encodings.b_encode(string)}.should raise_error
       end
     end
     
     it "should accept other encodings" do
       if RUBY_VERSION >= "1.9.1"
-        string = "This is a string"
+        string = "This is あ string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.b_encode(string).should == '=?UTF-8?B?VGhpcyBpcyBhIHN0cmluZw==?='
+        Mail::Encodings.b_encode(string).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       else
-        string = "This is a string"
+        string = "This is あ string"
         encoding = 'UTF-8'
-        Mail::Encodings.b_encode(string, encoding).should == '=?UTF-8?B?VGhpcyBpcyBhIHN0cmluZw==?='
+        Mail::Encodings.b_encode(string, encoding).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       end
     end
   end
@@ -134,11 +135,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.q_encode(string).should == '=?US-ASCII?Q?This_is_a_string?='
+        Mail::Encodings.q_encode(string).should == 'This is a string'
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.q_encode(string, encoding).should == '=?US-ASCII?Q?This_is_a_string?='
+        Mail::Encodings.q_encode(string, encoding).should == 'This is a string'
       end
     end
     
@@ -154,13 +155,25 @@ describe Mail::Encodings do
     
     it "should accept other encodings" do
       if RUBY_VERSION >= "1.9.1"
+        string = "This is あ string"
+        string = string.force_encoding('UTF-8')
+        Mail::Encodings.q_encode(string).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+      else
+        string = "This is あ string"
+        encoding = 'UTF-8'
+        Mail::Encodings.q_encode(string, encoding).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+      end
+    end
+    
+    it "should leave US ASCII alone" do
+      if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.q_encode(string).should == '=?UTF-8?Q?This_is_a_string?='
+        Mail::Encodings.q_encode(string).should == "This is a string"
       else
         string = "This is a string"
         encoding = 'UTF-8'
-        Mail::Encodings.q_encode(string, encoding).should == '=?UTF-8?Q?This_is_a_string?='
+        Mail::Encodings.q_encode(string, encoding).should == "This is a string"
       end
     end
     

@@ -50,7 +50,7 @@ describe Mail::ResentSenderField do
     
     it "should return the formatted line on to_s" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.to_s.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the encoded line" do

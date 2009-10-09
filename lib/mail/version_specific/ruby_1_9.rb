@@ -31,12 +31,14 @@ module Mail
     end
     
     def Ruby19.b_encode(str, encoding = nil)
+      return str if str.ascii_only?
       encoding = str.encoding.to_s
       string = Encodings::Base64.encode(str)
       "=?#{encoding}?B?#{string.chomp}?="
     end
     
     def Ruby19.q_encode(str, encoding = nil)
+      return str if str.ascii_only?
       encoding = str.encoding.to_s
       string = Encodings::QuotedPrintable.encode(str)
       "=?#{encoding}?Q?#{string.chomp}?="

@@ -470,7 +470,7 @@ TRACEHEADER
   describe "mime version handling" do
     it "should return the mime version of the email" do
       header = Mail::Header.new("Mime-Version: 1.0")
-      header['mime-version'].to_s.should == '1.0'
+      header['mime-version'].value.should == '1.0'
     end
     
     it "should return nil if no mime-version header field" do
@@ -480,7 +480,7 @@ TRACEHEADER
     
     it "should return the transfer-encoding of the email" do
       header = Mail::Header.new("Content-Transfer-Encoding: Base64")
-      header['content-transfer-encoding'].to_s.should == 'base64'
+      header['content-transfer-encoding'].value.should == 'base64'
     end
     
     it "should return nil if no transfer-encoding header field" do
@@ -490,7 +490,7 @@ TRACEHEADER
     
     it "should return the content-description of the email" do
       header = Mail::Header.new("Content-Description: This is a description")
-      header['Content-Description'].to_s.should == 'This is a description'
+      header['Content-Description'].value.should == 'This is a description'
     end
     
     it "should return nil if no content-description header field" do

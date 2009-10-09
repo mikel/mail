@@ -76,7 +76,7 @@ describe Mail::BccField do
     
     it "should return the formatted line on to_s" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.to_s.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
     it "should return the encoded line" do
