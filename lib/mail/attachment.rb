@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   # An attachment is any data you want to attach to a mail message that is
   # not part of the body and can be extracted to a file in it's own right

@@ -1,5 +1,6 @@
 # encoding: utf-8
 #:nodoc:
+
 # OK... serious code smell in here... I just took the whole multibyte_chars code out of 
 # ActiveSupport.... hacked it to fit... like a mallet bashing a square peg... the thing
 # fits in the hole... really!

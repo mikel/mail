@@ -96,7 +96,7 @@ Please do!  Contributing is easy in Mail:
 
 == Usage
 
-All major mail functions should be able to happen from the Mail:: module.
+All major mail functions should be able to happen from the Mail::module.
 So, you should be able to just "require 'mail'" to get started.
 
 === Making an email

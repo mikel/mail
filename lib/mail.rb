@@ -21,6 +21,7 @@ module Mail # :doc:
     RubyVer = Mail::Ruby18
   end
 
+  require File.join(dir_name, 'version')
   require File.join(dir_name, 'core_extensions')
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')

@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   class Ruby18
     require 'base64'

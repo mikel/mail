@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Mail
   
   # Allows you to create a new Mail::Message object.

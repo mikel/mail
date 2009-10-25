@@ -84,7 +84,7 @@ module Mail
         case
         when decoded.ascii_only? && field_length <= 78
           "#{name}: #{value}"
-        when field_length <= 28 # non usascii chars take a LOT of chars to represent
+        when field_length <= 40 # Allow for =?ISO-8859-1?B?=...=
           "#{name}: #{encode(value)}"
         else
           @folded_line = []
@@ -98,7 +98,7 @@ module Mail
       def fold(prepend = 0) # :nodoc:
         # Get the last whitespace character, OR we'll just choose 
         # 78 if there is no whitespace
-        @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 28 - prepend)
+        @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 40 - prepend)
         wspp = @unfolded_line.slice(0..limit) =~ /[ \t][^ \T]*$/ || limit
         wspp = limit if wspp == 0
         @folded_line << encode(@unfolded_line.slice!(0...wspp))
@@ -111,13 +111,11 @@ module Mail
 
       def encode(value)
         if RUBY_VERSION < '1.9'
-          Encodings.q_encode(value, $KCODE)
+          Encodings.b_encode(value, $KCODE)
         else
-          Encodings.q_encode(value, @value.encoding)
+          Encodings.b_encode(value, @value.encoding)
         end
       end
-      
-
 
     end
     

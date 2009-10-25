@@ -2,6 +2,9 @@
 
 # Include this module to make a class "deliverable".
 # It uses the defaults set in Configuration to retrieve SMTP settings.
+#
+# Thanks to Nicolas Fouché for this wrapper
+#
 module Mail
   module Deliverable
 
