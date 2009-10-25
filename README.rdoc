@@ -29,6 +29,7 @@ you are doing, you can fiddle with every last bit of your email directly.
 * RFC2045-2049 Support for multipart emails
 * Support for creating multipart alternate emails
 * Support for reading multipart/report emails & getting details from such
+* Support for multibyte emails - needs quite a lot of work and testing
 * Wrappers for File, Net/POP3, Net/SMTP
 
 Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
@@ -48,9 +49,8 @@ and you can manually create any other type of MIME email.
 
 Next TODO:
 
-* Add multilingual MIME support for non US-ASCII headers
+* Add multilingual MIME support for mixed ASCII and multibyte headers
 * Add IMAP wrapper
-* Release Mail as a Gem and bask in it's glitter
 
 == Testing Policy
 
@@ -64,23 +64,33 @@ It also means you can be sure Mail will behave correctly.
 
 == API Policy
 
-Right now Mail is still under development for a 1.0 release.
+Right now Mail is still under development for a 1.0.0 release.
 
-The API will change between now and 1.0.  How much?  Not sure.  Basically though
-once 1.0 is released, no API removals within a single point release.  All removals
+The API will change between now and 1.0.0.  How much?  Not sure.  Basically though
+once 1.0.0 is released, no API removals within a single point release.  All removals
 to be depreciated with warnings for at least one point release before removal.
 
 Also, all private or protected methods to be declared as such.
 
 == Installation
 
-If you are using this in production right now, you must _really_ know
-what you are doing.  This is well spec'd and tested alpha code.
+Installation is fairly simple, I host mail on gemcutter, so you can just do:
 
-If you need instructions beyond "go get it from my git repo" then you
-probably shouldn't be playing with Mail yet.  Wait till I've wrapped it
-up into a gem.
+ # gem install mail
 
+if you are on gemcutter, if you aren't, you can by doing:
+
+ # gem install gemcutter
+ # gem tumble
+ # gem install mail
+ 
+Warning though, the above will change your first gem repository to gemcutter, this
+may or may not be a problem for you.
+
+If you want to install mail manually, you can download the gem from github and do:
+
+ # gem install mail-1.0.0.gem
+ 
 == Contributing
 
 Please do!  Contributing is easy in Mail:

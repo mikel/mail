@@ -3,7 +3,7 @@ MAIL_ROOT = File.dirname(__FILE__)
 
 Gem::Specification.new do |s|
   s.name = %q{mail}
-  s.version = "0.0.1"
+  s.version = "1.0.0"
  
   s.requirements << 'treetop, Treetop is a Ruby-based DSL for text parsing and interpretation'
   s.requirements << 'mime/types, A list of a lot of Mime Types'
@@ -23,9 +23,13 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
+  
+  # I like knowing what goes into my gem... Manifest.txt is only ever edited
+  # by hand
   s.files = File.read(File.join(MAIL_ROOT, 'Manifest.txt')).lines.map do |f|
     File.join(MAIL_ROOT, f.chomp)
   end
+
   s.homepage = %q{http://github.com/mikel/mail}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
