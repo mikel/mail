@@ -98,3 +98,4 @@ lib/mail/version_specific/multibyte/chars.rb
 lib/mail/version_specific/multibyte/exceptions.rb
 lib/mail/version_specific/multibyte/unicode_database.rb
 lib/mail/utilities.rb
+lib/mail/version.rb
