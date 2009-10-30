@@ -8,7 +8,17 @@ module Mail
     FIELD_NAME = 'content-type'
 
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      if args.last.class == Array
+        @main_type = args.last[0]
+        @sub_type = args.last[1]
+        @parameters = args.last.last
+        super(FIELD_NAME, args.last)
+      else
+        @main_type = nil
+        @sub_type = nil
+        @parameters = nil
+        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      end
     end
     
     def tree
@@ -21,11 +31,11 @@ module Mail
     end
     
     def main_type
-      element.main_type
+      @main_type ||= element.main_type
     end
 
     def sub_type
-      element.sub_type
+      @sub_type ||= element.sub_type
     end
     
     def content_type
@@ -33,8 +43,10 @@ module Mail
     end
     
     def parameters
-      @parameters = Hash.new
-      element.parameters.each { |p| @parameters.merge!(p) }
+      unless @parameters
+        @parameters = Hash.new
+        element.parameters.each { |p| @parameters.merge!(p) }
+      end
       @parameters
     end
 
@@ -44,6 +56,18 @@ module Mail
     
     def ContentTypeField.generate_boundary
       "--==_mimepart_#{Mail.random_tag}"
+    end
+
+    def value
+      if @value.class == Array
+        "#{@main_type}/#{@sub_type}; #{stringify(parameters)}"
+      else
+        @value
+      end
+    end
+    
+    def stringify(params)
+      params.map { |k,v| "#{k}=#{v}" }.join("; ")
     end
 
   end

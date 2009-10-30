@@ -46,18 +46,33 @@ module Mail
     class SyntaxError < FieldError #:nodoc:
     end
     
-    # Accepts a text string in the format of:
+    # Accepts a string:
     # 
-    #  "field-name: field data"
+    #  Field.new("field-name: field data")
+    # 
+    # Or name, value pair:
+    # 
+    #  Field.new("field-name", "value")
+    # 
+    # Or a name by itself:
+    # 
+    #  Field.new("field-name")
     # 
     # Note, does not want a terminating carriage return.  Returns
-    # self appropriately parsed
-    def initialize(raw_field_text)
-      if raw_field_text !~ /:/
-        name = raw_field_text
+    # self appropriately parsed.  If value is not a string, then
+    # it will be passed through as is, for example, content-type
+    # field can accept an array with the type and a hash of 
+    # parameters:
+    # 
+    #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
+    def initialize(name, value = nil)
+      case
+      when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
+        name, value = split(name)
+        create_field(name, value)
+      when name !~ /:/ && value.blank?  # Field.new("field-name")
         create_field(name, nil)
-      else
-        name, value = split(raw_field_text)
+      else                              # Field.new("field-name", "value")
         create_field(name, value)
       end
       return self
@@ -136,9 +151,9 @@ module Mail
       # well, simpler... 
       case name.downcase
       when /^to$/
-        ToField.new(name,value)
+        ToField.new(name, value)
       when /^cc$/
-        CcField.new(name,value)
+        CcField.new(name, value)
       when /^bcc$/
         BccField.new(name, value)
       when /^message-id$/

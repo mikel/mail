@@ -229,7 +229,7 @@ describe Mail::Message do
       
       it "should allow you to read arbitrary headers" do
         @mail['foo'] = 1234
-        @mail['foo'].value.should == '1234'
+        @mail['foo'].value.to_s.should == '1234'
       end
       
       it "should instantiate a new Header" do
@@ -643,23 +643,6 @@ describe Mail::Message do
           mail.to_s.should =~ %r|#{mail.boundary}--|
         end
         
-        it "should round trip a basic email" do
-          mail = Mail.new('Subject: FooBar')
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          parsed_mail = Mail.new(mail.to_s)
-          parsed_mail.message_content_type.should == 'multipart/alternative'
-          parsed_mail.boundary.should == mail.boundary
-          parsed_mail.parts.length.should == 2
-          parsed_mail.parts[0].body.to_s.should == "This is Text"
-          parsed_mail.parts[1].body.to_s.should == "<b>This is HTML</b>"
-        end
-
         it "should not put message-ids into parts" do
           mail = Mail.new('Subject: FooBar')
           mail.text_part = Mail::Part.new do
@@ -1158,7 +1141,26 @@ describe Mail::Message do
           STDERR.should_not_receive(:puts)
           mail.to_s 
         end
-      
+        
+        it "should be able to set a content type with an array and hash" do
+          mail = Mail.new
+          mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
+          mail.content_type.encoded.should == "Content-Type: text/plain; charset=US-ASCII\r\n"
+          mail.content_type.parameters.should == {"charset" => "US-ASCII"}
+        end
+        
+        it "should be able to set a content type with an array and hash with a non-usascii field" do
+          mail = Mail.new
+          mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
+          mail.content_type.encoded.should == "Content-Type: text/plain; charset=UTF-8\r\n"
+          mail.content_type.parameters.should == {"charset" => "UTF-8"}
+        end
+
+        it "should allow us to specify a content type in a block" do
+          mail = Mail.new { content_type ["text", "plain", { "charset" => "UTF-8" }] }
+          mail.content_type.parameters.should == {"charset" => "UTF-8"}
+        end
+        
       end
       
       describe "content-transfer-encoding" do
@@ -1204,7 +1206,7 @@ describe Mail::Message do
     end
     
   end
-  
+
   describe "output" do
     
     it "should make an email and allow you to call :to_s on it to get a string" do

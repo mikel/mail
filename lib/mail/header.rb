@@ -136,11 +136,7 @@ module Mail
       # User wants to create the field
       else
         # Need to insert in correct order for trace fields
-        if value.blank?
-          self.fields << Field.new(name)
-        else
-          self.fields << Field.new("#{name}: #{value}")
-        end
+        self.fields << Field.new(name.to_s, value)
       end
     end
     

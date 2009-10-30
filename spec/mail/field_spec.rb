@@ -9,6 +9,17 @@ describe Mail::Field do
     
     it "should be instantiated" do
       doing {Mail::Field.new('To: Mikel')}.should_not raise_error
+      Mail::Field.new('To: Mikel').field.class.should == Mail::ToField
+    end
+    
+    it "should allow us to pass an empty value" do
+      doing {Mail::Field.new('To')}.should_not raise_error
+      Mail::Field.new('To').field.class.should == Mail::ToField
+    end
+    
+    it "should allow us to pass a value" do
+      doing {Mail::Field.new('To', 'Mikel')}.should_not raise_error
+      Mail::Field.new('To', 'Mikel').field.class.should == Mail::ToField
     end
     
     it "should match up fields to class names" do
