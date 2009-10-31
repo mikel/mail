@@ -559,6 +559,11 @@ describe Mail::Message do
           mail.parts[0].message_content_type.should == 'text/plain'
           mail.parts[1].message_content_type.should == 'text/enriched'
         end
+        
+        it "should report the mail :has_attachments?" do
+          mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_jpg.eml')))
+          mail.should be_has_attachments
+        end
 
       end
       

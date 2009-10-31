@@ -13,8 +13,8 @@ module Mail
         self.body = attachment.encoded
       else
         super
-        if content_type.parameters['filename']
-          @attachment = Mail::Attachment.new(:filename => content_type.parameters['filename'],
+        if filename = attachment?
+          @attachment = Mail::Attachment.new(:filename => filename,
                                              :data => body.to_s,
                                              :encoding => content_transfer_encoding.to_s)
         end
@@ -33,7 +33,7 @@ module Mail
     
     # Returns true if this part is an attachment
     def attachment?
-      @attachment ? true : false
+      find_attachment
     end
     
     # Returns the attachment data if there is any
@@ -113,6 +113,23 @@ module Mail
     
     def parse_delivery_status_report
       @delivery_status_data ||= Header.new(body.to_s.gsub("\r\n\r\n", "\r\n"))
+    end
+
+    # Returns the filename of the attachment (if it exists) or returns nil
+    def find_attachment
+      case
+      when content_type && content_type.parameters['filename']
+        filename = content_type.parameters['filename']
+      when content_type && content_type.parameters['name']
+        filename = content_type.parameters['name']
+      when content_disposition && content_disposition.parameters['filename']
+        filename = content_disposition.parameters['filename']
+      when content_location && content_location.location
+        filename = content_location.location
+      else
+        filename = nil
+      end
+      filename
     end
 
   end

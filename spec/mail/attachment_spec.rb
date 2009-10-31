@@ -7,7 +7,6 @@ def encode_base64( str )
   Mail::Encodings::Base64.encode(str)
 end
 
-
 describe "creating an attachment" do
   
   it "should create an attachment from an absolute path" do
@@ -99,4 +98,25 @@ describe "creating an attachment" do
     doing { att.decoded }.should raise_error(Mail::Attachment::UnknownEncodingType)
   end
   
+end
+
+describe "reading emails with attachments" do
+  describe "test emails" do
+    
+    it "should find the attachment using content location" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_location.eml')))
+      mail.attachments.length.should == 1
+    end
+
+    it "should find an attachment defined with 'name' and Content-Disposition: attachment" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
+      mail.attachments.length.should == 1
+    end
+
+    it "should use the content-type filename or name over the content-disposition filename" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
+      mail.attachments.first.filename.should == 'hello.rb'
+    end
+
+  end
 end

@@ -1,0 +1,44 @@
+Delivered-To: raasdnil@gmail.com
+Received: by 10.231.12.67 with SMTP id w3cs164325ibw;
+        Fri, 30 Oct 2009 01:11:12 -0700 (PDT)
+Received: by 10.150.44.2 with SMTP id r2mr2367210ybr.77.1256890271939;
+        Fri, 30 Oct 2009 01:11:11 -0700 (PDT)
+Return-Path: <mikel@test.lindsaar.net>
+Received: from mx1.test.lindsaar.net.au (mx1.test.lindsaar.net.au [210.14.110.240])
+        by mx.google.com with ESMTP id 25si7923673gxk.34.2009.10.30.01.11.11;
+        Fri, 30 Oct 2009 01:11:11 -0700 (PDT)
+Received-SPF: neutral (google.com: 210.14.110.240 is neither permitted nor denied by domain of mikel@test.lindsaar.net) client-ip=210.14.110.240;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 210.14.110.240 is neither permitted nor denied by domain of mikel@test.lindsaar.net) smtp.mail=mikel@test.lindsaar.net
+Received: from [192.168.4.253] (60-241-138-146.static.tpgi.com.au [60.241.138.146])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: mikel)
+	by mx1.test.lindsaar.net.au (Postfix) with ESMTPSA id 5C0186DD4CD
+	for <raasdnil@gmail.com>; Fri, 30 Oct 2009 19:11:08 +1100 (EST)
+Subject: =?utf-8?B?44G+44G/44KA44KB44KC44G+44G/44KA44KB44KC44G+44G/44KA?=
+ =?utf-8?B?44KB44KC44G+44G/44KA44KB44KC44G+44G/44KA44KB44KC44G+?=
+ =?utf-8?B?44G/44KA44KB44KC44G+44G/44KA44KB44KC44G+44G/44KA44KB?=
+ =?utf-8?B?44KC44G+44G/44KA44KB44KC44G+44G/44KA44KB44KC?=
+From: Mikel Lindsaar <mikel@test.lindsaar.net>
+Content-Type: multipart/mixed; boundary=Apple-Mail-6--589811753
+Message-Id: <60A112A8-F26C-4E23-95B8-4EB9F139D6A0@test.lindsaar.net>
+Date: Fri, 30 Oct 2009 19:11:02 +1100
+To: Mikel Lindsaar <raasdnil@gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1076)
+X-Mailer: Apple Mail (2.1076)
+
+
+--Apple-Mail-6--589811753
+Content-Disposition: attachment;
+	filename*0*=utf-8''%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%8B;
+	filename*1*=%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93.txt
+Content-Type: text/plain;
+	x-unix-mode=0644;
+	name="=?utf-8?B?44GL44GN44GP44GR44GT44GL44GN44GP44GR44GT44GL44GN44GP?=
+ =?utf-8?B?44GR44GT44GL44GN44GP44GR44GT44GL44GN44GP44GR44GTLnR4?=
+ =?utf-8?B?dA==?="
+Content-Transfer-Encoding: 7bit
+
+this is the data
+
+--Apple-Mail-6--589811753--

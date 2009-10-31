@@ -49,7 +49,9 @@ module Mail
     def filename
       @filename
     end
-    
+
+    alias :original_filename :filename
+
     def encoded
       @encoded_data
     end

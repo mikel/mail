@@ -493,6 +493,10 @@ module Mail
       body.parts.select { |p| p.attachment? }.map { |p| p.attachment }
     end
     
+    def has_attachments?
+      !attachments.empty?
+    end
+    
     # Accessor for html_part
     def html_part(&block)
       if block_given?

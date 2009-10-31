@@ -24,8 +24,8 @@ module Mail
     include Comparable
     
     STRUCTURED_FIELDS = %w[ bcc cc content-description content-disposition
-                            content-id content-transfer-encoding content-type 
-                            date from in-reply-to keywords message-id
+                            content-id content-location content-transfer-encoding
+                            content-type date from in-reply-to keywords message-id
                             mime-version received references reply-to
                             resent-bcc resent-cc resent-date resent-from
                             resent-message-id resent-sender resent-to
@@ -206,6 +206,8 @@ module Mail
         ContentTypeField.new(name, value)
       when /^content-id$/
         ContentIdField.new(name, value)
+      when /^content-location$/
+        ContentLocationField.new(name, value)
       else 
         OptionalField.new(name, value)
       end
