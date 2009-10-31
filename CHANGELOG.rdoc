@@ -1,0 +1,11 @@
+== Sat Oct 31 11:00:41 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Fixed attachment handling, so mail can find attachment from a content-type,
+content-disposition or content-location
+* Added content-location field and parser
+* Added message.has_attachments? for ActionMailer friendliness
+* Added attachment.original_filename for ActionMailer friendliness
+
+== Sat Oct 25 13:38:01 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Birthday, Mail released as a gem... phew
