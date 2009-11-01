@@ -53,7 +53,7 @@ module Mail
     end
     
     alias :to_s :encoded
-
+    
     def charset
       @charset
     end

@@ -127,7 +127,7 @@ module Mail
                       message-id in-reply-to references
                       subject comments keywords
                       mime-version content-type content-transfer-encoding
-                      content-disposition content-description ]
+                      content-location content-disposition content-description ]
     
     private
     
@@ -147,8 +147,8 @@ module Mail
     end
 
     def new_field(name, value)
-      # Could do this with constantize and make it as DRY as, but a simple case is,
-      # well, simpler... 
+      # Could do this with constantize and make it "as DRY as", but a simple case 
+      # statement is, well, simpler... 
       case name.downcase
       when /^to$/
         ToField.new(name, value)
