@@ -26,7 +26,11 @@ module Mail
       
       smtp = Net::SMTP.new(config.smtp[0], config.smtp[1] || 25)
       if config.tls?
-        smtp.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+        if OpenSSL::SSL::VERIFY_NONE.kind_of?(OpenSSL::SSL::SSLContext)
+          smtp.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+        else
+          smtp.enable_tls
+        end
       else
         smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto)
       end
