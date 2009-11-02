@@ -26,7 +26,7 @@ describe Mail::ContentDispositionField do
       c.value.should == 'attachment; filename=File'
     end
 
-    it "should accept a nil value and generate a content_type" do
+    it "should accept a nil value and generate a disposition type" do
       c = Mail::ContentDispositionField.new('Content-Disposition', nil)
       c.name.should == 'Content-Disposition'
       c.value.should_not be_nil
@@ -39,6 +39,12 @@ describe Mail::ContentDispositionField do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.disposition_type.should == 'attachment'
       c.parameters.should == {'filename' => 'File'}
+    end
+
+    # see spec/fixtures/trec_2005_corpus/missing_content_disposition.eml
+    it "should accept a blank disposition type" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: ')
+      c.disposition_type.should_not be_nil
     end
   end
 
