@@ -415,6 +415,25 @@ Of course... Mail will round trip an attachment as well
   @round_tripped_mail.attachments.length #=> 1
   @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 
+== Excerpts from TREC Spam Corpus 2005
+
+The spec fixture files in spec/fixtures/emails/from_trec_2005
+are from the 2005 TREC Public Spam Corpus. They remain copyrighted
+under the terms of that project and license agreement. They are used
+in this project to verify and describe the development of this
+email parser implementation.
+
+http://plg.uwaterloo.ca/~gvcormac/treccorpus/
+
+They are used as allowed by 'Permitted Uses, Clause 3':
+
+    "Small excerpts of the information may be displayed to others
+     or published in a scientific or technical context, solely for
+     the purpose of describing the research and development and
+     related issues."
+     
+     -- http://plg.uwaterloo.ca/~gvcormac/treccorpus/
+
 == License:
 
 (The MIT License)
