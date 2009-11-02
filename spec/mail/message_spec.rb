@@ -38,6 +38,10 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
 
+    it "should be able to parse an email with only blank lines as body" do
+      doing { Mail::Message.new(File.read(fixture('emails', 'trec_2005_corpus', 'missing_body.eml'))) }.should_not raise_error
+    end
+
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings

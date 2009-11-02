@@ -124,7 +124,7 @@ module Mail
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)
       self.epilogue = parts[-1].to_s.sub('--', '').strip
-      @parts = parts[1...-1].map { |part| Mail::Part.new(part) }
+      @parts = parts[1...-1].to_a.map { |part| Mail::Part.new(part) }
       self
     end
     
