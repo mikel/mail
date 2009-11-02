@@ -561,7 +561,7 @@ describe Mail::Message do
         end
         
         it "should report the mail :has_attachments?" do
-          mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_jpg.eml')))
+          mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
           mail.should be_has_attachments
         end
 
