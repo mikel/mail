@@ -72,8 +72,17 @@ module Mail
     def fields=(unfolded_fields)
       @fields = Mail::FieldList.new
       unfolded_fields.each do |field|
-        @fields << Field.new(field)
+
+        field = Field.new(field)
+        selected = select_field_for(field.name)
+
+        if selected.any? && limited_field?(field.name)
+          selected.first.update(field.name, field.value)
+        else
+          @fields << field
+        end
       end
+
     end
     
     #  3.6. Field definitions
@@ -98,7 +107,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      selected = fields.select { |f| f.responsible_for?(name) }
+      selected = select_field_for(name)
       case
       when selected.length > 1
         selected.map { |f| f }
@@ -123,14 +132,15 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
-      selected = fields.select { |f| f.responsible_for?(name) }
+      selected = select_field_for(name)
+
       case
       # User wants to delete the field
       when !selected.blank? && value == nil
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && LIMITED_FIELDS.include?(name.downcase)
+      when !selected.blank? && limited_field?(name)
 
         selected.first.update(name, value)
         
@@ -204,6 +214,14 @@ module Mail
     # strings.
     def split_header
       self.fields = unfolded_header.split(CRLF)
+    end
+    
+    def select_field_for(name)
+      fields.select { |f| f.responsible_for?(name) }
+    end
+    
+    def limited_field?(name)
+      LIMITED_FIELDS.include?(name.downcase)      
     end
     
   end

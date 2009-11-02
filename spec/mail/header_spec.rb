@@ -383,6 +383,13 @@ HERE
         header[field].value.should == "5678"
       end
     end
+
+    it "should enforce appear-once rule even with mass assigned header" do
+      header = Mail::Header.new(
+        "Content-Type: multipart/alternative\nContent-Type: text/plain\n"
+      )
+      header['content-type'].should_not be_kind_of(Array)
+    end
     
     it "should add additional fields that can appear more than once" do
       %w[ comments keywords x-spam].each do |field|
