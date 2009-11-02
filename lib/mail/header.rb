@@ -131,6 +131,7 @@ module Mail
         
       # User wants to change the field
       when !selected.blank? && LIMITED_FIELDS.include?(name.downcase)
+
         selected.first.update(name, value)
         
       # User wants to create the field
@@ -144,8 +145,7 @@ module Mail
                            message-id in-reply-to references subject
                            return-path content-type mime-version
                            content-transfer-encoding content-description 
-                           content-id content-type content-disposition
-                           content-location]
+                           content-id content-disposition content-location]
 
     def encoded
       buffer = ''
