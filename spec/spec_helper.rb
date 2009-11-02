@@ -62,17 +62,23 @@ class MockSMTP
     yield self
   end
   
-  def enable_tls(*args)
-    true
+  # in the standard lib: net/smtp.rb line 577
+  #   a TypeError is thrown unless this arg is a
+  #   kind of OpenSSL::SSL::SSLContext
+  def enable_tls(context = nil)
+    if context && context.kind_of?(OpenSSL::SSL::SSLContext)
+      true
+    elsif context
+      raise TypeError,
+        "wrong argument (#{context.class})! "+
+        "(Expected kind of OpenSSL::SSL::SSLContext)"
+    end
   end
 
   def enable_starttls
     true
   end
   
-  def enable_tls(type = nil)
-    true
-  end
 end
 
 class Net::SMTP
