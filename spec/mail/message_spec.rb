@@ -1235,4 +1235,23 @@ describe Mail::Message do
 
   end
   
+  describe "helper methods" do
+    it "should have a destinations method" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+        cc 'bob@test.lindsaar.net'
+        bcc 'sam@test.lindsaar.net'
+      end
+      mail.destinations.length.should == 3
+    end
+
+    it "should give destinations even if some of the fields are blank" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+      end
+      mail.destinations.length.should == 1
+    end
+
+  end
+  
 end

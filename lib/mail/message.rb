@@ -200,6 +200,20 @@ module Mail
       value ? self.from = value : header[:from]
     end
     
+    # Returns the list of addresses this message should be sent to by
+    # collecting the addresses off the to, cc and bcc fields.
+    # 
+    # Example:
+    # 
+    #  mail.to = 'mikel@test.lindsaar.net'
+    #  mail.cc = 'sam@test.lindsaar.net'
+    #  mail.bcc = 'bob@test.lindsaar.net'
+    #  mail.destinations.length #=> 3
+    #  mail.destinations.first #=> 'mikel@test.lindsaar.net'
+    def destinations
+      [to, cc, bcc].map { |f| f.addresses if f }.compact.flatten
+    end
+    
     # Sets the subject field in the message header.
     # 
     # Example:

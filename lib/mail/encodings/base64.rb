@@ -12,6 +12,7 @@ module Mail
       def self.encode(str)
         RubyVer.encode_base64( str )
       end
+      
     end
   end
 end

@@ -31,4 +31,10 @@ describe Mail::ParameterHash do
     hash['value'].should == "This is even more ***fun*** isn't it"
   end
   
+  it "should allow us to add a value" do
+    hash = Mail::ParameterHash.new
+    hash['value'] = 'bob'
+    hash['value'].should == 'bob'
+  end
+  
 end

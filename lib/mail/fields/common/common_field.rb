@@ -110,11 +110,8 @@ module Mail
       end
 
       def encode(value)
-        if RUBY_VERSION < '1.9'
-          Encodings.b_encode(value, $KCODE)
-        else
-          Encodings.b_encode(value, @value.encoding)
-        end
+        RUBY_VERSION < '1.9' ? encoding = $KCODE : encoding = @value.encoding
+        Encodings.b_value_encode(value, encoding)
       end
 
     end

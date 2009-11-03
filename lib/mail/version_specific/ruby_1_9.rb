@@ -31,18 +31,14 @@ module Mail
       klass.const_get( string.to_sym )
     end
     
-    def Ruby19.b_encode(str, encoding = nil)
-      return str if str.ascii_only?
+    def Ruby19.b_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
-      string = Encodings::Base64.encode(str)
-      "=?#{encoding}?B?#{string.chomp}?="
+      [Encodings::Base64.encode(str), encoding]
     end
     
-    def Ruby19.q_encode(str, encoding = nil)
-      return str if str.ascii_only?
+    def Ruby19.q_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
-      string = Encodings::QuotedPrintable.encode(str)
-      "=?#{encoding}?Q?#{string.chomp}?="
+      [Encodings::QuotedPrintable.encode(str), encoding]
     end
 
     def Ruby19.param_decode(str, encoding)

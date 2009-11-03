@@ -67,7 +67,7 @@ module Mail
     end
     
     def stringify(params)
-      params.map { |k,v| "#{k}=#{v}" }.join("; ")
+      params.map { |k,v| "#{k}=#{Encodings.param_encode(v)}" }.join("; ")
     end
 
     def filename
@@ -80,6 +80,17 @@ module Mail
         @filename = nil
       end
       @filename
+    end
+
+    private
+    
+    def method_missing(name, *args, &block)
+      if name.to_s =~ /([\w_]+)=/
+        self.parameters[$1] = args.first
+        @value = "#{content_type}; #{stringify(parameters)}"
+      else
+        super
+      end
     end
 
   end

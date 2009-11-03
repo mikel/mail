@@ -536,6 +536,15 @@ describe Mail::ContentTypeField do
       expected.should == result
     end
     
+    it "should encode a non us-ascii filename" do
+      c = Mail::ContentTypeField.new('application/octet-stream')
+      string = "01 Quien Te Dij\212at. Pitbull.mp3"
+      string.force_encoding('iso-2022-jp') if RUBY_VERSION >= '1.9'
+      c.filename = "01 Quien Te Dij\212at. Pitbull.mp3"
+      c.parameters.should == {'filename', "01 Quien Te Dij\212at. Pitbull.mp3"}
+      c.value.should == %q{application/octet-stream; filename*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3}
+    end
+    
   end
 
 end
