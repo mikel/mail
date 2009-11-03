@@ -1,7 +1,8 @@
 .gitignore
+CHANGELOG.rdoc
 Manifest.txt
-README.rdoc
 Rakefile
+README.rdoc
 lib/mail.rb
 lib/mail/attachment.rb
 lib/mail/body.rb
@@ -13,6 +14,7 @@ lib/mail/core_extensions.rb
 lib/mail/elements/address.rb
 lib/mail/elements/address_list.rb
 lib/mail/elements/content_disposition_element.rb
+lib/mail/elements/content_location_element.rb
 lib/mail/elements/content_transfer_encoding_element.rb
 lib/mail/elements/content_type_element.rb
 lib/mail/elements/date_time_element.rb
@@ -34,9 +36,11 @@ lib/mail/fields/common/common_address.rb
 lib/mail/fields/common/common_date.rb
 lib/mail/fields/common/common_field.rb
 lib/mail/fields/common/common_message_id.rb
+lib/mail/fields/common/parameter_hash.rb
 lib/mail/fields/content_description_field.rb
 lib/mail/fields/content_disposition_field.rb
 lib/mail/fields/content_id_field.rb
+lib/mail/fields/content_location_field.rb
 lib/mail/fields/content_transfer_encoding_field.rb
 lib/mail/fields/content_type_field.rb
 lib/mail/fields/date_field.rb
@@ -71,6 +75,8 @@ lib/mail/parsers/address_lists.rb
 lib/mail/parsers/address_lists.treetop
 lib/mail/parsers/content_disposition.rb
 lib/mail/parsers/content_disposition.treetop
+lib/mail/parsers/content_location.rb
+lib/mail/parsers/content_location.treetop
 lib/mail/parsers/content_transfer_encoding.rb
 lib/mail/parsers/content_transfer_encoding.treetop
 lib/mail/parsers/content_type.rb
@@ -98,9 +104,4 @@ lib/mail/patterns.rb
 lib/mail/utilities.rb
 lib/mail/version.rb
 lib/mail/version_specific/ruby_1_8.rb
-lib/mail/version_specific/ruby_1_8_string.rb
 lib/mail/version_specific/ruby_1_9.rb
-lib/mail/version_specific/multibyte.rb
-lib/mail/version_specific/multibyte/chars.rb
-lib/mail/version_specific/multibyte/exceptions.rb
-lib/mail/version_specific/multibyte/unicode_database.rb

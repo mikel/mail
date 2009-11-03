@@ -1,3 +1,13 @@
+== Tue Nov  3 00:59:45 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Some headers only can appear once, enforce during header parse assignment. <jlindley>
+* Convert empty bodies into empty arrays instead of nil. <jlindley>
+* Handle blank content dispositions. <jlindley>
+* Mention Trec 2005 Spam Corpus in readme <jlindley>
+* Add 'rake corpus:verify_all' to allow parse checks in bulk. <jlindley>
+* Added handling of multi value parameters, like filename*1*="us-ascii'en'blah" filename*2="bleh" <mikel>
+* Added dependency on ActiveSupport 2.3 or higher <mikel>
+
 == Sat Oct 31 11:00:41 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Fixed attachment handling, so mail can find attachment from a content-type,
