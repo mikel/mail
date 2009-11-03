@@ -44,7 +44,7 @@ module Mail
     
     def parameters
       unless @parameters
-        @parameters = Hash.new
+        @parameters = ParameterHash.new
         element.parameters.each { |p| @parameters.merge!(p) }
       end
       @parameters
@@ -68,6 +68,18 @@ module Mail
     
     def stringify(params)
       params.map { |k,v| "#{k}=#{v}" }.join("; ")
+    end
+
+    def filename
+      case
+      when parameters['filename']
+        @filename = parameters['filename']
+      when parameters['name']
+        @filename = parameters['name']
+      else 
+        @filename = nil
+      end
+      @filename
     end
 
   end

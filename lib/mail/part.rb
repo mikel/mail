@@ -16,7 +16,7 @@ module Mail
         if filename = attachment?
           @attachment = Mail::Attachment.new(:filename => filename,
                                              :data => body.to_s,
-                                             :encoding => content_transfer_encoding.to_s)
+                                             :encoding => content_transfer_encoding.encoding)
         end
       end
     end
@@ -118,12 +118,10 @@ module Mail
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
       case
-      when content_type && content_type.parameters['filename']
-        filename = content_type.parameters['filename']
-      when content_type && content_type.parameters['name']
-        filename = content_type.parameters['name']
-      when content_disposition && content_disposition.parameters['filename']
-        filename = content_disposition.parameters['filename']
+      when content_type && content_type.filename
+        filename = content_type.filename
+      when content_disposition && content_disposition.filename
+        filename = content_disposition.filename
       when content_location && content_location.location
         filename = content_location.location
       else

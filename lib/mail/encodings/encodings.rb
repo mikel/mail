@@ -20,5 +20,9 @@ module Mail
       RubyVer.q_encode(str, encoding)
     end
     
+    def Encodings.param_decode(str, encoding)
+      RubyVer.param_decode(str, encoding)
+    end
+    
   end
 end

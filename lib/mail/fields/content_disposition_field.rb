@@ -25,9 +25,21 @@ module Mail
     end
     
     def parameters
-      @parameters = Hash.new
+      @parameters = ParameterHash.new
       element.parameters.each { |p| @parameters.merge!(p) }
       @parameters
+    end
+
+    def filename
+      case
+      when !parameters['filename'].blank?
+        @filename = parameters['filename']
+      when !parameters['name'].blank?
+        @filename = parameters['name']
+      else 
+        @filename = nil
+      end
+      @filename
     end
 
   end

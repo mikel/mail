@@ -54,8 +54,11 @@ module Mail
       string = Encodings::QuotedPrintable.encode(str)
       "=?#{encoding}?Q?#{string.chomp}?="
     end
-
+    
+    def Ruby18.param_decode(str, encoding)
+      URI.unescape(str)
+    end
+    
   end
-  
   
 end

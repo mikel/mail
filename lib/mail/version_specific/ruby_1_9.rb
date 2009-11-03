@@ -45,5 +45,11 @@ module Mail
       "=?#{encoding}?Q?#{string.chomp}?="
     end
 
+    def Ruby19.param_decode(str, encoding)
+      string = URI.unescape(str)
+      string.force_encoding(encoding) if encoding
+      string
+    end
+
   end
 end

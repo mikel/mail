@@ -113,7 +113,6 @@ describe Mail::Encodings do
     end
   end
 
-
   describe "Q encodings" do
     # From rfc2047:
     # From: =?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>
@@ -175,6 +174,42 @@ describe Mail::Encodings do
         encoding = 'UTF-8'
         Mail::Encodings.q_encode(string, encoding).should == "This is a string"
       end
+    end
+    
+  end
+  
+  describe "parameter MIME encodings" do
+    #  Character set and language information may be combined with the
+    #  parameter continuation mechanism. For example:
+    #
+    #  Content-Type: application/x-stuff
+    #   title*0*=us-ascii'en'This%20is%20even%20more%20
+    #   title*1*=%2A%2A%2Afun%2A%2A%2A%20
+    #   title*2="isn't it!"
+    #
+    #  Note that:
+    #
+    #   (1)   Language and character set information only appear at
+    #         the beginning of a given parameter value.
+    #
+    #   (2)   Continuations do not provide a facility for using more
+    #         than one character set or language in the same
+    #         parameter value.
+    #
+    #   (3)   A value presented using multiple continuations may
+    #         contain a mixture of encoded and unencoded segments.
+    #
+    #   (4)   The first segment of a continuation MUST be encoded if
+    #         language and character set information are given.
+    #
+    #   (5)   If the first segment of a continued parameter value is
+    #         encoded the language and character set field delimiters
+    #         MUST be present even when the fields are left blank.
+    #
+    it "should leave an unencoded string alone" do
+      string = "this isn't encoded"
+      result = "this isn't encoded"
+      Mail::Encodings.param_decode(string, 'us-ascii').should == result
     end
     
   end

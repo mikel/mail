@@ -117,6 +117,23 @@ describe "reading emails with attachments" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
       mail.attachments.first.filename.should == 'hello.rb'
     end
+    
+    it "should decode an attachment" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+      mail.attachments.first.decoded.length.should == 1026
+    end
+    
+    it "should find an attachment that has an encoded name value" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_with_encoded_name.eml')))
+      mail.attachments.length.should == 1
+      result = mail.attachments.first.filename
+      if RUBY_VERSION >= '1.9'
+        expected = "01 Quien Te Dij\212at. Pitbull.mp3".force_encoding(result.encoding)
+      else
+        expected = "01 Quien Te Dij\212at. Pitbull.mp3"
+      end
+      result.should == expected
+    end
 
   end
 end

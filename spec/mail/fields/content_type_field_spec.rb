@@ -509,4 +509,33 @@ describe Mail::ContentTypeField do
     
   end
 
+  describe "finding a filename" do
+    
+    it "should locate a filename if there is a filename" do
+      string = %q{application/octet-stream; filename=mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      c.filename.should == 'mikel.jpg'
+    end
+
+    it "should locate a name if there is no filename" do
+      string = %q{application/octet-stream; name=mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      c.filename.should == 'mikel.jpg'
+    end
+    
+    it "should locate an encoded name as a filename" do
+      string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%8aat.%20Pitbull.mp3}
+      c = Mail::ContentTypeField.new(string)
+      if RUBY_VERSION >= '1.9'
+        expected = "01 Quien Te Dij\212at. Pitbull.mp3".force_encoding(Encoding::BINARY)
+        result = c.filename.force_encoding(Encoding::BINARY)
+      else
+        expected = "01 Quien Te Dij\212at. Pitbull.mp3"
+        result = c.filename
+      end
+      expected.should == result
+    end
+    
+  end
+
 end
