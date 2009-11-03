@@ -1,14 +1,6 @@
 # encoding: utf-8
 class String #:nodoc:
   
-  if defined?(Mail::Multibyte)
-    include Mail::Multibyte
-  end
-  
-  def blank?
-    self !~ /\S/
-  end
-  
   def to_crlf
     self.gsub(/\n|\r\n|\r/) { "\r\n" }
   end

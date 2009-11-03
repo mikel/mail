@@ -8,8 +8,10 @@ Gem::Specification.new do |s|
   s.requirements << 'treetop, Treetop is a Ruby-based DSL for text parsing and interpretation'
   s.requirements << 'mime/types, A list of a lot of Mime Types'
   s.requirements << 'tlsmail, Used for encrypted SMTP, only if you are on RUBY_VERSION <= 1.8.6'
+  s.requirements << 'activesupport, Because it has lots of goodies'
  
   s.add_dependency('treetop', '>= 1.4')
+  s.add_dependency('activesupport', '>= 2.3')
   s.add_dependency('mime-types', '>= 1.0')
   s.add_dependency('tlsmail', '>= 0.0.1') if RUBY_VERSION <= '1.8.6'
  

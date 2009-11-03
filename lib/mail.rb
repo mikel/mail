@@ -5,7 +5,9 @@ module Mail # :doc:
   
   gem "treetop", ">= 1.4"
   require 'treetop'
-
+  gem 'activesupport', ">= 2.3"
+  require 'activesupport'
+  require 'uri'
   require 'net/smtp'
   require 'mime/types'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
@@ -17,7 +19,6 @@ module Mail # :doc:
     RubyVer = Mail::Ruby19
   else
     require File.join(dir_name, 'version_specific', 'ruby_1_8.rb')
-    require File.join(dir_name, 'version_specific', 'ruby_1_8_string.rb')
     RubyVer = Mail::Ruby18
   end
 
