@@ -221,7 +221,7 @@ module Mail
     end
     
     def limited_field?(name)
-      LIMITED_FIELDS.include?(name.downcase)      
+      LIMITED_FIELDS.include?(name.to_s.downcase)
     end
     
   end

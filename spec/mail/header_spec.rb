@@ -314,6 +314,23 @@ describe Mail::Header do
       header.fields.length.should == 0
     end
     
+    # Handle empty X-Optional header from Microsoft Exchange
+    it "should handle an empty X-* header value" do
+      header = Mail::Header.new("X-MS-TNEF-Correlator:\r\n")
+      header.fields.length.should == 1
+      header['X-MS-TNEF-Correlator'].decoded.should == nil
+      header['X-MS-TNEF-Correlator'].encoded.should == "X-MS-TNEF-Correlator: \r\n"
+    end
+    
+    it "should accept X- option fields from MS-Exchange" do
+      header = Mail::Header.new("X-Ms-Has-Attach:\r\nX-MS-TNEF-Correlator: \r\n")
+      header.fields.length.should == 2
+      header['X-Ms-Has-Attach'].decoded.should == nil
+      header['X-Ms-Has-Attach'].encoded.should == "X-Ms-Has-Attach: \r\n"
+      header['X-MS-TNEF-Correlator'].decoded.should == nil
+      header['X-MS-TNEF-Correlator'].encoded.should == "X-MS-TNEF-Correlator: \r\n"
+    end
+    
     it "should return nil if asked for the value of a non existent field" do
       header = Mail::Header.new
       header['Bobs-Field'].should == nil

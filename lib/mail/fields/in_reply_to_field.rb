@@ -36,7 +36,7 @@ module Mail
     CAPITALIZED_FIELD = 'In-Reply-To'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
     def encoded

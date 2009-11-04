@@ -11,11 +11,11 @@ module Mail
     def initialize(*args)
       @uniq = 1
       if args.last.blank?
-        self.name = FIELD_NAME
+        self.name = CAPITALIZED_FIELD
         self.value = generate_content_id
         self
       else
-        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
     end
     

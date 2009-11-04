@@ -26,7 +26,7 @@ module Mail
     CAPITALIZED_FIELD = 'Received'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
     def tree

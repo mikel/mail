@@ -34,7 +34,7 @@ module Mail
     CAPITALIZED_FIELD = 'Resent-Bcc'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
     def encoded

@@ -9,7 +9,7 @@ module Mail
     CAPITALIZED_FIELD = 'Content-Transfer-Encoding'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last.to_s.downcase))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last.to_s.downcase))
     end
     
     def tree

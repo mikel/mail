@@ -9,7 +9,7 @@ module Mail
     module InstanceMethods # :doc:
       
       def name=(value)
-        @name = capitalize_field(value)
+        @name = value
       end
       
       def name

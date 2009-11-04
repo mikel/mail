@@ -69,7 +69,7 @@ module Mail
       case
       when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
         name, value = split(name)
-        create_field(name, value)
+        create_field(name, value.to_s)
       when name !~ /:/ && value.blank?  # Field.new("field-name")
         create_field(name, nil)
       else                              # Field.new("field-name", "value")
@@ -111,8 +111,8 @@ module Mail
     end
     
     def <=>( other )
-      self_order = FIELD_ORDER.rindex(self.name.downcase) || 100
-      other_order = FIELD_ORDER.rindex(other.name.downcase) || 100
+      self_order = FIELD_ORDER.rindex(self.name.to_s.downcase) || 100
+      other_order = FIELD_ORDER.rindex(other.name.to_s.downcase) || 100
       self_order <=> other_order
     end
     
@@ -132,7 +132,7 @@ module Mail
     private
     
     def split(raw_field)
-      match_data = raw_field.match(/^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})$/)
+      match_data = raw_field.match(/^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/)
       [match_data[1].to_s.strip, match_data[2].to_s.strip]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
@@ -149,64 +149,64 @@ module Mail
     def new_field(name, value)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
-      case name.downcase
-      when /^to$/
+      case name
+      when /^to$/i
         ToField.new(name, value)
-      when /^cc$/
+      when /^cc$/i
         CcField.new(name, value)
-      when /^bcc$/
+      when /^bcc$/i
         BccField.new(name, value)
-      when /^message-id$/
+      when /^message-id$/i
         MessageIdField.new(name, value)
-      when /^in-reply-to$/
+      when /^in-reply-to$/i
         InReplyToField.new(name, value)
-      when /^references$/
+      when /^references$/i
         ReferencesField.new(name, value)
-      when /^subject$/
+      when /^subject$/i
         SubjectField.new(name, value)
-      when /^comments$/
+      when /^comments$/i
         CommentsField.new(name, value)
-      when /^keywords$/
+      when /^keywords$/i
         KeywordsField.new(name, value)
-      when /^date$/
+      when /^date$/i
         DateField.new(name, value)
-      when /^from$/
+      when /^from$/i
         FromField.new(name, value)
-      when /^sender$/
+      when /^sender$/i
         SenderField.new(name, value)
-      when /^reply-to$/
+      when /^reply-to$/i
         ReplyToField.new(name, value)
-      when /^resent-date$/
+      when /^resent-date$/i
         ResentDateField.new(name, value)
-      when /^resent-from$/
+      when /^resent-from$/i
         ResentFromField.new(name, value)
-      when /^resent-sender$/ 
+      when /^resent-sender$/i 
         ResentSenderField.new(name, value)
-      when /^resent-to$/
+      when /^resent-to$/i
         ResentToField.new(name, value)
-      when /^resent-cc$/
+      when /^resent-cc$/i
         ResentCcField.new(name, value)
-      when /^resent-bcc$/
+      when /^resent-bcc$/i
         ResentBccField.new(name, value)
-      when /^resent-message-id$/
+      when /^resent-message-id$/i
         ResentMessageIdField.new(name, value)
-      when /^return-path$/
+      when /^return-path$/i
         ReturnPathField.new(name, value)
-      when /^received$/
+      when /^received$/i
         ReceivedField.new(name, value)
-      when /^mime-version$/
+      when /^mime-version$/i
         MimeVersionField.new(name, value)
-      when /^content-transfer-encoding$/
+      when /^content-transfer-encoding$/i
         ContentTransferEncodingField.new(name, value)
-      when /^content-description$/
+      when /^content-description$/i
         ContentDescriptionField.new(name, value)
-      when /^content-disposition$/
+      when /^content-disposition$/i
         ContentDispositionField.new(name, value)
-      when /^content-type$/
+      when /^content-type$/i
         ContentTypeField.new(name, value)
-      when /^content-id$/
+      when /^content-id$/i
         ContentIdField.new(name, value)
-      when /^content-location$/
+      when /^content-location$/i
         ContentLocationField.new(name, value)
       else 
         OptionalField.new(name, value)

@@ -13,12 +13,12 @@ module Mail
         @main_type = args.last[0]
         @sub_type = args.last[1]
         @parameters = ParameterHash.new.merge!(args.last.last)
-        super(FIELD_NAME, args.last)
+        super(CAPITALIZED_FIELD, args.last)
       else
         @main_type = nil
         @sub_type = nil
         @parameters = nil
-        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
     end
     

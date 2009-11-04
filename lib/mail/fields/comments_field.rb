@@ -32,9 +32,10 @@ module Mail
   class CommentsField < UnstructuredField
     
     FIELD_NAME = 'comments'
+    CAPITALIZED_FIELD = 'Comments'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
   end

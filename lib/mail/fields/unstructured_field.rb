@@ -34,7 +34,7 @@ module Mail
     private
     
     def do_encode(name)
-      value.blank? ? '' : "#{wrapped_value}\r\n"
+      value.nil? ? '' : "#{wrapped_value}\r\n"
     end
     
     def do_decode
@@ -69,7 +69,7 @@ module Mail
     #  it is allowed elsewhere.
     def wrapped_value # :nodoc:
       case
-      when decoded.ascii_only? && field_length <= 78
+      when decoded.to_s.ascii_only? && field_length <= 78
         "#{name}: #{value}"
       when field_length <= 40 # Allow for =?ISO-8859-1?B?=...=
         "#{name}: #{encode(value)}"

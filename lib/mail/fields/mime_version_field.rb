@@ -10,11 +10,11 @@ module Mail
 
     def initialize(*args)
       if args.last.blank?
-        self.name = FIELD_NAME
+        self.name = CAPITALIZED_FIELD
         self.value = '1.0'
         self
       else
-        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
     end
     
