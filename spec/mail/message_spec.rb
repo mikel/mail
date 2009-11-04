@@ -637,7 +637,7 @@ describe Mail::Message do
             content_type = "text/html; charset=US-ASCII"
             body "<b>This is HTML</b>"
           end
-          mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary=#{mail.boundary}|
+          mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
         end
         
         it "should add the end boundary tag" do
@@ -927,8 +927,8 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.add_message_id("ThisIsANonUniqueMessageId")
-          mail.to_s.should =~ /Message-ID: ThisIsANonUniqueMessageId\r\n/
+          mail.add_message_id("<ThisIsANonUniqueMessageId@me.com>")
+          mail.to_s.should =~ /Message-ID: <ThisIsANonUniqueMessageId@me.com>\r\n/
         end
 
         it "should generate a random message ID if nothing is passed to add_message_id" do
@@ -1154,14 +1154,14 @@ describe Mail::Message do
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
-          mail.content_type.encoded.should == "Content-Type: text/plain; charset=US-ASCII\r\n"
+          mail.content_type.encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n]
           mail.content_type.parameters.should == {"charset" => "US-ASCII"}
         end
         
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
-          mail.content_type.encoded.should == "Content-Type: text/plain; charset=UTF-8\r\n"
+          mail.content_type.encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="UTF-8";\r\n]
           mail.content_type.parameters.should == {"charset" => "UTF-8"}
         end
 
@@ -1231,6 +1231,11 @@ describe Mail::Message do
       mail.to_s.should =~ /Subject: This is a test email\r\n/
       mail.to_s.should =~ /This is a body of the email/
 
+    end
+
+    it "should raise an error and message if you try and call decoded" do
+      mail = Mail.new
+      doing { mail.decoded }.should raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
 
   end

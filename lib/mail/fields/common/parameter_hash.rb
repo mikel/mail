@@ -27,5 +27,15 @@ module Mail
       end
     end
 
+    def encoded
+      map.sort { |a,b| a.first <=> b.first }.map do |key_name, value|
+        unless value.ascii_only?
+          value = Mail::Encodings.param_encode(value)
+          key_name = "#{key_name}*"
+        end
+        %Q{#{key_name}="#{value}"}
+      end.join(";\r\n\t")
+    end
+
   end
 end

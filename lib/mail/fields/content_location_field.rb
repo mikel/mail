@@ -6,7 +6,8 @@ module Mail
   class ContentLocationField < StructuredField
     
     FIELD_NAME = 'content-location'
-
+    CAPITALIZED_FIELD = 'Content-Location'
+    
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
     end
@@ -22,6 +23,15 @@ module Mail
 
     def location
       element.location
+    end
+
+    # TODO: Fix this up
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+    end
+    
+    def decoded
+      value
     end
 
   end

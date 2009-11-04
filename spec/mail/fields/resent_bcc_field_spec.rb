@@ -63,7 +63,7 @@ describe Mail::ResentBccField do
     
     it "should return the encoded line" do
       t = Mail::ResentBccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Resent-Bcc: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == "Resent-Bcc: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
     end
     
   end

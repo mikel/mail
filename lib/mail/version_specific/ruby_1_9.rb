@@ -33,7 +33,17 @@ module Mail
     
     def Ruby19.b_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
-      [Encodings::Base64.encode(str), encoding]
+      [Ruby19.encode_base64(str), encoding]
+    end
+    
+    def Ruby19.b_value_decode(str)
+      match = str.match(/\=\?(.+)?\?B\?(.+)?\?\=/)
+      if match
+        encoding = match[1]
+        str = Ruby19.decode_base64(match[2])
+        str.force_encoding(encoding)
+      end
+      str
     end
     
     def Ruby19.q_value_encode(str, encoding = nil)
@@ -41,10 +51,26 @@ module Mail
       [Encodings::QuotedPrintable.encode(str), encoding]
     end
 
+    def Ruby19.q_value_decode(str)
+      match = str.match(/\=\?(.+)?\?Q\?(.+)?\?\=/)
+      if match
+        encoding = match[1]
+        str = Encodings::QuotedPrintable.decode(match[2])
+        str.force_encoding(encoding)
+      end
+      str
+    end
+
     def Ruby19.param_decode(str, encoding)
       string = URI.unescape(str)
       string.force_encoding(encoding) if encoding
       string
+    end
+
+    def Ruby19.param_encode(str)
+      encoding = str.encoding.to_s.downcase
+      language = Mail::Configuration.instance.param_encode_language
+      "#{encoding}'#{language}'#{URI.escape(str)}"
     end
 
   end

@@ -35,6 +35,7 @@ module Mail
     include Mail::CommonMessageId
     
     FIELD_NAME = 'message-id'
+    CAPITALIZED_FIELD = 'Message-ID'
     
     def initialize(*args)
       @uniq = 1
@@ -57,6 +58,14 @@ module Mail
     
     def to_s
       "<#{message_id}>"
+    end
+    
+    def encoded
+      do_encode(CAPITALIZED_FIELD)
+    end
+    
+    def decoded
+      do_decode
     end
     
     private

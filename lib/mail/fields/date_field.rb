@@ -29,6 +29,7 @@ module Mail
     include Mail::CommonDate
     
     FIELD_NAME = 'date'
+    CAPITALIZED_FIELD = "Date"
     
     def initialize(*args)
       if args.last.blank?
@@ -38,6 +39,14 @@ module Mail
       else
         super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
       end
+    end
+    
+    def encoded
+      do_encode(CAPITALIZED_FIELD)
+    end
+    
+    def decoded
+      do_decode
     end
     
   end

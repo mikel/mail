@@ -564,4 +564,32 @@ describe Mail::Address do
 
   end
 
+  describe "providing encoded and decoded outputs" do
+    it "should provide an encoded output" do
+      address = Mail::Address.new
+      address.display_name = "Mikel Lindsaar"
+      address.address = "mikel@test.lindsaar.net"
+      address.encoded.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+    end
+
+    it "should provide an encoded output for non us-ascii" do
+      address = Mail::Address.new
+      address.display_name = "まける"
+      address.address = "mikel@test.lindsaar.net"
+      if RUBY_VERSION >= '1.9'
+        address.encoded.should == '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+      else
+        address.encoded.should == '=?UTF8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+      end
+    end
+
+    it "should provide an encoded output for non us-ascii" do
+      address = Mail::Address.new
+      address.display_name = "まける"
+      address.address = "mikel@test.lindsaar.net"
+      address.decoded.should == '"まける" <mikel@test.lindsaar.net>'
+    end
+
+  end
+
 end

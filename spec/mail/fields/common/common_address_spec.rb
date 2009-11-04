@@ -37,5 +37,45 @@ describe Mail::CommonAddress do
       field.groups["My Group"].last.to_s.should == 'me@lindsaar.net'
     end
 
+    it "should provide a list of addresses that are just in the groups" do
+      field = Mail::ToField.new("To", "test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.group_addresses.should == ['test2@lindsaar.net', 'me@lindsaar.net']
+    end
+
   end
+  
+  describe "encoding and decoding fields" do
+    
+    it "should allow us to encode an address field" do
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.encoded.should == "To: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+    end
+    
+    it "should allow us to encode a simple address field" do
+      field = Mail::ToField.new("test1@lindsaar.net")
+      field.encoded.should == "To: test1@lindsaar.net\r\n"
+    end
+    
+    it "should allow us to encode an address field" do
+      field = Mail::BccField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.encoded.should == "Bcc: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+    end
+
+    it "should allow us to decode an address field" do
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.decoded.should == "test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;"
+    end
+    
+    it "should allow us to decode a non ascii address field" do
+      field = Mail::ToField.new("=?UTF-8?B?44G/44GR44KL?= <raasdnil@text.lindsaar.net>")
+      field.decoded.should == '"みける" <raasdnil@text.lindsaar.net>'
+    end
+    
+    it "should allow us to decode a non ascii address field" do
+      field = Mail::ToField.new("=?UTF-8?B?44G/44GR44KL?= <raasdnil@text.lindsaar.net>, =?UTF-8?B?44G/44GR44KL?= <mikel@text.lindsaar.net>")
+      field.decoded.should == '"みける" <raasdnil@text.lindsaar.net>, "みける" <mikel@text.lindsaar.net>'
+    end
+
+  end
+  
 end

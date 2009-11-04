@@ -24,6 +24,16 @@ module Mail
         element.message_ids
       end
       
+      private
+      
+      def do_encode(field_name)
+        %Q{#{field_name}: #{message_ids.map { |m| "<#{m}>" }.join(', ')}\r\n}
+      end
+      
+      def do_decode
+        "#{message_ids.map { |m| "<#{m}>" }.join(', ')}"
+      end
+      
     end
     
     def self.included(receiver) # :nodoc:

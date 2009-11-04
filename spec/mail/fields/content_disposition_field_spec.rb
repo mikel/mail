@@ -32,6 +32,16 @@ describe Mail::ContentDispositionField do
       c.value.should_not be_nil
     end
 
+    it "should render encoded" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
+      c.encoded.should == "Content-Disposition: attachment; filename=File\r\n"
+    end
+
+    it "should render decoded" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
+      c.decoded.should == 'attachment; filename=File'
+    end
+
   end
   
   describe "instance methods" do

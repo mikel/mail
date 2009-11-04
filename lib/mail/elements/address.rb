@@ -82,6 +82,7 @@ module Mail
     def display_name
       parse unless @parsed
       @display_name ||= get_display_name
+      Encodings.decode_encode(@display_name, @output_type) if @display_name
     end
     
     # Provides a way to assign a display name to an already made Mail::Address object.
@@ -153,6 +154,16 @@ module Mail
     def inspect
       parse unless @parsed
       "#<#{self.class}:#{self.object_id} Address: |#{to_s}| >"
+    end
+    
+    def encoded
+      @output_type = :encode
+      format
+    end
+    
+    def decoded
+      @output_type = :decode
+      format
     end
 
     private

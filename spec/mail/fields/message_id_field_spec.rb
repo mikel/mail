@@ -119,6 +119,11 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       m.encoded.should == "Message-ID: <1234@test.lindsaar.net>\r\n"
     end
+
+    it "should provide decoded" do
+      m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
+      m.decoded.should == "<1234@test.lindsaar.net>"
+    end
     
     it "should respond to :responsible_for?" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')

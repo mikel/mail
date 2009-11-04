@@ -28,6 +28,16 @@ describe Mail::ContentLocationField do
       t.value.should == 'photo.jpg'
     end
 
+    it "should render an encoded field" do
+      t = Mail::ContentLocationField.new('photo.jpg')
+      t.encoded.should == "Content-Location: photo.jpg\r\n"
+    end
+
+    it "should render a decoded field" do
+      t = Mail::ContentLocationField.new('photo.jpg')
+      t.decoded.should == 'photo.jpg'
+    end
+
   end
 
   describe "parsing the value" do

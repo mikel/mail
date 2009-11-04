@@ -6,6 +6,7 @@ module Mail
   class MimeVersionField < StructuredField
     
     FIELD_NAME = 'mime-version'
+    CAPITALIZED_FIELD = 'Mime-Version'
 
     def initialize(*args)
       if args.last.blank?
@@ -36,6 +37,14 @@ module Mail
 
     def minor
       element.minor.to_i
+    end
+    
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+    end
+    
+    def decoded
+      value
     end
     
   end

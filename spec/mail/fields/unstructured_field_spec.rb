@@ -33,7 +33,7 @@ describe Mail::UnstructuredField do
     end
   end
 
-  describe "displaying" do
+  describe "displaying encoded field and decoded value" do
     
     before(:each) do
       @field = Mail::UnstructuredField.new("Subject", "Hello Frank")
@@ -45,7 +45,7 @@ describe Mail::UnstructuredField do
     
     it "should return '' on to_s if there is no value" do
       @field.value = nil
-      @field.to_s.should == ''
+      @field.encoded.should == ''
     end
     
     it "should give an encoded value ready to insert into an email" do
@@ -54,12 +54,22 @@ describe Mail::UnstructuredField do
     
     it "should return nil on encoded if it has no value" do
       @field.value = nil
-      @field.encoded.should == nil
+      @field.encoded.should == ''
+    end
+    
+    it "should give an decoded value ready to insert into an email" do
+      @field.decoded.should == "Hello Frank"
+    end
+    
+    it "should return a nil on decoded if it has no value" do
+      @field.value = nil
+      @field.decoded.should == nil
     end
     
   end
 
   describe "folding" do
+
     it "should not fold itself if it is 78 chracters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters long")
       @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters long\r\n"
@@ -89,6 +99,20 @@ describe Mail::UnstructuredField do
       lines = @field.encoded.split("\r\n\t")
       lines.each { |line| line.length.should < 78 }
     end
+    
+    it "should fold itself if it is non us-ascii" do
+      string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
+      if RUBY_VERSION >= '1.9.1'
+        string = string.force_encoding('UTF-8')
+        result = "Subject: =?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRo?=\r\n\t=?UTF-8?B?aXMgaXMg44GCIHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgg==?=\r\n\t=?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHk=?=\r\n\t=?UTF-8?B?IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJlYWxseSBsb25n?=\r\n\t string\r\n"
+      else
+        $KCODE = 'UTF8'
+        result = "Subject: =?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIA==?=\r\n\t=?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXM=?=\r\n\t=?UTF8?B?IOOBgiByZWFsbHkgbG9uZyBzdHJpbmcgVGhpcyBpcyDjgYI=?=\r\n\t=?UTF8?B?IHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHk=?=\r\n\t long string\r\n"
+      end
+      @field = Mail::UnstructuredField.new("Subject", string)
+      @field.encoded.should == result
+    end
+
     
   end
 

@@ -157,6 +157,16 @@ describe Mail::MimeVersionField do
       t.version.should_not be_nil
     end
     
+    it "should provide an encoded value" do
+      t = Mail::MimeVersionField.new('1.0 (This is a comment)')
+      t.encoded.should == "Mime-Version: 1.0 (This is a comment)\r\n"
+    end
+
+    it "should provide an decoded value" do
+      t = Mail::MimeVersionField.new('1.0 (This is a comment)')
+      t.decoded.should == '1.0 (This is a comment)'
+    end
+
   end
 
 end

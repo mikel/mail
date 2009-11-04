@@ -64,7 +64,7 @@ describe Mail::ReplyToField do
     
     it "should return the encoded line" do
       t = Mail::ReplyToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Reply-To: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == "Reply-To: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
     end
     
   end

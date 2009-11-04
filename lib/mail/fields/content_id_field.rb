@@ -6,6 +6,7 @@ module Mail
   class ContentIdField < StructuredField
     
     FIELD_NAME = 'content-id'
+    CAPITALIZED_FIELD = "Content-ID"
     
     def initialize(*args)
       @uniq = 1
@@ -37,6 +38,15 @@ module Mail
     
     def to_s
       "<#{content_id}>"
+    end
+    
+    # TODO: Fix this up
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{to_s}\r\n"
+    end
+    
+    def decoded
+      "#{to_s}"
     end
     
     private

@@ -91,6 +91,29 @@ If you want to install mail manually, you can download the gem from github and d
 
  # gem install mail-1.0.0.gem
  
+== Encodings
+
+If you didn't know, handling encodings in Emails is not as straight forward as you
+would hope.
+
+I have tried to simplify it some:
+
+1. All objects that can render into an email, have an :encoded method.  Encoded will
+   return the object as a complete string ready to send in the mail system, that is,
+   it will include the header field and value and CRLF at the end and wrapped as
+   needed.
+2. All objects that can render into an email, have a :decoded method.  Decoded will
+   return the object's "value" only as a string.  This means it will not include
+   the header fields (like 'To:' or 'Subject:').
+3. By default, calling :to_s on an object will call it's encoded method, that is, make
+   it ready to send in an email.
+4. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
+   provide decoded parameter values when you call the parameter names as methods against
+   the object.
+5. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
+   provide encoded parameter values when you call the parameter names through the 
+   object.parameters['<parameter_name>'] method call.
+ 
 == Contributing
 
 Please do!  Contributing is easy in Mail:

@@ -33,9 +33,18 @@ module Mail
     include CommonMessageId
     
     FIELD_NAME = 'references'
+    CAPITALIZED_FIELD = 'References'
     
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+    end
+    
+    def encoded
+      do_encode(CAPITALIZED_FIELD)
+    end
+    
+    def decoded
+      do_decode
     end
     
   end

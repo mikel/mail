@@ -6,7 +6,8 @@ module Mail
   class ContentTransferEncodingField < StructuredField
     
     FIELD_NAME = 'content-transfer-encoding'
-
+    CAPITALIZED_FIELD = 'Content-Transfer-Encoding'
+    
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last.to_s.downcase))
     end
@@ -24,5 +25,14 @@ module Mail
       element.encoding
     end
     
+    # TODO: Fix this up
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+    end
+    
+    def decoded
+      value
+    end
+
   end
 end

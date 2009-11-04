@@ -6,7 +6,8 @@ module Mail
   class ContentDispositionField < StructuredField
     
     FIELD_NAME = 'content-disposition'
-
+    CAPITALIZED_FIELD = 'Content-Disposition'
+    
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
     end
@@ -40,6 +41,15 @@ module Mail
         @filename = nil
       end
       @filename
+    end
+
+    # TODO: Fix this up
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+    end
+    
+    def decoded
+      value
     end
 
   end

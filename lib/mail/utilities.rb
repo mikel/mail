@@ -24,7 +24,13 @@ module Mail
       # If the string supplied has PHRASE unsafe characters in it, will return the string quoted 
       # in double quotes, otherwise returns the string unmodified
       def quote_phrase( str )
-        (PHRASE_UNSAFE === str) ? dquote(str) : str
+        if RUBY_VERSION >= '1.9'
+          string = str.dup
+          string.force_encoding('ASCII-8BIT')
+          (PHRASE_UNSAFE === string) ? dquote(str) : str
+        else
+          (PHRASE_UNSAFE === str) ? dquote(str) : str
+        end
       end
 
       # Returns true if the string supplied is free from characters not allowed as a TOKEN

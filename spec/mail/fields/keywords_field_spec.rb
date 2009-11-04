@@ -57,4 +57,16 @@ describe Mail::KeywordsField do
     
   end
   
+  describe "encoding and decoding" do
+    it "should encode" do
+      k = Mail::KeywordsField.new('these are keywords, so there')
+      k.encoded.should == "Keywords: these are keywords, so there\r\n"
+    end
+
+    it "should decode" do
+      k = Mail::KeywordsField.new('these are keywords, so there')
+      k.decoded.should == "these are keywords, so there"
+    end
+  end
+  
 end

@@ -133,15 +133,15 @@ ENDPART
     it "should set it's encoding to base64 if given an attachment" do
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
-      part.encode!
+      part.ready_to_send!
       part.content_transfer_encoding.value.should == 'base64'
     end
 
     it "should round trip an image attachment" do
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
-      part.encode!
-      new_part = Mail::Part.new(part.to_s)
+      part.ready_to_send!
+      new_part = Mail::Part.new(part.encoded)
       if RUBY_VERSION >= '1.9'
         tripped = part.attachment.decoded.force_encoding(Encoding::BINARY)
         original = File.read(filename).force_encoding(Encoding::BINARY)

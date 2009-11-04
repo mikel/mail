@@ -160,7 +160,7 @@ module Mail
     def encoded
       buffer = ''
       fields.each do |field|
-        buffer << field.encoded.to_s
+        buffer << field.encoded
       end
       buffer
     end

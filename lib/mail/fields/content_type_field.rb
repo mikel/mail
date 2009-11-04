@@ -6,12 +6,13 @@ module Mail
   class ContentTypeField < StructuredField
     
     FIELD_NAME = 'content-type'
-
+    CAPITALIZED_FIELD = 'Content-Type'
+    
     def initialize(*args)
       if args.last.class == Array
         @main_type = args.last[0]
         @sub_type = args.last[1]
-        @parameters = args.last.last
+        @parameters = ParameterHash.new.merge!(args.last.last)
         super(FIELD_NAME, args.last)
       else
         @main_type = nil
@@ -80,6 +81,15 @@ module Mail
         @filename = nil
       end
       @filename
+    end
+    
+    # TODO: Fix this up
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{content_type};\r\n\t#{parameters.encoded};\r\n"
+    end
+    
+    def decoded
+      value
     end
 
     private

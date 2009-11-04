@@ -23,6 +23,7 @@ module Mail
   class ReceivedField < StructuredField
     
     FIELD_NAME = 'received'
+    CAPITALIZED_FIELD = 'Received'
     
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
@@ -43,6 +44,14 @@ module Mail
 
     def info
       element.info
+    end
+    
+    def encoded
+      "#{CAPITALIZED_FIELD}: #{value}"
+    end
+    
+    def decoded
+      value
     end
     
   end

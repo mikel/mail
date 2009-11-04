@@ -60,6 +60,16 @@ describe Mail::ContentIdField do
       m.value.should_not be_nil
     end
 
+    it "should allow it to be encoded" do
+      m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
+      m.encoded.should == "Content-ID: <1234@test.lindsaar.net>\r\n"
+    end
+
+    it "should allow it to be decoded" do
+      m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
+      m.decoded.should == "<1234@test.lindsaar.net>"
+    end
+
   end
   
   describe "ensuring only one message ID" do

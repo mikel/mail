@@ -33,14 +33,38 @@ module Mail
         end
         @groups
       end
+      
+      # Returns the addresses that are part of groups
+      def group_addresses
+        groups.map { |k,v| v.map { |a| a.format } }.flatten
+      end
 
       # Returns the name of all the groups in a string
       def group_names # :nodoc:
         tree.group_names
       end
-
+      
       private
       
+      def do_encode(field_name)
+        return '' unless value
+        address_array = tree.addresses.reject { |a| group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
+        address_text  = address_array.join(", \r\n\t")
+        group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\t")};" }
+        group_text  = group_array.join(" \r\n\t")
+        return_array = [address_text, group_text].reject { |a| a.blank? }
+        "#{field_name}: #{return_array.join(", \r\n\t")}\r\n"
+      end
+
+      def do_decode
+        address_array = tree.addresses.reject { |a| group_addresses.include?(a.decoded) }.map { |a| a.decoded }
+        address_text  = address_array.join(", ")
+        group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
+        group_text  = group_array.join(" ")
+        return_array = [address_text, group_text].reject { |a| a.blank? }
+        return_array.join(", ")
+      end
+
       # Returns the syntax tree of the Addresses
       def tree # :nodoc:
         @tree ||= AddressList.new(value)

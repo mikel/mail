@@ -54,6 +54,8 @@ namespace :corpus do
     if @save_failures_to
       puts "Add SAVE_TO=/some/dir to save failed emails to for review.,"
       puts "May result in a lot of saved files. Do a dry run first!\n\n"
+    else
+      puts "There are no errors"
     end
   end
 

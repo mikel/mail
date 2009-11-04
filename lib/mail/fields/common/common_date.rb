@@ -2,10 +2,6 @@
 module Mail
   module CommonDate # :nodoc:
     
-    module ClassMethods # :nodoc:
-      
-    end
-    
     module InstanceMethods # :doc:
       
       # Returns a date time object of the parsed date
@@ -14,6 +10,14 @@ module Mail
       end
 
       private
+      
+      def do_encode(field_name)
+        "#{field_name}: #{value}\r\n"
+      end
+      
+      def do_decode
+        "#{value}"
+      end
 
       def element
         @element ||= Mail::DateTimeElement.new(value)
@@ -27,7 +31,6 @@ module Mail
     end
     
     def self.included(receiver) # :nodoc:
-      receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end
     

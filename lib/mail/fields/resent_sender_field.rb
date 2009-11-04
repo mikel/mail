@@ -31,6 +31,7 @@ module Mail
     include Mail::CommonAddress
     
     FIELD_NAME = 'resent-sender'
+    CAPITALIZED_FIELD = 'Resent-Sender'
 
     def initialize(*args)
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
@@ -42,6 +43,14 @@ module Mail
 
     def address
       result = tree.addresses.first
+    end
+    
+    def encoded
+      do_encode(CAPITALIZED_FIELD)
+    end
+    
+    def decoded
+      do_decode
     end
     
   end

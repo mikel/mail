@@ -5,7 +5,7 @@ module Mail
     
       # Decode the string from Quoted-Printable
       def self.decode(str)
-        str.unpack("M*").first
+        str.unpack("M*").first.gsub('_', ' ')
       end
 
       def self.encode(str)

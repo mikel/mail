@@ -64,7 +64,12 @@ describe Mail::ToField do
     
     it "should return the encoded line" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "To: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == "To: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
+    end
+    
+    it "should return the decoded line" do
+      t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

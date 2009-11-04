@@ -61,6 +61,16 @@ describe Mail::ContentTransferEncodingField do
       t.value.should == '7bit'
     end
 
+    it "should render an encoded field" do
+      t = Mail::ContentTransferEncodingField.new('7bit')
+      t.encoded.should == "Content-Transfer-Encoding: 7bit\r\n"
+    end
+
+    it "should render a decoded field" do
+      t = Mail::ContentTransferEncodingField.new('7bit')
+      t.decoded.should == '7bit'
+    end
+
   end
 
   describe "parsing the value" do

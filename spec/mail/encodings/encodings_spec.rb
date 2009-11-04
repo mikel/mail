@@ -82,11 +82,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.b_value_encode(string).should == "This is a string"
+        Mail::Encodings.b_value_encode(string).should == "=?US-ASCII?B?VGhpcyBpcyBhIHN0cmluZw==?="
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.b_value_encode(string, encoding).should == "This is a string"
+        Mail::Encodings.b_value_encode(string, encoding).should == "=?US-ASCII?B?VGhpcyBpcyBhIHN0cmluZw==?="
       end
     end
     
@@ -124,6 +124,20 @@ describe Mail::Encodings do
       end
     end
 
+    it "should decode an encoded string" do
+      string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.b_value_decode(string).should == result
+    end
+
+    it "should decode a long encoded string" do
+      string = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
+      result = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.b_value_decode(string).should == result
+    end
+
   end
 
   describe "Q encodings" do
@@ -147,11 +161,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.q_value_encode(string).should == 'This is a string'
+        Mail::Encodings.q_value_encode(string).should == "=?US-ASCII?Q?This_is_a_string?="
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.q_value_encode(string, encoding).should == 'This is a string'
+        Mail::Encodings.q_value_encode(string, encoding).should == "=?US-ASCII?Q?This_is_a_string?="
       end
     end
     
@@ -165,7 +179,7 @@ describe Mail::Encodings do
       end
     end
     
-    it "should accept other encodings" do
+    it "should accept other character sets" do
       if RUBY_VERSION >= "1.9.1"
         string = "This is あ string"
         string = string.force_encoding('UTF-8')
@@ -176,17 +190,19 @@ describe Mail::Encodings do
         Mail::Encodings.q_value_encode(string, encoding).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
       end
     end
+
+    it "should decode an encoded string" do
+      string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.q_value_decode(string).should == result
+    end
     
-    it "should leave US ASCII alone" do
-      if RUBY_VERSION >= "1.9.1"
-        string = "This is a string"
-        string = string.force_encoding('UTF-8')
-        Mail::Encodings.q_value_encode(string).should == "This is a string"
-      else
-        string = "This is a string"
-        encoding = 'UTF-8'
-        Mail::Encodings.q_value_encode(string, encoding).should == "This is a string"
-      end
+    it "should detect a q encoded string and decode it" do
+      string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
     end
     
   end
@@ -248,10 +264,107 @@ describe Mail::Encodings do
     
     it "should encode a string" do
       string = "This is even more "
-      result = "This%20is%20even%20more%20"
-      Mail::Encodings.param_encode(string).should == result
+      if RUBY_VERSION >= '1.9'
+        Mail::Encodings.param_encode(string).should == "utf-8'en'This%20is%20even%20more%20"
+      else
+        Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20even%20more%20"
+      end
     end
     
+  end
+  
+  describe "decoding a string and detecting the encoding type" do
+    
+    it "should detect an encoded Base64 string to the decoded string" do
+      string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should detect an encoded QP string to the decoded string" do
+      string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should detect an plain string and return it" do
+      string = 'This is あ string'
+      result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+  end
+  
+  describe "altering an encoded text to decoded and visa versa" do
+
+    describe "decoding" do
+
+      it "should detect an encoded Base64 string and return the decoded string" do
+        string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+        result = "This is あ string"
+        if RUBY_VERSION >= '1.9'
+          result.force_encoding('UTF-8')
+        else
+          $KCODE = 'UTF-8'
+        end
+        Mail::Encodings.decode_encode(string, :decode).should == result
+      end
+
+      it "should detect an encoded QP string and return the decoded string" do
+        string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+        result = "This is あ string"
+        if RUBY_VERSION >= '1.9'
+          result.force_encoding('UTF-8')
+        else
+          $KCODE = 'UTF-8'
+        end
+        Mail::Encodings.decode_encode(string, :decode).should == result
+      end
+
+      it "should detect an a string is already decoded and leave it alone" do
+        string = 'This is あ string'
+        result = "This is あ string"
+        if RUBY_VERSION >= '1.9'
+          result.force_encoding('UTF-8')
+        else
+          $KCODE = 'UTF-8'
+        end
+        Mail::Encodings.decode_encode(string, :decode).should == result
+      end
+
+    end
+    
+    describe "encoding" do
+      
+      it "should encode a string into Base64" do
+        string = "This is あ string"
+        if RUBY_VERSION >= '1.9'
+          result = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+          result.force_encoding('UTF-8')
+        else
+          result = '=?UTF8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+          $KCODE = 'UTF-8'
+        end
+        Mail::Encodings.decode_encode(string, :encode).should == result
+      end
+
+      it "should leave a string that doesn't need encoding alone" do
+        string = 'This is a string'
+        result = "This is a string"
+        if RUBY_VERSION >= '1.9'
+          result.force_encoding('UTF-8')
+        else
+          $KCODE = 'UTF-8'
+        end
+        Mail::Encodings.decode_encode(string, :encode).should == result
+      end
+
+    end
+
+
   end
   
 end

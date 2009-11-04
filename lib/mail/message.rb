@@ -573,23 +573,21 @@ module Mail
 
     # Encodes the message, calls encode on all it's parts, gets an email message
     # ready to send
-    def encode!
-      parts.each { |part| part.encode! }
+    def ready_to_send!
+      parts.each { |part| part.ready_to_send! }
       add_required_fields
     end
-
-    # Decodes the message, calls decode on all it's parts, gets an email message
-    # ready to send
-    def decode!
-      parts.each { |part| part.decode! }
-      add_required_fields
+    
+    def encode!
+      STDERR.puts("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
+      ready_to_send!
     end
     
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
-      encode!
+      ready_to_send!
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded
@@ -597,6 +595,10 @@ module Mail
     end
     
     alias :to_s :encoded
+    
+    def decoded
+      raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+    end
     
     private
 

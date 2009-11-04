@@ -85,6 +85,10 @@ module Mail
       @tls || false
     end
     
+    def param_encode_language(value = nil)
+      value ? @encode_language = value : @encode_language ||= 'en'
+    end
+    
   end
 
 end

@@ -63,7 +63,7 @@ describe Mail::ResentToField do
     
     it "should return the encoded line" do
       t = Mail::ResentToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Resent-To: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == "Resent-To: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
     end
     
   end

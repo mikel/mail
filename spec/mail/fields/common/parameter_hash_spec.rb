@@ -37,4 +37,12 @@ describe Mail::ParameterHash do
     hash['value'].should == 'bob'
   end
   
+  it "should return an encoded value" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value*0*' => "us-ascii'en'This%20is%20even%20more%20",
+                 'value*1*' => '%2A%2A%2Afun%2A%2A%2A%20',
+                 'value*2*' => "isn't it"})
+    hash.encoded.should == %Q{value*0*="us-ascii'en'This%20is%20even%20more%20";\r\n\tvalue*1*="%2A%2A%2Afun%2A%2A%2A%20";\r\n\tvalue*2*="isn't it"}
+  end
+  
 end

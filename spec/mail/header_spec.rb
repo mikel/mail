@@ -442,8 +442,8 @@ TRACEHEADER
 
   describe "encoding" do
     it "should output a parsed version of itself to US-ASCII on encoded and tidy up and sort correctly" do
-      header = Mail::Header.new("To: Mikel\r\n\tLindsaar\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
-      result = "From: bob\r\nTo: Mikel Lindsaar\r\nSubject: This is a long badly formatted field\r\n"
+      header = Mail::Header.new("To: Mikel\r\n\tLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\t<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
+      result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long badly formatted field\r\n"
       header.encoded.should == result
     end
   end
