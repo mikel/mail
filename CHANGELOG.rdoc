@@ -1,6 +1,10 @@
 == Wed Nov  4 12:54:43 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Renamed Mail::Message.encode! to Mail::Message.ready_to_send!, deprecated :encode!
+* Rewrote encoding and decoding methods on all classes.  Adds a lot of boiler plate code, but allows us to
+  be really precise in each field type that needs custom encoding.  Now all encoding is done by the field_type
+  itself.  Need to follow through on the body.
+* Bump version to 1.2.0 due to changes of :encoded, :decoded behaviour
 
 == Tue Nov  3 00:59:45 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
