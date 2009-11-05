@@ -25,9 +25,13 @@ module Mail
       # in double quotes, otherwise returns the string unmodified
       def quote_phrase( str )
         if RUBY_VERSION >= '1.9'
-          string = str.dup
-          string.force_encoding('ASCII-8BIT')
-          (PHRASE_UNSAFE === string) ? dquote(str) : str
+          original_encoding = str.encoding
+          str.force_encoding('ASCII-8BIT')
+          if (PHRASE_UNSAFE === str)
+            dquote(str).force_encoding(original_encoding)
+          else
+            str.force_encoding(original_encoding)
+          end
         else
           (PHRASE_UNSAFE === str) ? dquote(str) : str
         end
