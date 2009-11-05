@@ -29,6 +29,8 @@ module Mail
     
     def element
       @element ||= Mail::ContentTypeElement.new(value)
+    rescue
+      @element ||= Mail::ContentTypeElement.new(sanatize(value))
     end
     
     def main_type
@@ -100,6 +102,15 @@ module Mail
         @value = "#{content_type}; #{stringify(parameters)}"
       else
         super
+      end
+    end
+    
+    def sanatize( val )
+      case
+      when val.chomp =~ /^text$/
+        'text/plain'
+      when val =~ /([\w\d_]+\/[\w\d_]+)\s(.*)/
+        "#{$1}; #{$2}"
       end
     end
 

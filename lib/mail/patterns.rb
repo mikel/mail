@@ -25,6 +25,7 @@ module Mail
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
     TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{lwsp}]/n
     
+    
     module ClassMethods
       
     end
