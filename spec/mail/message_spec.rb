@@ -165,7 +165,7 @@ describe Mail::Message do
     describe "accessing fields directly" do
       
       it "should allow you to grab field objects if you really want to" do
-        @mail.header_fields.class.should == Array
+        @mail.header_fields.class.should == Mail::FieldList
       end
       
       it "should give you back the fields in the header" do
