@@ -14,9 +14,10 @@ module Mail
       else
         super
         if filename = attachment?
+          encoding = content_transfer_encoding.encoding if content_transfer_encoding
           @attachment = Mail::Attachment.new(:filename => filename,
                                              :data => body.to_s,
-                                             :encoding => content_transfer_encoding.encoding)
+                                             :encoding => encoding)
         end
       end
     end

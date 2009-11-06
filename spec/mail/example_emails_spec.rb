@@ -254,10 +254,37 @@ describe "Test emails" do
 
   describe "from the wild" do
 
-    it "should return an 'encoded' version without raising a SystemStackError" do
-      message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml')))
-      doing { message.encoded }.should_not raise_error
+    describe "raw_email_encoded_stack_level_too_deep.eml" do
+      before(:each) do
+        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml')))
+      end
+
+      it "should return an 'encoded' version without raising a SystemStackError" do
+        doing { @message.encoded }.should_not raise_error
+      end
+
+      it "should have two parts" do
+        @message.parts.length.should == 2
+      end
+
     end
+
+    describe "sig_only_email.eml" do
+      before(:each) do
+        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'sig_only_email.eml')))
+      end
+      
+      it "should not error on multiart/signed emails" do
+        doing { @message.encoded }.should_not raise_error
+      end
+      
+      it "should have one attachment called signature.asc" do
+        @message.attachments.length.should == 1
+        @message.attachments.first.filename.should == 'signature.asc'
+      end
+      
+    end
+    
 
   end
   

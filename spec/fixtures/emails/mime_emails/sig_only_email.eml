@@ -1,0 +1,29 @@
+Date: Mon, 4 Jun 2007 15:01:31 -0700
+From: Test <test@test.lindsaar.net>
+To: Mikel <mikel@test.lindsaar.net>
+Subject: Re: Testing multipart/signed
+Message-ID: <20070604150131.40d4fa1e@reforged>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary=Sig_2GIY2xfzqSADMmu9sKGJqWm;
+ protocol="application/pgp-signature"; micalg=PGP-SHA1
+ 
+--Sig_2GIY2xfzqSADMmu9sKGJqWm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+ 
+This is random text, not what has been signed below, ie, this sig
+email is not signed correctly.
+ 
+--Sig_2GIY2xfzqSADMmu9sKGJqWm
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+ 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+ 
+iD8DB1111Iu7dfRchrkBInkRArniAKCue17JOxXBiAZHwLy3uFacU+pmhwCgwzhf
+V5YSPv2xmYOA6mJ6oVaasseQ=
+=T7p9
+-----END PGP SIGNATURE-----
+ 
+--Sig_2GIY2xfzqSADMmu9sKGJqWm--
