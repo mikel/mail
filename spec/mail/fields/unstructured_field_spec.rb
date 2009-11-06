@@ -66,6 +66,12 @@ describe Mail::UnstructuredField do
       @field.decoded.should == nil
     end
     
+    it "should just add the CRLF at the end of the line" do
+      @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
+      @field.encoded.should == "Subject: =?utf-8?Q?testing_testing_=D6=A4?=\r\n"
+      @field.decoded.should == "testing testing \326\244"
+    end
+    
   end
 
   describe "folding" do

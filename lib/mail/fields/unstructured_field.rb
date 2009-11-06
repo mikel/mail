@@ -38,7 +38,7 @@ module Mail
     end
     
     def do_decode
-      value.blank? ? nil : value
+      value.blank? ? nil : Encodings.decode_encode(value, :decode)
     end
     
     # 2.2.3. Long Header Fields
@@ -77,7 +77,7 @@ module Mail
         @folded_line = []
         @unfolded_line = value.clone
         fold("#{name}: ".length)
-        folded = @folded_line.compact.join("\r\n\t")
+        folded = @folded_line.map { |l| l unless l.blank? }.compact.join("\r\n\t")
         "#{name}: #{folded}"
       end
     end

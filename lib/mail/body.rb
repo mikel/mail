@@ -54,6 +54,11 @@ module Mail
     
     alias :to_s :encoded
     
+    # Returns the raw source right now.  Need to implement
+    def decoded
+      raw_source
+    end
+    
     def charset
       @charset
     end

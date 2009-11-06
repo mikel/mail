@@ -47,7 +47,7 @@ module Mail
     # Returns an array of all the fields in the header in order that they
     # were read in.
     def fields
-      @fields ||= []
+      @fields ||= FieldList.new
     end
     
     #  3.6. Field definitions

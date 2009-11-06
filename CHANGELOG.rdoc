@@ -1,3 +1,10 @@
+== Fri Nov  6 00:51:55 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Handled unstructured field folding "blank" lines
+* Fixed error in header.rb that created fields into an array, instead of a FieldList, resulting
+  in mail.encode returning a random sort order on the header.
+* Made unstructured fields attempt to decode their values on :decode
+
 == Thu Nov  5 04:45:31 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * 2acb70a: Closes Issue #1 - Handling badly formatted content-type fields <mikel>
