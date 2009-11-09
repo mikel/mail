@@ -26,6 +26,17 @@ module Mail
   #    body 'This is the body'
   #  end
   # 
+  # Or creating via a hash (or hash like object):
+  # 
+  #  message = Mail.new({:to => 'mikel@test.lindsaar.net',
+  #                      'from' => 'bob@test.lindsaar.net',
+  #                       :subject 'This is an email',
+  #                       :body 'This is the body' })
+  # 
+  # Note, the hash keys can be strings or symbols, the passed in object
+  # does not need to be a hash, it just needs to respond to :each_pair
+  # and yield each key value pair.
+  # 
   # As a side note, you can also create a new email through creating
   # a Mail::Message object directly and then passing in values via string,
   # symbol or direct method calls.  See Mail::Message for more information.
@@ -36,11 +47,7 @@ module Mail
   #  mail['subject'] = 'This is an email'
   #  mail.body = 'This is the body'
   def Mail.new(*args, &block)
-    if block_given?
-      Mail::Message.new(args, &block)
-    else
-      Mail::Message.new(args)
-    end
+    Mail::Message.new(args, &block)
   end
 
   # Set the default configuration to send and receive emails.  The defaults

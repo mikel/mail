@@ -51,13 +51,17 @@ module Mail
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
-      self.raw_source = args.flatten[0].to_s.strip
-      set_envelope_header
-      parse_message
-      separate_parts if multipart?
+
+      if args.flatten.first.respond_to?(:each_pair)
+        init_with_hash(args.flatten.first)
+      else
+        init_with_string(args.flatten[0].to_s.strip)
+      end
+
       if block_given?
         instance_eval(&block)
       end
+
       self
     end
     
@@ -654,14 +658,26 @@ module Mail
         body.boundary = boundary
       end
     end
-    
-    class << self
 
-      # Only POP3 is supported for now
-      def get_all_mail(&block)
-        self.pop3_get_all_mail(&block)
+    def init_with_hash(hash)
+      self.raw_source = ''
+      @header = Mail::Header.new
+      @body = Mail::Body.new
+      hash.each_pair do |k,v|
+        self[k] = v
       end
-
+    end
+    
+    def init_with_string(string)
+      self.raw_source = string
+      set_envelope_header
+      parse_message
+      separate_parts if multipart?
+    end
+    
+    # Only POP3 is supported for now
+    def Message.get_all_mail(&block)
+      self.pop3_get_all_mail(&block)
     end
 
   end

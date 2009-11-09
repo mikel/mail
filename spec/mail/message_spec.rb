@@ -158,12 +158,12 @@ describe Mail::Message do
   
   describe "directly setting values of a message" do
 
-    before(:each) do
-      @mail = Mail::Message.new
-    end
-
     describe "accessing fields directly" do
       
+      before(:each) do
+        @mail = Mail::Message.new
+      end
+
       it "should allow you to grab field objects if you really want to" do
         @mail.header_fields.class.should == Mail::FieldList
       end
@@ -184,6 +184,11 @@ describe Mail::Message do
     end
 
     describe "with :method=" do
+
+      before(:each) do
+        @mail = Mail::Message.new
+      end
+
       it "should return the to field" do
         @mail.to = "mikel"
         @mail.to.addresses.should == ["mikel"]
@@ -206,6 +211,11 @@ describe Mail::Message do
     end
     
     describe "with :method(value)" do
+
+      before(:each) do
+        @mail = Mail::Message.new
+      end
+
       it "should return the to field" do
         @mail.to "mikel"
         @mail.to.addresses.should == ["mikel"]
@@ -228,6 +238,11 @@ describe Mail::Message do
     end
     
     describe "setting arbitrary headers" do
+
+      before(:each) do
+        @mail = Mail::Message.new
+      end
+
       it "should allow you to set them" do
         doing {@mail['foo'] = 1234}.should_not raise_error
       end
@@ -459,6 +474,130 @@ describe Mail::Message do
         message['content_id'] =                '<1234@message_id.lindsaar.net>'
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
+        
+        message.bcc.value.should           == 'mikel@bcc.lindsaar.net'
+        message.cc.value.should            == 'mikel@cc.lindsaar.net'
+        message.comments.value.should      == 'this is a comment'
+        message.date.value.should          == '12 Aug 2009 00:00:01 GMT'
+        message.from.value.should          == 'mikel@from.lindsaar.net'
+        message.in_reply_to.value.should   == '<1234@in_reply_to.lindsaar.net>'
+        message.keywords.value.should      == 'test, "of the new mail", system'
+        message.message_id.value.should    == '<1234@message_id.lindsaar.net>'
+        message.received.value.should      == '12 Aug 2009 00:00:02 GMT'
+        message.references.value.should    == '<1234@references.lindsaar.net>'
+        message.reply_to.value.should      == 'mikel@reply-to.lindsaar.net'
+        message.resent_bcc.value.should    == 'mikel@resent-bcc.lindsaar.net'
+        message.resent_cc.value.should     == 'mikel@resent-cc.lindsaar.net'
+        message.resent_date.value.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_from.value.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_message_id.value.should == '<1234@resent_message_id.lindsaar.net>'
+        message.resent_sender.value.should == 'mikel@resent-sender.lindsaar.net'
+        message.resent_to.value.should     == 'mikel@resent-to.lindsaar.net'
+        message.sender.value.should        == 'mikel@sender.lindsaar.net'
+        message.subject.value.should       == 'Hello there Mikel'
+        message.to.value.should            == 'mikel@to.lindsaar.net'
+        message.content_type.value.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.value.should == '7bit'
+        message.content_description.value.should       == 'This is a test'
+        message.content_disposition.value.should       == 'attachment; filename=File'
+        message.content_id.value.should                == '<1234@message_id.lindsaar.net>'
+        message.mime_version.value.should              == '1.0'
+        message.body.to_s.should          == 'This is a body of text'
+      end
+      
+      it "should accept them as a hash with symbols" do
+        message = Mail.new({
+          :bcc =>           'mikel@bcc.lindsaar.net',
+          :cc =>            'mikel@cc.lindsaar.net',
+          :comments =>      'this is a comment',
+          :date =>          '12 Aug 2009 00:00:01 GMT',
+          :from =>          'mikel@from.lindsaar.net',
+          :in_reply_to =>   '<1234@in_reply_to.lindsaar.net>',
+          :keywords =>      'test, "of the new mail", system',
+          :message_id =>    '<1234@message_id.lindsaar.net>',
+          :received =>      '12 Aug 2009 00:00:02 GMT',
+          :references =>    '<1234@references.lindsaar.net>',
+          :reply_to =>      'mikel@reply-to.lindsaar.net',
+          :resent_bcc =>    'mikel@resent-bcc.lindsaar.net',
+          :resent_cc =>     'mikel@resent-cc.lindsaar.net',
+          :resent_date =>   '12 Aug 2009 00:00:03 GMT',
+          :resent_from =>   'mikel@resent-from.lindsaar.net',
+          :resent_message_id => '<1234@resent_message_id.lindsaar.net>',
+          :resent_sender => 'mikel@resent-sender.lindsaar.net',
+          :resent_to =>     'mikel@resent-to.lindsaar.net',
+          :sender =>        'mikel@sender.lindsaar.net',
+          :subject =>       'Hello there Mikel',
+          :to =>            'mikel@to.lindsaar.net',
+          :content_type =>  'text/plain; charset=UTF-8',
+          :content_transfer_encoding => '7bit',
+          :content_description =>       'This is a test',
+          :content_disposition =>       'attachment; filename=File',
+          :content_id =>                '<1234@message_id.lindsaar.net>',
+          :mime_version =>  '1.0',
+          :body =>          'This is a body of text'
+        })
+        
+        message.bcc.value.should           == 'mikel@bcc.lindsaar.net'
+        message.cc.value.should            == 'mikel@cc.lindsaar.net'
+        message.comments.value.should      == 'this is a comment'
+        message.date.value.should          == '12 Aug 2009 00:00:01 GMT'
+        message.from.value.should          == 'mikel@from.lindsaar.net'
+        message.in_reply_to.value.should   == '<1234@in_reply_to.lindsaar.net>'
+        message.keywords.value.should      == 'test, "of the new mail", system'
+        message.message_id.value.should    == '<1234@message_id.lindsaar.net>'
+        message.received.value.should      == '12 Aug 2009 00:00:02 GMT'
+        message.references.value.should    == '<1234@references.lindsaar.net>'
+        message.reply_to.value.should      == 'mikel@reply-to.lindsaar.net'
+        message.resent_bcc.value.should    == 'mikel@resent-bcc.lindsaar.net'
+        message.resent_cc.value.should     == 'mikel@resent-cc.lindsaar.net'
+        message.resent_date.value.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_from.value.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_message_id.value.should == '<1234@resent_message_id.lindsaar.net>'
+        message.resent_sender.value.should == 'mikel@resent-sender.lindsaar.net'
+        message.resent_to.value.should     == 'mikel@resent-to.lindsaar.net'
+        message.sender.value.should        == 'mikel@sender.lindsaar.net'
+        message.subject.value.should       == 'Hello there Mikel'
+        message.to.value.should            == 'mikel@to.lindsaar.net'
+        message.content_type.value.should              == 'text/plain; charset=UTF-8'
+        message.content_transfer_encoding.value.should == '7bit'
+        message.content_description.value.should       == 'This is a test'
+        message.content_disposition.value.should       == 'attachment; filename=File'
+        message.content_id.value.should                == '<1234@message_id.lindsaar.net>'
+        message.mime_version.value.should              == '1.0'
+        message.body.to_s.should          == 'This is a body of text'
+      end
+      
+      it "should accept them as a hash with strings" do
+        message = Mail.new({
+          'bcc' =>           'mikel@bcc.lindsaar.net',
+          'cc' =>            'mikel@cc.lindsaar.net',
+          'comments' =>      'this is a comment',
+          'date' =>          '12 Aug 2009 00:00:01 GMT',
+          'from' =>          'mikel@from.lindsaar.net',
+          'in_reply_to' =>   '<1234@in_reply_to.lindsaar.net>',
+          'keywords' =>      'test, "of the new mail", system',
+          'message_id' =>    '<1234@message_id.lindsaar.net>',
+          'received' =>      '12 Aug 2009 00:00:02 GMT',
+          'references' =>    '<1234@references.lindsaar.net>',
+          'reply_to' =>      'mikel@reply-to.lindsaar.net',
+          'resent_bcc' =>    'mikel@resent-bcc.lindsaar.net',
+          'resent_cc' =>     'mikel@resent-cc.lindsaar.net',
+          'resent_date' =>   '12 Aug 2009 00:00:03 GMT',
+          'resent_from' =>   'mikel@resent-from.lindsaar.net',
+          'resent_message_id' => '<1234@resent_message_id.lindsaar.net>',
+          'resent_sender' => 'mikel@resent-sender.lindsaar.net',
+          'resent_to' =>     'mikel@resent-to.lindsaar.net',
+          'sender' =>        'mikel@sender.lindsaar.net',
+          'subject' =>       'Hello there Mikel',
+          'to' =>            'mikel@to.lindsaar.net',
+          'content_type' =>  'text/plain; charset=UTF-8',
+          'content_transfer_encoding' => '7bit',
+          'content_description' =>       'This is a test',
+          'content_disposition' =>       'attachment; filename=File',
+          'content_id' =>                '<1234@message_id.lindsaar.net>',
+          'mime_version' =>  '1.0',
+          'body' =>          'This is a body of text'
+        })
         
         message.bcc.value.should           == 'mikel@bcc.lindsaar.net'
         message.cc.value.should            == 'mikel@cc.lindsaar.net'
