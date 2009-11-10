@@ -2,26 +2,6 @@
 module Mail
   class Part < Message
     
-    def initialize(*args, &block)
-      if args.flatten[0].is_a?(Hash)
-        options_hash = args.flatten[0]
-        super('') # Make an empty message, we are dealing with an attachment
-        @attachment = Mail::Attachment.new(options_hash)
-        self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""
-        self.content_transfer_encoding = "Base64"
-        self.content_disposition = "attachment; filename=\"#{attachment.filename}\""
-        self.body = attachment.encoded
-      else
-        super
-        if filename = attachment?
-          encoding = content_transfer_encoding.encoding if content_transfer_encoding
-          @attachment = Mail::Attachment.new(:filename => filename,
-                                             :data => body.to_s,
-                                             :encoding => encoding)
-        end
-      end
-    end
-    
     # Creates a new empty Content-ID field and inserts it in the correct order
     # into the Header.  The ContentIdField object will automatically generate
     # a unique content ID if you try and encode it or output it to_s without
@@ -30,25 +10,6 @@ module Mail
     # It will preserve the content ID you specify if you do.
     def add_content_id(content_id_val = '')
       header['content-id'] = content_id_val
-    end
-    
-    # Returns true if this part is an attachment
-    def attachment?
-      find_attachment
-    end
-    
-    # Returns the attachment data if there is any
-    def attachment
-      @attachment
-    end
-    
-    # Returns the filename of the attachment
-    def filename
-      if attachment?
-        attachment.filename
-      else
-        nil
-      end
     end
     
     # Returns true if the part has a content ID field, the field may or may
@@ -114,21 +75,6 @@ module Mail
     
     def parse_delivery_status_report
       @delivery_status_data ||= Header.new(body.to_s.gsub("\r\n\r\n", "\r\n"))
-    end
-
-    # Returns the filename of the attachment (if it exists) or returns nil
-    def find_attachment
-      case
-      when content_type && content_type.filename
-        filename = content_type.filename
-      when content_disposition && content_disposition.filename
-        filename = content_disposition.filename
-      when content_location && content_location.location
-        filename = content_location.location
-      else
-        filename = nil
-      end
-      filename
     end
 
   end

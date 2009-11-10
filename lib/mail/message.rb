@@ -565,7 +565,7 @@ module Mail
       self.body << part
     end
     
-    # Adds a part to the parts list or creates the part list
+    # Adds a file to the message.
     def add_file(options)
       add_multipart_mixed_header
       if options.is_a?(Hash)
@@ -602,6 +602,25 @@ module Mail
     
     def decoded
       raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+    end
+    
+    # Returns true if this part is an attachment
+    def attachment?
+      find_attachment
+    end
+    
+    # Returns the attachment data if there is any
+    def attachment
+      @attachment
+    end
+    
+    # Returns the filename of the attachment
+    def filename
+      if attachment?
+        attachment.filename
+      else
+        nil
+      end
     end
     
     private
@@ -664,8 +683,21 @@ module Mail
       @header = Mail::Header.new
       @body = Mail::Body.new
       hash.each_pair do |k,v|
-        self[k] = v
+        next if k.to_sym == :data
+        if k.to_sym == :filename
+          add_attachment(hash)
+        else
+          self[k] = v
+        end
       end
+    end
+
+    def add_attachment(options_hash)
+      @attachment = Mail::Attachment.new(options_hash)
+      self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""
+      self.content_transfer_encoding = "Base64"
+      self.content_disposition = "attachment; filename=\"#{attachment.filename}\""
+      self.body = attachment.encoded
     end
     
     def init_with_string(string)
@@ -673,8 +705,29 @@ module Mail
       set_envelope_header
       parse_message
       separate_parts if multipart?
+      if filename = attachment?
+        encoding = content_transfer_encoding.encoding if content_transfer_encoding
+        @attachment = Mail::Attachment.new(:filename => filename,
+                                           :data => body.to_s,
+                                           :encoding => encoding)
+      end
     end
     
+    # Returns the filename of the attachment (if it exists) or returns nil
+    def find_attachment
+      case
+      when content_type && content_type.filename
+        filename = content_type.filename
+      when content_disposition && content_disposition.filename
+        filename = content_disposition.filename
+      when content_location && content_location.location
+        filename = content_location.location
+      else
+        filename = nil
+      end
+      filename
+    end
+
     # Only POP3 is supported for now
     def Message.get_all_mail(&block)
       self.pop3_get_all_mail(&block)
