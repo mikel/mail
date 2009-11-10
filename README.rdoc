@@ -205,7 +205,7 @@ what you are doing.
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
-   add_file 'New Header Image', '/somefile.png'
+   add_file '/somefile.png'
  end
 
 or
@@ -219,7 +219,7 @@ or
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
-   add_file 'New Header Image', '/somefile.png'
+   add_file {:filename => 'somefile.png', :data => File.read('/somefile.png')}
  end
  
  mail.deliver!

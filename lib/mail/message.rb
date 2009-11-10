@@ -565,7 +565,22 @@ module Mail
       self.body << part
     end
     
-    # Adds a file to the message.
+    # Adds a file to the message.  You have two options with this method, you can
+    # just pass in the absolute path to the file you want and Mail will read the file,
+    # get the filename from the path you pass in and guess the mime type, or you
+    # can pass in the filename as a string, and pass in the file data as a blob.
+    # 
+    # Example:
+    # 
+    #  m = Mail.new
+    #  m.add_file('/path/to/filename.png')
+    # 
+    # or
+    # 
+    #  m = Mail.new
+    #  m.add_file(:filename => 'filename.png', :data => File.read('/path/to/filename.png'))
+    # 
+    # The above two alternatives will produce the same email message.
     def add_file(options)
       add_multipart_mixed_header
       if options.is_a?(Hash)
