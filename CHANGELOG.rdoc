@@ -1,3 +1,7 @@
+== Tue Nov 10 08:15:14 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Resolved Issue #5 - Message ID generation issue
+
 == Mon Nov  9 23:38:33 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added ability to create new email via a hash or hash-like object. <mikel>

@@ -109,7 +109,7 @@ module Mail
     t = Time.now
     sprintf('%x%x_%x%x%d%x',
             t.to_i, t.tv_usec,
-            $$, Thread.current.object_id, Mail.uniq, rand(255))
+            $$, Thread.current.object_id.abs, Mail.uniq, rand(255))
   end
   
   private
