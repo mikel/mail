@@ -1,6 +1,7 @@
 == Thu Nov 12 02:58:01 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Resolved Issue #8- Message ID not handling multiple periods in left hand side
+* Resolved Issue #8 - Message ID not handling multiple periods in left hand side
+* Resolved Issue #6 - Ordering of add_file and body items causes invalid emails
 
 == Tue Nov 10 08:15:14 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 

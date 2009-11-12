@@ -137,8 +137,30 @@ module Mail
     # 
     #  mail.body = 'This is the body'
     #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
+    # 
+    # You can also reset the body of an Message object by setting body to nil
+    # 
+    # Example:
+    # 
+    #  mail.body = 'this is the body'
+    #  mail.body.encoded #=> 'this is the body'
+    #  mail.body = nil
+    #  mail.body.encoded #=> ''
+    # 
+    # WARNING!!
+    # 
+    # Setting a body on a multipart email makes no sense as a multipart email
+    # is a body that is made up of many parts, and you really need to tell mail
+    # which part to change the body of.  This will raise a RuntimeError.
     def body=(value)
-      @body = Mail::Body.new(value)
+      case
+      when value == nil
+        @body = Mail::Body.new('')
+      when @body && !@body.parts.empty?
+        @body << Mail::Part.new(value)
+      else
+        @body = Mail::Body.new(value)
+      end
     end
 
     # Returns the body of the message object. Or, if passed
@@ -581,13 +603,37 @@ module Mail
     #  m.add_file(:filename => 'filename.png', :data => File.read('/path/to/filename.png'))
     # 
     # The above two alternatives will produce the same email message.
+    # 
+    # Note also that if you add a file to an existing message, Mail will convert that message
+    # to a MIME multipart email, moving whatever plain text body you had into it's own text
+    # plain part.
+    # 
+    # Example:
+    # 
+    #  m = Mail.new do
+    #    body 'this is some text'
+    #  end
+    #  m.multipart? #=> false
+    #  m.add_file('/path/to/filename.png')
+    #  m.multipart? #=> true
+    #  m.parts.first.content_type.content_type #=> 'text/plain'
+    #  m.parts.last.content_type.content_type #=> 'image/png'
     def add_file(options)
+      convert_to_multipart unless self.multipart? || self.body.decoded.blank?
       add_multipart_mixed_header
       if options.is_a?(Hash)
         self.body << Mail::Part.new(options)
       else
         self.body << Mail::Part.new(:filename => options)
       end
+    end
+
+    def convert_to_multipart
+      text = @body.decoded
+      self.body = ''
+      text_part = Mail::Part.new({:content_type => 'text/plain;',
+                                  :body => text})
+      self.body << text_part
     end
 
     # Encodes the message, calls encode on all it's parts, gets an email message
@@ -689,10 +735,11 @@ module Mail
     def add_multipart_mixed_header
       unless header['content-type']
         header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
+        
         body.boundary = boundary
       end
     end
-
+    
     def init_with_hash(hash)
       self.raw_source = ''
       @header = Mail::Header.new
@@ -706,7 +753,7 @@ module Mail
         end
       end
     end
-
+    
     def add_attachment(options_hash)
       @attachment = Mail::Attachment.new(options_hash)
       self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""

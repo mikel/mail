@@ -932,7 +932,7 @@ describe Mail::Message do
         it "should add a part given a filename" do
           mail = Mail::Message.new
           mail.add_file(fixture('attachments', 'test.png'))
-          mail.parts.length.should == 1
+          mail.parts.length.should == 1 # First part is an empty text body
         end
 
         it "should give the part the right content type" do
@@ -1039,6 +1039,31 @@ describe Mail::Message do
           else
             mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
           end
+        end
+        
+        it "should be able to add a body before adding a file" do
+          m = Mail.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            body    "Attached"
+            add_file :filename => fixture('attachments', 'test.png')
+          end
+          m.attachments.length.should == 1
+          m.parts.first.body.decoded.should == "Attached"
+        end
+        
+        it "should allow you to add a body as text part if you have added a file" do
+          m = Mail.new do
+            from    'mikel@from.lindsaar.net'
+            subject 'Hello there Mikel'
+            to      'mikel@to.lindsaar.net'
+            add_file :filename => fixture('attachments', 'test.png')
+            body    "Attached"
+          end
+          m.parts.length.should == 2
+          m.parts.first.content_type.content_type.should == 'image/png'
+          m.parts.last.content_type.content_type.should == 'text/plain'
         end
 
       end
