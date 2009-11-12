@@ -147,11 +147,15 @@ module Mail
     #  mail.body = nil
     #  mail.body.encoded #=> ''
     # 
-    # WARNING!!
+    # If you try and set the body of an email that is a multipart email, then instead
+    # of deleting all the parts of your email, mail will add a text/plain part to
+    # your email:
     # 
-    # Setting a body on a multipart email makes no sense as a multipart email
-    # is a body that is made up of many parts, and you really need to tell mail
-    # which part to change the body of.  This will raise a RuntimeError.
+    #  mail.add_file 'somefilename.png'
+    #  mail.parts.length #=> 1
+    #  mail.body = "This is a body"
+    #  mail.parts.length #=> 2
+    #  mail.parts.last.content_type.content_type #=> 'This is a body'
     def body=(value)
       case
       when value == nil
