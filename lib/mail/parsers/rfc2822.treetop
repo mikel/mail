@@ -84,6 +84,10 @@ module Mail
       "|" / "}" /
       "~"
     end
+    
+    rule mtext
+      (atext / ".")+
+    end
 
     rule atom
       CFWS? atext+ CFWS?
@@ -95,6 +99,10 @@ module Mail
   
     rule local_dot_atom
       CFWS? local_dot_atom_text CFWS?
+    end
+    
+    rule message_id_text
+      mtext+
     end
     
     rule dot_atom_text
@@ -360,7 +368,7 @@ module Mail
     end
     
     rule id_left
-      dot_atom_text / no_fold_quote / obs_id_left
+      message_id_text / no_fold_quote / obs_id_left
     end
     
     rule id_right

@@ -1,3 +1,7 @@
+== Thu Nov 12 02:58:01 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Resolved Issue #8- Message ID not handling multiple periods in left hand side
+
 == Tue Nov 10 08:15:14 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Resolved Issue #5 - Message ID generation issue

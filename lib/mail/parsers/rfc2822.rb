@@ -961,6 +961,53 @@ module Mail
       r0
     end
 
+    def _nt_mtext
+      start_index = index
+      if node_cache[:mtext].has_key?(index)
+        cached = node_cache[:mtext][index]
+        @index = cached.interval.end if cached
+        return cached
+      end
+
+      s0, i0 = [], index
+      loop do
+        i1 = index
+        r2 = _nt_atext
+        if r2
+          r1 = r2
+        else
+          if has_terminal?(".", false, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure(".")
+            r3 = nil
+          end
+          if r3
+            r1 = r3
+          else
+            @index = i1
+            r1 = nil
+          end
+        end
+        if r1
+          s0 << r1
+        else
+          break
+        end
+      end
+      if s0.empty?
+        @index = i0
+        r0 = nil
+      else
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      end
+
+      node_cache[:mtext][start_index] = r0
+
+      r0
+    end
+
     module Atom0
     end
 
@@ -1114,6 +1161,35 @@ module Mail
       end
 
       node_cache[:local_dot_atom][start_index] = r0
+
+      r0
+    end
+
+    def _nt_message_id_text
+      start_index = index
+      if node_cache[:message_id_text].has_key?(index)
+        cached = node_cache[:message_id_text][index]
+        @index = cached.interval.end if cached
+        return cached
+      end
+
+      s0, i0 = [], index
+      loop do
+        r1 = _nt_mtext
+        if r1
+          s0 << r1
+        else
+          break
+        end
+      end
+      if s0.empty?
+        @index = i0
+        r0 = nil
+      else
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      end
+
+      node_cache[:message_id_text][start_index] = r0
 
       r0
     end
@@ -4378,7 +4454,7 @@ module Mail
       end
 
       i0 = index
-      r1 = _nt_dot_atom_text
+      r1 = _nt_message_id_text
       if r1
         r0 = r1
       else
