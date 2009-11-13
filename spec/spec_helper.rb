@@ -93,7 +93,7 @@ class MockPopMail
   end
   
   def pop
-    @rfc2822
+    Mail.new(@rfc2822)
   end
 end
 

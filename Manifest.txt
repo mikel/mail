@@ -70,7 +70,13 @@ lib/mail/header.rb
 lib/mail/mail.rb
 lib/mail/message.rb
 lib/mail/network/deliverable.rb
+lib/mail/network/delivery_methods/file_delivery.rb
+lib/mail/network/delivery_methods/sendmail.rb
+lib/mail/network/delivery_methods/smtp.rb
+lib/mail/network/delivery_methods/test_mailer.rb
 lib/mail/network/retrievable.rb
+lib/mail/network/retriever_methods/imap.rb
+lib/mail/network/retriever_methods/pop3.rb
 lib/mail/parsers/address_lists.rb
 lib/mail/parsers/address_lists.treetop
 lib/mail/parsers/content_disposition.rb

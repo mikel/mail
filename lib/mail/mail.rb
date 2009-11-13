@@ -55,19 +55,37 @@ module Mail
   # if port values are omitted from the SMTP and POP3 method calls, then it
   # is assumed to use the default ports of 25 and 110 respectively.
   # 
-  # The methods you can call in the default configuration are:
+  # You call defaults in a block, then you can set the basic host and port,
+  # by passing arguments, also, if the method you are using required more
+  # information (like pop3), then pass a block to it and call methods like
+  # user, pass, enable_tls etc.
   # 
-  # smtp(server_name, port):: Sets the SMTP server domain name and port
-  # pop3(server_name, port):: Sets the POP3 server domain name and port
-  # user(username):: Sets the username used for POP3 sessions
-  # pass(password):: Sets the password used for POP3 sessions
+  # The arguments and block are both optional.
   #
   #  Mail.defaults do
   #    smtp 'smtp.myhost.fr', 587
-  #    pop3 'pop.myhost.fr'
-  #    user 'bernardo'
-  #    pass 'mypass'
-  #    enable_tls
+  #    pop3 'pop.myhost.fr' do
+  #      user 'bernardo'
+  #      pass 'mypass'
+  #      enable_tls
+  #    end
+  #  end
+  # 
+  # You will also want to specify a delivery and retriever type, the defaults
+  # are SMTP and POP3.  You set the types by passing a symbol:
+  # 
+  #  Mail.defaults do
+  #    retriever_method :pop3
+  #    delivery_method :smtp
+  #  end
+  # 
+  # The only implemented methods at the moment are :pop3, :smtp and :test
+  # 
+  # You can also specify your own delivery class which must respond to :deliver!
+  # or a retriever class which must respond to :get_messages
+  # 
+  #  Mail.defaults do
+  #    retriever_method MyOwnRetriever.new
   #  end
   # 
   # Once you have set defaults, you can call Mail.deliver to send an email
@@ -75,12 +93,16 @@ module Mail
   def Mail.defaults(&block)
     if block_given?
       Mail::Configuration.instance.defaults(&block)
+    else
+      Mail::Configuration.instance
     end
   end
 
   # Send an email using the default configuration.  You do need to set a default
   # configuration first before you use Mail.deliver, if you don't, an appropriate
   # error will be raised telling you to.
+  # 
+  # If you do not specify a delivery type, SMTP will be used.
   # 
   #  Mail.deliver do
   #   to 'mikel@test.lindsaar.net'
@@ -89,20 +111,39 @@ module Mail
   #   body 'Not much to say here'
   #  end
   # 
+  # You can also do:
+  # 
+  #  mail = Mail.read('email.eml')
+  #  mail.deliver!
+  # 
   # And your email object will be created and sent.
-  
   def Mail.deliver(*args, &block)
-    Mail.new(args, &block).deliver!
+    mail = Mail.new(args, &block)
+    Deliverable.perform_delivery!(mail)
+    mail
   end
 
+  # Returns all the messages on the server using the retriever method set up
+  # in Mail.defaults
   def Mail.get_all_mail(&block)
-    Mail::Message.get_all_mail(&block)
+    if block_given?
+      Retrievable.get_messages.each do |message|
+        yield message
+      end
+    else
+      Retrievable.get_messages
+    end
   end
 
   def Mail.read(filename)
     Mail.new(File.read(filename))
   end
 
+  # Provides a store of all the emails sent
+  def Mail.deliveries
+    @@deliveries ||= []
+  end
+  
   protected
   
   def Mail.random_tag

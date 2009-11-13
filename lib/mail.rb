@@ -28,7 +28,13 @@ module Mail # :doc:
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
   require File.join(dir_name, 'network', 'deliverable')
+  require File.join(dir_name, 'network', 'delivery_methods', 'smtp')
+  require File.join(dir_name, 'network', 'delivery_methods', 'file_delivery')
+  require File.join(dir_name, 'network', 'delivery_methods', 'sendmail')
+  require File.join(dir_name, 'network', 'delivery_methods', 'test_mailer')
   require File.join(dir_name, 'network', 'retrievable')
+  require File.join(dir_name, 'network', 'retriever_methods', 'pop3')
+  require File.join(dir_name, 'network', 'retriever_methods', 'imap')
 
   require File.join(dir_name, 'message')
   require File.join(dir_name, 'part')

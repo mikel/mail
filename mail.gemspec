@@ -3,7 +3,7 @@ MAIL_ROOT = File.dirname(__FILE__)
 
 Gem::Specification.new do |s|
   s.name = %q{mail}
-  s.version = "1.2.1"
+  s.version = "1.2.5"
  
   s.requirements << 'treetop, Treetop is a Ruby-based DSL for text parsing and interpretation'
   s.requirements << 'mime/types, A list of a lot of Mime Types'

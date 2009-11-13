@@ -46,8 +46,6 @@ module Mail
     
     include Patterns
     include Utilities
-    include Deliverable
-    include Retrievable
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
@@ -63,6 +61,26 @@ module Mail
       end
 
       self
+    end
+    
+    def deliver!
+      Deliverable.perform_delivery!(self)
+    end
+    
+    def <=>(other)
+      if other.nil?
+        1
+      else
+        self.date <=> other.date
+      end
+    end
+    
+    def ==(other)
+      unless other.respond_to?(:encoded)
+        false
+      else
+        self.encoded == other.encoded
+      end
     end
     
     # Provides access to the raw source of the message as it was when it

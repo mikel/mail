@@ -1406,6 +1406,17 @@ describe Mail::Message do
   end
   
   describe "helper methods" do
+    
+    it "should implement the spaceship operator on the date field" do
+      mail1 = Mail.new do
+        date 1.year.ago
+      end
+      mail2 = Mail.new do
+        date Time.now
+      end
+      [mail2, mail1].sort.should == [mail2, mail1]
+    end
+    
     it "should have a destinations method" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'

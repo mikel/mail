@@ -1,6 +1,14 @@
+== Fri Nov 13 00:31:04 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Hacked and mutilated the network section, made it easier to extend out with other
+  delivery and retriever methods.  API changed SLIGHTLY with this.  Please check the
+  readme
+* Resolved Issue #8 - Mail::SMTP now delivers to all mail.destinations
+* Version bump to 1.2.5
+
 == Thu Nov 12 02:58:01 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Resolved Issue #8 - Message ID not handling multiple periods in left hand side
+* Resolved Issue #5 - Message ID not handling multiple periods in left hand side
 * Resolved Issue #6 - Ordering of add_file and body items causes invalid emails
 
 == Tue Nov 10 08:15:14 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>

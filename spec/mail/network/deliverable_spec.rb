@@ -5,45 +5,41 @@ require 'mail'
 
 describe "Deliverable" do
 
-  before(:each) do
-    @deliverable = Class.new do
-      include Mail::Deliverable
-      attr_accessor :from, :to, :encoded
-    end
-  end
-  
   describe "general usage" do
 
     before(:each) do
       config = Mail.defaults do
-        smtp 'smtp.mockup.com', 587
-        enable_tls
+        smtp 'smtp.mockup.com', 587 do
+          enable_tls
+        end
       end
     end
 
     it "should send emails from given settings" do
-      from = 'roger@moore.com'
-      to = 'marcel@amont.com'
-      rfc2822 = 'invalid RFC2822'
 
-      @deliverable.new.deliver!(from, to, rfc2822)
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
 
-      MockSMTP.deliveries[0][0].should == rfc2822
-      MockSMTP.deliveries[0][1].should == from
-      MockSMTP.deliveries[0][2].should == to
+      MockSMTP.deliveries[0][0].should == mail.encoded
+      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][2].should == mail.destinations
     end
 
-    it "should send emails and get from/to/rfc2822 for the includer object" do
-      deliverable = @deliverable.new
-      deliverable.from = Mail::FromField.new('marcel@amont.com')
-      deliverable.to = Mail::ToField.new('marcel@amont.com')
-      deliverable.encoded = 'really invalid RFC2822'
+    it "should be able to send itself" do
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
 
-      deliverable.deliver!
+      mail.deliver!
 
-      MockSMTP.deliveries[0][0].should == deliverable.encoded
-      MockSMTP.deliveries[0][1].should == deliverable.from.addresses.first
-      MockSMTP.deliveries[0][2].should == deliverable.to.addresses
+      MockSMTP.deliveries[0][0].should == mail.encoded
+      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][2].should == mail.destinations
     end
 
     it "should raise if the SMTP configuration is not set" do
@@ -68,16 +64,18 @@ describe "Deliverable" do
       # config can't be setup until redefined
       redefine_verify_none(OpenSSL::SSL::SSLContext.new)
       config = Mail.defaults do
-        smtp 'smtp.mockup.com', 587
-        enable_tls
+        smtp 'smtp.mockup.com', 587 do
+          enable_tls
+        end
       end
 
-      deliverable = @deliverable.new
-      deliverable.from = Mail::FromField.new('marcel@amont.com')
-      deliverable.to = Mail::ToField.new('marcel@amont.com')
-      deliverable.encoded = 'really invalid RFC2822'
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
 
-      lambda{deliverable.deliver!}.should_not raise_error(TypeError)
+      doing { mail.deliver! }.should_not raise_error(TypeError)
     end
     
     it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
@@ -85,16 +83,18 @@ describe "Deliverable" do
       # config can't be setup until redefined
       redefine_verify_none(0)
       config = Mail.defaults do
-        smtp 'smtp.mockup.com', 587
-        enable_tls
+        smtp 'smtp.mockup.com', 587 do
+          enable_tls
+        end
       end
 
-      deliverable = @deliverable.new
-      deliverable.from = Mail::FromField.new('marcel@amont.com')
-      deliverable.to = Mail::ToField.new('marcel@amont.com')
-      deliverable.encoded = 'really invalid RFC2822'
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
 
-      lambda{deliverable.deliver!}.should_not raise_error(TypeError)      
+      doing { mail.deliver! }.should_not raise_error(TypeError)
     end
     
   end

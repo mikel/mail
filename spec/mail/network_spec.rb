@@ -5,40 +5,63 @@ require 'mail'
 
 describe "Mail" do
 
+  it "should provide a default network configuration without any setup" do
+    config = Mail.defaults
+    config.smtp.host.should_not be_blank
+    config.smtp.port.should_not be_blank
+  end
+  
   it "should accept a default POP3/SMTP configuration" do
     config = Mail.defaults do
-      smtp 'smtp.myhost.com'
-      pop3 'pop.myhost.com'
-      user 'roger'
-      pass 'moore'
-      disable_tls
+      smtp 'smtp.myhost.com' do
+        disable_tls
+      end
       
-      smtp.should == ['smtp.myhost.com', 25]
-      pop3.should == ['pop.myhost.com', 110]
-      user.should == 'roger'
-      pass.should == 'moore'
-      tls?.should == false
+      pop3 'pop.myhost.com' do
+        user 'roger'
+        pass 'moore'
+        disable_tls
+      end
       
-      enable_tls
+      smtp.host.should == 'smtp.myhost.com'
+      smtp.port.should == 25
+      smtp.tls?.should == false
+      pop3.host.should == 'pop.myhost.com'
+      pop3.port.should == 110
+      pop3.user.should == 'roger'
+      pop3.pass.should == 'moore'
+      pop3.tls?.should == false
       
-      tls?.should == true
+      pop3 do 
+        enable_tls
+      end
+      
+      smtp do 
+        enable_tls
+      end
+      
+      smtp.host.should == 'smtp.myhost.com'
+      smtp.port.should == 25
+      smtp.tls?.should == true
+      pop3.host.should == 'pop.myhost.com'
+      pop3.port.should == 110
+      pop3.user.should == 'roger'
+      pop3.pass.should == 'moore'
+      pop3.tls?.should == true
     end
-    
-    config.smtp.should == ['smtp.myhost.com', 25]
-    config.pop3.should == ['pop.myhost.com', 110]
-    config.user.should == 'roger'
-    config.pass.should == 'moore'
-    config.tls?.should == true
+
   end
   
   it "should send emails with SMTP" do
     config = Mail.defaults do
-      smtp 'smtp.mockup.com', 587
-      enable_tls
+      smtp 'smtp.mockup.com', 587 do
+        enable_tls
+      end
     end
     
-    config.smtp.should == ['smtp.mockup.com', 587]
-    config.tls?.should == true
+    config.smtp.host.should == 'smtp.mockup.com'
+    config.smtp.port.should == 587
+    config.smtp.tls?.should == true
     
     message = Mail.deliver do
       from 'roger@moore.com'
@@ -55,8 +78,9 @@ describe "Mail" do
   
   it "should retrieve all emails via POP3" do
     config = Mail.defaults do
-      pop3 'pop.mockup.com'
-      enable_tls
+      pop3 'pop.mockup.com' do
+        enable_tls
+      end
     end
     
     messages = Mail.get_all_mail
@@ -64,7 +88,6 @@ describe "Mail" do
     messages.should_not be_empty
     for message in messages
       message.should be_instance_of(Mail::Message)
-      message.raw_source.should =~ /test./
     end
   end
   
