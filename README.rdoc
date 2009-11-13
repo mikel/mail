@@ -445,6 +445,33 @@ Of course... Mail will round trip an attachment as well
   @round_tripped_mail.attachments.length #=> 1
   @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 
+== Using Mail with Testing or Spec'ing Libraries
+
+If mail is part of your system, you'll need a way to test it without actually
+sending emails, the TestMailer can do this for you.
+
+  require 'mail'
+  => true
+  Mail.defaults do
+    delivery_method(:test)
+  end
+  => #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
+  Mail.deliveries
+  => []
+  Mail.deliver do
+    to 'mikel@me.com'
+    from 'you@you.com'
+    subject 'testing'
+    body 'hello'
+  end
+  => #<Mail::Message:0x19284ec ...
+  Mail.deliveries.length
+  => 1
+  Mail.deliveries.first
+  => #<Mail::Message:0x19284ec ...
+  Mail.deliveries.clear
+  => []
+
 == Excerpts from TREC Spam Corpus 2005
 
 The spec fixture files in spec/fixtures/emails/from_trec_2005 are from the 
