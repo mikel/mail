@@ -42,6 +42,20 @@ describe Mail::CommonAddress do
       field.group_addresses.should == ['test2@lindsaar.net', 'me@lindsaar.net']
     end
 
+    it "should handle initializing as an empty string" do
+      field = Mail::ToField.new("To", "")
+      field.addresses.should == []
+      field.value = 'mikel@test.lindsaar.net'
+      field.addresses.should == ['mikel@test.lindsaar.net']
+    end
+    
+    it "should encode to an empty string if it has no addresses or groups" do
+      field = Mail::ToField.new("To", "")
+      field.encoded.should == ''
+      field.value = 'mikel@test.lindsaar.net'
+      field.encoded.should == "To: mikel@test.lindsaar.net\r\n"
+    end
+
   end
   
   describe "encoding and decoding fields" do

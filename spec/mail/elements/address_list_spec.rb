@@ -10,8 +10,13 @@ describe Mail::AddressList do
     end
 
     it "should raise an error if the input is useless" do
-      parse_text = nil
+      parse_text = '@@@@@@'
       doing { Mail::AddressList.new(parse_text) }.should raise_error
+    end
+    
+    it "should not raise an error if the input is just blank" do
+      parse_text = nil
+      doing { Mail::AddressList.new(parse_text) }.should_not raise_error
     end
 
     it "should raise an error if the input is useless" do

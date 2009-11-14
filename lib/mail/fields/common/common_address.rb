@@ -47,7 +47,7 @@ module Mail
       private
       
       def do_encode(field_name)
-        return '' unless value
+        return '' if value.blank?
         address_array = tree.addresses.reject { |a| group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
         address_text  = address_array.join(", \r\n\t")
         group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\t")};" }
@@ -57,6 +57,7 @@ module Mail
       end
 
       def do_decode
+        return nil if value.blank?
         address_array = tree.addresses.reject { |a| group_addresses.include?(a.decoded) }.map { |a| a.decoded }
         address_text  = address_array.join(", ")
         group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }

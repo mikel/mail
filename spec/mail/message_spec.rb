@@ -1432,6 +1432,13 @@ describe Mail::Message do
       end
       mail.destinations.length.should == 1
     end
+    
+    it "should be able to encode with only one destination" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+      end
+      mail.encoded
+    end
 
   end
   

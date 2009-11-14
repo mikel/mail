@@ -18,6 +18,10 @@ module Mail
     #  a.addresses    #=> [#<Mail::Address:14943130 Address: |ada@test.lindsaar.net...
     #  a.group_names  #=> ["My Group"]
     def initialize(string)
+      if string.blank?
+        @address_nodes = []
+        return self
+      end
       parser = Mail::AddressListsParser.new
       if tree = parser.parse(string)
         @address_nodes = tree.addresses
