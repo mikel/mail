@@ -1,3 +1,8 @@
+== Wed Nov 18 04:26:21 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Changed Encodings.param_encode(string) so it intelligently encodes and quotes needed
+  items and leaves plain, no special char, US-ASCII alone unquoted.
+
 == Sat Nov 14 08:20:21 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Resolved Issue #10 - empty/nil cc/bcc field causes exception (Mail::Field::ParseError)

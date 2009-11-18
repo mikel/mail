@@ -263,11 +263,29 @@ describe Mail::Encodings do
     end
     
     it "should encode a string" do
-      string = "This is even more "
+      string = "This is  あ string"
       if RUBY_VERSION >= '1.9'
-        Mail::Encodings.param_encode(string).should == "utf-8'en'This%20is%20even%20more%20"
+        Mail::Encodings.param_encode(string).should == "utf-8'en'This%20is%20%20%E3%81%82%20string"
       else
-        Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20even%20more%20"
+        Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20%20%E3%81%82%20string"
+      end
+    end
+
+    it "should just quote US-ASCII with spaces" do
+      string = "This is even more"
+      if RUBY_VERSION >= '1.9'
+        Mail::Encodings.param_encode(string).should == '"This is even more"'
+      else
+        Mail::Encodings.param_encode(string).should == '"This is even more"'
+      end
+    end
+
+    it "should leave US-ASCII without spaces alone" do
+      string = "fun"
+      if RUBY_VERSION >= '1.9'
+        Mail::Encodings.param_encode(string).should == 'fun'
+      else
+        Mail::Encodings.param_encode(string).should == 'fun'
       end
     end
     
