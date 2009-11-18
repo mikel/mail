@@ -25,4 +25,9 @@ describe Mail::Configuration do
     
   end
 
+  it "should configure sendmail" do
+    Mail.defaults { sendmail "/usr/bin/sendmail" }
+    Mail.defaults.delivery_method.should == Mail::Sendmail
+    Mail.defaults.sendmail.path.should == "/usr/bin/sendmail"
+  end
 end

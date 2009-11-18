@@ -75,6 +75,13 @@ module Mail
       end
       set_settings(Mail::POP3, host_array, &block)
     end
+
+    def sendmail(sendmail_path = nil)
+      delivery_method :sendmail
+      set_settings(Mail::Sendmail) do
+        path sendmail_path
+      end
+    end
     
     # Allows you to define the retriever method for mail, defaults to POP3
     # 
