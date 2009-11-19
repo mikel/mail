@@ -1,7 +1,5 @@
-require 'rake'
 require 'rake/rdoctask'
 require 'rake/testtask'
-require 'rubygems'
 require 'spec/rake/spectask'
 require 'cucumber/rake/task'
 
@@ -12,7 +10,6 @@ Cucumber::Rake::Task.new do |t|
 end
 
 Spec::Rake::SpecTask.new(:rcov) do |t|
-  gem 'relevance-rcov', '>= 0.8.4.1'
   t.spec_files = FileList['**/test/**/tc_*.rb', '**/spec/**/*_spec.rb']
   t.rcov = true
   t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
