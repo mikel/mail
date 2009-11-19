@@ -9,10 +9,12 @@ describe "Deliverable" do
 
     before(:each) do
       config = Mail.defaults do
+        delivery_method :smtp
         smtp 'smtp.mockup.com', 587 do
           enable_tls
         end
       end
+      MockSMTP.clear_deliveries
     end
 
     it "should send emails from given settings" do

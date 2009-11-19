@@ -46,6 +46,7 @@ end
 
 # Original mockup from ActionMailer
 class MockSMTP
+  
   def self.deliveries
     @@deliveries
   end
@@ -60,6 +61,10 @@ class MockSMTP
 
   def start(*args)
     yield self
+  end
+  
+  def self.clear_deliveries
+    @@deliveries = []
   end
   
   # in the standard lib: net/smtp.rb line 577

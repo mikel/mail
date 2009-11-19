@@ -4,6 +4,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require 'mail'
 
 describe "Mail" do
+  
+  before(:each) do
+    # Set the delivery method to test as the default
+    MockSMTP.clear_deliveries
+  end
 
   it "should provide a default network configuration without any setup" do
     config = Mail.defaults
@@ -13,6 +18,7 @@ describe "Mail" do
   
   it "should accept a default POP3/SMTP configuration" do
     config = Mail.defaults do
+      delivery_method :smtp
       smtp 'smtp.myhost.com' do
         disable_tls
       end
@@ -54,6 +60,7 @@ describe "Mail" do
   
   it "should send emails with SMTP" do
     config = Mail.defaults do
+      delivery_method :smtp
       smtp 'smtp.mockup.com', 587 do
         enable_tls
       end
