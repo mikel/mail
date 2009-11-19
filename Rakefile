@@ -7,7 +7,7 @@ require 'bundler'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "1.2.6.pre0"
+  s.version     = "1.2.6"
   s.author      = "Mike Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
