@@ -1,3 +1,9 @@
+== Thu Nov 19 04:16:10 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added sendmail support from (Simon Rozet)
+* Changed to bundler for gem dependancies and moved gem generation into rakefile (Simon Rozet)
+* Bumped to 1.2.6 for sendmail support
+
 == Wed Nov 18 04:26:21 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Changed Encodings.param_encode(string) so it intelligently encodes and quotes needed
