@@ -10,18 +10,18 @@ Cucumber::Rake::Task.new do |t|
 end
 
 Spec::Rake::SpecTask.new(:rcov) do |t|
-  t.spec_files = FileList['**/test/**/tc_*.rb', '**/spec/**/*_spec.rb']
+  t.spec_files = FileList['test/**/tc_*.rb', 'spec/**/*_spec.rb']
   t.rcov = true
   t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
 end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = FileList['**/spec/**/*_spec.rb']
+  t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
-  t.pattern = '**/test/**/tc_*.rb'
+  t.pattern = 'test/**/tc_*.rb'
   t.verbose = true
   t.warning = false
 end
