@@ -2,3 +2,6 @@
 coverage
 rdoc
 gems
+vendor
+bin
+pkg
