@@ -666,6 +666,12 @@ describe Mail::Message do
           mail = Mail.new("Content-Type: text/plain; charset=utf-8")
           mail.charset.should == 'utf-8'
         end
+        
+        it "should allow you to set the charset" do
+          mail = Mail.new
+          mail.charset = 'utf-8'
+          mail.charset.should == 'utf-8'
+        end
 
         it "should return the main content-type" do
           mail = Mail.new("Content-Type: text/plain")

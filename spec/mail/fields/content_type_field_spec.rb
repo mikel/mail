@@ -116,6 +116,11 @@ describe Mail::ContentTypeField do
       c.content_type.should == 'text/plain'
     end
 
+    it "should return a content_type for the :string method" do
+      c = Mail::ContentTypeField.new('text/plain')
+      c.string.should == 'text/plain'
+    end
+
     it "should return a main_type" do
       c = Mail::ContentTypeField.new('text/plain')
       c.main_type.should == 'text'

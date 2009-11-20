@@ -41,9 +41,11 @@ module Mail
       @sub_type ||= element.sub_type
     end
     
-    def content_type
+    def string
       "#{main_type}/#{sub_type}"
     end
+    
+    alias :content_type :string
     
     def parameters
       unless @parameters

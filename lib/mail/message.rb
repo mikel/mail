@@ -501,6 +501,16 @@ module Mail
     def charset
       content_type ? content_type.parameters['charset'] : nil
     end
+
+    # Sets the charset to the supplied value.  Will set the content type to text/plain if
+    # it does not already exist
+    def charset=(value)
+      if content_type
+        content_type.parameters['charset'] = value
+      else
+        self.content_type ['text', 'plain', {'charset' => value}]
+      end
+    end
     
     # Returns the main content type
     def main_type
