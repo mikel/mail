@@ -71,8 +71,8 @@ describe Mail::CommonAddress do
     end
     
     it "should allow us to encode an address field" do
-      field = Mail::BccField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
-      field.encoded.should == "Bcc: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+      field = Mail::CcField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.encoded.should == "Cc: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
     end
 
     it "should allow us to decode an address field" do

@@ -37,8 +37,9 @@ module Mail
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
+    # Bcc field should never be :encoded
     def encoded
-      do_encode(CAPITALIZED_FIELD)
+      ''
     end
     
     def decoded

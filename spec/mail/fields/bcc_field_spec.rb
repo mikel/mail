@@ -79,9 +79,9 @@ describe Mail::BccField do
       t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
-    it "should return the encoded line" do
+    it "should return nothing on encoded as Bcc should not be in the mail" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Bcc: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
+      t.encoded.should == ""
     end
     
     it "should return the decoded line" do
