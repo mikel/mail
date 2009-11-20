@@ -587,6 +587,13 @@ describe Mail::ContentTypeField do
       c.content_type.should == 'text/html'
       c.parameters['charset'].should == 'UTF-8'
     end
+    
+    it "should allow many parameters to be passed in" do
+      c = Mail::ContentTypeField.new(['text', 'html', {"format"=>"flowed", "charset"=>"utf-8"}])
+      c.content_type.should == 'text/html'
+      c.parameters['charset'].should == 'utf-8'
+      c.parameters['format'].should == 'flowed'
+    end
   end
 
 end
