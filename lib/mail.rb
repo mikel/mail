@@ -7,6 +7,12 @@ module Mail # :doc:
   require 'treetop'
   gem 'activesupport', ">= 2.3"
   require 'active_support'
+  begin
+    require 'active_support/hash_with_indifferent_access'
+  rescue LoadError
+    HashWithIndifferentAccess # Ensure this is available in any case
+  end
+  
   require 'uri'
   require 'net/smtp'
   require 'mime/types'
