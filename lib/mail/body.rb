@@ -48,7 +48,7 @@ module Mail
         encoded_parts = parts.map { |p| p.to_s }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
-        raw_source
+        raw_source.to_crlf
       end
     end
     
@@ -56,7 +56,7 @@ module Mail
     
     # Returns the raw source right now.  Need to implement
     def decoded
-      raw_source
+      raw_source.to_lf
     end
     
     def charset

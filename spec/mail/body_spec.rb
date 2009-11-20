@@ -66,7 +66,19 @@ describe Mail::Body do
       body.encoding = 'base64'
       body.encoding.should == 'base64'
     end
+    
+    it "should convert all new lines to crlf" do
+      body = Mail::Body.new("This has \n various \r new \r\n lines")
+      body.encoded.should == "This has \r\n various \r\n new \r\n lines"
+    end
 
+  end
+
+  describe "decoding" do
+    it "should convert all new lines to crlf" do
+      body = Mail::Body.new("This has \n various \r new \r\n lines")
+      body.decoded.should == "This has \n various \n new \n lines"
+    end
   end
 
   describe "splitting up a multipart document" do
