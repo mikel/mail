@@ -64,6 +64,8 @@ module Mail
       end
     end
     
+    alias :read :decoded
+    
     def mime_type
       @mime_type.to_s
     end

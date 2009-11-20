@@ -19,6 +19,16 @@ describe "creating an attachment" do
     end
   end
   
+  it "should handle alias :read to :decoded" do
+    file_data = File.read(filename = fixture('attachments', 'test.png'))
+    att = Mail::Attachment.new(:filename => fixture('attachments', 'test.png'))
+    if RUBY_VERSION >= '1.9'
+      att.read.should == file_data.force_encoding(Encoding::BINARY)
+    else
+      att.read.should == file_data
+    end
+  end
+  
   it "should work out it's filename" do
     att = Mail::Attachment.new(:filename => fixture('attachments', 'test.png'))
     att.filename.should == 'test.png'
