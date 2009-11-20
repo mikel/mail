@@ -261,6 +261,30 @@ module Mail
     def destinations
       [to, cc, bcc].map { |f| f.addresses if f }.compact.flatten
     end
+
+    # Returns an array of addresses (the encoded value) in the From field,
+    # if no From field, returns an empty array
+    def from_addrs
+      from ? from.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the To field,
+    # if no To field, returns an empty array
+    def to_addrs
+      to ? to.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the Cc field,
+    # if no Cc field, returns an empty array
+    def cc_addrs
+      cc ? cc.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the Bcc field,
+    # if no Bcc field, returns an empty array
+    def bcc_addrs
+      bcc ? bcc.formatted.compact.flatten : []
+    end
     
     # Sets the subject field in the message header.
     # 

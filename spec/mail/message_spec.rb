@@ -1426,6 +1426,58 @@ describe Mail::Message do
       mail.destinations.length.should == 3
     end
 
+    it "should have a from_addrs method" do
+      mail = Mail.new do
+        from 'mikel@test.lindsaar.net'
+      end
+      mail.from_addrs.length.should == 1
+    end
+
+    it "should have a from_addrs method that is empty if nil" do
+      mail = Mail.new do
+      end
+      mail.from_addrs.length.should == 0
+    end
+
+    it "should have a to_addrs method" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+      end
+      mail.to_addrs.length.should == 1
+    end
+
+    it "should have a to_addrs method that is empty if nil" do
+      mail = Mail.new do
+      end
+      mail.to_addrs.length.should == 0
+    end
+
+    it "should have a cc_addrs method" do
+      mail = Mail.new do
+        cc 'bob@test.lindsaar.net'
+      end
+      mail.cc_addrs.length.should == 1
+    end
+
+    it "should have a cc_addrs method that is empty if nil" do
+      mail = Mail.new do
+      end
+      mail.cc_addrs.length.should == 0
+    end
+
+    it "should have a bcc_addrs method" do
+      mail = Mail.new do
+        bcc 'sam@test.lindsaar.net'
+      end
+      mail.bcc_addrs.length.should == 1
+    end
+
+    it "should have a bcc_addrs method that is empty if nil" do
+      mail = Mail.new do
+      end
+      mail.bcc_addrs.length.should == 0
+    end
+
     it "should give destinations even if some of the fields are blank" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'

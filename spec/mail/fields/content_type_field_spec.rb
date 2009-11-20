@@ -581,4 +581,12 @@ describe Mail::ContentTypeField do
 
   end
 
+  describe "initializing with an array" do
+    it "should initialize with an array" do
+      c = Mail::ContentTypeField.new(['text', 'html', {'charset' => 'UTF-8'}])
+      c.content_type.should == 'text/html'
+      c.parameters['charset'].should == 'UTF-8'
+    end
+  end
+
 end
