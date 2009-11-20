@@ -6,7 +6,7 @@ module Mail # :doc:
   gem "treetop", ">= 1.4"
   require 'treetop'
   gem 'activesupport', ">= 2.3"
-  require 'activesupport'
+  require 'active_support'
   require 'uri'
   require 'net/smtp'
   require 'mime/types'

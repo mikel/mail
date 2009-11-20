@@ -6,9 +6,7 @@ module Mail
   # have the name*0="blah", name*1="bleh" keys, and will just return
   # a single key called name="blahbleh" and do any required un-encoding
   # to make that happen
-  class ParameterHash < Hash
-
-    include Enumerable
+  class ParameterHash < HashWithIndifferentAccess
 
     def [](key_name)
       pairs = select { |k,v| k =~ /^#{key_name}\*/ }

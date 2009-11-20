@@ -136,7 +136,7 @@ describe Mail::ContentTypeField do
       c.parameters.should == {'charset' => 'US-ASCII'}
     end
     
-    it "should return multipl parameters as a hash" do
+    it "should return multiple parameters as a hash" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
       c.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
     end
@@ -144,6 +144,12 @@ describe Mail::ContentTypeField do
     it "should return boundry parameters" do
       c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple-Mail-13-196941151')
       c.parameters.should == {'boundary' => 'Apple-Mail-13-196941151'}
+    end
+
+    it "should be indifferent with the access" do
+      c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple')
+      c.parameters[:boundary].should == "Apple"
+      c.parameters['boundary'].should == "Apple"
     end
   
   end

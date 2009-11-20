@@ -10,6 +10,15 @@ describe Mail::ParameterHash do
     hash.values.should == ['one', 'two']
   end
 
+  it "should return the values in the hash regardless of symbol or string" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value1' => 'one', 'value2' => 'two'})
+    hash['value1'].should == 'one'
+    hash['value2'].should == 'two'
+    hash[:value1].should == 'one'
+    hash[:value2].should == 'two'
+  end
+
   it "should return the correct value if they are not encoded" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value1' => 'one', 'value2' => 'two'})
