@@ -1,8 +1,8 @@
 source "http://gemcutter.org"
 
 gem "tlsmail"
-gem "treetop"
-gem "activesupport"
+gem "treetop", ">= 1.4"
+gem 'activesupport', ">= 2.3"
 gem "mime-types"
 
 only :test do

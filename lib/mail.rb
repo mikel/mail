@@ -3,15 +3,15 @@ module Mail # :doc:
 
   require 'date'
   
-  gem "treetop", ">= 1.4"
   require 'treetop'
-  gem 'activesupport', ">= 2.3"
   require 'active_support'
-  begin
-    require 'active_support/hash_with_indifferent_access'
-  rescue LoadError
-    HashWithIndifferentAccess # Ensure this is available in any case
-  end
+  require 'active_support'
+  
+  # Have to handle ActiveSupport 2.3 and 3.0
+  # Following two lines make sure that HashWithIndifferentAccess is available
+  # regardless of having activesupport 3 or 2.3 loaded
+  require 'active_support/core_ext/hash/indifferent_access'
+  HashWithIndifferentAccess 
   
   require 'uri'
   require 'net/smtp'

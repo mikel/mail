@@ -10,6 +10,9 @@ unless defined?(SPEC_ROOT)
 end
 
 require 'rubygems'
+gem "treetop", ">= 1.4"
+gem 'activesupport', ">= 2.3"
+
 require 'ruby-debug' if RUBY_VERSION < '1.9'
 require 'spec'
 require 'treetop'
