@@ -12,6 +12,14 @@ describe Mail::Part do
     part.content_id.should_not be_nil
   end
   
+  it "should preserve any content id that you put into it" do
+    part = Mail::Part.new do
+      content_id "<thisis@acontentid>"
+      body "This is Text"
+    end
+    part.content_id.value.should == "<thisis@acontentid>"
+  end
+  
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do
       part =<<PARTEND
