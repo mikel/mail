@@ -86,6 +86,12 @@ describe Mail::Body do
       body.decoded.should == "The=3Dbody"
     end
 
+    it "should change return the raw text if it does not recognise the encoding" do
+      body = Mail::Body.new("The=3Dbody")
+      body.encoding = '7bit'
+      body.decoded.should == "The=3Dbody"
+    end
+
     it "should change a body on decode if given an encoding type to decode" do
       body = Mail::Body.new("The=3Dbody")
       body.encoding = 'quoted-printable'
