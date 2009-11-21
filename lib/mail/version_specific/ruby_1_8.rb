@@ -45,7 +45,7 @@ module Mail
     end
     
     def Ruby18.b_value_decode(str)
-      match = str.match(/\=\?(.+)?\?B\?(.+)?\?\=/)
+      match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/)
       if match
         encoding = match[1]
         str = Ruby18.decode_base64(match[2])
@@ -61,7 +61,7 @@ module Mail
     end
     
     def Ruby18.q_value_decode(str)
-      match = str.match(/\=\?(.+)?\?Q\?(.+)?\?\=/)
+      match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/)
       if match
         encoding = match[1]
         str = Encodings::QuotedPrintable.decode(match[2])

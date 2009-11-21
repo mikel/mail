@@ -1408,7 +1408,37 @@ describe Mail::Message do
       mail = Mail.new
       doing { mail.decoded }.should raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
+    
+    describe "decoding bodies" do
 
+      it "should not change a body on decode if not given an encoding type to decode" do
+        mail = Mail.new do
+          body "The=3Dbody"
+        end
+        mail.body.decoded.should == "The=3Dbody"
+        mail.body.encoded.should == "The=3Dbody"
+      end
+
+      it "should change a body on decode if given an encoding type to decode" do
+        mail = Mail.new do
+          content_transfer_encoding 'quoted-printable'
+          body "The=3Dbody"
+        end
+        mail.body.decoded.should == "The=body"
+        mail.body.encoded.should == "The=3Dbody"
+      end
+
+      it "should change a body on decode if given an encoding type to decode" do
+        mail = Mail.new do
+          content_transfer_encoding 'base64'
+          body "VGhlIGJvZHk=\n"
+        end
+        mail.body.decoded.should == "The body"
+        mail.body.encoded.should == "VGhlIGJvZHk=\r\n"
+      end
+
+    end
+    
   end
   
   describe "helper methods" do

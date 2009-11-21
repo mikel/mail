@@ -75,10 +75,29 @@ describe Mail::Body do
   end
 
   describe "decoding" do
+    
     it "should convert all new lines to crlf" do
       body = Mail::Body.new("This has \n various \r new \r\n lines")
       body.decoded.should == "This has \n various \n new \n lines"
     end
+    
+    it "should not change a body on decode if not given an encoding type to decode" do
+      body = Mail::Body.new("The=3Dbody")
+      body.decoded.should == "The=3Dbody"
+    end
+
+    it "should change a body on decode if given an encoding type to decode" do
+      body = Mail::Body.new("The=3Dbody")
+      body.encoding = 'quoted-printable'
+      body.decoded.should == "The=body"
+    end
+
+    it "should change a body on decode if given an encoding type to decode" do
+      body = Mail::Body.new("VGhlIGJvZHk=\n")
+      body.encoding = 'base64'
+      body.decoded.should == "The body"
+    end
+
   end
 
   describe "splitting up a multipart document" do

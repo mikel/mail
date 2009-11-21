@@ -56,7 +56,13 @@ module Mail
     
     # Returns the raw source right now.  Need to implement
     def decoded
-      raw_source.to_lf
+      if encoding.nil?
+        raw_source.to_lf
+      else
+        if Encodings.defined?(encoding)
+          Encodings.get_encoding(encoding).decode(raw_source)
+        end
+      end
     end
     
     def charset

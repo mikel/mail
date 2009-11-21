@@ -183,6 +183,7 @@ module Mail
       else
         @body = Mail::Body.new(value)
       end
+      add_encoding_to_body
     end
 
     # Returns the body of the message object. Or, if passed
@@ -196,7 +197,12 @@ module Mail
     #  mail.body 'This is another body'
     #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is anothe...
     def body(value = nil)
-      value ? self.body = value : @body
+      if value
+        self.body = value
+        add_encoding_to_body
+      else
+        @body
+      end
     end
     
     # Sets the to filed of the message header.
@@ -767,6 +773,12 @@ module Mail
 
     def separate_parts
       body.split!(boundary)
+    end
+    
+    def add_encoding_to_body
+      unless content_transfer_encoding.blank?
+        body.encoding = content_transfer_encoding.decoded
+      end
     end
     
     def add_required_fields
