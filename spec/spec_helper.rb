@@ -9,20 +9,22 @@ unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
 end
 
-require 'rubygems'
-gem "treetop", ">= 1.4"
-gem 'activesupport', ">= 2.3"
+environment = File.expand_path('../../vendor/gems/environment')
+if File.exist?("#{environment}.rb")
+  require environment
+else
+  require 'rubygems'
+  gem "treetop", ">= 1.4"
+  gem 'activesupport', ">= 2.3"
 
-begin
-  require 'ruby-debug' if RUBY_VERSION < '1.9'
-rescue LoadError
-  # Skip debugger if unavailable.
+  begin
+    require 'ruby-debug' if RUBY_VERSION < '1.9'
+  rescue LoadError
+    # Skip debugger if unavailable.
+  end
+  require 'spec'
+  require 'treetop'
 end
-require 'spec'
-require 'treetop'
-
-$:.unshift "#{File.dirname(__FILE__)}/mail"
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
