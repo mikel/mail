@@ -47,6 +47,8 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.warning = true
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(--backtrace --diff --color)
+  t.libs << "#{File.dirname(__FILE__)}/spec"
+  t.libs << "#{File.dirname(__FILE__)}/spec/mail"
 end
 
 Rake::TestTask.new(:test) do |t|
