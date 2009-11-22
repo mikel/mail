@@ -13,7 +13,11 @@ require 'rubygems'
 gem "treetop", ">= 1.4"
 gem 'activesupport', ">= 2.3"
 
-require 'ruby-debug' if RUBY_VERSION < '1.9'
+begin
+  require 'ruby-debug' if RUBY_VERSION < '1.9'
+rescue LoadError
+  # Skip debugger if unavailable.
+end
 require 'spec'
 require 'treetop'
 
