@@ -116,6 +116,7 @@ module Mail
         output
       elsif original_encoding && to_encoding
         begin
+          require 'iconv'
           Iconv.iconv(to_encoding, original_encoding, output).first
         rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
