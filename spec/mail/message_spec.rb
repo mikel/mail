@@ -647,8 +647,8 @@ describe Mail::Message do
             p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>"
           end
         end
-        message.parts.first.parts.first.body.decoded.should == "Nothing to see here."
-        message.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>"
+        message.parts.first.parts[0].body.decoded.should == "Nothing to see here."
+        message.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>"
         message.encoded.should match(%r{Nothing to see here\.})
         message.encoded.should match(%r{<b>test</b> HTML<br/>})
       end
@@ -1509,11 +1509,12 @@ describe Mail::Message do
   describe "helper methods" do
     
     it "should implement the spaceship operator on the date field" do
+      now = Time.now
       mail1 = Mail.new do
-        date 1.year.ago
+        date(now - 1)
       end
       mail2 = Mail.new do
-        date Time.now
+        date(now)
       end
       [mail2, mail1].sort.should == [mail2, mail1]
     end
@@ -1612,10 +1613,10 @@ describe Mail::Message do
 
       mail.parts.first.should be_multipart
       mail.parts.first.parts.length.should == 2
-      mail.parts.first.parts.first.content_type.string.should == "text/plain"
-      mail.parts.first.parts.first.body.decoded.should == "test text\nline #2"
-      mail.parts.first.parts.second.content_type.string.should == "text/html"
-      mail.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
+      mail.parts.first.parts[0].content_type.string.should == "text/plain"
+      mail.parts.first.parts[0].body.decoded.should == "test text\nline #2"
+      mail.parts.first.parts[1].content_type.string.should == "text/html"
+      mail.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
     end
   end
   
