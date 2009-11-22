@@ -64,6 +64,11 @@ describe Mail::CcField do
       t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
+    it "should return the encoded line for one address" do
+      t = Mail::CcField.new('sam@me.com')
+      t.encoded.should == "Cc: sam@me.com\r\n"
+    end
+    
     it "should return the encoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       t.encoded.should == "Cc: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"

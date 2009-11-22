@@ -722,16 +722,28 @@ describe Mail::Message do
 
       end
       
+      describe "multipart emails" do
+        it "should add a boundary if there is none defined and a part is added" do
+          mail = Mail.new do
+            part('This is a part')
+            part('This is another part')
+          end
+          mail.boundary.should_not be_nil
+        end
+        
+        it "should add a boundary for an attachment" do
+          mail = Mail.new do
+            add_attachment :filename => 'test.png', :data => "2938492384923849"
+          end
+          mail.boundary.should_not be_nil
+        end
+      end
+      
       describe "multipart/alternative emails" do
         
         it "should know what it's boundary is if it is a multipart document" do
           mail = Mail.new('Content-Type: multitype/mixed; boundary="--==Boundary"')
           mail.boundary.should == "--==Boundary"
-        end
-        
-        it "should return nil if there is no boundary defined" do
-          mail = Mail.new('Content-Type: multitype/mixed')
-          mail.boundary.should == nil
         end
         
         it "should return nil if there is no content-type defined" do
@@ -951,6 +963,7 @@ describe Mail::Message do
       end
     
       describe "adding a file attachment" do
+
         it "should allow you to just call 'add_attachment'" do
           mail = Mail::Message.new
           mail.add_file(fixture('attachments', 'test.png'))
@@ -1092,6 +1105,17 @@ describe Mail::Message do
           m.parts.length.should == 2
           m.parts.first.content_type.content_type.should == 'image/png'
           m.parts.last.content_type.content_type.should == 'text/plain'
+        end
+
+        it "should add the filename to the content_disposition" do
+          m = Mail.new do 
+            part({:content_type => "image/jpeg",
+                  :content_disposition => "attachment",
+                  :data => "123456789",
+                  :content_transfer_encoding => "base64",
+                  :filename => fixture('attachments', 'test.png')})
+          end
+          m.parts.first.content_disposition.filename.should == 'test.png'
         end
 
       end
@@ -1573,7 +1597,6 @@ describe Mail::Message do
       mail.parts.first.parts.first.body.decoded.should == "test text\nline #2"
       mail.parts.first.parts.second.content_type.string.should == "text/html"
       mail.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
-      puts mail.encoded
     end
   end
   

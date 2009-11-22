@@ -107,7 +107,16 @@ describe "creating an attachment" do
                                :encoding => 'weird_encoding')
     doing { att.decoded }.should raise_error(Mail::Attachment::UnknownEncodingType)
   end
-  
+    
+  it "should not put the whole path into the filename" do
+    att = Mail::Attachment.new({:content_type=>"image/jpeg",
+                                :content_disposition=>"attachment",
+                                :data=>"123456789",
+                                :content_transfer_encoding=>"base64",
+                                :filename=>fixture('attachments', 'test.png')})
+    att.filename.should == 'test.png'
+  end
+
 end
 
 describe "reading emails with attachments" do

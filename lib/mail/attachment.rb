@@ -36,7 +36,7 @@ module Mail
     def initialize(options_hash)
       case
       when options_hash[:data]
-        @filename = options_hash[:filename]
+        @filename = File.basename(options_hash[:filename])
         add_file(options_hash[:data], options_hash[:encoding])
       when options_hash[:filename]
         @filename = File.basename(options_hash[:filename])

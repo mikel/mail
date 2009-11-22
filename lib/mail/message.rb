@@ -332,6 +332,8 @@ module Mail
     def []=(name, value)
       if name.to_s == 'body'
         self.body = value
+      elsif name.to_s =~ /content[-_]type/i
+        header[underscoreize(name)] = value
       else
         header[underscoreize(name)] = value
       end
@@ -617,6 +619,7 @@ module Mail
     def html_part(&block)
       if block_given?
         @html_part = Mail::Part.new(&block)
+        add_multipart_alternate_header
         add_part(@html_part)
       else
         @html_part
@@ -627,6 +630,7 @@ module Mail
     def text_part(&block)
       if block_given?
         @text_part = Mail::Part.new(&block)
+        add_multipart_alternate_header
         add_part(@text_part)
       else
         @text_part
@@ -642,6 +646,7 @@ module Mail
       else
         @html_part = Mail::Part.new('Content-Type: text/html;')
       end
+      add_multipart_alternate_header
       add_part(@html_part)
     end
     
@@ -654,12 +659,13 @@ module Mail
       else
         @text_part = Mail::Part.new('Content-Type: text/plain;')
       end
+      add_multipart_alternate_header
       add_part(@text_part)
     end
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      add_multipart_alternate_header
+      add_boundary
       self.body << part
     end
 
@@ -822,30 +828,35 @@ module Mail
     end
     
     def add_multipart_alternate_header
-      if html_part && text_part
-        unless header['content-type']
-          header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
-          body.boundary = boundary
-        end
+      header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
+      body.boundary = boundary
+    end
+    
+    def add_boundary
+      unless body.boundary && boundary
+        header['content-type'] = 'multipart/mixed' unless header['content-type']
+        header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
+        body.boundary = boundary
       end
     end
     
     def add_multipart_mixed_header
       unless header['content-type']
         header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
-        
         body.boundary = boundary
       end
     end
     
     def init_with_hash(hash)
+      passed_in_options = hash
       self.raw_source = ''
       @header = Mail::Header.new
       @body = Mail::Body.new
       hash.each_pair do |k,v|
         next if k.to_sym == :data
         if k.to_sym == :filename
-          add_attachment(hash)
+          add_attachment(passed_in_options)
+          break
         elsif k == :headers
           self.headers(v)
         else
@@ -856,9 +867,13 @@ module Mail
     
     def add_attachment(options_hash)
       @attachment = Mail::Attachment.new(options_hash)
-      self.content_type = "#{attachment.mime_type}; filename=\"#{attachment.filename}\""
+      mime_type = options_hash[:content_type] || attachment.mime_type
+      self.content_type = "#{mime_type}; filename=\"#{attachment.filename}\""
       self.content_transfer_encoding = "Base64"
-      self.content_disposition = "attachment; filename=\"#{attachment.filename}\""
+
+      disposition = options_hash[:content_disposition] || "attachment"
+      self.content_disposition = "#{disposition}; filename=\"#{attachment.filename}\""
+      add_boundary
       self.body = attachment.encoded
     end
     
