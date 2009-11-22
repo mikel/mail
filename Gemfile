@@ -2,7 +2,7 @@ source "http://gemcutter.org"
 
 gem "tlsmail"
 gem "treetop", ">= 1.4"
-gem 'activesupport', ">= 2.3"
+gem 'activesupport', ">= 2.3.4"
 gem "mime-types"
 
 only :test do
