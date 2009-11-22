@@ -1,3 +1,8 @@
+environment = File.expand_path('../../vendor/gems/environment')
+if File.exist?("#{environment}.rb")
+  require environment
+end
+
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 require 'rake/testtask'
