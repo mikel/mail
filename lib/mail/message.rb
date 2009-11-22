@@ -149,6 +149,13 @@ module Mail
       value ? self.header = value : @header
     end
     
+    # Provides a way to set custom headers, by passing in a hash
+    def headers(hash = {})
+      hash.each_pair do |k,v|
+        header[k] = v
+      end
+    end
+    
     # Sets the body object of the message object.
     # 
     # Example:
@@ -661,8 +668,8 @@ module Mail
     #  end
     def part(params = {})
       new_part = Part.new(params)
-      add_part(new_part)
       yield new_part if block_given?
+      add_part(new_part)
     end
     
     # Adds a file to the message.  You have two options with this method, you can
@@ -832,6 +839,8 @@ module Mail
         next if k.to_sym == :data
         if k.to_sym == :filename
           add_attachment(hash)
+        elsif k == :headers
+          self.headers(v)
         else
           self[k] = v
         end

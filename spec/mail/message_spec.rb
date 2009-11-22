@@ -629,6 +629,11 @@ describe Mail::Message do
         message.body.to_s.should          == 'This is a body of text'
       end
 
+      it "should let you set custom headers with a :headers => {hash}" do
+        message = Mail.new(:headers => {'custom-header' => 'mikel'})
+        message['custom-header'].decoded.should == 'mikel'
+      end
+      
     end
     
   end
@@ -1551,6 +1556,7 @@ describe Mail::Message do
       mail.parts.first.parts.first.body.decoded.should == "test text\nline #2"
       mail.parts.first.parts.second.content_type.string.should == "text/html"
       mail.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
+      puts mail.encoded
     end
   end
   
