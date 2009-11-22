@@ -44,6 +44,7 @@ Spec::Rake::SpecTask.new(:rcov) do |t|
 end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
+  t.warning = true
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 

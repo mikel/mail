@@ -32,6 +32,7 @@ module Mail
       else
         @raw_source = string
       end
+      @encoding = nil
       set_charset
     end
     
