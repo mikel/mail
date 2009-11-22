@@ -1530,4 +1530,28 @@ describe Mail::Message do
 
   end
   
+  describe "nested parts" do
+    it "should provide a way to instantiate a new part as you go down" do
+      mail = Mail.new do
+        to           'mikel@test.lindsaar.net'
+        subject      "nested multipart"
+        from         "test@example.com"
+        content_type "multipart/mixed"
+
+        part :content_type => "multipart/alternative", :content_disposition => "inline", :headers => { "foo" => "bar" } do |p|
+          p.part :content_type => "text/plain", :body => "test text\nline #2"
+          p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>\nline #2"
+        end
+
+      end
+
+      mail.parts.first.should be_multipart
+      mail.parts.first.parts.length.should == 2
+      mail.parts.first.parts.first.content_type.string.should == "text/plain"
+      mail.parts.first.parts.first.body.decoded.should == "test text\nline #2"
+      mail.parts.first.parts.second.content_type.string.should == "text/html"
+      mail.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
+    end
+  end
+  
 end

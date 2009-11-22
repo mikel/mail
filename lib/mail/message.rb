@@ -648,6 +648,22 @@ module Mail
       add_multipart_alternate_header
       self.body << part
     end
+
+    # Allows you to add a part in block form to an existing mail message object
+    # 
+    # Example:
+    # 
+    #  mail = Mail.new do
+    #    part :content_type => "multipart/alternative", :content_disposition => "inline" do |p|
+    #      p.part :content_type => "text/plain", :body => "test text\nline #2"
+    #      p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>\nline #2"
+    #    end
+    #  end
+    def part(params = {})
+      new_part = Part.new(params)
+      add_part(new_part)
+      yield new_part if block_given?
+    end
     
     # Adds a file to the message.  You have two options with this method, you can
     # just pass in the absolute path to the file you want and Mail will read the file,
