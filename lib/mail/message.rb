@@ -49,6 +49,7 @@ module Mail
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
+      @body = nil
 
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
