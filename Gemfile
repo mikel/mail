@@ -12,7 +12,7 @@ only :test do
   gem "cucumber"
   gem "rspec"
   gem "diff-lcs"
-  gem "ruby-debug"
+  gem "ruby-debug" if RUBY_VERSION < '1.9'
 end
 
 disable_system_gems
