@@ -46,6 +46,7 @@ end
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.warning = true
   t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_opts = %w(--backtrace --diff --color)
 end
 
 Rake::TestTask.new(:test) do |t|
