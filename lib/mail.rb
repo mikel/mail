@@ -2,17 +2,15 @@
 module Mail # :doc:
 
   require 'date'
-  
+
   require 'treetop'
   require 'active_support'
-  require 'active_support'
-  
+
   # Have to handle ActiveSupport 2.3 and 3.0
   # Following two lines make sure that HashWithIndifferentAccess is available
   # regardless of having activesupport 3 or 2.3 loaded
   require 'active_support/core_ext/hash/indifferent_access'
-  HashWithIndifferentAccess 
-  
+
   require 'uri'
   require 'net/smtp'
   require 'mime/types'
