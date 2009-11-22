@@ -634,6 +634,25 @@ describe Mail::Message do
         message['custom-header'].decoded.should == 'mikel'
       end
       
+      it "should assign the body to a part on creation" do
+        message = Mail.new do
+          part({:content_type=>"multipart/alternative", :content_disposition=>"inline", :body=>"Nothing to see here."})
+        end
+        message.parts.first.body.decoded.should == "Nothing to see here."
+      end
+      
+      it "should not overwrite bodies on creation" do
+        message = Mail.new do
+          part({:content_type=>"multipart/alternative", :content_disposition=>"inline", :body=>"Nothing to see here."}) do |p|
+            p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>"
+          end
+        end
+        message.parts.first.parts.first.body.decoded.should == "Nothing to see here."
+        message.parts.first.parts.second.body.decoded.should == "<b>test</b> HTML<br/>"
+        message.encoded.should match(%r{Nothing to see here\.})
+        message.encoded.should match(%r{<b>test</b> HTML<br/>})
+      end
+      
     end
     
   end

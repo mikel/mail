@@ -665,6 +665,12 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
+      if body.parts.empty? && !self.body.decoded.blank?
+         @text_part = Mail::Part.new('Content-Type: text/plain;')
+         @text_part.body = body.decoded
+         self.body << @text_part
+         add_multipart_alternate_header
+      end
       add_boundary
       self.body << part
     end
