@@ -1,3 +1,14 @@
+== Sun Nov 22 12:19:44 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added check on add_part to make sure if there is already a body, and if so, make a text_part of the body
+* Fixing up attachment adding and making sure multipart emails always have boundaries
+* Change Message#attachments to now recursively return all attachments in the email in an ordered flattened array
+* Added ability for Mail::Message to accept {:headers => {'custom-header' => 'value', 'another-custom-header' => 'value'}} as a param on init
+* Adding ability to Mail::Message to add a part via :part(params) with optional block
+* Fixed up QP encoding forcing underscores into everything with a space
+* Added ReturnPathField#address
+* Updating gem loads and active support loads
+
 == Sat Nov 21 12:52:46 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Changed Mail::Encodings to clean it up, added in unquote_and_convert_to as well as refactor in this area
