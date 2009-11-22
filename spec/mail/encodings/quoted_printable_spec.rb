@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe Mail::Encodings::QuotedPrintable do
   
   it "should encode quoted printable from text" do
-    result = 'This_is_a_test'
+    result = 'This is a test'
     Mail::Encodings::QuotedPrintable.encode('This is a test').should == result
   end
   

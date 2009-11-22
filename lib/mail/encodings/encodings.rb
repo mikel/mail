@@ -154,7 +154,7 @@ module Mail
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def Encodings.q_value_encode(str, encoding = nil)
       string, encoding = RubyVer.q_value_encode(str, encoding)
-      "=?#{encoding}?Q?#{string.chomp}?="
+      "=?#{encoding}?Q?#{string.chomp.gsub(/ /, '_')}?="
     end
     
     private
@@ -176,7 +176,7 @@ module Mail
     #  Encodings.b_value_encode("=?UTF-8?Q?This_is_=E3=81=82_string?=") 
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
-      RubyVer.q_value_decode(str)
+      RubyVer.q_value_decode(str).gsub(/_/, ' ')
     end
     
     def Encodings.split_encoding_from_string( str )

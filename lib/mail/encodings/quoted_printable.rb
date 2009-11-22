@@ -5,11 +5,11 @@ module Mail
     
       # Decode the string from Quoted-Printable
       def self.decode(str)
-        str.unpack("M*").first.gsub('_', ' ')
+        str.unpack("M*").first
       end
 
       def self.encode(str)
-        str.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }.gsub( / /, "_" )
+        str.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }
       end
 
       private

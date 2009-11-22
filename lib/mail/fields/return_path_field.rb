@@ -22,7 +22,7 @@
 module Mail
   class ReturnPathField < StructuredField
     
-    include CommonAddress
+    include Mail::CommonAddress
     
     FIELD_NAME = 'return-path'
     CAPITALIZED_FIELD = 'Return-Path'
@@ -37,6 +37,10 @@ module Mail
     
     def decoded
       do_decode
+    end
+    
+    def address
+      addresses.first
     end
     
   end
