@@ -598,10 +598,17 @@ module Mail
       body.parts
     end
     
+    # Returns an array of attachments in the email recursively
     def attachments
-      body.parts.select { |p| p.attachment? }.map { |p| p.attachment }
+      body.parts.map do |p| 
+        if p.parts.empty?
+          p.attachment if p.attachment?
+        else
+          p.attachments
+        end
+      end.compact.flatten
     end
-    
+
     def has_attachments?
       !attachments.empty?
     end

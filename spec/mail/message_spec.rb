@@ -933,6 +933,23 @@ describe Mail::Message do
 
       end
     
+      describe "finding attachments" do
+        
+        it "should return an array of attachments" do
+          mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
+          mail.attachments.length.should == 1
+          mail.attachments.first.filename.should == 'hello.rb'
+        end
+
+        it "should return an array of attachments" do
+          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml'))
+          mail.attachments.length.should == 2
+          mail.attachments[0].filename.should == 'byo-ror-cover.png'
+          mail.attachments[1].filename.should == 'smime.p7s'
+        end
+
+      end
+    
       describe "adding a file attachment" do
         it "should allow you to just call 'add_attachment'" do
           mail = Mail::Message.new
