@@ -214,4 +214,23 @@ describe Mail::Body do
     end
   end
 
+  describe "matching" do
+    it "should still equal itself" do
+      body = Mail::Body.new('The body')
+      body.should == body
+    end
+
+    it "should match on the body part decoded if given a string to ==" do
+      body = Mail::Body.new('The body')
+      (body == 'The body').should be_true
+    end
+
+    it "should match on the body part decoded if given a string to ==" do
+      body = Mail::Body.new("VGhlIGJvZHk=\n")
+      body.encoding = 'base64'
+      (body == "The body").should be_true
+    end
+
+  end
+
 end

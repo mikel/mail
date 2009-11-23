@@ -36,6 +36,28 @@ module Mail
       set_charset
     end
     
+    # Matches this body with another body.  Also matches the decoded value of this
+    # body with a string.
+    # 
+    # Examples:
+    # 
+    #   body = Mail::Body.new('The body')
+    #   body == body #=> true
+    #   
+    #   body = Mail::Body.new('The body')
+    #   body == 'The body' #=> true
+    #   
+    #   body = Mail::Body.new("VGhlIGJvZHk=\n")
+    #   body.encoding = 'base64'
+    #   body == "The body" #=> true
+    def ==(other)
+      if other.class == String
+        self.decoded == other
+      else
+        self.eql?(other)
+      end
+    end
+    
     # Returns the raw source that the body was initialized with, without
     # any tampering
     def raw_source
