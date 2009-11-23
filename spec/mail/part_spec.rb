@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe Mail::Part do
         
   it "should put content-ids into parts" do

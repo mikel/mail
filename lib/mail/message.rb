@@ -855,16 +855,24 @@ module Mail
     end
     
     def init_with_hash(hash)
-      passed_in_options = hash
+      passed_in_options = hash.with_indifferent_access
       self.raw_source = ''
       @header = Mail::Header.new
       @body = Mail::Body.new
-      hash.each_pair do |k,v|
-        next if k.to_sym == :data
-        if k.to_sym == :filename
-          add_attachment(passed_in_options)
-          break
-        elsif k == :headers
+
+      # Strip out the attachment headers and make an attachment
+      if passed_in_options.has_key?(:filename)
+        add_attachment(passed_in_options)
+        passed_in_options.delete(:content_disposition)
+        passed_in_options.delete(:content_type)
+        passed_in_options.delete(:mime_type)
+        passed_in_options.delete(:filename)
+        passed_in_options.delete(:data)
+      end
+      
+      passed_in_options.each_pair do |k,v|
+        k = underscoreize(k).to_sym if k.class == String
+        if k == :headers
           self.headers(v)
         else
           self[k] = v

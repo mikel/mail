@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe Mail::Configuration do
 
   describe "network configurations" do

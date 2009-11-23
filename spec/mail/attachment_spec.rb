@@ -1,8 +1,6 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 def encode_base64( str )
   Mail::Encodings::Base64.encode(str)
 end

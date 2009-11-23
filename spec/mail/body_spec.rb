@@ -1,8 +1,6 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe Mail::Body do
 
   # 3.5 Overall message syntax
@@ -214,6 +212,25 @@ describe Mail::Body do
       body.parts.length.should == 1
       body.should be_multipart
     end
+  end
+
+  describe "matching" do
+    it "should still equal itself" do
+      body = Mail::Body.new('The body')
+      body.should == body
+    end
+
+    it "should match on the body part decoded if given a string to ==" do
+      body = Mail::Body.new('The body')
+      (body == 'The body').should be_true
+    end
+
+    it "should match on the body part decoded if given a string to ==" do
+      body = Mail::Body.new("VGhlIGJvZHk=\n")
+      body.encoding = 'base64'
+      (body == "The body").should be_true
+    end
+
   end
 
 end

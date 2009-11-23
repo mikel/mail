@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
-require 'mail'
-
 describe Mail::ParameterHash do
   it "should return the values in the hash" do
     hash = Mail::ParameterHash.new
