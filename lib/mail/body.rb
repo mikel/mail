@@ -54,9 +54,38 @@ module Mail
       if other.class == String
         self.decoded == other
       else
-        self.eql?(other)
+        super
       end
     end
+    
+    # Accepts a string and performs a regular expression against the decoded text
+    # 
+    # Examples:
+    # 
+    #   body = Mail::Body.new('The body')
+    #   body =~ /The/ #=> 0
+    #   
+    #   body = Mail::Body.new("VGhlIGJvZHk=\n")
+    #   body.encoding = 'base64'
+    #   body =~ /The/ #=> 0
+    def =~(regexp)
+      self.decoded =~ regexp
+    end
+    
+    # Accepts a string and performs a regular expression against the decoded text
+    # 
+    # Examples:
+    # 
+    #   body = Mail::Body.new('The body')
+    #   body.match(/The/) #=> #<MatchData "The">
+    #   
+    #   body = Mail::Body.new("VGhlIGJvZHk=\n")
+    #   body.encoding = 'base64'
+    #   body.match(/The/) #=> #<MatchData "The">
+    def match(regexp)
+      self.decoded.match(regexp)
+    end
+    
     
     # Returns the raw source that the body was initialized with, without
     # any tampering
