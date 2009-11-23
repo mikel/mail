@@ -1,8 +1,6 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe Mail::Message do
   
   def basic_email

@@ -1,8 +1,6 @@
 # encoding: utf-8
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe "Round Tripping" do
 
   it "should round trip a basic email" do

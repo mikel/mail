@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require 'mail'
-
 describe Mail::FieldList do
   it "should be able to add new fields" do
     fl = Mail::FieldList.new

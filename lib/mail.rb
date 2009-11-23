@@ -27,7 +27,14 @@ module Mail # :doc:
   end
 
   require File.join(dir_name, 'version')
-  require File.join(dir_name, 'core_extensions')
+  begin
+    require 'active_support/core_ext/object/blank'
+  rescue LoadError
+    # Unneeded for Active Support <= 3.0.pre
+  end
+  require File.join(dir_name, 'core_extensions/nil')
+  require File.join(dir_name, 'core_extensions/string')
+
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
