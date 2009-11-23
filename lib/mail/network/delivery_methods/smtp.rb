@@ -40,7 +40,7 @@ module Mail
       @tls = true
     end
     
-    # Turn on TLS
+    # Turn off TLS
     def disable_tls
       @tls = false
     end

@@ -1,3 +1,7 @@
+== Mon Nov 23 23:34:22 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Resolved Issue #12 - Wrong comment in smtp.rb
+
 == Mon Nov 23 22:35:50 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Changed the way attachments are added so that it does not break depending on the order
