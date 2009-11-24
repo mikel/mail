@@ -1,7 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
-
-require 'mail'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::StructuredField do
 
@@ -33,34 +31,42 @@ describe Mail::StructuredField do
     end
   end
 
-  describe "displaying" do
+  describe "displaying encoded field and decoded value" do
     
     before(:each) do
-      @field = Mail::StructuredField.new("From", "bob@me.com")
+      @field = Mail::FromField.new("bob@me.com")
     end
     
-    it "should provide a to_s function that returns the field name and value" do
-      @field.encoded.should == "From: bob@me.com\r\n"
+    it "should provide a to_s function that returns the encoded string" do
+      @field.to_s.should == "From: bob@me.com\r\n"
     end
     
     it "should return '' on to_s if there is no value" do
       @field.value = nil
-      @field.to_s.should == ''
+      @field.encoded.should == ''
     end
     
     it "should give an encoded value ready to insert into an email" do
       @field.encoded.should == "From: bob@me.com\r\n"
     end
     
-    it "should return nil on encoded if it has no value" do
+    it "should return an empty string on encoded if it has no value" do
       @field.value = nil
-      @field.encoded.should == nil
+      @field.encoded.should == ''
     end
     
     it "should return the field name and value in proper format when called to_s" do
       @field.encoded.should == "From: bob@me.com\r\n"
     end
     
+  end
+  
+  describe "structured field template methods" do
+    it "should raise an error if attempting to call :encoded or :decoded on the parent StructuredField class" do
+      field = Mail::StructuredField.new
+      doing { field.encoded }.should raise_error(NoMethodError)
+      doing { field.decoded }.should raise_error(NoMethodError)
+    end
   end
 
 end

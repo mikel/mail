@@ -46,19 +46,42 @@ module Mail
     
     include Patterns
     include Utilities
-    include Deliverable
-    include Retrievable
     
     # Creates a new Mail::Message object through .new
     def initialize(*args, &block)
-      self.raw_source = args.flatten[0].to_s.strip
-      set_envelope_header
-      parse_message
-      separate_parts if multipart?
+      @body = nil
+
+      if args.flatten.first.respond_to?(:each_pair)
+        init_with_hash(args.flatten.first)
+      else
+        init_with_string(args.flatten[0].to_s.strip)
+      end
+
       if block_given?
         instance_eval(&block)
       end
+
       self
+    end
+    
+    def deliver!
+      Deliverable.perform_delivery!(self)
+    end
+    
+    def <=>(other)
+      if other.nil?
+        1
+      else
+        self.date <=> other.date
+      end
+    end
+    
+    def ==(other)
+      unless other.respond_to?(:encoded)
+        false
+      else
+        self.encoded == other.encoded
+      end
     end
     
     # Provides access to the raw source of the message as it was when it
@@ -127,14 +150,48 @@ module Mail
       value ? self.header = value : @header
     end
     
+    # Provides a way to set custom headers, by passing in a hash
+    def headers(hash = {})
+      hash.each_pair do |k,v|
+        header[k] = v
+      end
+    end
+    
     # Sets the body object of the message object.
     # 
     # Example:
     # 
     #  mail.body = 'This is the body'
     #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
+    # 
+    # You can also reset the body of an Message object by setting body to nil
+    # 
+    # Example:
+    # 
+    #  mail.body = 'this is the body'
+    #  mail.body.encoded #=> 'this is the body'
+    #  mail.body = nil
+    #  mail.body.encoded #=> ''
+    # 
+    # If you try and set the body of an email that is a multipart email, then instead
+    # of deleting all the parts of your email, mail will add a text/plain part to
+    # your email:
+    # 
+    #  mail.add_file 'somefilename.png'
+    #  mail.parts.length #=> 1
+    #  mail.body = "This is a body"
+    #  mail.parts.length #=> 2
+    #  mail.parts.last.content_type.content_type #=> 'This is a body'
     def body=(value)
-      @body = Mail::Body.new(value)
+      case
+      when value == nil
+        @body = Mail::Body.new('')
+      when @body && !@body.parts.empty?
+        @body << Mail::Part.new(value)
+      else
+        @body = Mail::Body.new(value)
+      end
+      add_encoding_to_body
     end
 
     # Returns the body of the message object. Or, if passed
@@ -148,7 +205,12 @@ module Mail
     #  mail.body 'This is another body'
     #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is anothe...
     def body(value = nil)
-      value ? self.body = value : @body
+      if value
+        self.body = value
+        add_encoding_to_body
+      else
+        @body
+      end
     end
     
     # Sets the to filed of the message header.
@@ -200,6 +262,44 @@ module Mail
       value ? self.from = value : header[:from]
     end
     
+    # Returns the list of addresses this message should be sent to by
+    # collecting the addresses off the to, cc and bcc fields.
+    # 
+    # Example:
+    # 
+    #  mail.to = 'mikel@test.lindsaar.net'
+    #  mail.cc = 'sam@test.lindsaar.net'
+    #  mail.bcc = 'bob@test.lindsaar.net'
+    #  mail.destinations.length #=> 3
+    #  mail.destinations.first #=> 'mikel@test.lindsaar.net'
+    def destinations
+      [to, cc, bcc].map { |f| f.addresses if f }.compact.flatten
+    end
+
+    # Returns an array of addresses (the encoded value) in the From field,
+    # if no From field, returns an empty array
+    def from_addrs
+      from ? from.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the To field,
+    # if no To field, returns an empty array
+    def to_addrs
+      to ? to.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the Cc field,
+    # if no Cc field, returns an empty array
+    def cc_addrs
+      cc ? cc.formatted.compact.flatten : []
+    end
+    
+    # Returns an array of addresses (the encoded value) in the Bcc field,
+    # if no Bcc field, returns an empty array
+    def bcc_addrs
+      bcc ? bcc.formatted.compact.flatten : []
+    end
+    
     # Sets the subject field in the message header.
     # 
     # Example:
@@ -233,6 +333,8 @@ module Mail
     def []=(name, value)
       if name.to_s == 'body'
         self.body = value
+      elsif name.to_s =~ /content[-_]type/i
+        header[underscoreize(name)] = value
       else
         header[underscoreize(name)] = value
       end
@@ -415,6 +517,16 @@ module Mail
     def charset
       content_type ? content_type.parameters['charset'] : nil
     end
+
+    # Sets the charset to the supplied value.  Will set the content type to text/plain if
+    # it does not already exist
+    def charset=(value)
+      if content_type
+        content_type.parameters['charset'] = value
+      else
+        self.content_type ['text', 'plain', {'charset' => value}]
+      end
+    end
     
     # Returns the main content type
     def main_type
@@ -433,7 +545,50 @@ module Mail
     
     # Returns true if the message is multipart
     def multipart?
-      main_type =~ /^multipart$/i
+      !!(main_type =~ /^multipart$/i)
+    end
+    
+    # Returns true if the message is a multipart/report
+    def multipart_report?
+      multipart? && sub_type =~ /^report$/i
+    end
+    
+    # Returns true if the message is a multipart/report; report-type=delivery-status;
+    def delivery_status_report?
+      multipart_report? && mime_parameters['report-type'] =~ /^delivery-status$/i
+    end
+    
+    # returns the part in a multipart/report email that has the content-type delivery-status
+    def delivery_status_part
+      @delivery_stats_part ||= parts.select { |p| p.delivery_status_report_part? }.first
+    end
+    
+    def bounced?
+      delivery_status_part.bounced?
+    end
+    
+    def action
+      delivery_status_part.action
+    end
+    
+    def final_recipient
+      delivery_status_part.final_recipient
+    end
+    
+    def error_status
+      delivery_status_part.error_status
+    end
+
+    def diagnostic_code
+      delivery_status_part.diagnostic_code
+    end
+    
+    def remote_mta
+      delivery_status_part.remote_mta
+    end
+    
+    def retryable?
+      delivery_status_part.retryable?
     end
     
     # Returns the current boundary for this message part
@@ -443,17 +598,44 @@ module Mail
     
     # Returns an array of parts in the message
     def parts
-      @parts ||= []
+      body.parts
+    end
+    
+    # Returns an array of attachments in the email recursively
+    def attachments
+      body.parts.map do |p| 
+        if p.parts.empty?
+          p.attachment if p.attachment?
+        else
+          p.attachments
+        end
+      end.compact.flatten
+    end
+
+    def has_attachments?
+      !attachments.empty?
     end
     
     # Accessor for html_part
-    def html_part
-      @html_part
+    def html_part(&block)
+      if block_given?
+        @html_part = Mail::Part.new(&block)
+        add_multipart_alternate_header
+        add_part(@html_part)
+      else
+        @html_part
+      end
     end
     
     # Accessor for text_part
-    def text_part
-      @text_part
+    def text_part(&block)
+      if block_given?
+        @text_part = Mail::Part.new(&block)
+        add_multipart_alternate_header
+        add_part(@text_part)
+      else
+        @text_part
+      end
     end
     
     # Helper to add a html part to a multipart/alternative email.  If this and
@@ -463,8 +645,9 @@ module Mail
       if msg
         @html_part = msg
       else
-        @html_part = Mail::Message.new('Content-Type: text/html;')
+        @html_part = Mail::Part.new('Content-Type: text/html;')
       end
+      add_multipart_alternate_header
       add_part(@html_part)
     end
     
@@ -475,34 +658,136 @@ module Mail
       if msg
         @text_part = msg
       else
-        @text_part = Mail::Message.new('Content-Type: text/plain;')
+        @text_part = Mail::Part.new('Content-Type: text/plain;')
       end
+      add_multipart_alternate_header
       add_part(@text_part)
     end
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      @parts ? @parts << part : @parts = [part]
+      if body.parts.empty? && !self.body.decoded.blank?
+         @text_part = Mail::Part.new('Content-Type: text/plain;')
+         @text_part.body = body.decoded
+         self.body << @text_part
+         add_multipart_alternate_header
+      end
+      add_boundary
+      self.body << part
+    end
+
+    # Allows you to add a part in block form to an existing mail message object
+    # 
+    # Example:
+    # 
+    #  mail = Mail.new do
+    #    part :content_type => "multipart/alternative", :content_disposition => "inline" do |p|
+    #      p.part :content_type => "text/plain", :body => "test text\nline #2"
+    #      p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>\nline #2"
+    #    end
+    #  end
+    def part(params = {})
+      new_part = Part.new(params)
+      yield new_part if block_given?
+      add_part(new_part)
+    end
+    
+    # Adds a file to the message.  You have two options with this method, you can
+    # just pass in the absolute path to the file you want and Mail will read the file,
+    # get the filename from the path you pass in and guess the mime type, or you
+    # can pass in the filename as a string, and pass in the file data as a blob.
+    # 
+    # Example:
+    # 
+    #  m = Mail.new
+    #  m.add_file('/path/to/filename.png')
+    # 
+    # or
+    # 
+    #  m = Mail.new
+    #  m.add_file(:filename => 'filename.png', :data => File.read('/path/to/filename.png'))
+    # 
+    # The above two alternatives will produce the same email message.
+    # 
+    # Note also that if you add a file to an existing message, Mail will convert that message
+    # to a MIME multipart email, moving whatever plain text body you had into it's own text
+    # plain part.
+    # 
+    # Example:
+    # 
+    #  m = Mail.new do
+    #    body 'this is some text'
+    #  end
+    #  m.multipart? #=> false
+    #  m.add_file('/path/to/filename.png')
+    #  m.multipart? #=> true
+    #  m.parts.first.content_type.content_type #=> 'text/plain'
+    #  m.parts.last.content_type.content_type #=> 'image/png'
+    def add_file(options)
+      convert_to_multipart unless self.multipart? || self.body.decoded.blank?
+      add_multipart_mixed_header
+      if options.is_a?(Hash)
+        self.body << Mail::Part.new(options)
+      else
+        self.body << Mail::Part.new(:filename => options)
+      end
+    end
+
+    def convert_to_multipart
+      text = @body.decoded
+      self.body = ''
+      text_part = Mail::Part.new({:content_type => 'text/plain;',
+                                  :body => text})
+      self.body << text_part
+    end
+
+    # Encodes the message, calls encode on all it's parts, gets an email message
+    # ready to send
+    def ready_to_send!
+      parts.each { |part| part.ready_to_send! }
+      add_required_fields
+    end
+    
+    def encode!
+      STDERR.puts("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
+      ready_to_send!
     end
     
     # Outputs an encoded string representation of the mail message including
     # all headers, attachments, etc.  This is an encoded email in US-ASCII,
     # so it is able to be directly sent to an email server.
     def encoded
-      add_multipart_header if html_part && text_part
-      add_required_fields
+      ready_to_send!
       buffer = header.encoded
       buffer << "\r\n"
       buffer << body.encoded
-      if multipart?
-        buffer << boundary_line
-        buffer << parts.map {|part| part.encoded}.join("#{boundary_line}")
-        buffer << "\r\n--#{boundary}--\r\n"
-      end
       buffer
     end
     
     alias :to_s :encoded
+    
+    def decoded
+      raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+    end
+    
+    # Returns true if this part is an attachment
+    def attachment?
+      find_attachment
+    end
+    
+    # Returns the attachment data if there is any
+    def attachment
+      @attachment
+    end
+    
+    # Returns the filename of the attachment
+    def filename
+      if attachment?
+        attachment.filename
+      else
+        nil
+      end
+    end
     
     private
 
@@ -522,24 +807,26 @@ module Mail
       self.body   = body_part
     end
     
-    def boundary_line
-      "\r\n--#{boundary}\r\n"
-    end
-    
     def set_envelope_header
-      if match_data = raw_source.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
+      if match_data = raw_source.to_s.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
         self.raw_source = match_data[2]
       end
     end
 
     def separate_parts
-      @parts = body.split("--#{mime_parameters['boundary']}")
+      body.split!(boundary)
+    end
+    
+    def add_encoding_to_body
+      unless content_transfer_encoding.blank?
+        body.encoding = content_transfer_encoding.decoded
+      end
     end
     
     def add_required_fields
       @body = Mail::Body.new('')    if body.nil?
-      add_message_id                unless has_message_id?
+      add_message_id                unless (has_message_id? || self.class == Mail::Part)
       add_date                      unless has_date?
       add_mime_version              unless has_mime_version?
       add_content_type              unless has_content_type?
@@ -547,17 +834,95 @@ module Mail
       add_transfer_encoding         unless has_transfer_encoding?
     end
     
-    def add_multipart_header
-      header['content-type'] = ContentTypeField.multipart_alternative_with_boundary
+    def add_multipart_alternate_header
+      header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
+      body.boundary = boundary
     end
     
-    class << self
-
-      # Only POP3 is supported for now
-      def get_all_mail(&block)
-        self.pop3_get_all_mail(&block)
+    def add_boundary
+      unless body.boundary && boundary
+        header['content-type'] = 'multipart/mixed' unless header['content-type']
+        header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
+        body.boundary = boundary
       end
+    end
+    
+    def add_multipart_mixed_header
+      unless header['content-type']
+        header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
+        body.boundary = boundary
+      end
+    end
+    
+    def init_with_hash(hash)
+      passed_in_options = hash.with_indifferent_access
+      self.raw_source = ''
+      @header = Mail::Header.new
+      @body = Mail::Body.new
 
+      # Strip out the attachment headers and make an attachment
+      if passed_in_options.has_key?(:filename)
+        add_attachment(passed_in_options)
+        passed_in_options.delete(:content_disposition)
+        passed_in_options.delete(:content_type)
+        passed_in_options.delete(:mime_type)
+        passed_in_options.delete(:filename)
+        passed_in_options.delete(:data)
+      end
+      
+      passed_in_options.each_pair do |k,v|
+        k = underscoreize(k).to_sym if k.class == String
+        if k == :headers
+          self.headers(v)
+        else
+          self[k] = v
+        end
+      end
+    end
+    
+    def add_attachment(options_hash)
+      @attachment = Mail::Attachment.new(options_hash)
+      mime_type = options_hash[:content_type] || attachment.mime_type
+      self.content_type = "#{mime_type}; filename=\"#{attachment.filename}\""
+      self.content_transfer_encoding = "Base64"
+
+      disposition = options_hash[:content_disposition] || "attachment"
+      self.content_disposition = "#{disposition}; filename=\"#{attachment.filename}\""
+      add_boundary
+      self.body = attachment.encoded
+    end
+    
+    def init_with_string(string)
+      self.raw_source = string
+      set_envelope_header
+      parse_message
+      separate_parts if multipart?
+      if filename = attachment?
+        encoding = content_transfer_encoding.encoding if content_transfer_encoding
+        @attachment = Mail::Attachment.new(:filename => filename,
+                                           :data => body.to_s,
+                                           :encoding => encoding)
+      end
+    end
+    
+    # Returns the filename of the attachment (if it exists) or returns nil
+    def find_attachment
+      case
+      when content_type && content_type.filename
+        filename = content_type.filename
+      when content_disposition && content_disposition.filename
+        filename = content_disposition.filename
+      when content_location && content_location.location
+        filename = content_location.location
+      else
+        filename = nil
+      end
+      filename
+    end
+
+    # Only POP3 is supported for now
+    def Message.get_all_mail(&block)
+      self.pop3_get_all_mail(&block)
     end
 
   end

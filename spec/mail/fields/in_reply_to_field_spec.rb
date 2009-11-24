@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 # 
 #    The "In-Reply-To:" field will contain the contents of the "Message-
 #    ID:" field of the message to which this one is a reply (the "parent
@@ -36,6 +36,27 @@ describe Mail::InReplyToField do
       t.value.should == '<1234@test.lindsaar.net>'
       t.message_id.should == '1234@test.lindsaar.net'
     end
+    
+    it "should provide encoded" do
+      t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
+      t.encoded.should == "In-Reply-To: <1234@test.lindsaar.net>\r\n"
+    end
+    
+    it "should handle many encoded message IDs" do
+      t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
+      t.encoded.should == "In-Reply-To: <1234@test.lindsaar.net>, <4567@test.lindsaar.net>\r\n"
+    end
+
+    it "should provide decoded" do
+      t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
+      t.decoded.should == "<1234@test.lindsaar.net>"
+    end
+    
+    it "should handle many decoded message IDs" do
+      t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
+      t.decoded.should == '<1234@test.lindsaar.net>, <4567@test.lindsaar.net>'
+    end
+    
   end
 
   describe "handlign multiple message ids" do

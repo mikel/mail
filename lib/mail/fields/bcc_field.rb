@@ -31,9 +31,19 @@ module Mail
     include Mail::CommonAddress
     
     FIELD_NAME = 'bcc'
+    CAPITALIZED_FIELD = 'Bcc'
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    end
+    
+    # Bcc field should never be :encoded
+    def encoded
+      ''
+    end
+    
+    def decoded
+      do_decode
     end
     
   end

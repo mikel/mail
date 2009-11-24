@@ -9,18 +9,26 @@ unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
 end
 
-require 'rubygems'
-require 'ruby-debug' if RUBY_VERSION < '1.9'
-require 'spec'
-require 'treetop'
+environment = File.expand_path('../../vendor/gems/environment')
+if File.exist?("#{environment}.rb")
+  require environment
+else
+  require 'rubygems'
+  gem "treetop", ">= 1.4"
+  gem 'activesupport', ">= 2.3"
 
-$:.unshift "#{File.dirname(__FILE__)}/mail"
-$:.unshift "#{File.dirname(__FILE__)}/../lib"
-$:.unshift "#{File.dirname(__FILE__)}/../lib/mail"
+  begin
+    require 'ruby-debug' if RUBY_VERSION < '1.9'
+  rescue LoadError
+    # Skip debugger if unavailable.
+  end
+  require 'spec'
+  require 'treetop'
+end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
-require 'mail'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'mail')
 
 Spec::Runner.configure do |config|  
   config.include(CustomMatchers)  
@@ -47,6 +55,7 @@ end
 
 # Original mockup from ActionMailer
 class MockSMTP
+  
   def self.deliveries
     @@deliveries
   end
@@ -63,18 +72,29 @@ class MockSMTP
     yield self
   end
   
-  def enable_tls(*args)
-    true
+  def self.clear_deliveries
+    @@deliveries = []
+  end
+  
+  # in the standard lib: net/smtp.rb line 577
+  #   a TypeError is thrown unless this arg is a
+  #   kind of OpenSSL::SSL::SSLContext
+  def enable_tls(context = nil)
+    if context && context.kind_of?(OpenSSL::SSL::SSLContext)
+      true
+    elsif context
+      raise TypeError,
+        "wrong argument (#{context.class})! "+
+        "(Expected kind of OpenSSL::SSL::SSLContext)"
+    end
   end
 
   def enable_starttls
     true
   end
   
-  def enable_tls(type = nil)
-    true
-  end
 end
+
 class Net::SMTP
   def self.new(*args)
     MockSMTP.new
@@ -87,9 +107,10 @@ class MockPopMail
   end
   
   def pop
-    @rfc2822
+    Mail.new(@rfc2822)
   end
 end
+
 class MockPOP3
   @@start = false
   
@@ -134,6 +155,7 @@ class MockPOP3
     @@start = false
   end
 end
+
 class Net::POP3
   def self.new(*args)
     MockPOP3.new

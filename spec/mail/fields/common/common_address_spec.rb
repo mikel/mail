@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
 
 describe Mail::CommonAddress do
   
@@ -37,5 +37,59 @@ describe Mail::CommonAddress do
       field.groups["My Group"].last.to_s.should == 'me@lindsaar.net'
     end
 
+    it "should provide a list of addresses that are just in the groups" do
+      field = Mail::ToField.new("To", "test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.group_addresses.should == ['test2@lindsaar.net', 'me@lindsaar.net']
+    end
+
+    it "should handle initializing as an empty string" do
+      field = Mail::ToField.new("To", "")
+      field.addresses.should == []
+      field.value = 'mikel@test.lindsaar.net'
+      field.addresses.should == ['mikel@test.lindsaar.net']
+    end
+    
+    it "should encode to an empty string if it has no addresses or groups" do
+      field = Mail::ToField.new("To", "")
+      field.encoded.should == ''
+      field.value = 'mikel@test.lindsaar.net'
+      field.encoded.should == "To: mikel@test.lindsaar.net\r\n"
+    end
+
   end
+  
+  describe "encoding and decoding fields" do
+    
+    it "should allow us to encode an address field" do
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.encoded.should == "To: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+    end
+    
+    it "should allow us to encode a simple address field" do
+      field = Mail::ToField.new("test1@lindsaar.net")
+      field.encoded.should == "To: test1@lindsaar.net\r\n"
+    end
+    
+    it "should allow us to encode an address field" do
+      field = Mail::CcField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.encoded.should == "Cc: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+    end
+
+    it "should allow us to decode an address field" do
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field.decoded.should == "test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;"
+    end
+    
+    it "should allow us to decode a non ascii address field" do
+      field = Mail::ToField.new("=?UTF-8?B?44G/44GR44KL?= <raasdnil@text.lindsaar.net>")
+      field.decoded.should == '"みける" <raasdnil@text.lindsaar.net>'
+    end
+    
+    it "should allow us to decode a non ascii address field" do
+      field = Mail::ToField.new("=?UTF-8?B?44G/44GR44KL?= <raasdnil@text.lindsaar.net>, =?UTF-8?B?44G/44GR44KL?= <mikel@text.lindsaar.net>")
+      field.decoded.should == '"みける" <raasdnil@text.lindsaar.net>, "みける" <mikel@text.lindsaar.net>'
+    end
+
+  end
+  
 end

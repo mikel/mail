@@ -1,0 +1,19 @@
+== Not really in any order:
+
+* Make body, part, field, header, message all responding correctly to :encoded
+  and :decoded messages.  And remove ":to_s" as a method on these
+  classes.  Encoded needs to return the field, encoded, ready to send in the
+  mail system, that is, US-ASCII.  Decoded needs to return the field decoded ready to
+  view.  :to_s is (unfortunately) ambiguous in this case.  Maybe return a warning 
+  with :to_s and say "please use encoded or decoded instead" or :to_s returns
+  "Showing you the encoded view by default, call :decoded to see the decoded view"
+
+* Refactor out the multibyte and string handling.  Make ActiveSupport a dependancy
+
+* Clean up the relationship between message, parts and bodies.  Need to make sure
+  once parsed, that a body knows what encoding it is, for example.
+
+* Cleanup the treetop parsers......... do I _really_ need that many entrance files?
+
+* Simplify the relationship of Headers and Fields.  Doing too much of the Field work
+  in the Header class on instantiating fields.  Header should just say "Field, do it!"

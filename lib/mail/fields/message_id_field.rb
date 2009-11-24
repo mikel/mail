@@ -35,15 +35,16 @@ module Mail
     include Mail::CommonMessageId
     
     FIELD_NAME = 'message-id'
+    CAPITALIZED_FIELD = 'Message-ID'
     
     def initialize(*args)
       @uniq = 1
       if args.last.blank?
-        self.name = FIELD_NAME
+        self.name = CAPITALIZED_FIELD
         self.value = generate_message_id
         self
       else
-        super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
     end
     
@@ -57,6 +58,14 @@ module Mail
     
     def to_s
       "<#{message_id}>"
+    end
+    
+    def encoded
+      do_encode(CAPITALIZED_FIELD)
+    end
+    
+    def decoded
+      do_decode
     end
     
     private

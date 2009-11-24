@@ -1,7 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../spec_helper'
-
-require 'mail'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
 
 describe Mail::Field do
 
@@ -9,6 +7,17 @@ describe Mail::Field do
     
     it "should be instantiated" do
       doing {Mail::Field.new('To: Mikel')}.should_not raise_error
+      Mail::Field.new('To: Mikel').field.class.should == Mail::ToField
+    end
+    
+    it "should allow us to pass an empty value" do
+      doing {Mail::Field.new('To')}.should_not raise_error
+      Mail::Field.new('To').field.class.should == Mail::ToField
+    end
+    
+    it "should allow us to pass a value" do
+      doing {Mail::Field.new('To', 'Mikel')}.should_not raise_error
+      Mail::Field.new('To', 'Mikel').field.class.should == Mail::ToField
     end
     
     it "should match up fields to class names" do
@@ -17,7 +26,7 @@ describe Mail::Field do
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
                               Return-Path Received Subject Comments Mime-Version
                               Content-Transfer-Encoding Content-Description
-                              Content-Type ]
+                              Content-Disposition Content-Type ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
@@ -31,7 +40,7 @@ describe Mail::Field do
                               rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD 
                               rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn 
                               cOntenT-transfer-EnCoDiNg Content-Description
-                              cOnTENt-TyPe ]
+                              Content-Disposition cOnTENt-TyPe ]
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
@@ -54,6 +63,12 @@ describe Mail::Field do
     
     it "should split the name and values out of the raw field passed in if missing whitespace" do
       field = Mail::Field.new('To:Bob')
+      field.name.should == 'To'
+      field.value.should == 'Bob'
+    end
+    
+    it "should split the name and values out of the raw field passed in if having added inapplicable whitespace" do
+      field = Mail::Field.new('To                  :                   Bob                      ')
       field.name.should == 'To'
       field.value.should == 'Bob'
     end
@@ -123,5 +138,6 @@ describe Mail::Field do
     end
 
   end
+  
 
 end

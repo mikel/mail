@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 #    The "Cc:" field (where the "Cc" means "Carbon Copy" in the sense of
 #    making a copy on a typewriter using carbon paper) contains the
@@ -61,12 +61,22 @@ describe Mail::CcField do
     
     it "should return the formatted line on to_s" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.to_s.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+    end
+    
+    it "should return the encoded line for one address" do
+      t = Mail::CcField.new('sam@me.com')
+      t.encoded.should == "Cc: sam@me.com\r\n"
     end
     
     it "should return the encoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Cc: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == "Cc: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
+    end
+    
+    it "should return the decoded line" do
+      t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

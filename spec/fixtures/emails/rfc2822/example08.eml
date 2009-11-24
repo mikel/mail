@@ -1,0 +1,12 @@
+Resent-From: Mary Smith <mary@example.net>
+Resent-To: Jane Brown <j-brown@other.example>
+Resent-Date: Mon, 24 Nov 1997 14:22:01 -0800
+Resent-Message-ID: <78910@example.net>
+From: John Doe <jdoe@machine.example>
+To: Mary Smith <mary@example.net>
+Subject: Saying Hello
+Date: Fri, 21 Nov 1997 09:55:06 -0600
+Message-ID: <1234@local.machine.example>
+
+This is a message just to say hello.
+So, "Hello".

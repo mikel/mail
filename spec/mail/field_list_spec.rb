@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-
-require 'mail'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
 
 describe Mail::FieldList do
   it "should be able to add new fields" do

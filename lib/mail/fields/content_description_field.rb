@@ -6,9 +6,10 @@ module Mail
   class ContentDescriptionField < UnstructuredField
     
     FIELD_NAME = 'content-description'
-
+    CAPITALIZED_FIELD = 'Content-Description'
+    
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
   end

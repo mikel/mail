@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::ContentTransferEncodingField do
 
@@ -59,6 +59,16 @@ describe Mail::ContentTransferEncodingField do
       t = Mail::ContentTransferEncodingField.new('7bit')
       t.name.should == 'Content-Transfer-Encoding'
       t.value.should == '7bit'
+    end
+
+    it "should render an encoded field" do
+      t = Mail::ContentTransferEncodingField.new('7bit')
+      t.encoded.should == "Content-Transfer-Encoding: 7bit\r\n"
+    end
+
+    it "should render a decoded field" do
+      t = Mail::ContentTransferEncodingField.new('7bit')
+      t.decoded.should == '7bit'
     end
 
   end

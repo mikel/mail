@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::KeywordsField do
 
@@ -55,6 +55,18 @@ describe Mail::KeywordsField do
       k.keywords.should == ['these, are keywords (another comment to be ignored)', 'so there (This is an irrelevant comment)']
     end
     
+  end
+  
+  describe "encoding and decoding" do
+    it "should encode" do
+      k = Mail::KeywordsField.new('these are keywords, so there')
+      k.encoded.should == "Keywords: these are keywords, so there\r\n"
+    end
+
+    it "should decode" do
+      k = Mail::KeywordsField.new('these are keywords, so there')
+      k.decoded.should == "these are keywords, so there"
+    end
   end
   
 end

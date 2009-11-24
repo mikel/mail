@@ -47,7 +47,7 @@ module Mail
     # Returns an array of all the fields in the header in order that they
     # were read in.
     def fields
-      @fields ||= []
+      @fields ||= FieldList.new
     end
     
     #  3.6. Field definitions
@@ -72,8 +72,17 @@ module Mail
     def fields=(unfolded_fields)
       @fields = Mail::FieldList.new
       unfolded_fields.each do |field|
-        @fields << Field.new(field)
+
+        field = Field.new(field)
+        selected = select_field_for(field.name)
+
+        if selected.any? && limited_field?(field.name)
+          selected.first.update(field.name, field.value)
+        else
+          @fields << field
+        end
       end
+
     end
     
     #  3.6. Field definitions
@@ -98,7 +107,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      selected = fields.select { |f| f.responsible_for?(name) }
+      selected = select_field_for(name)
       case
       when selected.length > 1
         selected.map { |f| f }
@@ -123,31 +132,30 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
-      selected = fields.select { |f| f.responsible_for?(name) }
+      selected = select_field_for(name)
+
       case
       # User wants to delete the field
       when !selected.blank? && value == nil
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && LIMITED_FIELDS.include?(name.downcase)
+      when !selected.blank? && limited_field?(name)
+
         selected.first.update(name, value)
         
       # User wants to create the field
       else
         # Need to insert in correct order for trace fields
-        if value.blank?
-          self.fields << Field.new(name)
-        else
-          self.fields << Field.new("#{name}: #{value}")
-        end
+        self.fields << Field.new(name.to_s, value)
       end
     end
     
     LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject
                            return-path content-type mime-version
-                           content-transfer-encoding ]
+                           content-transfer-encoding content-description 
+                           content-id content-disposition content-location]
 
     def encoded
       buffer = ''
@@ -159,9 +167,14 @@ module Mail
 
     alias :to_s :encoded
 
-    # Returns true if the header has a Message-Id defined (empty or not)
+    # Returns true if the header has a Message-ID defined (empty or not)
     def has_message_id?
       !fields.select { |f| f.responsible_for?('Message-ID') }.empty?
+    end
+
+    # Returns true if the header has a Content-ID defined (empty or not)
+    def has_content_id?
+      !fields.select { |f| f.responsible_for?('Content-ID') }.empty?
     end
 
     # Returns true if the header has a Date defined (empty or not)
@@ -201,6 +214,14 @@ module Mail
     # strings.
     def split_header
       self.fields = unfolded_header.split(CRLF)
+    end
+    
+    def select_field_for(name)
+      fields.select { |f| f.responsible_for?(name) }
+    end
+    
+    def limited_field?(name)
+      LIMITED_FIELDS.include?(name.to_s.downcase)
     end
     
   end

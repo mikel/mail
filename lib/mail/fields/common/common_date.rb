@@ -1,30 +1,36 @@
 # encoding: utf-8
 module Mail
-  module CommonDate
+  module CommonDate # :nodoc:
     
-    module ClassMethods
+    module InstanceMethods # :doc:
       
-    end
-    
-    module InstanceMethods
-      
-      def tree
-        @element ||= DateTimeElement.new(value)
-        @tree ||= @element.tree
-      end
-      
-      def element
-        @element ||= DateTimeElement.new(value)
-      end
-      
+      # Returns a date time object of the parsed date
       def date_time
-        ::DateTime.parse("#{element.date} #{element.time}")
+        ::DateTime.parse("#{element.date_string} #{element.time_string}")
+      end
+
+      private
+      
+      def do_encode(field_name)
+        "#{field_name}: #{value}\r\n"
+      end
+      
+      def do_decode
+        "#{value}"
+      end
+
+      def element
+        @element ||= Mail::DateTimeElement.new(value)
+      end
+      
+      # Returns the syntax tree of the Date
+      def tree
+        @tree ||= element.tree
       end
       
     end
     
-    def self.included(receiver)
-      receiver.extend         ClassMethods
+    def self.included(receiver) # :nodoc:
       receiver.send :include, InstanceMethods
     end
     

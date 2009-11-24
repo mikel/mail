@@ -8,7 +8,11 @@ module Mail
         def addresses
           [first_addr] + other_addr.elements.map { |o| o.addr_value }
         end
-      } / obs_addr_list
+      } / obs_addr_list {
+        def addresses
+          [first_addr] + other_addr.elements.map { |o| o.addr_value }
+        end
+      }
     end
     
   end

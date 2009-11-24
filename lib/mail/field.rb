@@ -23,13 +23,15 @@ module Mail
     include Patterns
     include Comparable
     
-    STRUCTURED_FIELDS = %w[ date from sender reply-to to cc bcc message-id in-reply-to
-                            references keywords resent-date resent-from resent-sender
-                            resent-to resent-cc resent-bcc resent-message-id 
-                            return-path received content-type content-transfer-encoding
-                            mime-version content-description content-id ]
+    STRUCTURED_FIELDS = %w[ bcc cc content-description content-disposition
+                            content-id content-location content-transfer-encoding
+                            content-type date from in-reply-to keywords message-id
+                            mime-version received references reply-to
+                            resent-bcc resent-cc resent-date resent-from
+                            resent-message-id resent-sender resent-to
+                            return-path sender to ]
 
-    KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments']
+    KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
     
     # Generic Field Exception
     class FieldError < StandardError
@@ -44,18 +46,33 @@ module Mail
     class SyntaxError < FieldError #:nodoc:
     end
     
-    # Accepts a text string in the format of:
+    # Accepts a string:
     # 
-    #  "field-name: field data"
+    #  Field.new("field-name: field data")
+    # 
+    # Or name, value pair:
+    # 
+    #  Field.new("field-name", "value")
+    # 
+    # Or a name by itself:
+    # 
+    #  Field.new("field-name")
     # 
     # Note, does not want a terminating carriage return.  Returns
-    # self appropriately parsed
-    def initialize(raw_field_text)
-      if raw_field_text !~ /:/
-        name = raw_field_text
+    # self appropriately parsed.  If value is not a string, then
+    # it will be passed through as is, for example, content-type
+    # field can accept an array with the type and a hash of 
+    # parameters:
+    # 
+    #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
+    def initialize(name, value = nil)
+      case
+      when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
+        name, value = split(name)
+        create_field(name, value.to_s)
+      when name !~ /:/ && value.blank?  # Field.new("field-name")
         create_field(name, nil)
-      else
-        name, value = split(raw_field_text)
+      else                              # Field.new("field-name", "value")
         create_field(name, value)
       end
       return self
@@ -94,8 +111,8 @@ module Mail
     end
     
     def <=>( other )
-      self_order = FIELD_ORDER.rindex(self.name.downcase) || 100
-      other_order = FIELD_ORDER.rindex(other.name.downcase) || 100
+      self_order = FIELD_ORDER.rindex(self.name.to_s.downcase) || 100
+      other_order = FIELD_ORDER.rindex(other.name.to_s.downcase) || 100
       self_order <=> other_order
     end
     
@@ -110,14 +127,13 @@ module Mail
                       message-id in-reply-to references
                       subject comments keywords
                       mime-version content-type content-transfer-encoding
-                      content-disposition content-description ]
-    
+                      content-location content-disposition content-description ]
     
     private
     
     def split(raw_field)
-      match_data = raw_field.match(/^(#{FIELD_NAME}):\s?(#{FIELD_BODY})$/)
-      [match_data[1], match_data[2]]
+      match_data = raw_field.match(/^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/)
+      [match_data[1].to_s.strip, match_data[2].to_s.strip]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
     end
@@ -131,61 +147,67 @@ module Mail
     end
 
     def new_field(name, value)
-      # Could do this with constantize and make it as DRY as, but a simple case is,
-      # well, simpler... 
-      case name.downcase
-      when /^to$/
-        ToField.new(name,value)
-      when /^cc$/
-        CcField.new(name,value)
-      when /^bcc$/
+      # Could do this with constantize and make it "as DRY as", but a simple case 
+      # statement is, well, simpler... 
+      case name
+      when /^to$/i
+        ToField.new(name, value)
+      when /^cc$/i
+        CcField.new(name, value)
+      when /^bcc$/i
         BccField.new(name, value)
-      when /^message-id$/
+      when /^message-id$/i
         MessageIdField.new(name, value)
-      when /^in-reply-to$/
+      when /^in-reply-to$/i
         InReplyToField.new(name, value)
-      when /^references$/
+      when /^references$/i
         ReferencesField.new(name, value)
-      when /^subject$/
+      when /^subject$/i
         SubjectField.new(name, value)
-      when /^comments$/
+      when /^comments$/i
         CommentsField.new(name, value)
-      when /^keywords$/
+      when /^keywords$/i
         KeywordsField.new(name, value)
-      when /^date$/
+      when /^date$/i
         DateField.new(name, value)
-      when /^from$/
+      when /^from$/i
         FromField.new(name, value)
-      when /^sender$/
+      when /^sender$/i
         SenderField.new(name, value)
-      when /^reply-to$/
+      when /^reply-to$/i
         ReplyToField.new(name, value)
-      when /^resent-date$/
+      when /^resent-date$/i
         ResentDateField.new(name, value)
-      when /^resent-from$/
+      when /^resent-from$/i
         ResentFromField.new(name, value)
-      when /^resent-sender$/ 
+      when /^resent-sender$/i 
         ResentSenderField.new(name, value)
-      when /^resent-to$/
+      when /^resent-to$/i
         ResentToField.new(name, value)
-      when /^resent-cc$/
+      when /^resent-cc$/i
         ResentCcField.new(name, value)
-      when /^resent-bcc$/
+      when /^resent-bcc$/i
         ResentBccField.new(name, value)
-      when /^resent-message-id$/
+      when /^resent-message-id$/i
         ResentMessageIdField.new(name, value)
-      when /^return-path$/
+      when /^return-path$/i
         ReturnPathField.new(name, value)
-      when /^received$/
+      when /^received$/i
         ReceivedField.new(name, value)
-      when /^mime-version$/
+      when /^mime-version$/i
         MimeVersionField.new(name, value)
-      when /^content-transfer-encoding$/
+      when /^content-transfer-encoding$/i
         ContentTransferEncodingField.new(name, value)
-      when /^content-description$/
+      when /^content-description$/i
         ContentDescriptionField.new(name, value)
-      when /^content-type$/
+      when /^content-disposition$/i
+        ContentDispositionField.new(name, value)
+      when /^content-type$/i
         ContentTypeField.new(name, value)
+      when /^content-id$/i
+        ContentIdField.new(name, value)
+      when /^content-location$/i
+        ContentLocationField.new(name, value)
       else 
         OptionalField.new(name, value)
       end

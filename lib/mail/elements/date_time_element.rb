@@ -1,25 +1,25 @@
 # encoding: utf-8
 module Mail
-  class DateTimeElement
+  class DateTimeElement # :nodoc:
     
     include Mail::Utilities
     
     def initialize( string )
       parser = Mail::DateTimeParser.new
       if tree = parser.parse(string)
-        @date = tree.date.text_value
-        @time = tree.time.text_value
+        @date_string = tree.date.text_value
+        @time_string = tree.time.text_value
       else
         raise Mail::Field::ParseError, "DateTimeElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
       end
     end
     
-    def date
-      @date
+    def date_string
+      @date_string
     end
     
-    def time
-      @time
+    def time_string
+      @time_string
     end
     
   end

@@ -1,25 +1,59 @@
 # encoding: utf-8
-module Mail
+module Mail # :doc:
 
   require 'date'
+
   require 'treetop'
+  require 'active_support'
+
+  # Have to handle ActiveSupport 2.3 and 3.0
+  # Following two lines make sure that HashWithIndifferentAccess is available
+  # regardless of having activesupport 3 or 2.3 loaded
+  require 'active_support/core_ext/hash/indifferent_access'
+
+  require 'uri'
   require 'net/smtp'
+  require 'mime/types'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
   dir_name = File.join(File.dirname(__FILE__), 'mail')
 
-  require File.join(dir_name, 'core_extensions')
+  if RUBY_VERSION >= "1.9.1"
+    require File.join(dir_name, 'version_specific', 'ruby_1_9.rb')
+    RubyVer = Mail::Ruby19
+  else
+    require File.join(dir_name, 'version_specific', 'ruby_1_8.rb')
+    RubyVer = Mail::Ruby18
+  end
+
+  require File.join(dir_name, 'version')
+  begin
+    require 'active_support/core_ext/object/blank'
+  rescue LoadError
+    # Unneeded for Active Support <= 3.0.pre
+  end
+  require File.join(dir_name, 'core_extensions/nil')
+  require File.join(dir_name, 'core_extensions/string')
+
   require File.join(dir_name, 'patterns')
   require File.join(dir_name, 'utilities')
   require File.join(dir_name, 'configuration')
   require File.join(dir_name, 'network', 'deliverable')
+  require File.join(dir_name, 'network', 'delivery_methods', 'smtp')
+  require File.join(dir_name, 'network', 'delivery_methods', 'file_delivery')
+  require File.join(dir_name, 'network', 'delivery_methods', 'sendmail')
+  require File.join(dir_name, 'network', 'delivery_methods', 'test_mailer')
   require File.join(dir_name, 'network', 'retrievable')
+  require File.join(dir_name, 'network', 'retriever_methods', 'pop3')
+  require File.join(dir_name, 'network', 'retriever_methods', 'imap')
 
   require File.join(dir_name, 'message')
+  require File.join(dir_name, 'part')
   require File.join(dir_name, 'header')
   require File.join(dir_name, 'body')
   require File.join(dir_name, 'field')
   require File.join(dir_name, 'field_list')
+  require File.join(dir_name, 'attachment')
 
   # Load in all common header fields modules
   commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))
@@ -31,18 +65,20 @@ module Mail
   require File.join(dir_name, 'fields', 'unstructured_field')
   require File.join(dir_name, 'envelope')
 
-  Treetop.load(File.join(dir_name, 'parsers', 'rfc2822_obsolete'))
-  Treetop.load(File.join(dir_name, 'parsers', 'rfc2822'))
-  Treetop.load(File.join(dir_name, 'parsers', 'address_lists'))
-  Treetop.load(File.join(dir_name, 'parsers', 'phrase_lists'))
-  Treetop.load(File.join(dir_name, 'parsers', 'date_time'))
-  Treetop.load(File.join(dir_name, 'parsers', 'received'))
-  Treetop.load(File.join(dir_name, 'parsers', 'message_ids'))
-  Treetop.load(File.join(dir_name, 'parsers', 'envelope_from'))
-  Treetop.load(File.join(dir_name, 'parsers', 'rfc2045'))
-  Treetop.load(File.join(dir_name, 'parsers', 'mime_version'))
-  Treetop.load(File.join(dir_name, 'parsers', 'content_type'))
-  Treetop.load(File.join(dir_name, 'parsers', 'content_transfer_encoding'))
+  parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
+                date_time received message_ids envelope_from rfc2045 
+                mime_version content_type content_disposition
+                content_transfer_encoding content_location ]
+
+  parsers.each do |parser|
+    begin
+      # Try requiring the pre-compiled ruby version first
+      require File.join(dir_name, 'parsers', parser)
+    rescue LoadError
+      # Otherwise, get treetop to compile and load it
+      Treetop.load(File.join(dir_name, 'parsers', parser))
+    end
+  end
   
   # Load in all header field elements
   elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
@@ -56,59 +92,13 @@ module Mail
     require field
   end
   
-  def Mail.new(*args, &block)
-    if block_given?
-      Mail::Message.new(args, &block)
-    else
-      Mail::Message.new(args)
-    end
-  end
-
-  # Set the default configuration to send and receive emails
-  #
-  #   Mail.defaults do
-  #     smtp 'smtp.myhost.fr', 587
-  #     pop3 'pop.myhost.fr'
-  #     user 'bernardo'
-  #     pass 'mypass'
-  #     enable_tls
-  #   end
-  def Mail.defaults(&block)
-    if block_given?
-      Mail::Configuration.instance.defaults(&block)
-    end
-  end
-
-  # Send an email using the default configuration
-  def Mail.deliver(*args, &block)
-    Mail.new(args, &block).deliver!
-  end
-
-  def Mail.get_all_mail(&block)
-    Mail::Message.get_all_mail(&block)
-  end
-
-  def Mail.read(filename)
-    Mail.new(File.read(filename))
+  # Load in all transfer encodings
+  elems = Dir.glob(File.join(dir_name, 'encodings', '*.rb'))
+  elems.each do |elem|
+    require elem
   end
   
-  def Mail.random_tag
-    t = Time.now
-    sprintf('%x%x_%x%x%d%x',
-            t.to_i, t.tv_usec,
-            $$, Thread.current.object_id, Mail.uniq, rand(255))
-  end
-  
-  private
+  # Finally... require all the Mail.methods
+  require File.join(dir_name, 'mail')
 
-  def Mail.something_random
-    (Thread.current.object_id * rand(255) / Time.now.to_f).to_s.slice(-3..-1).to_i
-  end
-  
-  def Mail.uniq
-    @@uniq += 1
-  end
-  
-  @@uniq = Mail.something_random
-  
 end

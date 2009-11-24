@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::BccField do
   
@@ -76,12 +76,17 @@ describe Mail::BccField do
     
     it "should return the formatted line on to_s" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.to_s.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
-    it "should return the encoded line" do
+    it "should return nothing on encoded as Bcc should not be in the mail" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Bcc: sam@me.com, my_group: mikel@me.com, bob@you.com;\r\n"
+      t.encoded.should == ""
+    end
+    
+    it "should return the decoded line" do
+      t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

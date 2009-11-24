@@ -5,9 +5,10 @@ module Mail
   class SubjectField < UnstructuredField
     
     FIELD_NAME = 'subject'
+    CAPITALIZED_FIELD = "Subject"
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
     end
     
   end

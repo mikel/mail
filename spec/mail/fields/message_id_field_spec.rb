@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 # 3.6.4. Identification fields
 #  
 #   Though optional, every message SHOULD have a "Message-ID:" field.
@@ -118,6 +118,11 @@ describe Mail::MessageIdField do
     it "should provide encoded" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       m.encoded.should == "Message-ID: <1234@test.lindsaar.net>\r\n"
+    end
+
+    it "should provide decoded" do
+      m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
+      m.decoded.should == "<1234@test.lindsaar.net>"
     end
     
     it "should respond to :responsible_for?" do

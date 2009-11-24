@@ -1,12 +1,26 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::Address do
 
   describe "functionality" do
 
-    it "should allow us to instantiate an empty address object" do
-      doing { Mail::Address.new }.should_not raise_error
+    it "should allow us to instantiate an empty address object and call to_s" do
+#      doing { 
+        Mail::Address.new.inspect
+#      }.should_not raise_error
+    end
+
+    it "should allow us to instantiate an empty address object and call inspect" do
+#      doing { 
+        Mail::Address.new.inspect
+#      }.should_not raise_error
+    end
+
+    it "should allow us to instantiate an empty address object and call format" do
+#      doing { 
+        Mail::Address.new.format
+#      }.should_not raise_error
     end
 
     it "should give it's address back on :to_s if there is no display name" do
@@ -77,6 +91,34 @@ describe Mail::Address do
       a.raw.should == result
     end
 
+  end
+  
+  describe "assigning values directly" do
+    it "should allow you to assign an address" do
+      a = Mail::Address.new
+      a.address = 'mikel@test.lindsaar.net'
+      a.address.should == 'mikel@test.lindsaar.net'
+      a.format.should == 'mikel@test.lindsaar.net'
+    end
+
+    it "should allow you to assign a display name" do
+      a = Mail::Address.new
+      a.display_name = 'Mikel Lindsaar'
+      a.display_name.should == 'Mikel Lindsaar'
+    end
+
+    it "should return an empty format a display name and no address defined" do
+      a = Mail::Address.new
+      a.display_name = 'Mikel Lindsaar'
+      a.format.should == ''
+    end
+    
+    it "should allow you to assign an address and a display name" do
+      a = Mail::Address.new
+      a.address = 'mikel@test.lindsaar.net'
+      a.display_name = 'Mikel Lindsaar'
+      a.format.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+    end
   end
 
   describe "parsing" do
@@ -414,7 +456,7 @@ describe Mail::Address do
             :comments     => ['foo@bar.com (foobar), ned@foo.com (nedfoo) '],
             :domain       => 'goess.org',
             :local        => 'kevin',
-            :format       => '"(foo@bar.com \\\\(foobar\\\\), ned@foo.com \\\\(nedfoo\\\\) )" <kevin@goess.org> (foo@bar.com \(foobar\), ned@foo.com \(nedfoo\) )',
+            :format       => '"(foo@bar.com \\(foobar\\), ned@foo.com \(nedfoo\) )" <kevin@goess.org> (foo@bar.com \(foobar\), ned@foo.com \(nedfoo\) )',
             :raw          => '(foo@bar.com (foobar), ned@foo.com (nedfoo) ) <kevin@goess.org>'})
       end
       
@@ -424,16 +466,53 @@ describe Mail::Address do
             :name         => 'Pete',
             :display_name => 'Pete',
             :address      => 'pete(his account)@silly.test',
-            :comments     => ['A wonderful \) chap', 'his account', 'his host'],
+            :comments     => ['A wonderful \\) chap', 'his account', 'his host'],
             :domain       => 'silly.test',
             :local        => 'pete(his account)',
-            :format       => 'Pete <pete(his account)@silly.test> (A wonderful \) chap his account his host)',
-            :raw          => 'Pete(A wonderful \) chap) <pete(his account)@silly.test(his host)>'})
+            :format       => 'Pete <pete(his account)@silly.test> (A wonderful \\) chap his account his host)',
+            :raw          => 'Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>'})
+      end
+      
+      it "should handle |Joe Q. Public <john.q.public@example.com>|" do
+        address = Mail::Address.new('Joe Q. Public <john.q.public@example.com>')
+        address.should break_down_to({
+            :name         => 'Joe Q. Public',
+            :display_name => 'Joe Q. Public',
+            :address      => 'john.q.public@example.com',
+            :comments     => nil,
+            :domain       => 'example.com',
+            :local        => 'john.q.public',
+            :format       => '"Joe Q. Public" <john.q.public@example.com>',
+            :raw          => 'Joe Q. Public <john.q.public@example.com>'})
+      end
+      
+      it "should handle |Mary Smith <@machine.tld:mary@example.net>|" do
+        address = Mail::Address.new('Mary Smith <@machine.tld:mary@example.net>')
+        address.should break_down_to({
+            :name         => 'Mary Smith',
+            :display_name => 'Mary Smith',
+            :address      => '@machine.tld:mary@example.net',
+            :comments     => nil,
+            :domain       => 'example.net',
+            :local        => '@machine.tld:mary',
+            :format       => 'Mary Smith <@machine.tld:mary@example.net>',
+            :raw          => 'Mary Smith <@machine.tld:mary@example.net>'})
       end
 
+      it "should handle |jdoe@test   . example|" do
+        pending
+        address = Mail::Address.new('jdoe@test   . example')
+        address.should break_down_to({
+            :name         => 'jdoe@test.example',
+            :display_name => 'jdoe@test.example',
+            :address      => 'jdoe@test.example',
+            :comments     => nil,
+            :domain       => 'test.example',
+            :local        => 'jdoe',
+            :format       => 'jdoe@test.example',
+            :raw          => 'jdoe@test.example'})
+      end
 
-
-      
     end
     
   end
@@ -481,6 +560,34 @@ describe Mail::Address do
       address.display_name = "Mikel Lindsaar"
       address.address = "mikel@test.lindsaar.net"
       address.format.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+    end
+
+  end
+
+  describe "providing encoded and decoded outputs" do
+    it "should provide an encoded output" do
+      address = Mail::Address.new
+      address.display_name = "Mikel Lindsaar"
+      address.address = "mikel@test.lindsaar.net"
+      address.encoded.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+    end
+
+    it "should provide an encoded output for non us-ascii" do
+      address = Mail::Address.new
+      address.display_name = "まける"
+      address.address = "mikel@test.lindsaar.net"
+      if RUBY_VERSION >= '1.9'
+        address.encoded.should == '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+      else
+        address.encoded.should == '=?UTF8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+      end
+    end
+
+    it "should provide an encoded output for non us-ascii" do
+      address = Mail::Address.new
+      address.display_name = "まける"
+      address.address = "mikel@test.lindsaar.net"
+      address.decoded.should == '"まける" <mikel@test.lindsaar.net>'
     end
 
   end

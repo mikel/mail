@@ -84,6 +84,10 @@ module Mail
       "|" / "}" /
       "~"
     end
+    
+    rule mtext
+      (atext / ".")+
+    end
 
     rule atom
       CFWS? atext+ CFWS?
@@ -97,8 +101,8 @@ module Mail
       CFWS? local_dot_atom_text CFWS?
     end
     
-    rule dot_atom_text
-      (domain_text "."?)+
+    rule message_id_text
+      mtext+
     end
     
     rule dot_atom_text
@@ -134,7 +138,7 @@ module Mail
     end
   
     rule phrase
-      word+ / obs_phrase
+      obs_phrase / word+
     end
 
     rule domain_literal
@@ -178,6 +182,7 @@ module Mail
         end
       }
     end
+
     rule quoted_string
       CFWS? DQUOTE quoted_content:(FWS? qcontent)+ FWS? DQUOTE CFWS?
     end
@@ -363,7 +368,7 @@ module Mail
     end
     
     rule id_left
-      dot_atom_text / no_fold_quote / obs_id_left
+      message_id_text / no_fold_quote / obs_id_left
     end
     
     rule id_right
@@ -400,14 +405,6 @@ module Mail
       "[" (dtext / quoted_pair)+ "]"
     end
     
-    rule obs_id_left
-      local_part
-    end
-
-    rule obs_id_right
-      domain
-    end
-
     
   end
 end

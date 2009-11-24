@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::AddressList do
 
@@ -10,8 +10,13 @@ describe Mail::AddressList do
     end
 
     it "should raise an error if the input is useless" do
-      parse_text = nil
+      parse_text = '@@@@@@'
       doing { Mail::AddressList.new(parse_text) }.should raise_error
+    end
+    
+    it "should not raise an error if the input is just blank" do
+      parse_text = nil
+      doing { Mail::AddressList.new(parse_text) }.should_not raise_error
     end
 
     it "should raise an error if the input is useless" do
@@ -70,6 +75,14 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.addresses.length.should == 3
     end
+    
+    it "should handle a really nasty obsolete address list" do
+      pending
+      psycho_obsolete = "Mary Smith <@machine.tld:mary@example.net>, , jdoe@test   . example"
+      list = Mail::AddressList.new(psycho_obsolete)
+      list.addresses.length.should == 2
+    end
+    
 
     it "should create an address instance for each address returned" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
@@ -82,6 +95,7 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.group_names.should == ["my_group"]
     end
+    
   end
   
 end

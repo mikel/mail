@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::ContentTypeField do
   # Content-Type Header Field
@@ -98,12 +98,27 @@ describe Mail::ContentTypeField do
       c.value.should_not be_nil
     end
 
+    it "should render encoded" do
+      c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n\tformat="flowed";\r\n}
+    end
+
+    it "should render decoded" do
+      c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
+      c.decoded.should == 'text/plain; charset=US-ASCII; format=flowed'
+    end
+
   end
 
   describe "instance methods" do
     it "should return a content_type" do
       c = Mail::ContentTypeField.new('text/plain')
       c.content_type.should == 'text/plain'
+    end
+
+    it "should return a content_type for the :string method" do
+      c = Mail::ContentTypeField.new('text/plain')
+      c.string.should == 'text/plain'
     end
 
     it "should return a main_type" do
@@ -121,7 +136,7 @@ describe Mail::ContentTypeField do
       c.parameters.should == {'charset' => 'US-ASCII'}
     end
     
-    it "should return multipl parameters as a hash" do
+    it "should return multiple parameters as a hash" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
       c.parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
     end
@@ -130,19 +145,30 @@ describe Mail::ContentTypeField do
       c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple-Mail-13-196941151')
       c.parameters.should == {'boundary' => 'Apple-Mail-13-196941151'}
     end
+
+    it "should be indifferent with the access" do
+      c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple')
+      c.parameters[:boundary].should == "Apple"
+      c.parameters['boundary'].should == "Apple"
+    end
   
   end
   
   describe "class methods" do
     it "should give back an initialized instance with a unique boundary" do
-      boundary = Mail::ContentTypeField.multipart_alternative_with_boundary
-      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\t boundary=--==_mimepart_[\w\d]+_[\w\d]+\r\n}
+      boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
+      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+";\r\n}
+    end
+
+    it "should give back an initialized instance with different type with a unique boundary" do
+      boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
+      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+";\r\n}
     end
 
     it "should give unique boundaries" do
-      boundary1 = Mail::ContentTypeField.multipart_alternative_with_boundary.parameters['boundary']
+      boundary1 = Mail::ContentTypeField.with_boundary('multipart/alternative').parameters['boundary']
       0.upto(250) do
-        boundary2 = Mail::ContentTypeField.multipart_alternative_with_boundary.parameters['boundary']
+        boundary2 = Mail::ContentTypeField.with_boundary('multipart/alternative').parameters['boundary']
         boundary1.should_not == boundary2
       end
     end
@@ -502,6 +528,83 @@ describe Mail::ContentTypeField do
       c.parameters.should == {'boundary' => '1_4626B816_9F1690', 'Type' => 'application/smil', 'Start' => '<mms.smil.txt>'}
     end
     
+  end
+
+  describe "finding a filename" do
+    
+    it "should locate a filename if there is a filename" do
+      string = %q{application/octet-stream; filename=mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      c.filename.should == 'mikel.jpg'
+    end
+
+    it "should locate a name if there is no filename" do
+      string = %q{application/octet-stream; name=mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      c.filename.should == 'mikel.jpg'
+    end
+    
+    it "should locate an encoded name as a filename" do
+      string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3}
+      c = Mail::ContentTypeField.new(string)
+      if RUBY_VERSION >= '1.9'
+        expected = "01 Quien Te Dij\221at. Pitbull.mp3".force_encoding(Encoding::BINARY)
+        result = c.filename.force_encoding(Encoding::BINARY)
+      else
+        expected = "01 Quien Te Dij\221at. Pitbull.mp3"
+        result = c.filename
+      end
+      expected.should == result
+    end
+    
+    it "should encode a non us-ascii filename" do
+      Mail.defaults do
+        param_encode_language('jp')
+      end
+      c = Mail::ContentTypeField.new('application/octet-stream')
+      string = "01 Quien Te Dij\221at. Pitbull.mp3"
+      if RUBY_VERSION >= '1.9'
+        string.force_encoding('SJIS')
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3";\r\n}
+      else
+        $KCODE = 'SJIS'
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3";\r\n}
+      end
+      c.filename = string
+      c.parameters.should == {'filename' => string}
+      c.encoded.should == result
+    end
+    
+  end
+
+  describe "handling badly formated content-type fields" do
+
+    it "should handle missing sub-type on a text content type" do
+      c = Mail::ContentTypeField.new('Content-Type: text')
+      c.content_type.should == 'text/plain'
+    end
+    
+    it "should handle missing ; after content-type" do
+      c = Mail::ContentTypeField.new('Content-Type: multipart/mixed boundary="----=_NextPart_000_000F_01C17754.8C3CAF30"')
+      c.content_type.should == 'multipart/mixed'
+      c.parameters['boundary'].should == '----=_NextPart_000_000F_01C17754.8C3CAF30'
+    end
+
+  end
+
+  describe "initializing with an array" do
+    it "should initialize with an array" do
+      c = Mail::ContentTypeField.new(['text', 'html', {'charset' => 'UTF-8'}])
+      c.content_type.should == 'text/html'
+      c.parameters['charset'].should == 'UTF-8'
+    end
+    
+    it "should allow many parameters to be passed in" do
+      c = Mail::ContentTypeField.new(['text', 'html', {"format"=>"flowed", "charset"=>"utf-8"}])
+      c.content_type.should == 'text/html'
+      c.parameters['charset'].should == 'utf-8'
+      c.parameters['format'].should == 'flowed'
+    end
   end
 
 end

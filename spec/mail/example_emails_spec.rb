@@ -1,7 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../spec_helper'
-
-require 'mail'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
 
 describe "Test emails" do
   
@@ -12,22 +10,12 @@ describe "Test emails" do
     # John Doe, a single recipient, Mary Smith, a subject, the date, a
     # message identifier, and a textual message in the body.
     it "should handle the basic test email" do
-      email =<<EMAILEND
-From: John Doe <jdoe@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: Fri, 21 Nov 1997 09:55:06 -0600
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example01.eml'))
       mail.from.formatted.should == ['John Doe <jdoe@machine.example>']
       mail.to.formatted.should == ['Mary Smith <mary@example.net>']
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -35,24 +23,13 @@ EMAILEND
     # was the author and replies to this message should go back to him, the
     # sender field would be used:
     it "should handle the sender test email" do
-      email =<<EMAILEND
-From: John Doe <jdoe@machine.example>
-Sender: Michael Jones <mjones@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: Fri, 21 Nov 1997 09:55:06 -0600
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example02.eml'))
       mail.from.formatted.should == ['John Doe <jdoe@machine.example>']
       mail.sender.formatted.should == ['Michael Jones <mjones@machine.example>']
       mail.to.formatted.should == ['Mary Smith <mary@example.net>']
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -68,21 +45,14 @@ EMAILEND
     # also that jdoe@example.org and boss@nil.test have no display names
     # associated with them at all, and jdoe@example.org uses the simpler
     # address form without the angle brackets.
+    # 
+    # "Giant; \"Big\" Box" <sysservices@example.net>
     it "should handle multiple recipients test email" do
-      email =<<EMAILEND
-From: "Joe Q. Public" <john.q.public@example.com>
-To: Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>
-Cc: <boss@nil.test>, "Giant; \"Big\" Box" <sysservices@example.net>
-Date: Tue, 1 Jul 2003 10:52:37 +0200
-Message-ID: <5678.21-Nov-1997@example.com>
-
-Hi everyone.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
       mail.from.formatted.should == ['"Joe Q. Public" <john.q.public@example.com>']
       mail.to.formatted.should == ['Mary Smith <mary@x.test>', 'jdoe@example.org', 'Who? <one@y.test>']
-      mail.cc.formatted.should == ['boss@nil.test', '"Giant; \"Big\" Box" <sysservices@example.net>']
-      mail.message_id.to_s.should == '<5678.21-Nov-1997@example.com>'
+      mail.cc.formatted.should == ['boss@nil.test', "\"Giant; \\\"Big\\\" Box\" <sysservices@example.net>"]
+      mail.message_id.value.should == '<5678.21-Nov-1997@example.com>'
       mail.date.date_time.should == ::DateTime.parse('1 Jul 2003 10:52:37 +0200')
     end
 
@@ -92,20 +62,11 @@ EMAILEND
     # Group which contains 3 addresses, and a "Cc:" field with an empty
     # group recipient named Undisclosed recipients.
     it "should handle group address email test" do
-      email =<<EMAILEND
-From: Pete <pete@silly.example>
-To: A Group:Chris Jones <c@a.test>,joe@where.test,John <jdoe@one.test>;
-Cc: Undisclosed recipients:;
-Date: Thu, 13 Feb 1969 23:32:54 -0330
-Message-ID: <testabcd.1234@silly.example>
-
-Testing.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example04.eml'))
       mail.from.formatted.should == ['Pete <pete@silly.example>']
       mail.to.formatted.should == ['Chris Jones <c@a.test>', 'joe@where.test', 'John <jdoe@one.test>']
       mail.cc.group_names.should == ['Undisclosed recipients']
-      mail.message_id.to_s.should == '<testabcd.1234@silly.example>'
+      mail.message_id.value.should == '<testabcd.1234@silly.example>'
       mail.date.date_time.should == ::DateTime.parse('Thu, 13 Feb 1969 23:32:54 -0330')
     end
 
@@ -120,21 +81,11 @@ EMAILEND
     # Note especially the "Message-ID:", "References:", and "In-Reply-To:"
     # fields in each message.
     it "should handle reply messages" do
-      email =<<EMAILEND
-From: John Doe <jdoe@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: Fri, 21 Nov 1997 09:55:06 -0600
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example05.eml'))
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.subject.value.should == 'Saying Hello'
+      mail.message_id.value.should == '<1234@local.machine.example>'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
     end
 
@@ -145,24 +96,12 @@ EMAILEND
     # to Mary's message above, the reply should go to the address in the
     # "Reply-To:" field instead of the address in the "From:" field.
     it "should handle reply message 2" do
-      email =<<EMAILEND
-From: Mary Smith <mary@example.net>
-To: John Doe <jdoe@machine.example>
-Reply-To: "Mary Smith: Personal Account" <smith@home.example>
-Subject: Re: Saying Hello
-Date: Fri, 21 Nov 1997 10:01:10 -0600
-Message-ID: <3456@example.net>
-In-Reply-To: <1234@local.machine.example>
-References: <1234@local.machine.example>
-
-This is a reply to your hello.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example06.eml'))
       mail.from.addresses.should == ['mary@example.net']
       mail.to.addresses.should == ['jdoe@machine.example']
       mail.reply_to.addresses.should == ['smith@home.example']
-      mail.subject.to_s.should == 'Re: Saying Hello'
-      mail.message_id.to_s.should == '<3456@example.net>'
+      mail.subject.value.should == 'Re: Saying Hello'
+      mail.message_id.value.should == '<3456@example.net>'
       mail.in_reply_to.message_ids.should == ['1234@local.machine.example']
       mail.references.message_ids.should == ['1234@local.machine.example']
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 10:01:10 -0600')
@@ -171,24 +110,13 @@ EMAILEND
     # From RFC 2822:
     # Final reply message
     it "should handle the final reply message" do
-      email =<<EMAILEND
-To: "Mary Smith: Personal Account" <smith@home.example>
-From: John Doe <jdoe@machine.example>
-Subject: Re: Saying Hello
-Date: Fri, 21 Nov 1997 11:00:00 -0600
-Message-ID: <abcd.1234@local.machine.tld>
-In-Reply-To: <3456@example.net>
-References: <1234@local.machine.example> <3456@example.net>
-
-This is a reply to your reply.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example07.eml'))
       mail.to.addresses.should == ['smith@home.example']
       mail.from.addresses.should == ['jdoe@machine.example']
-      mail.subject.to_s.should == 'Re: Saying Hello'
+      mail.subject.value.should == 'Re: Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 11:00:00 -0600')
-      mail.message_id.to_s.should == '<abcd.1234@local.machine.tld>'
-      mail.in_reply_to.to_s.should == '<3456@example.net>'
+      mail.message_id.value.should == '<abcd.1234@local.machine.tld>'
+      mail.in_reply_to.value.should == '<3456@example.net>'
       mail.references.message_ids.should == ['1234@local.machine.example', '3456@example.net']
     end
 
@@ -206,30 +134,16 @@ EMAILEND
     # she would prepend her own set of resent header fields to the above
     # and send that.
     it "should handle the rfc resent example email" do
-      email =<<EMAILEND
-Resent-From: Mary Smith <mary@example.net>
-Resent-To: Jane Brown <j-brown@other.example>
-Resent-Date: Mon, 24 Nov 1997 14:22:01 -0800
-Resent-Message-ID: <78910@example.net>
-From: John Doe <jdoe@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: Fri, 21 Nov 1997 09:55:06 -0600
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example08.eml'))
       mail.resent_from.addresses.should == ['mary@example.net']
       mail.resent_to.addresses.should == ['j-brown@other.example']
       mail.resent_date.date_time.should == ::DateTime.parse('Mon, 24 Nov 1997 14:22:01 -0800')
-      mail.resent_message_id.to_s.should == '<78910@example.net>'
+      mail.resent_message_id.value.should == '<78910@example.net>'
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.4. Messages with trace fields
@@ -239,33 +153,16 @@ EMAILEND
     # there is some folding white space in the first one since these lines
     # can be long.
     it "should handle the RFC trace example email" do
-      email =<<EMAILEND
-Received: from x.y.test
-   by example.net
-   via TCP
-   with ESMTP
-   id ABC12345
-   for <mary@example.net>;  21 Nov 1997 10:05:43 -0600
-Received: from machine.example by x.y.test; 21 Nov 1997 10:01:22 -0600
-From: John Doe <jdoe@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: Fri, 21 Nov 1997 09:55:06 -0600
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example09.eml'))
       mail.received[0].info.should == 'from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>'
       mail.received[0].date_time.should == ::DateTime.parse('21 Nov 1997 10:05:43 -0600')
       mail.received[1].info.should == 'from machine.example by x.y.test'
       mail.received[1].date_time.should == ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
       mail.from.addresses.should == ['jdoe@machine.example']
       mail.to.addresses.should == ['mary@example.net']
-      mail.subject.to_s.should == 'Saying Hello'
+      mail.subject.value.should == 'Saying Hello'
       mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.to_s.should == '<1234@local.machine.example>'
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.5. White space, comments, and other oddities
@@ -287,29 +184,12 @@ EMAILEND
     # seconds in the time of the date field; and (5) the white space before
     # (but not within) the identifier in the "Message-ID:" field.
     it "should handle the rfc whitespace test email" do
-      email =<<EMAILEND
-From: Pete(A wonderful \\) chap) <pete(his account)@silly.test(his host)>
-To:A Group(Some people)
-     :Chris Jones <c@(Chris's host.)public.example>,
-         joe@example.org,
-  John <jdoe@one.test> (my dear friend); (the end of the group)
-Cc:(Empty list)(start)Undisclosed recipients  :(nobody(that I know))  ;
-Date: Thu,
-      13
-        Feb
-          1969
-      23:32
-               -0330 (Newfoundland Time)
-Message-ID:              <testabcd.1234@silly.test>
-
-Testing.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
       mail.from.addresses.should == ['pete(his account)@silly.test']
       mail.to.addresses.should == ["c@(Chris's host.)public.example", 'joe@example.org', 'jdoe@one.test']
       mail.cc.group_names.should == ['(Empty list)(start)Undisclosed recipients ']
       mail.date.date_time.should == ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
-      mail.message_id.to_s.should == '<testabcd.1234@silly.test>'
+      mail.message_id.value.should == '<testabcd.1234@silly.test>'
     end
 
     # A.6. Obsoleted forms
@@ -323,20 +203,12 @@ EMAILEND
     # "." in the jdoe address.
     it "should handle the rfc obsolete addressing" do
       pending
-      email =<<EMAILEND
-From: Joe Q. Public <john.q.public@example.com>
-To: Mary Smith <@machine.tld:mary@example.net>, , jdoe@test   . example
-Date: Tue, 1 Jul 2003 10:52:37 +0200
-Message-ID: <5678.21-Nov-1997@example.com>
-
-Hi everyone.
-EMAILEND
-      mail = Mail::Message.new(email)
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example11.eml'))
       mail.from.addresses.should == ['john.q.public@example.com']
       mail.from.formatted.should == ['"Joe Q. Public" <john.q.public@example.com>']
       mail.to.addresses.should == ["@machine.tld:mary@example.net", 'jdoe@test.example']
       mail.date.date_time.should == ::DateTime.parse('Tue, 1 Jul 2003 10:52:37 +0200')
-      mail.message_id.to_s.should == '<5678.21-Nov-1997@example.com>'
+      mail.message_id.value.should == '<5678.21-Nov-1997@example.com>'
     end
 
     # A.6.2. Obsolete dates
@@ -347,17 +219,11 @@ EMAILEND
     # it is optional in the current syntax as well.
     it "should handle the rfc obsolete dates" do
       pending
-      email =<<EMAILEND
-From: John Doe <jdoe@machine.example>
-To: Mary Smith <mary@example.net>
-Subject: Saying Hello
-Date: 21 Nov 97 09:55:06 GMT
-Message-ID: <1234@local.machine.example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
-      doing { Mail::Message.new(email) }.should_not raise_error
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example12.eml'))
+      mail.from.addresses.should == ['jdoe@machine.example']
+      mail.to.addresses.should == ['mary@example.net']
+      mail.date.date_time.should == ::DateTime.parse('21 Nov 97 09:55:06 GMT')
+      mail.message_id.value.should == '<1234@local.machine.example>'
     end
 
     # A.6.3. Obsolete white space and comments
@@ -374,30 +240,50 @@ EMAILEND
     # obsolete syntax.
     it "should handle the rfc obsolete whitespace email" do
       pending
-      email =<<EMAILEND
-From  : John Doe <jdoe@machine(comment).  example>
-To    : Mary Smith
-__
-          <mary@example.net>
-Subject     : Saying Hello
-Date  : Fri, 21 Nov 1997 09(comment):   55  :  06 -0600
-Message-ID  : <1234   @   local(blah)  .machine .example>
-
-This is a message just to say hello.
-So, "Hello".
-EMAILEND
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example13.eml'))
+      mail.from.addresses.should == ['John Doe <jdoe@machine(comment).example>']
+      mail.to.addresses.should == ['Mary Smith <mary@example.net>']
+      mail.date.date_time.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
+      mail.message_id.value.should == '<1234@local(blah).machine.example>'
       doing { Mail::Message.new(email) }.should_not raise_error
     end
 
   end
 
   describe "from the wild" do
-    it "should return an 'encoded' version without raising a SystemStackError" do
-      message = Mail::Message.new(File.read(fixture('emails/raw_email_encoded_stack_level_too_deep')))
-      doing { message.encoded }.should_not raise_error
-    end
-  end
 
-  
+    describe "raw_email_encoded_stack_level_too_deep.eml" do
+      before(:each) do
+        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml')))
+      end
+
+      it "should return an 'encoded' version without raising a SystemStackError" do
+        doing { @message.encoded }.should_not raise_error
+      end
+
+      it "should have two parts" do
+        @message.parts.length.should == 2
+      end
+
+    end
+
+    describe "sig_only_email.eml" do
+      before(:each) do
+        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'sig_only_email.eml')))
+      end
+      
+      it "should not error on multiart/signed emails" do
+        doing { @message.encoded }.should_not raise_error
+      end
+      
+      it "should have one attachment called signature.asc" do
+        @message.attachments.length.should == 1
+        @message.attachments.first.filename.should == 'signature.asc'
+      end
+      
+    end
+    
+
+  end
   
 end

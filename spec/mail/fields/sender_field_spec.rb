@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::SenderField do
   # sender          =       "Sender:" mailbox CRLF
@@ -50,7 +50,7 @@ describe Mail::SenderField do
     
     it "should return the formatted line on to_s" do
       t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.to_s.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the encoded line" do

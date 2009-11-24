@@ -1,16 +1,15 @@
 # encoding: utf-8
 module Mail
-  module CommonMessageId
+  module CommonMessageId # :nodoc:
     
-    module ClassMethods
+    module ClassMethods # :nodoc:
       
     end
     
-    module InstanceMethods
+    module InstanceMethods # :doc:
       
       def tree
-        @element ||= Mail::MessageIdsElement.new(value)
-        @tree ||= @element.tree
+        @tree ||= element.tree
       end
       
       def element
@@ -25,9 +24,19 @@ module Mail
         element.message_ids
       end
       
+      private
+      
+      def do_encode(field_name)
+        %Q{#{field_name}: #{message_ids.map { |m| "<#{m}>" }.join(', ')}\r\n}
+      end
+      
+      def do_decode
+        "#{message_ids.map { |m| "<#{m}>" }.join(', ')}"
+      end
+      
     end
     
-    def self.included(receiver)
+    def self.included(receiver) # :nodoc:
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end
