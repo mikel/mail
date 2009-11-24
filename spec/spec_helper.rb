@@ -9,21 +9,11 @@ unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
 end
 
-environment = File.expand_path('../../vendor/gems/environment')
+environment = File.expand_path('../../vendor/gems/environment', __FILE__)
 if File.exist?("#{environment}.rb")
   require environment
 else
-  require 'rubygems'
-  gem "treetop", ">= 1.4"
-  gem 'activesupport', ">= 2.3"
-
-  begin
-    require 'ruby-debug' if RUBY_VERSION < '1.9'
-  rescue LoadError
-    # Skip debugger if unavailable.
-  end
-  require 'spec'
-  require 'treetop'
+  abort 'Missing bundled environment. `gem install bundle && gem bundle` and try again.'
 end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
