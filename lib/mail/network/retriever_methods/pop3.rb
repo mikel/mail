@@ -1,3 +1,12 @@
+# encoding: utf-8
+
+# The Pop3 retriever allows to get the last, first or all emails from a Pop3 server.
+# Each email retrieved (RFC2822) is given as an instance of +Message+.
+#
+# While being retrieved, emails can be yielded if a block is given.
+#
+# This module uses the defaults set in Configuration to retrieve POP3 settings.
+# 
 module Mail
   class POP3
     include Singleton
@@ -46,40 +55,107 @@ module Mail
       @tls || false
     end
     
-    # Get all emails via POP3.
-    # TODO :limit option
-    # TODO :order option
-    def POP3.get_messages(&block)
-      config = Mail.defaults
-      if config.pop3.host.blank? || config.pop3.port.blank?
-        raise ArgumentError.new('Please call +Mail.defaults+ to set the POP3 configuration')
-      end
+    # Get the oldest received email(s)
+    #
+    # Possible options:
+    #   count: number of emails to retrieve. The default value is 1.
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
+    def POP3.first(options = {}, &block)
+      options ||= {}
+      options[:what] = :first
+      options[:count] ||= 1
+      find(options, &block)
+    end
+    
+    # Get the most recent received email(s)
+    #
+    # Possible options:
+    #   count: number of emails to retrieve. The default value is 1.
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
+    def POP3.last(options = {}, &block)
+      options ||= {}
+      options[:what] = :last
+      options[:count] ||= 1
+      find(options, &block)
+    end
+    
+    # Get all emails.
+    #
+    # Possible options:
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
+    def POP3.all(options = {}, &block)
+      options ||= {}
+      options[:count] = :all
+      find(options, &block)
+    end
+    
+    # Find emails in a POP3 mailbox. Without any options, the 5 last received emails are returned.
+    #
+    # Possible options:
+    #   what:  last or first emails. The default is :first.
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+    #          instance of Message, not an array of Message instances.
+    #
+    def POP3.find(options = {}, &block)
+      validate_configuration
+      options = validate_options(options)
       
       start do |pop3|
+        mails = pop3.mails
+        mails.sort! { |m1, m2| m2.number <=> m1.number } if options[:what] == :last
+        mails = mails.first(options[:count]) if options[:count].is_a? Integer
+        
+        if options[:what].to_sym == :last && options[:order].to_sym == :desc ||
+           options[:what].to_sym == :first && options[:order].to_sym == :asc ||
+          mails.reverse!
+        end
+        
         if block_given?
-          pop3.each_mail do |pop_mail|
-            yield Mail.new(pop_mail.pop)
+          mails.each do |mail|
+            yield Mail.new(mail.pop)
           end
         else
           emails = []
-          pop3.each_mail do |pop_mail|
-            emails << Mail.new(pop_mail.pop)
+          mails.each do |mail|
+            emails << Mail.new(mail.pop)
           end
-          emails
+          emails.size == 1 && options[:count] == 1 ? emails.first : emails
         end
+        
       end
-      
     end
     
-    private
+  private
     
+    # Ensure that the POP3 configuration is set
+    def POP3.validate_configuration
+      config = Mail::Configuration.instance
+      if config.pop3.host.blank? || config.pop3.port.blank?
+        raise ArgumentError.new('Please call +Mail.defaults+ to set the POP3 configuration')
+      end
+    end
+  
+    # Set default options
+    def POP3.validate_options(options)
+      options ||= {}
+      options[:count] ||= 10
+      options[:order] ||= :asc
+      options[:what] ||= :first
+      options
+    end
+  
+    # Start a POP3 session and ensures that it will be closed in any case.
     def POP3.start(config = Mail::Configuration.instance, &block)
       raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
-      
+    
       pop3 = Net::POP3.new(config.pop3.host, config.pop3.port, isapop = false)
       pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if config.pop3.tls?
       pop3.start(config.pop3.user, config.pop3.pass)
-      
+    
       yield pop3
     ensure
       if defined?(pop3) && pop3 && pop3.started?

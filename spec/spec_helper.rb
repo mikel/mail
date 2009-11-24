@@ -102,33 +102,46 @@ class Net::SMTP
 end
 
 class MockPopMail
-  def initialize(rfc2822)
+  def initialize(rfc2822, number)
     @rfc2822 = rfc2822
+    @number = number
   end
   
   def pop
-    Mail.new(@rfc2822)
+    @rfc2822
+  end
+  
+  def number
+    @number
+  end
+  
+  def to_s
+    "#{number}: #{pop}"
   end
 end
-
 class MockPOP3
   @@start = false
   
   def initialize
-    @@popmails = [
-      MockPopMail.new('test1'),
-      MockPopMail.new('test2'),
-    ]
+    @@popmails = []
+    20.times do |i|
+      # "test00", "test01", "test02", ..., "test19"
+      @@popmails << MockPopMail.new("test#{i.to_s.rjust(2, '0')}", i)
+    end
   end
 
   def self.popmails
-    @@popmails
+    @@popmails.clone
   end
   
   def each_mail(*args)
     @@popmails.each do |popmail|
       yield popmail
     end
+  end
+  
+  def mails(*args)
+    @@popmails.clone
   end
 
   def start(*args)
@@ -155,7 +168,6 @@ class MockPOP3
     @@start = false
   end
 end
-
 class Net::POP3
   def self.new(*args)
     MockPOP3.new

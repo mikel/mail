@@ -88,7 +88,7 @@ describe "Mail" do
       end
     end
     
-    messages = Mail.get_all_mail
+    messages = Mail.all
     
     messages.should_not be_empty
     for message in messages
