@@ -237,6 +237,13 @@ describe Mail::Encodings do
     #         encoded the language and character set field delimiters
     #         MUST be present even when the fields are left blank.
     #
+
+    before(:each) do
+      Mail.defaults do
+        param_encode_language('en')
+      end
+    end
+
     it "should leave an unencoded string alone" do
       string = "this isn't encoded"
       result = "this isn't encoded"
