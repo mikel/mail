@@ -920,10 +920,5 @@ module Mail
       filename
     end
 
-    # Only POP3 is supported for now
-    def Message.get_all_mail(&block)
-      self.pop3_get_all_mail(&block)
-    end
-
   end
 end
