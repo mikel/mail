@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe Mail::Encodings do
   
@@ -237,6 +237,13 @@ describe Mail::Encodings do
     #         encoded the language and character set field delimiters
     #         MUST be present even when the fields are left blank.
     #
+
+    before(:each) do
+      Mail.defaults do
+        param_encode_language('en')
+      end
+    end
+
     it "should leave an unencoded string alone" do
       string = "this isn't encoded"
       result = "this isn't encoded"
