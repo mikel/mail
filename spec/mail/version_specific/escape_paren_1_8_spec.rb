@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe "Ruby 1.8 Extensions" do
   

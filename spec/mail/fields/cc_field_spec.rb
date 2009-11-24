@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 #    The "Cc:" field (where the "Cc" means "Carbon Copy" in the sense of
 #    making a copy on a typewriter using carbon paper) contains the

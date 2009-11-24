@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 # 3.6.4. Identification fields
 #  
 #   Though optional, every message SHOULD have a "Message-ID:" field.
