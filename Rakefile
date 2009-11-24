@@ -1,4 +1,4 @@
-environment = File.expand_path('../../vendor/gems/environment')
+environment = File.expand_path('../vendor/gems/environment', __FILE__)
 if File.exist?("#{environment}.rb")
   require environment
 end
@@ -50,7 +50,7 @@ end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.warning = true
-  t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_files = FileList["#{File.dirname(__FILE__)}/spec/**/*_spec.rb"]
   t.spec_opts = %w(--backtrace --diff --color)
   t.libs << "#{File.dirname(__FILE__)}/spec"
   t.libs << "#{File.dirname(__FILE__)}/spec/mail"
