@@ -1,23 +1,13 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
-
-require 'mail'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
 
 describe "Retrievable" do
   
   before(:each) do
-    @retrievable = Class.new do
-      include Mail::Retrievable
-      
-      attr_reader :raw_data
-      def initialize(raw_data)
-        @raw_data = raw_data
-      end
-    end
-    
     config = Mail.defaults do
-      pop3 'pop3.mockup.com', 587
-      enable_tls
+      pop3 'pop3.mockup.com', 587 do
+        enable_tls
+      end
     end
   end
   
@@ -25,20 +15,20 @@ describe "Retrievable" do
     MockPOP3.should_not be_started
     
     messages = []
-    @retrievable.pop3_get_all_mail do |message|
+    Mail.get_all_mail do |message|
       messages << message
     end
     
-    MockPOP3.popmails.collect {|p| p.pop}.sort.should == messages.collect {|m| m.raw_data}.sort
+    MockPOP3.popmails.length.should == messages.length
     MockPOP3.should_not be_started
   end
 
   it "should get emails without a given block" do
     MockPOP3.should_not be_started
     
-    messages = @retrievable.pop3_get_all_mail
+    messages = Mail.get_all_mail
     
-    MockPOP3.popmails.collect {|p| p.pop}.sort.should == messages.collect {|m| m.raw_data}.sort
+    MockPOP3.popmails.length.should == messages.length
     MockPOP3.should_not be_started
   end
 
@@ -46,7 +36,7 @@ describe "Retrievable" do
     MockPOP3.should_not be_started
     
     doing do
-      @retrievable.pop3_get_all_mail { |m| raise ArgumentError.new }
+      Mail.get_all_mail { |m| raise ArgumentError.new }
     end.should raise_error
     
     MockPOP3.should_not be_started
@@ -57,7 +47,7 @@ describe "Retrievable" do
       pop3 ''
     end
     
-    doing { @retrievable.pop3_get_all_mail }.should raise_error
+    doing { Mail.get_all_mail }.should raise_error
   end
   
 end
