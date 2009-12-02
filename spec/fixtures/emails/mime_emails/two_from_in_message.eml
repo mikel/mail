@@ -1,0 +1,42 @@
+Return-Path: <test@test.com>
+Received: from mail-xxx.google.com (mail-xxx.google.com [0.0.0.0])
+	by smtp.test.com (Postfix) with ESMTP id xxxx
+	for <tester@test.com>; Wed,  2 Dec 2009 09:39:57 +0000 (UTC)
+Received: by qyk6 with SMTP id 6so3112qyk.3
+        for <tester@test.com>; Wed, 02 Dec 2009 01:39:53 -0800 (PST)
+MIME-Version: 1.0
+Received: by 0.0.0.0 with SMTP id xxx.000.0000000000000; Wed, 
+	02 Dec 2009 01:39:53 -0800 (PST)
+In-Reply-To: <8fc5086d0912020131y377ba0ccpf8f14783cfc3014a@test.com>
+References: <8fc5086d0912020131y377ba0ccpf8f14783cfc3014a@test.com>
+From: Tester 1 <tester1@test.com>
+Date: Wed, 2 Dec 2009 22:39:33 +1300
+Message-ID: <8fc5086d0912020139y1564ad32jb4f4209fa464f4a6@test.com>
+Subject: Sending messages include last little bit
+To: tester2@test.com
+Content-Type: multipart/alternative; boundary=00c09fa216eb1bfc0a0479bba823
+
+--00c09fa216eb1bfc0a0479bba823
+Content-Type: text/plain; charset=ISO-8859-1
+
+When sending email:
+* From Hotmail you get the ads as well.
+* From GMail you also get the person's signature.
+
+I'm curious, and I might do some digging tomorrow as well, to see if its
+possible to strip the last little bit (signature/ads) from email messages.
+
+--00c09fa216eb1bfc0a0479bba823
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div class=3D"gmail_quote"><div class=3D"gmail_quote"><div>When sending ema=
+il:</div>* From Hotmail you get the ads as well.<div>* Fr=
+om GMail you also get the person&#39;s signature.</div><div><br></div><div>=
+I'm curious, and I might do some digging tomorrow as well, to see if it=
+s possible to strip the last little bit (signature/ads) from email messages=
+.<br>
+
+</div></div></div>
+
+--00c09fa216eb1bfc0a0479bba823--
