@@ -1,6 +1,7 @@
 == Thu  3 Dec 2009 00:52:12 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added POP upgrades from Nicolas Fouché
+* Added patch to handle multiple from lines in email from Luke Grimstrup
 
 == Mon Nov 23 23:34:22 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
