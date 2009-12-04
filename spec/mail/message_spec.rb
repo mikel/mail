@@ -63,7 +63,7 @@ describe Mail::Message do
       mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       mail.to.formatted.should == ["Mikel Lindsaar <raasdnil@gmail.com>"]
     end
-
+    
   end
   
   describe "envelope line handling" do
@@ -151,6 +151,12 @@ describe Mail::Message do
       mail.from.value.should == 'mikel'
       mail.body.to_s.should == 'This is the body'
     end
+    
+    it "should read in an email message with the word 'From' in it multiple times and parse it" do
+      mail = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'two_from_in_message.eml')))
+      mail.to.should_not be_nil
+      mail.to.addresses.first.should == "tester2@test.com"
+    end    
 
   end
   

@@ -8,10 +8,12 @@
 module Mail
   module Retrievable
 
-    def self.get_messages
-      Mail.defaults.retriever_method.get_messages
+    module_function
+
+    def method_missing(name, *args, &block)
+      Mail.defaults.retriever_method.__send__(name, *args, &block)
     end
-  
+
   end
-  
+
 end

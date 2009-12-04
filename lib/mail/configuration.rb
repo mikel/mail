@@ -67,7 +67,9 @@ module Mail
     #  end
     # 
     #  Mail.defaults do
-    #    pop3 '127.0.0.1', 110
+    #    pop3 '127.0.0.1', 995 do
+    #      enable_tls
+    #    end
     #  end
     def pop3(*args, &block)
       if args.size > 0

@@ -808,7 +808,7 @@ module Mail
     end
     
     def set_envelope_header
-      if match_data = raw_source.to_s.match(/From\s(#{TEXT}+)#{CRLF}(.*)/m)
+      if match_data = raw_source.to_s.match(/^From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
         self.raw_source = match_data[2]
       end
@@ -918,11 +918,6 @@ module Mail
         filename = nil
       end
       filename
-    end
-
-    # Only POP3 is supported for now
-    def Message.get_all_mail(&block)
-      self.pop3_get_all_mail(&block)
     end
 
   end

@@ -229,18 +229,52 @@ or
  
  mail.deliver!
 
-=== Getting an email from a pop server:
+=== Getting emails from a pop server:
+
+The most recent email:
 
  require 'mail'
  
  Mail.defaults do
-   pop3 'mail.myhost.com.au', 110
-   user 'mikel'
-   pass 'mypass'
+   pop3 'mail.myhost.com.au', 110 do
+     user 'mikel'
+     pass 'mypass'
+   end
  end
  
- emails = Mail.get_all_mail
- 
+ emails = Mail.last do |email|
+   email.reply!("I'll be back on Monday, please be patient!") # +reply!+ still not implemented ^^
+ end
+
+The 3 oldest emails sorted by date in descendent order:
+
+ require 'mail'
+
+ Mail.defaults do
+   pop3 'mail.myhost.co.jp', 995 do
+     user 'mikel'
+     pass 'mypass'
+     enable_tls
+   end
+ end
+
+ emails = Mail.first(:count => 3, :order => :desc) do |email|
+   email.date
+ end
+
+Or even all emails:
+
+ require 'mail'
+
+ Mail.defaults do
+   pop3 'mail.myhost.com.au' do
+     user 'mikel'
+     pass 'mypass'
+   end
+ end
+
+ emails = Mail.all
+
  emails.length #=> 12
 
 === Reading an Email

@@ -123,16 +123,35 @@ module Mail
     mail
   end
 
-  # Returns all the messages on the server using the retriever method set up
-  # in Mail.defaults
-  def Mail.get_all_mail(&block)
-    if block_given?
-      Retrievable.get_messages.each do |message|
-        yield message
-      end
-    else
-      Retrievable.get_messages
-    end
+  # Receive the first email(s) from a Pop3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.first(*args, &block)
+    Retrievable.first(*args, &block)
+  end
+
+  # Receive the first email(s) from a Pop3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.last(*args, &block)
+    Retrievable.last(*args, &block)
+  end
+
+  # Receive all emails from a Pop3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.all(*args, &block)
+    Retrievable.all(*args, &block)
+  end
+
+  # Receive all emails from a Pop3 server.
+  # DEPRECATED: please use Mail.all instead.
+  def Mail.get_all_mail(*args, &block)
+    warn "Mail.get_all_mail is deprecated. Please use Mail.all instead."
+    all(*args, &block)
+  end
+
+  # Find emails in a Pop3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.find(*args, &block)
+    Retrievable.find(*args, &block)
   end
 
   def Mail.read(filename)
