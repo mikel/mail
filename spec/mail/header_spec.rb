@@ -334,6 +334,23 @@ describe Mail::Header do
       header['Bobs-Field'].should == nil
     end
     
+    it "should allow you to replace a from field" do
+      header = Mail::Header.new
+      header['From'].should == nil
+      header['From'] = 'mikel@test.lindsaar.net'
+      header['From'].decoded.should == 'mikel@test.lindsaar.net'
+      header['From'] = 'bob@test.lindsaar.net'
+      header['From'].decoded.should == 'bob@test.lindsaar.net'
+    end
+    
+    it "should maintain the class of the field" do
+      header = Mail::Header.new
+      header['From'] = 'mikel@test.lindsaar.net'
+      header['From'].field.class.should == Mail::FromField
+      header['From'] = 'bob@test.lindsaar.net'
+      header['From'].field.class.should == Mail::FromField
+    end
+    
   end
 
   describe "folding and unfolding" do

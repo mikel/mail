@@ -149,7 +149,7 @@ module Mail
     def new_field(name, value)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
-      case name
+      case name.to_s
       when /^to$/i
         ToField.new(name, value)
       when /^cc$/i

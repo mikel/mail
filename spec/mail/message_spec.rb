@@ -185,6 +185,9 @@ describe Mail::Message do
         @mail['foo'] = nil
         @mail.header_fields.length.should == 0
       end
+      
+      
+      
     end
 
     describe "with :method=" do
@@ -259,6 +262,26 @@ describe Mail::Message do
       it "should instantiate a new Header" do
         @mail['foo'] = 1234
         @mail.header_fields.first.class.should == Mail::Field
+      end
+    end
+    
+    describe "replacing header values" do
+    
+      it "should allow you to replace a from field" do
+        mail = Mail.new
+        mail.from.should == nil
+        mail.from = 'mikel@test.lindsaar.net'
+        mail.from.decoded.should == 'mikel@test.lindsaar.net'
+        mail.from = 'bob@test.lindsaar.net'
+        mail.from.decoded.should == 'bob@test.lindsaar.net'
+      end
+    
+      it "should maintain the class of the field" do
+        mail = Mail.new
+        mail.from = 'mikel@test.lindsaar.net'
+        mail.from.field.class.should == Mail::FromField
+        mail.from = 'bob@test.lindsaar.net'
+        mail.from.field.class.should == Mail::FromField
       end
     end
     
