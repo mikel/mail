@@ -1,6 +1,7 @@
 == Sun Dec 13 01:06:17 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Resolved Issue #18 - Wrong instance variable name
+* Resolved Issue #15 - Duplicate block call
 
 == Thu Dec 10 21:25:37 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
