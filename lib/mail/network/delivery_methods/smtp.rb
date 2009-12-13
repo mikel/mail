@@ -32,7 +32,7 @@ module Mail
     # The helo domain used at the begining of an SMTP conversation,
     # default is 'localhost.localdomain'
     def helo(value = nil)
-      value ? @help = value : @helo ||= 'localhost.localdomain'
+      value ? @helo = value : @helo ||= 'localhost.localdomain'
     end
     
     # Turn on TLS
