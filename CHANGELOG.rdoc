@@ -1,3 +1,8 @@
+== Thu Dec 17 01:32:00 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.3.3
+* Removed dependency on treetop, don't need it at runtime
+
 == Wed Dec 16 23:48:46 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version 1.3.2
