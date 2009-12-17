@@ -1,10 +1,11 @@
 == Wed Dec 16 23:48:46 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Version 1.3.1
+* Version 1.3.2
 * Resolved Ruby 1.9.1-head not working because File.basename only accepts US-ASCII or 8Bit
 
 == Sun Dec 13 01:06:17 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
+* Version 1.3.1
 * Resolved Issue #18 - Wrong instance variable name
 * Resolved Issue #15 - Duplicate block call
 
