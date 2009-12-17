@@ -502,6 +502,16 @@ describe Mail::Encodings do
       Mail::Encodings.get_encoding(:quoted_printable).decode(encoded).should == expected
     end
 
+    it "should handle a new line in the text" do
+      if RUBY_VERSION >= '1.9'
+        expected = "\nRe: ol\341".force_encoding('ISO-8859-1')
+      else
+        expected = "\nRe: ol\341"
+      end
+      encoded = "=?ISO-8859-1?Q?\nRe=3A_ol=E1?="
+      Mail::Encodings.value_decode(encoded).should == expected
+    end
+
   end
   
 end

@@ -37,7 +37,7 @@ module Mail
     end
     
     def Ruby19.b_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/)
+      match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
         str = Ruby19.decode_base64(match[2])
@@ -52,7 +52,7 @@ module Mail
     end
 
     def Ruby19.q_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/)
+      match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
         str = Encodings::QuotedPrintable.decode(match[2])

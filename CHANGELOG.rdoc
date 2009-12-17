@@ -1,3 +1,7 @@
+== Thu Dec 17 06:35:05 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Fixed parsing error 'Subject: =?ISO-8859-1?Q?Re=3A_ol=E1?=' (has a new line embedded)
+
 == Thu Dec 17 02:14:23 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version 1.3.4
