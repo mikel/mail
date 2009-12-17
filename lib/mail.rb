@@ -10,6 +10,8 @@ module Mail # :doc:
   # regardless of having activesupport 3 or 2.3 loaded
   require 'active_support/core_ext/hash/indifferent_access'
 
+  require File.join(File.dirname(__FILE__), 'vendor', 'treetop')
+
   require 'uri'
   require 'net/smtp'
   require 'mime/types'

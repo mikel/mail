@@ -14,7 +14,7 @@ if File.exist?("#{environment}.rb")
   require environment
 else
   require 'rubygems'
-  gem "treetop", ">= 1.4"
+#  gem "treetop", ">= 1.4"
   gem 'activesupport', ">= 2.3"
 
   begin
@@ -23,7 +23,7 @@ else
     # Skip debugger if unavailable.
   end
   require 'spec'
-  require 'treetop'
+#  require 'treetop'
 end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
