@@ -3,7 +3,6 @@ module Mail # :doc:
 
   require 'date'
 
-  require 'treetop'
   require 'active_support'
 
   # Have to handle ActiveSupport 2.3 and 3.0

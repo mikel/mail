@@ -1,5 +1,4 @@
 gem "tlsmail"
-gem "treetop", ">= 1.4"
 gem 'activesupport', ">= 2.3.4"
 gem "mime-types"
 
