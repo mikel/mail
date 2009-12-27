@@ -1,7 +1,6 @@
 == Sun Dec 27 09:51:27 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Version bump to 1.4 because now :to_s calls :decoded for all fields and body while
-  :to_s calls :encoded for Message and Header containers.  Makes sense... really.
+* Version bump to 1.4 because now :to_s calls :decoded for all fields and body while :to_s calls :encoded for Message and Header containers.  Makes sense... really.
 
 == Sun Dec 27 07:30:02 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
