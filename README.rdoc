@@ -110,8 +110,12 @@ I have tried to simplify it some:
    return the object's "value" only as a string.  This means it will not include
    the header fields (like 'To:' or 'Subject:').
    
-3. By default, calling :to_s on an object will call it's encoded method, that is, make
-   it ready to send in an email.
+3. By default, calling :to_s on a container object will call it's encoded method, while
+   :to_s on a field object will call it's decoded method.  So calling :to_s on a Mail
+   object will return the mail, all encoded ready to send, while calling :to_s on the
+   From field will return the decoded value of the field.  The body and headers of Mail
+   objects are considered containers.  If you are in doubt, call :encoded, or :decoded
+   explicitly, this is safer if you are not sure.
    
 4. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
    provide decoded parameter values when you call the parameter names as methods against

@@ -28,7 +28,7 @@ module Mail
       end
       
       def to_s
-        encoded
+        decoded
       end
       
       def field_length

@@ -1,3 +1,7 @@
+== Sun Dec 27 07:30:02 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Changed fields to default to :decoded on :to_s, all container objects retain :encoded as the default for :to_s
+
 == Thu Dec 17 06:35:05 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Fixed parsing error 'Subject: =?ISO-8859-1?Q?Re=3A_ol=E1?=' (has a new line embedded)

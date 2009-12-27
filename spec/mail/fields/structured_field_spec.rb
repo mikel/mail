@@ -37,8 +37,8 @@ describe Mail::StructuredField do
       @field = Mail::FromField.new("bob@me.com")
     end
     
-    it "should provide a to_s function that returns the encoded string" do
-      @field.to_s.should == "From: bob@me.com\r\n"
+    it "should provide a to_s function that returns the decoded string" do
+      @field.to_s.should == "bob@me.com"
     end
     
     it "should return '' on to_s if there is no value" do

@@ -11,7 +11,6 @@ require File.join(TREETOP_ROOT, "ruby_extensions")
 require File.join(TREETOP_ROOT, "runtime")
 require File.join(TREETOP_ROOT, "compiler")
 
-unless defined?(::TREETOP_DISABLE_POLYGLOT)
-  require 'polyglot'
+if defined?(Polyglot)
   Polyglot.register(Treetop::VALID_GRAMMAR_EXT, Treetop)
 end
