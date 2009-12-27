@@ -5,7 +5,7 @@ module Treetop
       def compile(builder)
         unless rules.empty?
           builder.method_declaration("root") do
-            builder << "@root || :#{rules.first.name}"
+            builder << "@root ||= :#{rules.first.name}"
           end
           builder.newline
         end

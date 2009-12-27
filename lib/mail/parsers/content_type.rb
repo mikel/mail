@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :content_type
+      @root ||= :content_type
     end
 
     include RFC2822

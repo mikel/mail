@@ -27,6 +27,10 @@ module Mail
   class Body
 
     def initialize(string = '')
+      @boundary = nil
+      @preamble = nil
+      @epilogue = nil
+      @parts = []
       if string.blank?
         @raw_source = ''
       else
@@ -168,7 +172,7 @@ module Mail
     end
 
     def parts
-      @parts ||= []
+      @parts
     end
     
     def <<( val )

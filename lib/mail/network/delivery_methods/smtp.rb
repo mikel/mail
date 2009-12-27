@@ -2,6 +2,11 @@ module Mail
   class SMTP
     include Singleton
     
+    def initialize
+      @user = nil
+      @pass = nil
+    end
+    
     def settings(&block)
       if block_given?
         instance_eval(&block)

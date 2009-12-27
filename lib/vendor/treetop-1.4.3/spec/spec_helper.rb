@@ -2,6 +2,7 @@ dir = File.dirname(__FILE__)
 require 'rubygems'
 require 'benchmark'
 require 'spec'
+require 'polyglot'
 
 unless $bootstrapped_gen_1_metagrammar
   load File.join(dir, '..', 'lib', 'treetop', 'bootstrap_gen_1_metagrammar.rb')
