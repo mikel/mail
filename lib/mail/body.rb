@@ -97,22 +97,23 @@ module Mail
     # raw source.  Need to implement
     def encoded
       if multipart?
-        encoded_parts = parts.map { |p| p.to_s }
+        encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
         raw_source.to_crlf
       end
     end
     
-    alias :to_s :encoded
-    
-    # Returns the raw source right now.  Need to implement
     def decoded
       if encoding.nil? || !Encodings.defined?(encoding)
         raw_source.to_lf
       else
         Encodings.get_encoding(encoding).decode(raw_source)
       end
+    end
+    
+    def to_s
+      decoded
     end
     
     def charset

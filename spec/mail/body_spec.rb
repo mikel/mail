@@ -168,7 +168,7 @@ describe Mail::Body do
       body.split!('----=_Part_2192_32400445')
       body.preamble = "Really! this is some text"
       body.epilogue = "And this is the end"
-      new_body = Mail::Body.new(body.to_s)
+      new_body = Mail::Body.new(body.encoded)
       new_body.split!('----=_Part_2192_32400445')
       new_body.parts.length.should == 2
       new_body.preamble.should == "Really! this is some text"
@@ -180,7 +180,7 @@ describe Mail::Body do
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
       body.boundary = '------=_MIMEPART'
-      new_body = Mail::Body.new(body.to_s)
+      new_body = Mail::Body.new(body.encoded)
       new_body.split!('------=_MIMEPART')
       new_body.parts.length.should == 2
       new_body.preamble.should == "this is some text"

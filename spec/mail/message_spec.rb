@@ -211,9 +211,19 @@ describe Mail::Message do
         @mail.subject.value.should == "Hello!"
       end
 
-      it "should return the body" do
-        @mail.body = "email message\r\n"
-        @mail.body.to_s.should == "email message\r\n"
+      it "should return the body decoded with to_s" do
+        @mail.body "email message\r\n"
+        @mail.body.to_s.should == "email message\n"
+      end
+
+      it "should return the body encoded if asked for" do
+        @mail.body "email message\r\n"
+        @mail.body.encoded.should == "email message\r\n"
+      end
+
+      it "should return the body decoded if asked for" do
+        @mail.body "email message\r\n"
+        @mail.body.decoded.should == "email message\n"
       end
     end
     
@@ -238,9 +248,19 @@ describe Mail::Message do
         @mail.subject.value.should == "Hello!"
       end
 
-      it "should return the body" do
+      it "should return the body decoded with to_s" do
         @mail.body "email message\r\n"
-        @mail.body.to_s.should == "email message\r\n"
+        @mail.body.to_s.should == "email message\n"
+      end
+
+      it "should return the body encoded if asked for" do
+        @mail.body "email message\r\n"
+        @mail.body.encoded.should == "email message\r\n"
+      end
+
+      it "should return the body decoded if asked for" do
+        @mail.body "email message\r\n"
+        @mail.body.decoded.should == "email message\n"
       end
     end
     

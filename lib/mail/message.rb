@@ -764,8 +764,10 @@ module Mail
       buffer
     end
     
-    alias :to_s :encoded
-    
+    def to_s
+      encoded
+    end
+
     def decoded
       raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
     end
@@ -900,7 +902,7 @@ module Mail
       if filename = attachment?
         encoding = content_transfer_encoding.encoding if content_transfer_encoding
         @attachment = Mail::Attachment.new(:filename => filename,
-                                           :data => body.to_s,
+                                           :data => body.encoded,
                                            :encoding => encoding)
       end
     end

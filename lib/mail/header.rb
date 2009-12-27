@@ -165,7 +165,13 @@ module Mail
       buffer
     end
 
-    alias :to_s :encoded
+    def to_s
+      encoded
+    end
+    
+    def decoded
+      raise NoMethodError, 'Can not decode an entire header as there could be character set conflicts, try calling #decoded on the various fields.'
+    end
 
     # Returns true if the header has a Message-ID defined (empty or not)
     def has_message_id?
