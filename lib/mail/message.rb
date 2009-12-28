@@ -486,7 +486,8 @@ module Mail
       if body.only_us_ascii?
         content_type.parameters['charset'] = 'US-ASCII'
       else
-        STDERR.puts("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        STDERR.puts(warning)
         content_type.parameters['charset'] = 'UTF-8'
       end
     end
@@ -498,7 +499,8 @@ module Mail
       if body.only_us_ascii?
         header['Content-Transfer-Encoding'] = '7bit'
       else
-        STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
+        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        STDERR.puts(warning)
         header['Content-Transfer-Encoding'] = '8bit'
       end
     end

@@ -1410,7 +1410,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
         end
 
@@ -1420,7 +1420,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
+          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
         end
 
@@ -1479,7 +1479,7 @@ describe Mail::Message do
           mail.content_type = "text/plain; charset=utf-8"
           mail.should be_has_content_type
           mail.should be_has_charset
-          STDERR.should_receive(:puts).with("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
+          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect./m)
           mail.to_s =~ %r{Content-Transfer-Encoding: 8bit}
         end
 

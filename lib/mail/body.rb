@@ -30,6 +30,7 @@ module Mail
       @boundary = nil
       @preamble = nil
       @epilogue = nil
+      @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
       @parts = []
       if string.blank?
         @raw_source = ''
@@ -89,7 +90,26 @@ module Mail
     def match(regexp)
       self.decoded.match(regexp)
     end
+
+    # Allows you to set the sort order of the parts, overriding the default sort order.
+    # Defaults to 'text/plain', then 'text/enriched', then 'text/html' with any other content
+    # type coming after.
+    def set_sort_order(order)
+      @part_sort_order = order
+    end
     
+    # Allows you to sort the parts according to the default sort order, or the sort order you
+    # set with :set_sort_order.
+    #
+    # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
+    def sort_parts!
+      order = @part_sort_order
+      @parts = @parts.sort do |a, b|
+        a_order = order.index(a.content_type.string.downcase) || 1000
+        b_order = order.index(b.content_type.string.downcase) || 1000
+        a_order <=> b_order
+      end
+    end
     
     # Returns the raw source that the body was initialized with, without
     # any tampering
@@ -101,6 +121,7 @@ module Mail
     # raw source.  Need to implement
     def encoded
       if multipart?
+        self.sort_parts!
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
