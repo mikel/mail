@@ -105,8 +105,11 @@ module Mail
     def sort_parts!
       order = @part_sort_order
       @parts = @parts.sort do |a, b|
-        a_order = order.index(a.content_type.string.downcase) || 1000
-        b_order = order.index(b.content_type.string.downcase) || 1000
+        # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
+        # single email message... please show me a use case and I'll put more work into this method,
+        # in the meantime, it works :)
+        a_order = order.index(a.content_type.string.downcase) || 10000
+        b_order = order.index(b.content_type.string.downcase) || 10000
         a_order <=> b_order
       end
     end
