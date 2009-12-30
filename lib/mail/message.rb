@@ -105,11 +105,6 @@ module Mail
       @envelope = Mail::Envelope.new( val )
     end
     
-    def set_envelope( val )
-      @raw_envelope = val
-      @envelope = Mail::Envelope.new( val )
-    end
-    
     # The raw_envelope is the From mikel@test.lindsaar.net Mon May  2 16:07:05 2009
     # type field that you can see at the top of any email that has come
     # from a mailbox
@@ -438,8 +433,13 @@ module Mail
       !!charset
     end
     
-    def has_transfer_encoding?
-      transfer_encoding
+    def has_content_transfer_encoding?
+      content_transfer_encoding
+    end
+    
+    def has_transfer_encoding? # :nodoc:
+      STDERR.puts(":has_transfer_encoding? is deprecated in Mail 1.4.2.  Please use has_content_transfer_encoding?\n#{caller}")
+      content_transfer_encoding
     end
 
     # Creates a new empty Message-ID field and inserts it in the correct order
@@ -492,10 +492,10 @@ module Mail
       end
     end
     
-    # Adds a transfer encoding
+    # Adds a content transfer encoding
     # 
     # Otherwise raises a warning
-    def add_transfer_encoding
+    def add_content_transfer_encoding
       if body.only_us_ascii?
         header['Content-Transfer-Encoding'] = '7bit'
       else
@@ -505,10 +505,11 @@ module Mail
       end
     end
     
-    # Returns the content transfer encoding of the email
-    def transfer_encoding
-      content_transfer_encoding
+    def add_transfer_encoding # :nodoc:
+      STDERR.puts(":add_transfer_encoding? is deprecated in Mail 1.4.2.  Please use add_content_transfer_encoding?\n#{caller}")
+      add_content_transfer_encoding
     end
+
     
     # Returns the content type
     def message_content_type
@@ -835,7 +836,7 @@ module Mail
       add_mime_version              unless has_mime_version?
       add_content_type              unless has_content_type?
       add_charset                   unless has_charset?
-      add_transfer_encoding         unless has_transfer_encoding?
+      add_content_transfer_encoding unless has_content_transfer_encoding?
     end
     
     def add_multipart_alternate_header
