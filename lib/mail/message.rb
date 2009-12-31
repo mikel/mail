@@ -434,12 +434,12 @@ module Mail
     end
     
     def has_content_transfer_encoding?
-      content_transfer_encoding
+      !!content_transfer_encoding
     end
     
     def has_transfer_encoding? # :nodoc:
-      STDERR.puts(":has_transfer_encoding? is deprecated in Mail 1.4.2.  Please use has_content_transfer_encoding?\n#{caller}")
-      content_transfer_encoding
+      STDERR.puts(":has_transfer_encoding? is deprecated in Mail 1.4.3.  Please use has_content_transfer_encoding?\n#{caller}")
+      has_content_transfer_encoding?
     end
 
     # Creates a new empty Message-ID field and inserts it in the correct order
@@ -506,10 +506,14 @@ module Mail
     end
     
     def add_transfer_encoding # :nodoc:
-      STDERR.puts(":add_transfer_encoding? is deprecated in Mail 1.4.2.  Please use add_content_transfer_encoding?\n#{caller}")
+      STDERR.puts(":add_transfer_encoding is deprecated in Mail 1.4.3.  Please use add_content_transfer_encoding\n#{caller}")
       add_content_transfer_encoding
     end
-
+    
+    def transfer_encoding # :nodoc:
+      STDERR.puts(":transfer_encoding is deprecated in Mail 1.4.3.  Please use content_transfer_encoding\n#{caller}")
+      content_transfer_encoding
+    end
     
     # Returns the content type
     def message_content_type
