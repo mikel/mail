@@ -23,11 +23,9 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
 
-  manifest = Bundler::Environment.load(File.dirname(__FILE__) + '/Gemfile')
-  manifest.dependencies.each do |dep|
-    next if dep.only && dep.only.include?("test")
-    s.add_dependency(dep.name, dep.version)
-  end
+  s.add_dependency('tlsmail') if RUBY_VERSION <= '1.8.6'
+  s.add_dependency('activesupport', ">= 2.3.4")
+  s.add_dependency('mime-types')
 
   s.require_path = 'lib'
   s.files = %w(README.rdoc Rakefile TODO.rdoc) + Dir.glob("lib/**/*")

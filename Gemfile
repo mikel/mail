@@ -1,4 +1,4 @@
-gem "tlsmail"
+gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 gem 'activesupport', ">= 2.3.4"
 gem "mime-types"
 
