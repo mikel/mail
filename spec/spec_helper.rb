@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+$:.unshift File.expand_path('../lib', File.dirname(__FILE__))
+
 unless defined?(MAIL_ROOT)
   STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
   MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
@@ -28,7 +30,7 @@ end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'mail')
+require 'mail'
 
 Spec::Runner.configure do |config|  
   config.include(CustomMatchers)  

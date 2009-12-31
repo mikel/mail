@@ -10,96 +10,97 @@ module Mail # :doc:
   # regardless of having activesupport 3 or 2.3 loaded
   require 'active_support/core_ext/hash/indifferent_access'
 
-  require File.join(File.dirname(__FILE__), 'vendor', 'treetop')
+  require 'mail/vendor/treetop'
 
   require 'uri'
   require 'net/smtp'
   require 'mime/types'
   require 'tlsmail' if RUBY_VERSION <= '1.8.6'
 
-  dir_name = File.join(File.dirname(__FILE__), 'mail')
-
   if RUBY_VERSION >= "1.9.1"
-    require File.join(dir_name, 'version_specific', 'ruby_1_9.rb')
+    require 'mail/version_specific/ruby_1_9.rb'
     RubyVer = Mail::Ruby19
   else
-    require File.join(dir_name, 'version_specific', 'ruby_1_8.rb')
+    require 'mail/version_specific/ruby_1_8.rb'
     RubyVer = Mail::Ruby18
   end
 
-  require File.join(dir_name, 'version')
+  require 'mail/version'
+
   begin
     require 'active_support/core_ext/object/blank'
   rescue LoadError
     # Unneeded for Active Support <= 3.0.pre
   end
-  require File.join(dir_name, 'core_extensions/nil')
-  require File.join(dir_name, 'core_extensions/string')
 
-  require File.join(dir_name, 'patterns')
-  require File.join(dir_name, 'utilities')
-  require File.join(dir_name, 'configuration')
-  require File.join(dir_name, 'network', 'deliverable')
-  require File.join(dir_name, 'network', 'delivery_methods', 'smtp')
-  require File.join(dir_name, 'network', 'delivery_methods', 'file_delivery')
-  require File.join(dir_name, 'network', 'delivery_methods', 'sendmail')
-  require File.join(dir_name, 'network', 'delivery_methods', 'test_mailer')
-  require File.join(dir_name, 'network', 'retrievable')
-  require File.join(dir_name, 'network', 'retriever_methods', 'pop3')
-  require File.join(dir_name, 'network', 'retriever_methods', 'imap')
+  require 'mail/core_extensions/nil'
+  require 'mail/core_extensions/string'
 
-  require File.join(dir_name, 'message')
-  require File.join(dir_name, 'part')
-  require File.join(dir_name, 'header')
-  require File.join(dir_name, 'body')
-  require File.join(dir_name, 'field')
-  require File.join(dir_name, 'field_list')
-  require File.join(dir_name, 'attachment')
+  require 'mail/patterns'
+  require 'mail/utilities'
+  require 'mail/configuration'
+  require 'mail/network/deliverable'
+  require 'mail/network/delivery_methods/smtp'
+  require 'mail/network/delivery_methods/file_delivery'
+  require 'mail/network/delivery_methods/sendmail'
+  require 'mail/network/delivery_methods/test_mailer'
+  require 'mail/network/retrievable'
+  require 'mail/network/retriever_methods/pop3'
+  require 'mail/network/retriever_methods/imap'
+
+  require 'mail/message'
+  require 'mail/part'
+  require 'mail/header'
+  require 'mail/body'
+  require 'mail/field'
+  require 'mail/field_list'
+  require 'mail/attachment'
 
   # Load in all common header fields modules
-  commons = Dir.glob(File.join(dir_name, 'fields', 'common', '*.rb'))
-  commons.each do |common|
-    require common
-  end
+  require 'mail/fields/common/common_address'
+  require 'mail/fields/common/common_date'
+  require 'mail/fields/common/common_field'
+  require 'mail/fields/common/common_message_id'
+  require 'mail/fields/common/parameter_hash'
 
-  require File.join(dir_name, 'fields', 'structured_field')
-  require File.join(dir_name, 'fields', 'unstructured_field')
-  require File.join(dir_name, 'envelope')
+  require 'mail/fields/structured_field'
+  require 'mail/fields/unstructured_field'
+  require 'mail/envelope'
 
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location ]
-
+  
   parsers.each do |parser|
     begin
       # Try requiring the pre-compiled ruby version first
-      require File.join(dir_name, 'parsers', parser)
+      require "mail/parsers/#{parser}"
     rescue LoadError
       # Otherwise, get treetop to compile and load it
-      Treetop.load(File.join(dir_name, 'parsers', parser))
+      Treetop.load("mail/parsers/#{parser}")
     end
   end
-  
+
   # Load in all header field elements
-  elems = Dir.glob(File.join(dir_name, 'elements', '*.rb'))
+  elems = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'elements', '*.rb'))
   elems.each do |elem|
-    require elem
+    require "mail/elements/#{File.basename(elem, '.rb')}"
   end
   
   # Load in all header fields
-  fields = Dir.glob(File.join(dir_name, 'fields', '*.rb'))
+  fields = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'fields', '*.rb'))
   fields.each do |field|
-    require field
+    require "mail/fields/#{File.basename(field, '.rb')}"
   end
   
   # Load in all transfer encodings
-  elems = Dir.glob(File.join(dir_name, 'encodings', '*.rb'))
+  elems = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'encodings', '*.rb'))
   elems.each do |elem|
-    require elem
+    require "mail/encodings/#{File.basename(elem, '.rb')}"
   end
   
   # Finally... require all the Mail.methods
-  require File.join(dir_name, 'mail')
+  require File.join('mail', 'mail')
 
 end
