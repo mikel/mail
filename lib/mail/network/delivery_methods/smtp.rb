@@ -62,7 +62,7 @@ module Mail
       config = Mail.defaults
 
       # TODO: use the "return-path" field by default instead of the "from" field ? (see ActionMailer)
-      from = mail.from.addresses.first if mail.respond_to?(:from) && mail.from
+      from = mail.from_addrs.first
       raise ArgumentError.new('An author -from- is required to send a message') if from.blank?
       to ||= mail.destinations if mail.respond_to?(:destinations) && mail.destinations
       raise ArgumentError.new('At least one recipient -to, cc, bcc- is required to send a message') if to.blank?

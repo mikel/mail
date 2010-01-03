@@ -2,8 +2,8 @@
 module Mail
   module VERSION
     MAJOR = 1
-    MINOR = 4
-    TINY  = 3
+    MINOR = 5
+    TINY  = 0
 
     STRING = [MAJOR, MINOR, TINY].join('.')
   end

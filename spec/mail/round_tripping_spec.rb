@@ -7,7 +7,7 @@ describe "Round Tripping" do
     mail = Mail.new('Subject: FooBar')
     mail.body "This is Text"
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.subject.value.to_s.should == "FooBar"
+    parsed_mail.subject.to_s.should == "FooBar"
     parsed_mail.body.to_s.should == "This is Text"
   end
 
@@ -21,7 +21,7 @@ describe "Round Tripping" do
       body "<b>This is HTML</b>"
     end
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.message_content_type.should == 'multipart/alternative'
+    parsed_mail.mime_type.should == 'multipart/alternative'
     parsed_mail.boundary.should == mail.boundary
     parsed_mail.parts.length.should == 2
     parsed_mail.parts[0].body.to_s.should == "This is Text"

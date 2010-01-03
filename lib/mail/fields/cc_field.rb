@@ -16,14 +16,15 @@
 # 
 #  mail = Mail.new
 #  mail.cc = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.cc    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
+#  mail.cc    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #  mail[:cc]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
 #  mail['cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
 #  mail['Cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
 # 
-#  mail.cc.to_s  #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.cc.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
-#  mail.cc.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail[:cc].encoded   #=> 'Cc: Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net\r\n'
+#  mail[:cc].decoded   #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+#  mail[:cc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+#  mail[:cc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
 module Mail
   class CcField < StructuredField

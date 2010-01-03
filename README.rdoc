@@ -290,12 +290,12 @@ Or even all emails:
  mail.envelope.from   #=> 'mikel@test.lindsaar.net'
  mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
  mail.sender.address  #=> 'mikel@test.lindsaar.net'
- mail.to.addresses    #=> ['bob@test.lindsaar.net']
- mail.cc.addresses    #=> ['sam@test.lindsaar.net']
- mail.subject.to_s    #=> "This is the subject"
+ mail.to              #=> 'bob@test.lindsaar.net'
+ mail.cc              #=> 'sam@test.lindsaar.net'
+ mail.subject         #=> "This is the subject"
  mail.date.to_s       #=> '21 Nov 1997 09:55:06 -0600'
  mail.message_id      #=> '<4D6AA7EB.6490534@xxx.xxx>'
- mail.body            #=> 'This is the body of the email...
+ mail.body.decoded    #=> 'This is the body of the email...
 
 Many more methods available.
 
@@ -311,8 +311,8 @@ Many more methods available.
  mail.epilogue            #=> "Text after the last part"
  mail.parts.map { |p| p.content_type }  #=> ['text/plain', 'application/pdf']
  mail.parts.map { |p| p.class }         #=> [Mail::Message, Mail::Message]
- mail.parts[0].mime_parameters          #=> {'charset' => 'ISO-8859-1'}
- mail.parts[1].mime_parameters          #=> {'name' => 'my.pdf'}
+ mail.parts[0].content_type_parameters  #=> {'charset' => 'ISO-8859-1'}
+ mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
 
 Mail generates a tree of parts.  Each message has many or no parts.  Each part
 is another message which can have many or no parts.

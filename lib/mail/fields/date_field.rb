@@ -15,13 +15,11 @@
 # 
 #  mail = Mail.new
 #  mail.date = 'Mon, 24 Nov 1997 14:22:01 -0800'
-#  mail.date    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
-#  mail[:date]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
-#  mail['date'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
-#  mail['Date'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
-# 
+#  mail.date       #=> #<DateTime: 211747170121/86400,-1/3,2299161>
 #  mail.date.to_s  #=> 'Mon, 24 Nov 1997 14:22:01 -0800'
-#  mail.date.date_time #=> #<DateTime: 211747170121/86400,-1/3,2299161>
+#  mail[:date]     #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+#  mail['date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
+#  mail['Date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
 # 
 module Mail
   class DateField < StructuredField
@@ -37,7 +35,9 @@ module Mail
         self.value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
         self
       else
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+        value = strip_field(FIELD_NAME, args.last)
+        value = ::DateTime.parse(value.to_s).strftime('%a, %d %b %Y %H:%M:%S %z')
+        super(CAPITALIZED_FIELD, value)
       end
     end
     

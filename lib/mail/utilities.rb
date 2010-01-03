@@ -130,16 +130,27 @@ module Mail
       def constantize( str )
         str.to_s.split(/[-_]/).map { |v| v.capitalize }.to_s
       end
-
-      # Swaps out all hyphens (-) for underscores (_) good for symbolizing
+      
+      # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
       # a field name.
       # 
       # Example:
       # 
-      #  string = 'Resent-From-Field'
+      #  string = :resent_from_field
+      #  dasherize ( string ) #=> 'resent_from_field'
+      def dasherize( str )
+        str.to_s.downcase.gsub('_', '-')
+      end
+
+      # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
+      # a field name.
+      # 
+      # Example:
+      # 
+      #  string = :resent_from_field
       #  underscoreize ( string ) #=> 'resent_from_field'
       def underscoreize( str )
-        str.to_s.downcase.gsub('_', '-')
+        str.to_s.downcase.gsub('-', '_')
       end
       
     end

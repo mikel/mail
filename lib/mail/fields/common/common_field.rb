@@ -31,6 +31,10 @@ module Mail
         decoded
       end
       
+      def default
+        decoded
+      end
+      
       def field_length
         @length ||= name.length + value.length + ': '.length
       end
@@ -41,7 +45,7 @@ module Mail
 
       private
 
-      def strip_field(field_name, string) 
+      def strip_field(field_name, string)
         string.to_s.gsub(/#{field_name}:\s+/i, '')
       end
 

@@ -15,7 +15,7 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
-    part.content_id.value.should == "<thisis@acontentid>"
+    part.content_id.should == "<thisis@acontentid>"
   end
   
   describe "parts that have a missing header" do
@@ -115,7 +115,7 @@ ENDPART
     it "should set it's content type intelligently for png files" do
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
-      part.content_type.content_type.should == 'image/png'
+      part.content_type.should == 'image/png; filename="test.png"'
     end
     
     it "should know it is an attachment" do
@@ -140,7 +140,7 @@ ENDPART
       filename = fixture('attachments', 'test.png')
       part = Mail::Part.new(:filename => filename)
       part.ready_to_send!
-      part.content_transfer_encoding.value.should == 'base64'
+      part.content_transfer_encoding.should == 'base64'
     end
 
     it "should round trip an image attachment" do

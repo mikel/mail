@@ -16,14 +16,15 @@
 # 
 #  mail = Mail.new
 #  mail.resent_to = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.resent_to    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentToField:0x180e1c4
+#  mail.resent_to    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #  mail[:resent_to]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentToField:0x180e1c4
 #  mail['resent-to'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentToField:0x180e1c4
 #  mail['Resent-To'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentToField:0x180e1c4
 # 
-#  mail.resent_to.to_s  #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.resent_to.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
-#  mail.resent_to.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail[:resent_to].encoded   #=> 'Resent-To: Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net\r\n'
+#  mail[:resent_to].decoded   #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+#  mail[:resent_to].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+#  mail[:resent_to].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
 module Mail
   class ResentToField < StructuredField

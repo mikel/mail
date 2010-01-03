@@ -26,6 +26,10 @@ module Mail
     def decoded
       keywords.join(', ')
     end
+
+    def default
+      keywords
+    end
     
   end
 end

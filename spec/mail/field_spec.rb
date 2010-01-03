@@ -30,7 +30,7 @@ describe Mail::Field do
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
-        Mail::Field.new("#{sf}: Value").field.class.should == Mail.const_get(klass)
+        Mail::Field.new("#{sf}: ").field.class.should == Mail.const_get(klass)
       end
     end
     
@@ -44,7 +44,7 @@ describe Mail::Field do
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
-        Mail::Field.new("#{sf}: Value").field.class.should == Mail.const_get(klass)
+        Mail::Field.new("#{sf}: ").field.class.should == Mail.const_get(klass)
       end
     end
     

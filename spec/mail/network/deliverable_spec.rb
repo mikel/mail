@@ -24,7 +24,7 @@ describe "Deliverable" do
       end
 
       MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][1].should == mail.from
       MockSMTP.deliveries[0][2].should == mail.destinations
     end
 
@@ -38,7 +38,7 @@ describe "Deliverable" do
       mail.deliver!
 
       MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][1].should == mail.from
       MockSMTP.deliveries[0][2].should == mail.destinations
     end
 

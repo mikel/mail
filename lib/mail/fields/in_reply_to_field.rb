@@ -19,13 +19,12 @@
 # 
 #  mail = Mail.new
 #  mail.in_reply_to = '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
-#  mail.in_reply_to    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
+#  mail.in_reply_to    #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
 #  mail[:in_reply_to]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
 #  mail['in_reply_to'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
 #  mail['In-Reply-To'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::InReplyToField:0x180e1c4
 # 
-#  mail.in_reply_to.to_s  #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
-#  mail.in_reply_to.message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
+#  mail[:in_reply_to].message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 # 
 module Mail
   class InReplyToField < StructuredField

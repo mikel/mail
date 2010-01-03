@@ -1,3 +1,17 @@
+== Sun Jan  3 00:08:06 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 1.5.0
+
+* Major API change in Message#field_name.  This WILL break your applications that use Mail.  Message#field_name now returns good, intelligent, default values.  You can still access the field object by calling Message#[:field_name] or Message#['field_name'].
+
+== Sat Jan  2 04:12:53 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Message-ID, Content-ID, References et al, now return the default value of the message ID without the angle brackets, as per RFC 2822, "Semantically, the angle bracket characters are not part of the msg-id; the msg-id is what is contained between the two angle bracket characters."
+
+* Message class now has getter and setter methods for all the supported field types explicitly.  This allows us to return a "default" value for all fields.
+
+* All address fields, when called from Message#to or Message#from or the like, return either a string of the address spec (mikel@test.lindsaar.net) if it is a single entry, or an array of address specs if there is more than one ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+
 == Mon 28 Dec 2009 01:21:52 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added sorting of parts, default is text/plain, then text/enriched and text/html.  Access through  Body#set_sort_order and Body#sort_parts! (called from Body#encode automatically)

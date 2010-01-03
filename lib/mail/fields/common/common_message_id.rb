@@ -24,6 +24,14 @@ module Mail
         element.message_ids
       end
       
+      def default
+        if message_ids.length == 1
+          message_ids[0]
+        else
+          message_ids
+        end
+      end
+
       private
       
       def do_encode(field_name)

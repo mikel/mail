@@ -45,6 +45,10 @@ module Mail
       "#{main_type}/#{sub_type}"
     end
     
+    def default
+      decoded
+    end
+    
     alias :content_type :string
     
     def parameters

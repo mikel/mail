@@ -138,14 +138,14 @@ describe Mail::Body do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
-      body.parts[0].content_type.content_type.should == "text/plain"
+      body.parts[0].content_type.should == "text/plain; charset=ISO-8859-1"
     end
     
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
-      body.parts[1].content_type.content_type.should == "text/html"
+      body.parts[1].content_type.should == "text/html"
     end
 
     it "should separate out it's parts" do
@@ -221,9 +221,9 @@ describe Mail::Body do
       body.parts.length.should == 3
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.value.should == "text/plain"
-      body.parts[1].content_type.value.should == "text/enriched"
-      body.parts[2].content_type.value.should == "text/html"
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/enriched"
+      body.parts[2].content_type.should == "text/html"
     end
     
     it "should allow you to sort the parts with an arbitrary sort order" do
@@ -235,9 +235,9 @@ describe Mail::Body do
       body.parts.length.should == 3
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.value.should == "text/plain"
-      body.parts[1].content_type.value.should == "text/html"
-      body.parts[2].content_type.value.should == "text/enriched"
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/html"
+      body.parts[2].content_type.should == "text/enriched"
     end
     
     it "should allow you to sort the parts with an arbitrary sort order" do
@@ -249,9 +249,9 @@ describe Mail::Body do
       body.parts.length.should == 3
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.value.should == "application/x-yaml"
-      body.parts[1].content_type.value.should == "text/plain"
-      body.parts[2].content_type.value.should == "text/html"
+      body.parts[0].content_type.should == "application/x-yaml"
+      body.parts[1].content_type.should == "text/plain"
+      body.parts[2].content_type.should == "text/html"
     end
     
     it "should sort the parts on encode" do
@@ -262,9 +262,9 @@ describe Mail::Body do
       body.parts.length.should == 3
       body.should be_multipart
       body.encoded
-      body.parts[0].content_type.value.should == "text/plain"
-      body.parts[1].content_type.value.should == "text/enriched"
-      body.parts[2].content_type.value.should == "text/html"
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/enriched"
+      body.parts[2].content_type.should == "text/html"
     end
     
     it "should put the part types it doesn't know about at the end" do
@@ -275,9 +275,9 @@ describe Mail::Body do
       body.parts.length.should == 3
       body.should be_multipart
       body.encoded
-      body.parts[0].content_type.value.should == "text/plain"
-      body.parts[1].content_type.value.should == "text/html"
-      body.parts[2].content_type.value.should == "image/jpeg"
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/html"
+      body.parts[2].content_type.should == "image/jpeg"
     end
     
   end

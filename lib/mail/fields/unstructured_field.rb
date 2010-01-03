@@ -31,6 +31,10 @@ module Mail
       do_decode
     end
 
+    def default
+      decoded
+    end
+
     private
     
     def do_encode(name)
