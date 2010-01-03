@@ -47,7 +47,54 @@ module Mail
     include Patterns
     include Utilities
     
-    # Creates a new Mail::Message object through .new
+    # ==Making an email
+    # 
+    # You can make an new mail object via a block, passing a string, file or direct assignment.
+    # 
+    # ===Making an email via a block
+    # 
+    #  mail = Mail.new do
+    #       from 'mikel@test.lindsaar.net'
+    #         to 'you@test.lindsaar.net'
+    #    subject 'This is a test email'
+    #       body File.read('body.txt')
+    #  end
+    # 
+    #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+    #
+    # ===Making an email via passing a string
+    # 
+    #  mail = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Hello\r\n\r\nHi there!")
+    #  mail.body.to_s #=> 'Hi there!'
+    #  mail.subject   #=> 'Hello'
+    #  mail.to        #=> 'mikel@test.lindsaar.net'
+    # 
+    # ===Making an email from a file
+    # 
+    #  mail = Mail.read('path/to/file.eml')
+    #  mail.body.to_s #=> 'Hi there!'
+    #  mail.subject   #=> 'Hello'
+    #  mail.to        #=> 'mikel@test.lindsaar.net'
+    # 
+    # ===Making an email via assignment
+    # 
+    # You can assign values to a mail object via four approaches:
+    # 
+    # * Message#field_name=(value)
+    # * Message#field_name(value)
+    # * Message#['field_name']=(value)
+    # * Message#[:field_name]=(value)
+    # 
+    # Examples:
+    # 
+    #  mail = Mail.new
+    #  mail['from'] = 'mikel@test.lindsaar.net'
+    #  mail[:to]    = 'you@test.lindsaar.net'
+    #  mail.subject 'This is a test email'
+    #  mail.body    = 'This is a body'
+    # 
+    #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+    # 
     def initialize(*args, &block)
       @body = nil
 
@@ -64,10 +111,30 @@ module Mail
       self
     end
     
+    # Delivers an mail object.
+    # 
+    # Examples:
+    # 
+    #  mail = Mail.read('file.eml')
+    #  mail.deliver!
     def deliver!
       Deliverable.perform_delivery!(self)
     end
     
+    # Provides the operator needed for sort et al.
+    # 
+    # Compares this mail object with another mail object, this is done by date, so an
+    # email that is older than another will appear first.
+    # 
+    # Example:
+    # 
+    #  mail1 = Mail.new do
+    #    date(Time.now)
+    #  end
+    #  mail2 = Mail.new do
+    #    date(Time.now - 86400) # 1 day older
+    #  end
+    #  [mail2, mail1].sort #=> [mail2, mail1]
     def <=>(other)
       if other.nil?
         1
@@ -76,6 +143,16 @@ module Mail
       end
     end
     
+    # Two emails are the same if their encoded values are the same.  This means they
+    # are only equal if they are exactly the same email, as Message-IDs will change
+    # for every email.  If you need to compare two emails approximately, you are better
+    # off comparing specific fields and bodies or parts.
+    # 
+    # Example:
+    # 
+    #  mail1 = Mail.read('file.eml')
+    #  mail2 = Mail.read('file.eml')
+    #  mail1 == mail2 #=> true
     def ==(other)
       unless other.respond_to?(:encoded)
         false
@@ -96,10 +173,7 @@ module Mail
       @raw_source
     end
     
-    def raw_source=(value)
-      @raw_source = value.to_crlf
-    end
-    
+    # Sets the envelope from for the email
     def set_envelope( val )
       @raw_envelope = val
       @envelope = Mail::Envelope.new( val )
@@ -1328,6 +1402,10 @@ module Mail
       header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
       self.header = header_part
       self.body   = body_part
+    end
+    
+    def raw_source=(value)
+      @raw_source = value.to_crlf
     end
     
     def set_envelope_header
