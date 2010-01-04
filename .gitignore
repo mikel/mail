@@ -5,4 +5,6 @@ gems
 vendor
 bin
 pkg
-spec/fixtures/corpus/spam
+spec/fixtures/emails/corpus/
+spec/fixtures/failed_emails/
+mail.tmproj
