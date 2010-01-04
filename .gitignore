@@ -5,3 +5,4 @@ gems
 vendor
 bin
 pkg
+spec/fixtures/corpus/spam
