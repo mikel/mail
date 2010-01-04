@@ -143,21 +143,48 @@ module Mail
       end
     end
     
-    # Two emails are the same if their encoded values are the same.  This means they
-    # are only equal if they are exactly the same email, as Message-IDs will change
-    # for every email.  If you need to compare two emails approximately, you are better
-    # off comparing specific fields and bodies or parts.
+    # Two emails are the same if they have the same fields and body contents. One
+    # gotcha here is that Mail will insert Message-IDs when calling encoded, so doing
+    # mail1.encoded == mail2.encoded is most probably not going to return what you think
+    # as the assigned Message-IDs by Mail (if not already defined as the same) will ensure
+    # that the two objects are unique, and this comparison will ALWAYS return false.
     # 
-    # Example:
+    # So the == operator has been defined like so:  Two messages are the same if they have
+    # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
+    # different Message-ID value, then they are false.
     # 
-    #  mail1 = Mail.read('file.eml')
-    #  mail2 = Mail.read('file.eml')
-    #  mail1 == mail2 #=> true
+    # So, in practice the == operator works like this:
+    # 
+    #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> false
     def ==(other)
-      unless other.respond_to?(:encoded)
-        false
+      return false unless other.respond_to?(:encoded)
+      
+      if self.message_id && other.message_id
+        result = (self.encoded == other.encoded)
       else
-        self.encoded == other.encoded
+        self_message_id, other_message_id = self.message_id, other.message_id
+        self.message_id, other.message_id = '<temp@test>', '<temp@test>'
+        result = self.encoded == other.encoded
+        self.message_id, other.message_id = "<#{self_message_id}>", "<#{other_message_id}>"
+        result
       end
     end
     

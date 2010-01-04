@@ -40,14 +40,14 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'trec_2005_corpus', 'missing_body.eml'))) }.should_not raise_error
     end
 
-    it "should be able to parse every email example we have without raising an exception" do
-      emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
-      STDERR.stub!(:puts) # Don't want to get noisy about any warnings
-      emails.each do |email|
-        #doing { 
-          Mail::Message.new(File.read(email)) # }.should_not raise_error
-      end
-    end
+ #  it "should be able to parse every email example we have without raising an exception" do
+ #    emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
+ #    STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+ #    emails.each do |email|
+ #      #doing { 
+ #        Mail::Message.new(File.read(email)) # }.should_not raise_error
+ #    end
+ #  end
 
     it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
       STDERR.should_receive(:puts)
@@ -1554,6 +1554,58 @@ describe Mail::Message do
   end
   
   describe "helper methods" do
+    
+    describe "==" do
+      it "should be implemented" do
+        doing { Mail.new == Mail.new }.should_not raise_error
+      end
+
+      it "should ignore the message id value if both have a nil message id" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m1.should == m2
+      end
+
+      it "should ignore the message id value if self has a nil message id" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m1.should == m2
+      end
+
+      it "should ignore the message id value if other has a nil message id" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m1.should == m2
+      end
+
+      it "should not be == if both emails have different Message IDs" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m1.should_not == m2
+      end
+      
+      it "should preserve the message id of self if set" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m1 == m2
+        m1.message_id.should == '1234@test.lindsaar.net'
+      end
+      
+      it "should preserve the message id of other if set" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m1 == m2
+        m2.message_id.should == '1234@test.lindsaar.net'
+      end
+      
+      it "should preserve the message id of both if set" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m1 == m2
+        m1.message_id.should == '4321@test.lindsaar.net'
+        m2.message_id.should == '1234@test.lindsaar.net'
+      end
+    end
     
     it "should implement the spaceship operator on the date field" do
       now = Time.now
