@@ -97,7 +97,9 @@ module Mail
     # 
     def initialize(*args, &block)
       @body = nil
-
+      @text_part = nil
+      @html_part = nil
+      
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
