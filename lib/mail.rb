@@ -15,7 +15,14 @@ module Mail # :doc:
   require 'uri'
   require 'net/smtp'
   require 'mime/types'
-  require 'tlsmail' if RUBY_VERSION <= '1.8.6'
+
+  if RUBY_VERSION <= '1.8.6'
+    begin
+      require 'tlsmail'
+    rescue LoadError
+      raise "You need to install tlsmail if you are using ruby <= 1.8.6"
+    end
+  end
 
   if RUBY_VERSION >= "1.9.1"
     require 'mail/version_specific/ruby_1_9.rb'

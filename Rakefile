@@ -23,7 +23,6 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
 
-  s.add_dependency('tlsmail') if RUBY_VERSION <= '1.8.6'
   s.add_dependency('activesupport', ">= 2.3.4")
   s.add_dependency('mime-types')
 
