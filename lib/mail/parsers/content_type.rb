@@ -80,19 +80,24 @@ module Mail
               s5 << r6
               if r6
                 if has_terminal?(";", false, index)
-                  r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                  r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
                   @index += 1
                 else
                   terminal_parse_failure(";")
-                  r7 = nil
+                  r8 = nil
+                end
+                if r8
+                  r7 = r8
+                else
+                  r7 = instantiate_node(SyntaxNode,input, index...index)
                 end
                 s5 << r7
                 if r7
-                  r8 = _nt_parameter
-                  s5 << r8
-                  if r8
-                    r9 = _nt_CFWS
-                    s5 << r9
+                  r9 = _nt_parameter
+                  s5 << r9
+                  if r9
+                    r10 = _nt_CFWS
+                    s5 << r10
                   end
                 end
               end
