@@ -37,17 +37,17 @@ describe Mail::Message do
     end
 
     it "should be able to parse an email with only blank lines as body" do
-      doing { Mail::Message.new(File.read(fixture('emails', 'trec_2005_corpus', 'missing_body.eml'))) }.should_not raise_error
+      doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
 
- #  it "should be able to parse every email example we have without raising an exception" do
- #    emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
- #    STDERR.stub!(:puts) # Don't want to get noisy about any warnings
- #    emails.each do |email|
- #      #doing { 
- #        Mail::Message.new(File.read(email)) # }.should_not raise_error
- #    end
- #  end
+    it "should be able to parse every email example we have without raising an exception" do
+      emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
+      STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+      emails.each do |email|
+        #doing { 
+          Mail::Message.new(File.read(email)) # }.should_not raise_error
+      end
+    end
 
     it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
       STDERR.should_receive(:puts)
@@ -1030,10 +1030,17 @@ describe Mail::Message do
     
       describe "adding a file attachment" do
 
+        it "should set to multipart/mixed if a text part and some html parts" do
+          mail = Mail::Message.new
+          mail.text_part { body("log message goes here") }
+          mail.add_file(fixture('attachments', 'test.png'))
+          mail.mime_type.should == 'multipart/mixed'
+        end
+
         it "should allow you to just call 'add_attachment'" do
           mail = Mail::Message.new
           mail.add_file(fixture('attachments', 'test.png'))
-          mail[:content_type].string.should == 'multipart/mixed'
+          mail.mime_type.should == 'multipart/mixed'
         end
 
         it "should add a part given a filename" do

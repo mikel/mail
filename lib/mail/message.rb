@@ -1242,7 +1242,7 @@ module Mail
     def html_part(&block)
       if block_given?
         @html_part = Mail::Part.new(&block)
-        add_multipart_alternate_header
+        add_multipart_alternate_header unless html_part.blank?
         add_part(@html_part)
       else
         @html_part
@@ -1253,7 +1253,7 @@ module Mail
     def text_part(&block)
       if block_given?
         @text_part = Mail::Part.new(&block)
-        add_multipart_alternate_header
+        add_multipart_alternate_header unless html_part.blank?
         add_part(@text_part)
       else
         @text_part
@@ -1269,7 +1269,7 @@ module Mail
       else
         @html_part = Mail::Part.new('Content-Type: text/html;')
       end
-      add_multipart_alternate_header
+      add_multipart_alternate_header unless text_part.blank?
       add_part(@html_part)
     end
     
@@ -1282,7 +1282,7 @@ module Mail
       else
         @text_part = Mail::Part.new('Content-Type: text/plain;')
       end
-      add_multipart_alternate_header
+      add_multipart_alternate_header unless html_part.blank?
       add_part(@text_part)
     end
 
