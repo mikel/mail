@@ -23,6 +23,20 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
+== Compatibility
+
+Mail runs with all specs passing on:
+
+* ree-1.8.7-2009.10 [ x86_64 ]
+* ruby-1.8.6-p383 [ x86_64 ]
+* ruby-1.8.7-p248 [ x86_64 ]
+* ruby-1.9.1-head [ x86_64 ]
+* ruby-1.9.1-p376 [ x86_64 ]
+
+Almost compatible (few specs failing on)
+
+* jruby-1.4.0 [x86_64-java]
+
 == Discussion
 
 If you want to discuss mail with like minded individuals, please subscribe to
