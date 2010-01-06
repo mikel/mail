@@ -5,6 +5,7 @@ module Mail
     def initialize
       @user = nil
       @pass = nil
+      @tls  = false
     end
     
     def settings(&block)

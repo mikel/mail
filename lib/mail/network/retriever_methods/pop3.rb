@@ -14,6 +14,7 @@ module Mail
     def initialize
       @user = nil
       @pass = nil
+      @tls  = false
     end
     
     require 'net/pop'
