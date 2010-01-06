@@ -1,0 +1,25 @@
+From: <redacted@flashmail.net>
+Subject: Redacted
+To: <redacted@Enron.com>
+Message-ID: <105647271315.NCV17523@x263.net>
+MIME-version: 1.0
+Content-Type: multipart/alternative; boundary="----_001_5973_47T00ZN9.15SY2428"
+Content-type: text/plain
+
+This is a multi-part message in MIME format.
+
+------_001_5973_47T00ZN9.15SY2428
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+
+foo
+
+------_001_5973_47T00ZN9.15SY2428
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+
+<p>foo</p>
+
+------_001_5973_47T00ZN9.15SY2428--
