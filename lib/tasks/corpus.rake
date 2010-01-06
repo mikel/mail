@@ -10,7 +10,7 @@ namespace :corpus do
   desc "Provide a LOCATION=/some/dir to verify parsing in bulk, otherwise defaults"
   task :verify_all => :load_mail do
 
-    root_of_corpus    = ENV['LOCATION'] || 'spec/fixtures/corpus/spam'
+    root_of_corpus    = ENV['LOCATION'] || 'corpus/spam'
     @save_failures_to = ENV['SAVE_TO']  || 'spec/fixtures/emails/failed_emails'
     @failed_emails    = []
     @checked_count    = 0
