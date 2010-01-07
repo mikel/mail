@@ -25,7 +25,7 @@ you are doing, you can fiddle with every last bit of your email directly.
 
 == Compatibility
 
-Mail runs with all specs passing on:
+Mail is tested and works on the following platforms:
 
 * ree-1.8.7-2009.10 [ x86_64 ]
 * ruby-1.8.6-p383 [ x86_64 ]
@@ -33,7 +33,9 @@ Mail runs with all specs passing on:
 * ruby-1.9.1-head [ x86_64 ]
 * ruby-1.9.1-p376 [ x86_64 ]
 
-Almost compatible (few specs failing on)
+Mail seems to work fine on JRuby as well, however, the Base64 and Quoted-Printable
+encoding methods are implemented differently and return different values so 6 
+specs fail.  This needs to be triple checked if all OK.
 
 * jruby-1.4.0 [x86_64-java]
 
