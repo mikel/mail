@@ -607,4 +607,60 @@ describe Mail::ContentTypeField do
     end
   end
 
+  describe "special case values needing sanity" do
+    it "should handle 'text/plain;ISO-8559-1'" do
+      c = Mail::ContentTypeField.new('text/plain;ISO-8559-1')
+      c.string.should == 'text/plain'
+      c.parameters['charset'].should == 'ISO-8559-1'
+    end
+      
+    it "should handle text; params" do
+      c = Mail::ContentTypeField.new('text; charset=utf-8')
+      c.string.should == 'text/plain'
+      c.parameters['charset'].should == 'utf-8'
+    end
+      
+    it 'should handle text/html; charset="charset="GB2312""' do
+      c = Mail::ContentTypeField.new('text/html; charset="charset="GB2312""')
+      c.string.should == 'text/html'
+      c.parameters['charset'].should == 'GB2312'
+    end
+    
+    it "should handle application/octet-stream; name=archiveshelp1[1].htm" do
+      c = Mail::ContentTypeField.new('application/octet-stream; name=archiveshelp1[1].htm')
+      c.string.should == 'application/octet-stream'
+      c.parameters['name'].should == 'archiveshelp1[1].htm'
+    end
+    
+    it 'should handle text/plain;; format="flowed"' do
+      c = Mail::ContentTypeField.new('text/plain;; format="flowed"')
+      c.string.should == 'text/plain'
+      c.parameters['format'].should == 'flowed'
+    end
+    
+    it 'set an empty content type to text/plain' do
+      c = Mail::ContentTypeField.new('')
+      c.string.should == 'text/plain'
+    end
+
+    it "should just ignore illegal params like audio/x-midi;\r\n\tname=Part .exe" do
+      c = Mail::ContentTypeField.new("audio/x-midi;\r\n\tname=Part .exe")
+      c.string.should == 'audio/x-midi'
+      c.parameters['name'].should == nil
+    end
+    
+    it "should handle: rfc822; format=flowed; charset=iso-8859-15" do
+      c = Mail::ContentTypeField.new("rfc822; format=flowed; charset=iso-8859-15")
+      c.string.should == 'text/plain'
+      c.parameters['format'].should == 'flowed'
+      c.parameters['charset'].should == 'iso-8859-15'
+    end
+    
+    it "should just get the mime type if all else fails with some real garbage" do
+      c = Mail::ContentTypeField.new("text/html; format=flowed; charset=iso-8859-15  Mime-Version: 1.0")
+      c.string.should == 'text/html'
+    end
+      
+  end
+
 end

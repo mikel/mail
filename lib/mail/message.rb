@@ -1032,7 +1032,7 @@ module Mail
     end
 
     def has_content_type?
-      !!content_type
+      !!header[:content_type]
     end
     
     def has_charset?
@@ -1169,7 +1169,7 @@ module Mail
     
     # Returns true if the message is multipart
     def multipart?
-      !!(main_type =~ /^multipart$/i)
+      has_content_type? ? !!(main_type =~ /^multipart$/i) : false
     end
     
     # Returns true if the message is a multipart/report

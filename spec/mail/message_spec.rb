@@ -44,8 +44,7 @@ describe Mail::Message do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings
       emails.each do |email|
-        #doing { 
-          Mail::Message.new(File.read(email)) # }.should_not raise_error
+        Mail::Message.new(File.read(email))
       end
     end
 
