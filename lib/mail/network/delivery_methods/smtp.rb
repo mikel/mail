@@ -62,13 +62,13 @@ module Mail
       
       config = Mail.defaults
 
-      # TODO: use the "return-path" field by default instead of the "from" field ? (see ActionMailer)
-      from = mail.from_addrs.first
-      raise ArgumentError.new('An author -from- is required to send a message') if from.blank?
-      to ||= mail.destinations if mail.respond_to?(:destinations) && mail.destinations
-      raise ArgumentError.new('At least one recipient -to, cc, bcc- is required to send a message') if to.blank?
-      msg_str ||= mail.encoded if mail.respond_to?(:encoded)
-      raise ArgumentError.new('A encoded content is required to send a message') if msg_str.blank?
+      # Set the envelope from to be either the return-path, the sender or the first from address
+      envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
+      raise ArgumentError.new('An sender (Return-Path, Sender or From) required to send a message') if envelope_from.blank?
+      destinations ||= mail.destinations if mail.respond_to?(:destinations) && mail.destinations
+      raise ArgumentError.new('At least one recipient (To, Cc or Bcc) is required to send a message') if destinations.blank?
+      message ||= mail.encoded if mail.respond_to?(:encoded)
+      raise ArgumentError.new('A encoded content is required to send a message') if message.blank?
       
       smtp = Net::SMTP.new(config.smtp.host, config.smtp.port)
       if config.smtp.tls?
@@ -82,7 +82,7 @@ module Mail
       end
       
       smtp.start(config.smtp.helo, config.smtp.user, config.smtp.pass, authentication = :plain) do |smtp|
-        smtp.sendmail(msg_str, from, to)
+        smtp.sendmail(message, envelope_from, destinations)
       end
       
       self

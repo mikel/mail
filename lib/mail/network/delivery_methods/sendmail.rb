@@ -14,8 +14,10 @@ module Mail
     end
 
     def Sendmail.deliver!(mail)
-      IO.popen("#{Mail.defaults.sendmail.path} #{mail.destinations.join(" ")}", "w+") do |io|
+      mail.return_path ? return_path = "-f \"#{mail.return_path}\"" : reply_to = ''
+      IO.popen("#{Mail.defaults.sendmail.path} #{return_path} #{mail.destinations.join(" ")}", "w+") do |io|
         io.puts mail.to_s
+        io.flush
       end
     end
   end
