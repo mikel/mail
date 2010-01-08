@@ -1,3 +1,28 @@
+== Fri  8 Jan 2010 00:00:08 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 1.5.2
+
+== Fri  8 Jan 8:55:49 2010 +1100 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Updated Sendmail and SMTP delivery methods to use return-path if present
+* Fix up a lot of content-type parsing problems
+* Updating compat listing
+* Moving error emails into one directory
+* Moving error emails into one directory
+* Initializing @tls variable to remove warnings
+* Moved default corpus directory
+* Fixed up git ignore file
+
+== Thu  6 Jan 2010 23:59:29 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added compatibility list to Readme.rdoc
+* Fixing encoding of return path to be per RFC 2822, adding angle brackets around the addr_spec
+* Specs covering return path setting and preserving
+
+== Thu  5 Jan 2010 23:59:48 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Moving the require for tlsmail for Ruby 1.8.6 into mail.rb
+
 == Sun Jan  3 00:08:06 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 1.5.0
