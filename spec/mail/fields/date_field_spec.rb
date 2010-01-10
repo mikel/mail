@@ -37,21 +37,21 @@ describe Mail::DateField do
     it "should accept two strings with the field separate" do
       t = Mail::DateField.new('Date', '12 Aug 2009 00:00:02 GMT')
       t.name.should == 'Date'
-      t.value.should == '12 Aug 2009 00:00:02 GMT'
+      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
       t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
 
     it "should accept a string with the field name" do
       t = Mail::DateField.new('Date: 12 Aug 2009 00:00:02 GMT')
       t.name.should == 'Date'
-      t.value.should == '12 Aug 2009 00:00:02 GMT'
+      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
       t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
 
     it "should accept a string without the field name" do
       t = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
       t.name.should == 'Date'
-      t.value.should == '12 Aug 2009 00:00:02 GMT'
+      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
       t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
     
@@ -62,12 +62,12 @@ describe Mail::DateField do
     
     it "should allow us to encode an date field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
-      field.encoded.should == "Date: 12 Aug 2009 00:00:02 GMT\r\n"
+      field.encoded.should == "Date: Wed, 12 Aug 2009 00:00:02 +0000\r\n"
     end
     
     it "should allow us to decode an address field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
-      field.decoded.should == "12 Aug 2009 00:00:02 GMT"
+      field.decoded.should == "Wed, 12 Aug 2009 00:00:02 +0000"
     end
     
   end

@@ -27,6 +27,11 @@ module Mail
   class Body
 
     def initialize(string = '')
+      @boundary = nil
+      @preamble = nil
+      @epilogue = nil
+      @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
+      @parts = []
       if string.blank?
         @raw_source = ''
       else
@@ -85,7 +90,29 @@ module Mail
     def match(regexp)
       self.decoded.match(regexp)
     end
+
+    # Allows you to set the sort order of the parts, overriding the default sort order.
+    # Defaults to 'text/plain', then 'text/enriched', then 'text/html' with any other content
+    # type coming after.
+    def set_sort_order(order)
+      @part_sort_order = order
+    end
     
+    # Allows you to sort the parts according to the default sort order, or the sort order you
+    # set with :set_sort_order.
+    #
+    # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
+    def sort_parts!
+      order = @part_sort_order
+      @parts = @parts.sort do |a, b|
+        # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
+        # single email message... please show me a use case and I'll put more work into this method,
+        # in the meantime, it works :)
+        a_order = order.index(a[:content_type].string.downcase) || 10000
+        b_order = order.index(b[:content_type].string.downcase) || 10000
+        a_order <=> b_order
+      end
+    end
     
     # Returns the raw source that the body was initialized with, without
     # any tampering
@@ -97,22 +124,24 @@ module Mail
     # raw source.  Need to implement
     def encoded
       if multipart?
-        encoded_parts = parts.map { |p| p.to_s }
+        self.sort_parts!
+        encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
         raw_source.to_crlf
       end
     end
     
-    alias :to_s :encoded
-    
-    # Returns the raw source right now.  Need to implement
     def decoded
       if encoding.nil? || !Encodings.defined?(encoding)
         raw_source.to_lf
       else
         Encodings.get_encoding(encoding).decode(raw_source)
       end
+    end
+    
+    def to_s
+      decoded
     end
     
     def charset
@@ -167,7 +196,7 @@ module Mail
     end
 
     def parts
-      @parts ||= []
+      @parts
     end
     
     def <<( val )

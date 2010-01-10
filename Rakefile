@@ -12,7 +12,7 @@ require 'bundler'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "1.3.0"
+  s.version     = "1.5.2"
   s.author      = "Mike Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
@@ -23,11 +23,8 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
 
-  manifest = Bundler::Environment.load(File.dirname(__FILE__) + '/Gemfile')
-  manifest.dependencies.each do |dep|
-    next if dep.only && dep.only.include?("test")
-    s.add_dependency(dep.name, dep.version)
-  end
+  s.add_dependency('activesupport', ">= 2.3.4")
+  s.add_dependency('mime-types')
 
   s.require_path = 'lib'
   s.files = %w(README.rdoc Rakefile TODO.rdoc) + Dir.glob("lib/**/*")

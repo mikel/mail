@@ -107,6 +107,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
+      name = dasherize(name)
       selected = select_field_for(name)
       case
       when selected.length > 1
@@ -132,8 +133,9 @@ module Mail
     #  h['X-Mail-SPAM'] = nil
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
+      name = dasherize(name)
       selected = select_field_for(name)
-
+      
       case
       # User wants to delete the field
       when !selected.blank? && value == nil
@@ -141,7 +143,6 @@ module Mail
         
       # User wants to change the field
       when !selected.blank? && limited_field?(name)
-
         selected.first.update(name, value)
         
       # User wants to create the field
@@ -165,7 +166,13 @@ module Mail
       buffer
     end
 
-    alias :to_s :encoded
+    def to_s
+      encoded
+    end
+    
+    def decoded
+      raise NoMethodError, 'Can not decode an entire header as there could be character set conflicts, try calling #decoded on the various fields.'
+    end
 
     # Returns true if the header has a Message-ID defined (empty or not)
     def has_message_id?
@@ -217,7 +224,7 @@ module Mail
     end
     
     def select_field_for(name)
-      fields.select { |f| f.responsible_for?(name) }
+      fields.select { |f| f.responsible_for?(name.to_s) }
     end
     
     def limited_field?(name)

@@ -33,6 +33,6 @@ module Mail
     def decoded
       value
     end
-
+    
   end
 end

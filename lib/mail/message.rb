@@ -47,10 +47,59 @@ module Mail
     include Patterns
     include Utilities
     
-    # Creates a new Mail::Message object through .new
+    # ==Making an email
+    # 
+    # You can make an new mail object via a block, passing a string, file or direct assignment.
+    # 
+    # ===Making an email via a block
+    # 
+    #  mail = Mail.new do
+    #       from 'mikel@test.lindsaar.net'
+    #         to 'you@test.lindsaar.net'
+    #    subject 'This is a test email'
+    #       body File.read('body.txt')
+    #  end
+    # 
+    #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+    #
+    # ===Making an email via passing a string
+    # 
+    #  mail = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Hello\r\n\r\nHi there!")
+    #  mail.body.to_s #=> 'Hi there!'
+    #  mail.subject   #=> 'Hello'
+    #  mail.to        #=> 'mikel@test.lindsaar.net'
+    # 
+    # ===Making an email from a file
+    # 
+    #  mail = Mail.read('path/to/file.eml')
+    #  mail.body.to_s #=> 'Hi there!'
+    #  mail.subject   #=> 'Hello'
+    #  mail.to        #=> 'mikel@test.lindsaar.net'
+    # 
+    # ===Making an email via assignment
+    # 
+    # You can assign values to a mail object via four approaches:
+    # 
+    # * Message#field_name=(value)
+    # * Message#field_name(value)
+    # * Message#['field_name']=(value)
+    # * Message#[:field_name]=(value)
+    # 
+    # Examples:
+    # 
+    #  mail = Mail.new
+    #  mail['from'] = 'mikel@test.lindsaar.net'
+    #  mail[:to]    = 'you@test.lindsaar.net'
+    #  mail.subject 'This is a test email'
+    #  mail.body    = 'This is a body'
+    # 
+    #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+    # 
     def initialize(*args, &block)
       @body = nil
-
+      @text_part = nil
+      @html_part = nil
+      
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -64,10 +113,30 @@ module Mail
       self
     end
     
+    # Delivers an mail object.
+    # 
+    # Examples:
+    # 
+    #  mail = Mail.read('file.eml')
+    #  mail.deliver!
     def deliver!
       Deliverable.perform_delivery!(self)
     end
     
+    # Provides the operator needed for sort et al.
+    # 
+    # Compares this mail object with another mail object, this is done by date, so an
+    # email that is older than another will appear first.
+    # 
+    # Example:
+    # 
+    #  mail1 = Mail.new do
+    #    date(Time.now)
+    #  end
+    #  mail2 = Mail.new do
+    #    date(Time.now - 86400) # 1 day older
+    #  end
+    #  [mail2, mail1].sort #=> [mail2, mail1]
     def <=>(other)
       if other.nil?
         1
@@ -76,11 +145,48 @@ module Mail
       end
     end
     
+    # Two emails are the same if they have the same fields and body contents. One
+    # gotcha here is that Mail will insert Message-IDs when calling encoded, so doing
+    # mail1.encoded == mail2.encoded is most probably not going to return what you think
+    # as the assigned Message-IDs by Mail (if not already defined as the same) will ensure
+    # that the two objects are unique, and this comparison will ALWAYS return false.
+    # 
+    # So the == operator has been defined like so:  Two messages are the same if they have
+    # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
+    # different Message-ID value, then they are false.
+    # 
+    # So, in practice the == operator works like this:
+    # 
+    #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> true
+    # 
+    #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
+    #  m1 == m2 #=> false
     def ==(other)
-      unless other.respond_to?(:encoded)
-        false
+      return false unless other.respond_to?(:encoded)
+      
+      if self.message_id && other.message_id
+        result = (self.encoded == other.encoded)
       else
-        self.encoded == other.encoded
+        self_message_id, other_message_id = self.message_id, other.message_id
+        self.message_id, other.message_id = '<temp@test>', '<temp@test>'
+        result = self.encoded == other.encoded
+        self.message_id, other.message_id = "<#{self_message_id}>", "<#{other_message_id}>"
+        result
       end
     end
     
@@ -96,15 +202,7 @@ module Mail
       @raw_source
     end
     
-    def raw_source=(value)
-      @raw_source = value.to_crlf
-    end
-    
-    def set_envelope( val )
-      @raw_envelope = val
-      @envelope = Mail::Envelope.new( val )
-    end
-    
+    # Sets the envelope from for the email
     def set_envelope( val )
       @raw_envelope = val
       @envelope = Mail::Envelope.new( val )
@@ -154,6 +252,582 @@ module Mail
     def headers(hash = {})
       hash.each_pair do |k,v|
         header[k] = v
+      end
+    end
+    
+    # Returns the Bcc value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Bcc.
+    #
+    # Example:
+    # 
+    #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    def bcc( val = nil )
+      default :bcc, val
+    end
+    
+    # Sets the Bcc value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def bcc=( val )
+      header[:bcc] = val
+    end
+    
+    # Returns the Cc value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Cc.
+    #
+    # Example:
+    # 
+    #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    def cc( val = nil )
+      default :cc, val
+    end
+    
+    # Sets the Cc value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def cc=( val )
+      header[:cc] = val
+    end
+    
+    def comments( val = nil )
+      default :comments, val
+    end
+    
+    def comments=( val )
+      header[:comments] = val
+    end
+    
+    def content_description( val = nil )
+      default :content_description, val
+    end
+    
+    def content_description=( val )
+      header[:content_description] = val
+    end
+    
+    def content_disposition( val = nil )
+      default :content_disposition, val
+    end
+    
+    def content_disposition=( val )
+      header[:content_disposition] = val
+    end
+    
+    def content_id( val = nil )
+      default :content_id, val
+    end
+    
+    def content_id=( val )
+      header[:content_id] = val
+    end
+    
+    def content_location( val = nil )
+      default :content_location, val
+    end
+    
+    def content_location=( val )
+      header[:content_location] = val
+    end
+    
+    def content_transfer_encoding( val = nil )
+      default :content_transfer_encoding, val
+    end
+    
+    def content_transfer_encoding=( val )
+      header[:content_transfer_encoding] = val
+    end
+    
+    def content_type( val = nil )
+      default :content_type, val
+    end
+    
+    def content_type=( val )
+      header[:content_type] = val
+    end
+    
+    def date( val = nil )
+      default :date, val
+    end
+    
+    def date=( val )
+      header[:date] = val
+    end
+    
+    # Returns the From value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the From.
+    #
+    # Example:
+    # 
+    #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.from #=> 'mikel@test.lindsaar.net'
+    def from( val = nil )
+      default :from, val
+    end
+    
+    # Sets the From value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def from=( val )
+      header[:from] = val
+    end
+    
+    def in_reply_to( val = nil )
+      default :in_reply_to, val
+    end
+    
+    def in_reply_to=( val )
+      header[:in_reply_to] = val
+    end
+    
+    def keywords( val = nil )
+      default :keywords, val
+    end
+    
+    def keywords=( val )
+      header[:keywords] = val
+    end
+    
+    # Returns the Message-ID of the mail object.  Note, per RFC 2822 the Message ID
+    # consists of what is INSIDE the < > usually seen in the mail header, so this method
+    # will return only what is inside.
+    # 
+    # Example:
+    # 
+    #  mail.message_id = '<1234@message.id>'
+    #  mail.message_id #=> '1234@message.id'
+    # 
+    # Also allows you to set the Message-ID by passing a string as a parameter
+    # 
+    #  mail.message_id '<1234@message.id>'
+    #  mail.message_id #=> '1234@message.id'
+    def message_id( val = nil )
+      default :message_id, val
+    end
+    
+    # Sets the Message-ID. Note, per RFC 2822 the Message ID consists of what is INSIDE
+    # the < > usually seen in the mail header, so this method will return only what is inside.
+    # 
+    #  mail.message_id = '<1234@message.id>'
+    #  mail.message_id #=> '1234@message.id'
+    def message_id=( val )
+      header[:message_id] = val
+    end
+    
+    # Returns the mime version of the email as a string
+    # 
+    # Example:
+    # 
+    #  mail.mime_version = '1.0'
+    #  mail.mime_version #=> '1.0'
+    # 
+    # Also allows you to set the mime version by passing a string as a parameter.
+    # 
+    # Example:
+    # 
+    #  mail.mime_version '1.0'
+    #  mail.mime_version #=> '1.0'
+    def mime_version( val = nil )
+      default :mime_version, val
+    end
+    
+    # Sets the mime version of the email by accepting a string
+    # 
+    # Example:
+    # 
+    #  mail.mime_version = '1.0'
+    #  mail.mime_version #=> '1.0'
+    def mime_version=( val )
+      header[:mime_version] = val
+    end
+    
+    def received( val = nil )
+      if val
+        header[:received] = val
+      else
+        header[:received]
+      end
+    end
+    
+    def received=( val )
+      header[:received] = val
+    end
+    
+    def references( val = nil )
+      default :references, val
+    end
+    
+    def references=( val )
+      header[:references] = val
+    end
+    
+    # Returns the Reply-To value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Reply-To.
+    #
+    # Example:
+    # 
+    #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    def reply_to( val = nil )
+      default :reply_to, val
+    end
+    
+    # Sets the Reply-To value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def reply_to=( val )
+      header[:reply_to] = val
+    end
+    
+    # Returns the Resent-Bcc value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Resent-Bcc.
+    # 
+    # Example:
+    # 
+    #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    def resent_bcc( val = nil )
+      default :resent_bcc, val
+    end
+    
+    # Sets the Resent-Bcc value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
+    def resent_bcc=( val )
+      header[:resent_bcc] = val
+    end
+    
+    # Returns the Resent-Cc value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Resent-Cc.
+    # 
+    # Example:
+    # 
+    #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    def resent_cc( val = nil )
+      default :resent_cc, val
+    end
+    
+    # Sets the Resent-Cc value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
+    def resent_cc=( val )
+      header[:resent_cc] = val
+    end
+    
+    def resent_date( val = nil )
+      default :resent_date, val
+    end
+    
+    def resent_date=( val )
+      header[:resent_date] = val
+    end
+    
+    # Returns the Resent-From value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Resent-From.
+    #
+    # Example:
+    # 
+    #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    def resent_from( val = nil )
+      default :resent_from, val
+    end
+    
+    # Sets the Resent-From value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def resent_from=( val )
+      header[:resent_from] = val
+    end
+    
+    def resent_message_id( val = nil )
+      default :resent_message_id, val
+    end
+    
+    def resent_message_id=( val )
+      header[:resent_message_id] = val
+    end
+    
+    # Returns the Resent-Sender value of the mail object, as a single string of an address
+    # spec.  A sender per RFC 2822 must be a single address
+    #
+    # Example:
+    # 
+    #  mail.resent_sender = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_sender #=> 'mikel@test.lindsaar.net'
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.resent_sender 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_sender #=> 'mikel@test.lindsaar.net'
+    def resent_sender( val = nil )
+      default :resent_sender, val
+    end
+
+    # Sets the Resent-Sender value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.sender = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.sender #=> 'mikel@test.lindsaar.net'
+    def resent_sender=( val )
+      header[:resent_sender] = val
+    end
+    
+    # Returns the Resent-To value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the Resent-To.
+    #
+    # Example:
+    # 
+    #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    def resent_to( val = nil )
+      default :resent_to, val
+    end
+    
+    # Sets the Resent-To value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def resent_to=( val )
+      header[:resent_to] = val
+    end
+    
+    # Returns the return path of the mail object, or sets it if you pass a string
+    def return_path( val = nil )
+      default :return_path, val
+    end
+    
+    # Sets the return path of the object
+    def return_path=( val )
+      header[:return_path] = val
+    end
+    
+    # Returns the Sender value of the mail object, as a single string of an address
+    # spec.  A sender per RFC 2822 must be a single address
+    #
+    # Example:
+    # 
+    #  mail.sender = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.sender #=> 'mikel@test.lindsaar.net'
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.sender 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.sender #=> 'mikel@test.lindsaar.net'
+    def sender( val = nil )
+      default :sender, val
+    end
+    
+    # Sets the Sender value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.sender = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.sender #=> 'mikel@test.lindsaar.net'
+    def sender=( val )
+      header[:sender] = val
+    end
+    
+    # Returns the decoded value of the subject field, as a single string.
+    #
+    # Example:
+    # 
+    #  mail.subject = "G'Day mate"
+    #  mail.subject #=> "G'Day mate"
+    #  mail.subject = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+    #  mail.subject #=> "This is あ string"
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.subject "G'Day mate"
+    #  mail.subject #=> "G'Day mate"
+    def subject( val = nil )
+      default :subject, val
+    end
+    
+    # Sets the Subject value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.subject = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+    #  mail.subject #=> "This is あ string"
+    def subject=( val )
+      header[:subject] = val
+    end
+    
+    # Returns the To value of the mail object, either a single string of an address
+    # spec or an array of strings of address specs if there is more than one address
+    # in the To.
+    #
+    # Example:
+    # 
+    #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    # 
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    # 
+    #  mail.to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.to #=> 'mikel@test.lindsaar.net'
+    def to( val = nil )
+      default :to, val
+    end
+    
+    # Sets the To value of the mail object, pass in a string of the field
+    #
+    # Example:
+    # 
+    #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+    def to=( val )
+      header[:to] = val
+    end
+
+    # Returns the default value of the field requested as a symbol.
+    #
+    # Each header field has a :default method which returns the most common use case for 
+    # that field, for example, the date field types will return a DateTime object when
+    # sent :default, the subject, or unstructured fields will return a decoded string of
+    # their value, the address field types will return a single addr_spec or an array of
+    # addr_specs if there is more than one.
+    def default( sym, val = nil )
+      if val
+        header[sym] = val
+      else
+        header[sym].default if header[sym]
       end
     end
     
@@ -212,56 +886,7 @@ module Mail
         @body
       end
     end
-    
-    # Sets the to filed of the message header.
-    # 
-    # Example:
-    # 
-    #  mail.to = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    #  mail.to #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    def to=(value)
-      header[:to] = value
-    end
-    
-    # Returns the to field in the message header. Or, if passed
-    # a parameter sets the value.
-    # 
-    # Example:
-    # 
-    #  mail.to = '"M L" <mikel@test.lindsaar.net>'
-    #  mail.to.to_s #=> '"M L" <mikel@test.lindsaar.net>'
-    #  mail.to.formatted #=> ['"M L" <mikel@test.lindsaar.net>']
-    #  mail.to.addresses #=> ['mikel@test.lindsaar.net']
-    def to(value = nil)
-      value ? self.to = value : header[:to]
-    end
-
-    # Sets the from field in the message header.
-    # 
-    # Example:
-    # 
-    #  mail.from = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    #  mail.from.to_s #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    def from=(value)
-      header[:from] = value
-    end
-    
-    # Returns the from field in the message header. Or, if passed
-    # a parameter sets the value.
-    # 
-    # Example:
-    # 
-    #  mail.from = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    #  mail.from.to_s #=> '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-    # 
-    #  mail.from '"M L" <mikel@test.lindsaar.net>'
-    #  mail.from.to_s #=> '"M L" <mikel@test.lindsaar.net>'
-    #  mail.from.formatted #=> ['"M L" <mikel@test.lindsaar.net>']
-    #  mail.from.addresses #=> ['mikel@test.lindsaar.net']
-    def from(value = nil)
-      value ? self.from = value : header[:from]
-    end
-    
+     
     # Returns the list of addresses this message should be sent to by
     # collecting the addresses off the to, cc and bcc fields.
     # 
@@ -273,55 +898,31 @@ module Mail
     #  mail.destinations.length #=> 3
     #  mail.destinations.first #=> 'mikel@test.lindsaar.net'
     def destinations
-      [to, cc, bcc].map { |f| f.addresses if f }.compact.flatten
+      [to_addrs, cc_addrs, bcc_addrs].compact.flatten
     end
 
     # Returns an array of addresses (the encoded value) in the From field,
     # if no From field, returns an empty array
     def from_addrs
-      from ? from.formatted.compact.flatten : []
+      from ? [from].flatten : []
     end
     
     # Returns an array of addresses (the encoded value) in the To field,
     # if no To field, returns an empty array
     def to_addrs
-      to ? to.formatted.compact.flatten : []
+      to ? [to].flatten : []
     end
     
     # Returns an array of addresses (the encoded value) in the Cc field,
     # if no Cc field, returns an empty array
     def cc_addrs
-      cc ? cc.formatted.compact.flatten : []
+      cc ? [cc].flatten : []
     end
     
     # Returns an array of addresses (the encoded value) in the Bcc field,
     # if no Bcc field, returns an empty array
     def bcc_addrs
-      bcc ? bcc.formatted.compact.flatten : []
-    end
-    
-    # Sets the subject field in the message header.
-    # 
-    # Example:
-    # 
-    #  mail.subject = 'This is the subject'
-    #  mail.subject.to_s #=> 'This is the subject'
-    def subject=(value)
-      header[:subject] = value
-    end
-    
-    # Returns the subject field in the message header. Or, if passed
-    # a parameter sets the value.
-    # 
-    # Example:
-    # 
-    #  mail.subject = 'This is the subject'
-    #  mail.subject.to_s #=> 'This is the subject'
-    # 
-    #  mail.subject 'This is another subject'
-    #  mail.subject.to_s #=> 'This is another subject'
-    def subject(value = nil)
-      value ? self.subject = value : header[:subject]
+      bcc ? [bcc].flatten : []
     end
     
     # Allows you to add an arbitrary header
@@ -371,10 +972,10 @@ module Mail
     # Examples:
     # 
     #  mail.comments = 'These are some comments'
-    #  mail.comments.to_s #=> 'These are some comments'
+    #  mail.comments #=> 'These are some comments'
     # 
     #  mail.comments 'These are other comments'
-    #  mail.comments.to_s #=> 'These are other comments'
+    #  mail.comments #=> 'These are other comments'
     # 
     # 
     #  mail.date = 'Tue, 1 Jul 2003 10:52:37 +0200'
@@ -385,10 +986,10 @@ module Mail
     # 
     #
     #  mail.resent_msg_id = '<1234@resent_msg_id.lindsaar.net>'
-    #  mail.resent_msg_id.to_s #=> '<1234@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id #=> '<1234@resent_msg_id.lindsaar.net>'
     # 
     #  mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
-    #  mail.resent_msg_id.to_s #=> '<4567@resent_msg_id.lindsaar.net>'
+    #  mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
     def method_missing(name, *args, &block)
       #:nodoc:
       # Only take the structured fields, as we could take _anything_ really
@@ -431,15 +1032,20 @@ module Mail
     end
 
     def has_content_type?
-      !!content_type
+      !!header[:content_type]
     end
     
     def has_charset?
       !!charset
     end
     
-    def has_transfer_encoding?
-      transfer_encoding
+    def has_content_transfer_encoding?
+      !!content_transfer_encoding
+    end
+    
+    def has_transfer_encoding? # :nodoc:
+      STDERR.puts(":has_transfer_encoding? is deprecated in Mail 1.4.3.  Please use has_content_transfer_encoding?\n#{caller}")
+      has_content_transfer_encoding?
     end
 
     # Creates a new empty Message-ID field and inserts it in the correct order
@@ -476,7 +1082,7 @@ module Mail
     # 
     # Otherwise raises a warning
     def add_content_type
-      header['Content-Type'] = 'text/plain'
+      header[:content_type] = 'text/plain'
     end
     
     # Adds a content type and charset if the body is US-ASCII
@@ -484,45 +1090,57 @@ module Mail
     # Otherwise raises a warning
     def add_charset
       if body.only_us_ascii?
-        content_type.parameters['charset'] = 'US-ASCII'
+        header[:content_type].parameters['charset'] = 'US-ASCII'
       else
-        STDERR.puts("Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.")
-        content_type.parameters['charset'] = 'UTF-8'
+        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        STDERR.puts(warning)
+        header[:content_type].parameters['charset'] = 'UTF-8'
       end
     end
     
-    # Adds a transfer encoding
+    # Adds a content transfer encoding
     # 
     # Otherwise raises a warning
-    def add_transfer_encoding
+    def add_content_transfer_encoding
       if body.only_us_ascii?
-        header['Content-Transfer-Encoding'] = '7bit'
+        header[:content_transfer_encoding] = '7bit'
       else
-        STDERR.puts("Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.")
-        header['Content-Transfer-Encoding'] = '8bit'
+        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        STDERR.puts(warning)
+        header[:content_transfer_encoding] = '8bit'
       end
     end
     
-    # Returns the content transfer encoding of the email
-    def transfer_encoding
+    def add_transfer_encoding # :nodoc:
+      STDERR.puts(":add_transfer_encoding is deprecated in Mail 1.4.3.  Please use add_content_transfer_encoding\n#{caller}")
+      add_content_transfer_encoding
+    end
+    
+    def transfer_encoding # :nodoc:
+      STDERR.puts(":transfer_encoding is deprecated in Mail 1.4.3.  Please use content_transfer_encoding\n#{caller}")
       content_transfer_encoding
     end
     
-    # Returns the content type
+    # Returns the mime type of part we are on, this is taken from the content-type header
+    def mime_type
+      content_type ? header[:content_type].string : nil
+    end
+    
     def message_content_type
-      content_type ? content_type.content_type : nil
+      STDERR.puts(":message_content_type is deprecated in Mail 1.4.3.  Please use mime_type\n#{caller}")
+      mime_type
     end
     
     # Returns the character set defined in the content type field
     def charset
-      content_type ? content_type.parameters['charset'] : nil
+      content_type ? content_type_parameters['charset'] : nil
     end
 
     # Sets the charset to the supplied value.  Will set the content type to text/plain if
     # it does not already exist
     def charset=(value)
       if content_type
-        content_type.parameters['charset'] = value
+        content_type_parameters['charset'] = value
       else
         self.content_type ['text', 'plain', {'charset' => value}]
       end
@@ -530,22 +1148,28 @@ module Mail
     
     # Returns the main content type
     def main_type
-      has_content_type? ? content_type.main_type : nil
+      has_content_type? ? header[:content_type].main_type : nil
     end
     
     # Returns the sub content type
     def sub_type
-      has_content_type? ? content_type.sub_type : nil
+      has_content_type? ? header[:content_type].sub_type : nil
     end
     
     # Returns the content type parameters
     def mime_parameters
-      has_content_type? ? content_type.parameters : nil
+      STDERR.puts(':mime_parameters is deprecated in Mail 1.4.3, please use :content_type_parameters instead')
+      content_type_parameters
+    end
+    
+    # Returns the content type parameters
+    def content_type_parameters
+      has_content_type? ? header[:content_type].parameters : nil
     end
     
     # Returns true if the message is multipart
     def multipart?
-      !!(main_type =~ /^multipart$/i)
+      has_content_type? ? !!(main_type =~ /^multipart$/i) : false
     end
     
     # Returns true if the message is a multipart/report
@@ -555,7 +1179,7 @@ module Mail
     
     # Returns true if the message is a multipart/report; report-type=delivery-status;
     def delivery_status_report?
-      multipart_report? && mime_parameters['report-type'] =~ /^delivery-status$/i
+      multipart_report? && content_type_parameters['report-type'] =~ /^delivery-status$/i
     end
     
     # returns the part in a multipart/report email that has the content-type delivery-status
@@ -593,7 +1217,7 @@ module Mail
     
     # Returns the current boundary for this message part
     def boundary
-      mime_parameters ? mime_parameters['boundary'] : nil
+      content_type_parameters ? content_type_parameters['boundary'] : nil
     end
     
     # Returns an array of parts in the message
@@ -620,7 +1244,7 @@ module Mail
     def html_part(&block)
       if block_given?
         @html_part = Mail::Part.new(&block)
-        add_multipart_alternate_header
+        add_multipart_alternate_header unless html_part.blank?
         add_part(@html_part)
       else
         @html_part
@@ -631,7 +1255,7 @@ module Mail
     def text_part(&block)
       if block_given?
         @text_part = Mail::Part.new(&block)
-        add_multipart_alternate_header
+        add_multipart_alternate_header unless html_part.blank?
         add_part(@text_part)
       else
         @text_part
@@ -647,7 +1271,7 @@ module Mail
       else
         @html_part = Mail::Part.new('Content-Type: text/html;')
       end
-      add_multipart_alternate_header
+      add_multipart_alternate_header unless text_part.blank?
       add_part(@html_part)
     end
     
@@ -660,7 +1284,7 @@ module Mail
       else
         @text_part = Mail::Part.new('Content-Type: text/plain;')
       end
-      add_multipart_alternate_header
+      add_multipart_alternate_header unless html_part.blank?
       add_part(@text_part)
     end
 
@@ -764,8 +1388,10 @@ module Mail
       buffer
     end
     
-    alias :to_s :encoded
-    
+    def to_s
+      encoded
+    end
+
     def decoded
       raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
     end
@@ -807,6 +1433,10 @@ module Mail
       self.body   = body_part
     end
     
+    def raw_source=(value)
+      @raw_source = value.to_crlf
+    end
+    
     def set_envelope_header
       if match_data = raw_source.to_s.match(/^From\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
@@ -820,7 +1450,7 @@ module Mail
     
     def add_encoding_to_body
       unless content_transfer_encoding.blank?
-        body.encoding = content_transfer_encoding.decoded
+        body.encoding = content_transfer_encoding
       end
     end
     
@@ -831,7 +1461,7 @@ module Mail
       add_mime_version              unless has_mime_version?
       add_content_type              unless has_content_type?
       add_charset                   unless has_charset?
-      add_transfer_encoding         unless has_transfer_encoding?
+      add_content_transfer_encoding unless has_content_transfer_encoding?
     end
     
     def add_multipart_alternate_header
@@ -898,9 +1528,9 @@ module Mail
       parse_message
       separate_parts if multipart?
       if filename = attachment?
-        encoding = content_transfer_encoding.encoding if content_transfer_encoding
+        encoding = header[:content_transfer_encoding].encoding if content_transfer_encoding
         @attachment = Mail::Attachment.new(:filename => filename,
-                                           :data => body.to_s,
+                                           :data => body.encoded,
                                            :encoding => encoding)
       end
     end
@@ -908,12 +1538,12 @@ module Mail
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
       case
-      when content_type && content_type.filename
-        filename = content_type.filename
-      when content_disposition && content_disposition.filename
-        filename = content_disposition.filename
-      when content_location && content_location.location
-        filename = content_location.location
+      when content_type && header[:content_type].filename
+        filename = header[:content_type].filename
+      when content_disposition && header[:content_disposition].filename
+        filename = header[:content_disposition].filename
+      when content_location && header[:content_location].location
+        filename = header[:content_location].location
       else
         filename = nil
       end

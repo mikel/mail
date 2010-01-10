@@ -16,14 +16,15 @@
 # 
 #  mail = Mail.new
 #  mail.sender = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.sender    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
+#  mail.sender    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #  mail[:sender]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
 #  mail['sender'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
 #  mail['Sender'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
 # 
-#  mail.sender.to_s  #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.sender.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
-#  mail.sender.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail[:sender].encoded   #=> 'Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net\r\n'
+#  mail[:sender].decoded   #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+#  mail[:sender].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+#  mail[:sender].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
 module Mail
   class SenderField < StructuredField
@@ -38,7 +39,7 @@ module Mail
     end
 
     def addresses
-      [address]
+      [address.address]
     end
 
     def address

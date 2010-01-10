@@ -44,6 +44,14 @@ module Mail
         tree.group_names
       end
       
+      def default
+        if addresses.length == 1
+          addresses[0]
+        else
+          addresses
+        end
+      end
+      
       private
       
       def do_encode(field_name)

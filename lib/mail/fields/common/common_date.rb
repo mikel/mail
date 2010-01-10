@@ -9,6 +9,10 @@ module Mail
         ::DateTime.parse("#{element.date_string} #{element.time_string}")
       end
 
+      def default
+        date_time
+      end
+
       private
       
       def do_encode(field_name)

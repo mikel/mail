@@ -27,10 +27,6 @@ module Mail
       @parameters
     end
     
-    def to_s(*args)
-
-    end
-    
     def cleaned(string)
       string =~ /(.+);\s*$/ ? $1 : string
     end

@@ -38,7 +38,7 @@ module Mail
     end
 
     def addresses
-      [address]
+      [address.address]
     end
 
     def address

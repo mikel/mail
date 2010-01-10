@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :primary_phrase
+      @root ||= :primary_phrase
     end
 
     include RFC2822

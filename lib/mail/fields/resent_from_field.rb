@@ -13,17 +13,18 @@
 # addresses and groups of addresses.
 # 
 # == Examples:
-# 
+#
 #  mail = Mail.new
 #  mail.resent_from = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.resent_from    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentFromField:0x180e1c4
+#  mail.resent_from    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #  mail[:resent_from]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentFromField:0x180e1c4
 #  mail['resent-from'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentFromField:0x180e1c4
 #  mail['Resent-From'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentFromField:0x180e1c4
 # 
-#  mail.resent_from.to_s  #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.resent_from.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
-#  mail.resent_from.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail[:resent_from].encoded   #=> 'Resent-From: Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net\r\n'
+#  mail[:resent_from].decoded   #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+#  mail[:resent_from].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+#  mail[:resent_from].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
 module Mail
   class ResentFromField < StructuredField

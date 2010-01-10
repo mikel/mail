@@ -19,13 +19,12 @@
 # 
 #  mail = Mail.new
 #  mail.references = '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
-#  mail.references    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
+#  mail.references    #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
 #  mail[:references]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
 #  mail['references'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
 #  mail['References'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ReferencesField:0x180e1c4
 # 
-#  mail.references.to_s  #=> '<F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom>'
-#  mail.references.message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
+#  mail[:references].message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 # 
 module Mail
   class ReferencesField < StructuredField

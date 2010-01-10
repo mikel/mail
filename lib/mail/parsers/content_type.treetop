@@ -5,7 +5,7 @@ module Mail
     include RFC2045
     
     rule content_type
-      main_type "/" sub_type param_hashes:(CFWS ";" parameter CFWS)* {
+      main_type "/" sub_type param_hashes:(CFWS ";"? parameter CFWS)* {
         def parameters
           param_hashes.elements.map do |param|
             param.parameter.param_hash

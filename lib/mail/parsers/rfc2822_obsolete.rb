@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :obs_qp
+      @root ||= :obs_qp
     end
 
     module ObsQp0

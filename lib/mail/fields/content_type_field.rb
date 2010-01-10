@@ -28,9 +28,19 @@ module Mail
     end
     
     def element
-      @element ||= Mail::ContentTypeElement.new(value)
-    rescue
+      begin
+        @element ||= Mail::ContentTypeElement.new(value)
+      rescue
+        attempt_to_clean
+      end
+    end
+    
+    def attempt_to_clean
+      # Sanitize the value, handle special cases
       @element ||= Mail::ContentTypeElement.new(sanatize(value))
+    rescue
+      # All else fails, just get the mime type
+      @element ||= Mail::ContentTypeElement.new(get_mime_type(value))
     end
     
     def main_type
@@ -43,6 +53,10 @@ module Mail
     
     def string
       "#{main_type}/#{sub_type}"
+    end
+    
+    def default
+      decoded
     end
     
     alias :content_type :string
@@ -107,14 +121,50 @@ module Mail
       end
     end
     
+    # Various special cases from random emails found that I am not going to change
+    # the parser for
     def sanatize( val )
       case
-      when val.chomp =~ /^text$/
+      when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;;+(.*)$/i
+        # Handles 'text/plain;; format="flowed"' (double semi colon)
+        "#{$1}/#{$2}; #{$3}"
+      when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;(ISO[\w\d\-_]+)$/i
+        # Microsoft helper:
+        # Handles 'mime/type;ISO-8559-1'
+        "#{$1}/#{$2}; charset=#{quote_atom($3)}"
+      when val.chomp =~ /^text;?$/i
+        # Handles 'text;' and 'text'
+        "text/plain;"
+      when val.chomp =~ /^(\w+);\s(.*)$/i
+        # Handles 'text; <parameters>'
+        "text/plain; #{$2}"
+      when val =~ /([\w\d\-_]+\/[\w\d\-_]+);\scharset="charset="(\w+)""/i
+        # Handles text/html; charset="charset="GB2312""
+        "#{$1}; charset=#{quote_atom($2)}"
+      when val =~ /([\w\d\-_]+\/[\w\d\-_]+);\s+(.*)/i
+        type = $1
+        # Handles misquoted param values
+        # e.g: application/octet-stream; name=archiveshelp1[1].htm
+        # and: audio/x-midi;\r\n\tname=Part .exe
+        params = $2.to_s.split(/\s+/)
+        params = params.map { |i| i.to_s.chomp.strip }
+        params = params.map { |i| i.split(/\s*\=\s*/) }
+        params = params.map { |i| "#{i[0]}=#{dquote(i[1].to_s)}" }.join('; ')
+        "#{type}; #{params}"
+      when val =~ /^\s*$/
         'text/plain'
-      when val =~ /([\w\d_]+\/[\w\d_]+)\s(.*)/
-        "#{$1}; #{$2}"
+      else
+        ''
       end
     end
-
+    
+    def get_mime_type( val )
+      case
+      when val =~ /^([\w\d\-_]+)\/([\w\d\-_]+);.+$/i
+        "#{$1}/#{$2}"
+      else 
+        'text/plain'
+      end
+    end
   end
 end

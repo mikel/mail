@@ -11,6 +11,12 @@ module Mail
   class POP3
     include Singleton
     
+    def initialize
+      @user = nil
+      @pass = nil
+      @tls  = false
+    end
+    
     require 'net/pop'
     
     def settings(&block)

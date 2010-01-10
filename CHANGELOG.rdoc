@@ -1,3 +1,93 @@
+== Fri  8 Jan 2010 00:00:08 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 1.5.2
+
+== Fri  8 Jan 8:55:49 2010 +1100 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Updated Sendmail and SMTP delivery methods to use return-path if present
+* Fix up a lot of content-type parsing problems
+* Updating compat listing
+* Moving error emails into one directory
+* Moving error emails into one directory
+* Initializing @tls variable to remove warnings
+* Moved default corpus directory
+* Fixed up git ignore file
+
+== Thu  6 Jan 2010 23:59:29 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added compatibility list to Readme.rdoc
+* Fixing encoding of return path to be per RFC 2822, adding angle brackets around the addr_spec
+* Specs covering return path setting and preserving
+
+== Thu  5 Jan 2010 23:59:48 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Moving the require for tlsmail for Ruby 1.8.6 into mail.rb
+
+== Sun Jan  3 00:08:06 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 1.5.0
+
+* Major API change in Message#field_name.  This WILL break your applications that use Mail.  Message#field_name now returns good, intelligent, default values.  You can still access the field object by calling Message#[:field_name] or Message#['field_name'].
+
+== Sat Jan  2 04:12:53 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Message-ID, Content-ID, References et al, now return the default value of the message ID without the angle brackets, as per RFC 2822, "Semantically, the angle bracket characters are not part of the msg-id; the msg-id is what is contained between the two angle bracket characters."
+
+* Message class now has getter and setter methods for all the supported field types explicitly.  This allows us to return a "default" value for all fields.
+
+* All address fields, when called from Message#to or Message#from or the like, return either a string of the address spec (mikel@test.lindsaar.net) if it is a single entry, or an array of address specs if there is more than one ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+
+== Mon 28 Dec 2009 01:21:52 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added sorting of parts, default is text/plain, then text/enriched and text/html.  Access through  Body#set_sort_order and Body#sort_parts! (called from Body#encode automatically)
+* Version bump to 1.4.2
+
+== Sun Dec 27 10:38:24 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Updating treetop and mail to initialize uninitialized instance variables to
+  nil
+* Version bump to 1.4.1
+
+== Sun Dec 27 09:51:27 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 1.4 because now :to_s calls :decoded for all fields and body 
+  while :to_s calls :encoded for Message and Header containers.  Makes sense... 
+  really.
+
+== Sun Dec 27 07:30:02 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Changed fields to default to :decoded on :to_s, all container objects
+  retain :encoded as the default for :to_s
+
+== Thu Dec 17 06:35:05 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Fixed parsing error 'Subject: =?ISO-8859-1?Q?Re=3A_ol=E1?=' (has a new line embedded)
+
+== Thu Dec 17 02:14:23 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.3.4
+* Vendor'd treetop
+
+== Thu Dec 17 01:32:00 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.3.3
+* Removed dependency on treetop, don't need it at runtime
+
+== Wed Dec 16 23:48:46 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.3.2
+* Resolved Ruby 1.9.1-head not working because File.basename only accepts US-ASCII or 8Bit
+
+== Sun Dec 13 01:06:17 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.3.1
+* Resolved Issue #18 - Wrong instance variable name
+* Resolved Issue #15 - Duplicate block call
+
+== Thu Dec 10 21:25:37 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Resolved Issue #13 - replacing From field results in from field becoming optional field.
+
 == Thu  3 Dec 2009 00:52:12 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added POP upgrades from Nicolas Fouché
@@ -9,8 +99,7 @@
 
 == Mon Nov 23 22:35:50 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Changed the way attachments are added so that it does not break depending on the order
-  of the Hash passed in.
+* Changed the way attachments are added so that it does not break depending on the order of the Hash passed in.
 * Version bump to 1.3.0 - Now works with Edge ActionMailer, MRI 1.8.6, 1.8.7, 1.9.1, all tests passing
 
 == Sun Nov 22 12:19:44 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>

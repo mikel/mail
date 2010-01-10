@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :primary_address
+      @root ||= :primary_address
     end
 
     include RFC2822

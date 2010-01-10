@@ -28,5 +28,9 @@ module Mail
       self
     end
     
+    def default
+      decoded
+    end
+
   end
 end

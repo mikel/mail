@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :ALPHA
+      @root ||= :ALPHA
     end
 
     include RFC2822Obsolete

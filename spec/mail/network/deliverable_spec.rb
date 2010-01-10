@@ -24,7 +24,7 @@ describe "Deliverable" do
       end
 
       MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][1].should == mail.from
       MockSMTP.deliveries[0][2].should == mail.destinations
     end
 
@@ -38,7 +38,7 @@ describe "Deliverable" do
       mail.deliver!
 
       MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from.addresses.first
+      MockSMTP.deliveries[0][1].should == mail.from
       MockSMTP.deliveries[0][2].should == mail.destinations
     end
 
@@ -95,6 +95,20 @@ describe "Deliverable" do
       end
 
       doing { mail.deliver! }.should_not raise_error(TypeError)
+    end
+    
+    it "should preserve the return path" do
+      mail = Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+        subject "Can't set the return-path"
+        return_path "bounce@someemail.com" 
+        message_id "<1234@someemail.com>"
+        body "body"
+      end
+      delivered_mail = Mail.new(MockSMTP.deliveries[0][0])
+      delivered_mail.return_path.should == "bounce@someemail.com"
+      delivered_mail.from.should == "from@someemail.com"
     end
     
   end

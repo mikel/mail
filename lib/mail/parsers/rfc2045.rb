@@ -6,7 +6,7 @@ module Mail
     include Treetop::Runtime
 
     def root
-      @root || :tspecials
+      @root ||= :tspecials
     end
 
     def _nt_tspecials

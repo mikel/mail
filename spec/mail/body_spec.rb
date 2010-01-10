@@ -138,14 +138,14 @@ describe Mail::Body do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
-      body.parts[0].content_type.content_type.should == "text/plain"
+      body.parts[0].content_type.should == "text/plain; charset=ISO-8859-1"
     end
     
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
-      body.parts[1].content_type.content_type.should == "text/html"
+      body.parts[1].content_type.should == "text/html"
     end
 
     it "should separate out it's parts" do
@@ -168,7 +168,7 @@ describe Mail::Body do
       body.split!('----=_Part_2192_32400445')
       body.preamble = "Really! this is some text"
       body.epilogue = "And this is the end"
-      new_body = Mail::Body.new(body.to_s)
+      new_body = Mail::Body.new(body.encoded)
       new_body.split!('----=_Part_2192_32400445')
       new_body.parts.length.should == 2
       new_body.preamble.should == "Really! this is some text"
@@ -180,7 +180,7 @@ describe Mail::Body do
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
       body.boundary = '------=_MIMEPART'
-      new_body = Mail::Body.new(body.to_s)
+      new_body = Mail::Body.new(body.encoded)
       new_body.split!('------=_MIMEPART')
       new_body.parts.length.should == 2
       new_body.preamble.should == "this is some text"
@@ -212,6 +212,74 @@ describe Mail::Body do
       body.parts.length.should == 1
       body.should be_multipart
     end
+    
+    it "should allow you to sort the parts" do
+      body = Mail::Body.new('')
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched")
+      body.parts.length.should == 3
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/enriched"
+      body.parts[2].content_type.should == "text/html"
+    end
+    
+    it "should allow you to sort the parts with an arbitrary sort order" do
+      body = Mail::Body.new('')
+      body.set_sort_order([ "text/plain", "text/html", "text/enriched" ])
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched")
+      body.parts.length.should == 3
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/html"
+      body.parts[2].content_type.should == "text/enriched"
+    end
+    
+    it "should allow you to sort the parts with an arbitrary sort order" do
+      body = Mail::Body.new('')
+      body.set_sort_order(["application/x-yaml", "text/plain"])
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: HTML")
+      body << Mail::Part.new("content-type: text/html\r\nsubject: Plain Text")
+      body << Mail::Part.new("content-type: application/x-yaml\r\nsubject: Enriched")
+      body.parts.length.should == 3
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "application/x-yaml"
+      body.parts[1].content_type.should == "text/plain"
+      body.parts[2].content_type.should == "text/html"
+    end
+    
+    it "should sort the parts on encode" do
+      body = Mail::Body.new('')
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched")
+      body.parts.length.should == 3
+      body.should be_multipart
+      body.encoded
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/enriched"
+      body.parts[2].content_type.should == "text/html"
+    end
+    
+    it "should put the part types it doesn't know about at the end" do
+      body = Mail::Body.new('')
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text")
+      body << Mail::Part.new("content-type: image/jpeg\r\n")
+      body.parts.length.should == 3
+      body.should be_multipart
+      body.encoded
+      body.parts[0].content_type.should == "text/plain"
+      body.parts[1].content_type.should == "text/html"
+      body.parts[2].content_type.should == "image/jpeg"
+    end
+    
   end
 
   describe "matching" do

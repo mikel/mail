@@ -10,7 +10,15 @@ module Mail
     CAPITALIZED_FIELD = 'Resent-Date'
     
     def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+      if args.last.blank?
+        self.name = CAPITALIZED_FIELD
+        self.value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
+        self
+      else
+        value = strip_field(FIELD_NAME, args.last)
+        value = ::DateTime.parse(value.to_s).strftime('%a, %d %b %Y %H:%M:%S %z')
+        super(CAPITALIZED_FIELD, value)
+      end
     end
     
     def encoded

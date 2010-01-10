@@ -69,7 +69,7 @@ module Mail
       case
       when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
         name, value = split(name)
-        create_field(name, value.to_s)
+        create_field(name, value)
       when name !~ /:/ && value.blank?  # Field.new("field-name")
         create_field(name, nil)
       else                              # Field.new("field-name", "value")
@@ -149,7 +149,7 @@ module Mail
     def new_field(name, value)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
-      case name
+      case name.to_s
       when /^to$/i
         ToField.new(name, value)
       when /^cc$/i

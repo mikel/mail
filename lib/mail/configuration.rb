@@ -106,9 +106,6 @@ module Mail
           port host_array[1]
         end
       end
-      if block_given?
-        klass.instance.settings(&block)
-      end
       klass.instance.settings(&block)
     end
 

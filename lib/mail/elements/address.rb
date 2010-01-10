@@ -21,6 +21,8 @@ module Mail
     #  a.comments     #=> ['My email address']
     #  a.to_s         #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
     def initialize(value = nil)
+      @output_type = nil
+      @tree = nil
       @raw_text = value
       case
       when value.nil?
