@@ -7,13 +7,17 @@ module Mail
     end
     
     module InstanceMethods # :doc:
-      
-      def tree
-        @tree ||= element.tree
-      end
-      
+
       def element
         @element ||= Mail::MessageIdsElement.new(value)
+      end
+      
+      def parse(val = value)
+        unless val.blank?
+          @element = Mail::MessageIdsElement.new(val)
+        else
+          nil
+        end
       end
       
       def message_id

@@ -71,7 +71,7 @@ describe Mail::Header do
       
       it "should recognise a content-id field" do
         header = Mail::Header.new
-        header['content-id'] = '1234'
+        header['content-id'] = '<1234@test.lindsaar.net>'
         header['content-id'].field.class.should == Mail::ContentIdField
       end
       
@@ -101,19 +101,19 @@ describe Mail::Header do
       
       it "should recognise a in-reply-to field" do
         header = Mail::Header.new
-        header['in-reply-to'] = '1234@mail.baci.local'
+        header['in-reply-to'] = '<1234@test.lindsaar.net>'
         header['in-reply-to'].field.class.should == Mail::InReplyToField
       end
       
       it "should recognise a keywords field" do
         header = Mail::Header.new
-        header['keywords'] = 'mikel@test.lindsaar.net'
+        header['keywords'] = 'mikel test lindsaar net'
         header['keywords'].field.class.should == Mail::KeywordsField
       end
       
       it "should recognise a message-id field" do
         header = Mail::Header.new
-        header['message-id'] = '1234@mail.baci.local'
+        header['message-id'] = '<1234@test.lindsaar.net>'
         header['message-id'].field.class.should == Mail::MessageIdField
       end
       
@@ -131,7 +131,7 @@ describe Mail::Header do
       
       it "should recognise a references field" do
         header = Mail::Header.new
-        header['references'] = '1234@mail.baci.local'
+        header['references'] = '<1234@test.lindsaar.net>'
         header['references'].field.class.should == Mail::ReferencesField
       end
       
@@ -167,7 +167,7 @@ describe Mail::Header do
       
       it "should recognise a resent-message-id field" do
         header = Mail::Header.new
-        header['resent-message-id'] = '1234@mail.baci.local'
+        header['resent-message-id'] = '<1234@mail.baci.local>'
         header['resent-message-id'].field.class.should == Mail::ResentMessageIdField
       end
       

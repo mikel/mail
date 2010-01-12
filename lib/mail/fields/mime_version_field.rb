@@ -12,19 +12,22 @@ module Mail
       if args.last.blank?
         self.name = CAPITALIZED_FIELD
         self.value = '1.0'
-        self
       else
         super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
+      self.parse
+      self
+
     end
     
-    def tree
-      @element ||= MimeVersionElement.new(value)
-      @tree ||= @element.tree
+    def parse(val = value)
+      unless val.blank?
+        @element = Mail::MimeVersionElement.new(val)
+      end
     end
     
     def element
-      @element ||= MimeVersionElement.new(value)
+      @element ||= Mail::MimeVersionElement.new(value)
     end
     
     def version

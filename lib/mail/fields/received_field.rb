@@ -27,15 +27,19 @@ module Mail
     
     def initialize(*args)
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+      self.parse
+      self
+
     end
     
-    def tree
-      @element ||= ReceivedElement.new(value)
-      @tree ||= @element.tree
+    def parse(val = value)
+      unless val.blank?
+        @element = Mail::ReceivedElement.new(val)
+      end
     end
     
     def element
-      @element ||= ReceivedElement.new(value)
+      @element ||= Mail::ReceivedElement.new(value)
     end
     
     def date_time

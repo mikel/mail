@@ -8,6 +8,14 @@ module Mail
   
     module InstanceMethods # :doc:
       
+      def parse(val = value)
+        unless val.blank?
+          @tree ||= AddressList.new(value)
+        else
+          nil
+        end
+      end
+      
       # Allows you to iterate through each address object in the syntax tree
       def each
         tree.addresses.each do |address|

@@ -13,15 +13,18 @@ module Mail
       if args.last.blank?
         self.name = CAPITALIZED_FIELD
         self.value = generate_content_id
-        self
       else
         super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
+      self.parse
+      self
+
     end
     
-    def tree
-      @element ||= Mail::MessageIdsElement.new(value)
-      @tree ||= @element.tree
+    def parse(val = value)
+      unless val.blank?
+        @element = Mail::MessageIdsElement.new(val)
+      end
     end
     
     def element

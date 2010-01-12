@@ -32,6 +32,9 @@ module Mail
     
     def initialize(*args)
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+      self.parse
+      self
+
     end
     
   end

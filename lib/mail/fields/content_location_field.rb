@@ -10,11 +10,15 @@ module Mail
     
     def initialize(*args)
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+      self.parse
+      self
+
     end
     
-    def tree
-      @element ||= Mail::ContentLocationElement.new(value)
-      @tree ||= @element.tree
+    def parse(val = value)
+      unless val.blank?
+        @element = Mail::ContentLocationElement.new(val)
+      end
     end
     
     def element
