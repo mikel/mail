@@ -1,3 +1,14 @@
+== Thu Jan 14 10:41:22 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version update to 1.6.0 - API change on mail.address_fields to always return arrays
+* Updated all message.address_field methods to always return arrays, so mail.from #=> ['one@address.com'] now, is least surprise
+* Updated handling of empty group lists so it didn't crash
+
+== Thu Jan 12 10:41:47 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.5.3, handling invalid input on fields.  Highly recommended update
+* Updated fields to always try parsing the given data (unless blank). This allows mail to catch invalid input and return UnstructuredFields. Makes mail a lot more resistant to invalid input.
+
 == Fri  8 Jan 2010 00:00:08 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 1.5.2
