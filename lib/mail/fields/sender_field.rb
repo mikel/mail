@@ -57,5 +57,9 @@ module Mail
       do_decode
     end
     
+    def default
+      address.address
+    end
+    
   end
 end

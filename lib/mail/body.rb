@@ -144,6 +144,10 @@ module Mail
       decoded
     end
     
+    def to_str
+      to_s
+    end
+    
     def charset
       @charset
     end

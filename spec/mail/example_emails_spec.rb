@@ -11,8 +11,8 @@ describe "Test emails" do
     # message identifier, and a textual message in the body.
     it "should handle the basic test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example01.eml'))
-      mail.from.should == "jdoe@machine.example"
-      mail.to.should == 'mary@example.net'
+      mail.from.should == ["jdoe@machine.example"]
+      mail.to.should == ['mary@example.net']
       mail.message_id.should == '1234@local.machine.example'
       mail.date.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
       mail.subject.should == 'Saying Hello'
@@ -24,9 +24,9 @@ describe "Test emails" do
     # sender field would be used:
     it "should handle the sender test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example02.eml'))
-      mail.from.should == 'jdoe@machine.example'
+      mail.from.should == ['jdoe@machine.example']
       mail.sender.should == 'mjones@machine.example'
-      mail.to.should == 'mary@example.net'
+      mail.to.should == ['mary@example.net']
       mail.message_id.should == '1234@local.machine.example'
       mail.date.should == ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
       mail.subject.should == 'Saying Hello'
@@ -49,7 +49,7 @@ describe "Test emails" do
     # "Giant; \"Big\" Box" <sysservices@example.net>
     it "should handle multiple recipients test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
-      mail.from.should == 'john.q.public@example.com'
+      mail.from.should == ['john.q.public@example.com']
       mail.to.should == ['mary@x.test', 'jdoe@example.org', 'one@y.test']
       mail.cc.should == ['boss@nil.test', "sysservices@example.net"]
       mail.message_id.should == '5678.21-Nov-1997@example.com'
@@ -63,7 +63,7 @@ describe "Test emails" do
     # group recipient named Undisclosed recipients.
     it "should handle group address email test" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example04.eml'))
-      mail.from.should == 'pete@silly.example'
+      mail.from.should == ['pete@silly.example']
       mail.to.should == ['c@a.test', 'joe@where.test', 'jdoe@one.test']
       mail[:cc].group_names.should == ['Undisclosed recipients']
       mail.message_id.should == 'testabcd.1234@silly.example'
@@ -82,8 +82,8 @@ describe "Test emails" do
     # fields in each message.
     it "should handle reply messages" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example05.eml'))
-      mail.from.should == "jdoe@machine.example"
-      mail.to.should == 'mary@example.net'
+      mail.from.should == ["jdoe@machine.example"]
+      mail.to.should == ['mary@example.net']
       mail.subject.should == 'Saying Hello'
       mail.message_id.should == '1234@local.machine.example'
       mail.date.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
@@ -97,9 +97,9 @@ describe "Test emails" do
     # "Reply-To:" field instead of the address in the "From:" field.
     it "should handle reply message 2" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example06.eml'))
-      mail.from.should == 'mary@example.net'
-      mail.to.should == 'jdoe@machine.example'
-      mail.reply_to.should == 'smith@home.example'
+      mail.from.should == ['mary@example.net']
+      mail.to.should == ['jdoe@machine.example']
+      mail.reply_to.should == ['smith@home.example']
       mail.subject.should == 'Re: Saying Hello'
       mail.message_id.should == '3456@example.net'
       mail[:in_reply_to].message_ids.should == ['1234@local.machine.example']
@@ -111,8 +111,8 @@ describe "Test emails" do
     # Final reply message
     it "should handle the final reply message" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example07.eml'))
-      mail.to.should == 'smith@home.example'
-      mail.from.should == 'jdoe@machine.example'
+      mail.to.should == ['smith@home.example']
+      mail.from.should == ['jdoe@machine.example']
       mail.subject.should == 'Re: Saying Hello'
       mail.date.should == ::DateTime.parse('Fri, 21 Nov 1997 11:00:00 -0600')
       mail.message_id.should == 'abcd.1234@local.machine.tld'
@@ -135,12 +135,12 @@ describe "Test emails" do
     # and send that.
     it "should handle the rfc resent example email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example08.eml'))
-      mail.resent_from.should == 'mary@example.net'
-      mail.resent_to.should == 'j-brown@other.example'
+      mail.resent_from.should == ['mary@example.net']
+      mail.resent_to.should == ['j-brown@other.example']
       mail.resent_date.should == ::DateTime.parse('Mon, 24 Nov 1997 14:22:01 -0800')
       mail.resent_message_id.should == '78910@example.net'
-      mail.from.should == 'jdoe@machine.example'
-      mail.to.should == 'mary@example.net'
+      mail.from.should == ['jdoe@machine.example']
+      mail.to.should == ['mary@example.net']
       mail.subject.should == 'Saying Hello'
       mail.date.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
       mail.message_id.should == '1234@local.machine.example'
@@ -158,8 +158,8 @@ describe "Test emails" do
       mail.received[0].date_time.should == ::DateTime.parse('21 Nov 1997 10:05:43 -0600')
       mail.received[1].info.should == 'from machine.example by x.y.test'
       mail.received[1].date_time.should == ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
-      mail.from.should == 'jdoe@machine.example'
-      mail.to.should == 'mary@example.net'
+      mail.from.should == ['jdoe@machine.example']
+      mail.to.should == ['mary@example.net']
       mail.subject.should == 'Saying Hello'
       mail.date.should == ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
       mail.message_id.should == '1234@local.machine.example'
@@ -185,7 +185,7 @@ describe "Test emails" do
     # (but not within) the identifier in the "Message-ID:" field.
     it "should handle the rfc whitespace test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
-      mail.from.should == "pete(his account)@silly.test"
+      mail.from.should == ["pete(his account)@silly.test"]
       mail.to.should ==  ["c@(Chris's host.)public.example", "joe@example.org", "jdoe@one.test"]
       mail[:cc].group_names.should == ['(Empty list)(start)Undisclosed recipients ']
       mail.date.should == ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')

@@ -34,6 +34,11 @@ describe Mail::Body do
       body.to_s.should == 'this is some text'
     end
     
+    it "should accept text as raw source data" do
+      body = Mail::Body.new('this is some text')
+      body.to_str.should == 'this is some text'
+    end
+    
     it "should accept nil as a value and return an empty body" do
       body = Mail::Body.new
       body.to_s.should == ''

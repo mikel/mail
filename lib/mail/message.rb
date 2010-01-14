@@ -255,14 +255,13 @@ module Mail
       end
     end
     
-    # Returns the Bcc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Bcc.
+    # Returns the Bcc value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -271,7 +270,7 @@ module Mail
     # Example:
     # 
     #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
     def bcc( val = nil )
       default :bcc, val
     end
@@ -281,21 +280,20 @@ module Mail
     # Example:
     # 
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def bcc=( val )
       header[:bcc] = val
     end
     
-    # Returns the Cc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Cc.
+    # Returns the Cc value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -304,7 +302,7 @@ module Mail
     # Example:
     # 
     #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
     def cc( val = nil )
       default :cc, val
     end
@@ -314,7 +312,7 @@ module Mail
     # Example:
     # 
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def cc=( val )
@@ -385,14 +383,13 @@ module Mail
       header[:date] = val
     end
     
-    # Returns the From value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the From.
+    # Returns the From value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -401,7 +398,7 @@ module Mail
     # Example:
     # 
     #  mail.from 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
     def from( val = nil )
       default :from, val
     end
@@ -411,7 +408,7 @@ module Mail
     # Example:
     # 
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def from=( val )
@@ -507,14 +504,13 @@ module Mail
       header[:references] = val
     end
     
-    # Returns the Reply-To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Reply-To.
+    # Returns the Reply-To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -523,7 +519,7 @@ module Mail
     # Example:
     # 
     #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
     def reply_to( val = nil )
       default :reply_to, val
     end
@@ -533,21 +529,20 @@ module Mail
     # Example:
     # 
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def reply_to=( val )
       header[:reply_to] = val
     end
     
-    # Returns the Resent-Bcc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-Bcc.
+    # Returns the Resent-Bcc value of the mail object as an array of strings of 
+    # address specs.
     # 
     # Example:
     # 
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -556,7 +551,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
     def resent_bcc( val = nil )
       default :resent_bcc, val
     end
@@ -566,21 +561,20 @@ module Mail
     # Example:
     # 
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
     def resent_bcc=( val )
       header[:resent_bcc] = val
     end
     
-    # Returns the Resent-Cc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-Cc.
+    # Returns the Resent-Cc value of the mail object as an array of strings of 
+    # address specs.
     # 
     # Example:
     # 
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -589,7 +583,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     def resent_cc( val = nil )
       default :resent_cc, val
     end
@@ -599,7 +593,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
     def resent_cc=( val )
@@ -614,14 +608,13 @@ module Mail
       header[:resent_date] = val
     end
     
-    # Returns the Resent-From value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-From.
+    # Returns the Resent-From value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net']
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -629,7 +622,7 @@ module Mail
     #
     # Example:
     # 
-    #  mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from ['Mikel <mikel@test.lindsaar.net>']
     #  mail.resent_from #=> 'mikel@test.lindsaar.net'
     def resent_from( val = nil )
       default :resent_from, val
@@ -640,7 +633,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net']
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_from=( val )
@@ -683,14 +676,13 @@ module Mail
       header[:resent_sender] = val
     end
     
-    # Returns the Resent-To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-To.
+    # Returns the Resent-To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -699,7 +691,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
     def resent_to( val = nil )
       default :resent_to, val
     end
@@ -709,7 +701,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_to=( val )
@@ -783,14 +775,13 @@ module Mail
       header[:subject] = val
     end
     
-    # Returns the To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the To.
+    # Returns the To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -799,7 +790,7 @@ module Mail
     # Example:
     # 
     #  mail.to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
     def to( val = nil )
       default :to, val
     end
@@ -809,7 +800,7 @@ module Mail
     # Example:
     # 
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def to=( val )
@@ -1092,7 +1083,7 @@ module Mail
       if body.only_us_ascii?
         header[:content_type].parameters['charset'] = 'US-ASCII'
       else
-        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_type].parameters['charset'] = 'UTF-8'
       end
@@ -1105,7 +1096,7 @@ module Mail
       if body.only_us_ascii?
         header[:content_transfer_encoding] = '7bit'
       else
-        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_transfer_encoding] = '8bit'
       end

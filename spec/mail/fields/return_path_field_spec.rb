@@ -20,7 +20,7 @@ describe Mail::ReturnPathField do
       message_id "<1234@someemail.com>"
       body "body"
     end
-    mail.return_path.should == "bounce@someemail.com"
+    mail.return_path.should == ["bounce@someemail.com"]
   end
   
   it "should set the return path" do
@@ -33,7 +33,7 @@ describe Mail::ReturnPathField do
       body "body"
     end
     encoded_mail = Mail.new(mail.encoded)
-    encoded_mail.return_path.should == "bounce@someemail.com"
+    encoded_mail.return_path.should == ["bounce@someemail.com"]
   end
   
   it "should wrap the return path addr_spec in <>" do

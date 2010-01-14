@@ -53,11 +53,7 @@ module Mail
       end
       
       def default
-        if addresses.length == 1
-          addresses[0]
-        else
-          addresses
-        end
+        addresses
       end
       
       private
