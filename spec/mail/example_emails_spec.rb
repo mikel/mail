@@ -283,6 +283,19 @@ describe "Test emails" do
       
     end
     
+    describe "handling invalid group lists" do
+      before(:each) do
+        @message = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'empty_group_lists.eml')))
+      end
+
+      it "should parse the email and encode without crashing" do
+        doing { @message.encoded }.should_not raise_error
+      end
+
+      it "should return an empty groups list" do
+        @message[:to].group_addresses.should == []
+      end
+    end
 
   end
   

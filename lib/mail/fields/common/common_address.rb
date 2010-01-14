@@ -37,7 +37,7 @@ module Mail
       def groups
         @groups = Hash.new
         tree.group_recipients.each do |group|
-          @groups[group.group_name.text_value] = get_group_addresses(group.group_list.addresses)
+          @groups[group.group_name.text_value] = get_group_addresses(group.group_list)
         end
         @groups
       end
@@ -87,9 +87,13 @@ module Mail
         @tree ||= AddressList.new(value)
       end
       
-      def get_group_addresses(group_addresses)
-        group_addresses.map do |address_tree|
-          Mail::Address.new(address_tree)
+      def get_group_addresses(group_list)
+        if group_list.respond_to?(:addresses)
+          group_list.addresses.map do |address_tree|
+            Mail::Address.new(address_tree)
+          end
+        else
+          []
         end
       end
 

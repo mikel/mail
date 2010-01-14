@@ -77,6 +77,7 @@ describe Mail::ToField do
   it "should not crash if it can't understand a name" do
     t = Mail.new('To: <"Undisclosed-Recipient:"@msr19.hinet.net;>')
     doing { t.encoded }.should_not raise_error
+    t.encoded.should =~ /To\:\s<"Undisclosed\-Recipient\:"@msr19\.hinet\.net;>\r\n/
   end
   
 end
