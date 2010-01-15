@@ -54,5 +54,9 @@ module Mail
       addresses.first
     end
     
+    def default
+      address
+    end
+    
   end
 end
