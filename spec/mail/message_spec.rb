@@ -1724,5 +1724,4 @@ describe Mail::Message do
       mail.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
     end
   end
-  
 end

@@ -100,6 +100,8 @@ module Mail
       @text_part = nil
       @html_part = nil
       
+      @delivery_method = Mail.delivery_method.clone
+      
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -120,7 +122,15 @@ module Mail
     #  mail = Mail.read('file.eml')
     #  mail.deliver!
     def deliver!
-      Deliverable.perform_delivery!(self)
+      @delivery_method.deliver!(self)
+    end
+    
+    def delivery_method(method = nil, settings = {})
+      unless method
+        @delivery_method
+      else
+        @delivery_method = Mail::Configuration.instance.lookup_delivery_method(method).new(settings)
+      end
     end
     
     # Provides the operator needed for sort et al.

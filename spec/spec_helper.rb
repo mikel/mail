@@ -91,7 +91,7 @@ class MockSMTP
     end
   end
 
-  def enable_starttls
+  def enable_starttls_auto
     true
   end
   
@@ -121,6 +121,7 @@ class MockPopMail
     "#{number}: #{pop}"
   end
 end
+
 class MockPOP3
   @@start = false
   
@@ -170,6 +171,7 @@ class MockPOP3
     @@start = false
   end
 end
+
 class Net::POP3
   def self.new(*args)
     MockPOP3.new

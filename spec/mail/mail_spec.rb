@@ -12,7 +12,7 @@ describe "mail" do
   end
   
   it "should accept headers and body" do
-    # Full test in Message Spec
+    # Full tests in Message Spec
     message = Mail.new do
       from    'mikel@me.com'
       to      'mikel@you.com'

@@ -507,7 +507,7 @@ sending emails, the TestMailer can do this for you.
   require 'mail'
   => true
   Mail.defaults do
-    delivery_method(:test)
+    delivery_method :test
   end
   => #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
   Mail.deliveries
