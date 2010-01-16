@@ -81,16 +81,18 @@ module Mail
 
       # Set the envelope from to be either the return-path, the sender or the first from address
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
-      raise ArgumentError.new('An sender (Return-Path, Sender or From) required to send a message') if envelope_from.blank?
+      raise ArgumentError.new('A sender (Return-Path, Sender or From) required to send a message') if envelope_from.blank?
       destinations ||= mail.destinations if mail.respond_to?(:destinations) && mail.destinations
       raise ArgumentError.new('At least one recipient (To, Cc or Bcc) is required to send a message') if destinations.blank?
       message ||= mail.encoded if mail.respond_to?(:encoded)
       raise ArgumentError.new('A encoded content is required to send a message') if message.blank?
       
       smtp = Net::SMTP.new(config[:address], config[:port])
-      smtp.enable_starttls_auto if config[:enable_starttls_auto]
+      if config[:enable_starttls_auto]
+        smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto) 
+      end
       
-      smtp.start(config[:domain], config[:user_name], config[:password], authentication = :plain) do |smtp|
+      smtp.start(config[:domain], config[:user_name], config[:password], config[:authentication]) do |smtp|
         smtp.sendmail(message, envelope_from, destinations)
       end
       
