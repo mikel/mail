@@ -1,3 +1,10 @@
+== Fri Jan 15 09:20:51 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Rewrote all network classes to not use singletons.  Means different Mail::Message objects can have different delivery methods.
+* Added examples for how to send via GMail, MobileMe, Sendmail, File etc.
+* Version bump to 2.0.0 as Network API changed drastically, now not a singleton class.
+* Fixed that return-path should only return one address
+
 == Thu Jan 14 10:41:22 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version update to 1.6.0 - API change on mail.address_fields to always return arrays
