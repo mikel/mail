@@ -76,8 +76,6 @@ module Mail
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
-      
-      config = Mail.delivery_method.settings
 
       # Set the envelope from to be either the return-path, the sender or the first from address
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
@@ -87,12 +85,12 @@ module Mail
       message ||= mail.encoded if mail.respond_to?(:encoded)
       raise ArgumentError.new('A encoded content is required to send a message') if message.blank?
       
-      smtp = Net::SMTP.new(config[:address], config[:port])
-      if config[:enable_starttls_auto]
+      smtp = Net::SMTP.new(settings[:address], settings[:port])
+      if settings[:enable_starttls_auto]
         smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto) 
       end
       
-      smtp.start(config[:domain], config[:user_name], config[:password], config[:authentication]) do |smtp|
+      smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp|
         smtp.sendmail(message, envelope_from, destinations)
       end
       
