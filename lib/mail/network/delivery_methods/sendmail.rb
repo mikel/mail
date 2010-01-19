@@ -44,7 +44,9 @@ module Mail
     attr_accessor :settings
 
     def deliver!(mail)
-      mail.return_path ? return_path = "-f \"#{mail.return_path}\"" : return_path = nil
+      envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
+      return_path = "-f \"#{envelope_from}\"" if envelope_from
+
       arguments = [settings[:arguments], return_path].compact.join(" ")
       
       Sendmail.call(settings[:location], arguments, mail.destinations.join(" "), mail)
