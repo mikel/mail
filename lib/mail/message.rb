@@ -121,9 +121,11 @@ module Mail
     # 
     #  mail = Mail.read('file.eml')
     #  mail.deliver!
-    def deliver!
+    def deliver
       @delivery_method.deliver!(self)
     end
+    
+    alias :deliver! :deliver
     
     def delivery_method(method = nil, settings = {})
       unless method
