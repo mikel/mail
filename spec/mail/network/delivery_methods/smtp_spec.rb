@@ -88,19 +88,44 @@ describe "SMTP Delivery Method" do
 
       doing { mail.deliver! }.should_not raise_error(TypeError)
     end
-    
-    it "should preserve the return path" do
+  end
+  
+  describe "return path" do
+
+    it "should use the return path if specified" do
       mail = Mail.deliver do
         to "to@someemail.com"
         from "from@someemail.com"
+        sender "sender@test.lindsaar.net"
         subject "Can't set the return-path"
         return_path "bounce@someemail.com" 
         message_id "<1234@someemail.com>"
         body "body"
       end
-      delivered_mail = Mail.new(MockSMTP.deliveries[0][0])
-      delivered_mail.return_path.should == "bounce@someemail.com"
-      delivered_mail.from.should == ["from@someemail.com"]
+      MockSMTP.deliveries[0][1].should == "bounce@someemail.com"
+    end
+
+    it "should use the sender address is no return path is specified" do
+      mail = Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+        sender "sender@test.lindsaar.net"
+        subject "Can't set the return-path"
+        message_id "<1234@someemail.com>"
+        body "body"
+      end
+      MockSMTP.deliveries[0][1].should == "sender@test.lindsaar.net"
+    end
+    
+    it "should use the from address is no return path or sender is specified" do
+      mail = Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+        subject "Can't set the return-path"
+        message_id "<1234@someemail.com>"
+        body "body"
+      end
+      MockSMTP.deliveries[0][1].should == "from@someemail.com"
     end
     
   end
