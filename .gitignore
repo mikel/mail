@@ -7,4 +7,3 @@ bin
 pkg
 corpus/
 spec/fixtures/emails/failed_emails/
-mail.tmproj
