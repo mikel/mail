@@ -2,7 +2,6 @@
 coverage
 rdoc
 gems
-vendor
 bin
 pkg
 corpus/
