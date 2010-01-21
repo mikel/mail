@@ -1396,6 +1396,14 @@ module Mail
       end
     end
 
+    def read
+      if self.attachment?
+        decode_body
+      else
+        raise NoMethodError, 'Can not call read on a part unless it is an attachment.'
+      end
+    end
+
     def decode_body
       if Mail::Encodings.defined?(content_transfer_encoding)
         Mail::Encodings.get_encoding(content_transfer_encoding).decode(body.encoded)
