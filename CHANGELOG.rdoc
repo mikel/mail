@@ -1,6 +1,11 @@
 == Thu Jan 21 05:27:17 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Major change to attachments, add_file now only accepts {:filename => 'full/path/to/file.png'} or {:filename => 'file.png', :content => 'string of file content'}
+* Version bump to 2.0.2
+* Major change to attachments, add_file now only accepts
+  {:filename => 'full/path/to/file.png'} or 
+  {:filename => 'file.png', :content => 'string of file content'}
+  you can also now do mail.attachments['filename.png'] = File.read('path/to/file.png')
+  which is nice too!
 
 == Fri Jan 15 09:20:51 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
