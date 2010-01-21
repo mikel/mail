@@ -1228,7 +1228,40 @@ module Mail
       body.parts
     end
     
-    # Returns an attachments object list of all the attachments in the email recursively
+    # Returns an AttachmentsList object, which holds all of the attachments in
+    # the receiver object (either the entier email or a part within) and all
+    # of it's descendants.
+    # 
+    # It also allows you to add attachments to the mail object directly, like so:
+    # 
+    #  mail.attachments['filename.jpg'] = File.read('/path/to/filename.jpg')
+    # 
+    # If you do this, then Mail will take the file name and work out the mime type
+    # set the Content-Type, Content-Disposition, Content-Transfer-Encoding and 
+    # base64 encode the contents of the attachment all for you.
+    # 
+    # You can also specify overrides if you want by passing a hash instead of a string:
+    # 
+    #  mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+    #                                      :content => File.read('/path/to/filename.jpg')}
+    # 
+    # If you want to use a different encoding than Base64, you can pass an encoding in,
+    # but then it is up to you to pass in the content pre-encoded, and don't expect
+    # Mail to know how to decode this data:
+    # 
+    #  file_content = SpecialEncode(File.read('/path/to/filename.jpg'))
+    #  mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+    #                                      :encoding => 'SpecialEncoding',
+    #                                      :content => file_content }
+    # 
+    # You can also search for specific attachments:
+    # 
+    #  # By Filename
+    #  mail.attachments['filename.jpg']   #=> Mail::Part object or nil
+    #  
+    #  # or by index
+    #  mail.attachments[0]                #=> Mail::Part (first attachment)
+    #  
     def attachments
       parts.attachments
     end
@@ -1340,6 +1373,8 @@ module Mail
     #  m.multipart? #=> true
     #  m.parts.first.content_type.content_type #=> 'text/plain'
     #  m.parts.last.content_type.content_type #=> 'image/png'
+    # 
+    # See also #attachments
     def add_file(values)
       convert_to_multipart unless self.multipart? || self.body.decoded.blank?
       add_multipart_mixed_header
