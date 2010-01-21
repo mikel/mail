@@ -61,7 +61,6 @@ module Mail # :doc:
   require 'mail/body'
   require 'mail/field'
   require 'mail/field_list'
-  require 'mail/attachment'
 
   # Load in all common header fields modules
   require 'mail/fields/common/common_address'
