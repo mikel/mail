@@ -56,6 +56,8 @@ module Mail # :doc:
   require 'mail/message'
   require 'mail/part'
   require 'mail/header'
+  require 'mail/parts_list'
+  require 'mail/attachments_list'
   require 'mail/body'
   require 'mail/field'
   require 'mail/field_list'
