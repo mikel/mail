@@ -244,7 +244,7 @@ or
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
-   add_file {:filename => 'somefile.png', :data => File.read('/somefile.png')}
+   add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
  end
  
  mail.deliver!
@@ -463,7 +463,7 @@ will try and guess the mime_type for you.
   
   @mail = Mail.new
   file_data = File.read('path/to/myfile.pdf')
-  @mail.add_file(:filename => 'myfile.pdf', :data => file_data)
+  @mail.attachments['myfile.pdf'] = file_data
   @mail.parts.first.attachment? #=> true
   @mail.attachments.first.mime_type #=> 'application/pdf'
   @mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true

@@ -796,11 +796,10 @@ describe Mail::Message do
           mail.boundary.should_not be_nil
         end
         
-        it "should add a boundary for an attachment" do
-          mail = Mail.new do
-            add_attachment :filename => 'test.png', :data => "2938492384923849"
-          end
-          mail.boundary.should_not be_nil
+        it "should not add a boundary for a message that is only an attachment" do
+          mail = Mail.new
+          mail.attachments['test.png'] = "2938492384923849"
+          mail.boundary.should be_nil
         end
       end
       
@@ -1029,16 +1028,17 @@ describe Mail::Message do
     
       describe "adding a file attachment" do
 
-        it "should set to multipart/mixed if a text part and some html parts" do
+        it "should set to multipart/mixed if a text part and you add an attachment" do
           mail = Mail::Message.new
           mail.text_part { body("log message goes here") }
           mail.add_file(fixture('attachments', 'test.png'))
           mail.mime_type.should == 'multipart/mixed'
         end
 
-        it "should allow you to just call 'add_attachment'" do
+        it "should set to multipart/mixed if you add an attachment and then a text part" do
           mail = Mail::Message.new
           mail.add_file(fixture('attachments', 'test.png'))
+          mail.text_part { body("log message goes here") }
           mail.mime_type.should == 'multipart/mixed'
         end
 
@@ -1057,7 +1057,7 @@ describe Mail::Message do
         it "should return attachment objects" do
           mail = Mail::Message.new
           mail.add_file(fixture('attachments', 'test.png'))
-          mail.attachments.first.class.should == Mail::Attachment
+          mail.attachments.first.class.should == Mail::Part
         end
         
         it "should be return an aray of attachments" do
@@ -1071,7 +1071,7 @@ describe Mail::Message do
             add_file fixture('attachments', 'test.zip')
           end
           mail.attachments.length.should == 4
-          mail.attachments.each { |a| a.class.should == Mail::Attachment }
+          mail.attachments.each { |a| a.class.should == Mail::Part }
         end
         
         it "should return the filename of each attachment" do
@@ -1143,7 +1143,7 @@ describe Mail::Message do
             from    'mikel@from.lindsaar.net'
             subject 'Hello there Mikel'
             to      'mikel@to.lindsaar.net'
-            add_file(:filename => 'test.png', :data => file_data)
+            add_file(:filename => 'test.png', :content => file_data)
           end
           if RUBY_VERSION >= '1.9'
             tripped = mail.attachments[0].decoded
@@ -1160,10 +1160,12 @@ describe Mail::Message do
             subject 'Hello there Mikel'
             to      'mikel@to.lindsaar.net'
             body    "Attached"
-            add_file :filename => fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.png')
           end
           m.attachments.length.should == 1
-          m.parts.first.body.decoded.should == "Attached"
+          m.parts.length.should == 2
+          m.parts[0].body.should == "Attached"
+          m.parts[1].filename.should == "test.png"
         end
         
         it "should allow you to add a body as text part if you have added a file" do
@@ -1171,23 +1173,12 @@ describe Mail::Message do
             from    'mikel@from.lindsaar.net'
             subject 'Hello there Mikel'
             to      'mikel@to.lindsaar.net'
-            add_file :filename => fixture('attachments', 'test.png')
+            add_file fixture('attachments', 'test.png')
             body    "Attached"
           end
           m.parts.length.should == 2
           m.parts.first[:content_type].content_type.should == 'image/png'
           m.parts.last[:content_type].content_type.should == 'text/plain'
-        end
-
-        it "should add the filename to the content_disposition" do
-          m = Mail.new do 
-            part({:content_type => "image/jpeg",
-                  :content_disposition => "attachment",
-                  :data => "123456789",
-                  :content_transfer_encoding => "base64",
-                  :filename => fixture('attachments', 'test.png')})
-          end
-          m.parts.first[:content_disposition].filename.should == 'test.png'
         end
 
       end

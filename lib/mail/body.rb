@@ -31,7 +31,7 @@ module Mail
       @preamble = nil
       @epilogue = nil
       @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
-      @parts = []
+      @parts = Mail::PartsList.new
       if string.blank?
         @raw_source = ''
       else
@@ -103,15 +103,7 @@ module Mail
     #
     # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
     def sort_parts!
-      order = @part_sort_order
-      @parts = @parts.sort do |a, b|
-        # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
-        # single email message... please show me a use case and I'll put more work into this method,
-        # in the meantime, it works :)
-        a_order = order.index(a[:content_type].string.downcase) || 10000
-        b_order = order.index(b[:content_type].string.downcase) || 10000
-        a_order <=> b_order
-      end
+      @parts.sort!(@part_sort_order)
     end
     
     # Returns the raw source that the body was initialized with, without
@@ -203,7 +195,7 @@ module Mail
       if @parts
         @parts << val
       else
-        @parts = [val]
+        @parts = Mail::PartsList.new[val]
       end
     end
     
@@ -214,7 +206,7 @@ module Mail
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)
       self.epilogue = parts[-1].to_s.sub('--', '').strip
-      @parts = parts[1...-1].to_a.map { |part| Mail::Part.new(part) }
+      parts[1...-1].to_a.each { |part| @parts << Mail::Part.new(part) }
       self
     end
     

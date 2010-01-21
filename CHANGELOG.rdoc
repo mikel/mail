@@ -1,3 +1,7 @@
+== Thu Jan 21 05:27:17 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Major change to attachments, add_file now only accepts {:filename => 'full/path/to/file.png'} or {:filename => 'file.png', :content => 'string of file content'}
+
 == Fri Jan 15 09:20:51 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Rewrote all network classes to not use singletons.  Means different Mail::Message objects can have different delivery methods.

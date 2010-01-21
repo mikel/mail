@@ -1223,20 +1223,14 @@ module Mail
       content_type_parameters ? content_type_parameters['boundary'] : nil
     end
     
-    # Returns an array of parts in the message
+    # Returns a parts list object of all the parts in the message
     def parts
       body.parts
     end
     
-    # Returns an array of attachments in the email recursively
+    # Returns an attachments object list of all the attachments in the email recursively
     def attachments
-      body.parts.map do |p| 
-        if p.parts.empty?
-          p.attachment if p.attachment?
-        else
-          p.attachments
-        end
-      end.compact.flatten
+      parts.attachments
     end
 
     def has_attachments?
@@ -1322,20 +1316,16 @@ module Mail
     # Adds a file to the message.  You have two options with this method, you can
     # just pass in the absolute path to the file you want and Mail will read the file,
     # get the filename from the path you pass in and guess the mime type, or you
-    # can pass in the filename as a string, and pass in the file data as a blob.
+    # can pass in the filename as a string, and pass in the file content as a blob.
     # 
     # Example:
     # 
     #  m = Mail.new
     #  m.add_file('/path/to/filename.png')
     # 
-    # or
-    # 
     #  m = Mail.new
-    #  m.add_file(:filename => 'filename.png', :data => File.read('/path/to/filename.png'))
-    # 
-    # The above two alternatives will produce the same email message.
-    # 
+    #  m.add_file(:filename => 'filename.png', :content => File.read('/path/to/file.jpg'))
+    #
     # Note also that if you add a file to an existing message, Mail will convert that message
     # to a MIME multipart email, moving whatever plain text body you had into it's own text
     # plain part.
@@ -1350,14 +1340,17 @@ module Mail
     #  m.multipart? #=> true
     #  m.parts.first.content_type.content_type #=> 'text/plain'
     #  m.parts.last.content_type.content_type #=> 'image/png'
-    def add_file(options)
+    def add_file(values)
       convert_to_multipart unless self.multipart? || self.body.decoded.blank?
       add_multipart_mixed_header
-      if options.is_a?(Hash)
-        self.body << Mail::Part.new(options)
+      if values.is_a?(String)
+        basename = File.basename(values)
+        filedata = File.read(values)
       else
-        self.body << Mail::Part.new(:filename => options)
+        basename = values[:filename]
+        filedata = values[:content] || File.read(values[:filename])
       end
+      self.attachments[basename] = filedata
     end
 
     def convert_to_multipart
@@ -1396,7 +1389,19 @@ module Mail
     end
 
     def decoded
-      raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+      if self.attachment?
+        decode_body
+      else
+        raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+      end
+    end
+
+    def decode_body
+      if Mail::Encodings.defined?(content_transfer_encoding)
+        Mail::Encodings.get_encoding(content_transfer_encoding).decode(body.encoded)
+      else
+        raise UnknownEncodingType, "Don't know how to decode #{content_transfer_encoding}, please call #encoded and decode it yourself."
+      end
     end
     
     # Returns true if this part is an attachment
@@ -1411,11 +1416,7 @@ module Mail
     
     # Returns the filename of the attachment
     def filename
-      if attachment?
-        attachment.filename
-      else
-        nil
-      end
+      find_attachment
     end
     
     private
@@ -1493,16 +1494,6 @@ module Mail
       @header = Mail::Header.new
       @body = Mail::Body.new
 
-      # Strip out the attachment headers and make an attachment
-      if passed_in_options.has_key?(:filename)
-        add_attachment(passed_in_options)
-        passed_in_options.delete(:content_disposition)
-        passed_in_options.delete(:content_type)
-        passed_in_options.delete(:mime_type)
-        passed_in_options.delete(:filename)
-        passed_in_options.delete(:data)
-      end
-      
       passed_in_options.each_pair do |k,v|
         k = underscoreize(k).to_sym if k.class == String
         if k == :headers
@@ -1513,29 +1504,11 @@ module Mail
       end
     end
     
-    def add_attachment(options_hash)
-      @attachment = Mail::Attachment.new(options_hash)
-      mime_type = options_hash[:content_type] || attachment.mime_type
-      self.content_type = "#{mime_type}; filename=\"#{attachment.filename}\""
-      self.content_transfer_encoding = "Base64"
-
-      disposition = options_hash[:content_disposition] || "attachment"
-      self.content_disposition = "#{disposition}; filename=\"#{attachment.filename}\""
-      add_boundary
-      self.body = attachment.encoded
-    end
-    
     def init_with_string(string)
       self.raw_source = string
       set_envelope_header
       parse_message
       separate_parts if multipart?
-      if filename = attachment?
-        encoding = header[:content_transfer_encoding].encoding if content_transfer_encoding
-        @attachment = Mail::Attachment.new(:filename => filename,
-                                           :data => body.encoded,
-                                           :encoding => encoding)
-      end
     end
     
     # Returns the filename of the attachment (if it exists) or returns nil
