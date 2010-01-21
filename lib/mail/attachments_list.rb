@@ -29,7 +29,7 @@ module Mail
     end
 
     def []=(name, value)
-      default_values = { :content_type => "#{set_mime_type(name)}",
+      default_values = { :content_type => "#{set_mime_type(name)}; filename=\"#{name}\"",
                          :content_transfer_encoding => 'Base64',
                          :content_disposition => "attachment; filename=\"#{name}\"" }
 

@@ -107,6 +107,12 @@ describe "Attachments" do
       doing { @mail.attachments[0].decoded }.should raise_error(Mail::UnknownEncodingType)
     end
 
+    it "should be able to call read on the attachment to return the decoded data" do
+      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      @mail.attachments['test.png'] = { :content => file_data }
+      @mail.attachments[0].read.should == file_data
+    end
+
   end
 
   describe "multiple attachments" do
