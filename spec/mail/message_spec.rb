@@ -1401,6 +1401,14 @@ describe Mail::Message do
           mail.body = body
           mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
         end
+        
+        it "should not set the charset if the file is an attachment" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          mail.content_disposition = 'attachment; filename="foo.jpg"'
+          mail.to_s =~ %r{Content-Type: text/plain;\r\n}
+        end
 
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
           body = "This is NOT plain text ASCII　− かきくけこ"
