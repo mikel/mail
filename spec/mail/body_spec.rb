@@ -39,6 +39,15 @@ describe Mail::Body do
       body.to_s.should == ''
     end
 
+    it "should accept an array as the body and join it" do
+      doing { Mail::Body.new(["line one\n", "line two\n"]) }.should_not raise_error
+    end
+
+    it "should accept an array as the body and join it" do
+      body = Mail::Body.new(["line one\n", "line two\n"])
+      body.encoded.should == "line one\r\nline two\r\n"
+    end
+
   end
 
   describe "encoding" do

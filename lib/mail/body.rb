@@ -35,7 +35,7 @@ module Mail
       if string.blank?
         @raw_source = ''
       else
-        @raw_source = string
+        @raw_source = string.to_s
       end
       @encoding = nil
       set_charset
