@@ -35,7 +35,13 @@ module Mail
       if string.blank?
         @raw_source = ''
       else
-        @raw_source = string.to_s
+        if string.respond_to?(:join)
+          @raw_source = string.join('')
+        elsif string.class == String
+          @raw_source = string
+        else
+          raise "You can only assign a string or an object that responds_to?(:join) to a body."
+        end
       end
       @encoding = nil
       set_charset
