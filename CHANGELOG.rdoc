@@ -5,6 +5,8 @@
 * Added ability to use << on the results returned by the various address fields, ie, mail.to << 'new@address' now works
 * Message now adds multipart/mixed as the content type if nothing is set and there are parts to the message
 * Added #display_names and #addrs to all address fields.  #addrs returns the actual Mail::Address object for each address in the field.
+* Body should call to_s on given input... incase someone gave it an IO.readlines result (Array)
+* 
 
 == Thu Jan 21 05:27:17 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
