@@ -130,6 +130,15 @@ describe "Attachments" do
     end
 
   end
+  
+  describe "setting the content type correctly" do
+    it "should set the content type to multipart/mixed if none given and you add an attachment" do
+      mail = Mail.new
+      mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
+      mail.encoded
+      mail.mime_type.should == 'multipart/mixed'
+    end
+  end
 
 end
 
