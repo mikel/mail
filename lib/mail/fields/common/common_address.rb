@@ -33,6 +33,16 @@ module Mail
         tree.addresses.map { |a| a.format }
       end
       
+      # Returns the display name of all the addresses in the address list
+      def display_names
+        tree.addresses.map { |a| a.display_name }
+      end
+      
+      # Returns the actual address objects in the address list
+      def addrs
+        tree.addresses
+      end
+      
       # Returns a hash of group name => address strings for the address list
       def groups
         @groups = Hash.new

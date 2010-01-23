@@ -14,10 +14,22 @@ describe Mail::CommonAddress do
       field = Mail::ToField.new("To", "test1@lindsaar.net, test2@lindsaar.net")
       field.addresses.should == ["test1@lindsaar.net", "test2@lindsaar.net"]
     end
-  
+
     it "should give the formatted addresses" do
       field = Mail::ToField.new("To", "Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
       field.formatted.should == ["Mikel <test1@lindsaar.net>", "Bob <test2@lindsaar.net>"]
+    end
+
+    it "should give the display names" do
+      field = Mail::ToField.new("To", "Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
+      field.display_names.should == ["Mikel", "Bob"]
+    end
+
+    it "should give the actual address objects" do
+      field = Mail::ToField.new("To", "Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
+      field.addrs.each do |addr|
+        addr.class.should == Mail::Address
+      end
     end
   
     it "should handle groups as well" do
