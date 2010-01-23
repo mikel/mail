@@ -63,6 +63,7 @@ module Mail # :doc:
   require 'mail/field_list'
 
   # Load in all common header fields modules
+  require 'mail/fields/common/address_container'
   require 'mail/fields/common/common_address'
   require 'mail/fields/common/common_date'
   require 'mail/fields/common/common_field'

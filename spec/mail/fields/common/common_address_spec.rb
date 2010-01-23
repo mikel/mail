@@ -68,6 +68,12 @@ describe Mail::CommonAddress do
       field.encoded.should == "To: mikel@test.lindsaar.net\r\n"
     end
 
+    it "should allow you to append an address" do
+      field = Mail::ToField.new("To", "")
+      field << 'mikel@test.lindsaar.net'
+      field.addresses.should == ["mikel@test.lindsaar.net"]
+    end
+
   end
   
   describe "encoding and decoding fields" do
