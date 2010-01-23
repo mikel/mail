@@ -283,6 +283,15 @@ module Mail
     # 
     #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
     #  mail.bcc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.bcc << 'ada@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def bcc( val = nil )
       default :bcc, val
     end
@@ -315,6 +324,15 @@ module Mail
     # 
     #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
     #  mail.cc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.cc << 'ada@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def cc( val = nil )
       default :cc, val
     end
@@ -411,6 +429,15 @@ module Mail
     # 
     #  mail.from 'Mikel <mikel@test.lindsaar.net>'
     #  mail.from #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.from << 'ada@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def from( val = nil )
       default :from, val
     end
@@ -532,6 +559,15 @@ module Mail
     # 
     #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
     #  mail.reply_to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.reply_to << 'ada@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def reply_to( val = nil )
       default :reply_to, val
     end
@@ -564,6 +600,15 @@ module Mail
     # 
     #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
     #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_bcc << 'ada@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_bcc( val = nil )
       default :resent_bcc, val
     end
@@ -596,6 +641,15 @@ module Mail
     # 
     #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_cc << 'ada@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_cc( val = nil )
       default :resent_cc, val
     end
@@ -636,6 +690,15 @@ module Mail
     # 
     #  mail.resent_from ['Mikel <mikel@test.lindsaar.net>']
     #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from << 'ada@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_from( val = nil )
       default :resent_from, val
     end
@@ -661,7 +724,8 @@ module Mail
     end
     
     # Returns the Resent-Sender value of the mail object, as a single string of an address
-    # spec.  A sender per RFC 2822 must be a single address
+    # spec.  A sender per RFC 2822 must be a single address, so you can not append to
+    # this address.
     #
     # Example:
     # 
@@ -704,6 +768,15 @@ module Mail
     # 
     #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
     #  mail.resent_to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_to << 'ada@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_to( val = nil )
       default :resent_to, val
     end
@@ -731,7 +804,7 @@ module Mail
     end
     
     # Returns the Sender value of the mail object, as a single string of an address
-    # spec.  A sender per RFC 2822 must be a single address
+    # spec.  A sender per RFC 2822 must be a single address.
     #
     # Example:
     # 
@@ -803,6 +876,15 @@ module Mail
     # 
     #  mail.to 'Mikel <mikel@test.lindsaar.net>'
     #  mail.to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.to << 'ada@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def to( val = nil )
       default :to, val
     end
