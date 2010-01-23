@@ -35,12 +35,13 @@ module Mail
       if string.blank?
         @raw_source = ''
       else
+        # Do join first incase we have been given an Array in Ruby 1.9
         if string.respond_to?(:join)
           @raw_source = string.join('')
-        elsif string.class == String
-          @raw_source = string
+        elsif string.respond_to?(:to_s)
+          @raw_source = string.to_s
         else
-          raise "You can only assign a string or an object that responds_to?(:join) to a body."
+          raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
         end
       end
       @encoding = nil

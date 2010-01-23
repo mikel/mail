@@ -26,7 +26,11 @@ describe Mail::Body do
   describe "initialization" do
     
     it "should be instantiated" do
-      doing {Mail::Body.new}.should_not raise_error
+      doing { Mail::Body.new }.should_not raise_error
+    end
+    
+    it "should initialize on a nil value" do
+      doing { Mail::Body.new(nil) }.should_not raise_error
     end
     
     it "should accept text as raw source data" do
