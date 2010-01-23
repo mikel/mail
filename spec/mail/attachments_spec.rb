@@ -110,7 +110,12 @@ describe "Attachments" do
     it "should be able to call read on the attachment to return the decoded data" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
-      @mail.attachments[0].read.should == file_data
+      if RUBY_VERSION >= '1.9'
+        expected = @mail.attachments[0].read.force_encoding(file_data.encoding)
+      else
+        expected = @mail.attachments[0].read
+      end
+      expected.should == file_data
     end
 
   end

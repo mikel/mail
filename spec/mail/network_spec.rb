@@ -1,6 +1,10 @@
 # encoding: utf-8
 require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
 
+class MyDelivery; def initialize(settings); end; end
+
+class MyRetriever; def initialize(settings); end; end
+
 describe "Mail" do
 
   before(:each) do
@@ -76,7 +80,6 @@ describe "Mail" do
     end
 
     it "should allow you to pass in your own delivery method" do
-      class MyDelivery; def initialize(settings); end; end
       Mail.defaults do
         delivery_method MyDelivery
       end
@@ -94,7 +97,6 @@ describe "Mail" do
     end
 
     it "should allow you to pass in your own retriever method" do
-      class MyRetriever; def initialize(settings); end; end
       Mail.defaults do
         retriever_method MyRetriever
       end

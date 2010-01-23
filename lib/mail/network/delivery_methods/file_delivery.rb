@@ -12,7 +12,11 @@ module Mail
   # running Mail.
   class FileDelivery
 
-    require 'ftools'
+    if RUBY_VERSION >= '1.9.1'
+      require 'fileutils'
+    else
+      require 'ftools'
+    end
 
     def initialize(values)
       self.settings = { :location => './mails' }.merge!(values)
@@ -21,7 +25,11 @@ module Mail
     attr_accessor :settings
     
     def deliver!(mail)
-      ::File.makedirs settings[:location]
+      if ::File.respond_to?(:makedirs)
+        ::File.makedirs settings[:location]
+      else
+        ::FileUtils.mkdir_p settings[:location]
+      end
 
       mail.destinations.uniq.each do |to|
         ::File.open(::File.join(settings[:location], to), 'a') { |f| "#{f.write(mail.encoded)}\r\n\r\n" }
