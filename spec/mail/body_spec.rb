@@ -289,6 +289,42 @@ describe Mail::Body do
       body.parts[2].content_type.should == "image/jpeg"
     end
     
+    it "should allow you to sort the parts recursively" do
+      part = Mail::Part.new('Content-Type: multipart/alternate')
+      part.add_part(Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text"))
+      part.add_part(Mail::Part.new("content-type: text/html\r\nsubject: HTML"))
+      part.add_part(Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched"))
+      body = Mail::Body.new('')
+      body << part
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG\r\n\r\nsdkjskjdksjdkjsd")
+      body.parts.length.should == 2
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[1].content_type.should == "image/jpeg"
+      body.parts[0].parts[0].content_type.should == "text/plain"
+      body.parts[0].parts[1].content_type.should == "text/enriched"
+      body.parts[0].parts[2].content_type.should == "text/html"
+    end
+    
+    it "should allow you to sort the parts recursively" do
+      part = Mail::Part.new('Content-Type: multipart/alternate')
+      part.add_part(Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched"))
+      part.add_part(Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text"))
+      part.add_part(Mail::Part.new("content-type: text/html\r\nsubject: HTML"))
+      body = Mail::Body.new('')
+      body << part
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG\r\n\r\nsdkjskjdksjdkjsd")
+      body.parts.length.should == 2
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[1].content_type.should == "image/jpeg"
+      body.parts[0].parts[0].content_type.should == "text/plain"
+      body.parts[0].parts[1].content_type.should == "text/enriched"
+      body.parts[0].parts[2].content_type.should == "text/html"
+    end
+    
   end
 
   describe "matching" do
