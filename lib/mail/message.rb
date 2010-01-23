@@ -101,6 +101,7 @@ module Mail
       @html_part = nil
 
       @perform_deliveries = true
+      @raise_delivery_errors = true
       @delivery_method = Mail.delivery_method.dup
       @delivery_notification_observers = []
       
@@ -118,6 +119,7 @@ module Mail
     end
 
     attr_accessor :perform_deliveries
+    attr_accessor :raise_delivery_errors
 
     def register_for_delivery_notification(observer)
       @delivery_notification_observers << observer
@@ -137,8 +139,12 @@ module Mail
     #  mail.deliver!
     def deliver
       if perform_deliveries
-        delivery_method.deliver!(self)
-        Mail.deliveries << self
+        begin
+          delivery_method.deliver!(self)
+          Mail.deliveries << self
+        rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+          raise e if raise_delivery_errors
+        end
       end
       inform_observers
     end

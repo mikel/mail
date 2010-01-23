@@ -1,3 +1,7 @@
+== Sat Jan 23 23:49:50 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added :raise_delivery_errors to Mail::Message, if set to false will silently rescue all errors raised by the delivery methods, set to true by default
+
 == Sat Jan 23 23:28:42 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added :perform_deliveries to mail, will not actually call deliver on the delivery method if this is set to false, set to true by default.

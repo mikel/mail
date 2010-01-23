@@ -252,6 +252,21 @@ describe "Mail" do
       MyObserver.should_receive(:delivered_email).with(message).once
       message.deliver
     end
+    
+    it "should pass on delivery errors if raised" do
+      delivery_agent = MyDeliveryMethod.new
+      message.stub!(:delivery_method).and_return(delivery_agent)
+      delivery_agent.stub!(:deliver!).and_raise(Exception)
+      doing { message.deliver }.should raise_error(Exception)
+    end
+    
+    it "should not pass on delivery errors if raised raise_delivery_errors is set to false" do
+      delivery_agent = MyDeliveryMethod.new
+      message.stub!(:delivery_method).and_return(delivery_agent)
+      message.raise_delivery_errors = false
+      delivery_agent.stub!(:deliver!).and_raise(Exception)
+      doing { message.deliver }.should_not raise_error(Exception)
+    end
   end
   
 end
