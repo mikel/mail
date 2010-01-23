@@ -204,5 +204,54 @@ describe "Mail" do
     end
     
   end
+
+  describe "deliveries, perform delivery and observers" do
+    
+    class MyDeliveryMethod
+      attr_accessor :settings
+      def initialize(values = {}); end
+      def deliver!(message); true; end
+    end
+    
+    class MyObserver
+      def self.delivered_email(message); end
+    end
+    
+    def message
+      @message ||= Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+    end
+    
+    it "should add itself to the deliveries collection on mail on delivery" do
+      Mail.deliveries.clear
+      message.deliver
+      Mail.deliveries.length.should == 1
+    end
+
+    it "should call deliver on the delivery method by default" do
+      delivery_agent = MyDeliveryMethod.new
+      message.should_receive(:delivery_method).and_return(delivery_agent)
+      delivery_agent.should_receive(:deliver!).with(message)
+      message.deliver
+    end
+
+    it "should not call deliver if perform deliveries is set to false" do
+      message.perform_deliveries = false
+      delivery_agent = MyDeliveryMethod.new
+      message.should_not_receive(:delivery_method).and_return(delivery_agent)
+      delivery_agent.should_not_receive(:deliver!)
+      message.deliver
+    end
+    
+    it "should tell it's observers that it was told to deliver an email" do
+      message.register_for_delivery_notification(MyObserver)
+      MyObserver.should_receive(:delivered_email).with(message).once
+      message.deliver
+    end
+  end
   
 end

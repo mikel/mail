@@ -1,4 +1,9 @@
 module Mail
+  # The TestMailer is a bare bones mailer that does nothing.  It is useful
+  # when you are testing.
+  # 
+  # It also provides a template of the minimum methods you require to implement
+  # if you want to make a custom mailer for Mail
   class TestMailer
 
     def initialize(values)
@@ -7,14 +12,7 @@ module Mail
     
     attr_accessor :settings
 
-    # The Test Mailer provides a mail delivery method that does not hit
-    # your network or mail agent, in this way you can send all the emails
-    # you want and they will just be appended to Mail.deliveries
-    # 
-    # See the README under Using Mail with Testing or Spec'ing Libraries
-    # for more information.
     def deliver!(mail)
-      Mail.deliveries << mail
     end
     
   end

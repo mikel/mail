@@ -99,8 +99,10 @@ module Mail
       @body = nil
       @text_part = nil
       @html_part = nil
-      
-      @delivery_method = Mail.delivery_method.clone
+
+      @perform_deliveries = true
+      @delivery_method = Mail.delivery_method.dup
+      @delivery_notification_observers = []
       
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
@@ -114,6 +116,18 @@ module Mail
 
       self
     end
+
+    attr_accessor :perform_deliveries
+
+    def register_for_delivery_notification(observer)
+      @delivery_notification_observers << observer
+    end
+    
+    def inform_observers
+      @delivery_notification_observers.each do |observer|
+        observer.delivered_email(self)
+      end
+    end
     
     # Delivers an mail object.
     # 
@@ -122,7 +136,11 @@ module Mail
     #  mail = Mail.read('file.eml')
     #  mail.deliver!
     def deliver
-      @delivery_method.deliver!(self)
+      if perform_deliveries
+        delivery_method.deliver!(self)
+        Mail.deliveries << self
+      end
+      inform_observers
     end
     
     alias :deliver! :deliver
