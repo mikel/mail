@@ -19,7 +19,7 @@ module Mail
       # Allows you to iterate through each address object in the syntax tree
       def each
         tree.addresses.each do |address|
-          yield
+          yield(address)
         end
       end
 

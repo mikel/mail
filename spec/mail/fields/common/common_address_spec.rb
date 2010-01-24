@@ -110,4 +110,13 @@ describe Mail::CommonAddress do
 
   end
   
+  it "should yield each address object in turn" do
+    field = Mail::ToField.new("To", "test1@lindsaar.net, test2@lindsaar.net, me@lindsaar.net")
+    addresses = []
+    field.each do |address|
+      addresses << address.address
+    end
+    addresses.should == ["test1@lindsaar.net", "test2@lindsaar.net", "me@lindsaar.net"]
+  end
+
 end
