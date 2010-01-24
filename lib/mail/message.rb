@@ -122,7 +122,9 @@ module Mail
     attr_accessor :raise_delivery_errors
 
     def register_for_delivery_notification(observer)
-      @delivery_notification_observers << observer
+      unless @delivery_notification_observers.include?(observer)
+        @delivery_notification_observers << observer
+      end
     end
     
     def inform_observers
@@ -147,6 +149,7 @@ module Mail
         end
       end
       inform_observers
+      self
     end
     
     alias :deliver! :deliver
