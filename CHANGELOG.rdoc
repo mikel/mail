@@ -5,7 +5,7 @@
 
 == Sat Jan 23 23:28:42 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Version bump to 2.0.5
+* Version bump to 2.0.4
 * Added :perform_deliveries to mail, will not actually call deliver on the delivery method if this is set to false, set to true by default.
 * Added @delivery_notification_observers to mail messages, you can register an observer with mail by calling mail.register_for_delivery_notification(observer) and then when mail is told to :deliver it will call your observer with observer.delivered_email(self).  It will call your observer if it actually performed the delivery or not (that is, irregardless of the :perform_deliveries flag)
 * Added ability to overwrite the Mail.deliveries store with an object of your choice instead of just an array, this is a good way to find out if something actually got delivered as if :perform_deliveries is false, this collection will not get the mail message appended
