@@ -699,6 +699,23 @@ describe Mail::Message do
         message.encoded.should match(%r{<b>test</b> HTML<br/>})
       end
       
+      it "should allow you to init on an array of addresses from a hash" do
+        mail = Mail.new(:to => ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
+      it "should allow you to init on an array of addresses directly" do
+        mail = Mail.new
+        mail.to = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
+      it "should allow you to init on an array of addresses directly" do
+        mail = Mail.new
+        mail[:to] = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
     end
     
   end

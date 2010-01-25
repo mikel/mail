@@ -60,7 +60,7 @@ describe Mail::CommonAddress do
       field.value = 'mikel@test.lindsaar.net'
       field.addresses.should == ['mikel@test.lindsaar.net']
     end
-    
+
     it "should encode to an empty string if it has no addresses or groups" do
       field = Mail::ToField.new("To", "")
       field.encoded.should == ''
