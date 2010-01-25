@@ -1,3 +1,8 @@
+== Mon Jan 25 11:36:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added ability for address fields to init on an array instead of just a string.
+* Version bump to 2.1.1
+
 == Mon Jan 25 10:36:33 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Now passes a block to the delivery handler, which can just call yield if it want's Mail to just do it's normal delivery method
