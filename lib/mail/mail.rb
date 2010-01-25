@@ -169,25 +169,6 @@ module Mail
   def Mail.read(filename)
     Mail.new(File.read(filename))
   end
-
-  # Provides a store of all the emails sent
-  def Mail.deliveries
-    @@deliveries ||= []
-  end
-
-  # Allows you to over write the default deliveries store from an array to some
-  # other object.  If you just want to clear the store, call Mail.deliveries.clear.
-  # 
-  # If you place another object here, please make sure it responds to:
-  # 
-  # * << (message)
-  # * clear
-  # * length
-  # * size
-  # * and other common Array methods
-  def Mail.deliveries=(val)
-    @@deliveries = val
-  end
   
   protected
   

@@ -1,3 +1,9 @@
+== Mon Jan 25 10:36:33 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Now passes a block to the delivery handler, which can just call yield if it want's Mail to just do it's normal delivery method
+* Moved Mail.deliveries into Mail::TestMailer.deliveries. Now only gets mail appended to it if you are sending with the :test delivery_method (only for testing)
+* Version bump to 2.1.0
+
 == Mon Jan 25 01:44:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Change :deliver! to deliver a mail object, bypassing the :perform_deliveries and :raise_delivery_errors flags, also does not append the mail object to Mail.deliveries, thus the ! (dangerous).  The intended use for :deliver! is for people wanting to have their own delivery_handler (like ActionMailer uses) to track and handle delivery failures.

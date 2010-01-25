@@ -5,12 +5,6 @@ class MyDelivery; def initialize(settings); end; end
 
 class MyRetriever; def initialize(settings); end; end
 
-class MyDeliveryHandler
-  def deliver_mail(mail)
-    mail.deliver!
-  end
-end
-
 describe "Mail" do
 
   before(:each) do
@@ -223,6 +217,18 @@ describe "Mail" do
       def self.delivered_email(message); end
     end
     
+    class MyDeliveryHandler
+      def deliver_mail(mail)
+        mail.deliver!
+      end
+    end
+
+    class MyYieldingDeliveryHandler
+      def deliver_mail(mail)
+        yield
+      end
+    end
+    
     before(:each) do
       @message = Mail.new do
         from 'mikel@test.lindsaar.net'
@@ -235,7 +241,7 @@ describe "Mail" do
     
     describe "adding to Mail.deliveries" do
       it "should add itself to the deliveries collection on mail on delivery" do
-        doing { @message.deliver }.should change(Mail.deliveries, :size).by(1)
+        doing { @message.deliver }.should change(Mail::TestMailer.deliveries, :size).by(1)
       end
     end
     
@@ -257,12 +263,12 @@ describe "Mail" do
 
       it "should add to the deliveries array if perform_deliveries is true" do
         @message.perform_deliveries = true
-        doing { @message.deliver }.should change(Mail.deliveries, :size).by(1)
+        doing { @message.deliver }.should change(Mail::TestMailer.deliveries, :size).by(1)
       end
 
       it "should not add to the deliveries array if perform_deliveries is false" do
         @message.perform_deliveries = false
-        doing { @message.deliver }.should_not change(Mail.deliveries, :size)
+        doing { @message.deliver }.should_not change(Mail::TestMailer.deliveries, :size)
       end
     end
     
@@ -336,7 +342,13 @@ describe "Mail" do
 
       it "mail should not modify the Mail.deliveries object if using a delivery_handler" do
         @message.delivery_handler = MyDeliveryHandler.new
-        doing { @message.deliver }.should_not change(Mail, :deliveries)
+        doing { @message.deliver }.should_not change(Mail::TestMailer, :deliveries)
+      end
+      
+      it "should be able to just yield and let mail do it's thing" do
+        @message.delivery_handler = MyYieldingDeliveryHandler.new
+        @message.should_receive(:do_delivery).exactly(:once)
+        @message.deliver
       end
       
     end

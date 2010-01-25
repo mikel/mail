@@ -136,7 +136,7 @@ module Mail
     # * Actually calling :deliver! (with the bang) on the mail object to
     #   get it to deliver itself.
     # 
-    # A simple implementation of a delivery_handler would be
+    # A simplest implementation of a delivery_handler would be
     # 
     #   class MyObject
     #
@@ -148,12 +148,7 @@ module Mail
     #     attr_accessor :mail
     # 
     #     def deliver_mail(mail)
-    #       begin
-    #         mail.deliver! if mail.perform_deliveries
-    #         Mail.deliveries << mail
-    #       rescue e => Exception
-    #         raise e if mail.raise_delivery_errors
-    #       end
+    #       yield
     #     end
     #   end
     # 
@@ -163,8 +158,8 @@ module Mail
     #   obj.mail.deliver
     # 
     # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
-    # which then would call #deliver! on the mail object which then goes ahead
-    # and delivers itself.
+    # which then can just yield and let Mail do it's own private do_delivery
+    # method.
     attr_accessor :delivery_handler
 
     # If set to false, mail will go through the motions of doing a delivery,
@@ -218,7 +213,7 @@ module Mail
     #  mail.deliver
     def deliver
       if delivery_handler
-        delivery_handler.deliver_mail(self)
+        delivery_handler.deliver_mail(self) { do_delivery }
       else
         do_delivery
         inform_observers
@@ -227,9 +222,9 @@ module Mail
     end
 
     # This method bypasses checking perform_deliveries and raise_delivery_errors, 
-    # it also does not append the mail object to the Mail.deliveries array, so use
-    # with caution.  It still however fires callbacks to the observers if they
-    # are defined.
+    # so use with caution.
+    # 
+    # It still however fires callbacks to the observers if they are defined.
     # 
     # Returns self
     def deliver!
@@ -1767,7 +1762,6 @@ module Mail
       begin
         if perform_deliveries
           delivery_method.deliver!(self)
-          Mail.deliveries << self
         end
       rescue Exception => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
