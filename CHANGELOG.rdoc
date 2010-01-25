@@ -2,6 +2,7 @@
 
 * Change :deliver! to deliver a mail object, bypassing the :perform_deliveries and :raise_delivery_errors flags, also does not append the mail object to Mail.deliveries, thus the ! (dangerous).  The intended use for :deliver! is for people wanting to have their own delivery_handler (like ActionMailer uses) to track and handle delivery failures.
 * Added :delivery_handler to Message.  Allows you to pass an object that will be sent :deliver_mail(self) by the Mail::Message instance when it is sent :deliver and bypasses the usual delivery method.
+* Changed :perform_deliveries flag to be more consistent with it's name, mail will not append itself to the Mail.deliveries collection if :perform_deliveries is false
 
 == Sat Jan 23 23:49:50 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 

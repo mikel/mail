@@ -235,16 +235,7 @@ describe "Mail" do
     
     describe "adding to Mail.deliveries" do
       it "should add itself to the deliveries collection on mail on delivery" do
-        Mail.deliveries.clear
-        @message.deliver
-        Mail.deliveries.length.should == 1
-      end
-
-      it "should add itself to the deliveries even if told not to perform_deliveries" do
-        Mail.deliveries.clear
-        @message.perform_deliveries = false
-        @message.deliver
-        Mail.deliveries.length.should == 1
+        doing { @message.deliver }.should change(Mail.deliveries, :size).by(1)
       end
     end
     
@@ -262,6 +253,16 @@ describe "Mail" do
         @message.should_not_receive(:delivery_method).and_return(delivery_agent)
         delivery_agent.should_not_receive(:deliver!)
         @message.deliver
+      end
+
+      it "should add to the deliveries array if perform_deliveries is true" do
+        @message.perform_deliveries = true
+        doing { @message.deliver }.should change(Mail.deliveries, :size).by(1)
+      end
+
+      it "should not add to the deliveries array if perform_deliveries is false" do
+        @message.perform_deliveries = false
+        doing { @message.deliver }.should_not change(Mail.deliveries, :size)
       end
     end
     

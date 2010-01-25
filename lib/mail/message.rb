@@ -168,8 +168,24 @@ module Mail
     attr_accessor :delivery_handler
 
     # If set to false, mail will go through the motions of doing a delivery,
-    # but not actually call the delivery method.  It will however still append
-    # the email to the Mail.deliveries object.  Useful for testing
+    # but not actually call the delivery method or append the mail object to
+    # the Mail.deliveries collection.  Useful for testing.
+    #
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :smtp
+    #   mail.perform_deliveries = false
+    #   mail.deliver                        # Mail::SMTP not called here
+    #   Mail.deliveries.size #=> 0
+    # 
+    # If you want to test and query the Mail.deliveries collection to see what
+    # mail you sent, you should set perform_deliveries to true and use
+    # the :test mail delivery_method:
+    # 
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :test
+    #   mail.perform_deliveries = true
+    #   mail.deliver
+    #   Mail.deliveries.size #=> 1
     # 
     # This setting is ignored by mail (though still available as a flag) if you
     # define a delivery_handler
@@ -1749,8 +1765,10 @@ module Mail
 
     def do_delivery
       begin
-        delivery_method.deliver!(self) if perform_deliveries
-        Mail.deliveries << self
+        if perform_deliveries
+          delivery_method.deliver!(self)
+          Mail.deliveries << self
+        end
       rescue Exception => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
