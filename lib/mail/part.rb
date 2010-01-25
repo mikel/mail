@@ -32,7 +32,7 @@ module Mail
     end
     
     def bounced?
-      (action =~ /failed/i)
+      !!(action =~ /failed/i)
     end
     
     def action
