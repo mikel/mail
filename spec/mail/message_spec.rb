@@ -31,7 +31,11 @@ describe Mail::Message do
       mail.header.class.should == Mail::Header
       mail.body.class.should == Mail::Body
     end
-  
+
+    it "should not report basic emails as bounced" do
+      Mail::Message.new.should_not be_bounced
+    end
+
     it "should be able to parse a basic email" do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end

@@ -1300,31 +1300,31 @@ module Mail
     end
     
     def bounced?
-      delivery_status_part.bounced?
+      delivery_status_part and delivery_status_part.bounced?
     end
     
     def action
-      delivery_status_part.action
+      delivery_status_part and delivery_status_part.action
     end
     
     def final_recipient
-      delivery_status_part.final_recipient
+      delivery_status_part and delivery_status_part.final_recipient
     end
     
     def error_status
-      delivery_status_part.error_status
+      delivery_status_part and delivery_status_part.error_status
     end
 
     def diagnostic_code
-      delivery_status_part.diagnostic_code
+      delivery_status_part and delivery_status_part.diagnostic_code
     end
     
     def remote_mta
-      delivery_status_part.remote_mta
+      delivery_status_part and delivery_status_part.remote_mta
     end
     
     def retryable?
-      delivery_status_part.retryable?
+      delivery_status_part and delivery_status_part.retryable?
     end
     
     # Returns the current boundary for this message part
