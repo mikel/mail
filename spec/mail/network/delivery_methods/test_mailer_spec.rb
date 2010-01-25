@@ -33,7 +33,7 @@ describe "TestMailer" do
       subject 'testing'
       body 'hello'
     end
-    mail.deliver!
+    mail.deliver
     Mail.deliveries.length.should == 1
     Mail.deliveries.first.should == mail
   end
@@ -48,7 +48,7 @@ describe "TestMailer" do
       subject 'testing'
       body 'hello'
     end
-    mail.deliver!
+    mail.deliver
     Mail.deliveries.length.should == 1
     Mail.deliveries.clear
     Mail.deliveries.should be_empty

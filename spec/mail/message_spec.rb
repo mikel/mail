@@ -1723,4 +1723,12 @@ describe Mail::Message do
       mail.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
     end
   end
+  
+  describe "deliver" do
+    it "should return self after delivery" do
+      mail = Mail.new
+      mail.perform_deliveries = false
+      mail.deliver.should == mail
+    end
+  end
 end

@@ -5,6 +5,12 @@ class MyDelivery; def initialize(settings); end; end
 
 class MyRetriever; def initialize(settings); end; end
 
+class MyDeliveryHandler
+  def deliver_mail(mail)
+    mail.deliver!
+  end
+end
+
 describe "Mail" do
 
   before(:each) do
@@ -167,7 +173,7 @@ describe "Mail" do
   end
   
   describe "sending emails via SMTP" do
-    
+
     before(:each) do
       # Set the delivery method to test as the default
       MockSMTP.clear_deliveries
@@ -205,7 +211,7 @@ describe "Mail" do
     
   end
 
-  describe "deliveries, perform delivery and observers" do
+  describe "deliveries" do
     
     class MyDeliveryMethod
       attr_accessor :settings
@@ -217,56 +223,123 @@ describe "Mail" do
       def self.delivered_email(message); end
     end
     
-    def message
-      @message ||= Mail.new do
+    before(:each) do
+      @message = Mail.new do
         from 'mikel@test.lindsaar.net'
         to 'ada@test.lindsaar.net'
         subject 'Re: No way!'
         body 'Yeah sure'
       end
+      @message.delivery_method :test
     end
     
-    it "should add itself to the deliveries collection on mail on delivery" do
-      Mail.deliveries.clear
-      message.deliver
-      Mail.deliveries.length.should == 1
-    end
+    describe "adding to Mail.deliveries" do
+      it "should add itself to the deliveries collection on mail on delivery" do
+        Mail.deliveries.clear
+        @message.deliver
+        Mail.deliveries.length.should == 1
+      end
 
-    it "should call deliver on the delivery method by default" do
-      delivery_agent = MyDeliveryMethod.new
-      message.should_receive(:delivery_method).and_return(delivery_agent)
-      delivery_agent.should_receive(:deliver!).with(message)
-      message.deliver
+      it "should add itself to the deliveries even if told not to perform_deliveries" do
+        Mail.deliveries.clear
+        @message.perform_deliveries = false
+        @message.deliver
+        Mail.deliveries.length.should == 1
+      end
     end
+    
+    describe "perform_deliveries" do
+      it "should call deliver! on the delivery method by default" do
+        delivery_agent = MyDeliveryMethod.new
+        @message.should_receive(:delivery_method).and_return(delivery_agent)
+        delivery_agent.should_receive(:deliver!).with(@message)
+        @message.deliver
+      end
 
-    it "should not call deliver if perform deliveries is set to false" do
-      message.perform_deliveries = false
-      delivery_agent = MyDeliveryMethod.new
-      message.should_not_receive(:delivery_method).and_return(delivery_agent)
-      delivery_agent.should_not_receive(:deliver!)
-      message.deliver
+      it "should not call deliver if perform deliveries is set to false" do
+        @message.perform_deliveries = false
+        delivery_agent = MyDeliveryMethod.new
+        @message.should_not_receive(:delivery_method).and_return(delivery_agent)
+        delivery_agent.should_not_receive(:deliver!)
+        @message.deliver
+      end
     end
     
-    it "should tell it's observers that it was told to deliver an email" do
-      message.register_for_delivery_notification(MyObserver)
-      MyObserver.should_receive(:delivered_email).with(message).once
-      message.deliver
+    describe "observers" do
+      it "should tell it's observers that it was told to deliver an email" do
+        @message.register_for_delivery_notification(MyObserver)
+        MyObserver.should_receive(:delivered_email).with(@message).once
+        @message.deliver
+      end
+      
+      it "should tell it's observers that it was told to deliver an email even if perform_deliveries is false" do
+        @message.register_for_delivery_notification(MyObserver)
+        @message.perform_deliveries = false
+        MyObserver.should_receive(:delivered_email).with(@message).once
+        @message.deliver
+      end
+      
+      it "should tell it's observers that it was told to deliver an email even if it is using a delivery_handler" do
+        @message.delivery_handler = MyDeliveryHandler.new
+        @message.register_for_delivery_notification(MyObserver)
+        @message.perform_deliveries = false
+        MyObserver.should_receive(:delivered_email).with(@message).once
+        @message.deliver
+      end
+      
     end
     
-    it "should pass on delivery errors if raised" do
-      delivery_agent = MyDeliveryMethod.new
-      message.stub!(:delivery_method).and_return(delivery_agent)
-      delivery_agent.stub!(:deliver!).and_raise(Exception)
-      doing { message.deliver }.should raise_error(Exception)
+    describe "raise_delivery_errors" do
+      it "should pass on delivery errors if raised" do
+        delivery_agent = MyDeliveryMethod.new
+        @message.stub!(:delivery_method).and_return(delivery_agent)
+        delivery_agent.stub!(:deliver!).and_raise(Exception)
+        doing { @message.deliver }.should raise_error(Exception)
+      end
+
+      it "should not pass on delivery errors if raised raise_delivery_errors is set to false" do
+        delivery_agent = MyDeliveryMethod.new
+        @message.stub!(:delivery_method).and_return(delivery_agent)
+        @message.raise_delivery_errors = false
+        delivery_agent.stub!(:deliver!).and_raise(Exception)
+        doing { @message.deliver }.should_not raise_error(Exception)
+      end
     end
     
-    it "should not pass on delivery errors if raised raise_delivery_errors is set to false" do
-      delivery_agent = MyDeliveryMethod.new
-      message.stub!(:delivery_method).and_return(delivery_agent)
-      message.raise_delivery_errors = false
-      delivery_agent.stub!(:deliver!).and_raise(Exception)
-      doing { message.deliver }.should_not raise_error(Exception)
+    describe "delivery_handler" do
+      
+      it "should allow you to hand off performing the actual delivery to another object" do
+        delivery_handler = MyDeliveryHandler.new
+        delivery_handler.should_receive(:deliver_mail).with(@message).exactly(:once)
+        @message.delivery_handler = delivery_handler
+        @message.deliver
+      end
+
+      it "mail should be told to :deliver once and then :deliver! once by the delivery handler" do
+        @message.delivery_handler = MyDeliveryHandler.new
+        @message.should_receive(:deliver!).exactly(:once)
+        @message.deliver
+      end
+
+      it "mail only call it's delivery_method once" do
+        @message.delivery_handler = MyDeliveryHandler.new
+        @message.should_receive(:delivery_method).exactly(:once).and_return(Mail::TestMailer.new({}))
+        @message.deliver
+      end
+
+      it "mail should not catch any exceptions when using a delivery_handler" do
+        @message.delivery_handler = MyDeliveryHandler.new
+        @message.should_receive(:delivery_method).and_raise(Exception)
+        doing { @message.deliver }.should raise_error(Exception)
+      end
+
+      it "mail should not modify the Mail.deliveries object if using a delivery_handler" do
+        @message.delivery_handler = MyDeliveryHandler.new
+        doing { @message.deliver }.should_not change(Mail, :deliveries)
+      end
+      
     end
+    
   end
   
 end
