@@ -219,11 +219,9 @@ what you are doing.
 
 === Sending an email:
 
- require 'mail'
-
- Mail.defaults do
-   smtp '127.0.0.1', 25
- end
+Mail defaults to sending via SMTP to local host port 25.  If you have a 
+sendmail or postfix daemon running on on this port, sending email is as
+easy as:
 
  Mail.deliver do
        from 'me@test.lindsaar.net'
@@ -235,10 +233,6 @@ what you are doing.
 
 or
  
- Mail.defaults do
-   smtp '127.0.0.1' # Port 25 defult
- end
-
  mail = Mail.new do
        from 'me@test.lindsaar.net'
          to 'you@test.lindsaar.net'
@@ -248,6 +242,22 @@ or
  end
  
  mail.deliver!
+
+Sending via sendmail can be done like so:
+
+  mail = Mail.new do
+        from 'me@test.lindsaar.net'
+          to 'you@test.lindsaar.net'
+     subject 'Here is the image you wanted'
+        body File.read('body.txt')
+    add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+  end
+  
+  mail.delivery_method :sendmail
+  
+  mail.deliver
+
+mail.deliver!
 
 
 === Getting emails from a pop server:
@@ -343,10 +353,6 @@ Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
 
  require 'mail'
-
- Mail.defaults do
-   smtp '127.0.0.1' # Port 25 defult
- end
 
  mail = Mail.deliver do
    to 'nicolas@test.lindsaar.net.au'
