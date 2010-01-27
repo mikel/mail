@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
 
-describe "TestMailer" do
+describe "Mail::TestMailer" do
   before(:each) do
     # Reset all defaults back to original state
     Mail.defaults do
@@ -12,18 +12,18 @@ describe "TestMailer" do
                                :password             => nil,
                                :authentication       => nil,
                                :enable_starttls_auto => true  }
+      Mail::TestMailer.deliveries.clear
     end
-    Mail.deliveries.clear
   end
 
   it "should have no deliveries when first initiated" do
     Mail.defaults do
       delivery_method :test
     end
-    Mail.deliveries.should be_empty
+    Mail::TestMailer.deliveries.should be_empty
   end
   
-  it "should deliver an email to the Mail.deliveries array" do
+  it "should deliver an email to the Mail::TestMailer.deliveries array" do
     Mail.defaults do
       delivery_method :test
     end
@@ -33,9 +33,9 @@ describe "TestMailer" do
       subject 'testing'
       body 'hello'
     end
-    mail.deliver!
-    Mail.deliveries.length.should == 1
-    Mail.deliveries.first.should == mail
+    mail.deliver
+    Mail::TestMailer.deliveries.length.should == 1
+    Mail::TestMailer.deliveries.first.should == mail
   end
   
   it "should clear the deliveries when told to" do
@@ -48,10 +48,10 @@ describe "TestMailer" do
       subject 'testing'
       body 'hello'
     end
-    mail.deliver!
-    Mail.deliveries.length.should == 1
-    Mail.deliveries.clear
-    Mail.deliveries.should be_empty
+    mail.deliver
+    Mail::TestMailer.deliveries.length.should == 1
+    Mail::TestMailer.deliveries.clear
+    Mail::TestMailer.deliveries.should be_empty
   end
 
 end

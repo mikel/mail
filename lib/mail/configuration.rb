@@ -13,9 +13,12 @@ module Mail
   # which can be overwritten on a per mail object basis.
   class Configuration
     include Singleton
-    
-    @delivery_method  = nil
-    @retriever_method = nil
+
+    def initialize
+      @delivery_method  = nil
+      @retriever_method = nil
+      super
+    end
 
     def delivery_method(method = nil, settings = {})
       return @delivery_method if @delivery_method && method.nil?

@@ -102,9 +102,12 @@ module Mail
 
       @perform_deliveries = true
       @raise_delivery_errors = true
+
+      @delivery_handler = nil
+      
       @delivery_method = Mail.delivery_method.dup
       @delivery_notification_observers = []
-      
+
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -118,7 +121,76 @@ module Mail
       self
     end
 
+    # If you assign a delivery handler, mail will call :deliver_mail on the
+    # object you assign to delivery_handler, it will pass itself as the 
+    # single argument.
+    # 
+    # If you define a delivery_handler, then you are responsible for the
+    # following actions in the delivery cycle:
+    # 
+    # * Appending the mail object to Mail.deliveries as you see fit.
+    # * Checking the mail.perform_deliveries flag to decide if you should
+    #   actually call :deliver! the mail object or not.
+    # * Checking the mail.raise_delivery_errors flag to decide if you
+    #   should raise delivery errors if they occur.
+    # * Actually calling :deliver! (with the bang) on the mail object to
+    #   get it to deliver itself.
+    # 
+    # A simplest implementation of a delivery_handler would be
+    # 
+    #   class MyObject
+    #
+    #     def initialize
+    #       @mail = Mail.new('To: mikel@test.lindsaar.net')
+    #       @mail.delivery_handler = self
+    #     end
+    # 
+    #     attr_accessor :mail
+    # 
+    #     def deliver_mail(mail)
+    #       yield
+    #     end
+    #   end
+    # 
+    # Then doing:
+    # 
+    #   obj = MyObject.new
+    #   obj.mail.deliver
+    # 
+    # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
+    # which then can just yield and let Mail do it's own private do_delivery
+    # method.
+    attr_accessor :delivery_handler
+
+    # If set to false, mail will go through the motions of doing a delivery,
+    # but not actually call the delivery method or append the mail object to
+    # the Mail.deliveries collection.  Useful for testing.
+    #
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :smtp
+    #   mail.perform_deliveries = false
+    #   mail.deliver                        # Mail::SMTP not called here
+    #   Mail.deliveries.size #=> 0
+    # 
+    # If you want to test and query the Mail.deliveries collection to see what
+    # mail you sent, you should set perform_deliveries to true and use
+    # the :test mail delivery_method:
+    # 
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :test
+    #   mail.perform_deliveries = true
+    #   mail.deliver
+    #   Mail.deliveries.size #=> 1
+    # 
+    # This setting is ignored by mail (though still available as a flag) if you
+    # define a delivery_handler
     attr_accessor :perform_deliveries
+
+    # If set to false, mail will silently catch and ignore any exceptions
+    # raised through attempting to deliver an email.
+    # 
+    # This setting is ignored by mail (though still available as a flag) if you
+    # define a delivery_handler
     attr_accessor :raise_delivery_errors
 
     def register_for_delivery_notification(observer)
@@ -138,21 +210,28 @@ module Mail
     # Examples:
     # 
     #  mail = Mail.read('file.eml')
-    #  mail.deliver!
+    #  mail.deliver
     def deliver
-      if perform_deliveries
-        begin
-          delivery_method.deliver!(self)
-          Mail.deliveries << self
-        rescue Exception => e # Net::SMTP errors or sendmail pipe errors
-          raise e if raise_delivery_errors
-        end
+      if delivery_handler
+        delivery_handler.deliver_mail(self) { do_delivery }
+      else
+        do_delivery
+        inform_observers
       end
+      self
+    end
+
+    # This method bypasses checking perform_deliveries and raise_delivery_errors, 
+    # so use with caution.
+    # 
+    # It still however fires callbacks to the observers if they are defined.
+    # 
+    # Returns self
+    def deliver!
+      delivery_method.deliver!(self)
       inform_observers
       self
     end
-    
-    alias :deliver! :deliver
     
     def delivery_method(method = nil, settings = {})
       unless method
@@ -1571,7 +1650,7 @@ module Mail
       find_attachment
     end
     
-    private
+  private
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -1679,5 +1758,15 @@ module Mail
       filename
     end
 
+    def do_delivery
+      begin
+        if perform_deliveries
+          delivery_method.deliver!(self)
+        end
+      rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+        raise e if raise_delivery_errors
+      end
+    end
+    
   end
 end
