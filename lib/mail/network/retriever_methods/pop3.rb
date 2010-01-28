@@ -1,65 +1,49 @@
 # encoding: utf-8
 
-# The Pop3 retriever allows to get the last, first or all emails from a Pop3 server.
-# Each email retrieved (RFC2822) is given as an instance of +Message+.
-#
-# While being retrieved, emails can be yielded if a block is given.
-#
-# This module uses the defaults set in Configuration to retrieve POP3 settings.
-# 
 module Mail
+  # The Pop3 retriever allows to get the last, first or all emails from a POP3 server.
+  # Each email retrieved (RFC2822) is given as an instance of +Message+.
+  #
+  # While being retrieved, emails can be yielded if a block is given.
+  # 
+  # === Example of retrieving Emails from GMail:
+  # 
+  #   Mail.defaults do
+  #     retriever_method :pop3, { :address             => "pop.gmail.com",
+  #                               :port                => 995,
+  #                               :user_name           => '<username>',
+  #                               :password            => '<password>',
+  #                               :enable_ssl          => true }
+  #   end
+  # 
+  #   Mail.all    #=> Returns an array of all emails
+  #   Mail.first  #=> Returns the first unread email
+  #   Mail.last   #=> Returns the first unread email
+  # 
+  # You can also pass options into Mail.find to locate an email in your pop mailbox
+  # with the following options:
+  # 
+  #   what:  last or first emails. The default is :first.
+  #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+  #          instance of Message, not an array of Message instances.
+  # 
+  #   Mail.find(:what => :first, :count => 10, :order => :asc)
+  #   #=> Returns the first 10 emails in ascending order
+  # 
   class POP3
-    include Singleton
-    
-    def initialize
-      @user = nil
-      @pass = nil
-      @tls  = false
-    end
-    
     require 'net/pop'
-    
-    def settings(&block)
-      if block_given?
-        instance_eval(&block)
-      end
-      self
-    end
-    
-    # This is the host that you will send your POP3 mails to, defaults to 'localhost'
-    def host(value = nil)
-      value ? @host = value : @host ||= 'localhost'
-    end
 
-    # This is the port that POP3 email get sent to, default is 110
-    def port(value = nil)
-      value ? @port = value.to_i : @port ||= 110
+    def initialize(values)
+      self.settings = { :address              => "localhost",
+                        :port                 => 110,
+                        :user_name            => nil,
+                        :password             => nil,
+                        :authentication       => nil,
+                        :enable_ssl           => false }.merge!(values)
     end
     
-    # The username to use during POP3 authentication
-    def user(value = nil)
-      value ? @user = value : @user
-    end
-    
-    # Password to use during POP3 authentication
-    def pass(value = nil)
-      value ? @pass = value : @pass
-    end
-    
-    # Turn on TLS
-    def enable_tls
-      @tls = true
-    end
-    
-    # Turn on TLS
-    def disable_tls
-      @tls = false
-    end
-    
-    # TLS Enabled?  Default is false
-    def tls?
-      @tls || false
-    end
+    attr_accessor :settings
     
     # Get the oldest received email(s)
     #
@@ -67,7 +51,7 @@ module Mail
     #   count: number of emails to retrieve. The default value is 1.
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def POP3.first(options = {}, &block)
+    def first(options = {}, &block)
       options ||= {}
       options[:what] = :first
       options[:count] ||= 1
@@ -80,7 +64,7 @@ module Mail
     #   count: number of emails to retrieve. The default value is 1.
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def POP3.last(options = {}, &block)
+    def last(options = {}, &block)
       options ||= {}
       options[:what] = :last
       options[:count] ||= 1
@@ -92,7 +76,7 @@ module Mail
     # Possible options:
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def POP3.all(options = {}, &block)
+    def all(options = {}, &block)
       options ||= {}
       options[:count] = :all
       find(options, &block)
@@ -106,8 +90,7 @@ module Mail
     #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
     #          instance of Message, not an array of Message instances.
     #
-    def POP3.find(options = {}, &block)
-      validate_configuration
+    def find(options = {}, &block)
       options = validate_options(options)
       
       start do |pop3|
@@ -136,31 +119,23 @@ module Mail
     end
     
   private
-    
-    # Ensure that the POP3 configuration is set
-    def POP3.validate_configuration
-      config = Mail::Configuration.instance
-      if config.pop3.host.blank? || config.pop3.port.blank?
-        raise ArgumentError.new('Please call +Mail.defaults+ to set the POP3 configuration')
-      end
-    end
   
     # Set default options
-    def POP3.validate_options(options)
+    def validate_options(options)
       options ||= {}
       options[:count] ||= 10
       options[:order] ||= :asc
-      options[:what] ||= :first
+      options[:what]  ||= :first
       options
     end
   
     # Start a POP3 session and ensures that it will be closed in any case.
-    def POP3.start(config = Mail::Configuration.instance, &block)
+    def start(config = Mail::Configuration.instance, &block)
       raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
     
-      pop3 = Net::POP3.new(config.pop3.host, config.pop3.port, isapop = false)
-      pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if config.pop3.tls?
-      pop3.start(config.pop3.user, config.pop3.pass)
+      pop3 = Net::POP3.new(settings[:address], settings[:port], isapop = false)
+      pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if settings[:enable_ssl]
+      pop3.start(settings[:user_name], settings[:password])
     
       yield pop3
     ensure

@@ -10,6 +10,11 @@ describe Mail::Field do
       Mail::Field.new('To: Mikel').field.class.should == Mail::ToField
     end
     
+    it "should allow you to init on an array" do
+      field = Mail::Field.new("To", ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
+      field.addresses.should == ["test1@lindsaar.net", "test2@lindsaar.net"]
+    end
+    
     it "should allow us to pass an empty value" do
       doing {Mail::Field.new('To')}.should_not raise_error
       Mail::Field.new('To').field.class.should == Mail::ToField

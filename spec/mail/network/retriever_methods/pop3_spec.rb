@@ -1,15 +1,19 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
 
-describe "Retrievable" do
+describe "POP3 Retriever" do
   
   before(:each) do
-    config = Mail.defaults do
-      pop3 'pop3.mockup.com', 587 do
-        enable_tls
-      end
+    # Reset all defaults back to original state
+    Mail.defaults do
+      retriever_method :pop3, { :address             => "localhost",
+                                :port                => 995,
+                                :user_name           => nil,
+                                :password            => nil,
+                                :enable_ssl          => true }
     end
   end
+
 
   describe "find with and without block" do
   
@@ -126,7 +130,8 @@ describe "Retrievable" do
   describe "handling of options" do
     
     it "should set default options" do
-      options = Mail::POP3.validate_options({})
+      retrievable = Mail::POP3.new({})
+      options = retrievable.send(:validate_options, {})
       
       options[:count].should be_present
       options[:count].should == 10
@@ -139,7 +144,8 @@ describe "Retrievable" do
     end
     
     it "should not replace given configuration" do
-      options = Mail::POP3.validate_options({
+      retrievable = Mail::POP3.new({})
+      options = retrievable.send(:validate_options, {
         :count => 2,
         :order => :asc,
         :what => :first
@@ -167,14 +173,6 @@ describe "Retrievable" do
       end.should raise_error
       
       MockPOP3.should_not be_started
-    end
-    
-    it "should raise if the POP3 configuration is not valid" do
-      config = Mail.defaults do
-        pop3 ""
-      end
-      
-      doing { Mail.all }.should raise_error
     end
     
   end

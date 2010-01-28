@@ -12,13 +12,20 @@ module Mail
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last.to_s.downcase))
     end
     
+    def parse(val = value)
+      unless val.blank?
+        @element = Mail::ContentTransferEncodingElement.new(val)
+        @tree = @element.tree
+      end
+    end
+    
     def tree
-      @element ||= ContentTransferEncodingElement.new(value)
+      @element ||= Mail::ContentTransferEncodingElement.new(value)
       @tree ||= @element.tree
     end
     
     def element
-      @element ||= ContentTransferEncodingElement.new(value)
+      @element ||= Mail::ContentTransferEncodingElement.new(value)
     end
     
     def encoding

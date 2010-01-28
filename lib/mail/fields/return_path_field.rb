@@ -37,6 +37,9 @@ module Mail
     
     def initialize(*args)
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+      self.parse
+      self
+
     end
     
     def encoded
@@ -49,6 +52,10 @@ module Mail
     
     def address
       addresses.first
+    end
+    
+    def default
+      address
     end
     
   end

@@ -50,52 +50,70 @@ module Mail
     Mail::Message.new(args, &block)
   end
 
-  # Set the default configuration to send and receive emails.  The defaults
-  # are global, allowing you to just call them once and use them everywhere.
-  # if port values are omitted from the SMTP and POP3 method calls, then it
-  # is assumed to use the default ports of 25 and 110 respectively.
+  # Sets the default delivery method and retriever method for all new Mail objects.
+  # The delivery_method and retriever_method default to :smtp and :pop3, with defaults
+  # set.
   # 
-  # You call defaults in a block, then you can set the basic host and port,
-  # by passing arguments, also, if the method you are using required more
-  # information (like pop3), then pass a block to it and call methods like
-  # user, pass, enable_tls etc.
+  # So sending a new email, if you have an SMTP server running on localhost is
+  # as easy as:
   # 
-  # The arguments and block are both optional.
+  #   Mail.deliver do
+  #     to      'mikel@test.lindsaar.net'
+  #     from    'bob@test.lindsaar.net'
+  #     subject 'hi there!'
+  #     body    'this is a body'
+  #   end
+  # 
+  # If you do not specify anything, you will get the following equivalent code set in
+  # every new mail object:
+  # 
+  #   Mail.defaults do
+  #     delivery_method :smtp, { :address              => "localhost",
+  #                              :port                 => 25,
+  #                              :domain               => 'localhost.localdomain',
+  #                              :user_name            => nil,
+  #                              :password             => nil,
+  #                              :authentication       => nil,
+  #                              :enable_starttls_auto => true  }
+  # 
+  #     retriever_method :pop3, { :address             => "localhost",
+  #                               :port                => 995,
+  #                               :user_name           => nil,
+  #                               :password            => nil,
+  #                               :enable_ssl          => true }
+  #   end
+  # 
+  #   Mail.delivery_method.new  #=> Mail::SMTP instance
+  #   Mail.retriever_method.new #=> Mail::POP3 instance
   #
-  #  Mail.defaults do
-  #    smtp 'smtp.myhost.fr', 587
-  #    pop3 'pop.myhost.fr' do
-  #      user 'bernardo'
-  #      pass 'mypass'
-  #      enable_tls
-  #    end
-  #  end
+  # Each mail object inherits the default set in Mail.delivery_method, however, on
+  # a per email basis, you can override the method:
+  #
+  #   mail.delivery_method :sendmail
   # 
-  # You will also want to specify a delivery and retriever type, the defaults
-  # are SMTP and POP3.  You set the types by passing a symbol:
+  # Or you can override the method and pass in settings:
   # 
-  #  Mail.defaults do
-  #    retriever_method :pop3
-  #    delivery_method :smtp
-  #  end
+  #   mail.delivery_method :sendmail, { :address => 'some.host' }
   # 
-  # The only implemented methods at the moment are :pop3, :smtp and :test
+  # You can also just modify the settings:
   # 
-  # You can also specify your own delivery class which must respond to :deliver!
-  # or a retriever class which must respond to :get_messages
+  #   mail.delivery_settings = { :address => 'some.host' }
   # 
-  #  Mail.defaults do
-  #    retriever_method MyOwnRetriever.new
-  #  end
-  # 
-  # Once you have set defaults, you can call Mail.deliver to send an email
-  # through the Mail.deliver method.
+  # The passed in hash is just merged against the defaults with +merge!+ and the result
+  # assigned the mail object.  So the above example will change only the :address value
+  # of the global smtp_settings to be 'some.host', keeping all other values
   def Mail.defaults(&block)
-    if block_given?
-      Mail::Configuration.instance.defaults(&block)
-    else
-      Mail::Configuration.instance
-    end
+    Mail::Configuration.instance.instance_eval(&block)
+  end
+  
+  # Returns the delivery method selected, defaults to an instance of Mail::SMTP
+  def Mail.delivery_method
+    Mail::Configuration.instance.delivery_method
+  end
+
+  # Returns the retriever method selected, defaults to an instance of Mail::POP3
+  def Mail.retriever_method
+    Mail::Configuration.instance.retriever_method
   end
 
   # Send an email using the default configuration.  You do need to set a default
@@ -119,48 +137,37 @@ module Mail
   # And your email object will be created and sent.
   def Mail.deliver(*args, &block)
     mail = Mail.new(args, &block)
-    Deliverable.perform_delivery!(mail)
+    mail.deliver
     mail
+  end
+
+  # Find emails in a POP3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.find(*args, &block)
+    retriever_method.find(*args, &block)
   end
 
   # Receive the first email(s) from a Pop3 server.
   # See Mail::POP3 for a complete documentation.
   def Mail.first(*args, &block)
-    Retrievable.first(*args, &block)
+    retriever_method.first(*args, &block)
   end
 
   # Receive the first email(s) from a Pop3 server.
   # See Mail::POP3 for a complete documentation.
   def Mail.last(*args, &block)
-    Retrievable.last(*args, &block)
+    retriever_method.last(*args, &block)
   end
 
-  # Receive all emails from a Pop3 server.
+  # Receive all emails from a POP3 server.
   # See Mail::POP3 for a complete documentation.
   def Mail.all(*args, &block)
-    Retrievable.all(*args, &block)
+    retriever_method.all(*args, &block)
   end
 
-  # Receive all emails from a Pop3 server.
-  # DEPRECATED: please use Mail.all instead.
-  def Mail.get_all_mail(*args, &block)
-    warn "Mail.get_all_mail is deprecated. Please use Mail.all instead."
-    all(*args, &block)
-  end
-
-  # Find emails in a Pop3 server.
-  # See Mail::POP3 for a complete documentation.
-  def Mail.find(*args, &block)
-    Retrievable.find(*args, &block)
-  end
-
+  # Reads in an email message from a path and instantiates it as a new Mail::Message
   def Mail.read(filename)
     Mail.new(File.read(filename))
-  end
-
-  # Provides a store of all the emails sent
-  def Mail.deliveries
-    @@deliveries ||= []
   end
   
   protected

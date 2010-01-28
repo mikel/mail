@@ -1,5 +1,9 @@
 # encoding: utf-8
 module Mail
+  # Raised when attempting to decode an unknown encoding type
+  class UnknownEncodingType < StandardError #:nodoc:
+  end
+
   module Encodings
     
     include Mail::Patterns

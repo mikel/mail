@@ -103,60 +103,6 @@ ENDPART
       @delivery_report.should_not be_retryable
     end
 
-
-  end
-
-  describe "adding a file" do
-    it "should read a file name if given one" do
-      filename = fixture('attachments', 'test.png')
-      doing { Mail::Part.new(:filename => filename) }.should_not raise_error
-    end
-
-    it "should set it's content type intelligently for png files" do
-      filename = fixture('attachments', 'test.png')
-      part = Mail::Part.new(:filename => filename)
-      part.content_type.should == 'image/png; filename="test.png"'
-    end
-    
-    it "should know it is an attachment" do
-      filename = fixture('attachments', 'test.png')
-      part = Mail::Part.new(:filename => filename)
-      part.should be_attachment
-    end
-
-    it "should be able to detatch a file" do
-      filename = fixture('attachments', 'test.png')
-      part = Mail::Part.new(:filename => filename)
-      if RUBY_VERSION >= '1.9'
-        tripped = part.attachment.decoded.force_encoding(Encoding::BINARY)
-        original = File.read(filename).force_encoding(Encoding::BINARY)
-        tripped.should == original
-      else
-        part.attachment.decoded.should == File.read(filename)
-      end
-    end
-
-    it "should set it's encoding to base64 if given an attachment" do
-      filename = fixture('attachments', 'test.png')
-      part = Mail::Part.new(:filename => filename)
-      part.ready_to_send!
-      part.content_transfer_encoding.should == 'base64'
-    end
-
-    it "should round trip an image attachment" do
-      filename = fixture('attachments', 'test.png')
-      part = Mail::Part.new(:filename => filename)
-      part.ready_to_send!
-      new_part = Mail::Part.new(part.encoded)
-      if RUBY_VERSION >= '1.9'
-        tripped = part.attachment.decoded.force_encoding(Encoding::BINARY)
-        original = File.read(filename).force_encoding(Encoding::BINARY)
-        tripped.should == original
-      else
-        part.attachment.decoded.should == File.read(filename)
-      end
-    end
-
   end
 
 end

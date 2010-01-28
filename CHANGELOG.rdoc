@@ -1,3 +1,75 @@
+== Thu Jan 28 00:25:02 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added TMM1's patch to not raise errors if a email is not multipart/report
+* Added html_part and text_part now return the first text/html or text/plain part they find. Order is from top to bottom of the email, all parts, flattened.
+* Version bump to 2.1.2
+
+== Mon Jan 25 11:36:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added ability for address fields to init on an array instead of just a string.
+* Version bump to 2.1.1
+
+== Mon Jan 25 10:36:33 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Now passes a block to the delivery handler, which can just call yield if it want's Mail to just do it's normal delivery method
+* Moved Mail.deliveries into Mail::TestMailer.deliveries. Now only gets mail appended to it if you are sending with the :test delivery_method (only for testing)
+* Version bump to 2.1.0
+
+== Mon Jan 25 01:44:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Change :deliver! to deliver a mail object, bypassing the :perform_deliveries and :raise_delivery_errors flags, also does not append the mail object to Mail.deliveries, thus the ! (dangerous).  The intended use for :deliver! is for people wanting to have their own delivery_handler (like ActionMailer uses) to track and handle delivery failures.
+* Added :delivery_handler to Message.  Allows you to pass an object that will be sent :deliver_mail(self) by the Mail::Message instance when it is sent :deliver and bypasses the usual delivery method.
+* Changed :perform_deliveries flag to be more consistent with it's name, mail will not append itself to the Mail.deliveries collection if :perform_deliveries is false
+
+== Sat Jan 23 23:49:50 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.0.5
+* Added :raise_delivery_errors to Mail::Message, if set to false will silently rescue all errors raised by the delivery methods, set to true by default
+
+== Sat Jan 23 23:28:42 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.0.4
+* Added :perform_deliveries to mail, will not actually call deliver on the delivery method if this is set to false, set to true by default.
+* Added @delivery_notification_observers to mail messages, you can register an observer with mail by calling mail.register_for_delivery_notification(observer) and then when mail is told to :deliver it will call your observer with observer.delivered_email(self).  It will call your observer if it actually performed the delivery or not (that is, irregardless of the :perform_deliveries flag)
+* Added ability to overwrite the Mail.deliveries store with an object of your choice instead of just an array, this is a good way to find out if something actually got delivered as if :perform_deliveries is false, this collection will not get the mail message appended
+
+== Sat Jan 23 05:32:53 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.0.3
+* Made body.sort_parts! recursive, to do the entire body
+* Added ability to use << on the results returned by the various address fields, ie, mail.to << 'new@address' now works
+* Message now adds multipart/mixed as the content type if nothing is set and there are parts to the message
+* Added #display_names and #addrs to all address fields.  #addrs returns the actual Mail::Address object for each address in the field.
+* Body should call to_s on given input... incase someone gave it an IO.readlines result (Array)
+* 
+
+== Thu Jan 21 05:27:17 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.0.2
+* Major change to attachments, add_file now only accepts
+  {:filename => 'full/path/to/file.png'} or 
+  {:filename => 'file.png', :content => 'string of file content'}
+  you can also now do mail.attachments['filename.png'] = File.read('path/to/file.png')
+  which is nice too!
+
+== Fri Jan 15 09:20:51 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Rewrote all network classes to not use singletons.  Means different Mail::Message objects can have different delivery methods.
+* Added examples for how to send via GMail, MobileMe, Sendmail, File etc.
+* Version bump to 2.0.0 as Network API changed drastically, now not a singleton class.
+* Fixed that return-path should only return one address
+
+== Thu Jan 14 10:41:22 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version update to 1.6.0 - API change on mail.address_fields to always return arrays
+* Updated all message.address_field methods to always return arrays, so mail.from #=> ['one@address.com'] now, is least surprise
+* Updated handling of empty group lists so it didn't crash
+
+== Thu Jan 12 10:41:47 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version 1.5.3, handling invalid input on fields.  Highly recommended update
+* Updated fields to always try parsing the given data (unless blank). This allows mail to catch invalid input and return UnstructuredFields. Makes mail a lot more resistant to invalid input.
+
 == Fri  8 Jan 2010 00:00:08 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 1.5.2

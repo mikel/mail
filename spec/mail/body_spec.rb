@@ -26,7 +26,11 @@ describe Mail::Body do
   describe "initialization" do
     
     it "should be instantiated" do
-      doing {Mail::Body.new}.should_not raise_error
+      doing { Mail::Body.new }.should_not raise_error
+    end
+    
+    it "should initialize on a nil value" do
+      doing { Mail::Body.new(nil) }.should_not raise_error
     end
     
     it "should accept text as raw source data" do
@@ -37,6 +41,15 @@ describe Mail::Body do
     it "should accept nil as a value and return an empty body" do
       body = Mail::Body.new
       body.to_s.should == ''
+    end
+
+    it "should accept an array as the body and join it" do
+      doing { Mail::Body.new(["line one\n", "line two\n"]) }.should_not raise_error
+    end
+
+    it "should accept an array as the body and join it" do
+      body = Mail::Body.new(["line one\n", "line two\n"])
+      body.encoded.should == "line one\r\nline two\r\n"
     end
 
   end
@@ -278,6 +291,42 @@ describe Mail::Body do
       body.parts[0].content_type.should == "text/plain"
       body.parts[1].content_type.should == "text/html"
       body.parts[2].content_type.should == "image/jpeg"
+    end
+    
+    it "should allow you to sort the parts recursively" do
+      part = Mail::Part.new('Content-Type: multipart/alternate')
+      part.add_part(Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text"))
+      part.add_part(Mail::Part.new("content-type: text/html\r\nsubject: HTML"))
+      part.add_part(Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched"))
+      body = Mail::Body.new('')
+      body << part
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG\r\n\r\nsdkjskjdksjdkjsd")
+      body.parts.length.should == 2
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[1].content_type.should == "image/jpeg"
+      body.parts[0].parts[0].content_type.should == "text/plain"
+      body.parts[0].parts[1].content_type.should == "text/enriched"
+      body.parts[0].parts[2].content_type.should == "text/html"
+    end
+    
+    it "should allow you to sort the parts recursively" do
+      part = Mail::Part.new('Content-Type: multipart/alternate')
+      part.add_part(Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched"))
+      part.add_part(Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text"))
+      part.add_part(Mail::Part.new("content-type: text/html\r\nsubject: HTML"))
+      body = Mail::Body.new('')
+      body << part
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG\r\n\r\nsdkjskjdksjdkjsd")
+      body.parts.length.should == 2
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[1].content_type.should == "image/jpeg"
+      body.parts[0].parts[0].content_type.should == "text/plain"
+      body.parts[0].parts[1].content_type.should == "text/enriched"
+      body.parts[0].parts[2].content_type.should == "text/html"
     end
     
   end

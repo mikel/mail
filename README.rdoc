@@ -219,35 +219,46 @@ what you are doing.
 
 === Sending an email:
 
- require 'mail'
-
- Mail.defaults do
-   smtp '127.0.0.1', 25
- end
+Mail defaults to sending via SMTP to local host port 25.  If you have a 
+sendmail or postfix daemon running on on this port, sending email is as
+easy as:
 
  Mail.deliver do
        from 'me@test.lindsaar.net'
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
-   add_file '/somefile.png'
+   add_file '/full/path/to/somefile.png'
  end
 
 or
  
- Mail.defaults do
-   smtp '127.0.0.1' # Port 25 defult
- end
-
  mail = Mail.new do
        from 'me@test.lindsaar.net'
          to 'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
        body File.read('body.txt')
-   add_file {:filename => 'somefile.png', :data => File.read('/somefile.png')}
+   add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
  end
  
  mail.deliver!
+
+Sending via sendmail can be done like so:
+
+  mail = Mail.new do
+        from 'me@test.lindsaar.net'
+          to 'you@test.lindsaar.net'
+     subject 'Here is the image you wanted'
+        body File.read('body.txt')
+    add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+  end
+  
+  mail.delivery_method :sendmail
+  
+  mail.deliver
+
+mail.deliver!
+
 
 === Getting emails from a pop server:
 
@@ -342,10 +353,6 @@ Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
 
  require 'mail'
-
- Mail.defaults do
-   smtp '127.0.0.1' # Port 25 defult
- end
 
  mail = Mail.deliver do
    to 'nicolas@test.lindsaar.net.au'
@@ -451,7 +458,7 @@ You can just read the file off an absolute path, Mail will try
 to guess the mime_type and will encode the file in Base64 for you.
   
   @mail = Mail.new
-  @mail.add_file(:filename => "/path/to/file.jpg")
+  @mail.add_file("/path/to/file.jpg")
   @mail.parts.first.attachment? #=> true
   @mail.parts.first.content_transfer_encoding.to_s #=> 'base64'
   @mail.attachments.first.mime_type #=> 'image/jpg'
@@ -462,8 +469,7 @@ Or You can pass in file_data and give it a filename, again, mail
 will try and guess the mime_type for you.
   
   @mail = Mail.new
-  file_data = File.read('path/to/myfile.pdf')
-  @mail.add_file(:filename => 'myfile.pdf', :data => file_data)
+  @mail.attachments['myfile.pdf'] = File.read('path/to/myfile.pdf')
   @mail.parts.first.attachment? #=> true
   @mail.attachments.first.mime_type #=> 'application/pdf'
   @mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true
@@ -473,9 +479,8 @@ than mail (this should be rarely needed)
 
   @mail = Mail.new
   file_data = File.read('path/to/myfile.pdf')
-  @mail.add_file(:filename => 'myfile.pdf', 
-                 :data => file_data,
-                 :mime_type => 'application/x-pdf')
+  @mail.attachments['myfile.pdf'] = { :mime_type => 'application/x-pdf',
+                                      :content => File.read('path/to/myfile.pdf') }
   @mail.parts.first.mime_type #=> 'application/x-pdf'
 
 Of course... Mail will round trip an attachment as well
@@ -491,7 +496,7 @@ Of course... Mail will round trip an attachment as well
       content_type 'text/html; charset=UTF-8'
       body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
     end
-    add_file :filename => '/path/to/myfile.pdf'
+    add_file '/path/to/myfile.pdf'
   end
 
   @round_tripped_mail = Mail.new(@mail.encoded)
@@ -507,7 +512,7 @@ sending emails, the TestMailer can do this for you.
   require 'mail'
   => true
   Mail.defaults do
-    delivery_method(:test)
+    delivery_method :test
   end
   => #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
   Mail.deliveries

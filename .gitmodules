@@ -1,0 +1,3 @@
+[submodule "lib/mail/vendor/treetop-1.4.3"]
+	path = lib/mail/vendor/treetop-1.4.3
+	url = git://github.com/mikel/treetop.git

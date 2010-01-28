@@ -31,11 +31,18 @@ module Mail
       @preamble = nil
       @epilogue = nil
       @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
-      @parts = []
+      @parts = Mail::PartsList.new
       if string.blank?
         @raw_source = ''
       else
-        @raw_source = string
+        # Do join first incase we have been given an Array in Ruby 1.9
+        if string.respond_to?(:join)
+          @raw_source = string.join('')
+        elsif string.respond_to?(:to_s)
+          @raw_source = string.to_s
+        else
+          raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
+        end
       end
       @encoding = nil
       set_charset
@@ -103,15 +110,12 @@ module Mail
     #
     # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
     def sort_parts!
-      order = @part_sort_order
-      @parts = @parts.sort do |a, b|
-        # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
-        # single email message... please show me a use case and I'll put more work into this method,
-        # in the meantime, it works :)
-        a_order = order.index(a[:content_type].string.downcase) || 10000
-        b_order = order.index(b[:content_type].string.downcase) || 10000
-        a_order <=> b_order
+      @parts.each do |p|
+        p.body.set_sort_order(@part_sort_order)
+        @parts.sort!(@part_sort_order)
+        p.body.sort_parts!
       end
+#      @parts.sort!(@part_sort_order)
     end
     
     # Returns the raw source that the body was initialized with, without
@@ -203,7 +207,7 @@ module Mail
       if @parts
         @parts << val
       else
-        @parts = [val]
+        @parts = Mail::PartsList.new[val]
       end
     end
     
@@ -214,7 +218,7 @@ module Mail
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)
       self.epilogue = parts[-1].to_s.sub('--', '').strip
-      @parts = parts[1...-1].to_a.map { |part| Mail::Part.new(part) }
+      parts[1...-1].to_a.each { |part| @parts << Mail::Part.new(part) }
       self
     end
     

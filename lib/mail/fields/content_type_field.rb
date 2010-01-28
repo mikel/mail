@@ -20,11 +20,16 @@ module Mail
         @parameters = nil
         super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
+      self.parse
+      self
     end
     
-    def tree
-      @element ||= Mail::ContentTypeElement.new(value)
-      @tree ||= @element.tree
+    def parse(val = value)
+      unless val.blank?
+        self.value = val 
+        @element = nil
+        element
+      end
     end
     
     def element

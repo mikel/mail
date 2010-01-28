@@ -41,10 +41,12 @@ module Mail
       if args.last.blank?
         self.name = CAPITALIZED_FIELD
         self.value = generate_message_id
-        self
       else
         super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
       end
+      self.parse
+      self
+
     end
     
     def name

@@ -12,6 +12,15 @@ module Mail
       def default
         date_time
       end
+      
+      def parse(val = value)
+        unless val.blank?
+          @element = Mail::DateTimeElement.new(val)
+          @tree = @element.tree
+        else
+          nil
+        end
+      end
 
       private
       

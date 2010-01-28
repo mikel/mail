@@ -60,7 +60,15 @@ module Mail
     private
     
     def get_addresses
-      (individual_recipients + group_recipients.map { |g| g.group_list.addresses }).flatten
+      (individual_recipients + group_recipients.map { |g| get_group_addresses(g) }).flatten
+    end
+    
+    def get_group_addresses(g)
+      if g.group_list.respond_to?(:addresses)
+        g.group_list.addresses
+      else
+        []
+      end
     end
   end
 end

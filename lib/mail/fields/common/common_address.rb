@@ -8,28 +8,50 @@ module Mail
   
     module InstanceMethods # :doc:
       
+      def parse(val = value)
+        unless val.blank?
+          @tree = AddressList.new(val)
+        else
+          nil
+        end
+      end
+      
       # Allows you to iterate through each address object in the syntax tree
       def each
         tree.addresses.each do |address|
-          yield
+          yield(address)
         end
       end
 
       # Returns the address string of all the addresses in the address list
       def addresses
-        tree.addresses.map { |a| a.address }
+        list = tree.addresses.map { |a| a.address }
+        Mail::AddressContainer.new(self, list)
       end
 
       # Returns the formatted string of all the addresses in the address list
       def formatted
-        tree.addresses.map { |a| a.format }
+        list = tree.addresses.map { |a| a.format }
+        Mail::AddressContainer.new(self, list)
+      end
+      
+      # Returns the display name of all the addresses in the address list
+      def display_names
+        list = tree.addresses.map { |a| a.display_name }
+        Mail::AddressContainer.new(self, list)
+      end
+      
+      # Returns the actual address objects in the address list
+      def addrs
+        list = tree.addresses
+        Mail::AddressContainer.new(self, list)
       end
       
       # Returns a hash of group name => address strings for the address list
       def groups
         @groups = Hash.new
         tree.group_recipients.each do |group|
-          @groups[group.group_name.text_value] = get_group_addresses(group.group_list.addresses)
+          @groups[group.group_name.text_value] = get_group_addresses(group.group_list)
         end
         @groups
       end
@@ -45,10 +67,17 @@ module Mail
       end
       
       def default
-        if addresses.length == 1
-          addresses[0]
+        addresses
+      end
+
+      def <<(val)
+        case
+        when val.nil?
+          raise ArgumentError, "Need to pass an address to <<"
+        when val.blank?
+          parse(encoded)
         else
-          addresses
+          parse((formatted + [val]).join(", "))
         end
       end
       
@@ -79,9 +108,13 @@ module Mail
         @tree ||= AddressList.new(value)
       end
       
-      def get_group_addresses(group_addresses)
-        group_addresses.map do |address_tree|
-          Mail::Address.new(address_tree)
+      def get_group_addresses(group_list)
+        if group_list.respond_to?(:addresses)
+          group_list.addresses.map do |address_tree|
+            Mail::Address.new(address_tree)
+          end
+        else
+          []
         end
       end
 

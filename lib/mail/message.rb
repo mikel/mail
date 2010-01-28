@@ -99,7 +99,15 @@ module Mail
       @body = nil
       @text_part = nil
       @html_part = nil
+
+      @perform_deliveries = true
+      @raise_delivery_errors = true
+
+      @delivery_handler = nil
       
+      @delivery_method = Mail.delivery_method.dup
+      @delivery_notification_observers = []
+
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -112,15 +120,125 @@ module Mail
 
       self
     end
+
+    # If you assign a delivery handler, mail will call :deliver_mail on the
+    # object you assign to delivery_handler, it will pass itself as the 
+    # single argument.
+    # 
+    # If you define a delivery_handler, then you are responsible for the
+    # following actions in the delivery cycle:
+    # 
+    # * Appending the mail object to Mail.deliveries as you see fit.
+    # * Checking the mail.perform_deliveries flag to decide if you should
+    #   actually call :deliver! the mail object or not.
+    # * Checking the mail.raise_delivery_errors flag to decide if you
+    #   should raise delivery errors if they occur.
+    # * Actually calling :deliver! (with the bang) on the mail object to
+    #   get it to deliver itself.
+    # 
+    # A simplest implementation of a delivery_handler would be
+    # 
+    #   class MyObject
+    #
+    #     def initialize
+    #       @mail = Mail.new('To: mikel@test.lindsaar.net')
+    #       @mail.delivery_handler = self
+    #     end
+    # 
+    #     attr_accessor :mail
+    # 
+    #     def deliver_mail(mail)
+    #       yield
+    #     end
+    #   end
+    # 
+    # Then doing:
+    # 
+    #   obj = MyObject.new
+    #   obj.mail.deliver
+    # 
+    # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
+    # which then can just yield and let Mail do it's own private do_delivery
+    # method.
+    attr_accessor :delivery_handler
+
+    # If set to false, mail will go through the motions of doing a delivery,
+    # but not actually call the delivery method or append the mail object to
+    # the Mail.deliveries collection.  Useful for testing.
+    #
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :smtp
+    #   mail.perform_deliveries = false
+    #   mail.deliver                        # Mail::SMTP not called here
+    #   Mail.deliveries.size #=> 0
+    # 
+    # If you want to test and query the Mail.deliveries collection to see what
+    # mail you sent, you should set perform_deliveries to true and use
+    # the :test mail delivery_method:
+    # 
+    #   Mail.deliveries.size #=> 0
+    #   mail.delivery_method :test
+    #   mail.perform_deliveries = true
+    #   mail.deliver
+    #   Mail.deliveries.size #=> 1
+    # 
+    # This setting is ignored by mail (though still available as a flag) if you
+    # define a delivery_handler
+    attr_accessor :perform_deliveries
+
+    # If set to false, mail will silently catch and ignore any exceptions
+    # raised through attempting to deliver an email.
+    # 
+    # This setting is ignored by mail (though still available as a flag) if you
+    # define a delivery_handler
+    attr_accessor :raise_delivery_errors
+
+    def register_for_delivery_notification(observer)
+      unless @delivery_notification_observers.include?(observer)
+        @delivery_notification_observers << observer
+      end
+    end
+    
+    def inform_observers
+      @delivery_notification_observers.each do |observer|
+        observer.delivered_email(self)
+      end
+    end
     
     # Delivers an mail object.
     # 
     # Examples:
     # 
     #  mail = Mail.read('file.eml')
-    #  mail.deliver!
+    #  mail.deliver
+    def deliver
+      if delivery_handler
+        delivery_handler.deliver_mail(self) { do_delivery }
+      else
+        do_delivery
+        inform_observers
+      end
+      self
+    end
+
+    # This method bypasses checking perform_deliveries and raise_delivery_errors, 
+    # so use with caution.
+    # 
+    # It still however fires callbacks to the observers if they are defined.
+    # 
+    # Returns self
     def deliver!
-      Deliverable.perform_delivery!(self)
+      delivery_method.deliver!(self)
+      inform_observers
+      self
+    end
+    
+    def delivery_method(method = nil, settings = {})
+      unless method
+        @delivery_method
+      else
+        @delivery_method = Mail::Configuration.instance.lookup_delivery_method(method).new(settings)
+      end
     end
     
     # Provides the operator needed for sort et al.
@@ -255,14 +373,13 @@ module Mail
       end
     end
     
-    # Returns the Bcc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Bcc.
+    # Returns the Bcc value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -271,7 +388,16 @@ module Mail
     # Example:
     # 
     #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.bcc << 'ada@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def bcc( val = nil )
       default :bcc, val
     end
@@ -281,21 +407,20 @@ module Mail
     # Example:
     # 
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.bcc #=> ['mikel@test.lindsaar.net']
     #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def bcc=( val )
       header[:bcc] = val
     end
     
-    # Returns the Cc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Cc.
+    # Returns the Cc value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -304,7 +429,16 @@ module Mail
     # Example:
     # 
     #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.cc << 'ada@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def cc( val = nil )
       default :cc, val
     end
@@ -314,7 +448,7 @@ module Mail
     # Example:
     # 
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.cc #=> 'mikel@test.lindsaar.net'
+    #  mail.cc #=> ['mikel@test.lindsaar.net']
     #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def cc=( val )
@@ -385,14 +519,13 @@ module Mail
       header[:date] = val
     end
     
-    # Returns the From value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the From.
+    # Returns the From value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -401,7 +534,16 @@ module Mail
     # Example:
     # 
     #  mail.from 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.from << 'ada@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def from( val = nil )
       default :from, val
     end
@@ -411,7 +553,7 @@ module Mail
     # Example:
     # 
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.from #=> 'mikel@test.lindsaar.net'
+    #  mail.from #=> ['mikel@test.lindsaar.net']
     #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def from=( val )
@@ -507,14 +649,13 @@ module Mail
       header[:references] = val
     end
     
-    # Returns the Reply-To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Reply-To.
+    # Returns the Reply-To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -523,7 +664,16 @@ module Mail
     # Example:
     # 
     #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.reply_to << 'ada@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def reply_to( val = nil )
       default :reply_to, val
     end
@@ -533,21 +683,20 @@ module Mail
     # Example:
     # 
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.reply_to #=> 'mikel@test.lindsaar.net'
+    #  mail.reply_to #=> ['mikel@test.lindsaar.net']
     #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def reply_to=( val )
       header[:reply_to] = val
     end
     
-    # Returns the Resent-Bcc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-Bcc.
+    # Returns the Resent-Bcc value of the mail object as an array of strings of 
+    # address specs.
     # 
     # Example:
     # 
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -556,7 +705,16 @@ module Mail
     # Example:
     # 
     #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_bcc << 'ada@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_bcc( val = nil )
       default :resent_bcc, val
     end
@@ -566,21 +724,20 @@ module Mail
     # Example:
     # 
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_bcc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_bcc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
     def resent_bcc=( val )
       header[:resent_bcc] = val
     end
     
-    # Returns the Resent-Cc value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-Cc.
+    # Returns the Resent-Cc value of the mail object as an array of strings of 
+    # address specs.
     # 
     # Example:
     # 
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -589,7 +746,16 @@ module Mail
     # Example:
     # 
     #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_cc << 'ada@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_cc( val = nil )
       default :resent_cc, val
     end
@@ -599,7 +765,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_cc #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
     def resent_cc=( val )
@@ -614,14 +780,13 @@ module Mail
       header[:resent_date] = val
     end
     
-    # Returns the Resent-From value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-From.
+    # Returns the Resent-From value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net']
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -629,8 +794,17 @@ module Mail
     #
     # Example:
     # 
-    #  mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from ['Mikel <mikel@test.lindsaar.net>']
     #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_from << 'ada@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_from( val = nil )
       default :resent_from, val
     end
@@ -640,7 +814,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_from #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_from #=> ['mikel@test.lindsaar.net']
     #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_from=( val )
@@ -656,7 +830,8 @@ module Mail
     end
     
     # Returns the Resent-Sender value of the mail object, as a single string of an address
-    # spec.  A sender per RFC 2822 must be a single address
+    # spec.  A sender per RFC 2822 must be a single address, so you can not append to
+    # this address.
     #
     # Example:
     # 
@@ -683,14 +858,13 @@ module Mail
       header[:resent_sender] = val
     end
     
-    # Returns the Resent-To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the Resent-To.
+    # Returns the Resent-To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -699,7 +873,16 @@ module Mail
     # Example:
     # 
     #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_to << 'ada@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_to( val = nil )
       default :resent_to, val
     end
@@ -709,7 +892,7 @@ module Mail
     # Example:
     # 
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.resent_to #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_to #=> ['mikel@test.lindsaar.net']
     #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_to=( val )
@@ -727,7 +910,7 @@ module Mail
     end
     
     # Returns the Sender value of the mail object, as a single string of an address
-    # spec.  A sender per RFC 2822 must be a single address
+    # spec.  A sender per RFC 2822 must be a single address.
     #
     # Example:
     # 
@@ -783,14 +966,13 @@ module Mail
       header[:subject] = val
     end
     
-    # Returns the To value of the mail object, either a single string of an address
-    # spec or an array of strings of address specs if there is more than one address
-    # in the To.
+    # Returns the To value of the mail object as an array of strings of 
+    # address specs.
     #
     # Example:
     # 
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     # 
@@ -799,7 +981,16 @@ module Mail
     # Example:
     # 
     #  mail.to 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
+    # 
+    # Additionally, you can append new addresses to the returned Array like
+    # object.
+    # 
+    # Example:
+    # 
+    #  mail.to 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.to << 'ada@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def to( val = nil )
       default :to, val
     end
@@ -809,7 +1000,7 @@ module Mail
     # Example:
     # 
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.to #=> 'mikel@test.lindsaar.net'
+    #  mail.to #=> ['mikel@test.lindsaar.net']
     #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
     #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def to=( val )
@@ -1092,7 +1283,7 @@ module Mail
       if body.only_us_ascii?
         header[:content_type].parameters['charset'] = 'US-ASCII'
       else
-        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_type].parameters['charset'] = 'UTF-8'
       end
@@ -1105,7 +1296,7 @@ module Mail
       if body.only_us_ascii?
         header[:content_transfer_encoding] = '7bit'
       else
-        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\nCalled from:\n#{caller.join("\n")}"
+        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_transfer_encoding] = '8bit'
       end
@@ -1188,31 +1379,31 @@ module Mail
     end
     
     def bounced?
-      delivery_status_part.bounced?
+      delivery_status_part and delivery_status_part.bounced?
     end
     
     def action
-      delivery_status_part.action
+      delivery_status_part and delivery_status_part.action
     end
     
     def final_recipient
-      delivery_status_part.final_recipient
+      delivery_status_part and delivery_status_part.final_recipient
     end
     
     def error_status
-      delivery_status_part.error_status
+      delivery_status_part and delivery_status_part.error_status
     end
 
     def diagnostic_code
-      delivery_status_part.diagnostic_code
+      delivery_status_part and delivery_status_part.diagnostic_code
     end
     
     def remote_mta
-      delivery_status_part.remote_mta
+      delivery_status_part and delivery_status_part.remote_mta
     end
     
     def retryable?
-      delivery_status_part.retryable?
+      delivery_status_part and delivery_status_part.retryable?
     end
     
     # Returns the current boundary for this message part
@@ -1220,20 +1411,47 @@ module Mail
       content_type_parameters ? content_type_parameters['boundary'] : nil
     end
     
-    # Returns an array of parts in the message
+    # Returns a parts list object of all the parts in the message
     def parts
       body.parts
     end
     
-    # Returns an array of attachments in the email recursively
+    # Returns an AttachmentsList object, which holds all of the attachments in
+    # the receiver object (either the entier email or a part within) and all
+    # of it's descendants.
+    # 
+    # It also allows you to add attachments to the mail object directly, like so:
+    # 
+    #  mail.attachments['filename.jpg'] = File.read('/path/to/filename.jpg')
+    # 
+    # If you do this, then Mail will take the file name and work out the mime type
+    # set the Content-Type, Content-Disposition, Content-Transfer-Encoding and 
+    # base64 encode the contents of the attachment all for you.
+    # 
+    # You can also specify overrides if you want by passing a hash instead of a string:
+    # 
+    #  mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+    #                                      :content => File.read('/path/to/filename.jpg')}
+    # 
+    # If you want to use a different encoding than Base64, you can pass an encoding in,
+    # but then it is up to you to pass in the content pre-encoded, and don't expect
+    # Mail to know how to decode this data:
+    # 
+    #  file_content = SpecialEncode(File.read('/path/to/filename.jpg'))
+    #  mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+    #                                      :encoding => 'SpecialEncoding',
+    #                                      :content => file_content }
+    # 
+    # You can also search for specific attachments:
+    # 
+    #  # By Filename
+    #  mail.attachments['filename.jpg']   #=> Mail::Part object or nil
+    #  
+    #  # or by index
+    #  mail.attachments[0]                #=> Mail::Part (first attachment)
+    #  
     def attachments
-      body.parts.map do |p| 
-        if p.parts.empty?
-          p.attachment if p.attachment?
-        else
-          p.attachments
-        end
-      end.compact.flatten
+      parts.attachments
     end
 
     def has_attachments?
@@ -1247,7 +1465,7 @@ module Mail
         add_multipart_alternate_header unless html_part.blank?
         add_part(@html_part)
       else
-        @html_part
+        @html_part || find_first_mime_type('text/html')
       end
     end
     
@@ -1258,7 +1476,7 @@ module Mail
         add_multipart_alternate_header unless html_part.blank?
         add_part(@text_part)
       else
-        @text_part
+        @text_part || find_first_mime_type('text/plain')
       end
     end
     
@@ -1319,20 +1537,16 @@ module Mail
     # Adds a file to the message.  You have two options with this method, you can
     # just pass in the absolute path to the file you want and Mail will read the file,
     # get the filename from the path you pass in and guess the mime type, or you
-    # can pass in the filename as a string, and pass in the file data as a blob.
+    # can pass in the filename as a string, and pass in the file content as a blob.
     # 
     # Example:
     # 
     #  m = Mail.new
     #  m.add_file('/path/to/filename.png')
     # 
-    # or
-    # 
     #  m = Mail.new
-    #  m.add_file(:filename => 'filename.png', :data => File.read('/path/to/filename.png'))
-    # 
-    # The above two alternatives will produce the same email message.
-    # 
+    #  m.add_file(:filename => 'filename.png', :content => File.read('/path/to/file.jpg'))
+    #
     # Note also that if you add a file to an existing message, Mail will convert that message
     # to a MIME multipart email, moving whatever plain text body you had into it's own text
     # plain part.
@@ -1347,14 +1561,19 @@ module Mail
     #  m.multipart? #=> true
     #  m.parts.first.content_type.content_type #=> 'text/plain'
     #  m.parts.last.content_type.content_type #=> 'image/png'
-    def add_file(options)
+    # 
+    # See also #attachments
+    def add_file(values)
       convert_to_multipart unless self.multipart? || self.body.decoded.blank?
       add_multipart_mixed_header
-      if options.is_a?(Hash)
-        self.body << Mail::Part.new(options)
+      if values.is_a?(String)
+        basename = File.basename(values)
+        filedata = File.read(values)
       else
-        self.body << Mail::Part.new(:filename => options)
+        basename = values[:filename]
+        filedata = values[:content] || File.read(values[:filename])
       end
+      self.attachments[basename] = filedata
     end
 
     def convert_to_multipart
@@ -1393,7 +1612,27 @@ module Mail
     end
 
     def decoded
-      raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+      if self.attachment?
+        decode_body
+      else
+        raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+      end
+    end
+
+    def read
+      if self.attachment?
+        decode_body
+      else
+        raise NoMethodError, 'Can not call read on a part unless it is an attachment.'
+      end
+    end
+
+    def decode_body
+      if Mail::Encodings.defined?(content_transfer_encoding)
+        Mail::Encodings.get_encoding(content_transfer_encoding).decode(body.encoded)
+      else
+        raise UnknownEncodingType, "Don't know how to decode #{content_transfer_encoding}, please call #encoded and decode it yourself."
+      end
     end
     
     # Returns true if this part is an attachment
@@ -1408,14 +1647,18 @@ module Mail
     
     # Returns the filename of the attachment
     def filename
-      if attachment?
-        attachment.filename
-      else
-        nil
-      end
+      find_attachment
+    end
+
+    def all_parts
+      parts.map { |p| [p, p.all_parts] }.flatten
+    end
+
+    def find_first_mime_type(mt)
+      all_parts.detect { |p| p.mime_type == mt }
     end
     
-    private
+  private
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -1455,6 +1698,7 @@ module Mail
     end
     
     def add_required_fields
+      add_multipart_mixed_header    unless parts.empty?
       @body = Mail::Body.new('')    if body.nil?
       add_message_id                unless (has_message_id? || self.class == Mail::Part)
       add_date                      unless has_date?
@@ -1490,16 +1734,6 @@ module Mail
       @header = Mail::Header.new
       @body = Mail::Body.new
 
-      # Strip out the attachment headers and make an attachment
-      if passed_in_options.has_key?(:filename)
-        add_attachment(passed_in_options)
-        passed_in_options.delete(:content_disposition)
-        passed_in_options.delete(:content_type)
-        passed_in_options.delete(:mime_type)
-        passed_in_options.delete(:filename)
-        passed_in_options.delete(:data)
-      end
-      
       passed_in_options.each_pair do |k,v|
         k = underscoreize(k).to_sym if k.class == String
         if k == :headers
@@ -1510,29 +1744,11 @@ module Mail
       end
     end
     
-    def add_attachment(options_hash)
-      @attachment = Mail::Attachment.new(options_hash)
-      mime_type = options_hash[:content_type] || attachment.mime_type
-      self.content_type = "#{mime_type}; filename=\"#{attachment.filename}\""
-      self.content_transfer_encoding = "Base64"
-
-      disposition = options_hash[:content_disposition] || "attachment"
-      self.content_disposition = "#{disposition}; filename=\"#{attachment.filename}\""
-      add_boundary
-      self.body = attachment.encoded
-    end
-    
     def init_with_string(string)
       self.raw_source = string
       set_envelope_header
       parse_message
       separate_parts if multipart?
-      if filename = attachment?
-        encoding = header[:content_transfer_encoding].encoding if content_transfer_encoding
-        @attachment = Mail::Attachment.new(:filename => filename,
-                                           :data => body.encoded,
-                                           :encoding => encoding)
-      end
     end
     
     # Returns the filename of the attachment (if it exists) or returns nil
@@ -1550,5 +1766,15 @@ module Mail
       filename
     end
 
+    def do_delivery
+      begin
+        if perform_deliveries
+          delivery_method.deliver!(self)
+        end
+      rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+        raise e if raise_delivery_errors
+      end
+    end
+    
   end
 end

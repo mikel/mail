@@ -22,8 +22,8 @@ describe Mail::Message do
         from 'mikel@me.com'
         to 'lindsaar@you.com'
       end
-      mail.from.should == 'mikel@me.com'
-      mail.to.should == 'lindsaar@you.com'
+      mail.from.should == ['mikel@me.com']
+      mail.to.should == ['lindsaar@you.com']
     end
   
     it "should initialize a body and header class even if called with nothing to begin with" do
@@ -31,7 +31,11 @@ describe Mail::Message do
       mail.header.class.should == Mail::Header
       mail.body.class.should == Mail::Body
     end
-  
+
+    it "should not report basic emails as bounced" do
+      Mail::Message.new.should_not be_bounced
+    end
+
     it "should be able to parse a basic email" do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
@@ -60,7 +64,7 @@ describe Mail::Message do
 
     it "should read in an email message and basically parse it" do
       mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
-      mail.to.should == "raasdnil@gmail.com"
+      mail.to.should == ["raasdnil@gmail.com"]
     end
     
   end
@@ -79,12 +83,12 @@ describe Mail::Message do
     it "should strip off the envelope from field if present" do
       message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email.eml')))
       message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
-      message.from.should == "jamis@37signals.com"
+      message.from.should == ["jamis@37signals.com"]
     end
 
     it "should not cause any problems if there is no envelope from present" do
       message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
-      message.from.should == "test@lindsaar.net"
+      message.from.should == ["test@lindsaar.net"]
     end
 
   end
@@ -147,14 +151,14 @@ describe Mail::Message do
 
     it "should allow for whitespace at the start of the email" do
       mail = Mail.new("\r\n\r\nFrom: mikel\r\n\r\nThis is the body")
-      mail.from.should == 'mikel'
+      mail.from.should == ['mikel']
       mail.body.to_s.should == 'This is the body'
     end
     
     it "should read in an email message with the word 'From' in it multiple times and parse it" do
       mail = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'two_from_in_message.eml')))
       mail.to.should_not be_nil
-      mail.to.should == "tester2@test.com"
+      mail.to.should == ["tester2@test.com"]
     end    
 
   end
@@ -197,12 +201,12 @@ describe Mail::Message do
 
       it "should return the to field" do
         @mail.to = "mikel"
-        @mail.to.should == "mikel"
+        @mail.to.should == ["mikel"]
       end
 
       it "should return the from field" do
         @mail.from = "bob"
-        @mail.from.should == "bob"
+        @mail.from.should == ["bob"]
       end
 
       it "should return the subject" do
@@ -234,12 +238,12 @@ describe Mail::Message do
 
       it "should return the to field" do
         @mail.to "mikel"
-        @mail.to.should == "mikel"
+        @mail.to.should == ["mikel"]
       end
 
       it "should return the from field" do
         @mail.from "bob"
-        @mail.from.should == "bob"
+        @mail.from.should == ["bob"]
       end
 
       it "should return the subject" do
@@ -290,9 +294,9 @@ describe Mail::Message do
         mail = Mail.new
         mail.from.should == nil
         mail.from = 'mikel@test.lindsaar.net'
-        mail.from.should == 'mikel@test.lindsaar.net'
+        mail.from.should == ['mikel@test.lindsaar.net']
         mail.from = 'bob@test.lindsaar.net'
-        mail.from.should == 'bob@test.lindsaar.net'
+        mail.from.should == ['bob@test.lindsaar.net']
       end
     
       it "should maintain the class of the field" do
@@ -338,27 +342,27 @@ describe Mail::Message do
           body          'This is a body of text'
         end
         
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -399,27 +403,27 @@ describe Mail::Message do
         message.mime_version =  '1.0'
         message.body =          'This is a body of text'
 
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -460,27 +464,27 @@ describe Mail::Message do
         message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
         
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -521,27 +525,27 @@ describe Mail::Message do
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
         
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -583,27 +587,27 @@ describe Mail::Message do
           :body =>          'This is a body of text'
         })
         
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -645,27 +649,27 @@ describe Mail::Message do
           'body' =>          'This is a body of text'
         })
         
-        message.bcc.should           == 'mikel@bcc.lindsaar.net'
-        message.cc.should            == 'mikel@cc.lindsaar.net'
+        message.bcc.should           == ['mikel@bcc.lindsaar.net']
+        message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
         message.date.should          == '12 Aug 2009 00:00:01 GMT'
-        message.from.should          == 'mikel@from.lindsaar.net'
+        message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
         message.message_id.should    == '1234@message_id.lindsaar.net'
         message.received.date_time.should      == DateTime.parse('12 Aug 2009 00:00:02 GMT')
         message.references.should    == '1234@references.lindsaar.net'
-        message.reply_to.should      == 'mikel@reply-to.lindsaar.net'
-        message.resent_bcc.should    == 'mikel@resent-bcc.lindsaar.net'
-        message.resent_cc.should     == 'mikel@resent-cc.lindsaar.net'
+        message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
+        message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
+        message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
         message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
-        message.resent_from.should   == 'mikel@resent-from.lindsaar.net'
+        message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should == 'mikel@resent-sender.lindsaar.net'
-        message.resent_to.should     == 'mikel@resent-to.lindsaar.net'
+        message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
+        message.resent_to.should     == ['mikel@resent-to.lindsaar.net']
         message.sender.should        == 'mikel@sender.lindsaar.net'
         message.subject.should       == 'Hello there Mikel'
-        message.to.should            == 'mikel@to.lindsaar.net'
+        message.to.should            == ['mikel@to.lindsaar.net']
         message.content_type.should              == 'text/plain; charset=UTF-8'
         message.content_transfer_encoding.should == '7bit'
         message.content_description.should       == 'This is a test'
@@ -699,501 +703,27 @@ describe Mail::Message do
         message.encoded.should match(%r{<b>test</b> HTML<br/>})
       end
       
+      it "should allow you to init on an array of addresses from a hash" do
+        mail = Mail.new(:to => ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
+      it "should allow you to init on an array of addresses directly" do
+        mail = Mail.new
+        mail.to = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
+      it "should allow you to init on an array of addresses directly" do
+        mail = Mail.new
+        mail[:to] = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
+        mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
+      end
+      
     end
     
   end
-  
-  describe "MIME Emails" do
-      
-      describe "general helper methods" do
-
-        it "should read a mime version from an email" do
-          mail = Mail.new("Mime-Version: 1.0")
-          mail.mime_version.should == '1.0'
-        end
-
-        it "should return nil if the email has no mime version" do
-          mail = Mail.new("To: bob")
-          mail.mime_version.should == nil
-        end
-
-        it "should read the content-transfer-encoding" do
-          mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
-          mail.content_transfer_encoding.should == 'quoted-printable'
-        end
-
-        it "should read the content-description" do
-          mail = Mail.new("Content-Description: This is a description")
-          mail.content_description.should == 'This is a description'
-        end
-
-        it "should return the content-type" do
-          mail = Mail.new("Content-Type: text/plain")
-          mail.mime_type.should == 'text/plain'
-        end
-
-        it "should return the charset" do
-          mail = Mail.new("Content-Type: text/plain; charset=utf-8")
-          mail.charset.should == 'utf-8'
-        end
-        
-        it "should allow you to set the charset" do
-          mail = Mail.new
-          mail.charset = 'utf-8'
-          mail.charset.should == 'utf-8'
-        end
-
-        it "should return the main content-type" do
-          mail = Mail.new("Content-Type: text/plain")
-          mail.main_type.should == 'text'
-        end
-
-        it "should return the sub content-type" do
-          mail = Mail.new("Content-Type: text/plain")
-          mail.sub_type.should == 'plain'
-        end
-
-        it "should return the content-type parameters" do
-          mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
-          mail.content_type_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
-        end
-
-        it "should recognize a multipart email" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
-          mail.should be_multipart
-        end
-
-        it "should recognize a non multipart email" do
-          mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
-          mail.should_not be_multipart
-        end
-
-        it "should give how may (top level) parts there are" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
-          mail.parts.length.should == 2
-        end
-
-        it "should give the content_type of each part" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email11.eml'))
-          mail.mime_type.should == 'multipart/alternative'
-          mail.parts[0].mime_type.should == 'text/plain'
-          mail.parts[1].mime_type.should == 'text/enriched'
-        end
-        
-        it "should report the mail :has_attachments?" do
-          mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
-          mail.should be_has_attachments
-        end
-
-      end
-      
-      describe "multipart emails" do
-        it "should add a boundary if there is none defined and a part is added" do
-          mail = Mail.new do
-            part('This is a part')
-            part('This is another part')
-          end
-          mail.boundary.should_not be_nil
-        end
-        
-        it "should add a boundary for an attachment" do
-          mail = Mail.new do
-            add_attachment :filename => 'test.png', :data => "2938492384923849"
-          end
-          mail.boundary.should_not be_nil
-        end
-      end
-      
-      describe "multipart/alternative emails" do
-        
-        it "should know what it's boundary is if it is a multipart document" do
-          mail = Mail.new('Content-Type: multitype/mixed; boundary="--==Boundary"')
-          mail.boundary.should == "--==Boundary"
-        end
-        
-        it "should return nil if there is no content-type defined" do
-          mail = Mail.new
-          mail.boundary.should == nil
-        end
-        
-        it "should allow you to assign a text part" do
-          mail = Mail.new
-          text_mail = Mail.new("This is Text")
-          doing { mail.text_part = text_mail }.should_not raise_error
-        end
-        
-        it "should assign the text part and allow you to reference" do
-          mail = Mail.new
-          text_mail = Mail.new("This is Text")
-          mail.text_part = text_mail
-          mail.text_part.should == text_mail
-        end
-        
-        it "should allow you to assign a html part" do
-          mail = Mail.new
-          html_mail = Mail.new("<b>This is HTML</b>")
-          doing { mail.text_part = html_mail }.should_not raise_error
-        end
-        
-        it "should assign the html part and allow you to reference" do
-          mail = Mail.new
-          html_mail = Mail.new("<b>This is HTML</b>")
-          mail.html_part = html_mail
-          mail.html_part.should == html_mail
-        end
-
-        it "should add the html part and text part" do
-          mail = Mail.new
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body = "<b>This is HTML</b>"
-          end
-          mail.parts.length.should == 2
-          mail.parts.first.class.should == Mail::Part
-          mail.parts.last.class.should == Mail::Part
-        end
-        
-        it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
-          mail = Mail.new
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
-        end
-        
-        it "should add the end boundary tag" do
-          mail = Mail.new
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          mail.to_s.should =~ %r|#{mail.boundary}--|
-        end
-        
-        it "should not put message-ids into parts" do
-          mail = Mail.new('Subject: FooBar')
-          mail.text_part = Mail::Part.new do
-            body "This is Text"
-          end
-          mail.html_part = Mail::Part.new do
-            content_type = "text/html; charset=US-ASCII"
-            body "<b>This is HTML</b>"
-          end
-          mail.to_s
-          mail.parts.first.message_id.should be_nil
-          mail.parts.last.message_id.should be_nil
-        end
-
-        it "should create a multipart/alternative email through a block" do
-          mail = Mail.new do
-            to 'nicolas.fouche@gmail.com'
-            from 'Mikel Lindsaar <raasdnil@gmail.com>'
-            subject 'First multipart email sent with Mail'
-            text_part do
-              body 'This is plain text'
-            end
-            html_part do
-              content_type 'text/html; charset=UTF-8'
-              body '<h1>This is HTML</h1>'
-            end
-          end
-          mail.should be_multipart
-          mail.parts.length.should == 2
-          mail.text_part.class.should == Mail::Part
-          mail.text_part.body.to_s.should == 'This is plain text'
-          mail.html_part.class.should == Mail::Part
-          mail.html_part.body.to_s.should == '<h1>This is HTML</h1>'
-        end
-
-      end
     
-      describe "multipart/report emails" do
-        
-        it "should know if it is a multipart report type" do
-          mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-          mail.should be_multipart_report
-        end
-        
-        describe "delivery-status reports" do
-          
-          it "should know if it is a deliver-status report" do
-            mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-            mail.should be_delivery_status_report
-          end
-
-          it "should find it's message/delivery-status part" do
-            mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-            mail.delivery_status_part.should_not be_nil
-          end
-
-          describe "temporary failure" do
-            
-            before(:each) do
-              @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-            end
-            
-            it "should be bounced" do
-              @mail.should_not be_bounced
-            end
-            
-            it "should say action 'delayed'" do
-              @mail.action.should == 'delayed'
-            end
-            
-            it "should give a final recipient" do
-              @mail.final_recipient.should == 'RFC822; fraser@oooooooo.com.au'
-            end
-            
-            it "should give an error code" do
-              @mail.error_status.should == '4.2.2'
-            end
-            
-            it "should give a diagostic code" do
-              @mail.diagnostic_code.should == 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
-            end
-            
-            it "should give a remote-mta" do
-              @mail.remote_mta.should == 'DNS; mail.oooooooo.com.au'
-            end
-            
-            it "should be retryable" do
-              @mail.should be_retryable
-            end
-          end
-
-          describe "permanent failure" do
-            
-            before(:each) do
-              @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_530.eml'))
-            end
-            
-            it "should be bounced" do
-              @mail.should be_bounced
-            end
-            
-            it "should say action 'failed'" do
-              @mail.action.should == 'failed'
-            end
-            
-            it "should give a final recipient" do
-              @mail.final_recipient.should == 'RFC822; edwin@zzzzzzz.com'
-            end
-            
-            it "should give an error code" do
-              @mail.error_status.should == '5.3.0'
-            end
-            
-            it "should give a diagostic code" do
-              @mail.diagnostic_code.should == 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
-            end
-            
-            it "should give a remote-mta" do
-              @mail.remote_mta.should == 'DNS; mail.zzzzzz.com'
-            end
-            
-            it "should be retryable" do
-              @mail.should_not be_retryable
-            end
-          end
-
-        end
-
-      end
-    
-      describe "finding attachments" do
-        
-        it "should return an array of attachments" do
-          mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
-          mail.attachments.length.should == 1
-          mail.attachments.first.filename.should == 'hello.rb'
-        end
-
-        it "should return an array of attachments" do
-          mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml'))
-          mail.attachments.length.should == 2
-          mail.attachments[0].filename.should == 'byo-ror-cover.png'
-          mail.attachments[1].filename.should == 'smime.p7s'
-        end
-
-      end
-    
-      describe "adding a file attachment" do
-
-        it "should set to multipart/mixed if a text part and some html parts" do
-          mail = Mail::Message.new
-          mail.text_part { body("log message goes here") }
-          mail.add_file(fixture('attachments', 'test.png'))
-          mail.mime_type.should == 'multipart/mixed'
-        end
-
-        it "should allow you to just call 'add_attachment'" do
-          mail = Mail::Message.new
-          mail.add_file(fixture('attachments', 'test.png'))
-          mail.mime_type.should == 'multipart/mixed'
-        end
-
-        it "should add a part given a filename" do
-          mail = Mail::Message.new
-          mail.add_file(fixture('attachments', 'test.png'))
-          mail.parts.length.should == 1 # First part is an empty text body
-        end
-
-        it "should give the part the right content type" do
-          mail = Mail::Message.new
-          mail.add_file(fixture('attachments', 'test.png'))
-          mail.parts.first[:content_type].content_type.should == 'image/png'
-        end
-
-        it "should return attachment objects" do
-          mail = Mail::Message.new
-          mail.add_file(fixture('attachments', 'test.png'))
-          mail.attachments.first.class.should == Mail::Attachment
-        end
-        
-        it "should be return an aray of attachments" do
-          mail = Mail::Message.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file fixture('attachments', 'test.png')
-            add_file fixture('attachments', 'test.jpg')
-            add_file fixture('attachments', 'test.pdf')
-            add_file fixture('attachments', 'test.zip')
-          end
-          mail.attachments.length.should == 4
-          mail.attachments.each { |a| a.class.should == Mail::Attachment }
-        end
-        
-        it "should return the filename of each attachment" do
-          mail = Mail::Message.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file fixture('attachments', 'test.png')
-            add_file fixture('attachments', 'test.jpg')
-            add_file fixture('attachments', 'test.pdf')
-            add_file fixture('attachments', 'test.zip')
-          end
-          mail.attachments[0].filename.should == 'test.png'
-          mail.attachments[1].filename.should == 'test.jpg'
-          mail.attachments[2].filename.should == 'test.pdf'
-          mail.attachments[3].filename.should == 'test.zip'
-        end
-
-        it "should return the mime/type of each attachment" do
-          mail = Mail::Message.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file fixture('attachments', 'test.png')
-            add_file fixture('attachments', 'test.jpg')
-            add_file fixture('attachments', 'test.pdf')
-            add_file fixture('attachments', 'test.zip')
-          end
-          mail.attachments[0].mime_type.should == 'image/png'
-          mail.attachments[1].mime_type.should == 'image/jpeg'
-          mail.attachments[2].mime_type.should == 'application/pdf'
-          mail.attachments[3].mime_type.should == 'application/zip'
-        end
-
-        it "should return the content of each attachment" do
-          mail = Mail::Message.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file fixture('attachments', 'test.png')
-            add_file fixture('attachments', 'test.jpg')
-            add_file fixture('attachments', 'test.pdf')
-            add_file fixture('attachments', 'test.zip')
-          end
-          if RUBY_VERSION >= '1.9'
-            tripped = mail.attachments[0].decoded
-            original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
-            tripped.should == original
-            tripped = mail.attachments[1].decoded
-            original = File.read(fixture('attachments', 'test.jpg')).force_encoding(Encoding::BINARY)
-            tripped.should == original
-            tripped = mail.attachments[2].decoded
-            original = File.read(fixture('attachments', 'test.pdf')).force_encoding(Encoding::BINARY)
-            tripped.should == original
-            tripped = mail.attachments[3].decoded
-            original = File.read(fixture('attachments', 'test.zip')).force_encoding(Encoding::BINARY)
-            tripped.should == original
-          else
-            mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
-            mail.attachments[1].decoded.should == File.read(fixture('attachments', 'test.jpg'))
-            mail.attachments[2].decoded.should == File.read(fixture('attachments', 'test.pdf'))
-            mail.attachments[3].decoded.should == File.read(fixture('attachments', 'test.zip'))
-          end
-        end
-
-        it "should allow you to send in file data instead of having to read it" do
-          file_data = File.read(fixture('attachments', 'test.png'))
-          mail = Mail::Message.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file(:filename => 'test.png', :data => file_data)
-          end
-          if RUBY_VERSION >= '1.9'
-            tripped = mail.attachments[0].decoded
-            original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
-            tripped.should == original
-          else
-            mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
-          end
-        end
-        
-        it "should be able to add a body before adding a file" do
-          m = Mail.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            body    "Attached"
-            add_file :filename => fixture('attachments', 'test.png')
-          end
-          m.attachments.length.should == 1
-          m.parts.first.body.decoded.should == "Attached"
-        end
-        
-        it "should allow you to add a body as text part if you have added a file" do
-          m = Mail.new do
-            from    'mikel@from.lindsaar.net'
-            subject 'Hello there Mikel'
-            to      'mikel@to.lindsaar.net'
-            add_file :filename => fixture('attachments', 'test.png')
-            body    "Attached"
-          end
-          m.parts.length.should == 2
-          m.parts.first[:content_type].content_type.should == 'image/png'
-          m.parts.last[:content_type].content_type.should == 'text/plain'
-        end
-
-        it "should add the filename to the content_disposition" do
-          m = Mail.new do 
-            part({:content_type => "image/jpeg",
-                  :content_disposition => "attachment",
-                  :data => "123456789",
-                  :content_transfer_encoding => "base64",
-                  :filename => fixture('attachments', 'test.png')})
-          end
-          m.parts.first[:content_disposition].filename.should == 'test.png'
-        end
-
-      end
-      
-  end
-  
   describe "handling missing required fields:" do
     
     describe "every email" do
@@ -1409,6 +939,14 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
+        end
+        
+        it "should not set the charset if the file is an attachment" do
+          body = "This is plain text US-ASCII"
+          mail = Mail.new
+          mail.body = body
+          mail.content_disposition = 'attachment; filename="foo.jpg"'
+          mail.to_s =~ %r{Content-Type: text/plain;\r\n}
         end
 
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1725,4 +1263,11 @@ describe Mail::Message do
     end
   end
   
+  describe "deliver" do
+    it "should return self after delivery" do
+      mail = Mail.new
+      mail.perform_deliveries = false
+      mail.deliver.should == mail
+    end
+  end
 end

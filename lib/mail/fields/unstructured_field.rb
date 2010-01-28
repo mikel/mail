@@ -34,6 +34,10 @@ module Mail
     def default
       decoded
     end
+    
+    def parse # An unstructured field does not parse
+      self
+    end
 
     private
     

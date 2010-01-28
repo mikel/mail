@@ -12,15 +12,15 @@ describe "mail" do
   end
   
   it "should accept headers and body" do
-    # Full test in Message Spec
+    # Full tests in Message Spec
     message = Mail.new do
       from    'mikel@me.com'
       to      'mikel@you.com'
       subject 'Hello there Mikel'
       body    'This is a body of text'
     end
-    message.from.should      == 'mikel@me.com'
-    message.to.should        == 'mikel@you.com'
+    message.from.should      == ['mikel@me.com']
+    message.to.should        == ['mikel@you.com']
     message.subject.should   == 'Hello there Mikel'
     message.body.to_s.should == 'This is a body of text'
   end
