@@ -1,3 +1,9 @@
+== Thu Jan 28 00:25:02 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Added TMM1's patch to not raise errors if a email is not multipart/report
+* Added html_part and text_part now return the first text/html or text/plain part they find. Order is from top to bottom of the email, all parts, flattened.
+* Version bump to 2.1.2
+
 == Mon Jan 25 11:36:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added ability for address fields to init on an array instead of just a string.

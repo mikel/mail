@@ -1465,7 +1465,7 @@ module Mail
         add_multipart_alternate_header unless html_part.blank?
         add_part(@html_part)
       else
-        @html_part
+        @html_part || find_first_mime_type('text/html')
       end
     end
     
@@ -1476,7 +1476,7 @@ module Mail
         add_multipart_alternate_header unless html_part.blank?
         add_part(@text_part)
       else
-        @text_part
+        @text_part || find_first_mime_type('text/plain')
       end
     end
     
@@ -1648,6 +1648,14 @@ module Mail
     # Returns the filename of the attachment
     def filename
       find_attachment
+    end
+
+    def all_parts
+      parts.map { |p| [p, p.all_parts] }.flatten
+    end
+
+    def find_first_mime_type(mt)
+      all_parts.detect { |p| p.mime_type == mt }
     end
     
   private

@@ -211,6 +211,50 @@ describe "MIME Emails" do
         mail.html_part.class.should == Mail::Part
         mail.html_part.body.to_s.should == '<h1>This is HTML</h1>'
       end
+      
+      it "should detect an html_part in an existing email" do
+        m = Mail.new(:content_type => 'mixed/alternative')
+        m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+        m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+        m.text_part.body.decoded.should == 'PLAIN TEXT'
+        m.html_part.body.decoded.should == 'HTML TEXT'
+      end
+      
+      it "should detect an html_part in a multi level mime email" do
+        m = Mail.new(:content_type => 'mixed/multipart')
+        a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
+        p = Mail::Part.new(:content_type => 'mixed/alternative')
+        p.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+        p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+        m.add_part(p)
+        m.add_part(a)
+        m.text_part.body.decoded.should == 'PLAIN TEXT'
+        m.html_part.body.decoded.should == 'HTML TEXT'
+      end
+      
+      it "should only the first part on a stupidly overly complex email" do
+        m = Mail.new(:content_type => 'mixed/multipart')
+        a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
+        m.add_part(a)
+
+        b = Mail::Part.new(:content_type => 'mixed/alternative')
+        b.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+        b.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+        m.add_part(b)
+
+        c = Mail::Part.new(:content_type => 'mixed/alternative')
+        c.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML 2 TEXT'))
+        c.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN 2 TEXT'))
+        b.add_part(c)
+
+        d = Mail::Part.new(:content_type => 'mixed/alternative')
+        d.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML 3 TEXT'))
+        d.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN 3 TEXT'))
+        b.add_part(d)
+
+        m.text_part.body.decoded.should == 'PLAIN TEXT'
+        m.html_part.body.decoded.should == 'HTML TEXT'
+      end
 
     end
   
