@@ -28,8 +28,8 @@ module Mail
   #     delivery_method :smtp, { :address              => "smtp.gmail.com",
   #                              :port                 => 587,
   #                              :domain               => 'baci.lindsaar.net',
-  #                              :user_name            => 'raasdnil',
-  #                              :password             => 'g333ma11',
+  #                              :user_name            => '<username>',
+  #                              :password             => '<password>',
   #                              :authentication       => 'plain',
   #                              :enable_starttls_auto => true  }
   #   end
