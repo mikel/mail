@@ -40,6 +40,10 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
 
+    it "should be able to parse from address" do
+      Mail::Message.new(File.read('spec/fixtures/emails/cant_parse_from.eml')).from.should_not be_nil
+    end
+
     it "should be able to parse an email with only blank lines as body" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
