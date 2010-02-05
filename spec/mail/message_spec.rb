@@ -40,10 +40,6 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
 
-    it "should be able to parse from address" do
-      Mail::Message.new(File.read('spec/fixtures/emails/cant_parse_from.eml')).from.should_not be_nil
-    end
-
     it "should be able to parse an email with only blank lines as body" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
@@ -93,6 +89,19 @@ describe Mail::Message do
     it "should not cause any problems if there is no envelope from present" do
       message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       message.from.should == ["test@lindsaar.net"]
+    end
+
+    it "should ignore a plain text body that starts with ^From" do
+      m = Mail::Message.new("From: mikel@test.lindsaar.net\r\n\r\nThis is a way to break mail by putting\r\nFrom at the start of a body\r\nor elsewhere.")
+      m.from.should_not be_nil
+      m.from.should == ['mikel@test.lindsaar.net']
+    end
+
+    it "should handle a multipart message that has ^From in it" do
+      m = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'cant_parse_from.eml')))
+      m.from.should_not be_nil
+      m.from.should == ["News@InsideApple.Apple.com"]
+      m.should be_multipart
     end
 
   end
@@ -349,7 +358,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -359,7 +368,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
@@ -410,7 +419,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -420,7 +429,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
@@ -471,7 +480,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -481,7 +490,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
@@ -532,7 +541,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -542,7 +551,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
@@ -594,7 +603,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -604,7 +613,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']
@@ -656,7 +665,7 @@ describe Mail::Message do
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
-        message.date.should          == '12 Aug 2009 00:00:01 GMT'
+        message.date.should          == DateTime.parse('12 Aug 2009 00:00:01 GMT')
         message.from.should          == ['mikel@from.lindsaar.net']
         message.in_reply_to.should   == '1234@in_reply_to.lindsaar.net'
         message.keywords.should      == ["test", "of the new mail", "system"]
@@ -666,7 +675,7 @@ describe Mail::Message do
         message.reply_to.should      == ['mikel@reply-to.lindsaar.net']
         message.resent_bcc.should    == ['mikel@resent-bcc.lindsaar.net']
         message.resent_cc.should     == ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   == '12 Aug 2009 00:00:03 GMT'
+        message.resent_date.should   == DateTime.parse('12 Aug 2009 00:00:03 GMT')
         message.resent_from.should   == ['mikel@resent-from.lindsaar.net']
         message.resent_message_id.should == '1234@resent_message_id.lindsaar.net'
         message.resent_sender.should == ['mikel@resent-sender.lindsaar.net']

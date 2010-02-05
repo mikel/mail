@@ -1681,7 +1681,7 @@ module Mail
     end
     
     def set_envelope_header
-      if match_data = raw_source.to_s.match(/^From\s(#{TEXT}+)#{CRLF}(.*)/m)
+      if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}(.*)/m)
         set_envelope(match_data[1])
         self.raw_source = match_data[2]
       end
