@@ -264,49 +264,46 @@ mail.deliver!
 
 The most recent email:
 
- require 'mail'
- 
  Mail.defaults do
-   pop3 'mail.myhost.com.au', 110 do
-     user 'mikel'
-     pass 'mypass'
-   end
- end
- 
- emails = Mail.last do |email|
-   email.reply!("I'll be back on Monday, please be patient!") # +reply!+ still not implemented ^^
+   retriever_method :pop3, { :address             => "pop.gmail.com",
+                             :port                => 995,
+                             :user_name           => '<username>',
+                             :password            => '<password>',
+                             :enable_ssl          => true }
  end
 
-The 3 oldest emails sorted by date in descendent order:
+ Mail.all    #=> Returns an array of all emails
+ Mail.first  #=> Returns the first unread email
+ Mail.last   #=> Returns the first unread email
+
+The first 10 emails sorted by date in ascending order:
 
  require 'mail'
 
  Mail.defaults do
-   pop3 'mail.myhost.co.jp', 995 do
-     user 'mikel'
-     pass 'mypass'
-     enable_tls
-   end
+   retriever_method :pop3, { :address             => "pop.gmail.com",
+                             :port                => 995,
+                             :user_name           => '<username>',
+                             :password            => '<password>',
+                             :enable_ssl          => true }
  end
 
- emails = Mail.first(:count => 3, :order => :desc) do |email|
-   email.date
- end
+ emails = Mail.find(:what => :first, :count => 10, :order => :asc)
+ emails.length #=> 10
 
 Or even all emails:
 
- require 'mail'
-
  Mail.defaults do
-   pop3 'mail.myhost.com.au' do
-     user 'mikel'
-     pass 'mypass'
-   end
+   retriever_method :pop3, { :address             => "pop.gmail.com",
+                             :port                => 995,
+                             :user_name           => '<username>',
+                             :password            => '<password>',
+                             :enable_ssl          => true }
  end
 
  emails = Mail.all
 
- emails.length #=> 12
+ emails.length #=> LOTS!
 
 === Reading an Email
 
