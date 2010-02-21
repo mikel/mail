@@ -137,6 +137,15 @@ describe Mail::Encodings do
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
+    
+    it "should fold a long encoded string properly" do
+      original = "ВосстановлениеВосстановление Вашего пароля"
+      original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      mail = Mail.new
+      mail.subject = original
+      mail[:subject].encoded.should == "Subject: =?UTF8?B?0JLQvtGB0YHRgtCw0L3QvtCy0LvQtdC90LjQtdCS0A==?=\r\n\t=?UTF8?B?vtGB0YHRgtCw0L3QvtCy0LvQtdC90LjQtSDQktCw0YjQtdCz0L4=?=\r\n\t=?UTF8?B?INC/0LDRgNC+0LvRjw==?=\r\n"
+      Mail.new(mail.encoded).subject.should == original
+    end
 
   end
 
