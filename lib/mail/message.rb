@@ -1611,6 +1611,10 @@ module Mail
       encoded
     end
 
+    def inspect
+      "#<#{self.class}:#{self.object_id}, Multipart: #{multipart?}, Headers: #{header.field_summary}>"
+    end
+
     def decoded
       if self.attachment?
         decode_body
