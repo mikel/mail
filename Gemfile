@@ -1,8 +1,10 @@
+source :gemcutter
+
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 gem 'activesupport', ">= 2.3.4"
 gem "mime-types"
 
-only :test do
+group :test do
   gem "rcov"
   gem "rake"
   gem "bundler"
@@ -11,5 +13,3 @@ only :test do
   gem "diff-lcs"
   gem "ruby-debug" if RUBY_VERSION < '1.9'
 end
-
-disable_system_gems
