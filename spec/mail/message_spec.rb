@@ -1303,7 +1303,7 @@ describe Mail::Message do
     it "should inform observers that the mail was sent" do
       mail = Mail.new
       mail.delivery_method :test
-      Mail.register_for_delivery_notification(ObserverAgent)
+      Mail.register_observer(ObserverAgent)
       ObserverAgent.should_receive(:delivered_email).with(mail)
       mail.deliver
     end
@@ -1311,7 +1311,7 @@ describe Mail::Message do
     it "should inform observers that the mail was sent, even if a delivery agent is used" do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
-      Mail.register_for_delivery_notification(ObserverAgent)
+      Mail.register_observer(ObserverAgent)
       ObserverAgent.should_receive(:delivered_email).with(mail)
       mail.deliver
     end
@@ -1325,7 +1325,7 @@ describe Mail::Message do
     it "should pass to the interceptor the email just before it gets sent" do
       mail = Mail.new
       mail.delivery_method :test
-      Mail.register_for_delivery_interception(InterceptorAgent)
+      Mail.register_interceptor(InterceptorAgent)
       InterceptorAgent.should_receive(:delivering_email).with(mail)
       mail.deliver
     end
@@ -1334,7 +1334,7 @@ describe Mail::Message do
       mail = Mail.new
       mail.to = 'fred@example.com'
       mail.delivery_method :test
-      Mail.register_for_delivery_interception(InterceptorAgent)
+      Mail.register_interceptor(InterceptorAgent)
       mail.deliver
       mail.to.should == ['bob@example.com']
     end

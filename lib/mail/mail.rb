@@ -179,7 +179,7 @@ module Mail
   # 
   # Your object needs to respond to a single method #delivered_email(mail)
   # which receives the email that is sent.
-  def Mail.register_for_delivery_notification(observer)
+  def Mail.register_observer(observer)
     unless @@delivery_notification_observers.include?(observer)
       @@delivery_notification_observers << observer
     end
@@ -192,7 +192,7 @@ module Mail
   # Your object needs to respond to a single method #delivering_email(mail)
   # which receives the email that is about to be sent.  Make your modifications
   # directly to this object.
-  def Mail.register_for_delivery_interception(interceptor)
+  def Mail.register_interceptor(interceptor)
     unless @@delivery_interceptors.include?(interceptor)
       @@delivery_interceptors << interceptor
     end

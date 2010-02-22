@@ -193,17 +193,12 @@ module Mail
     attr_accessor :raise_delivery_errors
 
     def register_for_delivery_notification(observer)
-      STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_for_delivery_notification instead")
-      Mail.register_for_delivery_notification(observer)
+      STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
+      Mail.register_observer(observer)
     end
     
     def inform_observers
       Mail.inform_observers(self)
-    end
-    
-    def register_for_delivery_interception(interceptor)
-      STDERR.puts("Message#register_for_delivery_interception is deprecated, please call Mail.register_for_delivery_interception instead")
-      Mail.register_for_delivery_interception(interceptor)
     end
     
     def inform_interceptors
