@@ -46,7 +46,7 @@ module Mail
     
     include Patterns
     include Utilities
-    
+
     # ==Making an email
     # 
     # You can make an new mail object via a block, passing a string, file or direct assignment.
@@ -106,8 +106,7 @@ module Mail
       @delivery_handler = nil
       
       @delivery_method = Mail.delivery_method.dup
-      @delivery_notification_observers = []
-
+      
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -194,15 +193,21 @@ module Mail
     attr_accessor :raise_delivery_errors
 
     def register_for_delivery_notification(observer)
-      unless @delivery_notification_observers.include?(observer)
-        @delivery_notification_observers << observer
-      end
+      STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_for_delivery_notification instead")
+      Mail.register_for_delivery_notification(observer)
     end
     
     def inform_observers
-      @delivery_notification_observers.each do |observer|
-        observer.delivered_email(self)
-      end
+      Mail.inform_observers(self)
+    end
+    
+    def register_for_delivery_interception(interceptor)
+      STDERR.puts("Message#register_for_delivery_interception is deprecated, please call Mail.register_for_delivery_interception instead")
+      Mail.register_for_delivery_interception(interceptor)
+    end
+    
+    def inform_interceptors
+      Mail.inform_interceptors(self)
     end
     
     # Delivers an mail object.
@@ -212,12 +217,13 @@ module Mail
     #  mail = Mail.read('file.eml')
     #  mail.deliver
     def deliver
+      inform_interceptors
       if delivery_handler
         delivery_handler.deliver_mail(self) { do_delivery }
       else
         do_delivery
-        inform_observers
       end
+      inform_observers
       self
     end
 

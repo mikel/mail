@@ -1282,5 +1282,62 @@ describe Mail::Message do
       mail.perform_deliveries = false
       mail.deliver.should == mail
     end
+    
+    class DeliveryAgent
+      def self.deliver_mail(mail)
+      end
+    end
+    
+    it "should pass self to a delivery agent" do
+      mail = Mail.new
+      mail.delivery_handler = DeliveryAgent
+      DeliveryAgent.should_receive(:deliver_mail).with(mail)
+      mail.deliver
+    end
+    
+    class ObserverAgent
+      def self.delivered_email(mail)
+      end
+    end
+    
+    it "should inform observers that the mail was sent" do
+      mail = Mail.new
+      mail.delivery_method :test
+      Mail.register_for_delivery_notification(ObserverAgent)
+      ObserverAgent.should_receive(:delivered_email).with(mail)
+      mail.deliver
+    end
+    
+    it "should inform observers that the mail was sent, even if a delivery agent is used" do
+      mail = Mail.new
+      mail.delivery_handler = DeliveryAgent
+      Mail.register_for_delivery_notification(ObserverAgent)
+      ObserverAgent.should_receive(:delivered_email).with(mail)
+      mail.deliver
+    end
+    
+    class InterceptorAgent
+      def self.delivering_email(mail)
+        mail.to = 'bob@example.com'
+      end
+    end
+    
+    it "should pass to the interceptor the email just before it gets sent" do
+      mail = Mail.new
+      mail.delivery_method :test
+      Mail.register_for_delivery_interception(InterceptorAgent)
+      InterceptorAgent.should_receive(:delivering_email).with(mail)
+      mail.deliver
+    end
+    
+    it "should let the interceptor that the mail was sent" do
+      mail = Mail.new
+      mail.to = 'fred@example.com'
+      mail.delivery_method :test
+      Mail.register_for_delivery_interception(InterceptorAgent)
+      mail.deliver
+      mail.to.should == ['bob@example.com']
+    end
+    
   end
 end

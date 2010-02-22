@@ -170,6 +170,35 @@ module Mail
     Mail.new(File.read(filename))
   end
   
+  # Initialize the observers and interceptors arrays
+  @@delivery_notification_observers = []
+  @@delivery_interceptors = []
+  
+  def Mail.register_for_delivery_notification(observer)
+    unless @@delivery_notification_observers.include?(observer)
+      @@delivery_notification_observers << observer
+    end
+  end
+
+  def Mail.register_for_delivery_interception(interceptor)
+    unless @@delivery_interceptors.include?(interceptor)
+      @@delivery_interceptors << interceptor
+    end
+  end
+  
+  def Mail.inform_observers(mail)
+    @@delivery_notification_observers.each do |observer|
+      observer.delivered_email(mail)
+    end
+  end
+  
+  def Mail.inform_interceptors(mail)
+    @@delivery_interceptors.each do |interceptor|
+      interceptor.delivering_email(mail)
+    end
+  end
+
+  
   protected
   
   def Mail.random_tag
