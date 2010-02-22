@@ -210,7 +210,6 @@ module Mail
     end
   end
 
-  
   protected
   
   def Mail.random_tag

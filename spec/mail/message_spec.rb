@@ -1317,17 +1317,25 @@ describe Mail::Message do
     end
     
     class InterceptorAgent
+      @@intercept = false
+      def self.intercept=(val)
+        @@intercept = val
+      end
       def self.delivering_email(mail)
-        mail.to = 'bob@example.com'
+        if @@intercept
+          mail.to = 'bob@example.com'
+        end
       end
     end
-    
+
     it "should pass to the interceptor the email just before it gets sent" do
       mail = Mail.new
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
       InterceptorAgent.should_receive(:delivering_email).with(mail)
+      InterceptorAgent.intercept = true
       mail.deliver
+      InterceptorAgent.intercept = false
     end
     
     it "should let the interceptor that the mail was sent" do
@@ -1335,7 +1343,9 @@ describe Mail::Message do
       mail.to = 'fred@example.com'
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
+      InterceptorAgent.intercept = true
       mail.deliver
+      InterceptorAgent.intercept = false
       mail.to.should == ['bob@example.com']
     end
     
