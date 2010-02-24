@@ -20,6 +20,22 @@ describe "multipart/report emails" do
       mail.delivery_status_part.should_not be_nil
     end
 
+    describe "multipart reports with more than one address" do
+      it "should not crash" do
+        mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
+        mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
+        doing { mail1.bounced? }.should_not raise_error
+        doing { mail2.bounced? }.should_not raise_error
+      end
+
+      it "should not know that a multi address email was bounced" do
+        mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
+        mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
+        mail1.should be_bounced
+        mail2.should be_bounced
+      end
+    end
+
     describe "temporary failure" do
       
       before(:each) do

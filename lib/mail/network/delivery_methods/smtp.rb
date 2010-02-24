@@ -27,7 +27,7 @@ module Mail
   #   Mail.defaults do
   #     delivery_method :smtp, { :address              => "smtp.gmail.com",
   #                              :port                 => 587,
-  #                              :domain               => 'baci.lindsaar.net',
+  #                              :domain               => 'your.host.name',
   #                              :user_name            => '<username>',
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
