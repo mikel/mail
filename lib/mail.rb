@@ -4,13 +4,8 @@ module Mail # :doc:
   require 'date'
 
   require 'active_support'
-
-  # Have to handle ActiveSupport 2.3 and 3.0
-  # Following two lines make sure that HashWithIndifferentAccess is available
-  # regardless of having activesupport 3 or 2.3 loaded
   require 'active_support/core_ext/hash/indifferent_access'
-
-  require 'mail/vendor/treetop'
+  require 'active_support/core_ext/object/blank'
 
   require 'uri'
   require 'net/smtp'
@@ -25,20 +20,14 @@ module Mail # :doc:
   end
 
   if RUBY_VERSION >= "1.9.1"
-    require 'mail/version_specific/ruby_1_9.rb'
+    require 'mail/version_specific/ruby_1_9'
     RubyVer = Mail::Ruby19
   else
-    require 'mail/version_specific/ruby_1_8.rb'
+    require 'mail/version_specific/ruby_1_8'
     RubyVer = Mail::Ruby18
   end
 
   require 'mail/version'
-
-  begin
-    require 'active_support/core_ext/object/blank'
-  rescue LoadError
-    # Unneeded for Active Support <= 3.0.pre
-  end
 
   require 'mail/core_extensions/nil'
   require 'mail/core_extensions/string'
@@ -74,6 +63,7 @@ module Mail # :doc:
   require 'mail/fields/unstructured_field'
   require 'mail/envelope'
 
+  require 'mail/vendor/treetop'
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
