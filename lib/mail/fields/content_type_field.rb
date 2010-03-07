@@ -108,7 +108,7 @@ module Mail
     
     # TODO: Fix this up
     def encoded
-      "#{CAPITALIZED_FIELD}: #{content_type};\r\n\t#{parameters.encoded};\r\n"
+      "#{CAPITALIZED_FIELD}: #{content_type};\r\n\t#{parameters.encoded}\r\n"
     end
     
     def decoded

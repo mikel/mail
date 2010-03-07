@@ -100,7 +100,7 @@ describe Mail::ContentTypeField do
 
     it "should render encoded" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
-      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n\tformat="flowed";\r\n}
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n\tformat="flowed"\r\n}
     end
 
     it "should render decoded" do
@@ -157,12 +157,12 @@ describe Mail::ContentTypeField do
   describe "class methods" do
     it "should give back an initialized instance with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
-      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+";\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
     end
 
     it "should give back an initialized instance with different type with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
-      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+";\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
     end
 
     it "should give unique boundaries" do
@@ -565,11 +565,11 @@ describe Mail::ContentTypeField do
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
       if RUBY_VERSION >= '1.9'
         string.force_encoding('SJIS')
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3";\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3"\r\n}
       else
         storedkcode = $KCODE
         $KCODE = 'SJIS'
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3";\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3"\r\n}
       end
       c.filename = string
       c.parameters.should == {'filename' => string}
