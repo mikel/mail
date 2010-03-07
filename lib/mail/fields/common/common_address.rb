@@ -10,10 +10,22 @@ module Mail
       
       def parse(val = value)
         unless val.blank?
-          @tree = AddressList.new(val)
+          if val.is_a?(Array)
+            @tree = AddressList.new(val.join(', ').mb_chars)
+          else
+            @tree = AddressList.new(val.mb_chars)
+          end
         else
           nil
         end
+      end
+      
+      def charset
+        @charset
+      end
+      
+      def encode_if_needed(val)
+        Encodings.address_encode(val, charset)
       end
       
       # Allows you to iterate through each address object in the syntax tree
@@ -51,7 +63,7 @@ module Mail
       def groups
         @groups = Hash.new
         tree.group_recipients.each do |group|
-          @groups[group.group_name.text_value] = get_group_addresses(group.group_list)
+          @groups[group.group_name.text_value.to_s] = get_group_addresses(group.group_list)
         end
         @groups
       end

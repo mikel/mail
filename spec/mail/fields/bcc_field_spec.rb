@@ -26,17 +26,11 @@ describe Mail::BccField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::BccField.new("Bcc", "Mikel") }.should_not raise_error
+      doing { Mail::BccField.new("Bcc: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do
       Mail::BccField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
-    end
-
-    it "should accept two strings with the field separate" do
-      t = Mail::BccField.new('Bcc', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Bcc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string with the field name" do

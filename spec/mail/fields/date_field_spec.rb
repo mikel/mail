@@ -34,13 +34,6 @@ describe Mail::DateField do
       Mail::DateField.included_modules.should include(Mail::CommonDate::InstanceMethods) 
     end
 
-    it "should accept two strings with the field separate" do
-      t = Mail::DateField.new('Date', '12 Aug 2009 00:00:02 GMT')
-      t.name.should == 'Date'
-      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
-      t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
-    end
-
     it "should accept a string with the field name" do
       t = Mail::DateField.new('Date: 12 Aug 2009 00:00:02 GMT')
       t.name.should == 'Date'
@@ -56,7 +49,7 @@ describe Mail::DateField do
     end
     
     it "should accept nil as a value" do
-      t = Mail::DateField.new('Date', nil)
+      t = Mail::DateField.new(nil)
       t.date_time.should_not be_nil
     end
     

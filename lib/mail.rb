@@ -9,6 +9,7 @@ module Mail # :doc:
   # Following two lines make sure that HashWithIndifferentAccess is available
   # regardless of having activesupport 3 or 2.3 loaded
   require 'active_support/core_ext/hash/indifferent_access'
+  require 'active_support/core_ext/string'
 
   require 'mail/vendor/treetop'
 

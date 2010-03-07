@@ -33,13 +33,6 @@ describe Mail::ContentIdField do
       doing { Mail::ContentIdField.new("<1234@test.lindsaar.net>") }.should_not raise_error
     end
 
-    it "should accept two strings with the field separate" do
-      c = Mail::ContentIdField.new('Content-ID', '<1234@test.lindsaar.net>')
-      c.name.should == 'Content-ID'
-      c.value.should == '<1234@test.lindsaar.net>'
-      c.content_id.should == '1234@test.lindsaar.net'
-    end
-
     it "should accept a string with the field name" do
       c = Mail::ContentIdField.new('Content-ID: <1234@test.lindsaar.net>')
       c.name.should == 'Content-ID'
@@ -55,7 +48,7 @@ describe Mail::ContentIdField do
     end
 
     it "should accept a nil value and generate a content_id" do
-      m = Mail::ContentIdField.new('Content-ID', nil)
+      m = Mail::ContentIdField.new(nil)
       m.name.should == 'Content-ID'
       m.value.should_not be_nil
     end

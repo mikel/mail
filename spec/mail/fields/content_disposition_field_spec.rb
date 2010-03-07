@@ -8,12 +8,6 @@ describe Mail::ContentDispositionField do
       doing { Mail::ContentDispositionField.new("attachment; filename=File") }.should_not raise_error
     end
 
-    it "should accept two strings with the field separate" do
-      c = Mail::ContentDispositionField.new('Content-Disposition', "attachment; filename=File")
-      c.name.should == 'Content-Disposition'
-      c.value.should == 'attachment; filename=File'
-    end
-
     it "should accept a string with the field name" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.name.should == 'Content-Disposition'

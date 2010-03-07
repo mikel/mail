@@ -30,11 +30,11 @@ module Mail
     FIELD_NAME = 'comments'
     CAPITALIZED_FIELD = 'Comments'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      @charset = charset
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value))
       self.parse
       self
-
     end
     
   end

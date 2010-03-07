@@ -7,8 +7,8 @@ module Mail
     FIELD_NAME = 'subject'
     CAPITALIZED_FIELD = "Subject"
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
     end
     
   end

@@ -12,9 +12,9 @@ module Mail
         @element ||= Mail::MessageIdsElement.new(value)
       end
       
-      def parse(val = value)
+      def parse(val = nil)
         unless val.blank?
-          @element = Mail::MessageIdsElement.new(val)
+          @element = Mail::MessageIdsElement.new(self.value)
         else
           nil
         end

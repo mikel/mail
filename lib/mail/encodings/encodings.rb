@@ -136,6 +136,18 @@ module Mail
       end
     end
     
+    def Encodings.address_encode(address, charset = 'utf-8')
+      if address.is_a?(Array)
+        address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
+      elsif matchdata = address.match(/^['"](.+)?['"]\s+(<.+>)$/) || address.match(/^(.+)\s+(<.+>)$/)
+        phrase  = Encodings.b_value_encode(matchdata[1], charset)
+        address = matchdata[2]
+        "\"#{phrase}\" #{address}"
+      else
+        Encodings.b_value_encode(address, charset)
+      end
+    end
+    
     # Encode a string with Base64 Encoding and returns it ready to be inserted
     # as a value for a field, that is, in the =?<charset>?B?<string>?= format
     #
@@ -144,6 +156,7 @@ module Mail
     #  Encodings.b_value_encode('This is あ string', 'UTF-8') 
     #  #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
     def Encodings.b_value_encode(str, encoding = nil)
+      return str if str.to_s.ascii_only?
       string, encoding = RubyVer.b_value_encode(str, encoding)
       string.split("\n").map do |str|
         "=?#{encoding}?B?#{str.chomp}?="
@@ -158,6 +171,7 @@ module Mail
     #  Encodings.q_value_encode('This is あ string', 'UTF-8') 
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def Encodings.q_value_encode(str, encoding = nil)
+      return str if str.to_s.ascii_only?
       string, encoding = RubyVer.q_value_encode(str, encoding)
       "=?#{encoding}?Q?#{string.chomp.gsub(/ /, '_')}?="
     end

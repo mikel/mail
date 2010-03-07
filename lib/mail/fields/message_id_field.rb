@@ -36,13 +36,13 @@ module Mail
     FIELD_NAME = 'message-id'
     CAPITALIZED_FIELD = 'Message-ID'
     
-    def initialize(*args)
+    def initialize(value = nil, charset = 'utf-8')
       @uniq = 1
-      if args.last.blank?
+      if value.blank?
         self.name = CAPITALIZED_FIELD
         self.value = generate_message_id
       else
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       end
       self.parse
       self

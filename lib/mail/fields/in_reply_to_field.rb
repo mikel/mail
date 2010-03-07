@@ -34,8 +34,8 @@ module Mail
     FIELD_NAME = 'in-reply-to'
     CAPITALIZED_FIELD = 'In-Reply-To'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
     end

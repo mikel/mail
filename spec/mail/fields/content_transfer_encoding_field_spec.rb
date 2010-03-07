@@ -40,13 +40,7 @@ describe Mail::ContentTransferEncodingField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ContentTransferEncodingField.new("Content-Transfer-Encoding", "7bit") }.should_not raise_error
-    end
-
-    it "should accept two strings with the field separate" do
-      t = Mail::ContentTransferEncodingField.new('Content-Transfer-Encoding', '7bit')
-      t.name.should == 'Content-Transfer-Encoding'
-      t.value.should == '7bit'
+      doing { Mail::ContentTransferEncodingField.new("Content-Transfer-Encoding: 7bit") }.should_not raise_error
     end
 
     it "should accept a string with the field name" do

@@ -34,8 +34,8 @@ module Mail
     FIELD_NAME = 'bcc'
     CAPITALIZED_FIELD = 'Bcc'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = '', charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
     end

@@ -10,12 +10,6 @@ describe Mail::ContentLocationField do
       doing { Mail::ContentLocationField.new("Content-Location", "7bit") }.should_not raise_error
     end
 
-    it "should accept two strings with the field separate" do
-      t = Mail::ContentLocationField.new('Content-Location', 'photo.jpg')
-      t.name.should == 'Content-Location'
-      t.value.should == 'photo.jpg'
-    end
-
     it "should accept a string with the field name" do
       t = Mail::ContentLocationField.new('Content-Location: photo.jpg')
       t.name.should == 'Content-Location'

@@ -19,13 +19,7 @@ describe Mail::ContentDescriptionField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ContentDescriptionField.new("Content-Description", "This is a description") }.should_not raise_error
-    end
-
-    it "should accept two strings with the field separate" do
-      t = Mail::ContentDescriptionField.new('Content-Description', 'This is a description')
-      t.name.should == 'Content-Description'
-      t.value.should == 'This is a description'
+      doing { Mail::ContentDescriptionField.new("Content-Description: This is a description") }.should_not raise_error
     end
 
     it "should accept a string with the field name" do

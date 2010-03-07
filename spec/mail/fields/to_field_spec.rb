@@ -9,17 +9,11 @@ describe Mail::ToField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ToField.new("To", "Mikel") }.should_not raise_error
+      doing { Mail::ToField.new("Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do
       Mail::ToField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
-    end
-
-    it "should accept two strings with the field separate" do
-      t = Mail::ToField.new('To', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'To'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string with the field name" do
@@ -70,6 +64,21 @@ describe Mail::ToField do
     it "should return the decoded line" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
+    end
+    
+    it "should get multiple address out from a group list" do
+      t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.addresses.should == ["sam@me.com", "mikel@me.com", "bob@you.com"]
+    end
+    
+    it "should handle commas in the address" do
+      t = Mail::ToField.new('"Long, stupid email address" <mikel@test.lindsaar.net>')
+      t.addresses.should == ["mikel@test.lindsaar.net"]
+    end
+    
+    it "should handle commas in the address for multiple fields" do
+      t = Mail::ToField.new('"Long, stupid email address" <mikel@test.lindsaar.net>, "Another, really, really, long, stupid email address" <bob@test.lindsaar.net>')
+      t.addresses.should == ["mikel@test.lindsaar.net", "bob@test.lindsaar.net"]
     end
     
   end

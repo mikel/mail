@@ -60,13 +60,6 @@ describe Mail::MessageIdField do
       doing { Mail::MessageIdField.new("<1234@test.lindsaar.net>") }.should_not raise_error
     end
 
-    it "should accept two strings with the field separate" do
-      m = Mail::MessageIdField.new('Message-ID', '<1234@test.lindsaar.net>')
-      m.name.should == 'Message-ID'
-      m.value.should == '<1234@test.lindsaar.net>'
-      m.message_id.should == '1234@test.lindsaar.net'
-    end
-
     it "should accept a string with the field name" do
       m = Mail::MessageIdField.new('Message-ID: <1234@test.lindsaar.net>')
       m.name.should == 'Message-ID'
@@ -82,7 +75,7 @@ describe Mail::MessageIdField do
     end
 
     it "should accept a nil value and generate a message_id" do
-      m = Mail::MessageIdField.new('Message-ID', nil)
+      m = Mail::MessageIdField.new(nil)
       m.name.should == 'Message-ID'
       m.value.should_not be_nil
     end

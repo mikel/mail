@@ -74,12 +74,6 @@ describe Mail::ContentTypeField do
       doing { Mail::ContentTypeField.new("<1234@test.lindsaar.net>") }.should_not raise_error
     end
 
-    it "should accept two strings with the field separate" do
-      c = Mail::ContentTypeField.new('Content-Type', 'text/plain')
-      c.name.should == 'Content-Type'
-      c.value.should == 'text/plain'
-    end
-
     it "should accept a string with the field name" do
       c = Mail::ContentTypeField.new('Content-Type: text/plain')
       c.name.should == 'Content-Type'
@@ -558,6 +552,7 @@ describe Mail::ContentTypeField do
     end
     
     it "should encode a non us-ascii filename" do
+      original = $KCODE
       Mail.defaults do
         param_encode_language('jp')
       end
@@ -573,6 +568,7 @@ describe Mail::ContentTypeField do
       c.filename = string
       c.parameters.should == {'filename' => string}
       c.encoded.should == result
+      $KCODE = original
     end
     
   end

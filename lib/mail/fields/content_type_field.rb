@@ -8,18 +8,18 @@ module Mail
     FIELD_NAME = 'content-type'
     CAPITALIZED_FIELD = 'Content-Type'
     
-    def initialize(*args)
-      if args.last.class == Array
-        @main_type = args.last[0]
-        @sub_type = args.last[1]
-        @parameters = ParameterHash.new.merge!(args.last.last)
-        super(CAPITALIZED_FIELD, args.last)
+    def initialize(value = nil, charset = 'utf-8')
+      if value.class == Array
+        @main_type = value[0]
+        @sub_type = value[1]
+        @parameters = ParameterHash.new.merge!(value.last)
       else
         @main_type = nil
         @sub_type = nil
         @parameters = nil
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+        value = strip_field(FIELD_NAME, value)
       end
+      super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
     end

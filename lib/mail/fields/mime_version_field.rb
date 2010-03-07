@@ -8,13 +8,11 @@ module Mail
     FIELD_NAME = 'mime-version'
     CAPITALIZED_FIELD = 'Mime-Version'
 
-    def initialize(*args)
-      if args.last.blank?
-        self.name = CAPITALIZED_FIELD
-        self.value = '1.0'
-      else
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      if value.blank?
+        value = '1.0'
       end
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
 

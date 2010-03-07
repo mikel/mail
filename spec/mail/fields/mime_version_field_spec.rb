@@ -83,13 +83,7 @@ describe Mail::MimeVersionField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::MimeVersionField.new("Mime-Version", "1.0") }.should_not raise_error
-    end
-
-    it "should accept two strings with the field separate" do
-      t = Mail::MimeVersionField.new('Mime-Version', '1.0')
-      t.name.should == 'Mime-Version'
-      t.value.should == '1.0'
+      doing { Mail::MimeVersionField.new("1.0") }.should_not raise_error
     end
 
     it "should accept a string with the field name" do
@@ -153,7 +147,7 @@ describe Mail::MimeVersionField do
     end
     
     it "should accept nil as a value" do
-      t = Mail::MimeVersionField.new('Date', nil)
+      t = Mail::MimeVersionField.new(nil)
       t.version.should_not be_nil
     end
     

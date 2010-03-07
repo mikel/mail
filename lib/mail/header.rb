@@ -148,11 +148,19 @@ module Mail
       # User wants to create the field
       else
         # Need to insert in correct order for trace fields
-        self.fields << Field.new(name.to_s, value)
+        self.fields << Field.new(name.to_s, value, charset)
       end
     end
     
-    LIMITED_FIELDS   = %w[ orig-date from sender reply-to to cc bcc 
+    def charset
+      if self[:content_type] && self[:content_type].parameters
+        self[:content_type].parameters[:charset]
+      else
+        nil
+      end
+    end
+    
+    LIMITED_FIELDS   = %w[ date from sender reply-to to cc bcc 
                            message-id in-reply-to references subject
                            return-path content-type mime-version
                            content-transfer-encoding content-description 

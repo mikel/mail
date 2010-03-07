@@ -45,11 +45,11 @@ module Mail
 
       private
 
-      def strip_field(field_name, string)
-        if string.is_a?(Array)
-          string.join(', ')
+      def strip_field(field_name, value)
+        if value.is_a?(String)
+          value.to_s.gsub(/#{field_name}:\s+/i, '')
         else
-          string.to_s.gsub(/#{field_name}:\s+/i, '')
+          value
         end
       end
 

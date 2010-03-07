@@ -1,3 +1,7 @@
+== Wed Mar  3 05:23:04 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Dropped support for passing the field name as the first param on a field object, so ToField('To', 'string') is no longer supported, just do ToField('string') or ToField('To: string')
+
 == Wed Feb 24 09:14:56 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Fixed multiaddress bounce messages crashing when calling .bounced?  Now just take the first report and return that.

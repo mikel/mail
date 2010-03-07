@@ -8,17 +8,16 @@ module Mail
     FIELD_NAME = 'content-id'
     CAPITALIZED_FIELD = "Content-ID"
     
-    def initialize(*args)
+    def initialize(value = nil, charset = 'utf-8')
       @uniq = 1
-      if args.last.blank?
-        self.name = CAPITALIZED_FIELD
-        self.value = generate_content_id
+      if value.blank?
+        value = generate_content_id
       else
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+        value = strip_field(FIELD_NAME, value)
       end
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
-
     end
     
     def parse(val = value)

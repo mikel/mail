@@ -34,11 +34,10 @@ module Mail
     FIELD_NAME = 'reply-to'
     CAPITALIZED_FIELD = 'Reply-To'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
-
     end
     
     def encoded

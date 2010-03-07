@@ -144,5 +144,40 @@ describe Mail::Field do
 
   end
   
+  describe "passing an encoding" do
+    it "should allow you to send in unencoded strings to fields and encode them" do
+      subject = Mail::SubjectField.new("This is あ string", 'utf-8')
+      subject.encoded.should == "Subject: =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=\r\n"
+    end
+
+    it "should allow you to send in unencoded strings to address fields and encode them" do
+      to = Mail::ToField.new('"Mikel Lindsああr" <mikel@test.lindsaar.net>', 'utf-8')
+      to.encoded.should == "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+    end
+
+    it "should allow you to send in unencoded strings without quotes to address fields and encode them" do
+      to = Mail::ToField.new('Mikel Lindsああr <mikel@test.lindsaar.net>', 'utf-8')
+      to.encoded.should == "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+    end
+
+    it "should allow you to send in unencoded strings to address fields and encode them" do
+      to = Mail::ToField.new("あdあ <ada@test.lindsaar.net>", 'utf-8')
+      to.encoded.should == "To: =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+    end
+
+    it "should allow you to send in multiple unencoded strings to address fields and encode them" do
+      to = Mail::ToField.new(["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"], 'utf-8')
+      to.encoded.should == "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+    end
+
+    it "should allow you to send in multiple unencoded strings to any address field" do
+      mail = Mail.new
+      mail.charset = 'utf-8'
+      [Mail::ToField, Mail::FromField, Mail::CcField, Mail::ReplyToField].each do |klass|
+        field = klass.send(new, ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"], 'utf-8')
+        field.encoded.should == "#{klass::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      end
+    end
+  end
 
 end

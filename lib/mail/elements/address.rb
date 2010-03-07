@@ -84,7 +84,7 @@ module Mail
     def display_name
       parse unless @parsed
       @display_name ||= get_display_name
-      Encodings.decode_encode(@display_name, @output_type) if @display_name
+      Encodings.decode_encode(@display_name.to_s, @output_type) if @display_name
     end
     
     # Provides a way to assign a display name to an already made Mail::Address object.

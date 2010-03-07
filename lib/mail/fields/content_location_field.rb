@@ -8,8 +8,8 @@ module Mail
     FIELD_NAME = 'content-location'
     CAPITALIZED_FIELD = 'Content-Location'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last))
+    def initialize(value = nil, charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
 

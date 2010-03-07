@@ -22,10 +22,19 @@ module Mail
     include Mail::CommonField
     include Mail::Utilities
     
-    def initialize(*args)
-      self.name = args.first
-      self.value = args.last
+    def initialize(name = nil, value = nil, charset = nil)
+      self.name    = name
+      self.value   = value
+      self.charset = charset
       self
+    end
+    
+    def charset
+      @charset
+    end
+    
+    def charset=(val)
+      @charset = val
     end
     
     def default

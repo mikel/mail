@@ -15,12 +15,6 @@ describe Mail::ResentCcField do
       Mail::ResentCcField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should accept two strings with the field separate" do
-      t = Mail::ResentCcField.new('Resent-Cc', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Resent-Cc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
-    end
-
     it "should accept a string with the field name" do
       t = Mail::ResentCcField.new('Resent-Cc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'Resent-Cc'

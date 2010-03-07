@@ -202,8 +202,6 @@ describe Mail::Message do
         @mail.header_fields.length.should == 0
       end
       
-      
-      
     end
 
     describe "with :method=" do

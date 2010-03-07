@@ -65,15 +65,15 @@ module Mail
     # parameters:
     # 
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
-    def initialize(name, value = nil)
+    def initialize(name, value = nil, charset = 'utf-8')
       case
       when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
         name, value = split(name)
-        create_field(name, value)
+        create_field(name, value, charset)
       when name !~ /:/ && value.blank?  # Field.new("field-name")
-        create_field(name, nil)
+        create_field(name, nil, charset)
       else                              # Field.new("field-name", "value")
-        create_field(name, value)
+        create_field(name, value, charset)
       end
       return self
     end
@@ -94,8 +94,8 @@ module Mail
       field.value
     end
     
-    def value=(str)
-      create_field(name, str)
+    def value=(val)
+      create_field(name, val, charset)
     end
     
     def to_s
@@ -103,7 +103,7 @@ module Mail
     end
     
     def update(name, value)
-      create_field(name, value)
+      create_field(name, value, charset)
     end
     
     def same( other )
@@ -138,78 +138,78 @@ module Mail
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
     end
 
-    def create_field(name, value)
+    def create_field(name, value, charset)
       begin
-        self.field = new_field(name, value)
+        self.field = new_field(name, value, charset)
       rescue
-        self.field = Mail::UnstructuredField.new(name, value)
+        self.field = Mail::UnstructuredField.new(name, value, charset)
       end
     end
 
-    def new_field(name, value)
+    def new_field(name, value, charset)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
       case name.to_s
       when /^to$/i
-        ToField.new(name, value)
+        ToField.new(value, charset)
       when /^cc$/i
-        CcField.new(name, value)
+        CcField.new(value, charset)
       when /^bcc$/i
-        BccField.new(name, value)
+        BccField.new(value, charset)
       when /^message-id$/i
-        MessageIdField.new(name, value)
+        MessageIdField.new(value, charset)
       when /^in-reply-to$/i
-        InReplyToField.new(name, value)
+        InReplyToField.new(value, charset)
       when /^references$/i
-        ReferencesField.new(name, value)
+        ReferencesField.new(value, charset)
       when /^subject$/i
-        SubjectField.new(name, value)
+        SubjectField.new(value, charset)
       when /^comments$/i
-        CommentsField.new(name, value)
+        CommentsField.new(value, charset)
       when /^keywords$/i
-        KeywordsField.new(name, value)
+        KeywordsField.new(value, charset)
       when /^date$/i
-        DateField.new(name, value)
+        DateField.new(value, charset)
       when /^from$/i
-        FromField.new(name, value)
+        FromField.new(value, charset)
       when /^sender$/i
-        SenderField.new(name, value)
+        SenderField.new(value, charset)
       when /^reply-to$/i
-        ReplyToField.new(name, value)
+        ReplyToField.new(value, charset)
       when /^resent-date$/i
-        ResentDateField.new(name, value)
+        ResentDateField.new(value, charset)
       when /^resent-from$/i
-        ResentFromField.new(name, value)
+        ResentFromField.new(value, charset)
       when /^resent-sender$/i 
-        ResentSenderField.new(name, value)
+        ResentSenderField.new(value, charset)
       when /^resent-to$/i
-        ResentToField.new(name, value)
+        ResentToField.new(value, charset)
       when /^resent-cc$/i
-        ResentCcField.new(name, value)
+        ResentCcField.new(value, charset)
       when /^resent-bcc$/i
-        ResentBccField.new(name, value)
+        ResentBccField.new(value, charset)
       when /^resent-message-id$/i
-        ResentMessageIdField.new(name, value)
+        ResentMessageIdField.new(value, charset)
       when /^return-path$/i
-        ReturnPathField.new(name, value)
+        ReturnPathField.new(value, charset)
       when /^received$/i
-        ReceivedField.new(name, value)
+        ReceivedField.new(value, charset)
       when /^mime-version$/i
-        MimeVersionField.new(name, value)
+        MimeVersionField.new(value, charset)
       when /^content-transfer-encoding$/i
-        ContentTransferEncodingField.new(name, value)
+        ContentTransferEncodingField.new(value, charset)
       when /^content-description$/i
-        ContentDescriptionField.new(name, value)
+        ContentDescriptionField.new(value, charset)
       when /^content-disposition$/i
-        ContentDispositionField.new(name, value)
+        ContentDispositionField.new(value, charset)
       when /^content-type$/i
-        ContentTypeField.new(name, value)
+        ContentTypeField.new(value, charset)
       when /^content-id$/i
-        ContentIdField.new(name, value)
+        ContentIdField.new(value, charset)
       when /^content-location$/i
-        ContentLocationField.new(name, value)
+        ContentLocationField.new(value, charset)
       else 
-        OptionalField.new(name, value)
+        OptionalField.new(name, value, charset)
       end
       
     end

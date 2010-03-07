@@ -8,8 +8,8 @@ module Mail
     FIELD_NAME = 'content-transfer-encoding'
     CAPITALIZED_FIELD = 'Content-Transfer-Encoding'
     
-    def initialize(*args)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, args.last.to_s.downcase))
+    def initialize(value = nil, charset = 'utf-8')
+      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value.to_s.downcase), charset)
     end
     
     def parse(val = value)

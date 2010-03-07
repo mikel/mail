@@ -38,8 +38,19 @@ describe Mail::Header do
     end
     
     it "should say if it has a content_id field defined" do
-      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nContent-ID: 1234")
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nContent-ID: <1234@me.com>")
       header.should be_has_content_id
+    end
+    
+    it "should know it's own charset" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nContent-ID: <1234@me.com>")
+      header.charset.should == nil
+    end
+    
+    it "should know it's own charset if set" do
+      header = Mail::Header.new
+      header['content-type'] = 'text/plain; charset=utf-8'
+      header.charset.should == 'utf-8'
     end
     
   end
@@ -212,7 +223,7 @@ describe Mail::Header do
     end
     
     it "should not split a wrapped header in two" do
-      header = Mail::Header.new("To: Mikel\r\n\tLindsaar\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
+      header = Mail::Header.new("To: mikel lindsaar\r\n\t<mikel@lindsaar>\r\nFrom: bob\r\nSubject: This is\r\n a long\r\n\t \t \t \t    badly formatted             \r\n       \t\t  \t       field")
       header.fields.length.should == 3
     end
     
@@ -403,16 +414,22 @@ HERE
     
   end
   
-  describe "handling fields with multiple values" do
+  describe "handling date fields with multiple values" do
     it "should know which fields can only appear once" do
-      %w[ orig-date from sender reply-to to cc bcc 
-          message-id in-reply-to references subject
-          content-type content-transfer-encoding
-          mime-version ].each do |field|
+      %w[ date ].each do |field|
         header = Mail::Header.new
-        header[field] = "1234"
-        header[field] = "5678"
-        header[field].value.should == "5678"
+        header[field] = "Thu, 05 Jun 2008 10:53:29 -0700"
+        header[field] = "Mon, 15 Nov 2010 11:05:29 -1100"
+        header[field].value.should == "Mon, 15 Nov 2010 11:05:29 -1100"
+      end
+    end
+  
+    it "should know which fields can only appear once" do
+      %w[ from sender reply-to to cc bcc ].each do |field|
+        header = Mail::Header.new
+        header[field] = "mikel@test.lindsaar.net"
+        header[field] = "ada@test.lindsaar.net"
+        header[field].value.should == "ada@test.lindsaar.net"
       end
     end
 

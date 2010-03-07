@@ -16,12 +16,6 @@ describe Mail::FromField do
       Mail::FromField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
     end
 
-    it "should accept two strings with the field separate" do
-      t = Mail::FromField.new('From', 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'From'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
-    end
-
     it "should accept a string with the field name" do
       t = Mail::FromField.new('From: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       t.name.should == 'From'

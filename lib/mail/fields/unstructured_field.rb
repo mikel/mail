@@ -17,10 +17,27 @@ module Mail
     include Mail::CommonField
     include Mail::Utilities
     
-    def initialize(*args)
-      self.name = args.first
-      self.value = args.last
+    def initialize(name, value, charset = nil)
+      if charset
+        self.charset = charset
+      else
+        if value.respond_to?(:encoding)
+          self.charset = value.encoding
+        else
+          self.charset = $KCODE
+        end
+      end
+      self.name = name
+      self.value = value
       self
+    end
+    
+    def charset
+      @charset
+    end
+    
+    def charset=(val)
+      @charset = val
     end
     
     def encoded
@@ -108,8 +125,7 @@ module Mail
       if value.ascii_only?
         value
       else
-        RUBY_VERSION < '1.9' ? encoding = $KCODE : encoding = @value.encoding
-        Encodings.b_value_encode(value, encoding)
+        Encodings.b_value_encode(value, @charset)
       end
     end
 

@@ -9,12 +9,6 @@ describe Mail::KeywordsField do
       doing { Mail::KeywordsField.new("this, is, email") }.should_not raise_error
     end
     
-    it "should accept two strings with the field separate" do
-      k = Mail::KeywordsField.new('Keywords', 'these are keywords, so there')
-      k.name.should == 'Keywords'
-      k.value.should == 'these are keywords, so there'
-    end
-    
     it "should accept a string with the field name" do
       k = Mail::KeywordsField.new('Keywords: these are keywords, so there')
       k.name.should == 'Keywords'

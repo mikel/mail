@@ -29,16 +29,14 @@ module Mail
     FIELD_NAME = 'date'
     CAPITALIZED_FIELD = "Date"
     
-    def initialize(*args)
-      if args.last.blank?
-        self.name = CAPITALIZED_FIELD
-        self.value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
-        self
+    def initialize(value = nil, charset = 'utf-8')
+      if value.blank?
+        value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else
-        value = strip_field(FIELD_NAME, args.last)
+        value = strip_field(FIELD_NAME, value)
         value = ::DateTime.parse(value.to_s).strftime('%a, %d %b %Y %H:%M:%S %z')
-        super(CAPITALIZED_FIELD, value)
       end
+      super(CAPITALIZED_FIELD, value, charset)
     end
     
     def encoded
