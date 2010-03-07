@@ -170,6 +170,46 @@ module Mail
     Mail.new(File.read(filename))
   end
   
+  # Initialize the observers and interceptors arrays
+  @@delivery_notification_observers = []
+  @@delivery_interceptors = []
+  
+  # You can register an object to be informed of every email that is sent through
+  # this method.
+  # 
+  # Your object needs to respond to a single method #delivered_email(mail)
+  # which receives the email that is sent.
+  def Mail.register_observer(observer)
+    unless @@delivery_notification_observers.include?(observer)
+      @@delivery_notification_observers << observer
+    end
+  end
+
+  # You can register an object to be given every mail object that will be sent,
+  # before it is sent.  So if you want to add special headers or modify any
+  # email that gets sent through the Mail library, you can do so.
+  # 
+  # Your object needs to respond to a single method #delivering_email(mail)
+  # which receives the email that is about to be sent.  Make your modifications
+  # directly to this object.
+  def Mail.register_interceptor(interceptor)
+    unless @@delivery_interceptors.include?(interceptor)
+      @@delivery_interceptors << interceptor
+    end
+  end
+  
+  def Mail.inform_observers(mail)
+    @@delivery_notification_observers.each do |observer|
+      observer.delivered_email(mail)
+    end
+  end
+  
+  def Mail.inform_interceptors(mail)
+    @@delivery_interceptors.each do |interceptor|
+      interceptor.delivering_email(mail)
+    end
+  end
+
   protected
   
   def Mail.random_tag

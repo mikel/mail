@@ -174,6 +174,10 @@ module Mail
       raise NoMethodError, 'Can not decode an entire header as there could be character set conflicts, try calling #decoded on the various fields.'
     end
 
+    def field_summary
+      fields.map { |f| "<#{f.name}: #{f.value}>" }.join(", ")
+    end
+
     # Returns true if the header has a Message-ID defined (empty or not)
     def has_message_id?
       !fields.select { |f| f.responsible_for?('Message-ID') }.empty?

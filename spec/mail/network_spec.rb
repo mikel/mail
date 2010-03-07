@@ -219,7 +219,7 @@ describe "Mail" do
     
     class MyDeliveryHandler
       def deliver_mail(mail)
-        mail.deliver!
+        yield
       end
     end
 
@@ -280,15 +280,15 @@ describe "Mail" do
       end
       
       it "should tell it's observers that it was told to deliver an email even if perform_deliveries is false" do
-        @message.register_for_delivery_notification(MyObserver)
+        Mail.register_observer(MyObserver)
         @message.perform_deliveries = false
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
       
       it "should tell it's observers that it was told to deliver an email even if it is using a delivery_handler" do
+        Mail.register_observer(MyObserver)
         @message.delivery_handler = MyDeliveryHandler.new
-        @message.register_for_delivery_notification(MyObserver)
         @message.perform_deliveries = false
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
@@ -324,7 +324,7 @@ describe "Mail" do
 
       it "mail should be told to :deliver once and then :deliver! once by the delivery handler" do
         @message.delivery_handler = MyDeliveryHandler.new
-        @message.should_receive(:deliver!).exactly(:once)
+        @message.should_receive(:do_delivery).exactly(:once)
         @message.deliver
       end
 

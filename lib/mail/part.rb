@@ -32,27 +32,34 @@ module Mail
     end
     
     def bounced?
-      !!(action =~ /failed/i)
+      if action.is_a?(Array)
+        !!(action.first =~ /failed/i)
+      else
+        !!(action =~ /failed/i)
+      end
     end
     
+    
+    # Either returns the action if the message has just a single report, or an
+    # array of all the actions, one for each report
     def action
-      delivery_status_data['action'].value
+      get_return_values('action')
     end
     
     def final_recipient
-      delivery_status_data['final-recipient'].value
+      get_return_values('final-recipient')
     end
     
     def error_status
-      delivery_status_data['status'].value
+      get_return_values('status')
     end
 
     def diagnostic_code
-      delivery_status_data['diagnostic-code'].value
+      get_return_values('diagnostic-code')
     end
     
     def remote_mta
-      delivery_status_data['remote-mta'].value
+      get_return_values('remote-mta')
     end
     
     def retryable?
@@ -60,6 +67,14 @@ module Mail
     end
 
     private
+    
+    def get_return_values(key)
+      if delivery_status_data[key].is_a?(Array)
+        delivery_status_data[key].map { |a| a.value }
+      else
+        delivery_status_data[key].value
+      end
+    end
     
     # A part may not have a header.... so, just init a body if no header
     def parse_message

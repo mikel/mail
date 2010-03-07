@@ -1,0 +1,179 @@
+Received: from lvmail01.LL.com (LHLO lvmail01.LL.com)
+ (10.60.6.3) by lvmail01.LL.com with LMTP; Tue, 23 Feb 2010 22:16:41
+ -0800 (PST)
+Received: by lvmail01.LL.com (Postfix)
+	id 3E47A1BC025; Tue, 23 Feb 2010 22:16:41 -0800 (PST)
+Date: Tue, 23 Feb 2010 22:16:41 -0800 (PST)
+From: MAILER-DAEMON@lvmail01.LL.com (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: rahul.chaudhari@LL.com
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="9B7841BC027.1266992201/lvmail01.LL.com"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20100224061641.3E47A1BC025@lvmail01.LL.com>
+
+This is a MIME-encapsulated message.
+
+--9B7841BC027.1266992201/lvmail01.LL.com
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host lvmail01.LL.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<bbbbvhvbbvkjbhfbvbvjhb@gmail.com>: host
+    gmail-smtp-in.l.google.com[209.85.223.33] said: 550-5.1.1 The email account
+    that you tried to reach does not exist. Please try 550-5.1.1
+    double-checking the recipient's email address for typos or 550-5.1.1
+    unnecessary spaces. Learn more at                              550 5.1.1
+    http://mail.google.com/support/bin/answer.py?answer=6596 41si5422799iwn.27
+    (in reply to RCPT TO command)
+
+<bscdbcjhasbcjhbdscbhbsdhcbj@gmail.com>: host
+    gmail-smtp-in.l.google.com[209.85.223.33] said: 550-5.1.1 The email account
+    that you tried to reach does not exist. Please try 550-5.1.1
+    double-checking the recipient's email address for typos or 550-5.1.1
+    unnecessary spaces. Learn more at                              550 5.1.1
+    http://mail.google.com/support/bin/answer.py?answer=6596 41si5422799iwn.27
+    (in reply to RCPT TO command)
+
+<egyfefsdvsfvvhjsd@gmail.com>: host gmail-smtp-in.l.google.com[209.85.223.33]
+    said: 550-5.1.1 The email account that you tried to reach does not exist.
+    Please try 550-5.1.1 double-checking the recipient's email address for
+    typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27 (in reply to RCPT TO command)
+
+<kfhejkfbsjkjsbhds@gmail.com>: host gmail-smtp-in.l.google.com[209.85.223.33]
+    said: 550-5.1.1 The email account that you tried to reach does not exist.
+    Please try 550-5.1.1 double-checking the recipient's email address for
+    typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27 (in reply to RCPT TO command)
+
+<qfvhgsvhgsduiohncdhcvhsdfvsfygusd@gmail.com>: host
+    gmail-smtp-in.l.google.com[209.85.223.33] said: 550-5.1.1 The email account
+    that you tried to reach does not exist. Please try 550-5.1.1
+    double-checking the recipient's email address for typos or 550-5.1.1
+    unnecessary spaces. Learn more at                              550 5.1.1
+    http://mail.google.com/support/bin/answer.py?answer=6596 41si5422799iwn.27
+    (in reply to RCPT TO command)
+
+--9B7841BC027.1266992201/lvmail01.LL.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; lvmail01.LL.com
+X-Postfix-Queue-ID: 9B7841BC027
+X-Postfix-Sender: rfc822; rahul.chaudhari@LL.com
+Arrival-Date: Tue, 23 Feb 2010 22:16:15 -0800 (PST)
+
+Final-Recipient: rfc822; bbbbvhvbbvkjbhfbvbvjhb@gmail.com
+Original-Recipient: rfc822;bbbbvhvbbvkjbhfbvbvjhb@gmail.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27
+
+Final-Recipient: rfc822; bscdbcjhasbcjhbdscbhbsdhcbj@gmail.com
+Original-Recipient: rfc822;bscdbcjhasbcjhbdscbhbsdhcbj@gmail.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27
+
+Final-Recipient: rfc822; egyfefsdvsfvvhjsd@gmail.com
+Original-Recipient: rfc822;egyfefsdvsfvvhjsd@gmail.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27
+
+Final-Recipient: rfc822; kfhejkfbsjkjsbhds@gmail.com
+Original-Recipient: rfc822;kfhejkfbsjkjsbhds@gmail.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27
+
+Final-Recipient: rfc822; qfvhgsvhgsduiohncdhcvhsdfvsfygusd@gmail.com
+Original-Recipient: rfc822;qfvhgsvhgsduiohncdhcvhsdfvsfygusd@gmail.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at
+    550 5.1.1 http://mail.google.com/support/bin/answer.py?answer=6596
+    41si5422799iwn.27
+
+--9B7841BC027.1266992201/lvmail01.LL.com
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <rahul.chaudhari@LL.com>
+Received: from localhost (localhost [127.0.0.1])
+	by lvmail01.LL.com (Postfix) with ESMTP id 9B7841BC027;
+	Tue, 23 Feb 2010 22:16:15 -0800 (PST)
+X-Virus-Scanned: amavisd-new at LL.com
+Received: from lvmail01.LL.com ([127.0.0.1])
+	by localhost (lvmail01.LL.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HXMOLJWXGcFK; Tue, 23 Feb 2010 22:16:15 -0800 (PST)
+Received: from lvmail01.LL.com (lvmail01.LL.com [10.60.6.3])
+	by lvmail01.LL.com (Postfix) with ESMTP id 12D311BC025;
+	Tue, 23 Feb 2010 22:16:15 -0800 (PST)
+Date: Tue, 23 Feb 2010 22:16:14 -0800 (PST)
+From: Rahul Chaudhari <rahul.chaudhari@LL.com>
+To: egyfefsdvsfvvhjsd@gmail.com, kfhejkfbsjkjsbhds@gmail.com, 
+	bbbbvhvbbvkjbhfbvbvjhb@gmail.com, 
+	qfvhgsvhgsduiohncdhcvhsdfvsfygusd@gmail.com, 
+	bscdbcjhasbcjhbdscbhbsdhcbj@gmail.com
+Message-ID: <118707422.15521266992174819.JavaMail.root@lvmail01>
+Subject: Test of bounce email
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.50.4.44]
+X-Mailer: Zimbra 6.0.1_GA_1816.UBUNTU8_64 (ZimbraWebClient - FF3.0 (Linux)/6.0.1_GA_1816.UBUNTU8_64)
+
+This is just testing.
+
+
+Thanks & Regards,
+Rahul P. Chaudhari
+Software Developer
+LIVIA India Private Limited
+
+Board Line - +91.22.6725 5100
+Hand Phone - +91.809 783 3437
+Web URL: www.LL.com 
+
+--9B7841BC027.1266992201/lvmail01.LL.com--

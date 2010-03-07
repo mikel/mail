@@ -1,3 +1,7 @@
+== Wed Feb 24 09:14:56 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Fixed multiaddress bounce messages crashing when calling .bounced?  Now just take the first report and return that.
+
 == Thu Jan 28 00:25:02 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added TMM1's patch to not raise errors if a email is not multipart/report
