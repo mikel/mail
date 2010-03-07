@@ -85,7 +85,8 @@ module Mail # :doc:
       require "mail/parsers/#{parser}"
     rescue LoadError
       # Otherwise, get treetop to compile and load it
-      require 'treetop'
+      require 'treetop/runtime'
+      require 'treetop/compiler'
       Treetop.load("mail/parsers/#{parser}")
     end
   end
