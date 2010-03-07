@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-$:.unshift File.expand_path('../lib', File.dirname(__FILE__))
+require File.expand_path('../environment', __FILE__)
 
 unless defined?(MAIL_ROOT)
   STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
@@ -9,13 +9,6 @@ end
 
 unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
-end
-
-environment = File.expand_path('../../vendor/gems/environment', __FILE__)
-if File.exist?("#{environment}.rb")
-  require environment
-else
-  abort 'Missing bundled environment. `gem install bundle && gem bundle` and try again.'
 end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
