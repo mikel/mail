@@ -1,8 +1,8 @@
 .DS_Store
+.bundle
 coverage
 rdoc
 gems
-bin
 pkg
 spec/fixtures/emails/failed_emails/
 mail.tmproj

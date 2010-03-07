@@ -1,14 +1,10 @@
-environment = File.expand_path('../vendor/gems/environment', __FILE__)
-if File.exist?("#{environment}.rb")
-  require environment
-end
+require File.expand_path('../spec/environment', __FILE__)
 
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'spec/rake/spectask'
 require 'cucumber/rake/task'
-require 'bundler'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
@@ -31,7 +27,7 @@ spec = Gem::Specification.new do |s|
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
-    pkg.gem_spec = spec
+  pkg.gem_spec = spec
 end
 
 task :default => :spec
