@@ -78,13 +78,14 @@ module Mail # :doc:
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location ]
-  
   parsers.each do |parser|
     begin
       # Try requiring the pre-compiled ruby version first
+      require 'treetop/runtime'
       require "mail/parsers/#{parser}"
     rescue LoadError
       # Otherwise, get treetop to compile and load it
+      require 'treetop'
       Treetop.load("mail/parsers/#{parser}")
     end
   end
