@@ -11,7 +11,7 @@ describe Mail::ResentDateField do
   end
   
   it "should mix in the CommonAddress module" do
-    Mail::ResentDateField.included_modules.should include(Mail::CommonDate::InstanceMethods) 
+    Mail::ResentDateField.included_modules.should include(Mail::CommonDate) 
   end
 
   it "should accept two strings with the field separate" do
