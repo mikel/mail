@@ -1,8 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'activesupport', '2.3.6',
-  :git => 'git://github.com/rails/rails.git',
-  :ref => '2-3-stable'
+gem "activesupport", "2.3.6.pre"
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 gem "mime-types"
 
