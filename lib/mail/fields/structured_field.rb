@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/fields/common/common_field'
+
 module Mail
   # Provides access to a structured header field
   #

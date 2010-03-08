@@ -26,6 +26,8 @@
 # 
 #  mail[:in_reply_to].message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 # 
+require 'mail/fields/common/common_message_id'
+
 module Mail
   class InReplyToField < StructuredField
     

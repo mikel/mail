@@ -26,6 +26,8 @@
 #  mail[:reply_to].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:reply_to].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
+require 'mail/fields/common/common_address'
+
 module Mail
   class ReplyToField < StructuredField
     

@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/fields/common/address_container'
+
 module Mail
   module CommonAddress # :nodoc:
     def parse(val = value)

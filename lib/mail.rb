@@ -48,16 +48,6 @@ module Mail # :doc:
   require 'mail/field'
   require 'mail/field_list'
 
-  # Load in all common header fields modules
-  require 'mail/fields/common/address_container'
-  require 'mail/fields/common/common_address'
-  require 'mail/fields/common/common_date'
-  require 'mail/fields/common/common_field'
-  require 'mail/fields/common/common_message_id'
-  require 'mail/fields/common/parameter_hash'
-
-  require 'mail/fields/structured_field'
-  require 'mail/fields/unstructured_field'
   require 'mail/envelope'
 
   require 'mail/vendor/treetop'
@@ -78,25 +68,10 @@ module Mail # :doc:
     end
   end
 
-  # Load in all header field elements
-  elems = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'elements', '*.rb'))
-  elems.each do |elem|
-    require "mail/elements/#{File.basename(elem, '.rb')}"
-  end
-  
-  # Load in all header fields
-  fields = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'fields', '*.rb'))
-  fields.each do |field|
-    require "mail/fields/#{File.basename(field, '.rb')}"
-  end
-  
-  # Load in all transfer encodings
-  elems = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'encodings', '*.rb'))
-  elems.each do |elem|
-    require "mail/encodings/#{File.basename(elem, '.rb')}"
-  end
-  
-  # Finally... require all the Mail.methods
-  require File.join('mail', 'mail')
+  # Autoload header field elements and transfer encodings.
+  require 'mail/elements'
+  require 'mail/encodings'
 
+  # Finally... require all the Mail.methods
+  require 'mail/mail'
 end
