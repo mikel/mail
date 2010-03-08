@@ -35,12 +35,9 @@ module Mail # :doc:
   require 'mail/patterns'
   require 'mail/utilities'
   require 'mail/configuration'
-  require 'mail/network/delivery_methods/smtp'
-  require 'mail/network/delivery_methods/file_delivery'
-  require 'mail/network/delivery_methods/sendmail'
-  require 'mail/network/delivery_methods/test_mailer'
-  require 'mail/network/retriever_methods/pop3'
-  require 'mail/network/retriever_methods/imap'
+
+  # Autoload mail send and receive classes.
+  require 'mail/network'
 
   require 'mail/message'
   require 'mail/part'

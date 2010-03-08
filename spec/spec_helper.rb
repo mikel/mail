@@ -155,6 +155,7 @@ class MockPOP3
   end
 end
 
+require 'net/pop'
 class Net::POP3
   def self.new(*args)
     MockPOP3.new
