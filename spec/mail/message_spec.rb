@@ -712,8 +712,8 @@ describe Mail::Message do
         end
         message.parts.first.parts[0].body.decoded.should == "Nothing to see here."
         message.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>"
-        message.encoded.should match(%r{Nothing to see here\.})
-        message.encoded.should match(%r{<b>test</b> HTML<br/>})
+        message.encoded.should match %r{Nothing to see here\.}
+        message.encoded.should match %r{<b>test</b> HTML<br/>}
       end
       
       it "should allow you to init on an array of addresses from a hash" do
@@ -881,7 +881,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          mail.to_s.should =~ /Mime-Version: 3.0 \(This is an unreal version number\)\r\n/
+          mail.to_s.should =~ /Mime-Version: 3.0\r\n/
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -994,14 +994,14 @@ describe Mail::Message do
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
-          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="US-ASCII"\r\n]
+          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset=US-ASCII\r\n]
           mail.content_type_parameters.should == {"charset" => "US-ASCII"}
         end
         
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
-          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="UTF-8"\r\n]
+          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset=UTF-8\r\n]
           mail.content_type_parameters.should == {"charset" => "UTF-8"}
         end
 
