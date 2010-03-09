@@ -6,7 +6,11 @@ module Mail
   # have the name*0="blah", name*1="bleh" keys, and will just return
   # a single key called name="blahbleh" and do any required un-encoding
   # to make that happen
+  # Parameters are defined in RFC2045, split keys are in RFC2231
+
   class ParameterHash < HashWithIndifferentAccess
+
+    include Mail::Utilities
 
     def [](key_name)
       pairs = select { |k,v| k =~ /^#{key_name}\*/ }
@@ -31,9 +35,14 @@ module Mail
           value = Mail::Encodings.param_encode(value)
           key_name = "#{key_name}*"
         end
-        %Q{#{key_name}="#{value}"}
+        %Q{#{key_name}=#{quote_token(value)}}
       end.join(";\r\n\t")
     end
 
+    def decoded
+      map.sort { |a,b| a.first <=> b.first }.map do |key_name, value|
+        %Q{#{key_name}=#{quote_token(value)}}
+      end.join("; ")
+    end
   end
 end
