@@ -51,7 +51,7 @@ module Mail
     end
     
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}"
+      "#{CAPITALIZED_FIELD}: #{value}\r\n"
     end
     
     def decoded
