@@ -193,7 +193,7 @@ module Mail
       !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
-    # Returns true if the header has a message_id defined (empty or not)
+    # Returns true if the header has a MIME version defined (empty or not)
     def has_mime_version?
       !fields.select { |f| f.responsible_for?('Mime-Version') }.empty?
     end

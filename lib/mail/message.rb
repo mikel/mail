@@ -1262,8 +1262,8 @@ module Mail
     
     # Creates a new empty Mime Version field and inserts it in the correct order
     # into the Header.  The MimeVersion object will automatically generate
-    # DateTime.now's date if you try and encode it or output it to_s without
-    # specifying a date yourself.
+    # set itself to '1.0' if you try and encode it or output it to_s without
+    # specifying a version yourself.
     # 
     # It will preserve any date you specify if you do.
     def add_mime_version(ver_val = '')
