@@ -226,6 +226,10 @@ module Mail
       !!raw_source.to_s.ascii_only?
     end
     
+    def empty?
+      !!raw_source.to_s.empty?
+    end
+    
     private
     
     def crlf_boundary

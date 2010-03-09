@@ -1281,9 +1281,9 @@ module Mail
     # 
     # Otherwise raises a warning
     def add_charset
-      if body.only_us_ascii?
+      if body.only_us_ascii? and !body.empty?
         header[:content_type].parameters['charset'] = 'US-ASCII'
-      else
+      elsif !body.empty?
         warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_type].parameters['charset'] = 'UTF-8'
