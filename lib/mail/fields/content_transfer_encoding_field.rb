@@ -15,11 +15,11 @@ module Mail
     def parse(val = value)
       unless val.blank?
         @element = Mail::ContentTransferEncodingElement.new(val)
-        @tree = @element.tree
       end
     end
     
     def tree
+      STDERR.puts("tree is deprecated.  Please use encoding to get parse result\n#{caller}")
       @element ||= Mail::ContentTransferEncodingElement.new(value)
       @tree ||= @element.tree
     end
@@ -34,11 +34,11 @@ module Mail
     
     # TODO: Fix this up
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+      "#{CAPITALIZED_FIELD}: #{encoding}\r\n"
     end
     
     def decoded
-      value
+      encoding
     end
     
   end

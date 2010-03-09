@@ -108,11 +108,21 @@ module Mail
     
     # TODO: Fix this up
     def encoded
-      "#{CAPITALIZED_FIELD}: #{content_type};\r\n\t#{parameters.encoded}\r\n"
+      if parameters.length > 0
+        p = ";\r\n\t#{parameters.encoded}\r\n"
+      else
+        p = ""
+      end
+      "#{CAPITALIZED_FIELD}: #{content_type}" + p
     end
     
     def decoded
-      value
+      if parameters.length > 0
+        p = "; #{parameters.decoded}"
+      else
+        p = ""
+      end
+      "#{content_type}" + p
     end
 
     private
