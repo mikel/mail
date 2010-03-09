@@ -10,7 +10,7 @@ module Mail
   # 
   # * A Header object which contians all information and settings of the header of the email
   # * Body object which contains all parts of the email that are not part of the header, this
-  #   includes any attachments, body text, mime parts etc.
+  #   includes any attachments, body text, MIME parts etc.
   # 
   # ==Per RFC2822
   # 
@@ -603,14 +603,14 @@ module Mail
       header[:message_id] = val
     end
     
-    # Returns the mime version of the email as a string
+    # Returns the MIME version of the email as a string
     # 
     # Example:
     # 
     #  mail.mime_version = '1.0'
     #  mail.mime_version #=> '1.0'
     # 
-    # Also allows you to set the mime version by passing a string as a parameter.
+    # Also allows you to set the MIME version by passing a string as a parameter.
     # 
     # Example:
     # 
@@ -620,7 +620,7 @@ module Mail
       default :mime_version, val
     end
     
-    # Sets the mime version of the email by accepting a string
+    # Sets the MIME version of the email by accepting a string
     # 
     # Example:
     # 
@@ -1313,7 +1313,7 @@ module Mail
       content_transfer_encoding
     end
     
-    # Returns the mime type of part we are on, this is taken from the content-type header
+    # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
       content_type ? header[:content_type].string : nil
     end
@@ -1425,7 +1425,7 @@ module Mail
     # 
     #  mail.attachments['filename.jpg'] = File.read('/path/to/filename.jpg')
     # 
-    # If you do this, then Mail will take the file name and work out the mime type
+    # If you do this, then Mail will take the file name and work out the MIME media type
     # set the Content-Type, Content-Disposition, Content-Transfer-Encoding and 
     # base64 encode the contents of the attachment all for you.
     # 
@@ -1537,7 +1537,7 @@ module Mail
     
     # Adds a file to the message.  You have two options with this method, you can
     # just pass in the absolute path to the file you want and Mail will read the file,
-    # get the filename from the path you pass in and guess the mime type, or you
+    # get the filename from the path you pass in and guess the MIME media type, or you
     # can pass in the filename as a string, and pass in the file content as a blob.
     # 
     # Example:

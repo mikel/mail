@@ -2,7 +2,7 @@
 module Mail
 
   # ParameterHash is an intelligent Hash that allows you to add
-  # parameter values including the mime extension paramaters that
+  # parameter values including the MIME extension paramaters that
   # have the name*0="blah", name*1="bleh" keys, and will just return
   # a single key called name="blahbleh" and do any required un-encoding
   # to make that happen

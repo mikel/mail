@@ -44,7 +44,7 @@ module Mail
       # Sanitize the value, handle special cases
       @element ||= Mail::ContentTypeElement.new(sanatize(value))
     rescue
-      # All else fails, just get the mime type
+      # All else fails, just get the MIME media type
       @element ||= Mail::ContentTypeElement.new(get_mime_type(value))
     end
     
@@ -135,7 +135,7 @@ module Mail
         "#{$1}/#{$2}; #{$3}"
       when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;(ISO[\w\d\-_]+)$/i
         # Microsoft helper:
-        # Handles 'mime/type;ISO-8559-1'
+        # Handles 'type/subtype;ISO-8559-1'
         "#{$1}/#{$2}; charset=#{quote_atom($3)}"
       when val.chomp =~ /^text;?$/i
         # Handles 'text;' and 'text'

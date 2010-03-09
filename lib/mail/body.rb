@@ -169,7 +169,7 @@ module Mail
       @preamble
     end
 
-    # Sets the preamble to a string (adds text before the first mime boundary)
+    # Sets the preamble to a string (adds text before the first MIME boundary)
     def preamble=( val )
       @preamble = val
     end
@@ -179,7 +179,7 @@ module Mail
       @epilogue
     end
     
-    # Sets the epilogue to a string (adds text after the last mime boundary)
+    # Sets the epilogue to a string (adds text after the last MIME boundary)
     def epilogue=( val )
       @epilogue = val
     end
