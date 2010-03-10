@@ -7,15 +7,25 @@ module Mail
   module Encodings
     
     include Mail::Patterns
-    
+
+    @transfer_encodings = {}
+   
+    # Register transfer encoding
+    #
+    # Example
+    #
+    # Encodings.register "base64", Mail::Encodings::Base64
+    def Encodings.register(name, cls)
+        @transfer_encodings[name.to_s.gsub("-", "_").downcase] = cls
+    end
+ 
     # Is the encoding we want defined?
     # 
     # Example:
     # 
     #  Encodings.defined?(:base64) #=> true
     def Encodings.defined?( str )
-      string = str.to_s.split(/[_-]/).map { |v| v.capitalize }.join('')
-      RubyVer.has_constant?(Mail::Encodings, string)
+      @transfer_encodings.include? str.to_s.gsub("-", "_").downcase
     end
     
     # Gets a defined encoding type, QuotedPrintable or Base64 for now.
@@ -27,8 +37,7 @@ module Mail
     # 
     #  Encodings.get_encoding(:base64) #=> Mail::Encodings::Base64
     def Encodings.get_encoding( str )
-      string = str.to_s.split(/[_-]/).map { |v| v.capitalize }.join('')
-      RubyVer.get_constant(Mail::Encodings, string)
+      @transfer_encodings[str.to_s.gsub("-", "_").downcase]
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can

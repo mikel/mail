@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module Encodings
-    class Binary
+    class EightBit
 
       # Binary is an identiy encoding, meaning nothing to do
       
@@ -15,7 +15,7 @@ module Mail
         str
       end
      
-      Encodings.register('binary', self) 
+      Encodings.register('8bit', self) 
     end
   end
 end

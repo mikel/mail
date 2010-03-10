@@ -21,6 +21,8 @@ module Mail
         character.each_byte { |b| result << "=%02X" % b }
         result
       end
+
+      Encodings.register('quoted-printable', self)
     end
   end
 end
