@@ -1633,11 +1633,7 @@ module Mail
     end
 
     def decode_body
-      if Mail::Encodings.defined?(content_transfer_encoding)
-        Mail::Encodings.get_encoding(content_transfer_encoding).decode(body.encoded)
-      else
-        raise UnknownEncodingType, "Don't know how to decode #{content_transfer_encoding}, please call #encoded and decode it yourself."
-      end
+        body.decoded
     end
     
     # Returns true if this part is an attachment
@@ -1739,13 +1735,22 @@ module Mail
       @header = Mail::Header.new
       @body = Mail::Body.new
 
+      # We need to store the body until last, as we need all headers added first
+      body = nil
+
       passed_in_options.each_pair do |k,v|
         k = underscoreize(k).to_sym if k.class == String
         if k == :headers
           self.headers(v)
+        elsif k == :body
+          body = v
         else
           self[k] = v
         end
+      end
+
+      if body
+        self.body = body
       end
     end
     

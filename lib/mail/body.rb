@@ -137,6 +137,7 @@ module Mail
     end
     
     def decoded
+      # Handily the encodings we don't handle are identity encodings
       if encoding.nil? || !Encodings.defined?(encoding)
         raw_source.to_lf
       else
@@ -161,7 +162,7 @@ module Mail
     end
     
     def encoding=( val )
-      @encoding = val
+      @encoding = (val == "text") ? "8bit" : val
     end
 
     # Returns the preamble (any text that is before the first MIME boundary)
@@ -223,7 +224,8 @@ module Mail
     end
     
     def only_us_ascii?
-      !!raw_source.to_s.ascii_only?
+      raw_source.bytes {|b| return false if (b == 0 || b > 127)}
+      true
     end
     
     def empty?
@@ -241,7 +243,7 @@ module Mail
     end
     
     def set_charset
-      raw_source.ascii_only? ? @charset = 'US-ASCII' : @charset = nil
+      only_us_ascii? ? @charset = 'US-ASCII' : @charset = nil
     end
   end
 end

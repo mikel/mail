@@ -30,7 +30,7 @@ module Mail
 
     def []=(name, value)
       default_values = { :content_type => "#{set_mime_type(name)}; filename=\"#{name}\"",
-                         :content_transfer_encoding => 'Base64',
+                         :content_transfer_encoding => "#{guess_encoding}",
                          :content_disposition => "attachment; filename=\"#{name}\"" }
 
       if value.is_a?(Hash)
@@ -39,28 +39,31 @@ module Mail
 
         default_values[:body] = value.delete(:data) if value[:data]
 
-        # Only force encode base64 if the user has not specified an encoding
         if value[:transfer_encoding]
           default_values[:content_transfer_encoding] = value.delete(:transfer_encoding)
         elsif value[:encoding]
           default_values[:content_transfer_encoding] = value.delete(:encoding)
-        else
-          default_values[:body] = Mail::Encodings::Base64.encode(default_values[:body])
         end
 
         if value[:mime_type]
           default_values[:content_type] = value.delete(:mime_type)
+          @mime_type = MIME::Types[default_values[:content_type]].first
+          default_values[:content_transfer_encoding] = guess_encoding
         end
 
         hash = default_values.merge(value)
       else
-        default_values[:body] = Mail::Encodings::Base64.encode(value)
+        default_values[:body] = value
         hash = default_values
       end
 
       @parts_list << Part.new(hash)
     end
-    
+   
+    def guess_encoding
+      @mime_type.binary? ? "binary" : "text"
+    end 
+ 
     def set_mime_type(filename)
       # Have to do this because MIME::Types is not Ruby 1.9 safe yet
       if RUBY_VERSION >= '1.9'
