@@ -135,7 +135,7 @@ module Mail
       str.to_s.downcase.gsub('_', '-')
     end
 
-    # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
+    # Swaps out all hyphens (-) for underscores (_) good for stringing to symbols
     # a field name.
     # 
     # Example:
