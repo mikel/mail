@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'encoding'
-
 module Mail
   module Encodings
     class Binary < Encoding

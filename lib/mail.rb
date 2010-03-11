@@ -103,10 +103,12 @@ module Mail # :doc:
   
   # Load in all transfer encodings
   require "mail/encodings/encodings"
-  elems = Dir.glob(File.join(File.dirname(__FILE__), 'mail', 'encodings', '*.rb'))
-  elems.each do |elem|
-    require "mail/encodings/#{File.basename(elem, '.rb')}"
-  end
+  require "mail/encodings/encoding"
+  require "mail/encodings/binary"
+  require "mail/encodings/8bit"
+  require "mail/encodings/7bit"
+  require "mail/encodings/base64"
+  require "mail/encodings/quoted_printable"
   
   # Finally... require all the Mail.methods
   require File.join('mail', 'mail')
