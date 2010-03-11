@@ -41,13 +41,10 @@ module Mail
     end
 
     def Encodings.get_all
-      @transfer_encodings.keys
+      @transfer_encodings.values
     end
 
     def Encodings.get_name(enc)
-      if enc.is_a? Class then
-        enc = enc::Name
-      end
       enc = enc.to_s.gsub("-", "_").downcase
     end
 

@@ -10,7 +10,7 @@ module Mail
       
       # Decode the string
       def self.decode(str)
-        str.to_crlf
+        str.to_lf
       end
     
       # Encode the string

@@ -6,21 +6,21 @@ module Mail
     
       PRIORITY = 1
 
-      # 7bit is an identiy encoding, meaning nothing to do
+      # 7bit and 8bit operate the same
       
       # Decode the string
       def self.decode(str)
-        str.to_crlf
+        super
       end
     
       # Encode the string
       def self.encode(str)
-        str.to_crlf
+        super
       end
      
       # Idenity encodings have a fixed cost, 1 byte out per 1 byte in
       def self.cost(str)
-        1.0
+        super 
       end
 
       Encodings.register(NAME, self) 
