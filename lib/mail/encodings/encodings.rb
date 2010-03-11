@@ -216,6 +216,5 @@ module Mail
     def Encodings.find_encoding(str)
       RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
     end
-    
   end
 end

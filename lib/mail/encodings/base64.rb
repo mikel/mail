@@ -20,6 +20,11 @@ module Mail
         RubyVer.encode_base64( str )
       end
 
+      # Base64 has a fixed cost, 4 bytes out per 3 bytes in
+      def self.cost(str)
+        4.0/3
+      end
+
       Encodings.register(NAME, self)      
     end
   end

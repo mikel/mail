@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module Encodings
-    class Binary < Encoding
+    class Binary < TransferEncoding
       NAME = 'binary'
 
       PRIORITY = 5
@@ -18,6 +18,11 @@ module Mail
         str
       end
      
+      # Idenity encodings have a fixed cost, 1 byte out per 1 byte in
+      def self.cost(str)
+        1.0
+      end
+
       Encodings.register(NAME, self) 
     end
   end

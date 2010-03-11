@@ -16,10 +16,22 @@ module Mail
       end
 
       def self.encode(str)
-        str.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }
+        str.lines.map{|line| qp_encode_line(line)}.join("\r\n")
       end
 
+      def self.cost(str)
+        # These bytes probably do not need encoding
+        c = str.count("\x9\x20-\x3C\x3E-\x7E")
+        # Everything else turns into =XX where XX is a 
+        # two digit hex number (taking 3 bytes)
+        total = (str.bytesize - c)*3 + c
+        total.to_f/str.bytesize
+      end
+        
       private
+      def self.qp_encode_line(str)
+        str.chomp.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }
+      end
 
       # Convert the given character to quoted printable format, taking into
       # account multi-byte characters (if executing with $KCODE="u", for instance)

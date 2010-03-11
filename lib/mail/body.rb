@@ -138,8 +138,10 @@ module Mail
     
     def decoded
       # Handily the encodings we don't handle are identity encodings
-      if encoding.nil? || !Encodings.defined?(encoding)
+      if encoding.nil? 
         raw_source.to_lf
+      elsif !Encodings.defined?(encoding)
+        raise UnknownEncodingType, "Don't know how to decode #{encoding}, please call #encoded and decode it yourself."
       else
         Encodings.get_encoding(encoding).decode(raw_source)
       end

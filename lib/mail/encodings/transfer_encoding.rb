@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module Encodings
-    class Encoding
+    class TransferEncoding
       NAME = ''
 
       PRIORITY = -1
@@ -17,6 +17,10 @@ module Mail
 
       def self.can_encode?(enc)
         can_transport? enc 
+      end
+
+      def self.cost(str)
+        raise "Unimplemented"
       end
     end
   end

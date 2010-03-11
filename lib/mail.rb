@@ -103,7 +103,7 @@ module Mail # :doc:
   
   # Load in all transfer encodings
   require "mail/encodings/encodings"
-  require "mail/encodings/encoding"
+  require "mail/encodings/transfer_encoding"
   require "mail/encodings/binary"
   require "mail/encodings/8bit"
   require "mail/encodings/7bit"
