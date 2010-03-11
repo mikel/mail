@@ -1,21 +1,26 @@
 # encoding: utf-8
+require 'binary'
+
 module Mail
   module Encodings
-    class EightBit
+    class EightBit < Binary
+      NAME = '8bit'
 
-      # Binary is an identiy encoding, meaning nothing to do
+      PRIORITY = 4
+
+      # 8bit is an identiy encoding, meaning nothing to do
       
       # Decode the string
       def self.decode(str)
-        str
+        str.to_crlf
       end
     
       # Encode the string
       def self.encode(str)
-        str
+        str.to_crlf
       end
      
-      Encodings.register('8bit', self) 
+      Encodings.register(NAME, self) 
     end
   end
 end

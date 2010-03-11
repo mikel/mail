@@ -1,7 +1,12 @@
 # encoding: utf-8
+require 'encoding'
+
 module Mail
   module Encodings
-    class Binary
+    class Binary < Encoding
+      NAME = 'binary'
+
+      PRIORITY = 5
 
       # Binary is an identiy encoding, meaning nothing to do
       
@@ -15,7 +20,7 @@ module Mail
         str
       end
      
-      Encodings.register('binary', self) 
+      Encodings.register(NAME, self) 
     end
   end
 end
