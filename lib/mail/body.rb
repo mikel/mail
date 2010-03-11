@@ -44,7 +44,7 @@ module Mail
           raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
         end
       end
-      @encoding = nil
+      @encoding = (only_us_ascii? ? '7bit' : '8bit')
       set_charset
     end
     
@@ -123,21 +123,32 @@ module Mail
     def raw_source
       @raw_source
     end
-    
-    # Returns a US-ASCII 7-bit compliant body.  Right now just returns the
-    # raw source.  Need to implement
-    def encoded
+   
+    def get_best_encoding(target)
+#      if encoding.nil?
+#        target
+#      else 
+        target.get_best_compatible(encoding, raw_source)
+#      end
+    end
+ 
+    # Returns a body encoded using transfer_encoding.  Multipart always uses an
+    # identiy encoding (i.e. no encoding).
+    # Calling this directly is not a good idea, but supported for compatibility
+    # TODO: Validate that preamble and epilogue are valid for requested encoding
+    def encoded(transfer_encoding = '8bit')
       if multipart?
         self.sort_parts!
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
+      elsif transfer_encoding == encoding
+        raw_source
       else
-        raw_source.to_crlf
+        Mail::Encodings.get_encoding(transfer_encoding).encode raw_source
       end
     end
     
     def decoded
-      # Handily the encodings we don't handle are identity encodings
       if encoding.nil? 
         raw_source.to_lf
       elsif !Encodings.defined?(encoding)

@@ -106,7 +106,9 @@ module Mail
       @delivery_handler = nil
       
       @delivery_method = Mail.delivery_method.dup
-      
+     
+      @target_encoding = Mail::Encodings.get_encoding('7bit')
+ 
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -519,7 +521,19 @@ module Mail
     def date=( val )
       header[:date] = val
     end
-    
+   
+    def target_encoding( val = nil)
+      if val
+        self.target_encoding = val
+      else
+        @target_encoding
+      end
+    end
+
+    def target_encoding=( val )
+      @target_encoding = Mail::Encodings.get_encoding(val)
+    end
+ 
     # Returns the From value of the mail object as an array of strings of 
     # address specs.
     #
@@ -1052,7 +1066,7 @@ module Mail
       case
       when value == nil
         @body = Mail::Body.new('')
-      when @body && !@body.parts.empty?
+      when @body && @body.multipart?
         @body << Mail::Part.new(value)
       else
         @body = Mail::Body.new(value)
@@ -1078,7 +1092,19 @@ module Mail
         @body
       end
     end
-     
+    
+    def body_encoding(value)
+      if value.nil?
+        body.encoding
+      else
+        body.encoding = value
+      end
+    end
+
+    def body_encoding=(value)
+        body.encoding = value
+    end
+ 
     # Returns the list of addresses this message should be sent to by
     # collecting the addresses off the to, cc and bcc fields.
     # 
@@ -1509,7 +1535,7 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      if body.parts.empty? && !self.body.decoded.blank?
+      if !body.multipart? && !self.body.decoded.blank?
          @text_part = Mail::Part.new('Content-Type: text/plain;')
          @text_part.body = body.decoded
          self.body << @text_part
@@ -1588,10 +1614,14 @@ module Mail
     # Encodes the message, calls encode on all it's parts, gets an email message
     # ready to send
     def ready_to_send!
-      parts.each { |part| part.ready_to_send! }
+      identify_and_set_transfer_encoding
+      parts.each do |part| 
+        part.target_encoding = target_encoding
+        part.ready_to_send!
+      end
       add_required_fields
     end
-    
+
     def encode!
       STDERR.puts("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
       ready_to_send!
@@ -1604,7 +1634,7 @@ module Mail
       ready_to_send!
       buffer = header.encoded
       buffer << "\r\n"
-      buffer << body.encoded
+      buffer << body.encoded(content_transfer_encoding)
       buffer
     end
     
@@ -1697,9 +1727,17 @@ module Mail
         body.encoding = content_transfer_encoding
       end
     end
+
+    def identify_and_set_transfer_encoding
+        if body.multipart?
+            self.content_transfer_encoding = @target_encoding
+        else
+            self.content_transfer_encoding = body.get_best_encoding(@target_encoding)
+        end
+    end
     
     def add_required_fields
-      add_multipart_mixed_header    unless parts.empty?
+      add_multipart_mixed_header    unless !body.multipart?
       @body = Mail::Body.new('')    if body.nil?
       add_message_id                unless (has_message_id? || self.class == Mail::Part)
       add_date                      unless has_date?
@@ -1751,6 +1789,9 @@ module Mail
 
       if body
         self.body = body
+        if has_content_transfer_encoding?
+            body.encoding = content_transfer_encoding
+        end
       end
     end
     
