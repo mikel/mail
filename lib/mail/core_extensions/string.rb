@@ -21,10 +21,20 @@ class String #:nodoc:
     alias :bytesize :length
   end
 
-  unless method_defined?(:lines)
-    def lines(&block)
+  unless method_defined?(:bytes)
+    def bytes
       if block_given?
-        scan(/^.*$/) {|l| block.call l}
+        scan(/./n) {|b| yield b[0]}
+      else
+        scan(/./n)
+      end
+    end
+  end
+
+  unless method_defined?(:lines)
+    def lines
+      if block_given?
+        scan(/^.*$/) {|l| yield l}
       else
         scan(/^.*$/)
       end
