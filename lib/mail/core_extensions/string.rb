@@ -16,4 +16,18 @@ class String #:nodoc:
       !(self =~ /[^#{US_ASCII_REGEXP}]/)
     end
   end
+
+  unless method_defined?(:bytesize)
+    alias :bytesize :length
+  end
+
+  unless method_defined?(:lines)
+    def lines(&block)
+      if block_given?
+        scan(/^.*$/) {|l| block.call l}
+      else
+        scan(/^.*$/)
+      end
+    end
+  end
 end

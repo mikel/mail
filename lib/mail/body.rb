@@ -241,6 +241,12 @@ module Mail
     end
     
     def only_us_ascii?
+      # 1.8.6 does not have an iterator over characters/bytes, so
+      # we use a slower implementation
+      if !raw_source.class.method_defined?(:bytes)
+        return raw_source.count("\x1-\x7F") == raw_source.length
+      end
+      # 1.8.7 and later
       raw_source.bytes {|b| return false if (b == 0 || b > 127)}
       true
     end
