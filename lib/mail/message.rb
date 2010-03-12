@@ -1774,21 +1774,21 @@ module Mail
       @body = Mail::Body.new
 
       # We need to store the body until last, as we need all headers added first
-      body = nil
+      body_content = nil
 
       passed_in_options.each_pair do |k,v|
         k = underscoreize(k).to_sym if k.class == String
         if k == :headers
           self.headers(v)
         elsif k == :body
-          body = v
+          body_content = v
         else
           self[k] = v
         end
       end
 
-      if body
-        self.body = body
+      if body_content
+        self.body = body_content
         if has_content_transfer_encoding?
             body.encoding = content_transfer_encoding
         end

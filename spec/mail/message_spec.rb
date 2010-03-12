@@ -1014,40 +1014,37 @@ describe Mail::Message do
       
       describe "content-transfer-encoding" do
 
-        it "should not raise a warning if there is no content-transfer-encoding and only US-ASCII chars" do
+        it "should use 7bit for only US-ASCII chars" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: 7bit}
         end
 
-        it "should set the content-transfer-encoding to 7bit" do
-          body = "This is plain text US-ASCII"
+        it "should use QP transfer encoding for 8bit text with only a few 8bit characters" do
+          body = "Maxfeldstraße 5, 90409 Nürnberg"
           mail = Mail.new
           mail.body = body
-          mail.to_s =~ %r{Content-Transfer-Encoding: 7bit}
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: quoted-printable}
         end
 
-        it "should raise a warning if there is no content-transfer-encoding and there is non ascii chars and default to 8bit" do
+        it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
           mail.should be_has_content_type
           mail.should be_has_charset
-          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Transfer-Encoding: 8bit}
+          mail.to_s.should =~  %r{Content-Transfer-Encoding: base64}
         end
 
-        it "should not raise a warning if there is a content-transfer-encoding defined and there is non ascii chars" do
+        it "should not use 8bit transfer encoding when 8bit is allowed" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
-          mail.content_transfer_encoding = "8bit"
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+          mail.target_encoding = "8bit"
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: 8bit}
         end
 
       end

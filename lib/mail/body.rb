@@ -125,11 +125,7 @@ module Mail
     end
    
     def get_best_encoding(target)
-#      if encoding.nil?
-#        target
-#      else 
         target.get_best_compatible(encoding, raw_source)
-#      end
     end
  
     # Returns a body encoded using transfer_encoding.  Multipart always uses an
@@ -149,9 +145,7 @@ module Mail
     end
     
     def decoded
-      if encoding.nil? 
-        raw_source.to_lf
-      elsif !Encodings.defined?(encoding)
+      if !Encodings.defined?(encoding)
         raise UnknownEncodingType, "Don't know how to decode #{encoding}, please call #encoded and decode it yourself."
       else
         Encodings.get_encoding(encoding).decode(raw_source)
@@ -170,11 +164,21 @@ module Mail
       @charset = val
     end
 
-    def encoding
-      @encoding
+    def encoding(val = nil)
+      if val
+        self.encoding = val
+      else
+        @encoding
+      end
     end
     
     def encoding=( val )
+      if val == "text" then
+        val = "8bit"
+      end
+      if !Mail::Encodings.defined? val
+        raise UnknownEncodingType, "Don't know how to decode #{val}, please decode first"
+      end
       @encoding = (val == "text") ? "8bit" : val
     end
 
