@@ -42,7 +42,7 @@ end
 Spec::Rake::SpecTask.new(:rcov) do |t|
   t.spec_files = FileList['test/**/tc_*.rb', 'spec/**/*_spec.rb']
   t.rcov = true
-  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
+  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System,/usr']
 end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
