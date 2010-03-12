@@ -1043,7 +1043,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
-          mail.target_encoding = "8bit"
+          mail.transport_encoding = "8bit"
           mail.to_s.should =~ %r{Content-Transfer-Encoding: 8bit}
         end
 

@@ -107,7 +107,7 @@ module Mail
       
       @delivery_method = Mail.delivery_method.dup
      
-      @target_encoding = Mail::Encodings.get_encoding('7bit')
+      @transport_encoding = Mail::Encodings.get_encoding('7bit')
  
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
@@ -522,16 +522,16 @@ module Mail
       header[:date] = val
     end
    
-    def target_encoding( val = nil)
+    def transport_encoding( val = nil)
       if val
-        self.target_encoding = val
+        self.transport_encoding = val
       else
-        @target_encoding
+        @transport_encoding
       end
     end
 
-    def target_encoding=( val )
-      @target_encoding = Mail::Encodings.get_encoding(val)
+    def transport_encoding=( val )
+      @transport_encoding = Mail::Encodings.get_encoding(val)
     end
  
     # Returns the From value of the mail object as an array of strings of 
@@ -1616,7 +1616,7 @@ module Mail
     def ready_to_send!
       identify_and_set_transfer_encoding
       parts.each do |part| 
-        part.target_encoding = target_encoding
+        part.transport_encoding = transport_encoding
         part.ready_to_send!
       end
       add_required_fields
@@ -1730,9 +1730,9 @@ module Mail
 
     def identify_and_set_transfer_encoding
         if body.multipart?
-            self.content_transfer_encoding = @target_encoding
+            self.content_transfer_encoding = @transport_encoding
         else
-            self.content_transfer_encoding = body.get_best_encoding(@target_encoding)
+            self.content_transfer_encoding = body.get_best_encoding(@transport_encoding)
         end
     end
     
