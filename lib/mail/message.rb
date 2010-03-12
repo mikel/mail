@@ -1595,10 +1595,10 @@ module Mail
       add_multipart_mixed_header
       if values.is_a?(String)
         basename = File.basename(values)
-        filedata = File.read(values)
+        filedata = RubyVer.binfile_read(values)
       else
         basename = values[:filename]
-        filedata = values[:content] || File.read(values[:filename])
+        filedata = values[:content] || RubyVer.binfile_read(values[:filename])
       end
       self.attachments[basename] = filedata
     end

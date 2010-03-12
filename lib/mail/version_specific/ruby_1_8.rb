@@ -78,7 +78,10 @@ module Mail
       language = Mail::Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
-    
+   
+    def Ruby18.binfile_read(filename)
+      File.read(filename)
+    end 
   end
   
 end

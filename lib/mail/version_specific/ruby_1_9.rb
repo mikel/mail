@@ -73,5 +73,8 @@ module Mail
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
 
+    def Ruby19.binfile_read(filename)
+      File.read(filename, encoding: "BINARY")
+    end
   end
 end
