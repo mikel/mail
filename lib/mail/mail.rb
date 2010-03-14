@@ -167,7 +167,7 @@ module Mail
 
   # Reads in an email message from a path and instantiates it as a new Mail::Message
   def Mail.read(filename)
-    Mail.new(RubyVer.binfile_read(filename))
+    Mail.new(File.read(filename))
   end
   
   # Initialize the observers and interceptors arrays

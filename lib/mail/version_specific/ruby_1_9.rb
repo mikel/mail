@@ -72,4 +72,5 @@ module Mail
       language = Mail::Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
+  end
 end
