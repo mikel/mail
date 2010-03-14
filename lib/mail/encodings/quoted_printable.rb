@@ -16,7 +16,9 @@ module Mail
       end
 
       def self.encode(str)
-        str.lines.map{|line| qp_encode_line(line)}.join("\r\n")
+        l = []
+        str.each_line{|line| l << qp_encode_line(line)}
+        l.join("\r\n")
       end
 
       def self.cost(str)
