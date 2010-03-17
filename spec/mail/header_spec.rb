@@ -200,7 +200,13 @@ describe Mail::Header do
         header['to'] = 'mikel@test.lindsaar.net'
         header['to'].field.class.should == Mail::ToField
       end
-      
+
+      it "should maintain header case" do
+        header = Mail::Header.new
+        header['User-Agent'] = 'My funky mailer'
+        header.encoded.should match(/^User-Agent: /)
+        header.encoded.should_not match(/^user-agent: /)
+      end
     end
   
 

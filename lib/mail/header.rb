@@ -107,7 +107,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      name = dasherize(name)
+      name = dasherize(name).downcase
       selected = select_field_for(name)
       case
       when selected.length > 1
@@ -134,7 +134,8 @@ module Mail
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
       name = dasherize(name)
-      selected = select_field_for(name)
+      fn = name.downcase
+      selected = select_field_for(fn)
       
       case
       # User wants to delete the field
@@ -142,8 +143,8 @@ module Mail
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && limited_field?(name)
-        selected.first.update(name, value)
+      when !selected.blank? && limited_field?(fn)
+        selected.first.update(fn, value)
         
       # User wants to create the field
       else
