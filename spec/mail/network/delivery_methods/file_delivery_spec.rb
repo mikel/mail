@@ -26,7 +26,7 @@ describe "SMTP Delivery Method" do
   describe "general usage" do
     it "should send an email to a file" do
       Mail.defaults do
-        delivery_method :file, :location => "~/tmp/mail"
+        delivery_method :file, :location => "/tmp/mail"
       end
       
       mail = Mail.deliver do
@@ -42,7 +42,7 @@ describe "SMTP Delivery Method" do
 
     it "should send multiple emails to multiple files" do
       Mail.defaults do
-        delivery_method :file, :location => "~/tmp/mail"
+        delivery_method :file, :location => "/tmp/mail"
       end
       
       mail = Mail.deliver do
@@ -60,7 +60,7 @@ describe "SMTP Delivery Method" do
 
     it "should only create files based on the addr_spec of the destination" do
       Mail.defaults do
-        delivery_method :file, :location => "~/tmp/mail"
+        delivery_method :file, :location => "/tmp/mail"
       end
       
       mail = Mail.deliver do
