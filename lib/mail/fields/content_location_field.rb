@@ -31,11 +31,11 @@ module Mail
 
     # TODO: Fix this up
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+      "#{CAPITALIZED_FIELD}: #{location}\r\n"
     end
     
     def decoded
-      value
+      location 
     end
 
   end

@@ -1,8 +1,15 @@
 # encoding: utf-8
 module Mail
   module Encodings
-    class Base64
-      
+    class Base64 < SevenBit
+      NAME = 'base64'
+     
+      PRIORITY = 3
+ 
+      def self.can_encode?(enc)
+        true
+      end
+
       # Decode the string from Base64
       def self.decode(str)
         RubyVer.decode_base64( str )
@@ -12,7 +19,13 @@ module Mail
       def self.encode(str)
         RubyVer.encode_base64( str )
       end
-      
+
+      # Base64 has a fixed cost, 4 bytes out per 3 bytes in
+      def self.cost(str)
+        4.0/3
+      end
+
+      Encodings.register(NAME, self)      
     end
   end
 end

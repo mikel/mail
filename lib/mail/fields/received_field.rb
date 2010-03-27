@@ -43,19 +43,23 @@ module Mail
     end
     
     def date_time
-      ::DateTime.parse("#{element.date_time}")
+      @datetime ||= ::DateTime.parse("#{element.date_time}")
     end
 
     def info
       element.info
     end
-    
+   
+    def formatted_date
+        date_time.strftime("%a, %d %b %Y %H:%M:%S ") + date_time.zone.delete(':')
+    end
+ 
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+      "#{CAPITALIZED_FIELD}: #{info}; #{formatted_date}\r\n"
     end
     
     def decoded
-      value
+      "#{info}; #{formatted_date}" 
     end
     
   end

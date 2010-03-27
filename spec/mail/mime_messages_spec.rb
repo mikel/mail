@@ -339,7 +339,7 @@ describe "MIME Emails" do
         mail.attachments[3].filename.should == 'test.zip'
       end
 
-      it "should return the mime/type of each attachment" do
+      it "should return the type/subtype of each attachment" do
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'

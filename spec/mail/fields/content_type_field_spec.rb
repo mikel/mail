@@ -100,7 +100,12 @@ describe Mail::ContentTypeField do
 
     it "should render encoded" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
-      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n\tformat="flowed"\r\n}
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset=US-ASCII;\r\n\tformat=flowed\r\n}
+    end
+
+    it "should render quoted values encoded" do
+      c = Mail::ContentTypeField.new('text/plain; example="foo bar"')
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\texample="foo bar"\r\n}
     end
 
     it "should render decoded" do
@@ -108,6 +113,10 @@ describe Mail::ContentTypeField do
       c.decoded.should == 'text/plain; charset=US-ASCII; format=flowed'
     end
 
+    it "should render quoted values decoded" do
+      c = Mail::ContentTypeField.new('text/plain; example="foo bar"')
+      c.decoded.should == 'text/plain; example="foo bar"'
+    end
   end
 
   describe "instance methods" do
@@ -565,11 +574,11 @@ describe Mail::ContentTypeField do
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
       if RUBY_VERSION >= '1.9'
         string.force_encoding('SJIS')
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3"\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       else
         storedkcode = $KCODE
         $KCODE = 'SJIS'
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*="sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3"\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*=sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3\r\n}
       end
       c.filename = string
       c.parameters.should == {'filename' => string}

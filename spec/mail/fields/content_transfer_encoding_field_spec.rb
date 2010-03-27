@@ -87,6 +87,17 @@ describe Mail::ContentTransferEncodingField do
       t.encoding.should == 'x-this-is_my-encoding'
     end
     
+
+    it "should replace the existing value" do
+      t = Mail::ContentTransferEncodingField.new("7bit")
+      t.parse("quoted-printable")
+      t.encoding.should == 'quoted-printable'
+    end
+
+    it "should raise an error on bogus values" do
+      t = Mail::ContentTransferEncodingField.new("broken@foo")
+      doing { t.encoding }.should raise_error
+    end 
   end
 
 end

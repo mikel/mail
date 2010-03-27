@@ -10,7 +10,7 @@ module Mail
   # 
   # * A Header object which contians all information and settings of the header of the email
   # * Body object which contains all parts of the email that are not part of the header, this
-  #   includes any attachments, body text, mime parts etc.
+  #   includes any attachments, body text, MIME parts etc.
   # 
   # ==Per RFC2822
   # 
@@ -106,7 +106,9 @@ module Mail
       @delivery_handler = nil
       
       @delivery_method = Mail.delivery_method.dup
-      
+     
+      @transport_encoding = Mail::Encodings.get_encoding('7bit')
+ 
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -519,7 +521,19 @@ module Mail
     def date=( val )
       header[:date] = val
     end
-    
+   
+    def transport_encoding( val = nil)
+      if val
+        self.transport_encoding = val
+      else
+        @transport_encoding
+      end
+    end
+
+    def transport_encoding=( val )
+      @transport_encoding = Mail::Encodings.get_encoding(val)
+    end
+ 
     # Returns the From value of the mail object as an array of strings of 
     # address specs.
     #
@@ -603,14 +617,14 @@ module Mail
       header[:message_id] = val
     end
     
-    # Returns the mime version of the email as a string
+    # Returns the MIME version of the email as a string
     # 
     # Example:
     # 
     #  mail.mime_version = '1.0'
     #  mail.mime_version #=> '1.0'
     # 
-    # Also allows you to set the mime version by passing a string as a parameter.
+    # Also allows you to set the MIME version by passing a string as a parameter.
     # 
     # Example:
     # 
@@ -620,7 +634,7 @@ module Mail
       default :mime_version, val
     end
     
-    # Sets the mime version of the email by accepting a string
+    # Sets the MIME version of the email by accepting a string
     # 
     # Example:
     # 
@@ -1052,7 +1066,7 @@ module Mail
       case
       when value == nil
         @body = Mail::Body.new('')
-      when @body && !@body.parts.empty?
+      when @body && @body.multipart?
         @body << Mail::Part.new(value)
       else
         @body = Mail::Body.new(value)
@@ -1078,7 +1092,19 @@ module Mail
         @body
       end
     end
-     
+    
+    def body_encoding(value)
+      if value.nil?
+        body.encoding
+      else
+        body.encoding = value
+      end
+    end
+
+    def body_encoding=(value)
+        body.encoding = value
+    end
+ 
     # Returns the list of addresses this message should be sent to by
     # collecting the addresses off the to, cc and bcc fields.
     # 
@@ -1262,8 +1288,8 @@ module Mail
     
     # Creates a new empty Mime Version field and inserts it in the correct order
     # into the Header.  The MimeVersion object will automatically generate
-    # DateTime.now's date if you try and encode it or output it to_s without
-    # specifying a date yourself.
+    # set itself to '1.0' if you try and encode it or output it to_s without
+    # specifying a version yourself.
     # 
     # It will preserve any date you specify if you do.
     def add_mime_version(ver_val = '')
@@ -1281,9 +1307,9 @@ module Mail
     # 
     # Otherwise raises a warning
     def add_charset
-      if body.only_us_ascii?
+      if body.only_us_ascii? and !body.empty?
         header[:content_type].parameters['charset'] = 'US-ASCII'
-      else
+      elsif !body.empty?
         warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_type].parameters['charset'] = 'UTF-8'
@@ -1313,7 +1339,7 @@ module Mail
       content_transfer_encoding
     end
     
-    # Returns the mime type of part we are on, this is taken from the content-type header
+    # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
       content_type ? header[:content_type].string : nil
     end
@@ -1425,7 +1451,7 @@ module Mail
     # 
     #  mail.attachments['filename.jpg'] = File.read('/path/to/filename.jpg')
     # 
-    # If you do this, then Mail will take the file name and work out the mime type
+    # If you do this, then Mail will take the file name and work out the MIME media type
     # set the Content-Type, Content-Disposition, Content-Transfer-Encoding and 
     # base64 encode the contents of the attachment all for you.
     # 
@@ -1509,7 +1535,7 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      if body.parts.empty? && !self.body.decoded.blank?
+      if !body.multipart? && !self.body.decoded.blank?
          @text_part = Mail::Part.new('Content-Type: text/plain;')
          @text_part.body = body.decoded
          self.body << @text_part
@@ -1537,7 +1563,7 @@ module Mail
     
     # Adds a file to the message.  You have two options with this method, you can
     # just pass in the absolute path to the file you want and Mail will read the file,
-    # get the filename from the path you pass in and guess the mime type, or you
+    # get the filename from the path you pass in and guess the MIME media type, or you
     # can pass in the filename as a string, and pass in the file content as a blob.
     # 
     # Example:
@@ -1588,10 +1614,14 @@ module Mail
     # Encodes the message, calls encode on all it's parts, gets an email message
     # ready to send
     def ready_to_send!
-      parts.each { |part| part.ready_to_send! }
+      identify_and_set_transfer_encoding
+      parts.each do |part| 
+        part.transport_encoding = transport_encoding
+        part.ready_to_send!
+      end
       add_required_fields
     end
-    
+
     def encode!
       STDERR.puts("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
       ready_to_send!
@@ -1604,7 +1634,7 @@ module Mail
       ready_to_send!
       buffer = header.encoded
       buffer << "\r\n"
-      buffer << body.encoded
+      buffer << body.encoded(content_transfer_encoding)
       buffer
     end
     
@@ -1633,11 +1663,7 @@ module Mail
     end
 
     def decode_body
-      if Mail::Encodings.defined?(content_transfer_encoding)
-        Mail::Encodings.get_encoding(content_transfer_encoding).decode(body.encoded)
-      else
-        raise UnknownEncodingType, "Don't know how to decode #{content_transfer_encoding}, please call #encoded and decode it yourself."
-      end
+        body.decoded
     end
     
     # Returns true if this part is an attachment
@@ -1701,9 +1727,17 @@ module Mail
         body.encoding = content_transfer_encoding
       end
     end
+
+    def identify_and_set_transfer_encoding
+        if body.multipart?
+            self.content_transfer_encoding = @transport_encoding
+        else
+            self.content_transfer_encoding = body.get_best_encoding(@transport_encoding)
+        end
+    end
     
     def add_required_fields
-      add_multipart_mixed_header    unless parts.empty?
+      add_multipart_mixed_header    unless !body.multipart?
       @body = Mail::Body.new('')    if body.nil?
       add_message_id                unless (has_message_id? || self.class == Mail::Part)
       add_date                      unless has_date?
@@ -1739,12 +1773,24 @@ module Mail
       @header = Mail::Header.new
       @body = Mail::Body.new
 
+      # We need to store the body until last, as we need all headers added first
+      body_content = nil
+
       passed_in_options.each_pair do |k,v|
         k = underscoreize(k).to_sym if k.class == String
         if k == :headers
           self.headers(v)
+        elsif k == :body
+          body_content = v
         else
           self[k] = v
+        end
+      end
+
+      if body_content
+        self.body = body_content
+        if has_content_transfer_encoding?
+            body.encoding = content_transfer_encoding
         end
       end
     end

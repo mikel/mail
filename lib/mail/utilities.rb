@@ -137,12 +137,12 @@ module Mail
       # Example:
       # 
       #  string = :resent_from_field
-      #  dasherize ( string ) #=> 'resent_from_field'
+      #  dasherize ( string ) #=> 'resent-from-field'
       def dasherize( str )
-        str.to_s.downcase.gsub('_', '-')
+        str.to_s.gsub('_', '-')
       end
 
-      # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
+      # Swaps out all hyphens (-) for underscores (_) good for stringing to symbols
       # a field name.
       # 
       # Example:
