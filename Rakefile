@@ -8,7 +8,6 @@ require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'spec/rake/spectask'
 require 'cucumber/rake/task'
-require 'bundler'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
