@@ -1,3 +1,10 @@
+== Sun Mar 28 07:01:07 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.1.5
+* Changed guess encoding to short circuit to binary if the mime type is unknown, should be safe
+* Renaming spec to match the file for attachment_lists.rb
+* Adding Message#decoded returns Message#body#decoded if the message is not multipart
+
 == Sun Mar 28 02:55:42 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 2.1.4
