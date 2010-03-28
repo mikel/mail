@@ -53,7 +53,10 @@ module Mail
       start_index = index
       if node_cache[:content_type].has_key?(index)
         cached = node_cache[:content_type][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -137,7 +140,10 @@ module Mail
       start_index = index
       if node_cache[:main_type].has_key?(index)
         cached = node_cache[:main_type][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -164,7 +170,10 @@ module Mail
       start_index = index
       if node_cache[:discrete_type].has_key?(index)
         cached = node_cache[:discrete_type][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -241,7 +250,10 @@ module Mail
       start_index = index
       if node_cache[:composite_type].has_key?(index)
         cached = node_cache[:composite_type][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -285,7 +297,10 @@ module Mail
       start_index = index
       if node_cache[:extension_token].has_key?(index)
         cached = node_cache[:extension_token][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -312,7 +327,10 @@ module Mail
       start_index = index
       if node_cache[:sub_type].has_key?(index)
         cached = node_cache[:sub_type][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -356,7 +374,10 @@ module Mail
       start_index = index
       if node_cache[:parameter].has_key?(index)
         cached = node_cache[:parameter][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -413,7 +434,10 @@ module Mail
       start_index = index
       if node_cache[:attribute].has_key?(index)
         cached = node_cache[:attribute][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -448,7 +472,10 @@ module Mail
       start_index = index
       if node_cache[:value].has_key?(index)
         cached = node_cache[:value][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 

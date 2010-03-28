@@ -8,7 +8,8 @@ module Mail
     end
     
     rule ietf_token
-      token+
+      "7bit" / "8bit" / "binary" /
+      "quoted-printable" / "base64"
     end
     
     rule x_token
