@@ -1,7 +1,13 @@
 begin
   require File.expand_path('../../.bundle/environment', __FILE__)
 rescue LoadError
-  require 'rubygems'
+  # bust gem prelude
+  if defined? Gem
+    Gem.cache
+    gem 'bundler'
+  else
+    require 'rubygems'
+  end
   require 'bundler'
   Bundler.setup
 end
