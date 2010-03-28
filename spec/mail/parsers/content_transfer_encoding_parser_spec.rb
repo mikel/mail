@@ -6,39 +6,67 @@ Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/rfc2822'))
 Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/content_transfer_encoding'))
 
 describe "ContentTransferEncodingParser" do
+  
   it "should work" do
     text = "quoted-printable"
     a = Mail::ContentTransferEncodingParser.new
     a.parse(text).should_not be_nil
     a.parse(text).encoding.text_value.should == 'quoted-printable'
   end
-  
-  it "should parse a content transfer encoding that has a trailing semi colon" do
-    text = "quoted-printable;"
-    a = Mail::ContentTransferEncodingParser.new
-    a.parse(text).should_not be_nil
-    a.parse(text).encoding.text_value.should == 'quoted-printable'
+
+  describe "trailing semi colons" do
+
+    it "should parse" do
+      text = "quoted-printable;"
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == 'quoted-printable'
+    end
+
+    it "should parse with pre white space" do
+      text = 'quoted-printable  ;'
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == 'quoted-printable'
+    end
+
+    it "should parse with trailing white space" do
+      text = 'quoted-printable; '
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == 'quoted-printable'
+    end
+
+    it "should parse with pre and trailing white space" do
+      text = 'quoted-printable  ;  '
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == 'quoted-printable'
+    end
   end
   
-  it "should parse a content transfer encoding that has a trailing semi colon with pre white space" do
-    text = 'quoted-printable  ;'
-    a = Mail::ContentTransferEncodingParser.new
-    a.parse(text).should_not be_nil
-    a.parse(text).encoding.text_value.should == 'quoted-printable'
+  describe "x-token values" do
+    it "should work" do
+      text = 'x-my-token'
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == 'x-my-token'
+    end
   end
   
-  it "should parse a content transfer encoding that has a trailing semi colon with trailing white space" do
-    text = 'quoted-printable; '
-    a = Mail::ContentTransferEncodingParser.new
-    a.parse(text).should_not be_nil
-    a.parse(text).encoding.text_value.should == 'quoted-printable'
+  describe "wild content-transfer-encoding" do
+    it "should convert 8bits to 8bit" do
+      text = '8bits'
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == '8bit'
+    end
+
+    it "should convert 7bits to 7bit" do
+      text = '7bits'
+      a = Mail::ContentTransferEncodingParser.new
+      a.parse(text).should_not be_nil
+      a.parse(text).encoding.text_value.should == '7bit'
+    end
   end
-  
-  it "should parse a content transfer encoding that has a trailing semi colon with pre and trailing white space" do
-    text = 'quoted-printable  ;  '
-    a = Mail::ContentTransferEncodingParser.new
-    a.parse(text).should_not be_nil
-    a.parse(text).encoding.text_value.should == 'quoted-printable'
-  end
-  
 end

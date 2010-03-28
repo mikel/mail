@@ -47,9 +47,17 @@ describe Mail::Message do
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+      errors = false
       emails.each do |email|
-        Mail::Message.new(File.read(email))
+        begin
+          Mail::Message.new(File.read(email))
+        rescue => e
+          puts "Failed on email #{email}"
+          puts "Failure was:\n#{e}"
+          errors = true
+        end
       end
+      errors.should be_false
     end
 
     it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do

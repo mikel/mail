@@ -9,16 +9,11 @@ module Mail
     end
     
     rule encoding
-      (ietf_token / x_token) {
-        def encoding
-          ietf_token.text_value || x_token.text_value
+      ietf_token "s"? {
+        def text_value
+          ietf_token.text_value
         end
-      }
-    end
-    
-    rule ietf_token
-      "7bit" / "8bit" / "binary" /
-      "quoted-printable" / "base64"
+      } / x_token
     end
     
   end
