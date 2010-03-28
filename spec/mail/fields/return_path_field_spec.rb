@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::ReturnPathField do
   it "should allow you to specify a field" do

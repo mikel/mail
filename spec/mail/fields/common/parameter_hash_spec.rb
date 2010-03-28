@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
+require 'spec_helper'
 require 'mail/fields/common/parameter_hash'
 
 describe Mail::ParameterHash do
