@@ -8,7 +8,7 @@ require 'cucumber/rake/task'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "2.1.3"
+  s.version     = "2.1.5"
   s.author      = "Mike Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
@@ -38,7 +38,7 @@ end
 Spec::Rake::SpecTask.new(:rcov) do |t|
   t.spec_files = FileList['test/**/tc_*.rb', 'spec/**/*_spec.rb']
   t.rcov = true
-  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
+  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System,/usr']
 end
 
 Spec::Rake::SpecTask.new(:spec) do |t|

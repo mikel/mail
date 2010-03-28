@@ -304,7 +304,7 @@ describe Mail::Body do
       body.parts.length.should == 2
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)} 
       body.parts[1].content_type.should == "image/jpeg"
       body.parts[0].parts[0].content_type.should == "text/plain"
       body.parts[0].parts[1].content_type.should == "text/enriched"
@@ -322,7 +322,7 @@ describe Mail::Body do
       body.parts.length.should == 2
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.should == "multipart/alternate"
+      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)} 
       body.parts[1].content_type.should == "image/jpeg"
       body.parts[0].parts[0].content_type.should == "text/plain"
       body.parts[0].parts[1].content_type.should == "text/enriched"

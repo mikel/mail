@@ -25,7 +25,10 @@ module Mail
       start_index = index
       if node_cache[:primary].has_key?(index)
         cached = node_cache[:primary][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -75,7 +78,10 @@ module Mail
       start_index = index
       if node_cache[:ctime_date].has_key?(index)
         cached = node_cache[:ctime_date][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 

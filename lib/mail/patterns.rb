@@ -5,8 +5,8 @@ module Mail
     field_name  = %Q|\x21-\x39\x3b-\x7e|
     field_body  = text
     
-    aspecial     = %Q|()<>[]:;.\\,"|
-    tspecial     = %Q|()<>[];:\\,"/?=|
+    aspecial     = %Q|()<>[]:;@\\,."| # RFC5322
+    tspecial     = %Q|()<>@,;:\\"/[]?=| # RFC2045
     lwsp         = %Q| \t\r\n|
     control      = %Q|\x00-\x1f\x7f-\xff|
     

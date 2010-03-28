@@ -143,15 +143,17 @@ module Mail
     def create_field(name, value)
       begin
         self.field = new_field(name, value)
-      rescue
+      rescue => e
         self.field = Mail::UnstructuredField.new(name, value)
+        self.field.errors << [name, value, e]
+        self.field
       end
     end
 
     def new_field(name, value)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
-      case name.to_s
+      case name.to_s.downcase
       when /^to$/i
         ToField.new(name, value)
       when /^cc$/i

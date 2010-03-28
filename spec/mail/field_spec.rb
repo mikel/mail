@@ -89,6 +89,7 @@ describe Mail::Field do
     it "should call to_s on it's field when sent to_s" do
       @field_type = Mail::UnstructuredField
       @field_type.should_receive(:to_s)
+      @field_type.should_receive(:errors).and_return([])
       Mail::UnstructuredField.should_receive(:new).and_return(@field_type)
       Mail::Field.new('Subject: Hello bob').to_s
     end
@@ -111,6 +112,15 @@ describe Mail::Field do
       field.field.class.should == Mail::MessageIdField
     end
 
+  end
+
+  describe "error handling" do
+    it "should populate the errors array if it finds a field it can't deal with" do
+      field = Mail::Field.new('Content-Transfer-Encoding: 7-bit')
+      field.field.errors[0][0].should == 'Content-Transfer-Encoding'
+      field.field.errors[0][1].should == '7-bit'
+      field.field.errors[0][2].to_s.should =~ /ContentTransferEncodingElement can not parse |7-bit|/
+    end
   end
 
   describe "helper methods" do

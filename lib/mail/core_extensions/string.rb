@@ -16,4 +16,8 @@ class String #:nodoc:
       !(self =~ /[^#{US_ASCII_REGEXP}]/)
     end
   end
+
+  unless method_defined?(:bytesize)
+    alias :bytesize :length
+  end
 end

@@ -11,5 +11,5 @@ group :test do
   gem "cucumber"
   gem "rspec"
   gem "diff-lcs"
-  gem "ruby-debug" if RUBY_VERSION < '1.9'
+  gem "ruby-debug" if RUBY_VERSION < '1.9' and RUBY_PLATFORM != 'java'
 end

@@ -34,7 +34,7 @@ describe Mail::ContentDispositionField do
 
     it "should render encoded" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
-      c.encoded.should == "Content-Disposition: attachment; filename=File\r\n"
+      c.encoded.should == "Content-Disposition: attachment;\r\n\tfilename=File\r\n"
     end
 
     it "should render decoded" do

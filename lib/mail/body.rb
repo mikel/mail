@@ -44,7 +44,7 @@ module Mail
           raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
         end
       end
-      @encoding = nil
+      @encoding = (only_us_ascii? ? '7bit' : '8bit')
       set_charset
     end
     
@@ -123,22 +123,39 @@ module Mail
     def raw_source
       @raw_source
     end
-    
-    # Returns a US-ASCII 7-bit compliant body.  Right now just returns the
-    # raw source.  Need to implement
-    def encoded
+   
+    def get_best_encoding(target)
+        te = Mail::Encodings.get_encoding(target)
+        te.get_best_compatible(encoding, raw_source)
+    end
+ 
+    # Returns a body encoded using transfer_encoding.  Multipart always uses an
+    # identiy encoding (i.e. no encoding).
+    # Calling this directly is not a good idea, but supported for compatibility
+    # TODO: Validate that preamble and epilogue are valid for requested encoding
+    def encoded(transfer_encoding = '8bit')
       if multipart?
         self.sort_parts!
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
-        raw_source.to_crlf
+        be = get_best_encoding(transfer_encoding)
+        dec = Mail::Encodings::get_encoding(encoding)
+        enc = Mail::Encodings::get_encoding(be)
+        if transfer_encoding == encoding and dec.nil?
+            # Cannot decode, so skip normalization
+            raw_source
+        else
+            # Decode then encode to normalize and allow transforming 
+            # from base64 to Q-P and vice versa
+            enc.encode(dec.decode(raw_source))
+        end
       end
     end
     
     def decoded
-      if encoding.nil? || !Encodings.defined?(encoding)
-        raw_source.to_lf
+      if !Encodings.defined?(encoding)
+        raise UnknownEncodingType, "Don't know how to decode #{encoding}, please call #encoded and decode it yourself."
       else
         Encodings.get_encoding(encoding).decode(raw_source)
       end
@@ -156,12 +173,19 @@ module Mail
       @charset = val
     end
 
-    def encoding
-      @encoding
+    def encoding(val = nil)
+      if val
+        self.encoding = val
+      else
+        @encoding
+      end
     end
     
     def encoding=( val )
-      @encoding = val
+      if val == "text" || val.blank? then
+        val = "8bit"
+      end
+      @encoding = (val == "text") ? "8bit" : val
     end
 
     # Returns the preamble (any text that is before the first MIME boundary)
@@ -169,7 +193,7 @@ module Mail
       @preamble
     end
 
-    # Sets the preamble to a string (adds text before the first mime boundary)
+    # Sets the preamble to a string (adds text before the first MIME boundary)
     def preamble=( val )
       @preamble = val
     end
@@ -179,7 +203,7 @@ module Mail
       @epilogue
     end
     
-    # Sets the epilogue to a string (adds text after the last mime boundary)
+    # Sets the epilogue to a string (adds text after the last MIME boundary)
     def epilogue=( val )
       @epilogue = val
     end
@@ -223,7 +247,12 @@ module Mail
     end
     
     def only_us_ascii?
-      !!raw_source.to_s.ascii_only?
+      raw_source.each_byte {|b| return false if (b == 0 || b > 127)}
+      true
+    end
+    
+    def empty?
+      !!raw_source.to_s.empty?
     end
     
     private
@@ -237,7 +266,7 @@ module Mail
     end
     
     def set_charset
-      raw_source.ascii_only? ? @charset = 'US-ASCII' : @charset = nil
+      only_us_ascii? ? @charset = 'US-ASCII' : @charset = nil
     end
   end
 end
