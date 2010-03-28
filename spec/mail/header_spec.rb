@@ -207,6 +207,7 @@ describe Mail::Header do
         header.encoded.should match(/^User-Agent: /)
         header.encoded.should_not match(/^user-agent: /)
       end
+      
     end
   
 

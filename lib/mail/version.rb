@@ -4,7 +4,8 @@ module Mail
     MAJOR = 2
     MINOR = 1
     TINY  = 5
+    MICRO = 2
 
-    STRING = [MAJOR, MINOR, TINY].join('.')
+    STRING = [MAJOR, MINOR, TINY, MICRO].join('.')
   end
 end

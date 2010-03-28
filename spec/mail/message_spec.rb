@@ -1388,4 +1388,12 @@ describe Mail::Message do
       end
     end
   end
+  
+  describe "header case should be preserved" do
+    it "should handle mail[] and keep the header case" do
+      mail = Mail.new
+      mail['X-Foo-Bar'] = "Some custom text"
+      mail.to_s.should match(/X-Foo-Bar: Some custom text/)
+    end
+  end
 end
