@@ -1077,12 +1077,31 @@ describe Mail::Message do
       mail.to_s.should =~ /This is a body of the email/
 
     end
-
-    it "should raise an error and message if you try and call decoded" do
-      mail = Mail.new
+    
+    it "should raise an error and message if you try and call decoded on a multipart email" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+        from 'bob@test.lindsaar.net'
+        subject 'Multipart email'
+        text_part do
+          body 'This is plain text'
+        end
+        html_part do
+          content_type 'text/html; charset=UTF-8'
+          body '<h1>This is HTML</h1>'
+        end
+      end
       doing { mail.decoded }.should raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
-    
+
+    it "should return the decoded body if you call decode and the message is not multipart" do
+      mail = Mail.new do
+        content_transfer_encoding 'base64'
+        body "VGhlIGJvZHk=\n"
+      end
+      mail.decoded.should == "The body"
+    end
+
     describe "decoding bodies" do
 
       it "should not change a body on decode if not given an encoding type to decode" do

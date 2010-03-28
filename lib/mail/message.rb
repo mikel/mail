@@ -1670,8 +1670,11 @@ module Mail
     end
 
     def decoded
-      if self.attachment?
+      case
+      when self.attachment?
         decode_body
+      when !self.multipart?
+        body.decoded
       else
         raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
       end
