@@ -1175,9 +1175,9 @@ module Mail
       if name.to_s == 'body'
         self.body = value
       elsif name.to_s =~ /content[-_]type/i
-        header[underscoreize(name)] = value
+        header[name] = value
       else
-        header[underscoreize(name)] = value
+        header[name] = value
       end
     end
 
