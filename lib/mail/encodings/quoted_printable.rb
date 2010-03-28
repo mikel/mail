@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/encodings/7bit'
+
 module Mail
   module Encodings
     class QuotedPrintable < SevenBit

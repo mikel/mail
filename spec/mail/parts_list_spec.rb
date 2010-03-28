@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 describe "PartsList" do
   it "should return itself on sort" do

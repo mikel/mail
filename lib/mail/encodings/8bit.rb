@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/encodings/binary'
+
 module Mail
   module Encodings
     class EightBit < Binary

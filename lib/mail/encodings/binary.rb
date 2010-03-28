@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/encodings/transfer_encoding'
+
 module Mail
   module Encodings
     class Binary < TransferEncoding

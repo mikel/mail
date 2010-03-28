@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 # 
 #    The "References:" field will contain the contents of the parent's
 #    "References:" field (if any) followed by the contents of the parent's

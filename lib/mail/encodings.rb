@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'mail/encodings/base64'
-require 'mail/encodings/quoted_printable'
 
 module Mail
   # Raised when attempting to decode an unknown encoding type

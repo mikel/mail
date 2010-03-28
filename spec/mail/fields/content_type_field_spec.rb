@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::ContentTypeField do
   # Content-Type Header Field

@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe "SMTP Delivery Method" do
 
@@ -62,11 +62,7 @@ describe "SMTP Delivery Method" do
 
     it "should only create files based on the addr_spec of the destination" do
       Mail.defaults do
-<<<<<<< HEAD
-        delivery_method :file, :location => "/tmp/mail"
-=======
         delivery_method :file, :location => tmpdir
->>>>>>> ef3e0aada574d4c0aae39ed769d57e59dc654aab
       end
       
       mail = Mail.deliver do
