@@ -14,6 +14,13 @@ module Mail
     include RFC2045
 
     module Primary0
+      def CFWS
+        elements[0]
+      end
+
+    end
+
+    module Primary1
       def CFWS1
         elements[0]
       end
@@ -23,7 +30,7 @@ module Mail
       end
 
       def CFWS2
-        elements[2]
+        elements[3]
       end
     end
 
@@ -31,7 +38,10 @@ module Mail
       start_index = index
       if node_cache[:primary].has_key?(index)
         cached = node_cache[:primary][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -42,13 +52,41 @@ module Mail
         r2 = _nt_encoding
         s0 << r2
         if r2
-          r3 = _nt_CFWS
+          i4, s4 = index, []
+          r5 = _nt_CFWS
+          s4 << r5
+          if r5
+            if has_terminal?(";", false, index)
+              r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure(";")
+              r6 = nil
+            end
+            s4 << r6
+          end
+          if s4.last
+            r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+            r4.extend(Primary0)
+          else
+            @index = i4
+            r4 = nil
+          end
+          if r4
+            r3 = r4
+          else
+            r3 = instantiate_node(SyntaxNode,input, index...index)
+          end
           s0 << r3
+          if r3
+            r7 = _nt_CFWS
+            s0 << r7
+          end
         end
       end
       if s0.last
         r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-        r0.extend(Primary0)
+        r0.extend(Primary1)
       else
         @index = i0
         r0 = nil
@@ -61,7 +99,7 @@ module Mail
 
     module Encoding0
       def encoding
-        known_tokens.text_value || ietf_token.text_value || x_token.text_value
+        ietf_token.text_value || x_token.text_value
       end
     end
 
@@ -69,27 +107,26 @@ module Mail
       start_index = index
       if node_cache[:encoding].has_key?(index)
         cached = node_cache[:encoding][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
       i0 = index
-      r1 = _nt_known_tokens
+      r1 = _nt_ietf_token
       if r1
         r0 = r1
+        r0.extend(Encoding0)
       else
-        r2 = _nt_ietf_token
+        r2 = _nt_x_token
         if r2
           r0 = r2
+          r0.extend(Encoding0)
         else
-          r3 = _nt_x_token
-          r3.extend(Encoding0)
-          if r3
-            r0 = r3
-          else
-            @index = i0
-            r0 = nil
-          end
+          @index = i0
+          r0 = nil
         end
       end
 
@@ -98,11 +135,14 @@ module Mail
       r0
     end
 
-    def _nt_known_tokens
+    def _nt_ietf_token
       start_index = index
-      if node_cache[:known_tokens].has_key?(index)
-        cached = node_cache[:known_tokens][index]
-        @index = cached.interval.end if cached
+      if node_cache[:ietf_token].has_key?(index)
+        cached = node_cache[:ietf_token][index]
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -165,7 +205,7 @@ module Mail
         end
       end
 
-      node_cache[:known_tokens][start_index] = r0
+      node_cache[:ietf_token][start_index] = r0
 
       r0
     end
