@@ -79,9 +79,7 @@ describe "Attachments" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       @mail.ready_to_send!
-      encoded_email = @mail.attachments[0].encoded.gsub("\r\n", "\n") # Have to change \r\n back to \n to compare with Base64
-      base64_encoded_data = encode_base64(file_data)
-      encoded_email.should include(encode_base64(file_data))
+      @mail.attachments[0].encoded.should include(encode_base64(file_data))
     end
 
     it "should allow you to pass in an encoded attachment with an encoding" do

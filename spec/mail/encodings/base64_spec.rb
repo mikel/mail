@@ -3,7 +3,7 @@ require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_he
 describe Mail::Encodings::Base64 do
   
   it "should encode base 64 from text" do
-    result = "VGhpcyBpcyBhIHRlc3Q=\n"
+    result = "VGhpcyBpcyBhIHRlc3Q=\r\n"
     Mail::Encodings::Base64.encode('This is a test').should == result
   end
   
@@ -13,7 +13,7 @@ describe Mail::Encodings::Base64 do
   end
   
   it "should encode base 64 from binary" do
-    result = "AAAAAA==\n"
+    result = "AAAAAA==\r\n"
     Mail::Encodings::Base64.encode("\000\000\000\000").should == result
   end
   

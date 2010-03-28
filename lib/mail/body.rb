@@ -125,7 +125,8 @@ module Mail
     end
    
     def get_best_encoding(target)
-        target.get_best_compatible(encoding, raw_source)
+        te = Mail::Encodings.get_encoding(target)
+        te.get_best_compatible(encoding, raw_source)
     end
  
     # Returns a body encoded using transfer_encoding.  Multipart always uses an
@@ -137,10 +138,11 @@ module Mail
         self.sort_parts!
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
-      elsif transfer_encoding == encoding
-        raw_source
       else
-        Mail::Encodings.get_encoding(transfer_encoding).encode raw_source
+        be = get_best_encoding(transfer_encoding)
+        dec = Mail::Encodings::get_encoding(encoding)
+        enc = Mail::Encodings::get_encoding(be)
+        enc.encode(dec.decode(raw_source))
       end
     end
     
