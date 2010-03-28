@@ -69,8 +69,14 @@ module Mail
       @parts_list << Part.new(hash)
     end
    
+    # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we
+    # set it to binary, otherwise as set to plain text
     def guess_encoding
-      @mime_type.binary? ? "binary" : "text"
+      if @mime_type && !@mime_type.binary?
+        "7bit"
+      else
+        "binary"
+      end
     end 
  
     def set_mime_type(filename)

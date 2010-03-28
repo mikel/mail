@@ -63,6 +63,14 @@ describe "Attachments" do
                                         :mime_type => "application/x-gzip" }
       @mail.attachments[0].mime_type.should == 'application/x-gzip'
     end
+    
+    it "should allow you to override the mime_type" do
+      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      @mail.attachments['invoice.jpg'] = { :data => "you smiling",
+                                           :mime_type => "image/x-jpg",
+                                           :transfer_encoding => "base64" }
+      @mail.attachments[0].mime_type.should == 'image/x-jpg'
+    end
 
   end
 
