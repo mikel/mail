@@ -142,7 +142,14 @@ module Mail
         be = get_best_encoding(transfer_encoding)
         dec = Mail::Encodings::get_encoding(encoding)
         enc = Mail::Encodings::get_encoding(be)
-        enc.encode(dec.decode(raw_source))
+        if transfer_encoding == encoding and dec.nil?
+            # Cannot decode, so skip normalization
+            raw_source
+        else
+            # Decode then encode to normalize and allow transforming 
+            # from base64 to Q-P and vice versa
+            enc.encode(dec.decode(raw_source))
+        end
       end
     end
     
