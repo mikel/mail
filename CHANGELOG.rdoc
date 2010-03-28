@@ -1,3 +1,7 @@
+== Sun Mar 28 02:55:42 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.1.4
+
 == Sun Mar 28 00:26:27 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Merged in Jeremy/treetop to vendored treetop
@@ -6,16 +10,36 @@
 * Fixed content-transfer-encoding parser to be more compliant per RFC, also now handles trailing semi-colons correctly
 * Fixed content-transfer-encoding parser to handle weird "from the wild" misspellings
 * Added message.errors, header.errors arrays, returns array of [field_name, value, error_object] for each field that failed to parse
+* Removed bundler require from Rakefile
+
+== Sun Mar 17 03:03:03 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Keep header name case when failing to unstructured field
 
 == Wed Feb 24 09:14:56 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Fixed multiaddress bounce messages crashing when calling .bounced?  Now just take the first report and return that.
+* Closes issue 38 - final_recipient method give problem when one bounce email for multiple email ids
+* Fixing up TODO and Docs
+
+== Sun Mar 22 03:24:15 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.1.3
 
 == Thu Jan 28 00:25:02 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Added TMM1's patch to not raise errors if a email is not multipart/report
 * Added html_part and text_part now return the first text/html or text/plain part they find. Order is from top to bottom of the email, all parts, flattened.
+* Cleaning up register_interceptor and register_observer including documentation
+* Renamed #register_for_delivery_notification to #register_observer
+* Renamed #register_for_delivery_interception to #register_interceptor
+* Adding spec to check for folding of non ASCII words that have been encoded
+* Updating Message#inspect to be a bit more friendly... it is for us mere mortals after all
 * Version bump to 2.1.2
+
+== Sun Jan 28 02:59:34 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Removed old method of setting delivery_method 
 
 == Mon Jan 25 11:36:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 

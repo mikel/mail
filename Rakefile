@@ -11,7 +11,7 @@ require 'cucumber/rake/task'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "2.1.3"
+  s.version     = "2.1.4"
   s.author      = "Mike Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
