@@ -1,10 +1,10 @@
 namespace :corpus do
 
   task :load_mail do
-    $:.unshift File.expand_path('../', File.dirname(__FILE__))
-    require 'lib/mail'
+    require File.expand_path('../../../spec/environment')
+    require 'mail'
   end
-  
+
   # Used to run parsing against an arbitrary corpus of email.
   # For example: http://plg.uwaterloo.ca/~gvcormac/treccorpus/
   desc "Provide a LOCATION=/some/dir to verify parsing in bulk, otherwise defaults"

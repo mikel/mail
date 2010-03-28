@@ -1,7 +1,4 @@
-environment = File.expand_path('../../vendor/gems/environment')
-if File.exist?("#{environment}.rb")
-  require environment
-end
+require File.expand_path('../spec/environment', __FILE__)
 
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
@@ -30,7 +27,7 @@ spec = Gem::Specification.new do |s|
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
-    pkg.gem_spec = spec
+  pkg.gem_spec = spec
 end
 
 task :default => :spec
@@ -46,7 +43,7 @@ end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.warning = true
-  t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_files = FileList["#{File.dirname(__FILE__)}/spec/**/*_spec.rb"]
   t.spec_opts = %w(--backtrace --diff --color)
   t.libs << "#{File.dirname(__FILE__)}/spec"
   t.libs << "#{File.dirname(__FILE__)}/spec/mail"

@@ -15,7 +15,7 @@ describe Mail::CcField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::CcField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
+      Mail::CcField.included_modules.should include(Mail::CommonAddress) 
     end
 
     it "should accept two strings with the field separate" do

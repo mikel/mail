@@ -31,7 +31,7 @@ describe Mail::DateField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::DateField.included_modules.should include(Mail::CommonDate::InstanceMethods) 
+      Mail::DateField.included_modules.should include(Mail::CommonDate) 
     end
 
     it "should accept two strings with the field separate" do

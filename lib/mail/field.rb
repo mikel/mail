@@ -1,3 +1,5 @@
+require 'mail/fields'
+
 # encoding: utf-8
 module Mail
   # Provides a single class to call to create a new structured or unstructured

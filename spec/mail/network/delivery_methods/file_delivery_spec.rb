@@ -24,9 +24,11 @@ describe "SMTP Delivery Method" do
   end
   
   describe "general usage" do
+    tmpdir = File.expand_path('../../../../tmp/mail', __FILE__)
+
     it "should send an email to a file" do
       Mail.defaults do
-        delivery_method :file, :location => "/tmp/mail"
+        delivery_method :file, :location => tmpdir
       end
       
       mail = Mail.deliver do
@@ -42,7 +44,7 @@ describe "SMTP Delivery Method" do
 
     it "should send multiple emails to multiple files" do
       Mail.defaults do
-        delivery_method :file, :location => "/tmp/mail"
+        delivery_method :file, :location => tmpdir
       end
       
       mail = Mail.deliver do
@@ -60,7 +62,11 @@ describe "SMTP Delivery Method" do
 
     it "should only create files based on the addr_spec of the destination" do
       Mail.defaults do
+<<<<<<< HEAD
         delivery_method :file, :location => "/tmp/mail"
+=======
+        delivery_method :file, :location => tmpdir
+>>>>>>> ef3e0aada574d4c0aae39ed769d57e59dc654aab
       end
       
       mail = Mail.deliver do

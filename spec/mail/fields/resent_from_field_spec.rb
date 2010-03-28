@@ -12,7 +12,7 @@ describe Mail::ResentFromField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::ResentFromField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
+      Mail::ResentFromField.included_modules.should include(Mail::CommonAddress) 
     end
 
     it "should accept two strings with the field separate" do

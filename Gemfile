@@ -1,13 +1,13 @@
-source :gemcutter
+source 'http://rubygems.org'
 
+gem "activesupport", ">= 2.3.6.pre"
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
-gem 'activesupport', ">= 2.3.4"
 gem "mime-types"
 
 group :test do
   gem "rcov"
   gem "rake"
-  gem "bundler"
+  gem "bundler", "~> 0.9.10"
   gem "cucumber"
   gem "rspec"
   gem "diff-lcs"

@@ -1,6 +1,8 @@
 # encoding: utf-8
 # 
 # resent-msg-id   =       "Resent-Message-ID:" msg-id CRLF
+require 'mail/fields/common/common_message_id'
+
 module Mail
   class ResentMessageIdField < StructuredField
     
