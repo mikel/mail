@@ -132,7 +132,7 @@ module Mail
     #  string = :resent_from_field
     #  dasherize ( string ) #=> 'resent_from_field'
     def dasherize( str )
-      str.to_s.downcase.gsub('_', '-')
+      str.to_s.gsub('_', '-')
     end
 
     # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
