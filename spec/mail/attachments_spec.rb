@@ -96,7 +96,7 @@ describe "Attachments" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       base64_encoded_data = encode_base64(file_data)
       doing {@mail.attachments['test.png'] = { :content => base64_encoded_data,
-                                        :encoding => 'weird_encoding' }}.should raise_error
+                                               :encoding => 'weird_encoding' }}.should raise_error
     end
 
    it "should be able to call read on the attachment to return the decoded data" do

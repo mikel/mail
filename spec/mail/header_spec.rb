@@ -409,6 +409,18 @@ HERE
     
   end
   
+  describe "error handling" do
+    it "should collect up any of its fields' errors" do
+      header = Mail::Header.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b")
+      header.errors.should_not be_blank
+      header.errors.size.should == 2
+      header.errors[0][0].should == 'Content-Transfer-Encoding'
+      header.errors[0][1].should == 'vlad'
+      header.errors[1][0].should == 'Reply-To'
+      header.errors[1][1].should == 'a b b'
+    end
+  end
+  
   describe "handling fields with multiple values" do
     it "should know which fields can only appear once" do
       %w[ orig-date from sender reply-to to cc bcc 

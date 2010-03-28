@@ -99,6 +99,7 @@ module Mail
       @body = nil
       @text_part = nil
       @html_part = nil
+      @errors = nil
 
       @perform_deliveries = true
       @raise_delivery_errors = true
@@ -374,6 +375,27 @@ module Mail
       hash.each_pair do |k,v|
         header[k] = v
       end
+    end
+    
+    # Returns a list of parser errors on the header, each field that had an error
+    # will be reparsed as an unstructured field to preserve the data inside, but
+    # will not be used for further processing.
+    # 
+    # It returns a nested array of [field_name, value, original_error_message]
+    # per error found.
+    # 
+    # Example:
+    # 
+    #  message = Mail.new("Content-Transfer-Encoding: weirdo\r\n")
+    #  message.errors.size #=> 1
+    #  message.errors.first[0] #=> "Content-Transfer-Encoding"
+    #  message.errors.first[1] #=> "weirdo"
+    #  message.errors.first[3] #=> <The original error message exception>
+    # 
+    # This is a good first defence on detecting spam by the way.  Some spammers send
+    # invalid emails to try and get email parsers to give up parsing them.
+    def errors
+      header.errors
     end
     
     # Returns the Bcc value of the mail object as an array of strings of 
@@ -1258,7 +1280,8 @@ module Mail
     end
     
     def has_content_transfer_encoding?
-      !!content_transfer_encoding
+      header[:content_transfer_encoding] && 
+      header[:content_transfer_encoding].errors.blank?
     end
     
     def has_transfer_encoding? # :nodoc:
@@ -1723,7 +1746,7 @@ module Mail
     end
     
     def add_encoding_to_body
-      unless content_transfer_encoding.blank?
+      if has_content_transfer_encoding?
         body.encoding = content_transfer_encoding
       end
     end

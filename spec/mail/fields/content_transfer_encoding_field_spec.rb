@@ -87,6 +87,10 @@ describe Mail::ContentTransferEncodingField do
       t.encoding.should == 'x-this-is_my-encoding'
     end
     
+    it "should handle an x-encoding" do
+      t = Mail::ContentTransferEncodingField.new("x-uuencode")
+      t.encoding.should == "x-uuencode"
+    end
 
     it "should replace the existing value" do
       t = Mail::ContentTransferEncodingField.new("7bit")
@@ -95,9 +99,14 @@ describe Mail::ContentTransferEncodingField do
     end
 
     it "should raise an error on bogus values" do
-      t = Mail::ContentTransferEncodingField.new("broken@foo")
-      doing { t.encoding }.should raise_error
+      doing { Mail::ContentTransferEncodingField.new("broken@foo") }.should raise_error
     end 
+    
+    it "should handle an empty content transfer encoding" do
+      t = Mail::ContentTransferEncodingField.new("")
+      t.encoding.should == ""
+    end
+
   end
 
 end

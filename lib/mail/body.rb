@@ -173,11 +173,8 @@ module Mail
     end
     
     def encoding=( val )
-      if val == "text" then
+      if val == "text" || val.blank? then
         val = "8bit"
-      end
-      if !Mail::Encodings.defined? val
-        raise UnknownEncodingType, "Don't know how to decode #{val}, please decode first"
       end
       @encoding = (val == "text") ? "8bit" : val
     end

@@ -34,6 +34,7 @@ module Mail
     # these cases, please make a patch and send it in, or at the least, send
     # me the example so we can fix it.
     def initialize(header_text = nil)
+      @errors = []
       self.raw_source = header_text.to_crlf
       split_header if header_text
     end
@@ -74,6 +75,7 @@ module Mail
       unfolded_fields.each do |field|
 
         field = Field.new(field)
+        field.errors.each { |error| self.errors << error }
         selected = select_field_for(field.name)
 
         if selected.any? && limited_field?(field.name)
@@ -83,6 +85,10 @@ module Mail
         end
       end
 
+    end
+    
+    def errors
+      @errors
     end
     
     #  3.6. Field definitions

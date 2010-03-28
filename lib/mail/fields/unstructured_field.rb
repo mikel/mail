@@ -18,9 +18,14 @@ module Mail
     include Mail::Utilities
     
     def initialize(*args)
+      @errors = []
       self.name = args.first
       self.value = args.last
       self
+    end
+    
+    def errors
+      @errors
     end
     
     def encoded

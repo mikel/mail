@@ -1,3 +1,12 @@
+== Sun Mar 28 00:26:27 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Merged in Jeremy/treetop to vendored treetop
+* Merged in nathansobo/treetop to vendored treetop
+* Merged in pzbowen/mail into mail - Adds body auto encoding - awesome work
+* Fixed content-transfer-encoding parser to be more compliant per RFC, also now handles trailing semi-colons correctly
+* Fixed content-transfer-encoding parser to handle weird "from the wild" misspellings
+* Added message.errors, header.errors arrays, returns array of [field_name, value, error_object] for each field that failed to parse
+
 == Wed Feb 24 09:14:56 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Fixed multiaddress bounce messages crashing when calling .bounced?  Now just take the first report and return that.

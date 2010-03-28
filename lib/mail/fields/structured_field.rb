@@ -31,6 +31,10 @@ module Mail
     def default
       decoded
     end
+    
+    def errors
+      []
+    end
 
   end
 end

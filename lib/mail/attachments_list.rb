@@ -39,10 +39,13 @@ module Mail
 
         default_values[:body] = value.delete(:data) if value[:data]
 
-        if value[:transfer_encoding]
-          default_values[:content_transfer_encoding] = value.delete(:transfer_encoding)
-        elsif value[:encoding]
-          default_values[:content_transfer_encoding] = value.delete(:encoding)
+        encoding = value.delete(:transfer_encoding) || value.delete(:encoding)
+        if encoding
+          if Mail::Encodings.defined? encoding
+            default_values[:content_transfer_encoding] = encoding
+          else
+            raise "Do not know how to handle Content Transfer Encoding #{encoding}, please choose either quoted-printable or base64"
+          end
         end
 
         if value[:mime_type]
