@@ -1,3 +1,8 @@
+== Sun 28 Mar 2010 10:31:33 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.1.5.2
+* Fixed up preserve case in header fields when assigned from a message closes issue #46
+
 == Sun 28 Mar 2010 09:02:20 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 2.1.5.1
