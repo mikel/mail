@@ -11,5 +11,4 @@ module Mail
   autoload :MimeVersionElement, 'mail/elements/mime_version_element'
   autoload :PhraseList, 'mail/elements/phrase_list'
   autoload :ReceivedElement, 'mail/elements/received_element'
-  autoload :ReceivedElement, 'mail/elements/received_element'
 end
