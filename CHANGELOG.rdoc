@@ -1,3 +1,9 @@
+== Mon 29 Mar 2010 07:04:34 UTC Mikel Lindsaar <raasdnil@gmail.com>
+
+* Version bump to 2.1.5.3
+* No longer depend on vendor'd treetop as treetop now has optional loading of parts of the library
+* Change treetop dependency to 1.4.5
+
 == Sun 28 Mar 2010 10:31:33 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 2.1.5.2
