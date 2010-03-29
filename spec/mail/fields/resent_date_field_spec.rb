@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::ResentDateField do
   it "should initialize" do
@@ -11,7 +11,7 @@ describe Mail::ResentDateField do
   end
   
   it "should mix in the CommonAddress module" do
-    Mail::ResentDateField.included_modules.should include(Mail::CommonDate::InstanceMethods) 
+    Mail::ResentDateField.included_modules.should include(Mail::CommonDate) 
   end
 
   it "should accept a string with the field name" do

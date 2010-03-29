@@ -1,3 +1,5 @@
+require 'mail/fields'
+
 # encoding: utf-8
 module Mail
   # Provides a single class to call to create a new structured or unstructured
@@ -140,16 +142,18 @@ module Mail
 
     def create_field(name, value, charset)
       begin
-        self.field = new_field(name, value, charset)
-      rescue
-        self.field = Mail::UnstructuredField.new(name, value, charset)
+        self.field = new_field(name, value)
+      rescue => e
+        self.field = Mail::UnstructuredField.new(name, value)
+        self.field.errors << [name, value, e]
+        self.field
       end
     end
 
     def new_field(name, value, charset)
       # Could do this with constantize and make it "as DRY as", but a simple case 
       # statement is, well, simpler... 
-      case name.to_s
+      case name.to_s.downcase
       when /^to$/i
         ToField.new(value, charset)
       when /^cc$/i

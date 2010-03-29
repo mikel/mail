@@ -13,7 +13,10 @@ module Mail
       start_index = index
       if node_cache[:tspecials].has_key?(index)
         cached = node_cache[:tspecials][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -206,24 +209,70 @@ module Mail
       start_index = index
       if node_cache[:ietf_token].has_key?(index)
         cached = node_cache[:ietf_token][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
-      s0, i0 = [], index
-      loop do
-        r1 = _nt_token
-        if r1
-          s0 << r1
-        else
-          break
-        end
-      end
-      if s0.empty?
-        @index = i0
-        r0 = nil
+      i0 = index
+      if has_terminal?("7bit", false, index)
+        r1 = instantiate_node(SyntaxNode,input, index...(index + 4))
+        @index += 4
       else
-        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+        terminal_parse_failure("7bit")
+        r1 = nil
+      end
+      if r1
+        r0 = r1
+      else
+        if has_terminal?("8bit", false, index)
+          r2 = instantiate_node(SyntaxNode,input, index...(index + 4))
+          @index += 4
+        else
+          terminal_parse_failure("8bit")
+          r2 = nil
+        end
+        if r2
+          r0 = r2
+        else
+          if has_terminal?("binary", false, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 6))
+            @index += 6
+          else
+            terminal_parse_failure("binary")
+            r3 = nil
+          end
+          if r3
+            r0 = r3
+          else
+            if has_terminal?("quoted-printable", false, index)
+              r4 = instantiate_node(SyntaxNode,input, index...(index + 16))
+              @index += 16
+            else
+              terminal_parse_failure("quoted-printable")
+              r4 = nil
+            end
+            if r4
+              r0 = r4
+            else
+              if has_terminal?("base64", false, index)
+                r5 = instantiate_node(SyntaxNode,input, index...(index + 6))
+                @index += 6
+              else
+                terminal_parse_failure("base64")
+                r5 = nil
+              end
+              if r5
+                r0 = r5
+              else
+                @index = i0
+                r0 = nil
+              end
+            end
+          end
+        end
       end
 
       node_cache[:ietf_token][start_index] = r0
@@ -238,7 +287,10 @@ module Mail
       start_index = index
       if node_cache[:x_token].has_key?(index)
         cached = node_cache[:x_token][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -295,7 +347,10 @@ module Mail
       start_index = index
       if node_cache[:iana_token].has_key?(index)
         cached = node_cache[:iana_token][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -324,7 +379,10 @@ module Mail
       start_index = index
       if node_cache[:token].has_key?(index)
         cached = node_cache[:token][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 

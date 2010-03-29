@@ -1,7 +1,6 @@
 # encoding: utf-8
-# 
-# 
-# 
+require 'mail/fields/common/parameter_hash'
+
 module Mail
   class ContentDispositionField < StructuredField
     
@@ -49,11 +48,21 @@ module Mail
 
     # TODO: Fix this up
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+      if parameters.length > 0
+        p = ";\r\n\t#{parameters.encoded}\r\n"
+      else
+        p = ""
+      end
+      "#{CAPITALIZED_FIELD}: #{disposition_type}" + p
     end
     
     def decoded
-      value
+      if parameters.length > 0
+        p = "; #{parameters.decoded}"
+      else
+        p = ""
+      end
+      "#{disposition_type}" + p
     end
 
   end

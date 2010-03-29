@@ -26,6 +26,8 @@
 #  mail[:resent_cc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_cc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
+require 'mail/fields/common/common_address'
+
 module Mail
   class ResentCcField < StructuredField
     

@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::DateField do
   #    The origination date field consists of the field name "Date" followed
@@ -31,7 +31,7 @@ describe Mail::DateField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::DateField.included_modules.should include(Mail::CommonDate::InstanceMethods) 
+      Mail::DateField.included_modules.should include(Mail::CommonDate) 
     end
 
     it "should accept a string with the field name" do

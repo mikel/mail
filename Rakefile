@@ -1,18 +1,14 @@
-environment = File.expand_path('../../vendor/gems/environment')
-if File.exist?("#{environment}.rb")
-  require environment
-end
+require File.expand_path('../spec/environment', __FILE__)
 
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'spec/rake/spectask'
 require 'cucumber/rake/task'
-require 'bundler'
 
 spec = Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "2.1.3"
+  s.version     = "2.1.5.3"
   s.author      = "Mike Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
@@ -25,13 +21,14 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency('activesupport', ">= 2.3.4")
   s.add_dependency('mime-types')
+  s.add_dependency('treetop', '>= 1.4.5')
 
   s.require_path = 'lib'
   s.files = %w(README.rdoc Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
-    pkg.gem_spec = spec
+  pkg.gem_spec = spec
 end
 
 task :default => :spec
@@ -42,12 +39,12 @@ end
 Spec::Rake::SpecTask.new(:rcov) do |t|
   t.spec_files = FileList['test/**/tc_*.rb', 'spec/**/*_spec.rb']
   t.rcov = true
-  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System']
+  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System,/usr']
 end
 
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.warning = true
-  t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_files = FileList["#{File.dirname(__FILE__)}/spec/**/*_spec.rb"]
   t.spec_opts = %w(--backtrace --diff --color)
   t.libs << "#{File.dirname(__FILE__)}/spec"
   t.libs << "#{File.dirname(__FILE__)}/spec/mail"

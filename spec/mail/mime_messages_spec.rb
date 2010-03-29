@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 describe "MIME Emails" do
     
@@ -104,7 +104,7 @@ describe "MIME Emails" do
     describe "multipart/alternative emails" do
       
       it "should know what it's boundary is if it is a multipart document" do
-        mail = Mail.new('Content-Type: multitype/mixed; boundary="--==Boundary"')
+        mail = Mail.new('Content-Type: multipart/mixed; boundary="--==Boundary"')
         mail.boundary.should == "--==Boundary"
       end
       
@@ -213,7 +213,7 @@ describe "MIME Emails" do
       end
       
       it "should detect an html_part in an existing email" do
-        m = Mail.new(:content_type => 'mixed/alternative')
+        m = Mail.new(:content_type => 'multipart/alternative')
         m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
         m.text_part.body.decoded.should == 'PLAIN TEXT'
@@ -221,9 +221,9 @@ describe "MIME Emails" do
       end
       
       it "should detect an html_part in a multi level mime email" do
-        m = Mail.new(:content_type => 'mixed/multipart')
+        m = Mail.new(:content_type => 'multipart/mixed')
         a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
-        p = Mail::Part.new(:content_type => 'mixed/alternative')
+        p = Mail::Part.new(:content_type => 'multipart/alternative')
         p.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
         m.add_part(p)
@@ -233,21 +233,21 @@ describe "MIME Emails" do
       end
       
       it "should only the first part on a stupidly overly complex email" do
-        m = Mail.new(:content_type => 'mixed/multipart')
+        m = Mail.new(:content_type => 'multipart/mixed')
         a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
         m.add_part(a)
 
-        b = Mail::Part.new(:content_type => 'mixed/alternative')
+        b = Mail::Part.new(:content_type => 'multipart/alternative')
         b.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         b.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
         m.add_part(b)
 
-        c = Mail::Part.new(:content_type => 'mixed/alternative')
+        c = Mail::Part.new(:content_type => 'multipart/alternative')
         c.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML 2 TEXT'))
         c.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN 2 TEXT'))
         b.add_part(c)
 
-        d = Mail::Part.new(:content_type => 'mixed/alternative')
+        d = Mail::Part.new(:content_type => 'multipart/alternative')
         d.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML 3 TEXT'))
         d.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN 3 TEXT'))
         b.add_part(d)
@@ -339,7 +339,7 @@ describe "MIME Emails" do
         mail.attachments[3].filename.should == 'test.zip'
       end
 
-      it "should return the mime/type of each attachment" do
+      it "should return the type/subtype of each attachment" do
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'

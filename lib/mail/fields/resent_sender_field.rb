@@ -25,6 +25,8 @@
 #  mail.resent_sender.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail.resent_sender.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 # 
+require 'mail/fields/common/common_address'
+
 module Mail
   class ResentSenderField < StructuredField
     

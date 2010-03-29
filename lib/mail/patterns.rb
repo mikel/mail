@@ -1,13 +1,12 @@
 module Mail
   module Patterns
-
     white_space = %Q|\x9\x20|
     text        = %Q|\x1-\x8\xB\xC\xE-\x7f|
     field_name  = %Q|\x21-\x39\x3b-\x7e|
     field_body  = text
     
-    aspecial     = %Q|()<>[]:;.\\,"|
-    tspecial     = %Q|()<>[];:\\,"/?=|
+    aspecial     = %Q|()<>[]:;@\\,."| # RFC5322
+    tspecial     = %Q|()<>@,;:\\"/[]?=| # RFC2045
     lwsp         = %Q| \t\r\n|
     control      = %Q|\x00-\x1f\x7f-\xff|
     
@@ -24,20 +23,5 @@ module Mail
     ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{lwsp}]/n
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
     TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{lwsp}]/n
-    
-    
-    module ClassMethods
-      
-    end
-  
-    module InstanceMethods
-      
-    end
-    
-    def self.included(receiver)
-      receiver.extend         ClassMethods
-      receiver.send :include, InstanceMethods
-    end
-    
   end
 end

@@ -1,6 +1,8 @@
 # encoding: utf-8
 # 
 # resent-date     =       "Resent-Date:" date-time CRLF
+require 'mail/fields/common/common_date'
+
 module Mail
   class ResentDateField < StructuredField
     

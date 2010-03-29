@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::Header do
 
@@ -211,6 +211,13 @@ describe Mail::Header do
         header['to'] = 'mikel@test.lindsaar.net'
         header['to'].field.class.should == Mail::ToField
       end
+
+      it "should maintain header case" do
+        header = Mail::Header.new
+        header['User-Agent'] = 'My funky mailer'
+        header.encoded.should match(/^User-Agent: /)
+        header.encoded.should_not match(/^user-agent: /)
+      end
       
     end
   
@@ -414,6 +421,18 @@ HERE
     
   end
   
+  describe "error handling" do
+    it "should collect up any of its fields' errors" do
+      header = Mail::Header.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b")
+      header.errors.should_not be_blank
+      header.errors.size.should == 2
+      header.errors[0][0].should == 'Content-Transfer-Encoding'
+      header.errors[0][1].should == 'vlad'
+      header.errors[1][0].should == 'Reply-To'
+      header.errors[1][1].should == 'a b b'
+    end
+  end
+
   describe "handling date fields with multiple values" do
     it "should know which fields can only appear once" do
       %w[ date ].each do |field|

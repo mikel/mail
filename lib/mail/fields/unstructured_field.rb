@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/fields/common/common_field'
+
 module Mail
   # Provides access to an unstructured header field
   #
@@ -38,6 +40,10 @@ module Mail
     
     def charset=(val)
       @charset = val
+    end
+
+    def errors
+      @errors
     end
     
     def encoded

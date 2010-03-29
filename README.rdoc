@@ -471,7 +471,7 @@ will try and guess the mime_type for you.
   @mail.attachments.first.mime_type #=> 'application/pdf'
   @mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true
 
-You can also override the guessed mime type if you really know better
+You can also override the guessed MIME media type if you really know better
 than mail (this should be rarely needed)
 
   @mail = Mail.new

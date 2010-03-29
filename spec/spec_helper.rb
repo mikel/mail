@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-$:.unshift File.expand_path('../lib', File.dirname(__FILE__))
+require File.expand_path('../environment', __FILE__)
 
 unless defined?(MAIL_ROOT)
   STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
@@ -9,23 +9,6 @@ end
 
 unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
-end
-
-environment = File.expand_path('../../vendor/gems/environment')
-if File.exist?("#{environment}.rb")
-  require environment
-else
-  require 'rubygems'
-#  gem "treetop", ">= 1.4"
-  gem 'activesupport', ">= 2.3"
-
-  begin
-    require 'ruby-debug' if RUBY_VERSION < '1.9'
-  rescue LoadError
-    # Skip debugger if unavailable.
-  end
-  require 'spec'
-#  require 'treetop'
 end
 
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
@@ -172,6 +155,7 @@ class MockPOP3
   end
 end
 
+require 'net/pop'
 class Net::POP3
   def self.new(*args)
     MockPOP3.new

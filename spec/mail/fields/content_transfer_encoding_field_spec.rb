@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::ContentTransferEncodingField do
 
@@ -81,6 +81,26 @@ describe Mail::ContentTransferEncodingField do
       t.encoding.should == 'x-this-is_my-encoding'
     end
     
+    it "should handle an x-encoding" do
+      t = Mail::ContentTransferEncodingField.new("x-uuencode")
+      t.encoding.should == "x-uuencode"
+    end
+
+    it "should replace the existing value" do
+      t = Mail::ContentTransferEncodingField.new("7bit")
+      t.parse("quoted-printable")
+      t.encoding.should == 'quoted-printable'
+    end
+
+    it "should raise an error on bogus values" do
+      doing { Mail::ContentTransferEncodingField.new("broken@foo") }.should raise_error
+    end 
+    
+    it "should handle an empty content transfer encoding" do
+      t = Mail::ContentTransferEncodingField.new("")
+      t.encoding.should == ""
+    end
+
   end
 
 end

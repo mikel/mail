@@ -21,6 +21,8 @@
 #  mail['date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
 #  mail['Date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
 # 
+require 'mail/fields/common/common_date'
+
 module Mail
   class DateField < StructuredField
     

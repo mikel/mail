@@ -34,6 +34,7 @@ module Mail
     # these cases, please make a patch and send it in, or at the least, send
     # me the example so we can fix it.
     def initialize(header_text = nil)
+      @errors = []
       self.raw_source = header_text.to_crlf
       split_header if header_text
     end
@@ -74,6 +75,7 @@ module Mail
       unfolded_fields.each do |field|
 
         field = Field.new(field)
+        field.errors.each { |error| self.errors << error }
         selected = select_field_for(field.name)
 
         if selected.any? && limited_field?(field.name)
@@ -83,6 +85,10 @@ module Mail
         end
       end
 
+    end
+    
+    def errors
+      @errors
     end
     
     #  3.6. Field definitions
@@ -107,7 +113,7 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      name = dasherize(name)
+      name = dasherize(name).downcase
       selected = select_field_for(name)
       case
       when selected.length > 1
@@ -134,7 +140,8 @@ module Mail
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
       name = dasherize(name)
-      selected = select_field_for(name)
+      fn = name.downcase
+      selected = select_field_for(fn)
       
       case
       # User wants to delete the field
@@ -142,8 +149,8 @@ module Mail
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && limited_field?(name)
-        selected.first.update(name, value)
+      when !selected.blank? && limited_field?(fn)
+        selected.first.update(fn, value)
         
       # User wants to create the field
       else
@@ -201,7 +208,7 @@ module Mail
       !fields.select { |f| f.responsible_for?('Date') }.empty?
     end
 
-    # Returns true if the header has a message_id defined (empty or not)
+    # Returns true if the header has a MIME version defined (empty or not)
     def has_mime_version?
       !fields.select { |f| f.responsible_for?('Mime-Version') }.empty?
     end

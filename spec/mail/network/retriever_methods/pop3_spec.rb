@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
+require 'spec_helper'
 
 describe "POP3 Retriever" do
   
@@ -25,7 +25,7 @@ describe "POP3 Retriever" do
         messages << message
       end
       
-      messages.map(&:raw_source).sort.should == MockPOP3.popmails.map(&:pop).sort
+      messages.map { |m| m.raw_source }.sort.should == MockPOP3.popmails.map { |p| p.pop }.sort
       MockPOP3.should_not be_started
     end
     
@@ -37,7 +37,7 @@ describe "POP3 Retriever" do
         messages << message
       end
       
-      messages.map(&:raw_source).sort.should == MockPOP3.popmails.map(&:pop).sort
+      messages.map { |m| m.raw_source }.sort.should == MockPOP3.popmails.map { |p| p.pop }.sort
       MockPOP3.should_not be_started
     end
   
@@ -47,29 +47,29 @@ describe "POP3 Retriever" do
     
     it "should handle the :count option" do
       messages = Mail.find(:count => :all, :what => :last, :order => :asc)
-      messages.map(&:raw_source).sort.should == MockPOP3.popmails.map(&:pop)
+      messages.map { |m| m.raw_source }.sort.should == MockPOP3.popmails.map { |p| p.pop }
       
       message = Mail.find(:count => 1, :what => :last)
-      message.raw_source.should == MockPOP3.popmails.map(&:pop).last
+      message.raw_source.should == MockPOP3.popmails.map { |p| p.pop }.last
       
       messages = Mail.find(:count => 2, :what => :last, :order => :asc)
-      messages[0..1].collect {|m| m.raw_source}.should == MockPOP3.popmails.map(&:pop)[-2..-1]
+      messages[0..1].collect {|m| m.raw_source}.should == MockPOP3.popmails.map { |p| p.pop }[-2..-1]
     end
     
     it "should handle the :what option" do
       messages = Mail.find(:count => :all, :what => :last)
-      messages.map(&:raw_source).sort.should == MockPOP3.popmails.map(&:pop)
+      messages.map { |m| m.raw_source }.sort.should == MockPOP3.popmails.map { |p| p.pop }
       
       messages = Mail.find(:count => 2, :what => :first, :order => :asc)
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)[0..1]
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }[0..1]
     end
     
     it "should handle the :order option" do
       messages = Mail.find(:order => :desc, :count => 5, :what => :last)
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)[-5..-1].reverse
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }[-5..-1].reverse
       
       messages = Mail.find(:order => :asc, :count => 5, :what => :last)
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)[-5..-1]
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }[-5..-1]
     end
     
     it "should find the last 10 messages by default" do
@@ -86,7 +86,7 @@ describe "POP3 Retriever" do
       messages = Mail.last(:count => 5)
       
       messages.should be_instance_of(Array)
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)[-5..-1]
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }[-5..-1]
     end
     
     it "should find the last received message" do
@@ -104,7 +104,7 @@ describe "POP3 Retriever" do
       messages = Mail.first(:count => 5)
       
       messages.should be_instance_of(Array)
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)[0..4]
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }[0..4]
     end
     
     it "should find the first received message" do
@@ -122,7 +122,7 @@ describe "POP3 Retriever" do
       messages = Mail.all
       
       messages.size.should == MockPOP3.popmails.size
-      messages.map(&:raw_source).should == MockPOP3.popmails.map(&:pop)
+      messages.map { |m| m.raw_source }.should == MockPOP3.popmails.map { |p| p.pop }
     end
     
   end

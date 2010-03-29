@@ -27,6 +27,8 @@
 # item-value      =       1*angle-addr / addr-spec /
 #                          atom / domain / msg-id
 # 
+require 'mail/fields/common/common_address'
+
 module Mail
   class ReturnPathField < StructuredField
     

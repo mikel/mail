@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 # 
 # resent-from     =       "Resent-From:" mailbox-list CRLF
 
@@ -12,7 +12,7 @@ describe Mail::ResentFromField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::ResentFromField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
+      Mail::ResentFromField.included_modules.should include(Mail::CommonAddress) 
     end
 
     it "should accept a string with the field name" do

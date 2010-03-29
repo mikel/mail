@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 
 #    The "Cc:" field (where the "Cc" means "Carbon Copy" in the sense of
 #    making a copy on a typewriter using carbon paper) contains the
@@ -15,7 +15,7 @@ describe Mail::CcField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::CcField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
+      Mail::CcField.included_modules.should include(Mail::CommonAddress) 
     end
 
     it "should accept a string with the field name" do

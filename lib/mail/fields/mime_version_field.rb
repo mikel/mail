@@ -41,11 +41,11 @@ module Mail
     end
     
     def encoded
-      "#{CAPITALIZED_FIELD}: #{value}\r\n"
+      "#{CAPITALIZED_FIELD}: #{version}\r\n"
     end
     
     def decoded
-      value
+      version
     end
     
   end

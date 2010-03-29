@@ -21,7 +21,10 @@ module Mail
       start_index = index
       if node_cache[:primary_phrase].has_key?(index)
         cached = node_cache[:primary_phrase][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 

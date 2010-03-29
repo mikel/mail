@@ -1,4 +1,5 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', '..', 'spec_helper')
+require 'spec_helper'
+require 'mail/fields/common/parameter_hash'
 
 describe Mail::ParameterHash do
   it "should return the values in the hash" do
@@ -33,8 +34,8 @@ describe Mail::ParameterHash do
   it "should return a name list concatenated and unencoded" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value*0*' => "us-ascii'en'This%20is%20even%20more%20",
-                 'value*1*' => '%2A%2A%2Afun%2A%2A%2A%20',
-                 'value*2*' => "isn't it"})
+                 'value*1*' => "%2A%2A%2Afun%2A%2A%2A%20",
+                 'value*2'  => "isn't it"})
     hash['value'].should == "This is even more ***fun*** isn't it"
   end
   
@@ -47,9 +48,9 @@ describe Mail::ParameterHash do
   it "should return an encoded value" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value*0*' => "us-ascii'en'This%20is%20even%20more%20",
-                 'value*1*' => '%2A%2A%2Afun%2A%2A%2A%20',
-                 'value*2*' => "isn't it"})
-    hash.encoded.should == %Q{value*0*="us-ascii'en'This%20is%20even%20more%20";\r\n\tvalue*1*="%2A%2A%2Afun%2A%2A%2A%20";\r\n\tvalue*2*="isn't it"}
+                 'value*1*' => "%2A%2A%2Afun%2A%2A%2A%20",
+                 'value*2'  => "isn't it"})
+    hash.encoded.should == %Q{value*0*=us-ascii'en'This%20is%20even%20more%20;\r\n\tvalue*1*=%2A%2A%2Afun%2A%2A%2A%20;\r\n\tvalue*2="isn't it"}
   end
   
 end

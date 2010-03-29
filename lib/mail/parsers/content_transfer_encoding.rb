@@ -25,13 +25,20 @@ module Mail
       def CFWS2
         elements[2]
       end
+
+      def CFWS3
+        elements[4]
+      end
     end
 
     def _nt_primary
       start_index = index
       if node_cache[:primary].has_key?(index)
         cached = node_cache[:primary][index]
-        @index = cached.interval.end if cached
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
         return cached
       end
 
@@ -44,6 +51,25 @@ module Mail
         if r2
           r3 = _nt_CFWS
           s0 << r3
+          if r3
+            if has_terminal?(";", false, index)
+              r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure(";")
+              r5 = nil
+            end
+            if r5
+              r4 = r5
+            else
+              r4 = instantiate_node(SyntaxNode,input, index...index)
+            end
+            s0 << r4
+            if r4
+              r6 = _nt_CFWS
+              s0 << r6
+            end
+          end
         end
       end
       if s0.last
@@ -60,8 +86,21 @@ module Mail
     end
 
     module Encoding0
-      def encoding
-        known_tokens.text_value || ietf_token.text_value || x_token.text_value
+      def ietf_token
+        elements[0]
+      end
+
+    end
+
+    module Encoding1
+      def text_value
+        ietf_token.text_value
+      end
+    end
+
+    module Encoding2
+      def text_value
+        x_token.text_value
       end
     end
 
@@ -69,103 +108,54 @@ module Mail
       start_index = index
       if node_cache[:encoding].has_key?(index)
         cached = node_cache[:encoding][index]
-        @index = cached.interval.end if cached
-        return cached
-      end
-
-      i0 = index
-      r1 = _nt_known_tokens
-      if r1
-        r0 = r1
-      else
-        r2 = _nt_ietf_token
-        if r2
-          r0 = r2
-        else
-          r3 = _nt_x_token
-          r3.extend(Encoding0)
-          if r3
-            r0 = r3
-          else
-            @index = i0
-            r0 = nil
-          end
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
         end
-      end
-
-      node_cache[:encoding][start_index] = r0
-
-      r0
-    end
-
-    def _nt_known_tokens
-      start_index = index
-      if node_cache[:known_tokens].has_key?(index)
-        cached = node_cache[:known_tokens][index]
-        @index = cached.interval.end if cached
         return cached
       end
 
       i0 = index
-      if has_terminal?("7bit", false, index)
-        r1 = instantiate_node(SyntaxNode,input, index...(index + 4))
-        @index += 4
+      i1, s1 = index, []
+      r2 = _nt_ietf_token
+      s1 << r2
+      if r2
+        if has_terminal?("s", false, index)
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure("s")
+          r4 = nil
+        end
+        if r4
+          r3 = r4
+        else
+          r3 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s1 << r3
+      end
+      if s1.last
+        r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+        r1.extend(Encoding0)
+        r1.extend(Encoding1)
       else
-        terminal_parse_failure("7bit")
+        @index = i1
         r1 = nil
       end
       if r1
         r0 = r1
       else
-        if has_terminal?("8bit", false, index)
-          r2 = instantiate_node(SyntaxNode,input, index...(index + 4))
-          @index += 4
+        r5 = _nt_x_token
+        r5.extend(Encoding2)
+        if r5
+          r0 = r5
         else
-          terminal_parse_failure("8bit")
-          r2 = nil
-        end
-        if r2
-          r0 = r2
-        else
-          if has_terminal?("binary", false, index)
-            r3 = instantiate_node(SyntaxNode,input, index...(index + 6))
-            @index += 6
-          else
-            terminal_parse_failure("binary")
-            r3 = nil
-          end
-          if r3
-            r0 = r3
-          else
-            if has_terminal?("quoted-printable", false, index)
-              r4 = instantiate_node(SyntaxNode,input, index...(index + 16))
-              @index += 16
-            else
-              terminal_parse_failure("quoted-printable")
-              r4 = nil
-            end
-            if r4
-              r0 = r4
-            else
-              if has_terminal?("base64", false, index)
-                r5 = instantiate_node(SyntaxNode,input, index...(index + 6))
-                @index += 6
-              else
-                terminal_parse_failure("base64")
-                r5 = nil
-              end
-              if r5
-                r0 = r5
-              else
-                @index = i0
-                r0 = nil
-              end
-            end
-          end
+          @index = i0
+          r0 = nil
         end
       end
 
-      node_cache[:known_tokens][start_index] = r0
+      node_cache[:encoding][start_index] = r0
 
       r0
     end

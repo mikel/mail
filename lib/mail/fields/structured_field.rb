@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'mail/fields/common/common_field'
+
 module Mail
   # Provides access to a structured header field
   #
@@ -39,6 +41,10 @@ module Mail
     
     def default
       decoded
+    end
+    
+    def errors
+      []
     end
 
   end

@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', '..', 'spec_helper')
+require 'spec_helper'
 # 
 # resent-sender   =       "Resent-Sender:" mailbox CRLF
 
@@ -12,7 +12,7 @@ describe Mail::ResentSenderField do
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::ResentSenderField.included_modules.should include(Mail::CommonAddress::InstanceMethods) 
+      Mail::ResentSenderField.included_modules.should include(Mail::CommonAddress) 
     end
 
     it "should accept a string with the field name" do

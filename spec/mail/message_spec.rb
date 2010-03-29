@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 describe Mail::Message do
   
@@ -47,9 +47,17 @@ describe Mail::Message do
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+      errors = false
       emails.each do |email|
-        Mail::Message.new(File.read(email))
+        begin
+          Mail::Message.new(File.read(email))
+        rescue => e
+          puts "Failed on email #{email}"
+          puts "Failure was:\n#{e}"
+          errors = true
+        end
       end
+      errors.should be_false
     end
 
     it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
@@ -710,8 +718,8 @@ describe Mail::Message do
         end
         message.parts.first.parts[0].body.decoded.should == "Nothing to see here."
         message.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>"
-        message.encoded.should match(%r{Nothing to see here\.})
-        message.encoded.should match(%r{<b>test</b> HTML<br/>})
+        message.encoded.should match %r{Nothing to see here\.}
+        message.encoded.should match %r{<b>test</b> HTML<br/>}
       end
       
       it "should allow you to init on an array of addresses from a hash" do
@@ -879,7 +887,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          mail.to_s.should =~ /Mime-Version: 3.0 \(This is an unreal version number\)\r\n/
+          mail.to_s.should =~ /Mime-Version: 3.0\r\n/
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -992,14 +1000,14 @@ describe Mail::Message do
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
-          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="US-ASCII";\r\n]
+          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset=US-ASCII\r\n]
           mail.content_type_parameters.should == {"charset" => "US-ASCII"}
         end
         
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
-          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset="UTF-8";\r\n]
+          mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\tcharset=UTF-8\r\n]
           mail.content_type_parameters.should == {"charset" => "UTF-8"}
         end
 
@@ -1012,40 +1020,37 @@ describe Mail::Message do
       
       describe "content-transfer-encoding" do
 
-        it "should not raise a warning if there is no content-transfer-encoding and only US-ASCII chars" do
+        it "should use 7bit for only US-ASCII chars" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: 7bit}
         end
 
-        it "should set the content-transfer-encoding to 7bit" do
-          body = "This is plain text US-ASCII"
+        it "should use QP transfer encoding for 8bit text with only a few 8bit characters" do
+          body = "Maxfeldstraße 5, 90409 Nürnberg"
           mail = Mail.new
           mail.body = body
-          mail.to_s =~ %r{Content-Transfer-Encoding: 7bit}
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: quoted-printable}
         end
 
-        it "should raise a warning if there is no content-transfer-encoding and there is non ascii chars and default to 8bit" do
+        it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
           mail.should be_has_content_type
           mail.should be_has_charset
-          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Transfer-Encoding: 8bit}
+          mail.to_s.should =~  %r{Content-Transfer-Encoding: base64}
         end
 
-        it "should not raise a warning if there is a content-transfer-encoding defined and there is non ascii chars" do
+        it "should not use 8bit transfer encoding when 8bit is allowed" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
-          mail.content_transfer_encoding = "8bit"
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+          mail.transport_encoding = "8bit"
+          mail.to_s.should =~ %r{Content-Transfer-Encoding: 8bit}
         end
 
       end
@@ -1070,12 +1075,31 @@ describe Mail::Message do
       mail.to_s.should =~ /This is a body of the email/
 
     end
-
-    it "should raise an error and message if you try and call decoded" do
-      mail = Mail.new
+    
+    it "should raise an error and message if you try and call decoded on a multipart email" do
+      mail = Mail.new do
+        to 'mikel@test.lindsaar.net'
+        from 'bob@test.lindsaar.net'
+        subject 'Multipart email'
+        text_part do
+          body 'This is plain text'
+        end
+        html_part do
+          content_type 'text/html; charset=UTF-8'
+          body '<h1>This is HTML</h1>'
+        end
+      end
       doing { mail.decoded }.should raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
-    
+
+    it "should return the decoded body if you call decode and the message is not multipart" do
+      mail = Mail.new do
+        content_transfer_encoding 'base64'
+        body "VGhlIGJvZHk=\n"
+      end
+      mail.decoded.should == "The body"
+    end
+
     describe "decoding bodies" do
 
       it "should not change a body on decode if not given an encoding type to decode" do
@@ -1347,5 +1371,27 @@ describe Mail::Message do
       mail.to.should == ['bob@example.com']
     end
     
+  end
+  
+  describe "error handling" do
+    describe "error handling" do
+      it "should collect up any of its fields' errors" do
+        mail = Mail.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b\r\n")
+        mail.errors.should_not be_blank
+        mail.errors.size.should == 2
+        mail.errors[0][0].should == 'Content-Transfer-Encoding'
+        mail.errors[0][1].should == 'vlad'
+        mail.errors[1][0].should == 'Reply-To'
+        mail.errors[1][1].should == 'a b b'
+      end
+    end
+  end
+  
+  describe "header case should be preserved" do
+    it "should handle mail[] and keep the header case" do
+      mail = Mail.new
+      mail['X-Foo-Bar'] = "Some custom text"
+      mail.to_s.should match(/X-Foo-Bar: Some custom text/)
+    end
   end
 end

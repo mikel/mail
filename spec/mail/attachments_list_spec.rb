@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 def encode_base64( str )
   Mail::Encodings::Base64.encode(str)
@@ -63,6 +63,14 @@ describe "Attachments" do
                                         :mime_type => "application/x-gzip" }
       @mail.attachments[0].mime_type.should == 'application/x-gzip'
     end
+    
+    it "should allow you to override the mime_type" do
+      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      @mail.attachments['invoice.jpg'] = { :data => "you smiling",
+                                           :mime_type => "image/x-jpg",
+                                           :transfer_encoding => "base64" }
+      @mail.attachments[0].mime_type.should == 'image/x-jpg'
+    end
 
   end
 
@@ -71,15 +79,15 @@ describe "Attachments" do
     it "should set it's content_transfer_encoding" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
+      @mail.ready_to_send!
       @mail.attachments[0].content_transfer_encoding.should == 'base64'
     end
 
     it "should encode it's body to base64" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
-      encoded_email = @mail.attachments[0].encoded.gsub("\r\n", "\n") # Have to change \r\n back to \n to compare with Base64
-      base64_encoded_data = encode_base64(file_data)
-      encoded_email.should include(encode_base64(file_data))
+      @mail.ready_to_send!
+      @mail.attachments[0].encoded.should include(encode_base64(file_data))
     end
 
     it "should allow you to pass in an encoded attachment with an encoding" do
@@ -90,24 +98,14 @@ describe "Attachments" do
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
-    it "should allow you to pass in an encoded attachment with an unknown encoding" do
+    it "should not allow you to pass in an encoded attachment with an unknown encoding" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       base64_encoded_data = encode_base64(file_data)
-      @mail.attachments['test.png'] = { :content => base64_encoded_data,
-                                        :encoding => 'weird_encoding' }
-      encoded_email = @mail.attachments[0].encoded.gsub("\r\n", "\n") # Have to change \r\n back to \n to compare with Base64
-      encoded_email.should include(encode_base64(file_data))
+      doing {@mail.attachments['test.png'] = { :content => base64_encoded_data,
+                                               :encoding => 'weird_encoding' }}.should raise_error
     end
 
-    it "should raise an error if it doesn't know how to decode" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
-      encoded_data = encode_base64(file_data)
-      @mail.attachments['test.png'] = { :content => encoded_data,
-                                        :encoding => 'weird_encoding' }
-      doing { @mail.attachments[0].decoded }.should raise_error(Mail::UnknownEncodingType)
-    end
-
-    it "should be able to call read on the attachment to return the decoded data" do
+   it "should be able to call read on the attachment to return the decoded data" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       if RUBY_VERSION >= '1.9'
