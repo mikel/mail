@@ -2,9 +2,9 @@ namespace :treetop do
 
   desc "Pre-generate all the .treetop files into .rb files"
   task :generate do
-    Dir[File.join(File.dirname(__FILE__), '..', 'mail', 'parsers', '*.treetop')].each do |filename|
-      `lib/mail/vendor/treetop-1.4.3/bin/tt #{filename}`
+    Dir.glob(File.expand_path('../../mail/parsers/*.treetop', __FILE__)).each do |filename|
+      `bundle exec tt #{filename}`
     end
   end
-  
+
 end
