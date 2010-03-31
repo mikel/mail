@@ -274,7 +274,7 @@ describe "Mail" do
     
     describe "observers" do
       it "should tell it's observers that it was told to deliver an email" do
-        @message.register_for_delivery_notification(MyObserver)
+        Mail.register_observer(MyObserver)
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end

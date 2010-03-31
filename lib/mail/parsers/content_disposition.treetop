@@ -19,7 +19,7 @@ module Mail
     end
     
     rule extension_token
-      ietf_token / x_token
+      ietf_token / custom_x_token
     end
     
     rule parameter

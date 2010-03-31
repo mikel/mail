@@ -111,6 +111,12 @@ describe Mail::ContentTypeField do
       c = Mail::ContentTypeField.new('text/plain; example="foo bar"')
       c.decoded.should == 'text/plain; example="foo bar"'
     end
+    
+    it "should render " do
+      c = Mail::ContentTypeField.new('message/delivery-status')
+      c.main_type.should == 'message'
+      c.sub_type.should == 'delivery-status'
+    end
   end
 
   describe "instance methods" do
@@ -561,7 +567,7 @@ describe Mail::ContentTypeField do
     end
     
     it "should encode a non us-ascii filename" do
-      original = $KCODE
+      @original = $KCODE if RUBY_VERSION < '1.9'
       Mail.defaults do
         param_encode_language('jp')
       end
@@ -578,9 +584,7 @@ describe Mail::ContentTypeField do
       c.filename = string
       c.parameters.should == {'filename' => string}
       c.encoded.should == result
-      if RUBY_VERSION < '1.9'
-        $KCODE = storedkcode
-      end 
+      $KCODE = @original if RUBY_VERSION < '1.9'
     end
     
   end

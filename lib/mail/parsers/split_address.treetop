@@ -1,0 +1,80 @@
+module Mail
+
+  grammar SplitAddress
+
+    include SplitCommon
+    
+    rule primary
+      quoted_display_name_address {
+        def display
+          display_name.text_value.strip
+        end
+      
+        def address
+          address_spec.text_value.strip
+        end
+      } / unquoted_display_name_address {
+        def display
+          display_name.text_value.strip
+        end
+    
+        def address
+          address_spec.text_value.strip
+        end
+      } / bracketed_address {
+        def display
+          nil
+        end
+        
+        def address
+          text_value.strip
+        end
+      } / plain_address {
+        def display
+          nil
+        end
+        
+        def address
+          "<#{text_value.strip}>"
+        end
+      }
+    end
+    
+    rule quoted_display_name_address
+      '"' display_name:quoted '"' CFWS address_spec:(bracketed_address)
+    end
+    
+    rule unquoted_display_name_address
+      display_name:unquoted CFWS address_spec:(bracketed_address)
+    end
+    
+    rule bracketed_address
+      bracketed
+    end
+      
+    rule plain_address
+      addr
+    end
+    
+    rule unquoted
+      (!'<' . )+
+    end
+    
+    rule quoted
+      qtext*
+    end
+    
+    rule qtext
+      '\"' / (!'"' . )
+    end
+
+    rule bracketed
+      '<' (!'>' . )* '>'
+    end
+
+    rule addr
+      (!',' . )*
+    end
+
+  end
+end

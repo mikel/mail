@@ -79,7 +79,8 @@ module Mail
     #  str = '(This is a string)'
     #  unparen( str ) #=> 'This is a string'
     def unparen( str )
-      str =~ /^\((.*?)\)$/ ? $1 : str
+      match = str.match(/^\((.*?)\)$/)
+      match ? match[1] : str
     end
     
     # Escape parenthesies in a string

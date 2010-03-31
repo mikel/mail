@@ -105,7 +105,7 @@ describe Mail::UnstructuredField do
     end
     
     it "should fold itself if it is non us-ascii" do
-      orignal = $KCODE
+      @original = $KCODE if RUBY_VERSION < '1.9'
       string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
       @field = Mail::UnstructuredField.new("Subject", string)
       if string.respond_to?(:force_encoding)
@@ -116,7 +116,7 @@ describe Mail::UnstructuredField do
         result = "Subject: =?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIA==?=\r\n\t=?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXM=?=\r\n\t=?UTF8?B?IOOBgiByZWFsbHkgbG9uZyBzdHJpbmcgVGhpcyBpcyDjgYI=?=\r\n\t=?UTF8?B?IHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHk=?=\r\n\t long string\r\n"
       end
       @field.encoded.should == result
-      $KCODE = orignal
+      $KCODE = @original if RUBY_VERSION < '1.9'
     end
     
   end

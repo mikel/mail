@@ -12,7 +12,7 @@ module Mail
       "quoted-printable" / "base64"
     end
     
-    rule x_token
+    rule custom_x_token
       [xX] "-" token+
     end
 

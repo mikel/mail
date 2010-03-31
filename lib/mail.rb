@@ -6,6 +6,7 @@ module Mail # :doc:
   require 'active_support'
   require 'active_support/core_ext/hash/indifferent_access'
   require 'active_support/core_ext/object/blank'
+  require 'active_support/core_ext/string'
 
   require 'uri'
   require 'net/smtp'
@@ -53,7 +54,9 @@ module Mail # :doc:
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
-                content_transfer_encoding content_location ]
+                content_transfer_encoding content_location 
+                split_common split_addresses split_address ]
+
   parsers.each do |parser|
     begin
       # Try requiring the pre-compiled ruby version first
@@ -63,7 +66,7 @@ module Mail # :doc:
       # Otherwise, get treetop to compile and load it
       require 'treetop/runtime'
       require 'treetop/compiler'
-      Treetop.load("mail/parsers/#{parser}")
+      Treetop.load(File.join(File.dirname(__FILE__)) + "/mail/parsers/#{parser}")
     end
   end
 

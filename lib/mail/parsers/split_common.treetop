@@ -1,0 +1,47 @@
+module Mail
+
+  grammar SplitCommon
+
+    rule WSP
+      [\x09\x20]
+    end
+
+    rule CRLF
+      "\r\n"
+    end
+
+    rule FWS    # Folding white space
+      (WSP* CRLF WSP+) / (CRLF WSP+) / obs_FWS
+    end
+
+    rule CFWS
+      (FWS* comment)* FWS?
+    end
+
+    rule ctext
+      NO_WS_CTL   /    # Non white space controls
+      [\x21-\x27] /    # The rest of the US-ASCII
+      [\x2a-\x5b] /    #  characters not including "(",
+      [\x5d-\x7e]      #  ")", or "\"
+    end
+
+    rule ccontent
+      ctext / '"' quoted '"' / comment
+    end
+
+    rule comment
+      "(" ( FWS? ccontent )* FWS? ")"
+    end
+
+    rule NO_WS_CTL
+      [\x01-\x08]   /         # US-ASCII control characters
+      [\x0B-\x0C]   /         #  that do not include the
+      [\x0E-\x1F]   /         #  carriage return, line feed,
+      [\x7f]                  #  and white space characters
+    end
+
+    rule obs_FWS
+      WSP+ (CRLF WSP+)*
+    end
+  end
+end

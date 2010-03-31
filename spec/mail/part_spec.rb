@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Mail::Part do
-        
+
   it "should put content-ids into parts" do
     part = Mail::Part.new do
       body "This is Text"

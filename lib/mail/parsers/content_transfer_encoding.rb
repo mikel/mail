@@ -98,12 +98,6 @@ module Mail
       end
     end
 
-    module Encoding2
-      def text_value
-        x_token.text_value
-      end
-    end
-
     def _nt_encoding
       start_index = index
       if node_cache[:encoding].has_key?(index)
@@ -145,8 +139,7 @@ module Mail
       if r1
         r0 = r1
       else
-        r5 = _nt_x_token
-        r5.extend(Encoding2)
+        r5 = _nt_custom_x_token
         if r5
           r0 = r5
         else

@@ -13,7 +13,7 @@ module Mail
         def text_value
           ietf_token.text_value
         end
-      } / x_token
+      } / custom_x_token
     end
     
   end

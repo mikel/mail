@@ -31,6 +31,14 @@ module Mail
       [\x09\x20]
     end
   
+    rule FWS    # Folding white space
+      (WSP* CRLF WSP+) / (CRLF WSP+) / obs_FWS
+    end
+
+    rule CFWS
+      (FWS* comment)* FWS?
+    end
+
     rule NO_WS_CTL
       [\x01-\x08]   /         # US-ASCII control characters
       [\x0B-\x0C]   /         #  that do not include the
@@ -46,14 +54,6 @@ module Mail
       "@" / '\\' /
       "," / "." /
       DQUOTE
-    end
-
-    rule FWS    # Folding white space
-      (WSP* CRLF WSP+) / (CRLF WSP+) / obs_FWS
-    end
-
-    rule CFWS
-      (FWS* comment)* FWS?
     end
 
     rule ctext

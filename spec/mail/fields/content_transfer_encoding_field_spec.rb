@@ -101,6 +101,13 @@ describe Mail::ContentTransferEncodingField do
       t.encoding.should == ""
     end
 
+    it "should handle a hyphen" do
+      t = Mail::ContentTransferEncodingField.new('7-bit')
+      t.decoded.should == '7bit'
+      t = Mail::ContentTransferEncodingField.new('8-bit')
+      t.decoded.should == '8bit'
+    end
+
   end
 
 end

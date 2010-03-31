@@ -142,7 +142,7 @@ module Mail
 
     def create_field(name, value, charset)
       begin
-        self.field = new_field(name, value)
+        self.field = new_field(name, value, charset)
       rescue => e
         self.field = Mail::UnstructuredField.new(name, value)
         self.field.errors << [name, value, e]

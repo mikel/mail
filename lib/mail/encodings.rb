@@ -153,16 +153,39 @@ module Mail
         output
       end
     end
-    
+
     def Encodings.address_encode(address, charset = 'utf-8')
+      return address if address.respond_to?(:to_str) && address.ascii_only?
       if address.is_a?(Array)
         address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
-      elsif matchdata = address.match(/^['"](.+)?['"]\s+(<.+>)$/) || address.match(/^(.+)\s+(<.+>)$/)
-        phrase  = Encodings.b_value_encode(matchdata[1], charset)
-        address = matchdata[2]
-        "\"#{phrase}\" #{address}"
+      elsif address.match(/,/) # Has some commas, need to do more processing to split it up
+        split_addresses(address).map { |a| Encodings.address_encode(a, charset) }.join(", ")
       else
-        Encodings.b_value_encode(address, charset)
+        tree = Encodings.split_up_name_and_address(address)
+        if tree.display
+          display = Encodings.b_value_encode(tree.display, charset)
+          %{"#{display}" #{tree.address}}
+        else
+          tree.address
+        end
+      end
+    end
+    
+    def Encodings.split_up_name_and_address(address)
+      parser = Mail::SplitAddressParser.new
+      if tree = parser.parse(address)
+        return tree
+      else
+        raise "Could not parse address because of: #{parser.failure_reason}"
+      end
+    end
+    
+    def Encodings.split_addresses(address)
+      parser = Mail::SplitAddressesParser.new
+      if tree = parser.parse(address)
+        tree.addresses
+      else
+        raise "Could not parse address because of: #{parser.failure_reason}"
       end
     end
     

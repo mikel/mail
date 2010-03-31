@@ -21,7 +21,7 @@ describe Mail::ContentDispositionField do
     end
 
     it "should accept a nil value and generate a disposition type" do
-      c = Mail::ContentDispositionField.new('Content-Disposition', nil)
+      c = Mail::ContentDispositionField.new(nil)
       c.name.should == 'Content-Disposition'
       c.value.should_not be_nil
     end

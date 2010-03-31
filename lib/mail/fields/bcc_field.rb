@@ -37,6 +37,7 @@ module Mail
     CAPITALIZED_FIELD = 'Bcc'
     
     def initialize(value = '', charset = 'utf-8')
+      @charset = charset
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self

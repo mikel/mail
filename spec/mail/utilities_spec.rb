@@ -27,6 +27,35 @@ describe "Utilities Module" do
       result = 'This is not \(\)escaped\(\)'
       Mail::TestCase.new.send(:escape_paren, test).should == result
     end
+    
+  end
+  
+  describe "unescaping parenthesis" do
+
+    it "should work" do
+      test = '(This is a string)'
+      result = 'This is a string'
+      Mail::TestCase.new.send(:unparen, test).should == result
+    end
+
+    it "should work without parens" do
+      test = 'This is a string'
+      result = 'This is a string'
+      Mail::TestCase.new.send(:unparen, test).should == result
+    end
+
+    it "should work using ActiveSupport mb_chars" do
+      test = '(This is a string)'.mb_chars
+      result = 'This is a string'
+      Mail::TestCase.new.send(:unparen, test).should == result
+    end
+
+    it "should work without parens using ActiveSupport mb_chars" do
+      test = 'This is a string'.mb_chars
+      result = 'This is a string'
+      Mail::TestCase.new.send(:unparen, test).should == result
+    end
+
   end
   
   describe "quoting phrases" do

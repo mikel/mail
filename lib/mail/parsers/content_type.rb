@@ -309,7 +309,7 @@ module Mail
       if r1
         r0 = r1
       else
-        r2 = _nt_x_token
+        r2 = _nt_custom_x_token
         if r2
           r0 = r2
         else

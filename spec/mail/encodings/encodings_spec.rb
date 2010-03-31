@@ -288,7 +288,7 @@ describe Mail::Encodings do
     it "should encode a string" do
       string = "This is  あ string"
       if RUBY_VERSION >= '1.9'
-        Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20%20%E3%81%82%20string"
+        Mail::Encodings.param_encode(string).should == "utf-8'en'This%20is%20%20%E3%81%82%20string"
       else
         Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20%20%E3%81%82%20string"
       end
@@ -399,8 +399,15 @@ describe Mail::Encodings do
 
     describe "decoding" do
 
+      before(:each) do
+        @original = $KCODE if RUBY_VERSION < '1.9'
+      end
+
+      after(:each) do
+        $KCODE = @original if RUBY_VERSION < '1.9'
+      end
+
       it "should detect an encoded Base64 string and return the decoded string" do
-        original = $KCODE
         string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
         result = "This is あ string"
         if RUBY_VERSION >= '1.9'
@@ -409,11 +416,9 @@ describe Mail::Encodings do
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :decode).should == result
-        $KCODE = original
       end
 
       it "should detect an encoded QP string and return the decoded string" do
-        original = $KCODE
         string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
         result = "This is あ string"
         if RUBY_VERSION >= '1.9'
@@ -422,11 +427,9 @@ describe Mail::Encodings do
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :decode).should == result
-        $KCODE = original
       end
 
       it "should detect an a string is already decoded and leave it alone" do
-        original = $KCODE
         string = 'This is あ string'
         result = "This is あ string"
         if RUBY_VERSION >= '1.9'
@@ -435,7 +438,6 @@ describe Mail::Encodings do
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :decode).should == result
-        $KCODE = original
       end
 
     end
@@ -443,7 +445,6 @@ describe Mail::Encodings do
     describe "encoding" do
       
       it "should encode a string into Base64" do
-        original = $KCODE
         string = "This is あ string"
         if RUBY_VERSION >= '1.9'
           result = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
@@ -453,11 +454,9 @@ describe Mail::Encodings do
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :encode).should == result
-        $KCODE = original
       end
 
       it "should leave a string that doesn't need encoding alone" do
-        original = $KCODE
         string = 'This is a string'
         result = "This is a string"
         if RUBY_VERSION >= '1.9'
@@ -466,7 +465,6 @@ describe Mail::Encodings do
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :encode).should == result
-        $KCODE = original
       end
 
     end
@@ -539,6 +537,12 @@ describe Mail::Encodings do
   end
   
   describe "address encoding" do
+    it "should not do anything to a plain address" do
+      raw     = 'mikel@test.lindsaar.net'
+      encoded = 'mikel@test.lindsaar.net'
+      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+    end
+
     it "should encode an address correctly" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
       encoded = '"=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?=" <mikel@test.lindsaar.net>'
@@ -546,10 +550,80 @@ describe Mail::Encodings do
     end
 
     it "should encode multiple addresses correctly" do
-      raw     = ["'Mikel Lindsああr' <mikel@test.lindsaar.net>", '"あdあ" <ada@test.lindsaar.net>']
+      raw     = ['"Mikel Lindsああr" <mikel@test.lindsaar.net>', '"あdあ" <ada@test.lindsaar.net>']
       encoded = '"=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?=" <mikel@test.lindsaar.net>, "=?UTF-8?B?44GCZOOBgg==?=" <ada@test.lindsaar.net>'
       Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
     end
+
+    it "should handle a single ascii address correctly from a string" do
+      raw     = ['"Mikel Lindsaar" <mikel@test.lindsaar.net>']
+      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+    end
+
+    it "should handle multiple ascii addresses correctly from a string" do
+      raw     = 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      encoded = 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+    end
+
+    it "should handle ascii addresses correctly as an array" do
+      raw     = ['"Mikel Lindsaar" <mikel@test.lindsaar.net>', '"Ada" <ada@test.lindsaar.net>']
+      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+    end
+
+  end
+  
+  describe "splitting up addresses" do
+    it "should split an address into it's comma separated list" do
+      raw     = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      result = '"Mikel Lindsaar" <mikel@test.lindsaar.net>', '"Ada" <ada@test.lindsaar.net>'
+      Mail::Encodings.split_addresses(raw).should == result
+    end
+  
+    it "should split an address into it's comma separated list" do
+      raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>, "sああr" <ada@test.lindsaar.net>'
+      result = '"Mikel Lindsああr" <mikel@test.lindsaar.net>', '"sああr" <ada@test.lindsaar.net>'
+      Mail::Encodings.split_addresses(raw).should == result
+    end
+    
+    it "should handle an unquoted name" do
+      raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>, sああr <ada@test.lindsaar.net>'
+      result = 'Mikel Lindsああr <mikel@test.lindsaar.net>', 'sああr <ada@test.lindsaar.net>'
+      Mail::Encodings.split_addresses(raw).should == result
+    end
+  end
+  
+  describe "pulling display_name and address out" do
+    it "should find a quoted display namd and address" do
+      raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == "Mikel Lindsああr"
+      tree.address.should == "<mikel@test.lindsaar.net>"
+    end
+
+    it "should find an unquoted display namd and address" do
+      raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == "Mikel Lindsああr"
+      tree.address.should == "<mikel@test.lindsaar.net>"
+    end
+    
+    it "should find an address by itself" do
+      raw     = '<mikel@test.lindsaar.net>'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == nil
+      tree.address.should == "<mikel@test.lindsaar.net>"
+    end
+    
+    it "should find an address by itself without brackets" do
+      raw     = 'mikel@test.lindsaar.net'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == nil
+      tree.address.should == "<mikel@test.lindsaar.net>"
+    end
+    
   end
   
 end

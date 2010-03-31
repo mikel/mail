@@ -20,11 +20,12 @@ module Mail
     include Mail::Utilities
     
     def initialize(name, value, charset = nil)
+      @errors = []
       if charset
         self.charset = charset
       else
-        if value.respond_to?(:encoding)
-          self.charset = value.encoding
+        if value.to_s.respond_to?(:encoding)
+          self.charset = value.to_s.encoding
         else
           self.charset = $KCODE
         end

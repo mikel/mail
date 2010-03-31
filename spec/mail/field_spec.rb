@@ -116,10 +116,10 @@ describe Mail::Field do
 
   describe "error handling" do
     it "should populate the errors array if it finds a field it can't deal with" do
-      field = Mail::Field.new('Content-Transfer-Encoding: 7-bit')
+      field = Mail::Field.new('Content-Transfer-Encoding: bit')
       field.field.errors[0][0].should == 'Content-Transfer-Encoding'
-      field.field.errors[0][1].should == '7-bit'
-      field.field.errors[0][2].to_s.should =~ /ContentTransferEncodingElement can not parse |7-bit|/
+      field.field.errors[0][1].should == 'bit'
+      field.field.errors[0][2].to_s.should =~ /ContentTransferEncodingElement can not parse |17-bit|/
     end
   end
 
@@ -183,10 +183,15 @@ describe Mail::Field do
     it "should allow you to send in multiple unencoded strings to any address field" do
       mail = Mail.new
       mail.charset = 'utf-8'
-      [Mail::ToField, Mail::FromField, Mail::CcField, Mail::ReplyToField].each do |klass|
-        field = klass.send(new, ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"], 'utf-8')
-        field.encoded.should == "#{klass::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
-      end
+      array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
+      field = Mail::ToField.new(array, 'utf-8')
+      field.encoded.should == "#{Mail::ToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      field = Mail::FromField.new(array, 'utf-8')
+      field.encoded.should == "#{Mail::FromField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      field = Mail::CcField.new(array, 'utf-8')
+      field.encoded.should == "#{Mail::CcField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      field = Mail::ReplyToField.new(array, 'utf-8')
+      field.encoded.should == "#{Mail::ReplyToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
   end
 

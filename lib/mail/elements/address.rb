@@ -217,7 +217,7 @@ module Mail
     
     def get_comments
       if tree.respond_to?(:comments)
-        @comments ||= tree.comments.map { |c| unparen(c.text_value) } 
+        @comments = tree.comments.map { |c| unparen(c.text_value.to_str) } 
       else
         @comments = []
       end
@@ -226,7 +226,7 @@ module Mail
     def get_display_name
       if tree.respond_to?(:display_name)
         name = unquote(tree.display_name.text_value.strip)
-        str = strip_all_comments(name)
+        str = strip_all_comments(name.to_s)
       elsif comments
         if domain
           str = strip_domain_comments(format_comments)

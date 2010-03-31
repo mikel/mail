@@ -109,13 +109,13 @@ module Mail
       @delivery_method = Mail.delivery_method.dup
      
       @transport_encoding = Mail::Encodings.get_encoding('7bit')
- 
+
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
         init_with_string(args.flatten[0].to_s.strip)
       end
-
+ 
       if block_given?
         instance_eval(&block)
       end
@@ -307,7 +307,8 @@ module Mail
         self_message_id, other_message_id = self.message_id, other.message_id
         self.message_id, other.message_id = '<temp@test>', '<temp@test>'
         result = self.encoded == other.encoded
-        self.message_id, other.message_id = "<#{self_message_id}>", "<#{other_message_id}>"
+        self.message_id = "<#{self_message_id}>" if self_message_id
+        other.message_id = "<#{other_message_id}>" if other_message_id
         result
       end
     end
@@ -1280,8 +1281,7 @@ module Mail
     end
     
     def has_content_transfer_encoding?
-      header[:content_transfer_encoding] && 
-      header[:content_transfer_encoding].errors.blank?
+      header[:content_transfer_encoding] && header[:content_transfer_encoding].errors.blank?
     end
     
     def has_transfer_encoding? # :nodoc:
@@ -1755,7 +1755,7 @@ module Mail
     end
 
     def identify_and_set_transfer_encoding
-        if body.multipart?
+        if body && body.multipart?
             self.content_transfer_encoding = @transport_encoding
         else
             self.content_transfer_encoding = body.get_best_encoding(@transport_encoding)
@@ -1796,6 +1796,7 @@ module Mail
     def init_with_hash(hash)
       passed_in_options = hash.with_indifferent_access
       self.raw_source = ''
+
       @header = Mail::Header.new
       @body = Mail::Body.new
 

@@ -70,7 +70,6 @@ describe "SMTP Delivery Method" do
         to      '"Long, stupid email address" <mikel@test.lindsaar.net>'
         subject 'invalid RFC2822'
       end
-      debugger
       delivery = File.join(Mail.delivery_method.settings[:location], 'mikel@test.lindsaar.net')
       File.exists?(delivery).should be_true
     end

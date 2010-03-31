@@ -254,7 +254,7 @@ describe Mail::Header do
       test_value << '\r\n'
       doing {Mail::Header.new("header: #{test_value}")}.should_not raise_error
     end
-    
+
     it "should split each field into an name and value" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header.fields[0].name.should == "From"
@@ -555,7 +555,7 @@ TRACEHEADER
     
     it "should return the transfer-encoding of the email" do
       header = Mail::Header.new("Content-Transfer-Encoding: Base64")
-      header['content-transfer-encoding'].value.should == 'base64'
+      header['content-transfer-encoding'].value.should == 'Base64'
     end
     
     it "should return nil if no transfer-encoding header field" do

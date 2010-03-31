@@ -280,13 +280,13 @@ module Mail
       r0
     end
 
-    module XToken0
+    module CustomXToken0
     end
 
-    def _nt_x_token
+    def _nt_custom_x_token
       start_index = index
-      if node_cache[:x_token].has_key?(index)
-        cached = node_cache[:x_token][index]
+      if node_cache[:custom_x_token].has_key?(index)
+        cached = node_cache[:custom_x_token][index]
         if cached
           cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
           @index = cached.interval.end
@@ -332,13 +332,13 @@ module Mail
       end
       if s0.last
         r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-        r0.extend(XToken0)
+        r0.extend(CustomXToken0)
       else
         @index = i0
         r0 = nil
       end
 
-      node_cache[:x_token][start_index] = r0
+      node_cache[:custom_x_token][start_index] = r0
 
       r0
     end

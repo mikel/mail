@@ -183,6 +183,7 @@ describe "Test emails" do
     # white space (but no comments except at the end) and the missing
     # seconds in the time of the date field; and (5) the white space before
     # (but not within) the identifier in the "Message-ID:" field.
+
     it "should handle the rfc whitespace test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
       mail.from.should == ["pete(his account)@silly.test"]

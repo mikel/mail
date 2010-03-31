@@ -9,7 +9,7 @@ module Mail
       case
       when string.blank?
         @encoding = ''
-      when tree = parser.parse(string.downcase)
+      when tree = parser.parse(string.to_s.downcase)
         @encoding = tree.encoding.text_value
       else
         raise Mail::Field::ParseError, "ContentTransferEncodingElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
