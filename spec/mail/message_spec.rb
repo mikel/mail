@@ -1116,7 +1116,7 @@ describe Mail::Message do
           body "The=3Dbody"
         end
         mail.body.decoded.should == "The=body"
-        mail.body.encoded.should == "The=3Dbody"
+        mail.body.encoded.should == "The=3Dbody=\r\n"
       end
 
       it "should change a body on decode if given an encoding type to decode" do

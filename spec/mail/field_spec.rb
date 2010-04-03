@@ -156,7 +156,8 @@ describe Mail::Field do
   describe "passing an encoding" do
     it "should allow you to send in unencoded strings to fields and encode them" do
       subject = Mail::SubjectField.new("This is あ string", 'utf-8')
-      subject.encoded.should == "Subject: =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=\r\n"
+      subject.encoded.should == "Subject: =?UTF-8?Q?This_is_=E3=81=82_string=?=\r\n"
+      subject.decoded.should == "This is あ string"
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do

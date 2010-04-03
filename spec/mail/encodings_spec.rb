@@ -137,18 +137,21 @@ describe Mail::Encodings do
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
-    
+require 'ruby-debug'    
     it "should fold a long encoded string properly" do
       original = "ВосстановлениеВосстановление Вашего пароля"
       if RUBY_VERSION >= '1.9'
         original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-        result = "Subject: =?UTF-8?B?0JLQvtGB0YHRgtCw0L3QvtCy0LvQtdC90LjQtdCS0L7RgdGB0YLQsNC90L7Q?= =?UTF-8?B?stC70LXQvdC40LU=?=\r\n\t=?UTF-8?B?INCS0LDRiNC10LPQviDQv9Cw0YDQvtC70Y8=?=\r\n"
+        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0?="
       else
-        result = "Subject: =?UTF8?B?0JLQvtGB0YHRgtCw0L3QvtCy0LvQtdC90LjQtdCS0A==?=\r\n\t=?UTF8?B?vtGB0YHRgtCw0L3QvtCy0LvQtdC90LjQtSDQktCw0YjQtdCz0L4=?=\r\n\t=?UTF8?B?INC/0LDRgNC+0LvRjw==?=\r\n"
+        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0?="
       end
       mail = Mail.new
       mail.subject = original
-      Mail.new(mail.encoded).subject.should == original
+      debugger
+      mail[:subject].decoded.should == original
+      mail = Mail.new(mail.encoded)
+      mail.subject.should == original
       mail[:subject].encoded.should == result
     end
 
@@ -199,11 +202,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is あ string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.q_value_encode(string).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+        Mail::Encodings.q_value_encode(string).should == '=?UTF-8?Q?This_is_=E3=81=82_string=?='
       else
         string = "This is あ string"
         encoding = 'UTF-8'
-        Mail::Encodings.q_value_encode(string, encoding).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+        Mail::Encodings.q_value_encode(string, encoding).should == '=?UTF-8?Q?This_is_=E3=81=82_string=?='
       end
     end
 
@@ -514,6 +517,12 @@ describe Mail::Encodings do
   describe "quoted printable encoding and decoding" do
     it "should handle underscores in the text" do
       expected = 'something_with_underscores'
+      encoded = [expected].pack('*M')
+      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
+    end
+
+    it "should handle underscores in the text" do
+      expected = 'something with_underscores'
       encoded = [expected].pack('*M')
       Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
     end

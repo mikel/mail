@@ -113,11 +113,12 @@ module Mail
     # 
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
+      debugger if str =~ /=D0=92=D0=BE=D1=81=D1=81=D1=82/
       str.gsub!(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
       str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do
         before = $1.to_s
         text = $2.to_s
-        
+
         case
         when text =~ /=\?.+\?[Bb]\?/m
           before + b_value_decode(text)

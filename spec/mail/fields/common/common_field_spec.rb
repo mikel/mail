@@ -23,10 +23,10 @@ describe Mail::CommonField do
       value = "かきくけこ"
       if RUBY_VERSION < '1.9'
         $KCODE = 'u'
-        result = "Subject: =?UTF-8?B?44GL44GN44GP44GR44GT?=\r\n"
+        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       else
         value.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?B?44GL44GN44GP44GR44GT?=\r\n"
+        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       end
       field = Mail::SubjectField.new(value)
       field.encoded.should == result
@@ -38,10 +38,10 @@ describe Mail::CommonField do
       value = "かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ"
       if RUBY_VERSION < '1.9'
         $KCODE = 'u'
-        result = "Subject: =?UTF-8?B?44GL44GN44GP44GR44GTIOOBi+OBjeOBj+OBkeOBkw==?=\r\n\t=?UTF-8?B?IOOBi+OBjeOBj+OBkeOBkyDjgYvjgY3jgY/jgZHjgZM=?=\r\n\t=?UTF-8?B?IOOBi+OBjeOBj+OBkeOBkyDjgYvjgY3jgY/jgZHjgZM=?=\r\n\t=?UTF-8?B?IOOBi+OBjeOBj+OBkeOBkyDjgYvjgY3jgY/jgZHjgZM=?=\r\n\t=?UTF-8?B?IOOBi+OBjeOBj+OBkeOBkw==?=\r\n"
+        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       else
         value.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?B?44GL44GN44GP44GR44GTIOOBi+OBjeOBj+OBkeOBkyDjgYvjgY3jgY/jgZHj?= =?UTF-8?B?gZMg44GL44GN44GP44GR44GTIOOBi+OBjeOBj+OBkeOBkw==?=\r\n\t=?UTF-8?B?IOOBi+OBjeOBj+OBkeOBkyDjgYvjgY3jgY/jgZHjgZMg44GL44GN44GP44GR?= =?UTF-8?B?44GTIOOBi+OBjeOBj+OBkeOBkw==?=\r\n"
+        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       end
       field = Mail::SubjectField.new(value)
       field.encoded.should == result

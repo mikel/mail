@@ -110,12 +110,13 @@ describe Mail::UnstructuredField do
       @field = Mail::UnstructuredField.new("Subject", string)
       if string.respond_to?(:force_encoding)
         string = string.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRo?=\r\n\t=?UTF-8?B?aXMgaXMg44GCIHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgg==?=\r\n\t=?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHk=?=\r\n\t=?UTF-8?B?IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJlYWxseSBsb25n?=\r\n\t string\r\n"
+        result = "Subject: =?UTF-8?Q?This_is_=E3=81=82_really_long_string_=?=\r\n\t=?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is=?=\r\n\t=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82=?=\r\n\t=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really=?=\r\n\t long string\r\n"
       else
         $KCODE = 'u'
-        result = "Subject: =?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIA==?=\r\n\t=?UTF8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXM=?=\r\n\t=?UTF8?B?IOOBgiByZWFsbHkgbG9uZyBzdHJpbmcgVGhpcyBpcyDjgYI=?=\r\n\t=?UTF8?B?IHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHk=?=\r\n\t long string\r\n"
+        result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_=?=\r\n\t=?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is=?=\r\n\t=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82=?=\r\n\t=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really=?=\r\n\t long string\r\n"
       end
       @field.encoded.should == result
+      @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
     

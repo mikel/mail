@@ -132,7 +132,7 @@ module Mail
       if value.ascii_only?
         value
       else
-        Encodings.b_value_encode(value, @charset)
+        Encodings.q_value_encode(value, @charset)
       end
     end
 

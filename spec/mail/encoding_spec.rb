@@ -14,7 +14,7 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.subject = "This is あ string"
-      mail[:subject].encoded.should == "Subject: =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=\r\n"
+      mail[:subject].encoded.should == "Subject: =?UTF-8?Q?This_is_=E3=81=82_string=?=\r\n"
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do
@@ -105,7 +105,7 @@ describe "mail encoding" do
       subject.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.subject = subject
       result = mail[:subject].encoded
-      string = "Subject: =?ISO-8859-1?B?VGhpcyBpcyDjgYIgc3RyaW5n?=\r\n"
+      string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82_string=?=\r\n"
       if RUBY_VERSION > '1.9'
         string.force_encoding('ISO8859-1')
         result.force_encoding('ISO8859-1')

@@ -18,9 +18,7 @@ module Mail
       end
 
       def self.encode(str)
-        l = []
-        str.each_line{|line| l << qp_encode_line(line)}
-        l.join("\r\n")
+        [str].pack("M").gsub(/\n/, "\r\n")
       end
 
       def self.cost(str)
@@ -33,17 +31,6 @@ module Mail
       end
         
       private
-      def self.qp_encode_line(str)
-        str.chomp.gsub( /[^a-z ]/i ) { quoted_printable_encode($&) }
-      end
-
-      # Convert the given character to quoted printable format, taking into
-      # account multi-byte characters (if executing with $KCODE="u", for instance)
-      def self.quoted_printable_encode(character)
-        result = ""
-        character.each_byte { |b| result << "=%02X" % b }
-        result
-      end
 
       Encodings.register(NAME, self)
     end
