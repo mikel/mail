@@ -54,8 +54,7 @@ module Mail # :doc:
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
-                content_transfer_encoding content_location 
-                split_common split_address split_elements ]
+                content_transfer_encoding content_location ]
 
   parsers.each do |parser|
     begin

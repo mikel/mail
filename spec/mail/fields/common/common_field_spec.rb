@@ -53,7 +53,7 @@ describe Mail::CommonField do
       value = '"かきくけこ" <mikel@test.lindsaar.net>'
       if RUBY_VERSION < '1.9'
         $KCODE = 'u'
-        result = "From: =?UTF8?B?44GL44GN44GP44GR44GT?= <mikel@test.lindsaar.net>\r\n"
+        result = "From: =?UTF-8?B?44GL44GN44GP44GR44GT?= <mikel@test.lindsaar.net>\r\n"
       else
         value.force_encoding('UTF-8')
         result = "From: =?UTF-8?B?44GL44GN44GP44GR44GT?= <mikel@test.lindsaar.net>\r\n"
@@ -61,7 +61,7 @@ describe Mail::CommonField do
       field = Mail::FromField.new(value)
       field.encoded.should == result
       field.decoded.should == value
-      field.value.should == value
+      field.value.should == "=?UTF-8?B?44GL44GN44GP44GR44GT?= <mikel@test.lindsaar.net>"
     end
     
   end

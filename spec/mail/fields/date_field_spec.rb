@@ -62,6 +62,11 @@ describe Mail::DateField do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
       field.decoded.should == "Wed, 12 Aug 2009 00:00:02 +0000"
     end
+
+    it "should be able to parse a really bad spacing example" do
+      field = Mail::DateField.new("Fri, 21 Nov 1997 09(comment):   55  :  06 -0600")
+      field.decoded.should == "Fri, 21 Nov 1997 09:55:06 -0600"
+    end
     
   end
 

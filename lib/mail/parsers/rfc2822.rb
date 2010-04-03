@@ -176,6 +176,198 @@ module Mail
       r0
     end
 
+    module FWS0
+      def CRLF
+        elements[1]
+      end
+
+    end
+
+    module FWS1
+      def CRLF
+        elements[0]
+      end
+
+    end
+
+    def _nt_FWS
+      start_index = index
+      if node_cache[:FWS].has_key?(index)
+        cached = node_cache[:FWS][index]
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
+        return cached
+      end
+
+      i0 = index
+      i1, s1 = index, []
+      s2, i2 = [], index
+      loop do
+        r3 = _nt_WSP
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      s1 << r2
+      if r2
+        r4 = _nt_CRLF
+        s1 << r4
+        if r4
+          s5, i5 = [], index
+          loop do
+            r6 = _nt_WSP
+            if r6
+              s5 << r6
+            else
+              break
+            end
+          end
+          if s5.empty?
+            @index = i5
+            r5 = nil
+          else
+            r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+          end
+          s1 << r5
+        end
+      end
+      if s1.last
+        r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+        r1.extend(FWS0)
+      else
+        @index = i1
+        r1 = nil
+      end
+      if r1
+        r0 = r1
+      else
+        i7, s7 = index, []
+        r8 = _nt_CRLF
+        s7 << r8
+        if r8
+          s9, i9 = [], index
+          loop do
+            r10 = _nt_WSP
+            if r10
+              s9 << r10
+            else
+              break
+            end
+          end
+          if s9.empty?
+            @index = i9
+            r9 = nil
+          else
+            r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+          end
+          s7 << r9
+        end
+        if s7.last
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+          r7.extend(FWS1)
+        else
+          @index = i7
+          r7 = nil
+        end
+        if r7
+          r0 = r7
+        else
+          r11 = _nt_obs_FWS
+          if r11
+            r0 = r11
+          else
+            @index = i0
+            r0 = nil
+          end
+        end
+      end
+
+      node_cache[:FWS][start_index] = r0
+
+      r0
+    end
+
+    module CFWS0
+      def comment
+        elements[1]
+      end
+    end
+
+    module CFWS1
+    end
+
+    def _nt_CFWS
+      start_index = index
+      if node_cache[:CFWS].has_key?(index)
+        cached = node_cache[:CFWS][index]
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
+        return cached
+      end
+
+      i0, s0 = index, []
+      s1, i1 = [], index
+      loop do
+        i2, s2 = index, []
+        s3, i3 = [], index
+        loop do
+          r4 = _nt_FWS
+          if r4
+            s3 << r4
+          else
+            break
+          end
+        end
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        s2 << r3
+        if r3
+          r5 = _nt_comment
+          s2 << r5
+        end
+        if s2.last
+          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+          r2.extend(CFWS0)
+        else
+          @index = i2
+          r2 = nil
+        end
+        if r2
+          s1 << r2
+        else
+          break
+        end
+      end
+      r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+      s0 << r1
+      if r1
+        r7 = _nt_FWS
+        if r7
+          r6 = r7
+        else
+          r6 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s0 << r6
+      end
+      if s0.last
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+        r0.extend(CFWS1)
+      else
+        @index = i0
+        r0 = nil
+      end
+
+      node_cache[:CFWS][start_index] = r0
+
+      r0
+    end
+
     def _nt_NO_WS_CTL
       start_index = index
       if node_cache[:NO_WS_CTL].has_key?(index)
@@ -389,198 +581,6 @@ module Mail
       end
 
       node_cache[:specials][start_index] = r0
-
-      r0
-    end
-
-    module FWS0
-      def CRLF
-        elements[1]
-      end
-
-    end
-
-    module FWS1
-      def CRLF
-        elements[0]
-      end
-
-    end
-
-    def _nt_FWS
-      start_index = index
-      if node_cache[:FWS].has_key?(index)
-        cached = node_cache[:FWS][index]
-        if cached
-          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-          @index = cached.interval.end
-        end
-        return cached
-      end
-
-      i0 = index
-      i1, s1 = index, []
-      s2, i2 = [], index
-      loop do
-        r3 = _nt_WSP
-        if r3
-          s2 << r3
-        else
-          break
-        end
-      end
-      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-      s1 << r2
-      if r2
-        r4 = _nt_CRLF
-        s1 << r4
-        if r4
-          s5, i5 = [], index
-          loop do
-            r6 = _nt_WSP
-            if r6
-              s5 << r6
-            else
-              break
-            end
-          end
-          if s5.empty?
-            @index = i5
-            r5 = nil
-          else
-            r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
-          end
-          s1 << r5
-        end
-      end
-      if s1.last
-        r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-        r1.extend(FWS0)
-      else
-        @index = i1
-        r1 = nil
-      end
-      if r1
-        r0 = r1
-      else
-        i7, s7 = index, []
-        r8 = _nt_CRLF
-        s7 << r8
-        if r8
-          s9, i9 = [], index
-          loop do
-            r10 = _nt_WSP
-            if r10
-              s9 << r10
-            else
-              break
-            end
-          end
-          if s9.empty?
-            @index = i9
-            r9 = nil
-          else
-            r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
-          end
-          s7 << r9
-        end
-        if s7.last
-          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-          r7.extend(FWS1)
-        else
-          @index = i7
-          r7 = nil
-        end
-        if r7
-          r0 = r7
-        else
-          r11 = _nt_obs_FWS
-          if r11
-            r0 = r11
-          else
-            @index = i0
-            r0 = nil
-          end
-        end
-      end
-
-      node_cache[:FWS][start_index] = r0
-
-      r0
-    end
-
-    module CFWS0
-      def comment
-        elements[1]
-      end
-    end
-
-    module CFWS1
-    end
-
-    def _nt_CFWS
-      start_index = index
-      if node_cache[:CFWS].has_key?(index)
-        cached = node_cache[:CFWS][index]
-        if cached
-          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-          @index = cached.interval.end
-        end
-        return cached
-      end
-
-      i0, s0 = index, []
-      s1, i1 = [], index
-      loop do
-        i2, s2 = index, []
-        s3, i3 = [], index
-        loop do
-          r4 = _nt_FWS
-          if r4
-            s3 << r4
-          else
-            break
-          end
-        end
-        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-        s2 << r3
-        if r3
-          r5 = _nt_comment
-          s2 << r5
-        end
-        if s2.last
-          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-          r2.extend(CFWS0)
-        else
-          @index = i2
-          r2 = nil
-        end
-        if r2
-          s1 << r2
-        else
-          break
-        end
-      end
-      r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-      s0 << r1
-      if r1
-        r7 = _nt_FWS
-        if r7
-          r6 = r7
-        else
-          r6 = instantiate_node(SyntaxNode,input, index...index)
-        end
-        s0 << r6
-      end
-      if s0.last
-        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-        r0.extend(CFWS1)
-      else
-        @index = i0
-        r0 = nil
-      end
-
-      node_cache[:CFWS][start_index] = r0
 
       r0
     end
@@ -1621,6 +1621,50 @@ module Mail
       r0
     end
 
+    def _nt_phrase
+      start_index = index
+      if node_cache[:phrase].has_key?(index)
+        cached = node_cache[:phrase][index]
+        if cached
+          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+          @index = cached.interval.end
+        end
+        return cached
+      end
+
+      i0 = index
+      r1 = _nt_obs_phrase
+      if r1
+        r0 = r1
+      else
+        s2, i2 = [], index
+        loop do
+          r3 = _nt_word
+          if r3
+            s2 << r3
+          else
+            break
+          end
+        end
+        if s2.empty?
+          @index = i2
+          r2 = nil
+        else
+          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+        end
+        if r2
+          r0 = r2
+        else
+          @index = i0
+          r0 = nil
+        end
+      end
+
+      node_cache[:phrase][start_index] = r0
+
+      r0
+    end
+
     def _nt_word
       start_index = index
       if node_cache[:word].has_key?(index)
@@ -1735,50 +1779,6 @@ module Mail
       end
 
       node_cache[:phrase_list][start_index] = r0
-
-      r0
-    end
-
-    def _nt_phrase
-      start_index = index
-      if node_cache[:phrase].has_key?(index)
-        cached = node_cache[:phrase][index]
-        if cached
-          cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-          @index = cached.interval.end
-        end
-        return cached
-      end
-
-      i0 = index
-      r1 = _nt_obs_phrase
-      if r1
-        r0 = r1
-      else
-        s2, i2 = [], index
-        loop do
-          r3 = _nt_word
-          if r3
-            s2 << r3
-          else
-            break
-          end
-        end
-        if s2.empty?
-          @index = i2
-          r2 = nil
-        else
-          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-        end
-        if r2
-          r0 = r2
-        else
-          @index = i0
-          r0 = nil
-        end
-      end
-
-      node_cache[:phrase][start_index] = r0
 
       r0
     end

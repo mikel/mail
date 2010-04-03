@@ -154,60 +154,27 @@ module Mail
         output
       end
     end
-
+    
     def Encodings.address_encode(address, charset = 'utf-8')
       if address.is_a?(Array)
         # loop back through for each element
         address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
       else
-        # split it up into address and group elements
-        #=> [address, group, address, group, group]
-        elements = Encodings.elemental_spliter(address)
-        elements.map { |element| quote_element(element, charset) }.join(', ')
-      end
-    end
-
-    def Encodings.elemental_spliter(address)
-      parser = Mail::SplitElementsParser.new
-      if tree = parser.parse(address)
-        return tree.elements
-      else
-        raise "Could not split elements because of: #{parser.failure_reason}"
-      end
-    end
-
-    # Quote out each element as needed
-    def Encodings.quote_element(element, charset)
-      result = String.new
-      if element.respond_to?(:group_name) # We have a group
-        result << Encodings.b_value_encode(element.group_name.text_value, charset)
-        result << ": "
-        result << element.address_list.addresses.map { |a| Encodings.quote_address(a, charset) }.join(', ')
-        result << ";"
-      else # We have an address
-        result << element.addresses.map { |a| Encodings.quote_address(a, charset) }.join(', ')
-      end
-      result
-    end
-
-    # An element can be an mailbox
-    def Encodings.quote_address(address, charset)
-      tree = split_up_name_and_address(address)
-      if tree.display
-        display = Encodings.b_value_encode(tree.display, charset)
-        "#{quote_atom(display)} <#{tree.address}>"
-      else
-        tree.address
+        # find any word boundary that is not ascii and encode it
+        encode_non_usascii(address, charset)
       end
     end
     
-    def Encodings.split_up_name_and_address(address)
-      parser = Mail::SplitAddressParser.new
-      if tree = parser.parse(address)
-        return tree
-      else
-        raise "Could not parse address because of: #{parser.failure_reason}"
-      end
+    def Encodings.encode_non_usascii(address, charset)
+      return address if address.ascii_only?
+      us_ascii = %Q{\x00-\x7f}
+      # Encode any non usascii strings embedded inside of quotes
+      address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+      # Encode any non usascii strings delimited by space
+      address.gsub!(/\s+.*?[^#{us_ascii}].*?\s/) { |s| " #{Encodings.b_value_encode(s.strip, charset)} " }
+      # Encode any non usascii strings starting at the beginnning of the address
+      address.gsub!(/\A.*?[^#{us_ascii}].*?\s/) { |s| "#{Encodings.b_value_encode(s.strip, charset)} " }
+      address
     end
     
     # Encode a string with Base64 Encoding and returns it ready to be inserted
