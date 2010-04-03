@@ -38,6 +38,14 @@ describe Mail::AddressList do
       a.addresses.map {|addr| addr.to_s }.should == result
     end
 
+    it "should preserve the display name" do
+      parse_text  = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+      result      = 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.first.format.should == result
+      a.addresses.first.display_name.should == 'Mikel Lindsaar'
+    end
+
   end
   
   describe "functionality" do

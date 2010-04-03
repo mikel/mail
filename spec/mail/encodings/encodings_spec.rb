@@ -535,7 +535,7 @@ describe Mail::Encodings do
     end
 
   end
-  
+
   describe "address encoding" do
     it "should not do anything to a plain address" do
       raw     = 'mikel@test.lindsaar.net'
@@ -545,13 +545,13 @@ describe Mail::Encodings do
 
     it "should encode an address correctly" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
-      encoded = '"=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?=" <mikel@test.lindsaar.net>'
+      encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
       Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
     end
 
     it "should encode multiple addresses correctly" do
       raw     = ['"Mikel Lindsああr" <mikel@test.lindsaar.net>', '"あdあ" <ada@test.lindsaar.net>']
-      encoded = '"=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?=" <mikel@test.lindsaar.net>, "=?UTF-8?B?44GCZOOBgg==?=" <ada@test.lindsaar.net>'
+      encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
       Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
     end
 
@@ -562,36 +562,73 @@ describe Mail::Encodings do
     end
 
     it "should handle multiple ascii addresses correctly from a string" do
-      raw     = 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
-      encoded = 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      raw     = 'Mikel Lindsaar <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
+      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
       Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
     end
 
     it "should handle ascii addresses correctly as an array" do
-      raw     = ['"Mikel Lindsaar" <mikel@test.lindsaar.net>', '"Ada" <ada@test.lindsaar.net>']
-      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
+      raw     = ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'Ada <ada@test.lindsaar.net>']
+      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
       Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
     end
 
   end
   
-  describe "splitting up addresses" do
+  describe "splitting up addresses field" do
     it "should split an address into it's comma separated list" do
       raw     = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, "Ada" <ada@test.lindsaar.net>'
-      result = '"Mikel Lindsaar" <mikel@test.lindsaar.net>', '"Ada" <ada@test.lindsaar.net>'
-      Mail::Encodings.split_addresses(raw).should == result
+      result0 = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+      result1 = '"Ada" <ada@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      elements[0].addresses[0].should == result0
+      elements[0].addresses[1].should == result1
     end
   
     it "should split an address into it's comma separated list" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>, "sああr" <ada@test.lindsaar.net>'
-      result = '"Mikel Lindsああr" <mikel@test.lindsaar.net>', '"sああr" <ada@test.lindsaar.net>'
-      Mail::Encodings.split_addresses(raw).should == result
+      result0 = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
+      result1 = '"sああr" <ada@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      elements[0].addresses[0].should == result0
+      elements[0].addresses[1].should == result1
     end
-    
+
     it "should handle an unquoted name" do
       raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>, sああr <ada@test.lindsaar.net>'
-      result = 'Mikel Lindsああr <mikel@test.lindsaar.net>', 'sああr <ada@test.lindsaar.net>'
-      Mail::Encodings.split_addresses(raw).should == result
+      result0 = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
+      result1 = 'sああr <ada@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      elements[0].addresses[0].should == result0
+      elements[0].addresses[1].should == result1
+    end
+
+    it "should handle a group by itself" do
+      raw     = 'group: Mikel Lindsああr <mikel@test.lindsaar.net>;'
+      result0 = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      elements[0].groups[0].addresses[0].should == result0
+    end
+
+    it "should handle a group by itself" do
+      raw     = 'group: Mikel Lindsああr <mikel@test.lindsaar.net>, sああr <ada@test.lindsaar.net>;'
+      result0 = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
+      result1 = 'sああr <ada@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      elements[0].groups[0].addresses[0].should == result0
+      elements[0].groups[0].addresses[1].should == result1
+    end
+require 'ruby-debug'
+    it "should handle a group with an address by itself" do
+      raw     = 'Bob <bob@test.lindsaar.net>, group: Mikel Lindsああr <mikel@test.lindsaar.net>, sああr <ada@test.lindsaar.net>;'
+      result0 = 'Bob <bob@test.lindsaar.net>'
+      result1 = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
+      result2 = 'sああr <ada@test.lindsaar.net>'
+      elements = Mail::Encodings.elemental_spliter(raw)
+      debugger
+      elements[0].addresses[0].should == result0
+      elements[0].groups[0].addresses[0].should == result1
+      elements[0].groups[0].addresses[1].should == result2
     end
   end
   
@@ -600,28 +637,42 @@ describe Mail::Encodings do
       raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
       tree = Mail::Encodings.split_up_name_and_address(raw)
       tree.display.should == "Mikel Lindsああr"
-      tree.address.should == "<mikel@test.lindsaar.net>"
+      tree.address.should == "mikel@test.lindsaar.net"
+    end
+    
+    it "should find an address and display name that is quoted" do
+      raw     = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == "Mikel Lindsaar"
+      tree.address.should == "mikel@test.lindsaar.net"
+    end
+    
+    it "should find an address and display name that is unquoted" do
+      raw     = 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      tree = Mail::Encodings.split_up_name_and_address(raw)
+      tree.display.should == "Mikel Lindsaar"
+      tree.address.should == "mikel@test.lindsaar.net"
     end
 
     it "should find an unquoted display namd and address" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
       tree = Mail::Encodings.split_up_name_and_address(raw)
       tree.display.should == "Mikel Lindsああr"
-      tree.address.should == "<mikel@test.lindsaar.net>"
+      tree.address.should == "mikel@test.lindsaar.net"
     end
     
     it "should find an address by itself" do
       raw     = '<mikel@test.lindsaar.net>'
       tree = Mail::Encodings.split_up_name_and_address(raw)
       tree.display.should == nil
-      tree.address.should == "<mikel@test.lindsaar.net>"
+      tree.address.should == "mikel@test.lindsaar.net"
     end
     
     it "should find an address by itself without brackets" do
       raw     = 'mikel@test.lindsaar.net'
       tree = Mail::Encodings.split_up_name_and_address(raw)
       tree.display.should == nil
-      tree.address.should == "<mikel@test.lindsaar.net>"
+      tree.address.should == "mikel@test.lindsaar.net"
     end
     
   end

@@ -139,11 +139,11 @@ module Mail
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignorning) '#{raw_field}'"
     end
-
+    
     def create_field(name, value, charset)
       begin
         self.field = new_field(name, value, charset)
-      rescue => e
+      rescue Mail::Field::ParseError => e
         self.field = Mail::UnstructuredField.new(name, value)
         self.field.errors << [name, value, e]
         self.field

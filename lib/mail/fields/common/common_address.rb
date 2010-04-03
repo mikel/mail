@@ -6,11 +6,7 @@ module Mail
       
     def parse(val = value)
       unless val.blank?
-        if val.is_a?(Array)
-          @tree = AddressList.new(encode_if_needed(val.join(', ').mb_chars))
-        else
-          @tree = AddressList.new(encode_if_needed(val.mb_chars))
-        end
+        @tree = AddressList.new(encode_if_needed(val))
       else
         nil
       end

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe Mail::CommonAddress do
+describe "Mail::CommonAddress" do
   
   describe "address handling" do
   
@@ -31,7 +31,7 @@ describe Mail::CommonAddress do
         addr.class.should == Mail::Address
       end
     end
-  
+
     it "should handle groups as well" do
       field = Mail::ToField.new("To: test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;")
       field.addresses.should == ["test1@lindsaar.net", "test2@lindsaar.net", "me@lindsaar.net"]
@@ -72,6 +72,16 @@ describe Mail::CommonAddress do
       field = Mail::ToField.new("")
       field << 'mikel@test.lindsaar.net'
       field.addresses.should == ["mikel@test.lindsaar.net"]
+    end
+
+    it "should preserve the display name" do
+      field = Mail::ToField.new('"Mikel Lindsaar" <mikel@test.lindsaar.net>')
+      field.display_names.should == ["Mikel Lindsaar"]
+    end
+
+    it "should handle multiple addresses" do
+      field = Mail::ToField.new(['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
+      field.addresses.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
     end
 
   end

@@ -8,6 +8,7 @@ module Mail
   module Encodings
     
     include Mail::Patterns
+    extend  Mail::Utilities
 
     @transfer_encodings = {}
    
@@ -155,19 +156,48 @@ module Mail
     end
 
     def Encodings.address_encode(address, charset = 'utf-8')
-      return address if address.respond_to?(:to_str) && address.ascii_only?
       if address.is_a?(Array)
+        # loop back through for each element
         address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
-      elsif address.match(/,/) # Has some commas, need to do more processing to split it up
-        split_addresses(address).map { |a| Encodings.address_encode(a, charset) }.join(", ")
       else
-        tree = Encodings.split_up_name_and_address(address)
-        if tree.display
-          display = Encodings.b_value_encode(tree.display, charset)
-          %{"#{display}" #{tree.address}}
-        else
-          tree.address
-        end
+        # split it up into address and group elements
+        #=> [address, group, address, group, group]
+        elements = Encodings.elemental_spliter(address)
+        elements.map { |element| quote_element(element, charset) }.join(', ')
+      end
+    end
+
+    def Encodings.elemental_spliter(address)
+      parser = Mail::SplitElementsParser.new
+      if tree = parser.parse(address)
+        return tree.elements
+      else
+        raise "Could not split elements because of: #{parser.failure_reason}"
+      end
+    end
+
+    # Quote out each element as needed
+    def Encodings.quote_element(element, charset)
+      result = String.new
+      if element.respond_to?(:group_name) # We have a group
+        result << Encodings.b_value_encode(element.group_name.text_value, charset)
+        result << ": "
+        result << element.address_list.addresses.map { |a| Encodings.quote_address(a, charset) }.join(', ')
+        result << ";"
+      else # We have an address
+        result << element.addresses.map { |a| Encodings.quote_address(a, charset) }.join(', ')
+      end
+      result
+    end
+
+    # An element can be an mailbox
+    def Encodings.quote_address(address, charset)
+      tree = split_up_name_and_address(address)
+      if tree.display
+        display = Encodings.b_value_encode(tree.display, charset)
+        "#{quote_atom(display)} <#{tree.address}>"
+      else
+        tree.address
       end
     end
     
@@ -175,15 +205,6 @@ module Mail
       parser = Mail::SplitAddressParser.new
       if tree = parser.parse(address)
         return tree
-      else
-        raise "Could not parse address because of: #{parser.failure_reason}"
-      end
-    end
-    
-    def Encodings.split_addresses(address)
-      parser = Mail::SplitAddressesParser.new
-      if tree = parser.parse(address)
-        tree.addresses
       else
         raise "Could not parse address because of: #{parser.failure_reason}"
       end

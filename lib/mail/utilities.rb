@@ -11,7 +11,7 @@ module Mail
     # If the string supplied has ATOM unsafe characters in it, will return the string quoted 
     # in double quotes, otherwise returns the string unmodified
     def quote_atom( str )
-      (ATOM_UNSAFE === str) ? dquote(str) : str
+      atom_safe?( str ) ? str : dquote(str)
     end
 
     # If the string supplied has PHRASE unsafe characters in it, will return the string quoted 
@@ -38,7 +38,7 @@ module Mail
     # If the string supplied has TOKEN unsafe characters in it, will return the string quoted 
     # in double quotes, otherwise returns the string unmodified
     def quote_token( str )
-      (TOKEN_UNSAFE === str) ? dquote(str) : str
+      token_safe?( str ) ? str : dquote(str)
     end
 
     # Wraps supplied string in double quotes unless it is already wrapped.
@@ -46,7 +46,8 @@ module Mail
     # Additionally will escape any double quotation marks in the string with a single
     # backslash in front of the '"' character.
     def dquote( str )
-      str = $1 if str =~ /^"(.*)?"$/
+      match = str.match(/^"(.*)?"$/)
+      str = match[1] if match
       # First remove all escaped double quotes:
       str = str.gsub(/\\"/, '"')
       # Then wrap and re-escape all double quotes
@@ -60,7 +61,8 @@ module Mail
     #  string = '"This is a string"'
     #  unquote(string) #=> 'This is a string'
     def unquote( str )
-      str =~ /^"(.*?)"$/ ? $1 : str
+      match = str.match(/^"(.*?)"$/)
+      match ? match[1] : str
     end
     
     # Wraps a string in parenthesis and escapes any that are in the string itself.

@@ -46,6 +46,54 @@ describe "mail encoding" do
         mail[field].encoded.should == "#{field}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       end
     end
+    
+    it "should handle groups" do
+      mail = Mail.new
+      mail.charset = 'utf-8'
+      mail.to = "test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;"
+      mail[:to].encoded.should == "To: test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;\r\n"
+    end
+    
+    it "should handle groups with funky characters" do
+      mail = Mail.new
+      mail.charset = 'utf-8'
+      mail.to = %{"Mikel Lindsああr" test1@lindsaar.net, group: "あdあ" test2@lindsaar.net, me@lindsaar.net;}
+      mail[:to].encoded.should == "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <test1@lindsaar.net>, group: =?UTF-8?B?44GCZOOBgg==?= <test2@lindsaar.net>, <me@lindsaar.net>;\r\n"
+    end
+
+    describe "quouting token safe chars" do
+    
+      it "should not quote the display name if unquoted" do
+        mail = Mail.new
+        mail.charset = 'utf-8'
+        mail.to = 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+        mail[:to].encoded.should == %{To: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n}
+      end
+
+      it "should not quote the display name if already quoted" do
+        mail = Mail.new
+        mail.charset = 'utf-8'
+        mail.to = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+        mail[:to].encoded.should == %{To: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n}
+      end
+
+    end
+    
+    describe "quoting token unsafe chars" do
+      it "should quote the display name" do
+        mail = Mail.new
+        mail.charset = 'utf-8'
+        mail.to = "Mikel @ me Lindsaar <mikel@test.lindsaar.net>"
+        mail[:to].encoded.should == %{To: "Mikel @ me Lindsaar" <mikel@test.lindsaar.net>\r\n}
+      end
+
+      it "should preserve quotes needed from the user and not double quote" do
+        mail = Mail.new
+        mail.charset = 'utf-8'
+        mail.to = %{"Mikel @ me Lindsaar" <mikel@test.lindsaar.net>}
+        mail[:to].encoded.should == %{To: "Mikel @ me Lindsaar" <mikel@test.lindsaar.net>\r\n}
+      end
+    end
   end
 
   describe "specifying an email wide encoding" do

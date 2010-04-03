@@ -55,7 +55,7 @@ module Mail # :doc:
                 date_time received message_ids envelope_from rfc2045 
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location 
-                split_common split_addresses split_address ]
+                split_common split_address split_elements ]
 
   parsers.each do |parser|
     begin

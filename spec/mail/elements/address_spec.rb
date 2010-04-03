@@ -42,6 +42,20 @@ describe Mail::Address do
       a.display_name.should == result
     end
 
+    it "should preserve the display name passed in" do
+      parse_text  = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
+      result      = 'Mikel Lindsaar'
+      a = Mail::Address.new(parse_text)
+      a.display_name.should == result
+    end
+
+    it "should preserve the display name passed in with token unsafe chars" do
+      parse_text  = '"Mikel@@@Lindsaar" <mikel@test.lindsaar.net>'
+      result      = 'Mikel@@@Lindsaar'
+      a = Mail::Address.new(parse_text)
+      a.display_name.should == result
+    end
+
     it "should give back the local part" do
       parse_text  = 'Mikel Lindsaar <test@lindsaar.net>'
       result      = 'test'

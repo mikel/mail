@@ -128,6 +128,10 @@ module Mail
       [\x47-\x5b] /   # or the "." or the 
       [\x5d-\x7e]     # double quote character
     end
+
+    rule phrase
+      obs_phrase / word+
+    end
     
     rule word
       atom / quoted_string
@@ -135,10 +139,6 @@ module Mail
     
     rule phrase_list
       first_phrase:phrase other_phrases:("," FWS* phrase_value:phrase)*
-    end
-  
-    rule phrase
-      obs_phrase / word+
     end
 
     rule domain_literal

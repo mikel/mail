@@ -10,6 +10,28 @@ module Mail
       "\r\n"
     end
 
+    rule ALPHA
+      [a-zA-Z]
+    end
+    
+    rule DIGIT
+      [0-9]
+    end
+
+    rule atext
+      ALPHA / DIGIT / # Any character except controls,
+      "!" / "#" /     #  SP, and specials.
+      "$" / "%" /     #  Used for atoms
+      "&" / "'" /
+      "*" / "+" /
+      "-" / "/" /
+      "=" / "?" /
+      "^" / "_" /
+      "`" / "{" /
+      "|" / "}" /
+      "~"
+    end
+
     rule FWS    # Folding white space
       (WSP* CRLF WSP+) / (CRLF WSP+) / obs_FWS
     end
@@ -43,5 +65,10 @@ module Mail
     rule obs_FWS
       WSP+ (CRLF WSP+)*
     end
+    
+    rule display_name
+      phrase
+    end
+    
   end
 end
