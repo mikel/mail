@@ -38,13 +38,12 @@ describe Mail::CommonField do
       value = "かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ かきくけこ"
       if RUBY_VERSION < '1.9'
         $KCODE = 'u'
-        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       else
         value.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93_=E3=81=8B=E3=81=8D=E3=81=8F=\r\n=E3=81=91=E3=81=93=?=\r\n\t=?UTF-8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       end
+      result = "Subject: =?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n\t=?UTF8?Q?_=E3=81=8B=E3=81=8D=E3=81=8F=E3=81=91=E3=81=93=?=\r\n"
       field = Mail::SubjectField.new(value)
-      field.encoded.should == result
+      field.encoded.gsub("UTF-8", "UTF8").should == result
       field.decoded.should == value
       field.value.should == value
     end

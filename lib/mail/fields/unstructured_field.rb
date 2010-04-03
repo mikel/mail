@@ -102,12 +102,12 @@ module Mail
     def wrapped_value # :nodoc:
       case
       when decoded.to_s.ascii_only? && field_length <= 78
-        "#{name}: #{value}"
-      when field_length <= 40 # Allow for =?ISO-8859-1?B?=...=
-        "#{name}: #{encode(value)}"
+        "#{name}: #{decoded}"
+      when field_length <= 25 # Allow for =?ISO-8859-1?B?=...=
+        "#{name}: #{encode(decoded)}"
       else
         @folded_line = []
-        @unfolded_line = value.clone
+        @unfolded_line = decoded.clone
         fold("#{name}: ".length)
         folded = @folded_line.map { |l| l unless l.blank? }.compact.join("\r\n\t")
         "#{name}: #{folded}"
@@ -116,12 +116,24 @@ module Mail
 
     def fold(prepend = 0) # :nodoc:
       # Get the last whitespace character, OR we'll just choose 
-      # 78 if there is no whitespace
-      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 40 - prepend)
-      wspp = @unfolded_line.slice(0..limit) =~ /[ \t][^ \T]*$/ || limit
-      wspp = limit if wspp == 0
-      @folded_line << encode(@unfolded_line.slice!(0...wspp))
-      if @unfolded_line.length > limit
+      # 78 if there is no whitespace, or 23 for non ascii (23 * 3 for QP Encoding == 69)
+      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 23 - prepend)
+      # find the last white space character within the limit
+      if wspp = @unfolded_line.slice(0..limit) =~ /[ \t][^ \T]*$/
+        wrap = true
+        wspp = limit if wspp == 0
+        @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+      # if no last whitespace, find the first
+      elsif wspp = @unfolded_line =~ /[ \t][^ \T]/
+        wrap = true
+        wspp = limit if wspp == 0
+        @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+      # if no whitespace, don't wrap
+      else
+        wrap = false
+      end
+      
+      if wrap && @unfolded_line.length > limit
         fold
       else
         @folded_line << encode(@unfolded_line)
@@ -132,7 +144,7 @@ module Mail
       if value.ascii_only?
         value
       else
-        Encodings.q_value_encode(value, @charset)
+        Encodings.q_value_encode(value, @charset).gsub(" ", "\r\n\t")
       end
     end
 

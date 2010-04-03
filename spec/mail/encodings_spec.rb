@@ -137,23 +137,6 @@ describe Mail::Encodings do
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
-require 'ruby-debug'    
-    it "should fold a long encoded string properly" do
-      original = "ВосстановлениеВосстановление Вашего пароля"
-      if RUBY_VERSION >= '1.9'
-        original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0?="
-      else
-        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0?="
-      end
-      mail = Mail.new
-      mail.subject = original
-      debugger
-      mail[:subject].decoded.should == original
-      mail = Mail.new(mail.encoded)
-      mail.subject.should == original
-      mail[:subject].encoded.should == result
-    end
 
   end
 
@@ -223,7 +206,39 @@ require 'ruby-debug'
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
-    
+
+    it "should fold a long encoded string properly" do
+      original = "ВосстановлениеВосстановлениеВашегопароля"
+      if RUBY_VERSION >= '1.9'
+        original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF-8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF-8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF-8?Q?=BE=D0=BB=D1=8F=?=\r\n"
+      else
+        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF8?Q?=BE=D0=BB=D1=8F=?=\r\n"
+      end
+      mail = Mail.new
+      mail.subject = original
+      mail[:subject].decoded.should == original
+      mail[:subject].encoded.should == result
+    end
+
+    it "should round trip a complex string properly" do
+      original = "ВосстановлениеВосстановлениеВашегопароля This is a NUT?????Z__string that== could (break) anything"
+      if RUBY_VERSION >= '1.9'
+        original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      end
+      result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF8?Q?=BE=D0=BB=D1=8F_This=?=\r\n\tis a NUT?????Z__string that== could (break)\r\n\t anything\r\n"
+      mail = Mail.new
+      mail.subject = original
+      mail[:subject].decoded.should == original
+      mail[:subject].encoded.should == result
+      mail = Mail.new(mail.encoded)
+      mail[:subject].decoded.should == original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+      mail = Mail.new(mail.encoded)
+      mail[:subject].decoded.should == original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+    end
+
   end
   
   describe "parameter MIME encodings" do

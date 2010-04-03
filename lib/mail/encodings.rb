@@ -113,9 +113,8 @@ module Mail
     # 
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
-      debugger if str =~ /=D0=92=D0=BE=D1=81=D1=81=D1=82/
-      str.gsub!(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
-      str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do
+      str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
+      str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do # Grab the insides of each encoded-word
         before = $1.to_s
         text = $2.to_s
 
@@ -188,7 +187,7 @@ module Mail
     def Encodings.b_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.b_value_encode(str, encoding)
-      string.split("\n").map do |str|
+      string.each_line.map do |str|
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
     end
@@ -203,7 +202,9 @@ module Mail
     def Encodings.q_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.q_value_encode(str, encoding)
-      "=?#{encoding}?Q?#{string.chomp.gsub(/ /, '_')}?="
+      string.each_line.map do |str|
+        "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
+      end.join(" ")
     end
     
     private
