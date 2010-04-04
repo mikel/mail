@@ -164,17 +164,26 @@ module Mail
         encode_non_usascii(address, charset)
       end
     end
-    
+
     def Encodings.encode_non_usascii(address, charset)
       return address if address.ascii_only?
       us_ascii = %Q{\x00-\x7f}
       # Encode any non usascii strings embedded inside of quotes
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
-      # Encode any non usascii strings delimited by space
-      address.gsub!(/\s+.*?[^#{us_ascii}].*?\s/) { |s| " #{Encodings.b_value_encode(s.strip, charset)} " }
-      # Encode any non usascii strings starting at the beginnning of the address
-      address.gsub!(/\A.*?[^#{us_ascii}].*?\s/) { |s| "#{Encodings.b_value_encode(s.strip, charset)} " }
-      address
+      # Then loop through all remaining items and encode as needed
+      tokens = address.split(/\b/)
+      tokens.enum_with_index.map do |word, i|
+        if word.ascii_only?
+          word
+        else
+          previous_space = tokens[i-1] && match = tokens[i-1].match(/^(\s+)$/)
+          previous_non_ascii = tokens[i-2] && !tokens[i-2].ascii_only?
+          if previous_space && previous_non_ascii
+            word = match[1] + word
+          end
+          Encodings.b_value_encode(word, charset)
+        end
+      end.join
     end
     
     # Encode a string with Base64 Encoding and returns it ready to be inserted

@@ -60,8 +60,8 @@ describe Mail::Message do
       errors.should be_false
     end
 
-    it "should raise a warning (and keep parsing) on having non US-ASCII characters in the header" do
-      STDERR.should_receive(:puts)
+    it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
+      STDERR.should_not_receive(:puts)
       Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')))
     end
 
@@ -1392,6 +1392,15 @@ describe Mail::Message do
       mail = Mail.new
       mail['X-Foo-Bar'] = "Some custom text"
       mail.to_s.should match(/X-Foo-Bar: Some custom text/)
+    end
+  end
+
+  describe "parsing emails with non usascii in the header" do
+    it "should work" do
+      mail = Mail.new('From: "Foo áëô îü" <extended@example.net>')
+      mail.from.should == ['extended@example.net']
+      mail[:from].decoded.should == '"Foo áëô îü" <extended@example.net>'
+      mail[:from].encoded.should == "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
     end
   end
 end

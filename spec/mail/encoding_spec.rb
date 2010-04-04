@@ -38,6 +38,13 @@ describe "mail encoding" do
       mail[:to].encoded.should == "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 
+    it "should allow you to send unquoted non us-ascii strings, with spaces in them" do
+      mail = Mail.new
+      mail.charset = 'utf-8'
+      mail.to = ["Foo áëô îü <extended@example.net>"]
+      mail[:to].encoded.should == "To: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
+    end
+
     it "should allow you to send in multiple unencoded strings to any address field" do
       mail = Mail.new
       mail.charset = 'utf-8'
