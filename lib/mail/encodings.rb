@@ -171,19 +171,18 @@ module Mail
       # Encode any non usascii strings embedded inside of quotes
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
-      tokens = address.split(/\b/)
+      tokens = address.split(/\s/)
       tokens.enum_with_index.map do |word, i|
         if word.ascii_only?
           word
         else
-          previous_space = tokens[i-1] && match = tokens[i-1].match(/^(\s+)$/)
-          previous_non_ascii = tokens[i-2] && !tokens[i-2].ascii_only?
-          if previous_space && previous_non_ascii
-            word = match[1] + word
+          previous_non_ascii = tokens[i-1] && !tokens[i-1].ascii_only?
+          if previous_non_ascii
+            word = " #{word}"
           end
           Encodings.b_value_encode(word, charset)
         end
-      end.join
+      end.join(' ')
     end
     
     # Encode a string with Base64 Encoding and returns it ready to be inserted

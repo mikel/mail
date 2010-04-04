@@ -218,7 +218,7 @@ describe Mail::Encodings do
       mail = Mail.new
       mail.subject = original
       mail[:subject].decoded.should == original
-      mail[:subject].encoded.should == result
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
     end
 
     it "should round trip a complex string properly" do
@@ -230,7 +230,7 @@ describe Mail::Encodings do
       mail = Mail.new
       mail.subject = original
       mail[:subject].decoded.should == original
-      mail[:subject].encoded.should == result
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
       mail = Mail.new(mail.encoded)
       mail[:subject].decoded.should == original
       mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result

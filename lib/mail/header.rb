@@ -33,8 +33,9 @@ module Mail
     # no automatic processing of that field will happen.  If you find one of
     # these cases, please make a patch and send it in, or at the least, send
     # me the example so we can fix it.
-    def initialize(header_text = nil)
+    def initialize(header_text = nil, charset = nil)
       @errors = []
+      @charset = charset
       self.raw_source = header_text.to_crlf
       split_header if header_text
     end
@@ -74,7 +75,7 @@ module Mail
       @fields = Mail::FieldList.new
       unfolded_fields.each do |field|
 
-        field = Field.new(field)
+        field = Field.new(field, nil, charset)
         field.errors.each { |error| self.errors << error }
         selected = select_field_for(field.name)
 
@@ -163,8 +164,12 @@ module Mail
       if self[:content_type] && self[:content_type].parameters
         self[:content_type].parameters[:charset]
       else
-        nil
+        @charset
       end
+    end
+    
+    def charset=(val)
+      @charset = val
     end
     
     LIMITED_FIELDS   = %w[ date from sender reply-to to cc bcc 

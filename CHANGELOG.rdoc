@@ -1,3 +1,11 @@
+== Sun Apr  4 06:41:46 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Created non-ascii header auto encoding for address fields and unstructured fields
+* Changed default behaviour of mail, if you specify a charset, it will use that charset
+  regardless of what is in the body.  Previously, if the body was all US-ASCII, it would
+  set the charset to US-ASCII in preference.
+* 
+
 == Mon 29 Mar 2010 07:04:34 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 2.1.5.3

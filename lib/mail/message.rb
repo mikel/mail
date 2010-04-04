@@ -100,7 +100,9 @@ module Mail
       @text_part = nil
       @html_part = nil
       @errors = nil
-
+      @header = nil
+      @charset = 'UTF-8'
+      
       @perform_deliveries = true
       @raise_delivery_errors = true
 
@@ -353,7 +355,7 @@ module Mail
     #  mail.header = 'To: mikel@test.lindsaar.net\r\nFrom: Bob@bob.com'
     #  mail.header #=> <#Mail::Header
     def header=(value)
-      @header = Mail::Header.new(value)
+      @header = Mail::Header.new(value, charset)
     end
 
     # Returns the header object of the message object. Or, if passed
@@ -805,7 +807,7 @@ module Mail
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
     #  mail.resent_cc #=> ['mikel@test.lindsaar.net']
     #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']    
+    #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
     def resent_cc=( val )
       header[:resent_cc] = val
     end
@@ -1271,13 +1273,13 @@ module Mail
     def has_mime_version?
       header.has_mime_version?
     end
-
+    
     def has_content_type?
       !!header[:content_type]
     end
     
     def has_charset?
-      !!charset
+      !!(header[:content_type] && header[:content_type].parameters['charset'])
     end
     
     def has_content_transfer_encoding?
@@ -1330,9 +1332,7 @@ module Mail
     # 
     # Otherwise raises a warning
     def add_charset
-      if body.only_us_ascii? and !body.empty?
-        header[:content_type].parameters['charset'] = 'US-ASCII'
-      elsif !body.empty?
+      if !body.empty?
         warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
         STDERR.puts(warning)
         header[:content_type].parameters['charset'] = 'UTF-8'
@@ -1374,17 +1374,18 @@ module Mail
     
     # Returns the character set defined in the content type field
     def charset
-      content_type ? content_type_parameters['charset'] : nil
+      if @header
+        content_type ? content_type_parameters['charset'] : @charset
+      else
+        @charset
+      end
     end
 
     # Sets the charset to the supplied value.  Will set the content type to text/plain if
     # it does not already exist
     def charset=(value)
-      if content_type
-        content_type_parameters['charset'] = value
-      else
-        self.content_type ['text', 'plain', {'charset' => value}]
-      end
+      @charset = value
+      @header.charset = value
     end
     
     # Returns the main content type

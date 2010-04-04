@@ -133,13 +133,13 @@ describe Mail::Message do
   
     it "should give the header class the header to parse" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!").and_return(header)
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
       mail = Mail::Message.new(basic_email)
     end
 
     it "should give the header class the header to parse even if there is no body" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!").and_return(header)
+      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
   
@@ -157,7 +157,7 @@ describe Mail::Message do
     it "should give the header the part before the line without spaces and the body the part without" do
       header = Mail::Header.new("To: mikel")
       body = Mail::Body.new("G'Day!")
-      Mail::Header.should_receive(:new).with("To: mikel").and_return(header)
+      Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
       Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
     end
@@ -165,7 +165,7 @@ describe Mail::Message do
     it "should give allow for whitespace on the gap line between header and body" do
       header = Mail::Header.new("To: mikel")
       body = Mail::Body.new("G'Day!")
-      Mail::Header.should_receive(:new).with("To: mikel").and_return(header)
+      Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
       Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
     end
@@ -945,12 +945,12 @@ describe Mail::Message do
           mail.should_not be_has_charset
         end
 
-        it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
+        it "should raise a warning if there is no charset defined and only US-ASCII chars" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          STDERR.should_not_receive(:puts)
-          mail.to_s 
+          STDERR.should_receive(:puts)
+          mail.to_s
         end
 
         it "should set the content type to text/plain; charset=us-ascii" do
