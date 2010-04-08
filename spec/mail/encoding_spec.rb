@@ -168,4 +168,14 @@ describe "mail encoding" do
     end
   end
 
+  it "should let you define a charset per part" do
+    mail = Mail.new
+    part = Mail::Part.new
+    part.content_type = "text/html"
+    part.charset = "ISO-8859-1"
+    part.body = "blah"
+    mail.add_part(part)
+    mail.parts[0].content_type.should == "text/html; charset=ISO-8859-1"
+  end
+
 end

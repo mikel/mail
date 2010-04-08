@@ -169,6 +169,9 @@ module Mail
     end
     
     def charset=(val)
+      if self[:content_type]
+        self[:content_type].parameters[:charset] = val
+      end
       @charset = val
     end
     

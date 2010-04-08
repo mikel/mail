@@ -102,6 +102,7 @@ module Mail
       @errors = nil
       @header = nil
       @charset = 'UTF-8'
+      @defaulted_charset = true
       
       @perform_deliveries = true
       @raise_delivery_errors = true
@@ -1333,9 +1334,11 @@ module Mail
     # Otherwise raises a warning
     def add_charset
       if !body.empty?
-        warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
-        STDERR.puts(warning)
-        header[:content_type].parameters['charset'] = 'UTF-8'
+        if @defaulted_charset
+          warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
+          STDERR.puts(warning)
+        end
+        header[:content_type].parameters['charset'] = @charset
       end
     end
     
@@ -1381,9 +1384,9 @@ module Mail
       end
     end
 
-    # Sets the charset to the supplied value.  Will set the content type to text/plain if
-    # it does not already exist
+    # Sets the charset to the supplied value.
     def charset=(value)
+      @defaulted_charset = false
       @charset = value
       @header.charset = value
     end
@@ -1776,6 +1779,7 @@ module Mail
     
     def add_multipart_alternate_header
       header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
+      header['content_type'].parameters[:charset] = @charset
       body.boundary = boundary
     end
     
@@ -1783,6 +1787,7 @@ module Mail
       unless body.boundary && boundary
         header['content-type'] = 'multipart/mixed' unless header['content-type']
         header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
+        header['content_type'].parameters[:charset] = @charset
         body.boundary = boundary
       end
     end
@@ -1790,6 +1795,7 @@ module Mail
     def add_multipart_mixed_header
       unless header['content-type']
         header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
+        header['content_type'].parameters[:charset] = @charset
         body.boundary = boundary
       end
     end

@@ -25,7 +25,6 @@ module Mail
     include Mail::Utilities
     
     def initialize(name = nil, value = nil, charset = nil)
-      @charset = nil
       self.name    = name
       self.value   = value
       self.charset = charset
