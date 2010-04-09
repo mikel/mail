@@ -75,7 +75,7 @@
 
 * Support for content-transport-encoding handling [DONE - ML] (base64)
 
-* Handle non us-ascii in Subject, keywords, header fields in general
+* Handle non us-ascii in Subject, keywords, header fields in general [DONE - ML]
 
 * handle encoding and decoding of multipart emails [DONE - ML] (base64)
 
