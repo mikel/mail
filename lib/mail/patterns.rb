@@ -3,6 +3,7 @@ module Mail
     white_space = %Q|\x9\x20|
     text        = %Q|\x1-\x8\xB\xC\xE-\x7f|
     field_name  = %Q|\x21-\x39\x3b-\x7e|
+    qp_safe     = %Q|\x20-\x3c\x3e-\x7e|
     
     aspecial     = %Q|()<>[]:;@\\,."| # RFC5322
     tspecial     = %Q|()<>@,;:\\"/[]?=| # RFC2045
@@ -18,6 +19,8 @@ module Mail
     FIELD_LINE    = /^[#{field_name}]+:\s*.+$/
     HEADER_LINE   = /^([#{field_name}]+:\s*.+)$/
 
+    QP_UNSAFE     = /[^#{qp_safe}]/
+    QP_SAFE       = /[#{qp_safe}]/
     CONTROL_CHAR  = /[#{control}]/n
     ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{lwsp}]/n
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
