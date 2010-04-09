@@ -8,6 +8,7 @@ module Mail
     CAPITALIZED_FIELD = 'Content-Type'
     
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       if value.class == Array
         @main_type = value[0]
         @sub_type = value[1]

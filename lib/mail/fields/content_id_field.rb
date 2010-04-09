@@ -9,6 +9,7 @@ module Mail
     CAPITALIZED_FIELD = "Content-ID"
     
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       @uniq = 1
       if value.blank?
         value = generate_content_id

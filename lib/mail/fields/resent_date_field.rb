@@ -12,7 +12,7 @@ module Mail
     CAPITALIZED_FIELD = 'Resent-Date'
     
     def initialize(value = nil, charset = 'utf-8')
-      @charset = charset
+      self.charset = charset
       if value.blank?
         value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else

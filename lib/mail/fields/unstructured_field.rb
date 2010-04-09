@@ -20,6 +20,7 @@ module Mail
     include Mail::Utilities
     
     def initialize(name, value, charset = nil)
+      self.charset = charset
       @errors = []
       if charset
         self.charset = charset

@@ -9,6 +9,7 @@ module Mail
     CAPITALIZED_FIELD = 'Content-Transfer-Encoding'
     
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       value = '7bit' if value.to_s =~ /7-bit/i
       value = '8bit' if value.to_s =~ /8-bit/i
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)

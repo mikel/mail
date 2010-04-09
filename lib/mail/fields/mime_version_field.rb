@@ -9,6 +9,7 @@ module Mail
     CAPITALIZED_FIELD = 'Mime-Version'
 
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       if value.blank?
         value = '1.0'
       end

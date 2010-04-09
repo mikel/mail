@@ -39,6 +39,7 @@ module Mail
     CAPITALIZED_FIELD = 'Message-ID'
     
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       @uniq = 1
       if value.blank?
         self.name = CAPITALIZED_FIELD

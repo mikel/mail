@@ -30,6 +30,7 @@ module Mail
       @boundary = nil
       @preamble = nil
       @epilogue = nil
+      @charset  = nil
       @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
       @parts = Mail::PartsList.new
       if string.blank?

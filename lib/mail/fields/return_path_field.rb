@@ -38,10 +38,10 @@ module Mail
     CAPITALIZED_FIELD = 'Return-Path'
     
     def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
       self
-
     end
     
     def encoded
