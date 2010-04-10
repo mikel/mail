@@ -101,18 +101,26 @@ module Mail
     #  preference to other places where the field could be folded, even if
     #  it is allowed elsewhere.
     def wrapped_value # :nodoc:
-      case
-      when decoded.to_s.ascii_only? && field_length <= 78
-        "#{name}: #{decoded}"
-      when field_length <= 25 # Allow for =?ISO-8859-1?B?=...=
-        "#{name}: #{encode(decoded)}"
-      else
-        @folded_line = []
-        @unfolded_line = decoded.clone
-        fold("#{name}: ".length)
-        folded = @folded_line.map { |l| l unless l.blank? }.compact.join("\r\n\t")
-        "#{name}: #{folded}"
+      @folded_line = []
+      @unfolded_line = decoded.to_s.clone
+      fold("#{name}: ".length)
+      wrap_lines(name, @folded_line)
+    end
+
+    def wrap_lines(name, folded_lines)
+      result = []
+      index = 0
+      result[index] = "#{name}: #{folded_lines.shift}"
+      folded_lines.each do |line|
+        if (result[index] + line).length < 77
+          result[index] << " " + line
+        else
+          result[index] << "\r\n\t"
+          index += 1
+          result[index] = line
+        end
       end
+      result.join
     end
 
     def fold(prepend = 0) # :nodoc:
@@ -124,29 +132,28 @@ module Mail
         wrap = true
         wspp = limit if wspp == 0
         @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+        @folded_line.flatten!
       # if no last whitespace, find the first
       elsif wspp = @unfolded_line =~ /[ \t][^ \T]/
         wrap = true
         wspp = limit if wspp == 0
         @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+        @folded_line.flatten!
       # if no whitespace, don't wrap
       else
         wrap = false
       end
-      
+
       if wrap && @unfolded_line.length > limit
         fold
       else
         @folded_line << encode(@unfolded_line)
+        @folded_line.flatten!
       end
     end
 
     def encode(value)
-      if value.ascii_only?
-        value
-      else
-        Encodings.q_value_encode(value, @charset).gsub(" ", "\r\n\t")
-      end
+      Encodings.q_value_encode(value, @charset).split(" ")
     end
 
   end

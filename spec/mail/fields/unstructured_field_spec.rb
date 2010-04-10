@@ -66,7 +66,8 @@ describe Mail::UnstructuredField do
     
     it "should just add the CRLF at the end of the line" do
       @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
-      @field.encoded.gsub("UTF-8", "UTF8").should == "Subject: testing\r\n\t=?UTF8?Q?_testing_=D6=A4=?=\r\n"
+      result = "Subject: testing =?UTF8?Q?_testing_=D6=A4=?=\r\n"
+      @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "testing testing \326\244"
     end
     
@@ -75,30 +76,31 @@ describe Mail::UnstructuredField do
   describe "folding" do
 
     it "should not fold itself if it is 78 chracters long" do
-      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters long")
-      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters long\r\n"
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters....")
+      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 78 characters....\r\n"
     end
     
     it "should fold itself if it is 79 chracters long" do
-      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 79 characters long.")
-      @field.encoded.should == "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\t long.\r\n"
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 79 characters long")
+      result = "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\tlong\r\n"
+      @field.encoded.should == result
     end
 
     it "should fold itself if it is 997 chracters long" do
-      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. And this makes it 997 long")
+      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. And this makes it 997....")
       lines = @field.encoded.split("\r\n\t")
       lines.each { |line| line.length.should < 78 }
     end
     
     it "should fold itself if it is 998 characters long" do
-      value = "This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. And this makes it 998 long."
+      value = "This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. And this makes it 998 long"
       @field = Mail::UnstructuredField.new("Subject", value)
       lines = @field.encoded.split("\r\n\t")
       lines.each { |line| line.length.should < 78 }
     end
     
     it "should fold itself if it is 999 characters long" do
-      value = "This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. And this makes it 999 long.."
+      value = "This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. And this makes it 999 long."
       @field = Mail::UnstructuredField.new("Subject", value)
       lines = @field.encoded.split("\r\n\t")
       lines.each { |line| line.length.should < 78 }
@@ -113,7 +115,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82=?=\r\n\treally long string Thi\r\n\t=?UTF8?Q?s_is_=E3=81=82_really_long=?=\r\n\t=?UTF8?Q?string_This_is_=E3=81=82=?=\r\n\treally long string Thi\r\n\t=?UTF8?Q?s_is_=E3=81=82_really_long=?=\r\n\t=?UTF8?Q?string_This_is_=E3=81=82=?=\r\n\t really long string\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82=?= really long string Thi\r\n\t=?UTF8?Q?s_is_=E3=81=82_really_long=?= =?UTF8?Q?string_This_is_=E3=81=82=?=\r\n\treally long string Thi =?UTF8?Q?s_is_=E3=81=82_really_long=?=\r\n\t=?UTF8?Q?string_This_is_=E3=81=82=?= really long string\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'

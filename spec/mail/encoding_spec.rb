@@ -14,35 +14,40 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.subject = "This is あ string"
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == "Subject: =?UTF8?Q?This_is_=E3=81=82=?=\r\n\t string\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82=?= string\r\n"
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = "Mikel Lindsああr <mikel@test.lindsaar.net>"
-      mail[:to].encoded.should == "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+      result = "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+      mail[:to].encoded.should == result
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = "あdあ <ada@test.lindsaar.net>"
-      mail[:to].encoded.should == "To: =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      result = "To: =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      mail[:to].encoded.should == result
     end
 
     it "should allow you to send in multiple unencoded strings to address fields and encode them" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
-      mail[:to].encoded.should == "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      result = "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      mail[:to].encoded.should == result
     end
 
     it "should allow you to send unquoted non us-ascii strings, with spaces in them" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = ["Foo áëô îü <extended@example.net>"]
-      mail[:to].encoded.should == "To: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
+      result = "To: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
+      mail[:to].encoded.should == result
     end
 
     it "should allow you to send in multiple unencoded strings to any address field" do
@@ -50,7 +55,8 @@ describe "mail encoding" do
       mail.charset = 'utf-8'
       ['To', 'From', 'Cc', 'Reply-To'].each do |field|
         mail.send("#{field.downcase.gsub("-", '_')}=", ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"])
-        mail[field].encoded.should == "#{field}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+        result = "#{field}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\t=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+        mail[field].encoded.should == result
       end
     end
     
@@ -58,14 +64,16 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = "test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;"
-      mail[:to].encoded.should == "To: test1@lindsaar.net, \r\n\tgroup: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+      result = "To: test1@lindsaar.net, \r\n\tgroup: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+      mail[:to].encoded.should == result
     end
 
     it "should handle groups with funky characters" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = '"Mikel Lindsああr" <test1@lindsaar.net>, group: "あdあ" <test2@lindsaar.net>, me@lindsaar.net;'
-      mail[:to].encoded.should == "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <test1@lindsaar.net>, \r\n\tgroup: =?UTF-8?B?44GCZOOBgg==?= <test2@lindsaar.net>, \r\n\tme@lindsaar.net;\r\n"
+      result = "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <test1@lindsaar.net>, \r\n\tgroup: =?UTF-8?B?44GCZOOBgg==?= <test2@lindsaar.net>, \r\n\tme@lindsaar.net;\r\n"
+      mail[:to].encoded.should == result
     end
 
     describe "quouting token safe chars" do
@@ -112,7 +120,7 @@ describe "mail encoding" do
       subject.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.subject = subject
       result = mail[:subject].encoded
-      string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82=?=\r\n\t string\r\n"
+      string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82=?= string\r\n"
       if RUBY_VERSION > '1.9'
         string.force_encoding('ISO8859-1')
         result.force_encoding('ISO8859-1')

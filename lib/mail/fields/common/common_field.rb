@@ -29,7 +29,7 @@ module Mail
     end
     
     def field_length
-      @length ||= name.length + value.length + ': '.length
+      @length ||= "#{name}: #{encode(decoded)}".length
     end
     
     def responsible_for?( val )
