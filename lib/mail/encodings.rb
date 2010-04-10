@@ -107,14 +107,15 @@ module Mail
         end
       end
     end
-    
+
     # Decodes a given string as Base64 or Quoted Printable, depending on what
     # type it is.
     # 
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
-      # Join QP encoded-words that are adjacent
+
+      # Join QP encoded-words that are adjacent to avoid decoding partial chars
       str.gsub!( /=\?==\?.+?\?[Qq]\?/m, '' ) if str =~ /\?==\?/
       
       str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do # Grab the insides of each encoded-word
@@ -122,9 +123,9 @@ module Mail
         text = $2.to_s
 
         case
-        when text =~ /=\?.+\?[Bb]\?/m
+        when text.to_str =~ /=\?.+\?[Bb]\?/m
           before + b_value_decode(text)
-        when text =~ /=\?.+\?[Qq]\?/m
+        when text.to_str =~ /=\?.+\?[Qq]\?/m
           before + q_value_decode(text)
         else
           before + text
@@ -174,7 +175,7 @@ module Mail
       # Encode any non usascii strings embedded inside of quotes
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
-      tokens = address.mb_chars.split(/\s/)
+      tokens = address.split(/\s/)
       tokens.each_with_index.map do |word, i|
         if word.ascii_only?
           word

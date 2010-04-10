@@ -153,8 +153,8 @@ module Mail
     end
 
     def encode(value)
-      value.mb_chars.gsub!("\r", "=0D")
-      value.mb_chars.gsub!("\n", "=0A")
+      value.gsub!("\r", "=0D")
+      value.gsub!("\n", "=0A")
       Encodings.q_value_encode(value, @charset).split(" ")
     end
 
