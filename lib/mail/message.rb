@@ -1328,13 +1328,15 @@ module Mail
     def add_content_type
       header[:content_type] = 'text/plain'
     end
-    
+
     # Adds a content type and charset if the body is US-ASCII
     # 
     # Otherwise raises a warning
     def add_charset
       if !body.empty?
-        if @defaulted_charset
+        # Only give a warning if this isn't an attachment, has non US-ASCII and the user
+        # has not specified an encoding explicitly.
+        if @defaulted_charset && body.raw_source.not_ascii_only? && !self.attachment?
           warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
           STDERR.puts(warning)
         end

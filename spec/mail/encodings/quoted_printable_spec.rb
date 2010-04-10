@@ -22,9 +22,4 @@ describe Mail::Encodings::QuotedPrintable do
     Mail::Encodings::QuotedPrintable.decode("=00=00=00=00").should == result
   end
   
-  it "should encode an ascii string that has carriage returns if asked to" do
-    result = "=0Aasdf=0A"
-    Mail::Encodings::QuotedPrintable.encode("\nasdf\n").should == result
-  end
-  
 end

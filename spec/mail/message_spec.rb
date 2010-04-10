@@ -945,11 +945,11 @@ describe Mail::Message do
           mail.should_not be_has_charset
         end
 
-        it "should raise a warning if there is no charset defined and only US-ASCII chars" do
+        it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          STDERR.should_receive(:puts)
+          STDERR.should_not_receive(:puts)
           mail.to_s
         end
 
@@ -1030,6 +1030,7 @@ describe Mail::Message do
         it "should use QP transfer encoding for 8bit text with only a few 8bit characters" do
           body = "Maxfeldstraße 5, 90409 Nürnberg"
           mail = Mail.new
+          mail.charset = "UTF-8"
           mail.body = body
           mail.to_s.should =~ %r{Content-Transfer-Encoding: quoted-printable}
         end
@@ -1037,6 +1038,7 @@ describe Mail::Message do
         it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
+          mail.charset = "UTF-8"
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
           mail.should be_has_content_type
@@ -1047,6 +1049,7 @@ describe Mail::Message do
         it "should not use 8bit transfer encoding when 8bit is allowed" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
+          mail.charset = "UTF-8"
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
           mail.transport_encoding = "8bit"
