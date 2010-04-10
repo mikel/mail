@@ -161,9 +161,9 @@ module Mail
         # Handles misquoted param values
         # e.g: application/octet-stream; name=archiveshelp1[1].htm
         # and: audio/x-midi;\r\n\tname=Part .exe
-        params = $2.to_s.split(/\s+/)
+        params = $2.to_s.mb_chars.split(/\s+/)
         params = params.map { |i| i.to_s.chomp.strip }
-        params = params.map { |i| i.split(/\s*\=\s*/) }
+        params = params.map { |i| i.mb_chars.split(/\s*\=\s*/) }
         params = params.map { |i| "#{i[0]}=#{dquote(i[1].to_s)}" }.join('; ')
         "#{type}; #{params}"
       when val =~ /^\s*$/

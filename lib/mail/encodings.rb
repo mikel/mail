@@ -114,6 +114,9 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
+      # Join QP encoded-words that are adjacent
+      str.gsub!( /=\?==\?.+?\?[Qq]\?/m, '' ) if str =~ /\?==\?/
+      
       str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do # Grab the insides of each encoded-word
         before = $1.to_s
         text = $2.to_s
@@ -171,8 +174,8 @@ module Mail
       # Encode any non usascii strings embedded inside of quotes
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
-      tokens = address.split(/\s/)
-      tokens.enum_with_index.map do |word, i|
+      tokens = address.mb_chars.split(/\s/)
+      tokens.each_with_index.map do |word, i|
         if word.ascii_only?
           word
         else
@@ -238,7 +241,7 @@ module Mail
     end
     
     def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?(.+)?\?[QB]\?(.+)?\?\=/mi)
+      match = str.mb_chars.match(/\=\?(.+)?\?[QB]\?(.+)?\?\=/mi)
       if match
         [match[1], match[2]]
       else

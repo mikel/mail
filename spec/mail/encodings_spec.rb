@@ -210,8 +210,8 @@ describe Mail::Encodings do
     it "should fold a long encoded string properly" do
       original = "ВосстановлениеВосстановлениеВашегопароля"
       if RUBY_VERSION >= '1.9'
-        original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF-8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF-8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF-8?Q?=BE=D0=BB=D1=8F=?=\r\n"
+        original.force_encoding('UTF-8')
+        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF8?Q?=BE=D0=BB=D1=8F=?=\r\n"
       else
         result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF8?Q?=BE=D0=BB=D1=8F=?=\r\n"
       end
@@ -224,7 +224,7 @@ describe Mail::Encodings do
     it "should round trip a complex string properly" do
       original = "ВосстановлениеВосстановлениеВашегопароля This is a NUT?????Z__string that== could (break) anything"
       if RUBY_VERSION >= '1.9'
-        original.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+        original.force_encoding('UTF-8')
       end
       result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=?=\r\n\t=?UTF8?Q?=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=?=\r\n\t=?UTF8?Q?=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=?=\r\n\t=?UTF8?Q?=BE=D0=BB=D1=8F_This=?= is a NUT?????Z__string that== could (break)\r\n\tanything\r\n"
       mail = Mail.new
@@ -358,6 +358,13 @@ describe Mail::Encodings do
     it "should detect a multiple encoded Base64 string with a whitespace to the decoded string" do
       string = "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\t=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
       result = "This is あ stringThis is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should decode B and Q encodings together if needed" do
+      string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\tMore non encoded stuff"
+      result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\tMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end

@@ -128,16 +128,16 @@ module Mail
       # 78 if there is no whitespace, or 23 for non ascii (23 * 3 for QP Encoding == 69)
       @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 23 - prepend)
       # find the last white space character within the limit
-      if wspp = @unfolded_line.slice(0..limit) =~ /[ \t][^ \T]*$/
+      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \T]*$/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip)
         @folded_line.flatten!
-      # if no last whitespace, find the first
+      # if no last whitespace before the limit, find the first
       elsif wspp = @unfolded_line =~ /[ \t][^ \T]/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.slice!(0...wspp).strip)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip)
         @folded_line.flatten!
       # if no whitespace, don't wrap
       else
@@ -153,8 +153,8 @@ module Mail
     end
 
     def encode(value)
-      value.gsub!("\r", "=0D")
-      value.gsub!("\n", "=0A")
+      value.mb_chars.gsub!("\r", "=0D")
+      value.mb_chars.gsub!("\n", "=0A")
       Encodings.q_value_encode(value, @charset).split(" ")
     end
 
