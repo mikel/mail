@@ -27,17 +27,15 @@ you are doing, you can fiddle with every last bit of your email directly.
 
 Mail is tested and works on the following platforms:
 
-* ree-1.8.7-2009.10 [ x86_64 ]
-* ruby-1.8.6-p383 [ x86_64 ]
-* ruby-1.8.7-p248 [ x86_64 ]
-* ruby-1.9.1-head [ x86_64 ]
-* ruby-1.9.1-p376 [ x86_64 ]
+* jruby-1.4.0 [ [x86_64-java] ]
+* ree-1.8.7-2010.01 [ x86_64 ]
+* ruby-1.8.7-p249 [ x86_64 ]
+* ruby-1.9.1-head [ x86_64 ] (10 April 2010)
+* ruby-1.9.2-head [ x86_64 ] (10 April 2010)
 
-Mail seems to work fine on JRuby as well, however, the Base64 and Quoted-Printable
-encoding methods are implemented differently and return different values so 6 
-specs fail.  This needs to be triple checked if all OK.
-
-* jruby-1.4.0 [x86_64-java]
+Mail seems to work fine on JRuby as well, however there is some weird QP
+problem that only shows up while running the specs, running it directly
+works fine.... weird.  Any jRuby gurus who want to help out, please do.
 
 == Discussion
 
@@ -52,6 +50,8 @@ the Google Group http://groups.google.com/group/mail-ruby
 * Support for reading multipart/report emails & getting details from such
 * Support for multibyte emails - needs quite a lot of work and testing
 * Wrappers for File, Net/POP3, Net/SMTP
+* Auto encoding of non US-ASCII header fields
+* Auto encoding of non US-ASCII bodies
 
 Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
 emails.  There are a few obsoleted syntax emails that it will have problems with, but
@@ -108,7 +108,7 @@ may or may not be a problem for you.
 
 If you want to install mail manually, you can download the gem from github and do:
 
- # gem install mail-1.2.1.gem
+ # gem install mail-2.2.0.gem
  
 == Encodings
 
