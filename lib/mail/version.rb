@@ -2,10 +2,9 @@
 module Mail
   module VERSION
     MAJOR = 2
-    MINOR = 1
-    TINY  = 5
-    MICRO = 7
+    MINOR = 2
+    TINY  = 0
 
-    STRING = [MAJOR, MINOR, TINY, MICRO].join('.')
+    STRING = [MAJOR, MINOR, TINY].join('.')
   end
 end
