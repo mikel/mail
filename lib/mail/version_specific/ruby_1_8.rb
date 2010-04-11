@@ -61,8 +61,6 @@ module Mail
     end
     
     def Ruby18.q_value_decode(str)
-      str.gsub(/\r\n/, "\n").unpack("M").first
-      
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
