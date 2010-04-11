@@ -125,19 +125,23 @@ module Mail
 
     def fold(prepend = 0) # :nodoc:
       # Get the last whitespace character, OR we'll just choose 
-      # 78 if there is no whitespace, or 23 for non ascii (23 * 3 for QP Encoding == 69)
-      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 23 - prepend)
+      # 78 if there is no whitespace, or 23 for non ascii:
+      # Each QP byte is 6 chars (=0A)
+      # Plus 18 for the =?encoding?Q?= ... ?=
+      # Plus 2 for the \r\n and 1 for the \t
+      # 80 - 2 - 1 - 18 = 59 / 6 ~= 10
+      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - prepend)
       # find the last white space character within the limit
-      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \T]*$/
+      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \t]*$/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
         @folded_line.flatten!
       # if no last whitespace before the limit, find the first
-      elsif wspp = @unfolded_line =~ /[ \t][^ \T]/
+      elsif wspp = @unfolded_line.mb_chars =~ /[ \t][^ \t]/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
         @folded_line.flatten!
       # if no whitespace, don't wrap
       else

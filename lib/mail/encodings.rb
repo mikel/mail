@@ -214,6 +214,7 @@ module Mail
     def Encodings.q_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.q_value_encode(str, encoding)
+      string.gsub!("=\r\n=", '=') # We already have limited the string to the length we want
       string.each_line.map do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
       end.join(" ")
@@ -242,7 +243,7 @@ module Mail
     end
     
     def Encodings.split_encoding_from_string( str )
-      match = str.mb_chars.match(/\=\?(.+)?\?[QB]\?(.+)?\?\=/mi)
+      match = str.match(/\=\?(.+)?\?[QB]\?(.+)?\?\=/mi)
       if match
         [match[1], match[2]]
       else
