@@ -1,10 +1,18 @@
+== Sun Apr 11 07:49:15 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Lots of updates on encoding and decoding of headers and unstructured fields.  This
+  is now a lot cleaner and nicer.  Also more predictable.
+* Merged encoding branch back into head
+* Version bump to 2.2.0
+* Tagged 2.2.0
+
 == Sun Apr  4 06:41:46 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Created non-ascii header auto encoding for address fields and unstructured fields
 * Changed default behaviour of mail, if you specify a charset, it will use that charset
   regardless of what is in the body.  Previously, if the body was all US-ASCII, it would
   set the charset to US-ASCII in preference.
-* 
+* Many internal version jumps from 2.1.5.3 => 2.1.5.8 - unreleased development versions
 
 == Mon 29 Mar 2010 07:04:34 UTC Mikel Lindsaar <raasdnil@gmail.com>
 
