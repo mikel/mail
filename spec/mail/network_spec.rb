@@ -130,9 +130,10 @@ describe "Mail" do
 
     it "should be able to change the delivery_method and pass in settings" do
       mail = Mail.new
-      mail.delivery_method :file, :location => '/tmp'
+      tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
+      mail.delivery_method :file, :location => tmpdir
       mail.delivery_method.class.should == Mail::FileDelivery
-      mail.delivery_method.settings.should == {:location => '/tmp'}
+      mail.delivery_method.settings.should == {:location => tmpdir}
     end
   
     it "should not change the default when it changes the delivery_method" do
