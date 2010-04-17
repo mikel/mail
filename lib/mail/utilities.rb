@@ -69,7 +69,7 @@ module Mail
     # 
     # Example:
     # 
-    #  string
+    #  paren( 'This is a string' ) #=> '(This is a string)'
     def paren( str )
       RubyVer.paren( str )
     end
@@ -85,6 +85,26 @@ module Mail
       match ? match[1] : str
     end
     
+    # Wraps a string in angle brackets and escapes any that are in the string itself
+    # 
+    # Example:
+    # 
+    #  bracket( 'This is a string' ) #=> '<This is a string>'
+    def bracket( str )
+      RubyVer.bracket( str )
+    end
+    
+    # Unwraps a string from being wrapped in parenthesis
+    # 
+    # Example:
+    # 
+    #  str = '<This is a string>'
+    #  unbracket( str ) #=> 'This is a string'
+    def unbracket( str )
+      match = str.match(/^\<(.*?)\>$/)
+      match ? match[1] : str
+    end
+    
     # Escape parenthesies in a string
     # 
     # Example:
@@ -93,6 +113,14 @@ module Mail
     #  escape_paren( str ) #=> 'This is \(a\) string'
     def escape_paren( str )
       RubyVer.escape_paren( str )
+    end
+    
+    def uri_escape( str )
+      URI.escape(str)
+    end
+    
+    def uri_unescape( str )
+      URI.unescape(str)
     end
     
     # Matches two objects with their to_s values case insensitively

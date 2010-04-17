@@ -18,6 +18,27 @@ describe Mail::Part do
     part.content_id.should == "<thisis@acontentid>"
   end
   
+  it "should return an inline content_id" do
+    part = Mail::Part.new do
+      content_id "<thisis@acontentid>"
+      body "This is Text"
+    end
+    part.inline_content_id.should == "thisis@acontentid"
+  end
+  
+  it "should URL escape its inline content_id" do
+    part = Mail::Part.new do
+      content_id "<thi%%sis@acontentid>"
+      body "This is Text"
+    end
+    part.inline_content_id.should == "thi%25%25sis@acontentid"
+  end
+  
+  it "should add a content_id if there is none and is asked for an inline_content_id" do
+    part = Mail::Part.new
+    part.inline_content_id.should_not be_nil
+  end
+  
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do
       part =<<PARTEND

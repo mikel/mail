@@ -17,7 +17,12 @@ module Mail
     def has_content_id?
       header.has_content_id?
     end
-
+    
+    def inline_content_id
+      add_content_id unless has_content_id?
+      uri_escape(unbracket(content_id))
+    end
+    
     def add_required_fields
       add_content_id unless has_content_id?
       super

@@ -65,8 +65,11 @@ module Mail
           hash[:body].force_encoding("BINARY")
         end
       end
+      
+      attachment = Part.new(hash)
+      attachment.add_content_id(hash[:content_id])
 
-      @parts_list << Part.new(hash)
+      @parts_list << attachment
     end
    
     # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we

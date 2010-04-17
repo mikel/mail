@@ -131,7 +131,29 @@ describe "Attachments" do
       mail.attachments[2].filename.should == 'test.jpg'
       mail.attachments[3].filename.should == 'test.zip'
     end
-
+    
+  end
+  
+  describe "getting the content ID from an inline attachment" do
+    
+    before(:each) do
+      @mail = Mail.new
+      @mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
+      @cid = @mail.attachments['test.gif'].content_id
+    end
+    
+    it "should return a content-id for the attachment on creation if passed inline => true" do
+      @cid.should_not be_nil
+    end
+    
+    it "should return a valid content-id on inline attachments" do
+      Mail::ContentIdField.new(@cid).errors.should be_empty
+    end
+    
+    it "should provide a URL escaped content_id (without brackets) for use inside an email" do
+      @inline = @mail.attachments['test.gif'].inline_content_id
+      @inline.should == URI.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
+    end
   end
   
   describe "setting the content type correctly" do

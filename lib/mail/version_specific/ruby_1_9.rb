@@ -15,6 +15,17 @@ module Mail
       '(' + str + ')'
     end
     
+    def Ruby19.escape_bracket( str )
+      re = /(?<!\\)([\<\>])/          # Only match unescaped brackets
+      str.gsub(re) { |s| '\\' + s }
+    end
+
+    def Ruby19.bracket( str )
+      str = $1 if str =~ /^\<(.*)?\>$/
+      str = escape_bracket( str )
+      '<' + str + '>'
+    end
+
     def Ruby19.decode_base64(str)
       str.unpack( 'm' ).first.force_encoding(Encoding::BINARY)
     end
