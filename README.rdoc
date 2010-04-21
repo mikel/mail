@@ -512,7 +512,7 @@ sending emails, the TestMailer can do this for you.
     delivery_method :test
   end
   => #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
-  Mail.deliveries
+  Mail::TestMailer.deliveries
   => []
   Mail.deliver do
     to 'mikel@me.com'
@@ -521,11 +521,11 @@ sending emails, the TestMailer can do this for you.
     body 'hello'
   end
   => #<Mail::Message:0x19284ec ...
-  Mail.deliveries.length
+  Mail::TestMailer.deliveries.length
   => 1
-  Mail.deliveries.first
+  Mail::TestMailer.deliveries.first
   => #<Mail::Message:0x19284ec ...
-  Mail.deliveries.clear
+  Mail::TestMailer.deliveries.clear
   => []
 
 == Excerpts from TREC Spam Corpus 2005
