@@ -159,7 +159,7 @@ module Mail
     def encode(value)
       value.gsub!("\r", "=0D")
       value.gsub!("\n", "=0A")
-      Encodings.q_value_encode(value, @charset).split(" ")
+      Encodings.b_value_encode(value, @charset).split(" ")
     end
 
   end
