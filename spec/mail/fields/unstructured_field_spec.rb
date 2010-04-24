@@ -128,7 +128,20 @@ describe Mail::UnstructuredField do
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
 
-  
+    it "should fold properly with my actual complicated header" do
+      @original = $KCODE if RUBY_VERSION < '1.9'
+      string = %|{"unique_args": {"mailing_id":147,"account_id":2}, "to": ["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys": {"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}": ["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"], "{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til at stå hvornår folk har skrevet sig op ...)"], "{{unsubscribe_url}}": ["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"], "{{email}}": ["larspind@gmail.com"], "{{link:308}}": ["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"], "{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}|
+      @field = Mail::UnstructuredField.new("X-SMTPAPI", string)
+      if string.respond_to?(:force_encoding)
+        string = string.force_encoding('UTF-8')
+      else
+        $KCODE = 'u'
+      end
+      result = %|X-SMTPAPI: {"unique_args": {"mailing_id":147,"account_id":2}, "to":\r\n\t["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys":\r\n\t{"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}":\r\n\t["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"],\r\n\t"{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til\r\n\t=?UTF8?Q?at_st=C3=A5?= =?UTF8?Q?hvorn=C3=A5r?= folk har skrevet sig op\r\n\t...)"], "{{unsubscribe_url}}":\r\n\t["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"],\r\n\t"{{email}}": ["larspind@gmail.com"], "{{link:308}}":\r\n\t["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"],\r\n\t"{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}\r\n|
+      @field.encoded.gsub("UTF-8", "UTF8").should == result
+      @field.decoded.should == string
+      $KCODE = @original if RUBY_VERSION < '1.9'
+    end
   
   end
   

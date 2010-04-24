@@ -135,13 +135,13 @@ module Mail
       if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \t]*$/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0..wspp).strip.to_str)
         @folded_line.flatten!
       # if no last whitespace before the limit, find the first
       elsif wspp = @unfolded_line.mb_chars =~ /[ \t][^ \t]/
         wrap = true
         wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
+        @folded_line << encode(@unfolded_line.mb_chars.slice!(0..wspp).strip.to_str)
         @folded_line.flatten!
       # if no whitespace, don't wrap
       else
@@ -151,7 +151,7 @@ module Mail
       if wrap && @unfolded_line.length > limit
         fold
       else
-        @folded_line << encode(@unfolded_line.gsub(/^[ \t]/, ''))
+        @folded_line << encode(@unfolded_line)
         @folded_line.flatten!
       end
     end
