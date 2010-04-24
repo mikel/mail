@@ -102,7 +102,7 @@ module Mail
     #  it is allowed elsewhere.
     def wrapped_value # :nodoc:
       @folded_line = []
-      @unfolded_line = encode(decoded.to_s.clone)
+      @unfolded_line = encode(decoded.to_s.clone).first
       fold("#{name}: ".length)
       wrap_lines(name, @folded_line)
     end
