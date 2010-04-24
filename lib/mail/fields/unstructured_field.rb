@@ -130,7 +130,7 @@ module Mail
       # Plus 18 for the =?encoding?Q?= ... ?=
       # Plus 2 for the \r\n and 1 for the \t
       # 80 - 2 - 1 - 18 = 59 / 6 ~= 10
-      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - prepend)
+      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - (prepend/6))
       # find the last white space character within the limit
       if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \t]*$/
         wrap = true
@@ -151,7 +151,7 @@ module Mail
       if wrap && @unfolded_line.length > limit
         fold
       else
-        @folded_line << encode(@unfolded_line)
+        @folded_line << encode(@unfolded_line.gsub(/^[ \t]/, ''))
         @folded_line.flatten!
       end
     end
@@ -159,7 +159,7 @@ module Mail
     def encode(value)
       value.gsub!("\r", "=0D")
       value.gsub!("\n", "=0A")
-      Encodings.b_value_encode(value, @charset).split(" ")
+      Encodings.q_value_encode(value, @charset).split(" ")
     end
 
   end

@@ -66,9 +66,16 @@ describe Mail::UnstructuredField do
     
     it "should just add the CRLF at the end of the line" do
       @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
-      result = "Subject: testing testing =?UTF8?Q?_=D6=A4=?=\r\n"
+      result = "Subject: testing testing =?UTF8?Q?=D6=A4?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "testing testing \326\244"
+    end
+
+    it "should do encoded-words encoding correctly without extra equal sign" do
+      @field = Mail::SubjectField.new("testing testing æøå")
+      result = "Subject: testing testing =?UTF8?Q?=C3=A6=C3=B8=C3=A5?=\r\n"
+      @field.encoded.gsub("UTF-8", "UTF8").should == result
+      @field.decoded.should == "testing testing æøå"
     end
     
   end
@@ -115,12 +122,14 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: This =?UTF8?Q?is_=E3=81=82=?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82=?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82=?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82=?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82=?= really long string\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string =?UTF8?Q?This_is_=E3=81=82?=\r\n\treally long string =?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
-    
+
+  
+  
   end
   
   describe "encoding non QP safe chars" do

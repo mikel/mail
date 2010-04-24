@@ -14,7 +14,7 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.subject = "This is あ string"
-      result = "Subject: This =?UTF8?Q?is_=E3=81=82=?= string\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82?= string\r\n"
       mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
     end
 
@@ -120,7 +120,7 @@ describe "mail encoding" do
       subject.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.subject = subject
       result = mail[:subject].encoded
-      string = "Subject: This =?ISO-8859-1?Q?is_=E3=81=82=?= string\r\n"
+      string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82?= string\r\n"
       if RUBY_VERSION > '1.9'
         string.force_encoding('ISO8859-1')
         result.force_encoding('ISO8859-1')
