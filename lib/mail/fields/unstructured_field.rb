@@ -106,13 +106,21 @@ module Mail
       fold("#{name}: ".length)
       wrap_lines(name, @folded_line)
     end
-
+   
+    # 6.2. Display of 'encoded-word's
+    # 
+    #  When displaying a particular header field that contains multiple
+    #  'encoded-word's, any 'linear-white-space' that separates a pair of
+    #  adjacent 'encoded-word's is ignored.  (This is to allow the use of
+    #  multiple 'encoded-word's to represent long strings of unencoded text,
+    #  without having to separate 'encoded-word's where spaces occur in the
+    #  unencoded text.)
     def wrap_lines(name, folded_lines)
       result = []
       index = 0
       result[index] = "#{name}: #{folded_lines.shift}"
       folded_lines.each do |line|
-        if (result[index] + line).length < 77
+        if ((result[index] + line).length < 77) && (line.index("=?") != 0)
           result[index] << " " + line
         else
           result[index] << "\r\n\t"
