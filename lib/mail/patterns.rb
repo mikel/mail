@@ -1,3 +1,4 @@
+# encoding: us-ascii
 module Mail
   module Patterns
     white_space = %Q|\x9\x20|
