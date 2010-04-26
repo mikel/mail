@@ -113,6 +113,9 @@ module Mail
     # 
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
+      # Optimization: The gsub below is really slow for very long strings, so if there's no encoded-words in the string, just return it
+      return str unless str.index("=?")
+      
       str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
 
       # Join QP encoded-words that are adjacent to avoid decoding partial chars

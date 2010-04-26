@@ -418,6 +418,11 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should == result
     end
 
+    it "should handle a very long string efficiently" do
+      string = "This is a string " * 10000
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == string
+    end
   end
   
   describe "altering an encoded text to decoded and visa versa" do
