@@ -66,21 +66,21 @@ describe Mail::UnstructuredField do
     
     it "should just add the CRLF at the end of the line" do
       @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
-      result = "Subject: testing testing\r\n\t=?UTF8?Q?=D6=A4?=\r\n"
+      result = "Subject: testing testing =?UTF8?Q?=D6=A4?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "testing testing \326\244"
     end
 
     it "should do encoded-words encoding correctly without extra equal sign" do
       @field = Mail::SubjectField.new("testing testing æøå")
-      result = "Subject: testing testing\r\n\t=?UTF8?Q?=C3=A6=C3=B8=C3=A5?=\r\n"
+      result = "Subject: testing testing =?UTF8?Q?=C3=A6=C3=B8=C3=A5?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "testing testing æøå"
     end
     
-    it "should not put two encoded-words on the same line" do
+    it "should encode the space between two adjacent encoded-words" do
       @field = Mail::SubjectField.new("Her er æ ø å")
-      result = "Subject: =?UTF8?Q?Her_er_=C3=A6?=\r\n\t=?UTF8?Q?=C3=B8_=C3=A5?=\r\n"
+      result = "Subject: =?UTF8?Q?Her_er_=C3=A6?= =?UTF8?Q?_=C3=B8_=C3=A5?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "Her er æ ø å"
     end
@@ -128,7 +128,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string =?UTF8?Q?This_is_=E3=81=82?=\r\n\treally long string =?UTF8?Q?This_is_=E3=81=82?= really long string\r\n\t=?UTF8?Q?This_is_=E3=81=82?= really long string\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
@@ -143,7 +143,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = %|X-SMTPAPI: {"unique_args": {"mailing_id":147,"account_id":2}, "to":\r\n\t["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys":\r\n\t{"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}":\r\n\t["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"],\r\n\t"{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til\r\n\t=?UTF8?Q?at_st=C3=A5?=\r\n\t=?UTF8?Q?hvorn=C3=A5r?= folk har skrevet sig op ...)"],\r\n\t"{{unsubscribe_url}}":\r\n\t["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"],\r\n\t"{{email}}": ["larspind@gmail.com"], "{{link:308}}":\r\n\t["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"],\r\n\t"{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}\r\n|
+      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\t[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\t{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\t[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\t=?UTF8?Q?st=C3=A5?= =?UTF8?Q?_hvorn=C3=A5r?= folk har skrevet sig op ...)\"],\r\n\t\"{{unsubscribe_url}}\":\r\n\t[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\t[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\t\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'

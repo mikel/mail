@@ -120,7 +120,7 @@ module Mail
       index = 0
       result[index] = "#{name}: #{folded_lines.shift}"
       folded_lines.each do |line|
-        if ((result[index] + line).length < 77) && (line.index("=?") != 0)
+        if (result[index] + line).length < 77
           result[index] << " " + line
         else
           result[index] << "\r\n\t"
@@ -138,19 +138,15 @@ module Mail
       # Plus 18 for the =?encoding?Q?= ... ?=
       # Plus 2 for the \r\n and 1 for the \t
       # 80 - 2 - 1 - 18 = 59 / 6 ~= 10
+      # prepend / 6 because prepend is not encoded-word encoded
       @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - (prepend/6))
       # find the last white space character within the limit
-      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \t]*$/
-        wrap = true
-        wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0..wspp).strip.to_str)
-        @folded_line.flatten!
       # if no last whitespace before the limit, find the first
-      elsif wspp = @unfolded_line.mb_chars =~ /[ \t][^ \t]/
+      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[^ \t][ \t][^ \t]*$/ || @unfolded_line.mb_chars =~ /[^ \t][ \t][^ \t]/
+        # skip past the non-whitespace character that we're matching on
+        wspp += 1
         wrap = true
-        wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0..wspp).strip.to_str)
-        @folded_line.flatten!
+        append(@unfolded_line.mb_chars.slice!(0...wspp))
       # if no whitespace, don't wrap
       else
         wrap = false
@@ -159,11 +155,16 @@ module Mail
       if wrap && @unfolded_line.length > limit
         fold
       else
-        @folded_line << encode(@unfolded_line)
-        @folded_line.flatten!
+        append(@unfolded_line)
       end
     end
-
+    
+    def append(s)
+      s = s.strip unless @folded_line.empty? || (@folded_line.last.index("=?") == 0 && !s.ascii_only?)
+      @folded_line << encode(s.to_str)
+      @folded_line.flatten!
+    end
+    
     def encode(value)
       value.gsub!("\r", "=0D")
       value.gsub!("\n", "=0A")
