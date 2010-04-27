@@ -143,13 +143,15 @@ module Mail
           # If word was the first non-ascii word, we're going to make the entire line encoded and we're going to reduce the limit accordingly
           if non_ascii && !encoded
             encoded = true
+            line = line.gsub(/\?/, '=3F')
             limit = limit - 8 - encoding.length  # minus the =?...?Q?...?= part, the possible leading white-space, and the name of the encoding
           end
           # Remove the word from the queue ...
           @unfolded_line.shift
           # ... add it in encoded form to the current line
           line << " " unless line.empty?
-          line << encoded_word
+          encoded_word.gsub!(/\?/, '=3F') if encoded
+          line << encoded_word          
         end
         # Add leading whitespace if both this and the last line were encoded, because whitespace between two encoded-words is ignored when decoding
         line = " " + line if encoded && @folded_line.last && @folded_line.last.index('=?') == 0

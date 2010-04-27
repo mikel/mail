@@ -84,6 +84,14 @@ describe Mail::UnstructuredField do
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == "Her er æ ø å"
     end
+
+    it "should encode question marks inside strings" do
+      string = "Her er æ ø å? Ja?"
+      @field = Mail::SubjectField.new(string)
+      result = "Subject: =?UTF8?Q?Her_er_=C3=A6_=C3=B8_=C3=A5=3F_Ja=3F?=\r\n"
+      @field.encoded.gsub("UTF-8", "UTF8").should == result
+      @field.decoded.should == string
+    end
   end
 
   describe "folding" do
