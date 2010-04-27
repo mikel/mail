@@ -85,10 +85,10 @@ describe Mail::UnstructuredField do
       @field.decoded.should == "Her er æ ø å"
     end
 
-    it "should encode question marks inside strings" do
-      string = "Her er æ ø å? Ja?"
+    it "should encode additional special characters inside encoded-word-encoded strings" do
+      string = %Q(Her er æ()<>@,;:\\"/[]?.=)
       @field = Mail::SubjectField.new(string)
-      result = "Subject: =?UTF8?Q?Her_er_=C3=A6_=C3=B8_=C3=A5=3F_Ja=3F?=\r\n"
+      result = %Q(Subject: =?UTF8?Q?Her_er_=C3=A6=28=29<>@,;:\\=22/[]=3F.=3D?=\r\n)
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
     end
@@ -152,7 +152,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\t[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\t{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\t[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\t=?UTF8?Q?st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...)\"],?=\r\n\t\"{{unsubscribe_url}}\":\r\n\t[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\t[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\t\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
+      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\t[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\t{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\t[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\t=?UTF8?Q?st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n\t\"{{unsubscribe_url}}\":\r\n\t[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\t[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\t\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'

@@ -143,14 +143,14 @@ module Mail
           # If word was the first non-ascii word, we're going to make the entire line encoded and we're going to reduce the limit accordingly
           if non_ascii && !encoded
             encoded = true
-            line = line.gsub(/\?/, '=3F')
+            encoded_word_safify!(line)
             limit = limit - 8 - encoding.length  # minus the =?...?Q?...?= part, the possible leading white-space, and the name of the encoding
           end
           # Remove the word from the queue ...
           @unfolded_line.shift
           # ... add it in encoded form to the current line
           line << " " unless line.empty?
-          encoded_word.gsub!(/\?/, '=3F') if encoded
+          encoded_word_safify!(encoded_word) if encoded
           line << encoded_word          
         end
         # Add leading whitespace if both this and the last line were encoded, because whitespace between two encoded-words is ignored when decoding
@@ -165,6 +165,14 @@ module Mail
         
     def encode(value)
       (value.not_ascii_only? ? [value].pack("M").gsub("=\n", '') : value).gsub("\r", "=0D").gsub("\n", "=0A")
+    end
+    
+    def encoded_word_safify!(value)
+      value.gsub!(/"/,  '=22')
+      value.gsub!(/\(/, '=28')
+      value.gsub!(/\)/, '=29')
+      value.gsub!(/\?/, '=3F')
+      value.gsub!(/_/,  '=5F')
     end
 
   end
