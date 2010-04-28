@@ -113,27 +113,34 @@ module Mail
     # 
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
-      # Optimization: The gsub below is really slow for very long strings, so if there's no encoded-words in the string, just return it
+      # Optimization: If there's no encoded-words in the string, just return it
       return str unless str.index("=?")
       
       str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
 
-      # Join QP encoded-words that are adjacent to avoid decoding partial chars
-      str.gsub!( /=\?==\?.+?\?[Qq]\?/m, '' ) if str =~ /\?==\?/
-      
-      str.gsub(/(.*?)(=\?.*?\?.\?.*?\?=)|$/m) do # Grab the insides of each encoded-word
-        before = $1.to_s
-        text = $2.to_s
-
-        case
-        when text.to_str =~ /=\?.+\?[Bb]\?/m
-          before + b_value_decode(text)
-        when text.to_str =~ /=\?.+\?[Qq]\?/m
-          before + q_value_decode(text)
+      # Split on white-space boundaries with capture, so we capture the white-space as well
+      str.split(/([ \t])/).map do |text|
+        if text.index('=?') != 0
+          text
         else
-          before + text
+          # Join QP encoded-words that are adjacent to avoid decoding partial chars
+          text.gsub!(/\?\=\=\?.+?\?[Qq]\?/m, '') if text =~ /\?==\?/
+        
+          # Separate encoded-words with a space, so we can treat them one by one
+          text.gsub!(/\?\=\=\?/, '?= =?')
+
+          text.split(/ /).map do |word|
+            case 
+            when word.to_str =~ /=\?.+\?[Bb]\?/m
+              b_value_decode(word)
+            when text.to_str =~ /=\?.+\?[Qq]\?/m
+              q_value_decode(word)
+            else
+              word.to_str
+            end
+          end
         end
-      end
+      end.join("")
     end
     
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
