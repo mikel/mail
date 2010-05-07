@@ -1,10 +1,12 @@
 module Mail
   class AttachmentsList < Array
-    
+
     def initialize(parts_list)
       @parts_list = parts_list
       parts_list.map { |p|
-        if p.parts.empty?
+        if p.content_type == "message/rfc822"
+          Mail.new(p.body).attachments
+        elsif p.parts.empty?
           p if p.attachment?
         else
           p.attachments
@@ -12,12 +14,12 @@ module Mail
       }.flatten.compact.each { |a| self << a }
       self
     end
-    
+
     # Returns the attachment by filename or at index.
-    # 
+    #
     # mail.attachments['test.png'] = File.read('test.png')
     # mail.attachments['test.jpg'] = File.read('test.jpg')
-    # 
+    #
     # mail.attachments['test.png'].filename #=> 'test.png'
     # mail.attachments[1].filename          #=> 'test.jpg'
     def [](index_value)
@@ -71,7 +73,7 @@ module Mail
 
       @parts_list << attachment
     end
-   
+
     # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we
     # set it to binary, otherwise as set to plain text
     def guess_encoding
@@ -80,8 +82,8 @@ module Mail
       else
         "binary"
       end
-    end 
- 
+    end
+
     def set_mime_type(filename)
       # Have to do this because MIME::Types is not Ruby 1.9 safe yet
       if RUBY_VERSION >= '1.9'
@@ -91,7 +93,7 @@ module Mail
       end
       @mime_type = MIME::Types.type_for(filename).first
     end
-    
+
   end
 end
 

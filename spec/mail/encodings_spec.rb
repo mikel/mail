@@ -532,7 +532,12 @@ describe Mail::Encodings do
         expected.force_encoding 'iso-8859-1' if expected.respond_to?(:force_encoding)
         b.should == expected
       end
-      
+
+      it "should unquote multiple strings in the middle of the text" do
+        a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should == "日本語 <a@example.com>, 日本語 <b@example.com>"
+      end      
     end
   end
   

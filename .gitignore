@@ -1,7 +1,7 @@
 .bundle
 coverage
 gems
-pkg
+/mail-*.gem
 rdoc
 mail.tmproj
 spec/fixtures/emails/failed_emails/
