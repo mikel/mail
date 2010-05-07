@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = "mail"
   s.version     = "2.2.0"
-  s.author      = "Mike Lindsaar"
+  s.author      = "Mikel Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
   s.description = "A really Ruby Mail handler."

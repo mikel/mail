@@ -29,13 +29,6 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.libs << "#{File.dirname(__FILE__)}/spec/mail"
 end
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'test'
-  t.pattern = 'test/**/tc_*.rb'
-  t.verbose = true
-  t.warning = false
-end
-
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'Mail'
