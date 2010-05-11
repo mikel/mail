@@ -99,6 +99,20 @@ module Mail
       self.decoded.match(regexp)
     end
 
+    # Accepts anything that responds to #to_s and checks if it's a substring of the decoded text
+    #
+    # Examples:
+    #
+    #   body = Mail::Body.new('The body')
+    #   body.include?('The') #=> true
+    #
+    #   body = Mail::Body.new("VGhlIGJvZHk=\n")
+    #   body.encoding = 'base64'
+    #   body.include?('The') #=> true
+    def include?(other)
+      self.decoded.include?(other.to_s)
+    end
+
     # Allows you to set the sort order of the parts, overriding the default sort order.
     # Defaults to 'text/plain', then 'text/enriched', then 'text/html' with any other content
     # type coming after.

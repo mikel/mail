@@ -21,6 +21,21 @@ module Mail
       '(' + str + ')'
     end
     
+    def Ruby18.escape_bracket( str )
+      re = /\\\>/
+      str = str.gsub(re) { |s| '>'}
+      re = /\\\</
+      str = str.gsub(re) { |s| '<'}
+      re = /([\<\>])/          # Only match unescaped parens
+      str.gsub(re) { |s| '\\' + s }
+    end
+    
+    def Ruby18.bracket( str )
+      str = $1 if str =~ /^\<(.*)?\>$/
+      str = escape_bracket( str )
+      '<' + str + '>'
+    end
+    
     def Ruby18.decode_base64(str)
       Base64.decode64(str)
     end

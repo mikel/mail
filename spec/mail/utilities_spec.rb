@@ -132,6 +132,34 @@ describe "Utilities Module" do
 
   end
   
+  describe "unescaping brackets" do
+
+    it "should work" do
+      test = '<This is a string>'
+      result = 'This is a string'
+      unbracket(test).should == result
+    end
+
+    it "should work without brackets" do
+      test = 'This is a string'
+      result = 'This is a string'
+      unbracket(test).should == result
+    end
+
+    it "should work using ActiveSupport mb_chars" do
+      test = '<This is a string>'.mb_chars
+      result = 'This is a string'
+      unbracket(test).should == result
+    end
+
+    it "should work without parens using ActiveSupport mb_chars" do
+      test = 'This is a string'.mb_chars
+      result = 'This is a string'
+      unbracket(test).should == result
+    end
+
+  end
+  
   describe "quoting phrases" do
     it "should quote a phrase if it is unsafe" do
       test = 'this.needs quoting'
@@ -220,6 +248,80 @@ describe "Utilities Module" do
       paren(test).should == result
     end
     
+  end
+  
+  
+  describe "bracketizing phrases" do
+    it "should bracketize a phrase" do
+      test = 'this.needs bracketizing'
+      result = '<this.needs bracketizing>'
+      bracket(test).should == result
+    end
+
+    it "should properly bracketize a string, and escape properly" do
+      test = 'this needs <escaping'
+      result = '<this needs \<escaping>'
+      bracket(test).should == result
+    end
+
+    it "should properly bracketize a string, and escape properly (other way)" do
+      test = 'this needs >escaping'
+      result = '<this needs \>escaping>'
+      bracket(test).should == result
+    end
+
+    it "should properly bracketize a string, even if bracketized but not escaped properly" do
+      test = '<this needs <escaping>'
+      result = '<this needs \<escaping>'
+      bracket(test).should == result
+    end
+
+    it "should properly bracketize a string, even if bracketized but not escaped properly (other way)" do
+      test = '<this needs >escaping>'
+      result = '<this needs \>escaping>'
+      bracket(test).should == result
+    end
+    
+    it "should bracketize correctly a phrase with an escaped brackets in it" do
+      test = 'this needs \<bracketizing'
+      result = '<this needs \<bracketizing>'
+      bracket(test).should == result
+    end
+    
+    it "should bracketize correctly a phrase with an escaped brackets in it (other way)" do
+      test = 'this needs \>bracketizing'
+      result = '<this needs \>bracketizing>'
+      bracket(test).should == result
+    end
+    
+    it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it" do
+      test = 'this needs \\\<bracketizing'
+      result = '<this needs \\\<bracketizing>'
+      bracket(test).should == result
+    end
+    
+    it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it (other way)" do
+      test = 'this needs \\\>bracketizing'
+      result = '<this needs \\\>bracketizing>'
+      bracket(test).should == result
+    end
+
+    it "should bracketize correctly a phrase with a set of brackets" do
+      test = 'this <needs> bracketizing'
+      result = '<this \<needs\> bracketizing>'
+      bracket(test).should == result
+    end
+    
+  end
+
+  describe "url escaping" do
+    it "should have a wrapper on URI.escape" do
+      uri_escape("@?@!").should == URI.escape("@?@!")
+    end
+
+    it "should have a wrapper on URI.unescape" do
+      uri_unescape("@?@!").should == URI.unescape("@?@!")
+    end
   end
   
 end

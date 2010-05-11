@@ -370,7 +370,16 @@ describe Mail::Body do
       body.encoding = 'base64'
       (body.match(/The/))[0].should == 'The'
     end
-
+    
+    it "should match on the body part decoded if given a string to include?" do
+      body = Mail::Body.new('The Body')
+      body.should include('The')
+    end
+    
+    it "should match on the body part decoded if given a string to include?" do
+      body = Mail::Body.new("VGhlIGJvZHk=\n")
+      body.encoding = 'base64'
+      body.should include('The')
+    end
   end
-
 end

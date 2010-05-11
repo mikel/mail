@@ -253,7 +253,7 @@ module Mail
     end
     
     def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?(.+)?\?[QB]\?(.+)?\?\=/mi)
+      match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
       if match
         [match[1], match[2]]
       else
