@@ -1,3 +1,21 @@
+== Thu May 13 02:49:47 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
+
+* Fixed Ruby 1.8.6 and 1.9.x incompatibilities because we were using each_with_index and each_line
+* Redid the folding to make it much much faster for long strings (the old one really crumbled with headers longer than 100,000 characters (Lars Pind <lars@pinds.com>)
+* Mail now only returns one encoded-word per line (Lars Pind <lars@pinds.com>)
+* Fixed all the previous issues with extra white-space and an extra = at the end of the encoded-words. (Lars Pind <lars@pinds.com>)
+* Make sure we can handle decoding of very long strings efficiently (Lars Pind <lars@pinds.com>)
+* Handle setting of charset through []= method, so we don't get the warning (Lars Pind <lars@pinds.com>)
+* Remove the trailing =\n that pack('M') adds (Lars Pind <lars@pinds.com>)
+* Handle multiple quoted words in Encodings.unquote_and_convert_to (Eric Kidd <git@randomhacks.net>)
+* Ruby 1.9: mark source encoding so it's usable with -Ks, -Ke, etc (Jeremy Kemper <jeremy@bitsweat.net>)
+* Add #include? to mail body for convenience (Maxim Chernyak <max@bitsonnet.com>)
+* Use Mail::TestMailer.deliveries in README example (John Trupiano <jtrupiano@gmail.com>)
+* Allow bundler to automatically build a gem directly from git (Eric Kidd <git@randomhacks.net>)
+* Added recursive parsing of attachments inside message/rfc822 parts (Ubiratan Pires Alberton <u.alberton@gmail.com>)
+* Adding #inline_content_id for attachments and parts (mikel)
+* Updating readme (mikel)
+
 == Sun Apr 11 07:49:15 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Lots of updates on encoding and decoding of headers and unstructured fields.  This
