@@ -420,7 +420,7 @@ describe Mail::Encodings do
 
     it "should handle a very long string efficiently" do
       string = "This is a string " * 10000
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      string.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == string
     end
   end
