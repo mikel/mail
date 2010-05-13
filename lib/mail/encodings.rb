@@ -7,6 +7,7 @@ module Mail
 
   module Encodings
     
+    require "enumerator"
     include Mail::Patterns
     extend  Mail::Utilities
 
@@ -176,7 +177,8 @@ module Mail
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
       tokens = address.split(/\s/)
-      tokens.each_with_index.map do |word, i|
+      # Need to use enum_for to stay 1.8.6 compatible
+      tokens.enum_for(:each_with_index).map do |word, i|
         if word.ascii_only?
           word
         else

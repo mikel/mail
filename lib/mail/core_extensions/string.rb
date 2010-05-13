@@ -24,4 +24,24 @@ class String #:nodoc:
   unless method_defined?(:bytesize)
     alias :bytesize :length
   end
+
+  unless self.respond_to?(:lines)
+    require "enumerator"
+
+    unless method_defined?(:lines)
+      def lines
+        to_a.enum_for(:each)
+      end
+    end
+    
+    unless method_defined?(:each_line)
+      def each_line
+        to_a.enum_for(:each)
+      end
+    end
+    
+  end
+
 end
+
+
