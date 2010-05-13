@@ -211,7 +211,7 @@ module Mail
     def Encodings.b_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.b_value_encode(str, encoding)
-      string.each_line.map do |str|
+      string.lines.map do |str|
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
     end
@@ -227,7 +227,7 @@ module Mail
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.q_value_encode(str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
-      string.each_line.map do |str|
+      string.lines.map do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
       end.join(" ")
     end
