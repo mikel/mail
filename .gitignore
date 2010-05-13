@@ -5,3 +5,4 @@ gems
 rdoc
 mail.tmproj
 spec/fixtures/emails/failed_emails/
+pkg/
