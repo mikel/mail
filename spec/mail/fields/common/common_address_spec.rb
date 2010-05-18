@@ -90,7 +90,7 @@ describe "Mail::CommonAddress" do
     
     it "should allow us to encode an address field" do
       field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
-      field.encoded.should == "To: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+      field.encoded.should == "To: test1@lindsaar.net, \r\n\sMy Group: test2@lindsaar.net, \r\n\sme@lindsaar.net;\r\n"
     end
     
     it "should allow us to encode a simple address field" do
@@ -100,7 +100,7 @@ describe "Mail::CommonAddress" do
     
     it "should allow us to encode an address field" do
       field = Mail::CcField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
-      field.encoded.should == "Cc: test1@lindsaar.net, \r\n\tMy Group: test2@lindsaar.net, \r\n\tme@lindsaar.net;\r\n"
+      field.encoded.should == "Cc: test1@lindsaar.net, \r\n\sMy Group: test2@lindsaar.net, \r\n\sme@lindsaar.net;\r\n"
     end
 
     it "should allow us to decode an address field" do

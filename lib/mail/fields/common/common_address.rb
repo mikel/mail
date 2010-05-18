@@ -90,11 +90,11 @@ module Mail
     def do_encode(field_name)
       return '' if value.blank?
       address_array = tree.addresses.reject { |a| group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
-      address_text  = address_array.join(", \r\n\t")
-      group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\t")};" }
-      group_text  = group_array.join(" \r\n\t")
+      address_text  = address_array.join(", \r\n\s")
+      group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
+      group_text  = group_array.join(" \r\n\s")
       return_array = [address_text, group_text].reject { |a| a.blank? }
-      "#{field_name}: #{return_array.join(", \r\n\t")}\r\n"
+      "#{field_name}: #{return_array.join(", \r\n\s")}\r\n"
     end
 
     def do_decode

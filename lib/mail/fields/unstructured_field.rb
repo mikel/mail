@@ -115,7 +115,7 @@ module Mail
         if (result[index] + line).length < 77
           result[index] << " " + line
         else
-          result[index] << "\r\n\t"
+          result[index] << "\r\n\s"
           index += 1
           result[index] = line
         end
@@ -128,7 +128,7 @@ module Mail
       # 78 if there is no whitespace, or 23 for non ascii:
       # Each QP byte is 6 chars (=0A)
       # Plus 18 for the =?encoding?Q?= ... ?=
-      # Plus 2 for the \r\n and 1 for the \t
+      # Plus 2 for the \r\n and 1 for the \s
       # 80 - 2 - 1 - 18 = 59 / 6 ~= 10
       @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - prepend)
       # find the last white space character within the limit
