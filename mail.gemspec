@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
 
-  s.add_dependency('activesupport', ">= 2.3.4")
+  s.add_dependency('activesupport', ">= 2.3.6")
   s.add_dependency('mime-types')
   s.add_dependency('treetop', '>= 1.4.5')
 
