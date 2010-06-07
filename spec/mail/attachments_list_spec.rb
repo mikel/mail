@@ -151,7 +151,7 @@ describe "Attachments" do
     end
     
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
-      @inline = @mail.attachments['test.gif'].inline_content_id
+      @inline = @mail.attachments['test.gif'].cid
       @inline.should == URI.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
     end
   end

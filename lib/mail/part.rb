@@ -19,6 +19,12 @@ module Mail
     end
     
     def inline_content_id
+      # TODO: Deprecated in 2.2.2 - Remove in 2.3
+      STDERR.puts("Part#inline_content_id is deprecated, please call Part#cid instead")
+      cid
+    end
+    
+    def cid
       add_content_id unless has_content_id?
       uri_escape(unbracket(content_id))
     end
