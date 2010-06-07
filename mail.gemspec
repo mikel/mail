@@ -1,6 +1,6 @@
-def load_version
-  version_hash = YAML.load(File.join(File.dirname(__FILE__), @name, 'VERSION.yml'))
-  [vh.major, vh.minor, vh.patch, vh.build].compact.join(".")
+def self.load_version
+  vh = YAML.load_file(File.join(File.dirname(__FILE__), 'VERSION.yml'))
+  [ vh[:major], vh[:minor], vh[:patch], vh[:build] ].compact.join(".")
 end
 
 Gem::Specification.new do |s|
@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency('treetop', '>= 1.4.5')
 
   s.require_path = 'lib'
-  s.files = %w(README.rdoc Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w(README.rdoc Rakefile TODO.rdoc VERSION.yml) + Dir.glob("lib/**/*")
 end
