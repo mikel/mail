@@ -1,6 +1,11 @@
+def load_version
+  version_hash = YAML.load(File.join(File.dirname(__FILE__), @name, 'VERSION.yml'))
+  [vh.major, vh.minor, vh.patch, vh.build].compact.join(".")
+end
+
 Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = "2.2.0"
+  s.version     = load_version
   s.author      = "Mikel Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
