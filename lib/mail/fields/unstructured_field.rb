@@ -120,39 +120,46 @@ module Mail
       index = 0
       result[index] = "#{name}: #{folded_lines.shift}"
       result.concat(folded_lines)
-      result.join("\r\n\t")
+      result.join("\r\n\s")
     end
 
     def fold(prepend = 0) # :nodoc:
-      # Get the last whitespace character, OR we'll just choose 
-      # 78 if there is no whitespace, or 23 for non ascii:
-      # Each QP byte is 6 chars (=0A)
-      # Plus 18 for the =?encoding?Q?= ... ?=
-      # Plus 2 for the \r\n and 1 for the \s
-      # 80 - 2 - 1 - 18 = 59 / 6 ~= 10
-      @unfolded_line.ascii_only? ? (limit = 78 - prepend) : (limit = 10 - prepend)
-      # find the last white space character within the limit
-      if wspp = @unfolded_line.mb_chars.slice(0..limit) =~ /[ \t][^ \t]*$/
-        wrap = true
-        wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
-        @folded_line.flatten!
-      # if no last whitespace before the limit, find the first
-      elsif wspp = @unfolded_line.mb_chars =~ /[ \t][^ \t]/
-        wrap = true
-        wspp = limit if wspp == 0
-        @folded_line << encode(@unfolded_line.mb_chars.slice!(0...wspp).strip.to_str)
-        @folded_line.flatten!
-      # if no whitespace, don't wrap
-      else
-        wrap = false
-      end
-
-      if wrap && @unfolded_line.length > limit
-        fold
-      else
-        @folded_line << encode(@unfolded_line)
-        @folded_line.flatten!
+      encoding = @charset.to_s.upcase.gsub('_', '-')
+      while !@unfolded_line.empty?
+        encoded = false
+        limit = 78 - prepend
+        line = ""
+        while !@unfolded_line.empty?          
+          break unless word = @unfolded_line.first.dup
+          # Remember whether it was non-ascii before we encode it ('cause then we can't tell anymore)
+          non_ascii = word.not_ascii_only?
+          encoded_word = encode(word)
+          # Skip to next line if we're going to go past the limit
+          # Unless this is the first word, in which case we're going to add it anyway
+          # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
+          # (The fix, it seems, would be to use encoded-word encoding on it, because that way you can break it across multiple lines and 
+          # the linebreak will be ignored)
+          break if !line.empty? && (line.length + encoded_word.length + 1 > limit)
+          # If word was the first non-ascii word, we're going to make the entire line encoded and we're going to reduce the limit accordingly
+          if non_ascii && !encoded
+            encoded = true
+            encoded_word_safify!(line)
+            limit = limit - 8 - encoding.length  # minus the =?...?Q?...?= part, the possible leading white-space, and the name of the encoding
+          end
+          # Remove the word from the queue ...
+          @unfolded_line.shift
+          # ... add it in encoded form to the current line
+          line << " " unless line.empty?
+          encoded_word_safify!(encoded_word) if encoded
+          line << encoded_word          
+        end
+        # Add leading whitespace if both this and the last line were encoded, because whitespace between two encoded-words is ignored when decoding
+        line = " " + line if encoded && @folded_line.last && @folded_line.last.index('=?') == 0
+        # Encode the line if necessary
+        line = "=?#{encoding}?Q?#{line.gsub(/ /, '_')}?=" if encoded
+        # Add the line to the output and reset the prepend
+        @folded_line << line
+        prepend = 0
       end
     end
         

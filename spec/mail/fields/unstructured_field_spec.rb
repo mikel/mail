@@ -102,14 +102,8 @@ describe Mail::UnstructuredField do
     end
     
     it "should fold itself if it is 79 chracters long" do
-<<<<<<< HEAD
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is absolutely 79 characters long")
-      result = "Subject: This is a subject header message that is absolutely 79 characters\r\n\tlong\r\n"
-      
-=======
-      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 79 characters long")
-      result = "Subject: This is a subject header message that is _exactly_ 79 characters\r\n\slong\r\n"
->>>>>>> 5ca4ebccd4a44eb3191e46b35c9a4ad9b42b2c28
+      result = "Subject: This is a subject header message that is absolutely 79 characters\r\n\slong\r\n"
       @field.encoded.should == result
     end
 
@@ -142,7 +136,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\t=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\t=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long_string?=\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long_string?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
@@ -157,7 +151,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\t[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\t{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\t[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\t=?UTF8?Q?st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n\t\"{{unsubscribe_url}}\":\r\n\t[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\t\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\t[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\t\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
+      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\s[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\s{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\s[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\s\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\s=?UTF8?Q?st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n\s\"{{unsubscribe_url}}\":\r\n\s[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\s\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\s[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\s\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
