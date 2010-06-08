@@ -238,7 +238,17 @@ describe Mail::Encodings do
       mail[:subject].decoded.should == original
       mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
     end
-
+    
+    it "should round trip another complex string (koi-8)" do
+      original = "Слово 9999 и число"
+      mail = Mail.new
+      mail.subject = original
+      mail[:subject].charset = 'koi8-r'
+      wrapped = mail[:subject].wrapped_value
+      unwrapped = Mail::Encodings.value_decode(wrapped)
+    
+      unwrapped.gsub("Subject: ", "").should == original
+    end
   end
   
   describe "parameter MIME encodings" do
