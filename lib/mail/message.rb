@@ -1644,6 +1644,7 @@ module Mail
     # ready to send
     def ready_to_send!
       identify_and_set_transfer_encoding
+      parts.sort!([ "text/plain", "text/enriched", "text/html", "multipart/alternative" ])
       parts.each do |part| 
         part.transport_encoding = transport_encoding
         part.ready_to_send!
@@ -1695,7 +1696,7 @@ module Mail
     end
 
     def decode_body
-        body.decoded
+      body.decoded
     end
     
     # Returns true if this part is an attachment

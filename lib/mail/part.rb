@@ -29,6 +29,14 @@ module Mail
       uri_escape(unbracket(content_id))
     end
     
+    def url
+      "cid:#{cid}"
+    end
+    
+    def inline?
+      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition]
+    end
+    
     def add_required_fields
       add_content_id unless has_content_id?
       super
