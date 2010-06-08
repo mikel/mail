@@ -94,12 +94,12 @@ describe Mail::ContentTypeField do
 
     it "should render encoded" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
-      c.encoded.should == %Q{Content-Type: text/plain;\r\n\tcharset=US-ASCII;\r\n\tformat=flowed\r\n}
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\scharset=US-ASCII;\r\n\sformat=flowed\r\n}
     end
 
     it "should render quoted values encoded" do
       c = Mail::ContentTypeField.new('text/plain; example="foo bar"')
-      c.encoded.should == %Q{Content-Type: text/plain;\r\n\texample="foo bar"\r\n}
+      c.encoded.should == %Q{Content-Type: text/plain;\r\n\sexample="foo bar"\r\n}
     end
 
     it "should render decoded" do
@@ -166,12 +166,12 @@ describe Mail::ContentTypeField do
   describe "class methods" do
     it "should give back an initialized instance with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
-      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\sboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
     end
 
     it "should give back an initialized instance with different type with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
-      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\tboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\sboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
     end
 
     it "should give unique boundaries" do
@@ -575,11 +575,11 @@ describe Mail::ContentTypeField do
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
       if RUBY_VERSION >= '1.9'
         string.force_encoding('SJIS')
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       else
         storedkcode = $KCODE
         $KCODE = 'SJIS'
-        result = %Q{Content-Type: application/octet-stream;\r\n\tfilename*=sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3\r\n}
+        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3\r\n}
       end
       c.filename = string
       c.parameters.should == {'filename' => string}
@@ -655,8 +655,8 @@ describe Mail::ContentTypeField do
       c.string.should == 'text/plain'
     end
 
-    it "should just ignore illegal params like audio/x-midi;\r\n\tname=Part .exe" do
-      c = Mail::ContentTypeField.new("audio/x-midi;\r\n\tname=Part .exe")
+    it "should just ignore illegal params like audio/x-midi;\r\n\sname=Part .exe" do
+      c = Mail::ContentTypeField.new("audio/x-midi;\r\n\sname=Part .exe")
       c.string.should == 'audio/x-midi'
       c.parameters['name'].should == nil
     end

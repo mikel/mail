@@ -356,22 +356,22 @@ describe Mail::Encodings do
     end
 
     it "should detect a multiple encoded Base64 string with a whitespace to the decoded string" do
-      string = "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\t=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
+      string = "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\s=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
 
     it "should decode B and Q encodings together if needed" do
-      string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\tMore non encoded stuff"
-      result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\tMore non encoded stuff"
+      string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
+      result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
 
     it "should detect a encoded and unencoded Base64 string to the decoded string" do
-      string = "Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\tMore non encoded stuff"
-      result = "Some non encoded stuff This is あ string \r\n\tMore non encoded stuff"
+      string = "Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
+      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
@@ -398,15 +398,15 @@ describe Mail::Encodings do
     end
 
     it "should detect multiple encoded QP string with a space to the decoded string" do
-      string = "=?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\t=?UTF-8?Q?This_is_=E3=81=82_string?="
+      string = "=?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\s=?UTF-8?Q?This_is_=E3=81=82_string?="
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
 
     it "should detect a encoded and unencoded QP string to the decoded string" do
-      string = "Some non encoded stuff =?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\tMore non encoded stuff"
-      result = "Some non encoded stuff This is あ string \r\n\tMore non encoded stuff"
+      string = "Some non encoded stuff =?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\sMore non encoded stuff"
+      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end

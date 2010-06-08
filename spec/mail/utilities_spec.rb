@@ -77,7 +77,7 @@ describe "Utilities Module" do
       
       it "should quote white space" do
         quote_atom('ab abc'.mb_chars).should == '"ab abc"'
-        quote_atom("ab\ta\r\nbc".mb_chars).should == %{"ab\ta\r\nbc"}
+        quote_atom("a\sb\ta\r\nbc".mb_chars).should == %{"a\sb\ta\r\nbc"}
       end
     end
 

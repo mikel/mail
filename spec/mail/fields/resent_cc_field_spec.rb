@@ -57,7 +57,7 @@ describe Mail::ResentCcField do
     
     it "should return the encoded line" do
       t = Mail::ResentCcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Resent-Cc: sam@me.com, \r\n\tmy_group: mikel@me.com, \r\n\tbob@you.com;\r\n"
+      t.encoded.should == "Resent-Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
     
   end

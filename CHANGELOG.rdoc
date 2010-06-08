@@ -1,3 +1,19 @@
+== Mon Jun  7 18:00:39 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Updating versioning so we only have one source, VERSION.yml (mikel)
+* Changed activesupport dependency to 2.3.6 to fix #53, #64, and def #67. (Artem Titoulenko)
+* Fixing typo in break_down_to.rb. (mikel)
+
+== Mon Jun  7 18:07:16 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* fixing a typo when generating docs. (Andrew Bloom)
+* Changing \r\n\t to \r\n\s throughout mail (mikel)
+* Handle multiple quoted words in Encodings.unquote_and_convert_to (Eric Kidd)
+* Ruby 1.9: mark source encoding so it's usable with -Ks, -Ke, etc (Jeremy Kemper)
+* Add #include? to mail body for convenience (Maxim Chernyak)
+* Use Mail::TestMailer.deliveries in README example (John Trupiano)
+* Allow bundler to automatically build a gem directly from git (Eric Kidd)
+
 == Sun Apr 11 07:49:15 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Lots of updates on encoding and decoding of headers and unstructured fields.  This

@@ -109,7 +109,7 @@ module Mail
     # TODO: Fix this up
     def encoded
       if parameters.length > 0
-        p = ";\r\n\t#{parameters.encoded}\r\n"
+        p = ";\r\n\s#{parameters.encoded}\r\n"
       else
         p = ""
       end
@@ -160,7 +160,7 @@ module Mail
         type = $1
         # Handles misquoted param values
         # e.g: application/octet-stream; name=archiveshelp1[1].htm
-        # and: audio/x-midi;\r\n\tname=Part .exe
+        # and: audio/x-midi;\r\n\sname=Part .exe
         params = $2.to_s.split(/\s+/)
         params = params.map { |i| i.to_s.chomp.strip }
         params = params.map { |i| i.split(/\s*\=\s*/) }

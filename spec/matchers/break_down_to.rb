@@ -21,7 +21,7 @@ module CustomMatchers
       "but was |#{@target.send(@failed)}|"
     end
 
-    def megative_failure_message
+    def negative_failure_message
       "expected #{@failed} not to be |#{@expected[@failed]}| " +
       "and was |#{@target.send(@failed)}|"
     end
