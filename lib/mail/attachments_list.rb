@@ -3,6 +3,7 @@ module Mail
 
     def initialize(parts_list)
       @parts_list = parts_list
+      @content_disposition_type = 'attachment'
       parts_list.map { |p|
         if p.content_type == "message/rfc822"
           Mail.new(p.body).attachments
@@ -12,6 +13,11 @@ module Mail
           p.attachments
         end
       }.flatten.compact.each { |a| self << a }
+      self
+    end
+
+    def inline
+      @content_disposition_type = 'inline'
       self
     end
 
@@ -33,7 +39,7 @@ module Mail
     def []=(name, value)
       default_values = { :content_type => "#{set_mime_type(name)}; filename=\"#{name}\"",
                          :content_transfer_encoding => "#{guess_encoding}",
-                         :content_disposition => "attachment; filename=\"#{name}\"" }
+                         :content_disposition => "#{@content_disposition_type}; filename=\"#{name}\"" }
 
       if value.is_a?(Hash)
 

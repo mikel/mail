@@ -23,21 +23,37 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
+    part.cid.should == "thisis@acontentid"
+    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     part.inline_content_id.should == "thisis@acontentid"
   end
+  
   
   it "should URL escape its inline content_id" do
     part = Mail::Part.new do
       content_id "<thi%%sis@acontentid>"
       body "This is Text"
     end
+    part.cid.should == "thi%25%25sis@acontentid"
+    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     part.inline_content_id.should == "thi%25%25sis@acontentid"
   end
   
   it "should add a content_id if there is none and is asked for an inline_content_id" do
     part = Mail::Part.new
+    part.cid.should_not be_nil
+    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     part.inline_content_id.should_not be_nil
   end
+  
+  it "should respond correctly to inline?" do
+    part = Mail::Part.new(:content_disposition => 'attachment')
+    part.should_not be_inline
+
+    part = Mail::Part.new(:content_disposition => 'inline')
+    part.should be_inline
+  end
+  
   
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do

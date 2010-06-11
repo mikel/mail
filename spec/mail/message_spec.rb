@@ -1406,4 +1406,21 @@ describe Mail::Message do
       mail[:from].encoded.should == "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
     end
   end
+
+  describe "ordering messages" do
+    it "should put all attachments as the last item" do
+      mail = Mail.new
+      mail.attachments['image.png'] = "\302\302\302\302"
+      p = Mail::Part.new(:content_type => 'multipart/alternative')
+      p.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+      p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+      mail.add_part(p)
+      mail.encoded
+      mail.parts[0].mime_type.should == "multipart/alternative"
+      mail.parts[0].parts[0].mime_type.should == "text/plain"
+      mail.parts[0].parts[1].mime_type.should == "text/html"
+      mail.parts[1].mime_type.should == "image/png"
+    end
+  end
+  
 end

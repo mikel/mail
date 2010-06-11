@@ -134,6 +134,30 @@ describe "Attachments" do
     
   end
   
+  describe "inline attachments" do
+    
+    it "should set the content_disposition to inline or attachment as appropriate" do
+      mail = Mail.new
+      mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
+      mail.attachments['test.pdf'].content_disposition.should == 'attachment; filename=test.pdf'
+      mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
+      mail.attachments.inline['test.png'].content_disposition.should == 'inline; filename=test.png'
+    end
+
+    it "should return a cid" do
+      mail = Mail.new
+      mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
+      mail.attachments['test.png'].url.should == "cid:#{mail.attachments['test.png'].cid}"
+    end
+
+    it "should respond true to inline?" do
+      mail = Mail.new
+      mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
+      mail.attachments['test.png'].should be_inline
+    end
+    
+  end
+  
   describe "getting the content ID from an inline attachment" do
     
     before(:each) do
@@ -151,7 +175,7 @@ describe "Attachments" do
     end
     
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
-      @inline = @mail.attachments['test.gif'].inline_content_id
+      @inline = @mail.attachments['test.gif'].cid
       @inline.should == URI.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
     end
   end
