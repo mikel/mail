@@ -14,7 +14,7 @@ group :test do
   gem "diff-lcs"
   if defined?(RUBY_ENGINE) && RUBY_ENGINE != 'rbx' && RUBY_PLATFORM != 'java'
     gem "ruby-debug" if RUBY_VERSION < '1.9'
-    gem "ruby-debug19" if RUBY_VERSION > '1.9'
+    gem "ruby-debug19" if RUBY_VERSION > '1.9' && RUBY_VERSION < '1.9.2'
   end
   gem "ZenTest"
 end
