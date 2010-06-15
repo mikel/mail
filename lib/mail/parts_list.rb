@@ -14,8 +14,17 @@ module Mail
         to_a
       end
     end
+    
+    undef :map
+    alias_method :map, :collect
 
-    alias :collect :map 
+    def map!
+      raise NoMethodError, "#map! is not defined, please call #collect and create a new PartsList"
+    end
+    
+    def collect!
+      raise NoMethodError, "#collect! is not defined, please call #collect and create a new PartsList"
+    end
     
     def sort!(order)
       sorted = self.sort do |a, b|
