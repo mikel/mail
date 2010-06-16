@@ -12,7 +12,17 @@ group :test do
   gem "cucumber"
   gem "rspec"
   gem "diff-lcs"
-  gem "ruby-debug" if RUBY_VERSION < '1.9' and RUBY_PLATFORM != 'java'
-  gem "ruby-debug19" if RUBY_VERSION > '1.9' and RUBY_PLATFORM != 'java'
+  case
+  when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
+    # Skip it
+  when RUBY_PLATFORM == 'java'
+    # Skip it
+  when RUBY_VERSION < '1.9'
+    gem "ruby-debug"
+  when RUBY_VERSION > '1.9' && RUBY_VERSION < '1.9.2'
+    gem "ruby-debug19"
+  else
+    # Skip it
+  end
   gem "ZenTest"
 end
