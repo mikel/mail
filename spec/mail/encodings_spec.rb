@@ -247,7 +247,7 @@ describe Mail::Encodings do
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
     
-      unwrapped.gsub("Subject: ", "").should == original
+      unwrapped.gsub("Subject: ", "").should == original.force_encoding('koi8-r')
     end
   end
   
