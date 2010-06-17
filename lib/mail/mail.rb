@@ -170,6 +170,13 @@ module Mail
     Mail.new(File.read(filename))
   end
   
+  # Delete all emails from a POP3 server.
+  # See Mail::POP3 for a complete documentation.
+  def Mail.delete_all(*args, &block)
+    retriever_method.delete_all(*args, &block)
+  end
+  
+  
   # Initialize the observers and interceptors arrays
   @@delivery_notification_observers = []
   @@delivery_interceptors = []

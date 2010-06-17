@@ -153,6 +153,10 @@ class MockPOP3
   def finish
     @@start = false
   end
+  
+  def delete_all
+    @@popmails = []
+  end
 end
 
 require 'net/pop'

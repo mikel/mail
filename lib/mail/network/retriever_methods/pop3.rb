@@ -118,6 +118,16 @@ module Mail
       end
     end
     
+    # Delete all emails from a POP3 server   
+    def delete_all
+      start do |pop3|
+        unless pop3.mails.empty?
+          pop3.delete_all
+          pop3.finish
+        end
+      end
+    end
+    
   private
   
     # Set default options

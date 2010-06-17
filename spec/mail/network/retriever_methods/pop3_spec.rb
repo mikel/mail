@@ -127,6 +127,15 @@ describe "POP3 Retriever" do
     
   end
   
+  describe "delete_all" do
+    it "should delete all mesages" do
+      messages = Mail.all
+      Mail.delete_all
+    
+      MockPOP3.popmails.size.should == 0
+    end
+  end
+  
   describe "handling of options" do
     
     it "should set default options" do
