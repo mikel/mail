@@ -1180,6 +1180,8 @@ module Mail
         self.body = value
       elsif name.to_s =~ /content[-_]type/i
         header[name] = value
+      elsif name.to_s == 'charset'
+        self.charset = value
       else
         header[name] = value
       end
