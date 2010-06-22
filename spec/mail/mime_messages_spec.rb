@@ -66,6 +66,23 @@ describe "MIME Emails" do
         mail.should_not be_multipart
       end
 
+      it "should not report the email as :attachment?" do
+        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+        mail.attachment?.should == false
+      end
+
+      it "should report the email as :attachment?" do
+        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_only_email.eml')))
+        mail.attachment?.should == true
+      end
+
+      it "should recognize an attachment part" do
+        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+        mail.should_not be_attachment
+        mail.parts[0].attachment?.should == false
+        mail.parts[1].attachment?.should == true
+      end
+
       it "should give how may (top level) parts there are" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
         mail.parts.length.should == 2
@@ -77,7 +94,7 @@ describe "MIME Emails" do
         mail.parts[0].mime_type.should == 'text/plain'
         mail.parts[1].mime_type.should == 'text/enriched'
       end
-      
+
       it "should report the mail :has_attachments?" do
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
         mail.should be_has_attachments

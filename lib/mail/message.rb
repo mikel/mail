@@ -1700,17 +1700,18 @@ module Mail
     def decode_body
       body.decoded
     end
-    
-    # Returns true if this part is an attachment
+
+    # Returns true if this part is an attachment,
+    # false otherwise.
     def attachment?
-      find_attachment
+      !!find_attachment
     end
-    
+
     # Returns the attachment data if there is any
     def attachment
       @attachment
     end
-    
+
     # Returns the filename of the attachment
     def filename
       find_attachment
