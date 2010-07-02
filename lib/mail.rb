@@ -22,10 +22,10 @@ module Mail # :doc:
 
   if RUBY_VERSION >= "1.9.1"
     require 'mail/version_specific/ruby_1_9'
-    RubyVer = Mail::Ruby19
+    RubyVer = Ruby19
   else
     require 'mail/version_specific/ruby_1_8'
-    RubyVer = Mail::Ruby18
+    RubyVer = Ruby18
   end
 
   require 'mail/version'

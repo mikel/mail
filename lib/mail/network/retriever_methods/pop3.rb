@@ -140,7 +140,7 @@ module Mail
     end
   
     # Start a POP3 session and ensures that it will be closed in any case.
-    def start(config = Mail::Configuration.instance, &block)
+    def start(config = Configuration.instance, &block)
       raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
     
       pop3 = Net::POP3.new(settings[:address], settings[:port], isapop = false)

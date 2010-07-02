@@ -80,7 +80,7 @@ module Mail
 
     def Ruby19.param_encode(str)
       encoding = str.encoding.to_s.downcase
-      language = Mail::Configuration.instance.param_encode_language
+      language = Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
   end

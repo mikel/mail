@@ -244,7 +244,7 @@ module Mail
       unless method
         @delivery_method
       else
-        @delivery_method = Mail::Configuration.instance.lookup_delivery_method(method).new(settings)
+        @delivery_method = Configuration.instance.lookup_delivery_method(method).new(settings)
       end
     end
     

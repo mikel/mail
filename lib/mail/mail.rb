@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Mail
-  
+
   # Allows you to create a new Mail::Message object.
   # 
   # You can make an email via passing a string or passing a block.
@@ -15,11 +15,11 @@ module Mail
   #  string << 'Subject: This is an email\r\n'
   #  string << '\r\n'
   #  string << 'This is the body'
-  #  Mail.new(string)
+  #  self.new(string)
   # 
   # Or creating via a block:
   # 
-  #  message = Mail.new do
+  #  message = self.new do
   #    to 'mikel@test.lindsaar.net'
   #    from 'bob@test.lindsaar.net'
   #    subject 'This is an email'
@@ -28,7 +28,7 @@ module Mail
   # 
   # Or creating via a hash (or hash like object):
   # 
-  #  message = Mail.new({:to => 'mikel@test.lindsaar.net',
+  #  message = self.new({:to => 'mikel@test.lindsaar.net',
   #                      'from' => 'bob@test.lindsaar.net',
   #                       :subject 'This is an email',
   #                       :body 'This is the body' })
@@ -41,13 +41,13 @@ module Mail
   # a Mail::Message object directly and then passing in values via string,
   # symbol or direct method calls.  See Mail::Message for more information.
   # 
-  #  mail = Mail.new
+  #  mail = self.new
   #  mail.to = 'mikel@test.lindsaar.net'
   #  mail[:from] = 'bob@test.lindsaar.net'
   #  mail['subject'] = 'This is an email'
   #  mail.body = 'This is the body'
-  def Mail.new(*args, &block)
-    Mail::Message.new(args, &block)
+  def self.new(*args, &block)
+    Message.new(args, &block)
   end
 
   # Sets the default delivery method and retriever method for all new Mail objects.
@@ -57,7 +57,7 @@ module Mail
   # So sending a new email, if you have an SMTP server running on localhost is
   # as easy as:
   # 
-  #   Mail.deliver do
+  #   self.deliver do
   #     to      'mikel@test.lindsaar.net'
   #     from    'bob@test.lindsaar.net'
   #     subject 'hi there!'
@@ -67,7 +67,7 @@ module Mail
   # If you do not specify anything, you will get the following equivalent code set in
   # every new mail object:
   # 
-  #   Mail.defaults do
+  #   self.defaults do
   #     delivery_method :smtp, { :address              => "localhost",
   #                              :port                 => 25,
   #                              :domain               => 'localhost.localdomain',
@@ -83,10 +83,10 @@ module Mail
   #                               :enable_ssl          => true }
   #   end
   # 
-  #   Mail.delivery_method.new  #=> Mail::SMTP instance
-  #   Mail.retriever_method.new #=> Mail::POP3 instance
+  #   self.delivery_method.new  #=> Mail::SMTP instance
+  #   self.retriever_method.new #=> Mail::POP3 instance
   #
-  # Each mail object inherits the default set in Mail.delivery_method, however, on
+  # Each mail object inherits the default set in self.delivery_method, however, on
   # a per email basis, you can override the method:
   #
   #   mail.delivery_method :sendmail
@@ -102,27 +102,27 @@ module Mail
   # The passed in hash is just merged against the defaults with +merge!+ and the result
   # assigned the mail object.  So the above example will change only the :address value
   # of the global smtp_settings to be 'some.host', keeping all other values
-  def Mail.defaults(&block)
-    Mail::Configuration.instance.instance_eval(&block)
+  def self.defaults(&block)
+    Configuration.instance.instance_eval(&block)
   end
-  
+
   # Returns the delivery method selected, defaults to an instance of Mail::SMTP
-  def Mail.delivery_method
-    Mail::Configuration.instance.delivery_method
+  def self.delivery_method
+    Configuration.instance.delivery_method
   end
 
   # Returns the retriever method selected, defaults to an instance of Mail::POP3
-  def Mail.retriever_method
-    Mail::Configuration.instance.retriever_method
+  def self.retriever_method
+    Configuration.instance.retriever_method
   end
 
   # Send an email using the default configuration.  You do need to set a default
-  # configuration first before you use Mail.deliver, if you don't, an appropriate
+  # configuration first before you use self.deliver, if you don't, an appropriate
   # error will be raised telling you to.
   # 
   # If you do not specify a delivery type, SMTP will be used.
   # 
-  #  Mail.deliver do
+  #  self.deliver do
   #   to 'mikel@test.lindsaar.net'
   #   from 'ada@test.lindsaar.net'
   #   subject 'This is a test email'
@@ -131,62 +131,62 @@ module Mail
   # 
   # You can also do:
   # 
-  #  mail = Mail.read('email.eml')
+  #  mail = self.read('email.eml')
   #  mail.deliver!
   # 
   # And your email object will be created and sent.
-  def Mail.deliver(*args, &block)
-    mail = Mail.new(args, &block)
+  def self.deliver(*args, &block)
+    mail = self.new(args, &block)
     mail.deliver
     mail
   end
 
   # Find emails in a POP3 server.
   # See Mail::POP3 for a complete documentation.
-  def Mail.find(*args, &block)
+  def self.find(*args, &block)
     retriever_method.find(*args, &block)
   end
 
   # Receive the first email(s) from a Pop3 server.
   # See Mail::POP3 for a complete documentation.
-  def Mail.first(*args, &block)
+  def self.first(*args, &block)
     retriever_method.first(*args, &block)
   end
 
   # Receive the first email(s) from a Pop3 server.
   # See Mail::POP3 for a complete documentation.
-  def Mail.last(*args, &block)
+  def self.last(*args, &block)
     retriever_method.last(*args, &block)
   end
 
   # Receive all emails from a POP3 server.
   # See Mail::POP3 for a complete documentation.
-  def Mail.all(*args, &block)
+  def self.all(*args, &block)
     retriever_method.all(*args, &block)
   end
 
   # Reads in an email message from a path and instantiates it as a new Mail::Message
-  def Mail.read(filename)
-    Mail.new(File.read(filename))
+  def self.read(filename)
+    self.new(File.read(filename))
   end
-  
+
   # Delete all emails from a POP3 server.
   # See Mail::POP3 for a complete documentation.
-  def Mail.delete_all(*args, &block)
+  def self.delete_all(*args, &block)
     retriever_method.delete_all(*args, &block)
   end
-  
-  
+
+
   # Initialize the observers and interceptors arrays
   @@delivery_notification_observers = []
   @@delivery_interceptors = []
-  
+
   # You can register an object to be informed of every email that is sent through
   # this method.
   # 
   # Your object needs to respond to a single method #delivered_email(mail)
   # which receives the email that is sent.
-  def Mail.register_observer(observer)
+  def self.register_observer(observer)
     unless @@delivery_notification_observers.include?(observer)
       @@delivery_notification_observers << observer
     end
@@ -199,43 +199,43 @@ module Mail
   # Your object needs to respond to a single method #delivering_email(mail)
   # which receives the email that is about to be sent.  Make your modifications
   # directly to this object.
-  def Mail.register_interceptor(interceptor)
+  def self.register_interceptor(interceptor)
     unless @@delivery_interceptors.include?(interceptor)
       @@delivery_interceptors << interceptor
     end
   end
-  
-  def Mail.inform_observers(mail)
+
+  def self.inform_observers(mail)
     @@delivery_notification_observers.each do |observer|
       observer.delivered_email(mail)
     end
   end
-  
-  def Mail.inform_interceptors(mail)
+
+  def self.inform_interceptors(mail)
     @@delivery_interceptors.each do |interceptor|
       interceptor.delivering_email(mail)
     end
   end
 
   protected
-  
-  def Mail.random_tag
+
+  def self.random_tag
     t = Time.now
     sprintf('%x%x_%x%x%d%x',
             t.to_i, t.tv_usec,
-            $$, Thread.current.object_id.abs, Mail.uniq, rand(255))
+            $$, Thread.current.object_id.abs, self.uniq, rand(255))
   end
-  
+
   private
 
-  def Mail.something_random
+  def self.something_random
     (Thread.current.object_id * rand(255) / Time.now.to_f).to_s.slice(-3..-1).to_i
   end
-  
-  def Mail.uniq
+
+  def self.uniq
     @@uniq += 1
   end
-  
-  @@uniq = Mail.something_random
-  
+
+  @@uniq = self.something_random
+
 end
