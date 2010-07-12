@@ -1385,16 +1385,14 @@ describe Mail::Message do
   end
   
   describe "error handling" do
-    describe "error handling" do
-      it "should collect up any of its fields' errors" do
-        mail = Mail.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b\r\n")
-        mail.errors.should_not be_blank
-        mail.errors.size.should == 2
-        mail.errors[0][0].should == 'Content-Transfer-Encoding'
-        mail.errors[0][1].should == 'vlad'
-        mail.errors[1][0].should == 'Reply-To'
-        mail.errors[1][1].should == 'a b b'
-      end
+    it "should collect up any of its fields' errors" do
+      mail = Mail.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b\r\n")
+      mail.errors.should_not be_blank
+      mail.errors.size.should == 2
+      mail.errors[0][0].should == 'Content-Transfer-Encoding'
+      mail.errors[0][1].should == 'vlad'
+      mail.errors[1][0].should == 'Reply-To'
+      mail.errors[1][1].should == 'a b b'
     end
   end
   
