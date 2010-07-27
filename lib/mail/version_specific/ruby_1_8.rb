@@ -1,4 +1,9 @@
 # encoding: utf-8
+
+# For multibyte strings in Ruby 1.8
+require 'active_support'
+require 'active_support/core_ext/string'
+
 module Mail
   class Ruby18
     require 'base64'

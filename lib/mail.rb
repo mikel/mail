@@ -3,11 +3,6 @@ module Mail # :doc:
 
   require 'date'
 
-  require 'active_support'
-  require 'active_support/core_ext/hash/indifferent_access'
-  require 'active_support/core_ext/object/blank'
-  require 'active_support/core_ext/string'
-
   require 'uri'
   require 'net/smtp'
   require 'mime/types'
@@ -20,7 +15,7 @@ module Mail # :doc:
     end
   end
 
-  if RUBY_VERSION >= "1.9.1"
+  if RUBY_VERSION >= "1.9.0"
     require 'mail/version_specific/ruby_1_9'
     RubyVer = Ruby19
   else
@@ -32,6 +27,9 @@ module Mail # :doc:
 
   require 'mail/core_extensions/nil'
   require 'mail/core_extensions/string'
+  require 'mail/core_extensions/object'
+
+  require 'mail/indifferent_hash'
 
   require 'mail/patterns'
   require 'mail/utilities'

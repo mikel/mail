@@ -1,4 +1,66 @@
 # encoding: utf-8
+
+unless ''.respond_to?(:mb_chars)
+  class String
+    # Compatability with ActiveSupport, which returns self in 1.9
+    def mb_chars
+      self
+    end
+  end
+end
+
+# Need this crap from ActiveSupport
+# Do not create if already there
+unless Class.respond_to?(:cattr_accessor)
+  class Class
+    def cattr_reader(*syms)
+      syms.each do |sym|
+        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+          unless defined? @@#{sym}
+            @@#{sym} = nil
+          end
+
+          def self.#{sym}
+            @@#{sym}
+          end
+        EOS
+
+        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+          def #{sym}
+            @@#{sym}
+          end
+        EOS
+      end
+    end
+
+    def cattr_writer(*syms)
+      syms.each do |sym|
+        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+          unless defined? @@#{sym}
+            @@#{sym} = nil
+          end
+
+          def self.#{sym}=(obj)
+            @@#{sym} = obj
+          end
+        EOS
+
+        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+          def #{sym}=(obj)
+            @@#{sym} = obj
+          end
+        EOS
+        self.send("#{sym}=", yield) if block_given?
+      end
+    end
+
+    def cattr_accessor(*syms, &blk)
+      cattr_reader(*syms)
+      cattr_writer(*syms, &blk)
+    end
+  end
+end
+
 module Mail
   class Ruby19
 

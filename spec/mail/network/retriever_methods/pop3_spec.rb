@@ -172,13 +172,13 @@ describe "POP3 Retriever" do
       retrievable = Mail::POP3.new({})
       options = retrievable.send(:validate_options, {})
       
-      options[:count].should be_present
+      options[:count].should_not be_blank
       options[:count].should == 10
       
-      options[:order].should be_present
+      options[:order].should_not be_blank
       options[:order].should == :asc
       
-      options[:what].should be_present
+      options[:what].should_not be_blank
       options[:what].should == :first
     end
     
@@ -190,13 +190,13 @@ describe "POP3 Retriever" do
         :what => :first
       })
       
-      options[:count].should be_present
+      options[:count].should_not be_blank
       options[:count].should == 2
       
-      options[:order].should be_present
+      options[:order].should_not be_blank
       options[:order].should == :asc
       
-      options[:what].should be_present
+      options[:what].should_not be_blank
       options[:what].should == :first
     end
     
