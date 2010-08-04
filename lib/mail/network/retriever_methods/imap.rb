@@ -71,7 +71,7 @@ module Mail
       start do |imap|
         imap.select(mailbox)
         imap.search(['ALL']).each do |message_id|
-          imap.store(message_id, "+FLAGS", [:Deleted])
+          imap.store(message_id, "+FLAGS", [Net::IMAP::DELETED])
         end
         imap.expunge
       end
