@@ -1,4 +1,37 @@
+# encoding: utf-8
+
 module Mail
+  # The IMAP retriever allows to get the last, first or all emails from a POP3 server.
+  # Each email retrieved (RFC2822) is given as an instance of +Message+.
+  #
+  # While being retrieved, emails can be yielded if a block is given.
+  #
+  # === Example of retrieving Emails from GMail:
+  #
+  #   Mail.defaults do
+  #     retriever_method :imap, { :address             => "imap.googlemail.com",
+  #                               :port                => 993,
+  #                               :user_name           => '<username>',
+  #                               :password            => '<password>',
+  #                               :enable_ssl          => true }
+  #   end
+  #
+  #   Mail.all    #=> Returns an array of all emails
+  #   Mail.first  #=> Returns the first unread email
+  #   Mail.last   #=> Returns the first unread email
+  #
+  # You can also pass options into Mail.find to locate an email in your imap mailbox
+  # with the following options:
+  #
+  #   mailbox: name of the mailbox used for email retrieval. The default is 'INBOX'.
+  #   what:    last or first emails. The default is :first.
+  #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+  #            instance of Message, not an array of Message instances.
+  #
+  #   Mail.find(:what => :first, :count => 10, :order => :asc)
+  #   #=> Returns the first 10 emails in ascending order
+  #
   class IMAP
     require 'net/imap'
     
@@ -13,6 +46,13 @@ module Mail
 
     attr_accessor :settings
 
+    # Get the oldest received email(s)
+    #
+    # Possible options:
+    #   mailbox: mailbox to retrieve the oldest received email(s) from. The default is 'INBOX'.
+    #   count:   number of emails to retrieve. The default value is 1.
+    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
     def first(options={}, &block)
       options ||= {}
       options[:what] = :first
@@ -20,6 +60,13 @@ module Mail
       find(options, &block)
     end
 
+    # Get the most recent received email(s)
+    #
+    # Possible options:
+    #   mailbox: mailbox to retrieve the most recent received email(s) from. The default is 'INBOX'.
+    #   count:   number of emails to retrieve. The default value is 1.
+    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
     def last(options={}, &block)
       options ||= {}
       options[:what] = :last
@@ -27,13 +74,27 @@ module Mail
       find(options, &block)
     end
 
+    # Get all emails.
+    #
+    # Possible options:
+    #   mailbox: mailbox to retrieve all email(s) from. The default is 'INBOX'.
+    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #
     def all(options={}, &block)
       options ||= {}
       options[:count] = :all
       find(options, &block)
     end
     
-
+    # Find emails in a POP3 mailbox. Without any options, the 10 last received emails are returned.
+    #
+    # Possible options:
+    #   mailbox: mailbox to search the email(s) in. The default is 'INBOX'.
+    #   what:    last or first emails. The default is :first.
+    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+    #            instance of Message, not an array of Message instances.
+    #
     def find(options={}, &block)
       options = validate_options(options)
 
@@ -64,7 +125,7 @@ module Mail
       end
     end
 
-
+    # Delete all emails from a IMAP mailbox
     def delete_all(mailbox='INBOX')
       mailbox ||= 'INBOX'
 
@@ -79,6 +140,7 @@ module Mail
 
     private
 
+      # Set default options
       def validate_options(options)
         options ||= {}
         options[:mailbox] ||= 'INBOX'
@@ -88,6 +150,7 @@ module Mail
         options
       end
 
+      # Start an IMAP session and ensures that it will be closed in any case.
       def start(config=Mail::Configuration.instance, &block)
         raise ArgumentError.new("Mail::Retrievable#imap_start takes a block") unless block_given?
 
