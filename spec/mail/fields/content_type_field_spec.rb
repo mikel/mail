@@ -321,6 +321,24 @@ describe Mail::ContentTypeField do
       c.parameters.should == {"boundary" =>"----=_NextPart_000_0093_01C81419.EB75E850"}
     end
 
+    it "should handle 'Multipart/Alternative;boundary=MuLtIpArT_BoUnDaRy'" do
+      string = %q{Multipart/Alternative; boundary=MuLtIpArT_BoUnDaRy}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'alternative'
+      c.parameters.should == {"boundary" =>"MuLtIpArT_BoUnDaRy"}
+    end
+
+    it "should handle 'Multipart/Alternative;boundary=MuLtIpArT_BoUnDaRy'" do
+      string = %q{Multipart/Alternative;boundary=MuLtIpArT_BoUnDaRy}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'multipart/alternative'
+      c.main_type.should == 'multipart'
+      c.sub_type.should == 'alternative'
+      c.parameters.should == {"boundary" =>"MuLtIpArT_BoUnDaRy"}
+    end
+
     it "should handle 'multipart/mixed'" do
       string = %q{multipart/mixed}
       c = Mail::ContentTypeField.new(string)
