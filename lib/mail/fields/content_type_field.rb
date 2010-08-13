@@ -140,7 +140,6 @@ module Mail
     # the parser for
     def sanatize( val )
       val = val.gsub(/(multipart\/alternative);/i,'multipart/alternative; ')
-      $stderr.puts val
       case
       when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;;+(.*)$/i
         # Handles 'text/plain;; format="flowed"' (double semi colon)
