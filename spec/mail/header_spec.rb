@@ -79,7 +79,14 @@ describe Mail::Header do
         header['content-disposition'] = 'attachment; filename=File'
         header['content-disposition'].field.class.should == Mail::ContentDispositionField
       end
-      
+
+      it "should recognise an inline content-disposition field" do
+        header = Mail::Header.new
+        header['content-disposition'] = 'inline'
+        header['content-disposition'].field.class.should == Mail::ContentDispositionField
+      end
+
+
       it "should recognise a content-id field" do
         header = Mail::Header.new
         header['content-id'] = '<1234@test.lindsaar.net>'
@@ -513,6 +520,24 @@ TRACEHEADER
       header = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\s \t \t \t    badly formatted             \r\n       \t\t  \t       field")
       result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long badly formatted field\r\n"
       header.encoded.should == result
+    end
+
+    it "should not merge Content-Disposition and User-Agent headers" do
+      header = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: testing\r\nContent-Disposition: inline\r\nUser-Agent: some sweet mail app\r\n")
+      result = "To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: testing\r\nContent-Disposition: inline\r\nUser-Agent: some sweet mail app\r\n"
+      header['Content-Disposition'].should == 'inline'
+      header['User-Agent'].should == 'some sweet mail app'
+      header.encoded.should == result
+    end
+
+    it "should encode Content-Disposition correct" do
+      str = "Content-Disposition: inline\r\n"
+      header = Mail::Header.new(str)
+      header.encoded.should == str
+
+      str = "Content-Disposition: attachment; filename=File\r\n"
+      header = Mail::Header.new(str)
+      header.encoded.should == str
     end
   end
   
