@@ -31,11 +31,20 @@ describe Mail::ContentDispositionField do
       c.encoded.should == "Content-Disposition: attachment;\r\n\sfilename=File\r\n"
     end
 
+    it "should render encoded for inline" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: inline')
+      c.encoded.should == "Content-Disposition: inline\r\n"
+    end
+
     it "should render decoded" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.decoded.should == 'attachment; filename=File'
     end
 
+    it "should render decoded inline" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: inline')
+      c.decoded.should == 'inline'
+    end
   end
   
   describe "instance methods" do

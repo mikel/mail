@@ -51,7 +51,7 @@ module Mail
       if parameters.length > 0
         p = ";\r\n\s#{parameters.encoded}\r\n"
       else
-        p = ""
+        p = "\r\n"
       end
       "#{CAPITALIZED_FIELD}: #{disposition_type}" + p
     end
