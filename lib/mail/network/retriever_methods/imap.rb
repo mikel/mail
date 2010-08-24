@@ -101,7 +101,7 @@ module Mail
       start do |imap|
         imap.select(options[:mailbox])
 
-        message_ids = imap.search(['ALL'])
+        message_ids = imap.uid_search(['ALL'])
         message_ids.reverse! if options[:what].to_sym == :last
         message_ids = message_ids.first(options[:count]) if options[:count].is_a?(Integer)
         message_ids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
@@ -109,14 +109,14 @@ module Mail
 
         if block_given?
           message_ids.each do |message_id|
-            fetchdata = imap.fetch(message_id, ['RFC822'])[0]
+            fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
 
             yield Mail.new(fetchdata.attr['RFC822'])
           end
         else
           emails = []
           message_ids.each do |message_id|
-            fetchdata = imap.fetch(message_id, ['RFC822'])[0]
+            fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
 
             emails << Mail.new(fetchdata.attr['RFC822'])
           end
@@ -131,8 +131,8 @@ module Mail
 
       start do |imap|
         imap.select(mailbox)
-        imap.search(['ALL']).each do |message_id|
-          imap.store(message_id, "+FLAGS", [Net::IMAP::DELETED])
+        imap.uid_search(['ALL']).each do |message_id|
+          imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED])
         end
         imap.expunge
       end

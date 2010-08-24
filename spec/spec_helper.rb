@@ -201,15 +201,15 @@ class MockIMAP
     @@mailbox = mailbox
   end
 
-  def search(keys, charset=nil)
+  def uid_search(keys, charset=nil)
     [*(0..@@examples.size - 1)]
   end
 
-  def fetch(set, attr)
+  def uid_fetch(set, attr)
     [@@examples[set]]
   end
 
-  def store(set, attr, flags)
+  def uid_store(set, attr, flags)
     if attr == "+FLAGS" && flags.include?(Net::IMAP::DELETED)
       @@marked_for_deletion << set
     end
