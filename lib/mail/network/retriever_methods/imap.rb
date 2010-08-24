@@ -52,6 +52,8 @@ module Mail
     #   mailbox: mailbox to retrieve the oldest received email(s) from. The default is 'INBOX'.
     #   count:   number of emails to retrieve. The default value is 1.
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
+    #            search string or a single-dimension array of search keywords and arguments.
     #
     def first(options={}, &block)
       options ||= {}
@@ -66,6 +68,8 @@ module Mail
     #   mailbox: mailbox to retrieve the most recent received email(s) from. The default is 'INBOX'.
     #   count:   number of emails to retrieve. The default value is 1.
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
+    #            search string or a single-dimension array of search keywords and arguments.
     #
     def last(options={}, &block)
       options ||= {}
@@ -78,7 +82,10 @@ module Mail
     #
     # Possible options:
     #   mailbox: mailbox to retrieve all email(s) from. The default is 'INBOX'.
+    #   count:   number of emails to retrieve. The default value is 1.
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
+    #            search string or a single-dimension array of search keywords and arguments.
     #
     def all(options={}, &block)
       options ||= {}
