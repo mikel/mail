@@ -83,6 +83,7 @@ module Mail
     def all(options={}, &block)
       options ||= {}
       options[:count] = :all
+      options[:keys]  = 'ALL'
       find(options, &block)
     end
     
@@ -101,7 +102,7 @@ module Mail
       start do |imap|
         imap.select(options[:mailbox])
 
-        message_ids = imap.uid_search(['ALL'])
+        message_ids = imap.uid_search(options[:keys])
         message_ids.reverse! if options[:what].to_sym == :last
         message_ids = message_ids.first(options[:count]) if options[:count].is_a?(Integer)
         message_ids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
@@ -147,6 +148,7 @@ module Mail
         options[:count]   ||= 10
         options[:order]   ||= :asc
         options[:what]    ||= :first
+        options[:keys]    ||= 'ALL'
         options
       end
 
