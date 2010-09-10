@@ -3,7 +3,6 @@ require File.expand_path('../spec/environment', __FILE__)
 require 'rake/rdoctask'
 require 'rake/testtask'
 require 'spec/rake/spectask'
-require 'cucumber/rake/task'
 
 desc "Build a gem file"
 task :build do
@@ -11,9 +10,6 @@ task :build do
 end
 
 task :default => :spec
-Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = "spec/features --format pretty"
-end
 
 Spec::Rake::SpecTask.new(:rcov) do |t|
   t.spec_files = FileList['test/**/tc_*.rb', 'spec/**/*_spec.rb']
