@@ -1,16 +1,16 @@
-source 'http://rubygems.org'
+source :rubygems
 
 gem "activesupport", "~> 2.3.6.pre"
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
-gem "mime-types"
-gem "treetop", ">= 1.4.5"
+gem "mime-types", "~> 1.16"
+gem "treetop", "~> 1.4.8"
 
 group :test do
-  gem "rcov"
-  gem "rake"
+  gem "ZenTest",    "~> 4.4.0"
+  gem "rcov",       "~> 0.9.8"
+  gem "rake",       "~> 0.8.7"
   gem "bundler"
-  gem "cucumber"
-  gem "rspec"
+  gem "rspec",      "~> 1.3.0"
   gem "diff-lcs"
   case
   when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
@@ -24,5 +24,4 @@ group :test do
   else
     # Skip it
   end
-  gem "ZenTest"
 end
