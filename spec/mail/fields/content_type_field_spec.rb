@@ -537,6 +537,15 @@ describe Mail::ContentTypeField do
       c.parameters.should == {'boundary' => '1_4626B816_9F1690', 'Type' => 'application/smil', 'Start' => '<mms.smil.txt>'}
     end
     
+    it "should handle 'IMAGE/JPEG; name=\"IM 006.jpg\"'" do
+      string = %q{IMAGE/JPEG; name="IM 006.jpg"}
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should == 'image/jpeg'
+      c.main_type.should == 'image'
+      c.sub_type.should == 'jpeg'
+      c.parameters.should == {'name' => "IM 006.jpg"}
+    end
+    
   end
 
   describe "finding a filename" do

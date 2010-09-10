@@ -18,12 +18,22 @@ module Mail
       discrete_type / composite_type
     end
 
+    # This matches in a case insensitive way:
+    #
+    #   rule discrete_type
+    #     "text" / "image" / "audio" / "video" / "application" / extension_token
+    #   end
     rule discrete_type
-      "text" / "image" / "audio" / "video" / "application" / extension_token
+      [tT] [eE] [xX] [tT] / [iI] [mM] [aA] [gG] [eE] / [aA] [uU] [dD] [iI] [oO] / [vV] [iI] [dD] [eE] [oO] / [aA] [pP] [pP] [lL] [iI] [cC] [aA] [tT] [iI] [oO] [nN] / extension_token
     end
 
+    # This matches in a case insensitive way:
+    #
+    #   rule composite_type
+    #     "message" / "multipart" / extension_token
+    #   end
     rule composite_type
-      "message" / "multipart" / extension_token
+      [mM] [eE] [sS] [sS] [aA] [gG] [eE] / [mM] [uU] [lL] [tT] [iI] [pP] [aA] [rR] [tT] / extension_token
     end
   
     rule extension_token

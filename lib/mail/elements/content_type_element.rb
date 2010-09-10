@@ -7,8 +7,8 @@ module Mail
     def initialize( string )
       parser = Mail::ContentTypeParser.new
       if tree = parser.parse(cleaned(string))
-        @main_type = tree.main_type.text_value
-        @sub_type = tree.sub_type.text_value
+        @main_type = tree.main_type.text_value.downcase
+        @sub_type = tree.sub_type.text_value.downcase
         @parameters = tree.parameters
       else
         raise Mail::Field::ParseError, "ContentTypeElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
