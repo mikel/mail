@@ -8,7 +8,7 @@ gem "treetop", ">= 1.4.5"
 group :test do
   gem "rcov"
   gem "rake"
-  gem "bundler", "~> 0.9.10"
+  gem "bundler"
   gem "cucumber"
   gem "rspec"
   gem "diff-lcs"
