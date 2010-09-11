@@ -75,6 +75,11 @@ describe Mail::Message do
       mail.to.should == ["raasdnil@gmail.com"]
     end
     
+    it "should not fail parsing message with caps in content_type" do
+      mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'mix_caps_content_type.eml')))
+      mail.content_type.should == "text/plain"
+    end
+    
   end
   
   describe "envelope line handling" do

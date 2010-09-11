@@ -1,0 +1,11 @@
+From joe@company.com Fri Feb 19 08:41:30 2010
+From: Big Bug bb@bug.com
+To: rubymail@ruby-lang.org
+Subject: undef method parameter bug
+Date: Fri, 19 Feb 2010 10:08:29 +0300
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+charset="iso-8859-1" Content-Transfer-Encoding: quoted-printable
+Message-Id: 201002191008.30117.foo.bar@company.com
+
+foo bar
