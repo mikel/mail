@@ -1,3 +1,8 @@
+== Sat Sep 11 01:32:13 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Closed issue #58 - Content Type not parsing unless lower case.
+* Version bump to 2.2.5.1
+
 == Thu 17 Jun 2010 22:13:18 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Added Mail::POP3.delete_all, including specs (Martijn Storck)
