@@ -77,7 +77,9 @@ describe Mail::Message do
     
     it "should not fail parsing message with caps in content_type" do
       mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'mix_caps_content_type.eml')))
-      mail.content_type.should == "text/plain"
+      mail.content_type.should == 'text/plain; charset=iso-8859-1'
+      mail.main_type.should == 'text'
+      mail.sub_type.should == 'plain'
     end
     
   end
