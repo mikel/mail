@@ -1,6 +1,8 @@
 == Sat 11 Sep 2010 05:13:36 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixed parsing an email with an empty In-Reply-To header (Reported by Eugene Pimenov)
+* Adding address spec for groupname+domain.com@example.com format emails
+* Version bump to 2.2.6
 
 == Sat Sep 11 01:56:59 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
