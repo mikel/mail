@@ -225,7 +225,7 @@ describe Mail::Body do
       body.parts.length.should == 1
       body.should be_multipart
     end
-    
+
     it "should allow you to sort the parts" do
       body = Mail::Body.new('')
       body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")

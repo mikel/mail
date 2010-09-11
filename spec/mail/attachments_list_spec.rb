@@ -236,3 +236,34 @@ describe "reading emails with attachments" do
 
   end
 end
+
+describe "attachment order" do
+  it "should be preserved instead  when content type exists" do
+    mail = Mail.new do
+      to "aaaa@aaaa.aaa"
+      from "aaaa2@aaaa.aaa"
+      subject "a subject"
+      date Time.now
+      text_part do
+        content_type 'text/plain; charset=UTF-8'
+        body "a \nsimplebody\n"
+      end
+    end
+
+    mail.attachments['test.zip'] = File.read(fixture('attachments', 'test.zip'))
+    mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
+    mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
+    mail.attachments['test.jpg'] = File.read(fixture('attachments', 'test.jpg'))
+    mail.attachments[0].filename.should == 'test.zip'
+    mail.attachments[1].filename.should == 'test.pdf'
+    mail.attachments[2].filename.should == 'test.gif'
+    mail.attachments[3].filename.should == 'test.jpg'
+
+
+    mail2 = Mail.new(mail.encoded)
+    mail2.attachments[0].filename.should == 'test.zip'
+    mail2.attachments[1].filename.should == 'test.pdf'
+    mail2.attachments[2].filename.should == 'test.gif'
+    mail2.attachments[3].filename.should == 'test.jpg'
+  end
+end

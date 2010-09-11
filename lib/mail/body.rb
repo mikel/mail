@@ -130,7 +130,6 @@ module Mail
         @parts.sort!(@part_sort_order)
         p.body.sort_parts!
       end
-#      @parts.sort!(@part_sort_order)
     end
     
     # Returns the raw source that the body was initialized with, without
