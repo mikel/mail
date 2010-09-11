@@ -152,6 +152,7 @@ describe Mail::Message do
       body = Mail::Body.new("email message")
       Mail::Body.should_receive(:new).with("email message").and_return(body)
       mail = Mail::Message.new(basic_email)
+      mail.body #body calculates now lazy so need to ask for it
     end
   
     it "should still ask the body for a new instance even though these is nothing to parse, yet" do
@@ -165,6 +166,7 @@ describe Mail::Message do
       Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
       Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
+      mail.body #body calculates now lazy so need to ask for it
     end
   
     it "should give allow for whitespace on the gap line between header and body" do
@@ -173,6 +175,7 @@ describe Mail::Message do
       Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
       Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
+      mail.body #body calculates now lazy so need to ask for it
     end
 
     it "should allow for whitespace at the start of the email" do
