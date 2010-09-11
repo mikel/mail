@@ -176,6 +176,10 @@ module Mail
     retriever_method.delete_all(*args, &block)
   end
 
+  # Instantiates a new Mail::Message using a string
+  def Mail.read_from_string(mail_as_string)
+    Mail.new(mail_as_string)
+  end
 
   # Initialize the observers and interceptors arrays
   @@delivery_notification_observers = []

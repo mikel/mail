@@ -6,6 +6,7 @@
 * Replace hard-coded references to Mail with more generic self references to allow easier inheritance (closes #61) - Simone Carletti
 * Force encoding on Regexp for Ruby 1.9 to avoid encoding conflicts - Golubev Pavel
 * Added lazy evaluation to message body: body is not parsed until need. It greatly improves performance with big mails if you don't need to read the body (yet)
+* Added Mail.read_from_string as an explicit method (mcansky)
 
 == Sat Sep 11 01:32:13 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
