@@ -86,14 +86,19 @@ describe Mail::Message do
       mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       mail.to.should == ["raasdnil@gmail.com"]
     end
-    
+
     it "should not fail parsing message with caps in content_type" do
       mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'mix_caps_content_type.eml')))
       mail.content_type.should == 'text/plain; charset=iso-8859-1'
       mail.main_type.should == 'text'
       mail.sub_type.should == 'plain'
     end
-    
+
+    it "should be able to pass an empty reply-to header" do
+      mail = Mail.new(File.read(fixture('emails', 'error_emails', 'empty_in_reply_to.eml')))
+      mail.in_reply_to.should be_blank
+    end
+
   end
   
   describe "envelope line handling" do

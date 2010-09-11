@@ -2,7 +2,7 @@
 module Mail
   module CommonMessageId # :nodoc:
     def element
-      @element ||= Mail::MessageIdsElement.new(value)
+      @element ||= Mail::MessageIdsElement.new(value) unless value.blank?
     end
 
     def parse(val = value)
@@ -14,14 +14,15 @@ module Mail
     end
     
     def message_id
-      element.message_id
+      element.message_id if element
     end
     
     def message_ids
-      element.message_ids
+      element.message_ids if element
     end
     
     def default
+      return nil unless message_ids
       if message_ids.length == 1
         message_ids[0]
       else
