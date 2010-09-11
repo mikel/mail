@@ -9,7 +9,7 @@ module Mail
     include Enumerable
 
     def <<( new_field )
-      current_entry = self.rindex(new_field.name)
+      current_entry = self.rindex(new_field)
       if current_entry
         self.insert((current_entry + 1), new_field)
       else
