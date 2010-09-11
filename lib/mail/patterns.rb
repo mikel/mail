@@ -11,6 +11,10 @@ module Mail
     lwsp         = %Q| \t\r\n|
     control      = %Q|\x00-\x1f\x7f-\xff|
     
+    if control.respond_to?(:force_encoding)
+      control = control.force_encoding(Encoding::BINARY)
+    end
+    
     CRLF          = /\r\n/
     WSP           = /[#{white_space}]/
     FWS           = /#{CRLF}#{WSP}*/
