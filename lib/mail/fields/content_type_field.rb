@@ -3,10 +3,10 @@ require 'mail/fields/common/parameter_hash'
 
 module Mail
   class ContentTypeField < StructuredField
-    
+
     FIELD_NAME = 'content-type'
     CAPITALIZED_FIELD = 'Content-Type'
-    
+
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       if value.class == Array
@@ -23,15 +23,15 @@ module Mail
       self.parse
       self
     end
-    
+
     def parse(val = value)
       unless val.blank?
-        self.value = val 
+        self.value = val
         @element = nil
         element
       end
     end
-    
+
     def element
       begin
         @element ||= Mail::ContentTypeElement.new(value)
@@ -39,7 +39,7 @@ module Mail
         attempt_to_clean
       end
     end
-    
+
     def attempt_to_clean
       # Sanitize the value, handle special cases
       @element ||= Mail::ContentTypeElement.new(sanatize(value))
@@ -47,7 +47,7 @@ module Mail
       # All else fails, just get the MIME media type
       @element ||= Mail::ContentTypeElement.new(get_mime_type(value))
     end
-    
+
     def main_type
       @main_type ||= element.main_type
     end
@@ -55,17 +55,17 @@ module Mail
     def sub_type
       @sub_type ||= element.sub_type
     end
-    
+
     def string
       "#{main_type}/#{sub_type}"
     end
-    
+
     def default
       decoded
     end
-    
+
     alias :content_type :string
-    
+
     def parameters
       unless @parameters
         @parameters = ParameterHash.new
@@ -77,7 +77,7 @@ module Mail
     def ContentTypeField.with_boundary(type)
       new("#{type}; boundary=#{generate_boundary}")
     end
-    
+
     def ContentTypeField.generate_boundary
       "--==_mimepart_#{Mail.random_tag}"
     end
@@ -89,7 +89,7 @@ module Mail
         @value
       end
     end
-    
+
     def stringify(params)
       params.map { |k,v| "#{k}=#{Encodings.param_encode(v)}" }.join("; ")
     end
@@ -100,12 +100,12 @@ module Mail
         @filename = parameters['filename']
       when parameters['name']
         @filename = parameters['name']
-      else 
+      else
         @filename = nil
       end
       @filename
     end
-    
+
     # TODO: Fix this up
     def encoded
       if parameters.length > 0
@@ -115,7 +115,7 @@ module Mail
       end
       "#{CAPITALIZED_FIELD}: #{content_type}" + p
     end
-    
+
     def decoded
       if parameters.length > 0
         p = "; #{parameters.decoded}"
@@ -126,7 +126,7 @@ module Mail
     end
 
     private
-    
+
     def method_missing(name, *args, &block)
       if name.to_s =~ /([\w_]+)=/
         self.parameters[$1] = args.first
@@ -135,16 +135,28 @@ module Mail
         super
       end
     end
-    
+
     # Various special cases from random emails found that I am not going to change
     # the parser for
     def sanatize( val )
-      val = val.gsub(/(multipart\/alternative);/i,'multipart/alternative; ')
+
+      # TODO: check if there are cases where whitespace is not a separator
+      val = val.tr(' ',';')
+        .squeeze(';')
+        .gsub(';', '; ') #use '; ' as a separator (or EOL)
+        .gsub(/;\s*$/,'') #remove trailing to keep examples below
+
+      if val =~ /(boundary=(\S*))/i
+        val = "#{$`.downcase}boundary=#{$2}#{$'.downcase}"
+      else
+        val.downcase!
+      end
+
       case
       when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;;+(.*)$/i
         # Handles 'text/plain;; format="flowed"' (double semi colon)
         "#{$1}/#{$2}; #{$3}"
-      when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;(ISO[\w\d\-_]+)$/i
+      when val.chomp =~ /^\s*([\w\d\-_]+)\/([\w\d\-_]+)\s*;\s?(ISO[\w\d\-_]+)$/i
         # Microsoft helper:
         # Handles 'type/subtype;ISO-8559-1'
         "#{$1}/#{$2}; charset=#{quote_atom($3)}"
@@ -173,12 +185,12 @@ module Mail
         ''
       end
     end
-    
+
     def get_mime_type( val )
       case
       when val =~ /^([\w\d\-_]+)\/([\w\d\-_]+);.+$/i
         "#{$1}/#{$2}"
-      else 
+      else
         'text/plain'
       end
     end
