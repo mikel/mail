@@ -1,0 +1,112 @@
+Return-Path: <>
+X-Original-To: notification+promo@blah.com
+Delivered-To: notification+promo@blah.com
+Received: from schemailmta04.ci.com (schemailmta04.ci.com [209.183.37.58])
+    by blah.com (Postfix) with ESMTP id 24EF419F546
+    for <notification+promo@blah.com>; Tue, 29 Jun 2010 15:42:46 +0000 (UTC)
+To: notification+promo@blah.com
+From: Mail Administrator <Postmaster@ci.com>
+Reply-To: <Postmaster@ci.com>
+Subject: Mail System Error - Returned Mail
+Date: Tue, 29 Jun 2010 10:42:44 -0500
+Message-ID: <20100629154244.OZPA15102.schemailmta04.ci.com@schemailmta04>
+MIME-Version: 1.0
+Content-Type: multipart/report;
+        report-type=delivery-status;
+        Boundary="===========================_ _= 6078796(15102)1277826164"
+X-Cloudmark-Analysis: v=1.0 c=1 a=q8OS1GolVHwA:10 a=ev1gGZlfZ-EA:10 a=HQ-Cukr2AAAA:8 a=qihIh-XuXL65y3o_mUgA:9 a=mUL5bUDOV_-gjcCZylcY5Lz4jjsA:4 a=iQvSWfByulMA:10 a=ni8l3qMSI1sA:10 a=WHDNLAQ519cA:10 a=Fry9e7MVxuJdODrS104A:9 a=JYo4OF_E9TqbHrUN2TvLdggtx2cA:4 a=S0jCPnXDAAAA:8 a=pXkHMj1YAAAA:8 a=5ErcFzC0N3E7OloTRA8A:9 a=cC0RL7HlXt3RrKfnpEbxHCeM-zQA:4 a=cHEBK1Z0Lu8A:10 a=p9ZeupWRHUwA:10 a=7sPVfr_AX1EA:10
+
+
+--===========================_ _= 6078796(15102)1277826164
+Content-Type: message/delivery-status;
+
+This Message was undeliverable due to the following reason:
+
+
+<u@ci.com> has restricted SMS e-mail
+
+Please reply to <Postmaster@ci.com>
+if you feel this message to be in error.
+
+--===========================_ _= 6078796(15102)1277826164
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; schemailmta04.ci.com
+Arrival-Date: Tue, 29 Jun 2010 10:42:37 -0500
+Received-From-MTA: dns; schemailedgegx04.ci.com (172.16.130.170)
+
+Original-Recipient: rfc822;u@ci.com
+Final-Recipient: RFC822; <u@ci.com>
+Action: failed
+Status: 5.3.0
+
+--===========================_ _= 6078796(15102)1277826164
+Content-Type: message/rfc822
+
+Received: from schemailedgegx04.ci.com ([172.16.130.170])
+          by schemailmta04.ci.com
+          (InterMail vM.6.01.04.00 201-2131-118-20041027) with ESMTP
+          id <20100629154237.OZBY15102.schemailmta04.ci.com@schemailedgegx04.ci.com>
+          for <u@ci.com>; Tue, 29 Jun 2010 10:42:37 -0500
+Received: from blah.com ([1.1.1.1])
+          by schemailedgegx04.ci.com
+          (InterMail vG.1.02.00.04 201-2136-104-104-20050323) with ESMTP
+          id <20100629154225.WEFB17009.schemailedgegx04.ci.com@blah.com>
+          for <u@ci.com>; Tue, 29 Jun 2010 10:42:25 -0500
+Received: from blah.com (snooki [10.12.126.68])
+    by blah.com (Postfix) with ESMTP id 4BDAE19F546
+    for <u@ci.com>; Tue, 29 Jun 2010 15:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=blah.com;
+    s=2010; t=1277826145; bh=wC3hHAhQgApcTmwQsi2F4OJf40rbyIek/WwIuzSc3V
+    M=; h=Date:From:Reply-To:To:Message-ID:Subject:Mime-Version:
+     Content-Type:Content-Transfer-Encoding:List-Unsubscribe; b=aw+Bhd8
+    t1goZUXWBAHSrHaM1IdqhkXqF5WVMwGRYcnya4FHNw05XfpB3TTpTFda13DfhtziFRk
+    zHSfiNbMapv7Vz+D3A/9NHg5nKahSMosZVTa0BfajYWNd1aY8JUWUlxdQHxQQ4ygCBj
+    /MndJohtSm6K3gsqdIv88DNXdBGBEw=
+Date: Tue, 29 Jun 2010 15:42:25 +0000
+From: HomeRun <notification@blah.com>
+Reply-To: HomeRun <notification+45b0d380@blah.com>
+To: u@ci.com
+Message-ID: <4c2a146147ac8_61ff157c4ec1652df@s.h.c.mail>
+Subject: Your Friend F M wants you to join HomeRun
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_4c2a146141756_61ff157c4ec1649a8";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+List-Unsubscribe: <mailto:unsubscribe+45b0d380@blah.com>
+
+
+
+----==_mimepart_4c2a146141756_61ff157c4ec1649a8
+Date: Tue, 29 Jun 2010 15:42:25 +0000
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-ID: <4c2a146145451_61ff157c4ec165040@s.h.c.mail>
+
+SGV5IGNpbmd1bGFybWVmYXJpZGEsCgpGYXJpZGEgTWFsaWsgdGhpbmtzIHlv
+dSBzaG91bGQgYXBwbHkgdG8gam9pbiBIb21lUnVuLCB5b3VyIHBsYWNlIGZv
+dC4sIFNhbiBGcmFuY2lzY28sIENBLCA5NDEyMywgVVNB
+
+
+----==_mimepart_4c2a146141756_61ff157c4ec1649a8
+Date: Tue, 29 Jun 2010 15:42:25 +0000
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-ID: <4c2a1461468ae_61ff157c4ec165194@s.h.c.mail>
+
+PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KPHRpdGxlPkhvbWVSdW4g
+LSBZb3VyIEZyaWVuZCBGYXJpZGEgTWFsaWsgd2FudHMgeW91IHRvIGpvaW4g
+cnVuLmNvbS9vLjQ1YjBkMzgwLmdpZicgd2lkdGg9JzEnIC8+CjwvdGQ+Cjwv
+dHI+CjwvdGFibGU+CjwvdGQ+CjwvdHI+CjwvdGFibGU+CjwvZGl2Pgo8L2Jv
+ZHk+CjwvaHRtbD4K
+
+
+----==_mimepart_4c2a146141756_61ff157c4ec1649a8--
+
+--===========================_ _= 6078796(15102)1277826164--
+Comments

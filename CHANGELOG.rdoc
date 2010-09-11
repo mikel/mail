@@ -7,6 +7,7 @@
 * Force encoding on Regexp for Ruby 1.9 to avoid encoding conflicts - Golubev Pavel
 * Added lazy evaluation to message body: body is not parsed until need. It greatly improves performance with big mails if you don't need to read the body (yet)
 * Added Mail.read_from_string as an explicit method (mcansky)
+* Fixed bounce detection for multipart reports that contain a human readable report status part
 
 == Sat Sep 11 01:32:13 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 

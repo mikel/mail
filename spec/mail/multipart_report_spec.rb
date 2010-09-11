@@ -19,6 +19,11 @@ describe "multipart/report emails" do
       mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
       mail.delivery_status_part.should_not be_nil
     end
+    
+    it "should handle a report that has a human readable message/delivery-status" do
+      mail = Mail.read(fixture('emails', 'multipart_report_emails', 'multipart_report_multiple_status.eml'))
+      mail.should be_bounced
+    end
 
     describe "multipart reports with more than one address" do
       it "should not crash" do

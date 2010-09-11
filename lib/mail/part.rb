@@ -43,7 +43,7 @@ module Mail
     end
     
     def delivery_status_report_part?
-      main_type =~ /message/i && sub_type =~ /delivery-status/i
+      (main_type =~ /message/i && sub_type =~ /delivery-status/i) && body =~ /Status:/
     end
     
     def delivery_status_data
