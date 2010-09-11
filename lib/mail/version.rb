@@ -2,14 +2,11 @@
 module Mail
   module VERSION
     
-    def self.version
-      version_hash = {}
-      File.read(File.join(File.dirname(__FILE__), '../', 'VERSION')).each_line do |line|
-        type, value = line.chomp.split(":")
-        next if type =~ /^\s+$/  || value =~ /^\s+$/
-        version_hash[type] = value
-      end
-      version_hash
+    version = {}
+    File.read(File.join(File.dirname(__FILE__), '../', 'VERSION')).each_line do |line|
+      type, value = line.chomp.split(":")
+      next if type =~ /^\s+$/  || value =~ /^\s+$/
+      version[type] = value
     end
     
     MAJOR = version['major']
@@ -18,5 +15,10 @@ module Mail
     BUILD = version['build']
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
+    
+    def self.version
+      STRING
+    end
+    
   end
 end

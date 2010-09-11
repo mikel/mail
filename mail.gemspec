@@ -1,16 +1,8 @@
-def self.load_version
-  vh = {}
-  File.read(File.join(File.dirname(__FILE__), 'lib/VERSION')).lines do |line|
-    type, value = line.chomp.split(":")
-    next if type =~ /^\s+$/  || value =~ /^\s+$/
-    vh[type] = value
-  end
-  [ vh['major'], vh['minor'], vh['patch'], vh['build'] ].compact.join(".")
-end
+require File.dirname(__FILE__) + "/lib/mail/version"
 
 Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = load_version
+  s.version     = Mail::VERSION::STRING
   s.author      = "Mikel Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
