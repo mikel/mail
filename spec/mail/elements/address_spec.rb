@@ -527,6 +527,19 @@ describe Mail::Address do
             :raw          => 'jdoe@test.example'})
       end
 
+      it "should handle |groupname+domain.com@example.com|" do
+        address = Mail::Address.new('groupname+domain.com@example.com')
+        address.should break_down_to({
+            :name         => nil,
+            :display_name => nil,
+            :address      => 'groupname+domain.com@example.com',
+            :comments     => nil,
+            :domain       => 'example.com',
+            :local        => 'groupname+domain.com',
+            :format       => 'groupname+domain.com@example.com',
+            :raw          => 'groupname+domain.com@example.com'})
+      end
+
     end
     
   end
