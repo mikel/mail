@@ -93,6 +93,11 @@ describe Mail::ContentTypeField do
     end
 
     it "should render encoded" do
+      c = Mail::ContentTypeField.new('Content-Type: text/plain')
+      c.encoded.should == "Content-Type: text/plain\r\n"
+    end
+
+    it "should render encoded with parameters" do
       c = Mail::ContentTypeField.new('text/plain; charset=US-ASCII; format=flowed')
       c.encoded.should == %Q{Content-Type: text/plain;\r\n\scharset=US-ASCII;\r\n\sformat=flowed\r\n}
     end

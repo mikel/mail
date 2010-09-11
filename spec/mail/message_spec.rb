@@ -2,21 +2,33 @@
 require 'spec_helper'
 
 describe Mail::Message do
-  
+
   def basic_email
     "To: mikel\r\nFrom: bob\r\nSubject: Hello!\r\n\r\nemail message\r\n"
   end
-  
+
   describe "initialization" do
-  
+
     it "should instantiate empty" do
       Mail::Message.new.class.should == Mail::Message
     end
-  
+
+    it "should return a basic email" do
+      mail = Mail.new
+      mail = Mail.new(mail.to_s)
+      mail.date.should_not be_blank
+      mail.message_id.should_not be_blank
+      mail.mime_version.should == "1.0"
+      mail.content_type.should == "text/plain"
+      mail.content_transfer_encoding.should == "7bit"
+      mail.subject.should be_blank
+      mail.body.should be_blank
+    end
+
     it "should instantiate with a string" do
       Mail::Message.new(basic_email).class.should == Mail::Message
     end
-  
+
     it "should allow us to pass it a block" do
       mail = Mail::Message.new do
         from 'mikel@me.com'

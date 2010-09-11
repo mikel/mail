@@ -9,6 +9,7 @@
 * Added Mail.read_from_string as an explicit method (mcansky)
 * Fixed bounce detection for multipart reports that contain a human readable report status part
 * Closed Issue #65 found (incredibly) by quetz - major Kudos for bug hunting
+* Fixed missing trailing CRLF in content type field - Closes issue #57 - Kudos to Henry Flower for finding it
 
 == Sat Sep 11 01:32:13 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 

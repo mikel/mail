@@ -109,11 +109,11 @@ module Mail
     # TODO: Fix this up
     def encoded
       if parameters.length > 0
-        p = ";\r\n\s#{parameters.encoded}\r\n"
+        p = ";\r\n\s#{parameters.encoded}"
       else
         p = ""
       end
-      "#{CAPITALIZED_FIELD}: #{content_type}" + p
+      "#{CAPITALIZED_FIELD}: #{content_type}#{p}\r\n"
     end
 
     def decoded
