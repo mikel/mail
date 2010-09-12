@@ -15,11 +15,11 @@ module Mail
   #  string << 'Subject: This is an email\r\n'
   #  string << '\r\n'
   #  string << 'This is the body'
-  #  self.new(string)
+  #  Mail.new(string)
   # 
   # Or creating via a block:
   # 
-  #  message = self.new do
+  #  message = Mail.new do
   #    to 'mikel@test.lindsaar.net'
   #    from 'bob@test.lindsaar.net'
   #    subject 'This is an email'
@@ -28,7 +28,7 @@ module Mail
   # 
   # Or creating via a hash (or hash like object):
   # 
-  #  message = self.new({:to => 'mikel@test.lindsaar.net',
+  #  message = Mail.new({:to => 'mikel@test.lindsaar.net',
   #                      'from' => 'bob@test.lindsaar.net',
   #                       :subject 'This is an email',
   #                       :body 'This is the body' })
@@ -41,7 +41,7 @@ module Mail
   # a Mail::Message object directly and then passing in values via string,
   # symbol or direct method calls.  See Mail::Message for more information.
   # 
-  #  mail = self.new
+  #  mail = Mail.new
   #  mail.to = 'mikel@test.lindsaar.net'
   #  mail[:from] = 'bob@test.lindsaar.net'
   #  mail['subject'] = 'This is an email'
@@ -57,7 +57,7 @@ module Mail
   # So sending a new email, if you have an SMTP server running on localhost is
   # as easy as:
   # 
-  #   self.deliver do
+  #   Mail.deliver do
   #     to      'mikel@test.lindsaar.net'
   #     from    'bob@test.lindsaar.net'
   #     subject 'hi there!'
@@ -67,7 +67,7 @@ module Mail
   # If you do not specify anything, you will get the following equivalent code set in
   # every new mail object:
   # 
-  #   self.defaults do
+  #   Mail.defaults do
   #     delivery_method :smtp, { :address              => "localhost",
   #                              :port                 => 25,
   #                              :domain               => 'localhost.localdomain',
@@ -83,10 +83,10 @@ module Mail
   #                               :enable_ssl          => true }
   #   end
   # 
-  #   self.delivery_method.new  #=> Mail::SMTP instance
-  #   self.retriever_method.new #=> Mail::POP3 instance
+  #   Mail.delivery_method.new  #=> Mail::SMTP instance
+  #   Mail.retriever_method.new #=> Mail::POP3 instance
   #
-  # Each mail object inherits the default set in self.delivery_method, however, on
+  # Each mail object inherits the default set in Mail.delivery_method, however, on
   # a per email basis, you can override the method:
   #
   #   mail.delivery_method :sendmail
@@ -122,7 +122,7 @@ module Mail
   # 
   # If you do not specify a delivery type, SMTP will be used.
   # 
-  #  self.deliver do
+  #  Mail.deliver do
   #   to 'mikel@test.lindsaar.net'
   #   from 'ada@test.lindsaar.net'
   #   subject 'This is a test email'
@@ -131,7 +131,7 @@ module Mail
   # 
   # You can also do:
   # 
-  #  mail = self.read('email.eml')
+  #  mail = Mail.read('email.eml')
   #  mail.deliver!
   # 
   # And your email object will be created and sent.
