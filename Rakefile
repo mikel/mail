@@ -27,10 +27,18 @@ end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Mail'
-  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.title    = 'Mail - A Ruby Mail Library'
+
+  rdoc.options << '-c' << 'utf-8'
+  rdoc.options << '--line-numbers'
+  rdoc.options << '--inline-source'
+  rdoc.options << '-m' << 'README.rdoc'
+
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.include('lib/network/**/*.rb')
+  rdoc.rdoc_files.exclude('lib/parsers/*')
+  
 end
 
 # load custom rake tasks

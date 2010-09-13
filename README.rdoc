@@ -257,8 +257,13 @@ Sending via sendmail can be done like so:
   
   mail.deliver
 
-mail.deliver!
+{Learn more about SMTP Delivery}[link:classes/Mail/SMTP.html]
 
+{Learn more about File Delivery}[link:classes/Mail/FileDelivery.html]
+
+{Learn more about Sendmail Delivery}[link:classes/Mail/Sendmail.html]
+
+{Learn more about Test Email Delivery}[link:classes/Mail/TestMailer.html]
 
 === Getting emails from a pop server:
 
@@ -304,6 +309,10 @@ Or even all emails:
  emails = Mail.all
 
  emails.length #=> LOTS!
+
+{Learn more about POP3}[link:classes/Mail/POP3.html]
+
+{Learn more about IMAP}[link:classes/Mail/IMAP.html]
 
 === Reading an Email
 
