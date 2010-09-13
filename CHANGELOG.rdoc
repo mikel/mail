@@ -1,3 +1,8 @@
+== Mon Sep 13 02:31:21 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Replace some missing documentation
+* Version bump to 2.2.6.1
+
 == Sat 11 Sep 2010 05:13:36 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixed parsing an email with an empty In-Reply-To header (Reported by Eugene Pimenov)
