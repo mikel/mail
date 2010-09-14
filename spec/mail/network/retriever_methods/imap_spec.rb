@@ -123,6 +123,17 @@ describe "IMAP Retriever" do
     end
   end 
 
+  describe "connection" do
+    it "should raise an Error if no block is given" do
+      lambda { Mail.connection { |m| raise ArgumentError.new } }.should raise_error
+    end
+    it "should yield the connection object to the given block" do
+      Mail.connection do |connection|
+        connection.should be_an_instance_of(MockIMAP)
+      end
+    end
+  end
+
   describe "handling of options" do
     it "should set default options" do
       retrievable = Mail::IMAP.new({})

@@ -175,6 +175,10 @@ module Mail
   def Mail.delete_all(*args, &block)
     retriever_method.delete_all(*args, &block)
   end
+
+  def Mail.connection(&block)
+    retriever_method.connection(&block)
+  end
   
   
   # Initialize the observers and interceptors arrays

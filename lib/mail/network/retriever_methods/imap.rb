@@ -146,6 +146,15 @@ module Mail
       end
     end
 
+    # Returns the connection object of the retrievable (IMAP or POP3)
+    def connection(&block)
+      raise ArgumentError.new('Mail::Retrievable#connection takes a block') unless block_given?
+
+      start do |imap|
+        yield imap
+      end
+    end
+
     private
 
       # Set default options
