@@ -90,14 +90,14 @@ module Mail
     #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
     #          instance of Message, not an array of Message instances.
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
-    #           is false. Call #find_and_delete if you would like this to default to true.
+    #           is false. Use #find_and_delete if you would like this to default to true.
     #
     def find(options = {}, &block)
       options = validate_options(options)
       
       start do |pop3|
         mails = pop3.mails
-        pop3.reset # Clears all "deleted" marks, to prevent non-explicit/accidental deletions due to server settings.
+        pop3.reset # Clears all "deleted" marks. This prevents non-explicit/accidental deletions due to server settings.
         mails.sort! { |m1, m2| m2.number <=> m1.number } if options[:what] == :last
         mails = mails.first(options[:count]) if options[:count].is_a? Integer
         
