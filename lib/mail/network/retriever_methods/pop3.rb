@@ -95,6 +95,8 @@ module Mail
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
     #          instance of Message, not an array of Message instances.
+    #   delete_after_find: flag for whether to delete each retreived email after find. Default
+    #           is false. Call #find_and_delete if you would like this to default to true.
     #
     def find(options = {}, &block)
       options = validate_options(options)
