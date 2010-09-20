@@ -147,6 +147,12 @@ module Mail
     retriever_method.find(*args, &block)
   end
 
+  # Finds and the deletes found emails from a POP3 server.
+  # See Mail::POP3 for a complete documentation.
+  def self.find_and_delete(*args, &block)
+    retriever_method.find_and_delete(*args, &block)
+  end
+
   # Receive the first email(s) from a Pop3 server.
   # See Mail::POP3 for a complete documentation.
   def self.first(*args, &block)

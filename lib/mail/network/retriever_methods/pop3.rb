@@ -118,6 +118,45 @@ module Mail
       end
     end
     
+    # Find emails in a POP3 mailbox, and then deletes them. Without any options, the 
+    # five last received emails are returned.
+    #
+    # Possible options:
+    #   what:  last or first emails. The default is :first.
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+    #          instance of Message, not an array of Message instances.
+    #
+    def find_and_delete(options = {}, &block)
+      options = validate_options(options)
+      
+      start_with_delete do |pop3|
+        mails = pop3.mails
+        mails.sort! { |m1, m2| m2.number <=> m1.number } if options[:what] == :last
+        mails = mails.first(options[:count]) if options[:count].is_a? Integer
+        
+        if options[:what].to_sym == :last && options[:order].to_sym == :desc ||
+           options[:what].to_sym == :first && options[:order].to_sym == :asc ||
+          mails.reverse!
+        end
+        
+        if block_given?
+          mails.each do |mail|
+            yield Mail.new(mail.pop)
+            mail.delete
+          end
+        else
+          emails = []
+          mails.each do |mail|
+            emails << Mail.new(mail.pop)
+            mail.delete
+          end
+          emails.size == 1 && options[:count] == 1 ? emails.first : emails
+        end        
+      end
+    end
+    
+    
     # Delete all emails from a POP3 server   
     def delete_all
       start do |pop3|
@@ -151,6 +190,32 @@ module Mail
     ensure
       if defined?(pop3) && pop3 && pop3.started?
         pop3.reset # This clears all "deleted" marks from messages.
+        pop3.finish
+      end
+    end
+  
+    # Start a POP3 session, ensuring that messages marked for deletion will
+    # be deleted, and that the sesssion will be closed in any case.
+    def start_with_delete(config = Configuration.instance, &block)
+      raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
+    
+      pop3 = Net::POP3.new(settings[:address], settings[:port], isapop = false)
+      pop3.enable_ssl(verify = OpenSSL::SSL::VERIFY_NONE) if settings[:enable_ssl]
+      pop3.start(settings[:user_name], settings[:password])
+    
+      yield pop3
+    ensure
+      if defined?(pop3) && pop3 && pop3.started?
+        # Note [M7]: I'm not sure why this #reset is here. Is
+        # it because some servers flag to be deleted after each 
+        # session automatically (just guessing)? If so, maybe
+        # we could move it before the call to #start, so that 
+        # the messages we flag for deletion are still deleted
+        # when the session closes? For now, I've commented
+        # it out, because the :delete_after_find option won't
+        # work if #reset is called.
+        
+        #pop3.reset # This clears all "deleted" marks from messages.
         pop3.finish
       end
     end
