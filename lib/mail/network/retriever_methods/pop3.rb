@@ -108,8 +108,10 @@ module Mail
         
         if block_given?
           mails.each do |mail|
-            yield Mail.new(mail.pop)
-            mail.delete if options[:delete_after_find]
+            new_message = Mail.new(mail.pop)
+            new_message.marked_for_delete = true if options[:delete_after_find]
+            yield new_message
+            mail.delete if options[:delete_after_find] && new_message.is_marked_for_delete? # Delete if still marked for delete
           end
         else
           emails = []
@@ -162,7 +164,7 @@ module Mail
       options
     end
   
-    # Start a POP3 session and ensures that it will be closed in any case. Any messages
+    # Start a POP3 session and ensure that it will be closed in any case. Any messages
     # marked for deletion via #find_and_delete or with the :delete_after_find option
     # will be deleted when the session is closed.
     def start(config = Configuration.instance, &block)
