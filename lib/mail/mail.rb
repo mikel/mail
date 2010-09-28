@@ -187,6 +187,10 @@ module Mail
     Mail.new(mail_as_string)
   end
 
+  def Mail.connection(&block)
+    retriever_method.connection(&block)
+  end
+
   # Initialize the observers and interceptors arrays
   @@delivery_notification_observers = []
   @@delivery_interceptors = []

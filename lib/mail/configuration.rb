@@ -53,6 +53,8 @@ module Mail
         Mail::POP3
       when :pop3
         Mail::POP3
+      when :imap
+        Mail::IMAP
       else
         method
       end
