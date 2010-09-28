@@ -104,7 +104,7 @@ module Mail
     #  a.local #=> 'mikel'
     def local
       parse unless @parsed
-      "#{obs_domain_list}#{get_local.strip}"
+      "#{obs_domain_list}#{get_local.strip}" if get_local
     end
 
     # Returns the domain part (the right hand side of the @ sign in the email address) of
@@ -297,7 +297,7 @@ module Mail
       when tree.respond_to?(:addr_spec)
         tree.addr_spec.local_part.text_value
       else
-        tree.local_part.text_value
+        tree ? tree.local_part.text_value : nil
       end
     end
     

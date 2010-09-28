@@ -19,6 +19,24 @@ describe Mail::Address do
       Mail::Address.new.format.should == ''
     end
 
+    it "should allow us to instantiate an empty address object and call address" do
+      [nil, '', ' '].each do |input|
+        Mail::Address.new(input).address.should == nil
+      end
+    end
+
+    it "should allow us to instantiate an empty address object and call local" do
+      [nil, '', ' '].each do |input|
+        Mail::Address.new(input).local.should == nil
+      end
+    end
+
+    it "should allow us to instantiate an empty address object and call domain" do
+      [nil, '', ' '].each do |input|
+        Mail::Address.new(input).domain.should == nil
+      end
+    end
+
     it "should give it's address back on :to_s if there is no display name" do
       parse_text  = 'test@lindsaar.net'
       result      = 'test@lindsaar.net'
