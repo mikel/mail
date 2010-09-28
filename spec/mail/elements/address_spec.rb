@@ -5,22 +5,18 @@ describe Mail::Address do
 
   describe "functionality" do
 
-    it "should allow us to instantiate an empty address object and call to_s" do
-#      doing { 
+    it "should allow us to instantiate an empty address object and call inspect" do
+      doing { 
         Mail::Address.new.inspect
-#      }.should_not raise_error
+      }.should_not raise_error
     end
 
-    it "should allow us to instantiate an empty address object and call inspect" do
-#      doing { 
-        Mail::Address.new.inspect
-#      }.should_not raise_error
+    it "should allow us to instantiate an empty address object and call to_s" do
+      Mail::Address.new.to_s.should == ''
     end
 
     it "should allow us to instantiate an empty address object and call format" do
-#      doing { 
-        Mail::Address.new.format
-#      }.should_not raise_error
+      Mail::Address.new.format.should == ''
     end
 
     it "should give it's address back on :to_s if there is no display name" do
