@@ -1,6 +1,7 @@
 == Tue Sep 28 14:59:03 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Merged POP3 delete support work from Michael Prendergast
+* Merged IMAP support work from Fabian Staubli
 
 == Mon Sep 13 02:31:21 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
