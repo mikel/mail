@@ -13,10 +13,20 @@ module Mail
     include Mail::Utilities
 
     def [](key_name)
-      pairs = select { |k,v| k =~ /^#{key_name}\*/ }
-      pairs = pairs.to_a if RUBY_VERSION >= '1.9'
+      key_pattern = Regexp.escape(key_name.to_s)
+      pairs = []
+      exact = nil
+      each do |k,v|
+        if k =~ /^#{key_pattern}(\*|$)/i
+          if $1 == '*'
+            pairs << [k, v]
+          else
+            exact = k
+          end
+        end
+      end
       if pairs.empty? # Just dealing with a single value pair
-        super(key_name)
+        super(exact || key_name)
       else # Dealing with a multiple value pair or a single encoded value pair
         string = pairs.sort { |a,b| a.first <=> b.first }.map { |v| v.last }.join('')
         if mt = string.match(/([\w\d\-]+)'(\w\w)'(.*)/)
