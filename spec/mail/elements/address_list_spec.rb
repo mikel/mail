@@ -46,6 +46,13 @@ describe Mail::AddressList do
       a.addresses.first.display_name.should == 'Mikel Lindsaar'
     end
 
+    it "should handle nil addresses" do
+      parse_text  = ',info@othercompany.it,'
+      result      = 'info@othercompany.it'
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.first.address.should == result
+    end
+
   end
   
   describe "functionality" do
