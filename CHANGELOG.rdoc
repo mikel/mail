@@ -1,3 +1,13 @@
+== Thu Oct  7 15:44:31 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Version Bump to 2.2.7
+* Release 2.2.7
+
+== Thu Oct  7 15:42:57 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Added fix for Windows using 'rb' flags, thanks to Luis Lavena and dzhang for pointing it out
+* Fixed up Rakefile to require bundler to run specs and give more appropriate errors messages if this fails
+
 == Tue Sep 28 14:59:03 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Merged POP3 delete support work from Michael Prendergast
