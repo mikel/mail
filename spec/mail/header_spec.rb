@@ -53,6 +53,11 @@ describe Mail::Header do
       header.charset.should == 'utf-8'
     end
     
+    it "shouldn't die when queried for a charset and the content-type header is invalid" do
+      header = Mail::Header.new
+      header['Content-Type'] = 'invalid/invalid; charset="iso-8859-1"'
+      doing { header.charset }.should_not raise_error
+    end
   end
 
   describe "creating fields" do
@@ -375,7 +380,6 @@ describe Mail::Header do
       header['From'] = 'bob@test.lindsaar.net'
       header['From'].field.class.should == Mail::FromField
     end
-    
   end
 
   describe "folding and unfolding" do
