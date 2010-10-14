@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'treetop/compiler'
 
 Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/rfc2822_obsolete'))
 Treetop.load(File.join(MAIL_ROOT, 'lib/mail/parsers/rfc2822'))
