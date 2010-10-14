@@ -173,7 +173,7 @@ module Mail
 
   # Reads in an email message from a path and instantiates it as a new Mail::Message
   def self.read(filename)
-    self.new(File.read(filename))
+    self.new(File.open(filename, 'rb') { |f| f.read })
   end
 
   # Delete all emails from a POP3 server.

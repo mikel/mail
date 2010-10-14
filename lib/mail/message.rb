@@ -1624,10 +1624,10 @@ module Mail
       add_multipart_mixed_header
       if values.is_a?(String)
         basename = File.basename(values)
-        filedata = File.read(values)
+        filedata = File.open(values, 'rb') { |f| f.read }
       else
         basename = values[:filename]
-        filedata = values[:content] || File.read(values[:filename])
+        filedata = values[:content] || File.open(values[:filename], 'rb') { |f| f.read }
       end
       self.attachments[basename] = filedata
     end
