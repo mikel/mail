@@ -1447,5 +1447,18 @@ describe Mail::Message do
       mail.parts[1].mime_type.should == "image/png"
     end
   end
-  
+
+  describe "attachment query methods" do
+    it "shouldn't die with an invalid Content-Disposition header" do
+      mail = Mail.new('Content-Disposition: invalid')
+      doing { mail.attachment? }.should_not raise_error
+    end
+
+    it "shouldn't die with an invalid Content-Type header" do
+      mail = Mail.new('Content-Type: invalid/invalid; charset="iso-8859-1"')
+      doing { mail.attachment? }.should_not raise_error
+    end
+
+  end  
+
 end
