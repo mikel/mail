@@ -109,7 +109,7 @@ module Mail
         if block_given?
           mails.each do |mail|
             new_message = Mail.new(mail.pop)
-            new_message.marked_for_delete = true if options[:delete_after_find]
+            new_message.mark_for_delete = true if options[:delete_after_find]
             yield new_message
             mail.delete if options[:delete_after_find] && new_message.is_marked_for_delete? # Delete if still marked for delete
           end
