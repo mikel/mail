@@ -136,6 +136,7 @@ module Mail
     # Delete all emails from a IMAP mailbox
     def delete_all(mailbox='INBOX')
       mailbox ||= 'INBOX'
+      mailbox = Net::IMAP.encode_utf7(mailbox)
 
       start do |imap|
         imap.select(mailbox)
@@ -165,6 +166,9 @@ module Mail
         options[:order]   ||= :asc
         options[:what]    ||= :first
         options[:keys]    ||= 'ALL'
+
+        options[:mailbox] = Net::IMAP.encode_utf7(options[:mailbox])
+
         options
       end
 

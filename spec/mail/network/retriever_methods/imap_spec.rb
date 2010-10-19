@@ -117,6 +117,8 @@ describe "IMAP Retriever" do
   describe "delete_all" do
     it "should delete all messages" do
       messages = Mail.all
+
+      Net::IMAP.should_receive(:encode_utf7).once
       Mail.delete_all
 
       MockIMAP.examples.size.should == 0
@@ -171,6 +173,15 @@ describe "IMAP Retriever" do
 
       options[:mailbox].should be_present
       options[:mailbox].should == 'some/mail/box'
+    end
+    it "should ensure utf7 conversion for mailbox names" do
+      retrievable = Mail::IMAP.new({})
+
+      Net::IMAP.stub!(:encode_utf7 => 'UTF7_STRING')
+      options = retrievable.send(:validate_options, {
+        :mailbox => 'UTF8_STRING'
+      })
+      options[:mailbox].should == 'UTF7_STRING'
     end
   end
 
