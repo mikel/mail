@@ -176,6 +176,22 @@ module Mail
     def underscoreize( str )
       str.to_s.downcase.gsub('-', '_')
     end
+
+    def lines( str )
+      results = []
+      str.each_line do |line|
+        results << line
+      end
+      results
+    end
+
+    def map_with_index( enum, &block )
+      results = []
+      enum.each_with_index do |token, i|
+        results[i] = yield(token, i)
+      end
+      results
+    end
     
   end
 end
