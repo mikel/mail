@@ -186,7 +186,7 @@ module Mail
       address.gsub!(/(".*?[^#{us_ascii}].+?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
       tokens = address.split(/\s/)
-      tokens.each_with_index.map do |word, i|
+      map_with_index(tokens) do |word, i|
         if word.ascii_only?
           word
         else
@@ -209,7 +209,7 @@ module Mail
     def Encodings.b_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.b_value_encode(str, encoding)
-      string.each_line.map do |str|
+      lines(string).map do |str|
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
     end
@@ -225,7 +225,7 @@ module Mail
       return str if str.to_s.ascii_only?
       string, encoding = RubyVer.q_value_encode(str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
-      string.each_line.map do |str|
+      lines(string).map do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
       end.join(" ")
     end
