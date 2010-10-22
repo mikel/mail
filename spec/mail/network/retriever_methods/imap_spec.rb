@@ -75,6 +75,17 @@ describe "IMAP Retriever" do
 
       MockIMAP.mailbox.should == 'INBOX'
     end
+
+    it "should handle the delete_after_find_option" do
+      Mail.find(:delete_after_find => false)
+      MockIMAP.examples.size.should == 20
+
+      Mail.find(:delete_after_find => true)
+      MockIMAP.examples.size.should == 10
+
+      Mail.find(:delete_after_find => true) { |message| }
+      MockIMAP.examples.size.should == 10
+    end
   end
 
   describe "last" do
