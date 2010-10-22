@@ -85,6 +85,10 @@ describe "POP3 Retriever" do
       Mail.find(:delete_after_find => true)
       MockPOP3.popmails.first(10).each { |message| message.should be_deleted }
       MockPOP3.popmails.last(10).each { |message| message.should_not be_deleted }
+
+      Mail.find(:delete_after_find => true) { |message| }
+      MockPOP3.popmails.first(10).each { |message| message.should be_deleted }
+      MockPOP3.popmails.last(10).each { |message| message.should_not be_deleted }
     end
 
     it "should handle the find_and_delete method" do
