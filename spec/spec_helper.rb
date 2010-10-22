@@ -90,6 +90,7 @@ class MockPopMail
   def initialize(rfc2822, number)
     @rfc2822 = rfc2822
     @number = number
+    @deleted = false
   end
   
   def pop
@@ -102,6 +103,14 @@ class MockPopMail
   
   def to_s
     "#{number}: #{pop}"
+  end
+
+  def delete
+    @deleted = true
+  end
+
+  def deleted?
+    @deleted
   end
 end
 
@@ -119,7 +128,7 @@ class MockPOP3
   def self.popmails
     @@popmails.clone
   end
-  
+
   def each_mail(*args)
     @@popmails.each do |popmail|
       yield popmail
