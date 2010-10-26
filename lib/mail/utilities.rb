@@ -177,21 +177,35 @@ module Mail
       str.to_s.downcase.gsub('-', '_')
     end
 
-    def lines( str )
-      results = []
-      str.each_line do |line|
-        results << line
+    if RUBY_VERSION <= '1.8.6'
+
+      def map_lines( str, &block )
+        results = []
+        str.each_line do |line|
+          results << yield(line)
+        end
+        results
       end
-      results
+  
+      def map_with_index( enum, &block )
+        results = []
+        enum.each_with_index do |token, i|
+          results[i] = yield(token, i)
+        end
+        results
+      end
+      
+    else
+
+      def map_lines( str, &block )
+        str.each_line.map(&block)
+      end
+
+      def map_with_index( enum, &block )
+        enum.each_with_index.map(&block)
+      end
+
     end
 
-    def map_with_index( enum, &block )
-      results = []
-      enum.each_with_index do |token, i|
-        results[i] = yield(token, i)
-      end
-      results
-    end
-    
   end
 end
