@@ -1,9 +1,10 @@
 source :rubygems
 
-gem "activesupport", "~> 2.3.6.pre"
+gem "activesupport", ">= 2.3.6"
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 gem "mime-types", "~> 1.16"
 gem "treetop", "~> 1.4.8"
+gem "i18n", "~> 0.4.1"
 
 group :test do
   gem "ZenTest",    "~> 4.4.0"
