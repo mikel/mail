@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Mail
-  # The IMAP retriever allows to get the last, first or all emails from a POP3 server.
+  # The IMAP retriever allows to get the last, first or all emails from a IMAP server.
   # Each email retrieved (RFC2822) is given as an instance of +Message+.
   #
   # While being retrieved, emails can be yielded if a block is given.
@@ -94,7 +94,7 @@ module Mail
       find(options, &block)
     end
     
-    # Find emails in a POP3 mailbox. Without any options, the 10 last received emails are returned.
+    # Find emails in a IMAP mailbox. Without any options, the 10 last received emails are returned.
     #
     # Possible options:
     #   mailbox: mailbox to search the email(s) in. The default is 'INBOX'.
@@ -102,6 +102,8 @@ module Mail
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
     #            instance of Message, not an array of Message instances.
+    #   delete_after_find: flag for whether to delete each retreived email after find. Default
+    #           is false. Use #find_and_delete if you would like this to default to true.
     #
     def find(options={}, &block)
       options = validate_options(options)
@@ -136,6 +138,23 @@ module Mail
         end
       end
     end
+
+    # Find emails in a IMAP mailbox, and then deletes them. Without any options, the 
+    # five last received emails are returned.
+    #
+    # Possible options:
+    #   what:  last or first emails. The default is :first.
+    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+    #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+    #          instance of Message, not an array of Message instances.
+    #   delete_after_find: flag for whether to delete each retreived email after find. Default
+    #           is true. Use #find_and_delete if you would like this to default to false.
+    #
+    def find_and_delete(options = {}, &block)
+      options ||= {}
+      options[:delete_after_find] ||= true
+      find(options, &block)      
+    end 
 
     # Delete all emails from a IMAP mailbox
     def delete_all(mailbox='INBOX')
