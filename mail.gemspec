@@ -3,9 +3,9 @@ require File.dirname(__FILE__) + "/lib/mail/version"
 Gem::Specification.new do |s|
   s.name        = "mail"
   s.version     = Mail::VERSION::STRING
-  s.authors     = ["Mikel Lindsaar", "Donald Ball"]
-  s.email       = ["raasdnil@gmail.com", "donald.ball@gmail.com"]
-  s.homepage    = "http://github.com/dball/mail"
+  s.author      = "Mikel Lindsaar"
+  s.email       = "raasdnil@gmail.com"
+  s.homepage    = "http://github.com/mikel/mail"
   s.description = "A really Ruby Mail handler."
   s.summary     = "Mail provides a nice Ruby DSL for making, sending and reading emails."
 
