@@ -1,3 +1,7 @@
+== Tue Oct 26 07:14:36 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Always encode mailbox names with UTF-7 (github: fasta)
+
 == Tue Oct 26 06:43:17 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Added updates from Donald Ball (github: dball) to improve 1.8.6 support
