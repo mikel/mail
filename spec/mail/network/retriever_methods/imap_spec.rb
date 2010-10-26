@@ -86,6 +86,12 @@ describe "IMAP Retriever" do
       Mail.find(:delete_after_find => true) { |message| }
       MockIMAP.examples.size.should == 10
     end
+
+    it "should handle the find_and_delete method" do
+      Mail.find_and_delete(:count => 15)
+      MockIMAP.examples.size.should == 5
+    end
+    
   end
 
   describe "last" do
