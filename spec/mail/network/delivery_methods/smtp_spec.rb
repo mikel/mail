@@ -12,7 +12,8 @@ describe "SMTP Delivery Method" do
                                :user_name            => nil,
                                :password             => nil,
                                :authentication       => nil,
-                               :enable_starttls_auto => true  }
+                               :enable_starttls_auto => true,
+                               :openssl_verify_mode  => nil }
     end
     MockSMTP.clear_deliveries
   end

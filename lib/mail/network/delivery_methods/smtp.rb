@@ -68,7 +68,9 @@ module Mail
                         :user_name            => nil,
                         :password             => nil,
                         :authentication       => nil,
-                        :enable_starttls_auto => true  }.merge!(values)
+                        :enable_starttls_auto => true,
+                        :openssl_verify_mode  => nil
+                      }.merge!(values)
     end
     
     attr_accessor :settings
@@ -95,7 +97,19 @@ module Mail
       
       smtp = Net::SMTP.new(settings[:address], settings[:port])
       if settings[:enable_starttls_auto]
-        smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto) 
+        if smtp.respond_to?(:enable_starttls_auto) 
+          unless settings[:openssl_verify_mode]
+            smtp.enable_starttls_auto
+          else
+            openssl_verify_mode = settings[:openssl_verify_mode]
+            if openssl_verify_mode.kind_of?(String)
+              openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
+            end
+            context = Net::SMTP.default_ssl_context
+            context.verify_mode = openssl_verify_mode
+            smtp.enable_starttls_auto(context)
+          end
+        end
       end
       
       smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp|
