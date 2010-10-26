@@ -45,6 +45,13 @@ describe Mail::ContentDispositionField do
       c = Mail::ContentDispositionField.new('Content-Disposition: inline')
       c.decoded.should == 'inline'
     end
+
+    it "should handle upper and mixed case INLINE and AttachMent" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: INLINE')
+      c.decoded.should == 'inline'
+      c = Mail::ContentDispositionField.new('Content-Disposition: AttachMent')
+      c.decoded.should == 'attachment'
+    end
   end
   
   describe "instance methods" do

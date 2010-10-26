@@ -113,6 +113,12 @@ module Mail
       r0
     end
 
+    module DispositionType0
+    end
+
+    module DispositionType1
+    end
+
     def _nt_disposition_type
       start_index = index
       if node_cache[:disposition_type].has_key?(index)
@@ -125,39 +131,181 @@ module Mail
       end
 
       i0 = index
-      if has_terminal?("inline", false, index)
-        r1 = instantiate_node(SyntaxNode,input, index...(index + 6))
-        @index += 6
+      i1, s1 = index, []
+      if has_terminal?('\G[iI]', true, index)
+        r2 = true
+        @index += 1
       else
-        terminal_parse_failure("inline")
+        r2 = nil
+      end
+      s1 << r2
+      if r2
+        if has_terminal?('\G[nN]', true, index)
+          r3 = true
+          @index += 1
+        else
+          r3 = nil
+        end
+        s1 << r3
+        if r3
+          if has_terminal?('\G[lL]', true, index)
+            r4 = true
+            @index += 1
+          else
+            r4 = nil
+          end
+          s1 << r4
+          if r4
+            if has_terminal?('\G[iI]', true, index)
+              r5 = true
+              @index += 1
+            else
+              r5 = nil
+            end
+            s1 << r5
+            if r5
+              if has_terminal?('\G[nN]', true, index)
+                r6 = true
+                @index += 1
+              else
+                r6 = nil
+              end
+              s1 << r6
+              if r6
+                if has_terminal?('\G[eE]', true, index)
+                  r7 = true
+                  @index += 1
+                else
+                  r7 = nil
+                end
+                s1 << r7
+              end
+            end
+          end
+        end
+      end
+      if s1.last
+        r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+        r1.extend(DispositionType0)
+      else
+        @index = i1
         r1 = nil
       end
       if r1
         r0 = r1
       else
-        if has_terminal?("attachment", false, index)
-          r2 = instantiate_node(SyntaxNode,input, index...(index + 10))
-          @index += 10
+        i8, s8 = index, []
+        if has_terminal?('\G[aA]', true, index)
+          r9 = true
+          @index += 1
         else
-          terminal_parse_failure("attachment")
-          r2 = nil
+          r9 = nil
         end
-        if r2
-          r0 = r2
+        s8 << r9
+        if r9
+          if has_terminal?('\G[tT]', true, index)
+            r10 = true
+            @index += 1
+          else
+            r10 = nil
+          end
+          s8 << r10
+          if r10
+            if has_terminal?('\G[tT]', true, index)
+              r11 = true
+              @index += 1
+            else
+              r11 = nil
+            end
+            s8 << r11
+            if r11
+              if has_terminal?('\G[aA]', true, index)
+                r12 = true
+                @index += 1
+              else
+                r12 = nil
+              end
+              s8 << r12
+              if r12
+                if has_terminal?('\G[cC]', true, index)
+                  r13 = true
+                  @index += 1
+                else
+                  r13 = nil
+                end
+                s8 << r13
+                if r13
+                  if has_terminal?('\G[hH]', true, index)
+                    r14 = true
+                    @index += 1
+                  else
+                    r14 = nil
+                  end
+                  s8 << r14
+                  if r14
+                    if has_terminal?('\G[mM]', true, index)
+                      r15 = true
+                      @index += 1
+                    else
+                      r15 = nil
+                    end
+                    s8 << r15
+                    if r15
+                      if has_terminal?('\G[eE]', true, index)
+                        r16 = true
+                        @index += 1
+                      else
+                        r16 = nil
+                      end
+                      s8 << r16
+                      if r16
+                        if has_terminal?('\G[nN]', true, index)
+                          r17 = true
+                          @index += 1
+                        else
+                          r17 = nil
+                        end
+                        s8 << r17
+                        if r17
+                          if has_terminal?('\G[tT]', true, index)
+                            r18 = true
+                            @index += 1
+                          else
+                            r18 = nil
+                          end
+                          s8 << r18
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+        if s8.last
+          r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+          r8.extend(DispositionType1)
         else
-          r3 = _nt_extension_token
-          if r3
-            r0 = r3
+          @index = i8
+          r8 = nil
+        end
+        if r8
+          r0 = r8
+        else
+          r19 = _nt_extension_token
+          if r19
+            r0 = r19
           else
             if has_terminal?('', false, index)
-              r4 = instantiate_node(SyntaxNode,input, index...(index + 0))
+              r20 = instantiate_node(SyntaxNode,input, index...(index + 0))
               @index += 0
             else
               terminal_parse_failure('')
-              r4 = nil
+              r20 = nil
             end
-            if r4
-              r0 = r4
+            if r20
+              r0 = r20
             else
               @index = i0
               r0 = nil

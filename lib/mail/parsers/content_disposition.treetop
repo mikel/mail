@@ -15,7 +15,7 @@ module Mail
     end
     
     rule disposition_type
-      "inline" / "attachment" / extension_token / ''
+      [iI] [nN] [lL] [iI] [nN] [eE] / [aA] [tT] [tT] [aA] [cC] [hH] [mM] [eE] [nN] [tT] / extension_token / ''
     end
     
     rule extension_token

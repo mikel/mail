@@ -18,6 +18,15 @@ describe Mail::ParameterHash do
     hash[:value2].should == 'two'
   end
 
+  it "should return the values in the hash using case-insensitive key matching" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value1' => 'one', 'VALUE2' => 'two'})
+    hash['VALUE1'].should == 'one'
+    hash['vAlUe2'].should == 'two'
+    hash[:VaLuE1].should == 'one'
+    hash[:value2].should == 'two'
+  end
+
   it "should return the correct value if they are not encoded" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value1' => 'one', 'value2' => 'two'})

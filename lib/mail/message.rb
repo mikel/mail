@@ -1276,11 +1276,13 @@ module Mail
     end
 
     def has_content_type?
-      !!header[:content_type]
+      tmp = header[:content_type].main_type rescue nil
+      !!tmp
     end
 
     def has_charset?
-      !!(has_content_type? && header[:content_type].parameters['charset'])
+      tmp = header[:content_type].parameters rescue nil
+      !!(has_content_type? && tmp && tmp['charset'])
     end
 
     def has_content_transfer_encoding?
@@ -1369,7 +1371,7 @@ module Mail
 
     # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
-      content_type ? header[:content_type].string : nil
+      content_type ? header[:content_type].string : nil rescue nil
     end
 
     def message_content_type
@@ -1395,12 +1397,12 @@ module Mail
 
     # Returns the main content type
     def main_type
-      has_content_type? ? header[:content_type].main_type : nil
+      has_content_type? ? header[:content_type].main_type : nil rescue nil
     end
 
     # Returns the sub content type
     def sub_type
-      has_content_type? ? header[:content_type].sub_type : nil
+      has_content_type? ? header[:content_type].sub_type : nil rescue nil
     end
 
     # Returns the content type parameters
@@ -1411,7 +1413,7 @@ module Mail
 
     # Returns the content type parameters
     def content_type_parameters
-      has_content_type? ? header[:content_type].parameters : nil
+      has_content_type? ? header[:content_type].parameters : nil rescue nil
     end
 
     # Returns true if the message is multipart
@@ -1904,13 +1906,16 @@ module Mail
 
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
+      content_type_name = header[:content_type].filename rescue nil
+      content_disp_name = header[:content_disposition].filename rescue nil
+      content_loc_name  = header[:content_location].location rescue nil
       case
-      when content_type && header[:content_type].filename
-        filename = header[:content_type].filename
-      when content_disposition && header[:content_disposition].filename
-        filename = header[:content_disposition].filename
-      when content_location && header[:content_location].location
-        filename = header[:content_location].location
+      when content_type && content_type_name
+        filename = content_type_name
+      when content_disposition && content_disp_name
+        filename = content_disp_name
+      when content_location && content_loc_name
+        filename = content_loc_name
       else
         filename = nil
       end
