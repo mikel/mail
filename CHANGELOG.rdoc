@@ -1,5 +1,7 @@
 == Tue Oct 26 07:14:36 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
+* Version Bump to 2.2.9 and tag
+* Added work from Kendall Gifford closing issues #104, #107 and #117
 * Always encode mailbox names with UTF-7 (github: fasta)
 
 == Tue Oct 26 06:43:17 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
