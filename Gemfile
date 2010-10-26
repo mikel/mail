@@ -19,8 +19,6 @@ group :test do
     # Skip it
   when RUBY_VERSION < '1.9'
     gem "ruby-debug"
-  when RUBY_VERSION > '1.9' && RUBY_VERSION < '1.9.2'
-    gem "ruby-debug19"
   else
     # Skip it
   end
