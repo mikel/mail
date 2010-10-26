@@ -118,16 +118,20 @@ module Mail
         if block_given?
           message_ids.each do |message_id|
             fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
-
-            yield Mail.new(fetchdata.attr['RFC822'])
+            new_message = Mail.new(fetchdata.attr['RFC822'])
+            new_message.mark_for_delete = true if options[:delete_after_find]
+            yield new_message
+            imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
           end
+          imap.expunge if options[:delete_after_find]
         else
           emails = []
           message_ids.each do |message_id|
             fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
-
             emails << Mail.new(fetchdata.attr['RFC822'])
+            imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find]
           end
+          imap.expunge if options[:delete_after_find]
           emails.size == 1 && options[:count] == 1 ? emails.first : emails
         end
       end
@@ -165,6 +169,7 @@ module Mail
         options[:order]   ||= :asc
         options[:what]    ||= :first
         options[:keys]    ||= 'ALL'
+        options[:delete_after_find] ||= false
         options
       end
 
