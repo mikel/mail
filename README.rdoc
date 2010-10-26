@@ -257,13 +257,13 @@ Sending via sendmail can be done like so:
   
   mail.deliver
 
-{Learn more about SMTP Delivery}[link:classes/Mail/SMTP.html]
+{Learn more about SMTP Delivery}[link:http://rdoc.info/github/mikel/mail/master/Mail/SMTP]
 
-{Learn more about File Delivery}[link:classes/Mail/FileDelivery.html]
+{Learn more about File Delivery}[link:http://rdoc.info/github/mikel/mail/master/Mail/FileDelivery]
 
-{Learn more about Sendmail Delivery}[link:classes/Mail/Sendmail.html]
+{Learn more about Sendmail Delivery}[link:http://rdoc.info/github/mikel/mail/master/Mail/Sendmail]
 
-{Learn more about Test Email Delivery}[link:classes/Mail/TestMailer.html]
+{Learn more about Test Email Delivery}[link:http://rdoc.info/github/mikel/mail/master/Mail/TestMailer]
 
 === Getting emails from a pop server:
 
@@ -310,9 +310,9 @@ Or even all emails:
 
  emails.length #=> LOTS!
 
-{Learn more about POP3}[link:classes/Mail/POP3.html]
+{Learn more about POP3}[link:http://rdoc.info/github/mikel/mail/master/Mail/POP3]
 
-{Learn more about IMAP}[link:classes/Mail/IMAP.html]
+{Learn more about IMAP}[link:http://rdoc.info/github/mikel/mail/master/Mail/IMAP]
 
 === Reading an Email
 
