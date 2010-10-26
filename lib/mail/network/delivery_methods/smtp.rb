@@ -34,6 +34,18 @@ module Mail
   #                              :enable_starttls_auto => true  }
   #   end
   #
+  # === Certificate verification
+  #
+  # When using TLS, some mail servers provide certificates that are self-signed
+  # or whose names do not exactly match the hostname given in the address.
+  # OpenSSL will reject these by default. The best remedy is to use the correct
+  # hostname or update the certificate authorities trusted by your ruby. If
+  # that isn't possible, you can control this behavior with
+  # an :openssl_verify_mode setting. Its value may be either an OpenSSL
+  # verify mode constant (OpenSSL::SSL::VERIFY_NONE), or a string containing
+  # the name of an OpenSSL verify mode (none, peer, client_once,
+  # fail_if_no_peer_cert).
+  #
   # === Others 
   # 
   # Feel free to send me other examples that were tricky
