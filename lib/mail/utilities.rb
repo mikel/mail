@@ -177,7 +177,6 @@ module Mail
       str.to_s.downcase.gsub('-', '_')
     end
 
-<<<<<<< HEAD
     if RUBY_VERSION <= '1.8.6'
 
       def map_lines( str, &block )
