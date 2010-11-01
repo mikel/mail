@@ -6,4 +6,5 @@ module Mail
 
   autoload :POP3, 'mail/network/retriever_methods/pop3'
   autoload :IMAP, 'mail/network/retriever_methods/imap'
+  autoload :TestRetriever, 'mail/network/retriever_methods/test_retriever'
 end
