@@ -1485,7 +1485,7 @@ describe Mail::Message do
         @mail.reply.subject.should == 'RE: Testing 123'
       end
   
-      it "should be addressed to the original sender" do
+      it "should be sent to the original sender" do
         @mail.reply.to.should == ['test@lindsaar.net']
         @mail.reply[:to].to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
       end
@@ -1495,6 +1495,18 @@ describe Mail::Message do
         @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
       end
   
+    end
+
+    describe "replying to a message with an explicit reply-to address" do
+
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example06.eml')))
+      end
+
+      it "should be sent to the reply-to address" do
+        @mail.reply[:to].to_s.should == '"Mary Smith: Personal Account" <smith@home.example>'
+      end
+
     end
 
     describe "replying to a reply" do

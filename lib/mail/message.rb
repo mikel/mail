@@ -266,7 +266,7 @@ module Mail
           reply.references ||= bracketed_message_id
         end
         reply.subject = "RE: #{subject}" if subject
-        reply.to = self[:from].to_s
+        reply.to = self[reply_to ? :reply_to : :from].to_s
         reply.from = self[:to].to_s
       end
     end
