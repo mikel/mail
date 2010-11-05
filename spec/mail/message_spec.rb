@@ -1461,40 +1461,57 @@ describe Mail::Message do
 
   end  
 
-  describe "replying to a basic message" do
-
-    before do
-      #6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net
-      #Subject: Testing 123
-      #From: Mikel Lindsaar <test@lindsaar.net>
-      #To: Mikel Lindsaar <raasdnil@gmail.com>
-      @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
-    end
+  describe "replying" do
   
-    it "should create a new message" do
-      @mail.reply.should be_a_kind_of(Mail::Message)
+    describe "replying to a basic message" do
+  
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
+      end
+    
+      it "should create a new message" do
+        @mail.reply.should be_a_kind_of(Mail::Message)
+      end
+  
+      it "should be in-reply-to the original message" do
+        @mail.reply.in_reply_to.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+      end
+  
+      it "should reference the original message" do
+        @mail.reply.references.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+      end
+  
+      it "should RE: the original subject" do
+        @mail.reply.subject.should == 'RE: Testing 123'
+      end
+  
+      it "should be addressed to the original sender" do
+        @mail.reply.to.should == ['test@lindsaar.net']
+        @mail.reply[:to].to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
+      end
+  
+      it "should be sent from the original recipient" do
+        @mail.reply.from.should == ['raasdnil@gmail.com']
+        @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
+      end
+  
     end
 
-    it "should be in-reply-to the original message" do
-      @mail.reply.in_reply_to.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
-    end
+    describe "replying to a reply" do
+  
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_reply.eml')))
+      end
 
-    it "should reference the original message" do
-      @mail.reply.references.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
-    end
+      it "should be in-reply-to the original message" do
+        @mail.reply.in_reply_to.should == '473FFE27.20003@xxx.org'
+      end
 
-    it "should RE: the original subject" do
-      @mail.reply.subject.should == 'RE: Testing 123'
-    end
+      it "should append to the original's references list" do
+        pending "after fixing the references header method"
+        @mail.reply.references.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+      end
 
-    it "should be addressed to the original sender" do
-      @mail.reply.to.should == ['test@lindsaar.net']
-      @mail.reply[:to].to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
-    end
-
-    it "should be sent from the original recipient" do
-      @mail.reply.from.should == ['raasdnil@gmail.com']
-      @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
     end
 
   end

@@ -255,8 +255,11 @@ module Mail
 
     def reply(*args, &block)
       self.class.new.tap do |reply|
-        reply.in_reply_to = "<#{message_id}>" if message_id
-        reply.references = "<#{message_id}>" if message_id
+        if message_id
+          bracketed_message_id = "<#{message_id}>"
+          reply.in_reply_to = bracketed_message_id
+          reply.references = (references.to_a.map { |r| "<#{r}>" } << bracketed_message_id).join(' ')
+        end
         reply.subject = "RE: #{subject}" if subject
         reply.to = self[:from].to_s
         reply.from = self[:to].to_s
