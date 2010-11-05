@@ -1509,6 +1509,18 @@ describe Mail::Message do
 
     end
 
+    describe "replying to a message with more than one recipient" do
+
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example03.eml')))
+      end
+
+      it "should be sent from the first to address" do
+        @mail.reply[:from].to_s.should == 'Mary Smith <mary@x.test>'
+      end
+
+    end
+
     describe "replying to a reply" do
   
       before do

@@ -265,9 +265,15 @@ module Mail
           end
           reply.references ||= bracketed_message_id
         end
-        reply.subject = "RE: #{subject}" if subject
-        reply.to = self[reply_to ? :reply_to : :from].to_s
-        reply.from = self[:to].to_s
+        if subject
+          reply.subject = "RE: #{subject}"
+        end
+        if reply_to || from
+          reply.to = self[reply_to ? :reply_to : :from].to_s
+        end
+        if to
+          reply.from = self[:to].formatted.first.to_s
+        end
       end
     end
 
