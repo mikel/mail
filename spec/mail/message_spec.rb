@@ -1494,6 +1494,14 @@ describe Mail::Message do
         @mail.reply.from.should == ['raasdnil@gmail.com']
         @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
       end
+
+      it "should accept args" do
+        @mail.reply(:from => 'Donald Ball <donald.ball@gmail.com>').from.should == ['donald.ball@gmail.com']
+      end
+
+      it "should accept a block" do
+        @mail.reply { from('Donald Ball <donald.ball@gmail.com>') }.from.should == ['donald.ball@gmail.com']
+      end
   
     end
 

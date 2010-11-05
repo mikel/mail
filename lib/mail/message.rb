@@ -274,6 +274,18 @@ module Mail
         if to
           reply.from = self[:to].formatted.first.to_s
         end
+
+        unless args.empty?
+          if args.flatten.first.respond_to?(:each_pair)
+            reply.send(:init_with_hash, args.flatten.first)
+          else
+            reply.send(:init_with_string, args.flatten[0].to_s.strip)
+          end
+        end
+
+        if block_given?
+          reply.instance_eval(&block)
+        end
       end
     end
 
