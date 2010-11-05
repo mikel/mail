@@ -1463,7 +1463,7 @@ describe Mail::Message do
 
   describe "replying" do
   
-    describe "replying to a basic message" do
+    describe "to a basic message" do
   
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
@@ -1497,7 +1497,7 @@ describe Mail::Message do
   
     end
 
-    describe "replying to a message with an explicit reply-to address" do
+    describe "to a message with an explicit reply-to address" do
 
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example06.eml')))
@@ -1509,7 +1509,7 @@ describe Mail::Message do
 
     end
 
-    describe "replying to a message with more than one recipient" do
+    describe "to a message with more than one recipient" do
 
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example03.eml')))
@@ -1521,7 +1521,7 @@ describe Mail::Message do
 
     end
 
-    describe "replying to a reply" do
+    describe "to a reply" do
   
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_reply.eml')))
@@ -1537,7 +1537,7 @@ describe Mail::Message do
 
     end
 
-    describe "replying to a reply with an in-reply-to with a single message id but no references header" do
+    describe "to a reply with an in-reply-to with a single message id but no references header" do
 
       before do
         @mail = Mail.new do
@@ -1552,7 +1552,7 @@ describe Mail::Message do
 
     end
 
-    describe "replying to a reply with an in-reply-to with multiple message ids but no references header" do
+    describe "to a reply with an in-reply-to with multiple message ids but no references header" do
 
       before do
         @mail = Mail.new do
