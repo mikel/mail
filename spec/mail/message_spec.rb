@@ -1508,8 +1508,38 @@ describe Mail::Message do
       end
 
       it "should append to the original's references list" do
-        pending "after fixing the references header method"
-        @mail.reply.references.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+        @mail.reply[:references].message_ids.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+      end
+
+    end
+
+    describe "replying to a reply with an in-reply-to with a single message id but no references header" do
+
+      before do
+        @mail = Mail.new do
+          in_reply_to '<1234@test.lindsaar.net>'
+          message_id '5678@test.lindsaar.net'
+        end
+      end
+
+      it "should have a references consisting of the in-reply-to and message_id fields" do
+        @mail.reply[:references].message_ids.should == ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+      end
+
+    end
+
+    describe "replying to a reply with an in-reply-to with multiple message ids but no references header" do
+
+      before do
+        @mail = Mail.new do
+          in_reply_to '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+          message_id '90@test.lindsaar.net'
+        end
+      end
+
+      # Behavior is actually not defined in RFC2822, so we'll just leave it empty
+      it "should have no references header" do
+        @mail.references.should be_nil
       end
 
     end
