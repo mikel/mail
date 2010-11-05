@@ -253,6 +253,16 @@ module Mail
       end
     end
 
+    def reply(*args, &block)
+      self.class.new.tap do |reply|
+        reply.in_reply_to = "<#{message_id}>" if message_id
+        reply.references = "<#{message_id}>" if message_id
+        reply.subject = "RE: #{subject}" if subject
+        reply.to = self[:from].to_s
+        reply.from = self[:to].to_s
+      end
+    end
+
     # Provides the operator needed for sort et al.
     #
     # Compares this mail object with another mail object, this is done by date, so an
