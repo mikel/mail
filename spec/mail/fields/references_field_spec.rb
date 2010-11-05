@@ -38,6 +38,7 @@ describe Mail::ReferencesField do
     t.value.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
     t.message_id.should == '1234@test.lindsaar.net'
     t.message_ids.should == ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+    t.to_s.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
   end
 
 end

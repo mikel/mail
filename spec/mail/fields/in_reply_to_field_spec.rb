@@ -37,7 +37,7 @@ describe Mail::InReplyToField do
     
     it "should handle many encoded message IDs" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
-      t.encoded.should == "In-Reply-To: <1234@test.lindsaar.net>, <4567@test.lindsaar.net>\r\n"
+      t.encoded.should == "In-Reply-To: <1234@test.lindsaar.net> <4567@test.lindsaar.net>\r\n"
     end
 
     it "should provide decoded" do
@@ -47,7 +47,7 @@ describe Mail::InReplyToField do
     
     it "should handle many decoded message IDs" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
-      t.decoded.should == '<1234@test.lindsaar.net>, <4567@test.lindsaar.net>'
+      t.decoded.should == '<1234@test.lindsaar.net> <4567@test.lindsaar.net>'
     end
     
   end

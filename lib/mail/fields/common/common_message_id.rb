@@ -33,11 +33,11 @@ module Mail
     private
     
     def do_encode(field_name)
-      %Q{#{field_name}: #{message_ids.map { |m| "<#{m}>" }.join(', ')}\r\n}
+      %Q{#{field_name}: #{do_decode}\r\n}
     end
     
     def do_decode
-      "#{message_ids.map { |m| "<#{m}>" }.join(', ')}"
+      "#{message_ids.map { |m| "<#{m}>" }.join(' ')}"
     end
     
   end
