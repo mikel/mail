@@ -32,4 +32,12 @@ describe Mail::ReferencesField do
     t.message_id.should == '1234@test.lindsaar.net'
   end
 
+  it "should accept multiple message ids" do
+    t = Mail::ReferencesField.new('<1234@test.lindsaar.net> <5678@test.lindsaar.net>')
+    t.name.should == 'References'
+    t.value.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+    t.message_id.should == '1234@test.lindsaar.net'
+    t.message_ids.should == ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+  end
+
 end
