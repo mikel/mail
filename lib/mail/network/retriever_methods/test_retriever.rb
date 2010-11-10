@@ -2,7 +2,7 @@
 
 module Mail
 
-  class TestRetriever
+  class TestRetriever < Retriever
     cattr_accessor :emails
 
     def initialize(values)
@@ -33,12 +33,6 @@ module Mail
       end.tap do |results|
         emails.each { |email| @@emails.delete(email) if email.is_marked_for_delete? } if options[:delete_after_find]
       end
-    end
-
-    def all(options = {}, &block)
-      options ||= {}
-      options[:count] = :all
-      find(options, &block)
     end
 
   end

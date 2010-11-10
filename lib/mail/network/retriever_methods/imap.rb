@@ -32,7 +32,7 @@ module Mail
   #   Mail.find(:what => :first, :count => 10, :order => :asc)
   #   #=> Returns the first 10 emails in ascending order
   #
-  class IMAP
+  class IMAP < Retriever
     require 'net/imap'
     
     def initialize(values)
@@ -46,54 +46,6 @@ module Mail
 
     attr_accessor :settings
 
-    # Get the oldest received email(s)
-    #
-    # Possible options:
-    #   mailbox: mailbox to retrieve the oldest received email(s) from. The default is 'INBOX'.
-    #   count:   number of emails to retrieve. The default value is 1.
-    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
-    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
-    #            search string or a single-dimension array of search keywords and arguments.
-    #
-    def first(options={}, &block)
-      options ||= {}
-      options[:what] = :first
-      options[:count] ||= 1
-      find(options, &block)
-    end
-
-    # Get the most recent received email(s)
-    #
-    # Possible options:
-    #   mailbox: mailbox to retrieve the most recent received email(s) from. The default is 'INBOX'.
-    #   count:   number of emails to retrieve. The default value is 1.
-    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
-    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
-    #            search string or a single-dimension array of search keywords and arguments.
-    #
-    def last(options={}, &block)
-      options ||= {}
-      options[:what] = :last
-      options[:count] ||= 1
-      find(options, &block)
-    end
-
-    # Get all emails.
-    #
-    # Possible options:
-    #   mailbox: mailbox to retrieve all email(s) from. The default is 'INBOX'.
-    #   count:   number of emails to retrieve. The default value is 1.
-    #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
-    #   keys:    keywords for the imap SEARCH command. Can be either a string holding the entire 
-    #            search string or a single-dimension array of search keywords and arguments.
-    #
-    def all(options={}, &block)
-      options ||= {}
-      options[:count] = :all
-      options[:keys]  = 'ALL'
-      find(options, &block)
-    end
-    
     # Find emails in a IMAP mailbox. Without any options, the 10 last received emails are returned.
     #
     # Possible options:
@@ -138,23 +90,6 @@ module Mail
         end
       end
     end
-
-    # Find emails in a IMAP mailbox, and then deletes them. Without any options, the 
-    # five last received emails are returned.
-    #
-    # Possible options:
-    #   what:  last or first emails. The default is :first.
-    #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
-    #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
-    #          instance of Message, not an array of Message instances.
-    #   delete_after_find: flag for whether to delete each retreived email after find. Default
-    #           is true. Use #find_and_delete if you would like this to default to false.
-    #
-    def find_and_delete(options = {}, &block)
-      options ||= {}
-      options[:delete_after_find] ||= true
-      find(options, &block)      
-    end 
 
     # Delete all emails from a IMAP mailbox
     def delete_all(mailbox='INBOX')
