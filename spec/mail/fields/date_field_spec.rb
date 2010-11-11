@@ -67,6 +67,12 @@ describe Mail::DateField do
       field = Mail::DateField.new("Fri, 21 Nov 1997 09(comment):   55  :  06 -0600")
       field.decoded.should == "Fri, 21 Nov 1997 09:55:06 -0600"
     end
+
+    it "should give today's date if no date is specified" do
+      now = Time.now
+      Time.stub!(:now).and_return(now)
+      Mail::DateField.new.date_time.should == ::DateTime.parse(now.to_s)
+    end
     
   end
 
