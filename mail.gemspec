@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency('activesupport', ">= 2.3.6")
   s.add_dependency('mime-types', "~> 1.16")
   s.add_dependency('treetop', '~> 1.4.8')
-  s.add_dependency('i18n', '~> 0.4.1')
+  s.add_dependency('i18n', '>= 0.4.1')
 
   s.require_path = 'lib'
   s.files = %w(README.rdoc Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
