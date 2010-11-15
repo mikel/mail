@@ -1,3 +1,11 @@
+== Mon Nov 15 13:04:41 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Add find_and_delete convenience method for consistency with POP3, document delete_after_find option (Donald Ball)
+* Documenting the openssl_verify_mode setting (Donald Ball)
+* Added ruby-1.8.6 back into the list of tested platforms (Donald Ball)
+* Relax i18n dependency until we remove active support requirement
+* Version Bump to 2.2.9.1 to include new i18n dependency
+
 == Tue Oct 26 07:14:36 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Version Bump to 2.2.9 and tag
