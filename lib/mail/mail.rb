@@ -141,32 +141,32 @@ module Mail
     mail
   end
 
-  # Find emails in a POP3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Find emails from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.find(*args, &block)
     retriever_method.find(*args, &block)
   end
 
-  # Finds and then deletes retrieved emails from a POP3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Finds and then deletes retrieved emails from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.find_and_delete(*args, &block)
     retriever_method.find_and_delete(*args, &block)
   end
 
-  # Receive the first email(s) from a Pop3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Receive the first email(s) from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.first(*args, &block)
     retriever_method.first(*args, &block)
   end
 
-  # Receive the first email(s) from a Pop3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Receive the first email(s) from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.last(*args, &block)
     retriever_method.last(*args, &block)
   end
 
-  # Receive all emails from a POP3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Receive all emails from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.all(*args, &block)
     retriever_method.all(*args, &block)
   end
@@ -176,8 +176,8 @@ module Mail
     self.new(File.open(filename, 'rb') { |f| f.read })
   end
 
-  # Delete all emails from a POP3 server.
-  # See Mail::POP3 for a complete documentation.
+  # Delete all emails from the default retriever
+  # See Mail::Retriever for a complete documentation.
   def self.delete_all(*args, &block)
     retriever_method.delete_all(*args, &block)
   end
