@@ -253,6 +253,42 @@ module Mail
       end
     end
 
+    def reply(*args, &block)
+      self.class.new.tap do |reply|
+        if message_id
+          bracketed_message_id = "<#{message_id}>"
+          reply.in_reply_to = bracketed_message_id
+          if !references.nil?
+            reply.references = (references.to_a.map { |r| "<#{r}>" } << bracketed_message_id).join(' ')
+          elsif !in_reply_to.nil? && !in_reply_to.kind_of?(Array)
+            reply.references = "<#{in_reply_to}> #{bracketed_message_id}"
+          end
+          reply.references ||= bracketed_message_id
+        end
+        if subject
+          reply.subject = "RE: #{subject}"
+        end
+        if reply_to || from
+          reply.to = self[reply_to ? :reply_to : :from].to_s
+        end
+        if to
+          reply.from = self[:to].formatted.first.to_s
+        end
+
+        unless args.empty?
+          if args.flatten.first.respond_to?(:each_pair)
+            reply.send(:init_with_hash, args.flatten.first)
+          else
+            reply.send(:init_with_string, args.flatten[0].to_s.strip)
+          end
+        end
+
+        if block_given?
+          reply.instance_eval(&block)
+        end
+      end
+    end
+
     # Provides the operator needed for sort et al.
     #
     # Compares this mail object with another mail object, this is done by date, so an

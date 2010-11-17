@@ -1461,4 +1461,121 @@ describe Mail::Message do
 
   end  
 
+  describe "replying" do
+  
+    describe "to a basic message" do
+  
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
+      end
+    
+      it "should create a new message" do
+        @mail.reply.should be_a_kind_of(Mail::Message)
+      end
+  
+      it "should be in-reply-to the original message" do
+        @mail.reply.in_reply_to.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+      end
+  
+      it "should reference the original message" do
+        @mail.reply.references.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+      end
+  
+      it "should RE: the original subject" do
+        @mail.reply.subject.should == 'RE: Testing 123'
+      end
+  
+      it "should be sent to the original sender" do
+        @mail.reply.to.should == ['test@lindsaar.net']
+        @mail.reply[:to].to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
+      end
+  
+      it "should be sent from the original recipient" do
+        @mail.reply.from.should == ['raasdnil@gmail.com']
+        @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
+      end
+
+      it "should accept args" do
+        @mail.reply(:from => 'Donald Ball <donald.ball@gmail.com>').from.should == ['donald.ball@gmail.com']
+      end
+
+      it "should accept a block" do
+        @mail.reply { from('Donald Ball <donald.ball@gmail.com>') }.from.should == ['donald.ball@gmail.com']
+      end
+  
+    end
+
+    describe "to a message with an explicit reply-to address" do
+
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example06.eml')))
+      end
+
+      it "should be sent to the reply-to address" do
+        @mail.reply[:to].to_s.should == '"Mary Smith: Personal Account" <smith@home.example>'
+      end
+
+    end
+
+    describe "to a message with more than one recipient" do
+
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'rfc2822', 'example03.eml')))
+      end
+
+      it "should be sent from the first to address" do
+        @mail.reply[:from].to_s.should == 'Mary Smith <mary@x.test>'
+      end
+
+    end
+
+    describe "to a reply" do
+  
+      before do
+        @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_reply.eml')))
+      end
+
+      it "should be in-reply-to the original message" do
+        @mail.reply.in_reply_to.should == '473FFE27.20003@xxx.org'
+      end
+
+      it "should append to the original's references list" do
+        @mail.reply[:references].message_ids.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+      end
+
+    end
+
+    describe "to a reply with an in-reply-to with a single message id but no references header" do
+
+      before do
+        @mail = Mail.new do
+          in_reply_to '<1234@test.lindsaar.net>'
+          message_id '5678@test.lindsaar.net'
+        end
+      end
+
+      it "should have a references consisting of the in-reply-to and message_id fields" do
+        @mail.reply[:references].message_ids.should == ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+      end
+
+    end
+
+    describe "to a reply with an in-reply-to with multiple message ids but no references header" do
+
+      before do
+        @mail = Mail.new do
+          in_reply_to '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+          message_id '90@test.lindsaar.net'
+        end
+      end
+
+      # Behavior is actually not defined in RFC2822, so we'll just leave it empty
+      it "should have no references header" do
+        @mail.references.should be_nil
+      end
+
+    end
+
+  end
+
 end
