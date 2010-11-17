@@ -1,3 +1,12 @@
+== Wed 17 Nov 2010 00:43:31 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Added test retriever and updated documentation (Donald Ball)
+* Fix test suite to work in any timezone (Donald Ball)
+* Added dependency for tlsmail for Ruby 1.8.6 (Donald Ball)
+* Added new feature, replies for mail message
+* Fix references header to use CFWS instead of comma as the separator per RFC2822
+* Version Bum to 2.2.10 and pushed.
+
 == Mon Nov 15 13:04:41 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Add find_and_delete convenience method for consistency with POP3, document delete_after_find option (Donald Ball)
