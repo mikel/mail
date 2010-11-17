@@ -14,7 +14,7 @@ module Mail
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       if value.blank?
-        value = Time.now.strftime('%a, %d %b %Y %H:%M:%S %z')
+        value = ::DateTime.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else
         value = strip_field(FIELD_NAME, value)
         value = ::DateTime.parse(value.to_s).strftime('%a, %d %b %Y %H:%M:%S %z')
