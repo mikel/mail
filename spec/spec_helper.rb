@@ -176,10 +176,11 @@ class Net::POP3
 end
 
 class MockIMAPFetchData
-  attr_reader :attr
+  attr_reader :attr, :number
 
   def initialize(rfc822, number)
     @attr = { 'RFC822' => rfc822 }
+    @number = number
   end
 
 end

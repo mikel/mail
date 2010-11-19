@@ -74,7 +74,11 @@ module Mail
             fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
-            yield new_message
+            if block.arity == 3
+              yield imap, message_id, new_message
+            else
+              yield new_message
+            end
             imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
           end
           imap.expunge if options[:delete_after_find]
