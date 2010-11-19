@@ -38,7 +38,7 @@ describe "IMAP Retriever" do
 
       messages = []
       uids = []
-      Mail.all do |imap, uid, message|
+      Mail.all do |message, imap, uid|
         MockIMAP.should === imap
         messages << message
         uids << uid

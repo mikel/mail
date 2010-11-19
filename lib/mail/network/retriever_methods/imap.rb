@@ -75,7 +75,7 @@ module Mail
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
             if block.arity == 3
-              yield imap, message_id, new_message
+              yield new_message, imap, message_id
             else
               yield new_message
             end
