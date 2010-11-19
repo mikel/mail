@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe Mail::Encodings do
@@ -246,9 +246,12 @@ describe Mail::Encodings do
       mail[:subject].charset = 'koi8-r'
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
-      orginial = original.force_encoding('koi8-r') if RUBY_VERSION >= "1.9"
-    
-      unwrapped.gsub("Subject: ", "").should == original
+
+      if RUBY_VERSION >= "1.9"
+        unwrapped.gsub("Subject: ", "").encode('UTF-8').should == original.encode('UTF-8')
+      else
+        unwrapped.gsub("Subject: ", "").should == original
+      end
     end
   end
   

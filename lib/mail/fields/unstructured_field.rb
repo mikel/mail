@@ -164,6 +164,7 @@ module Mail
     end
         
     def encode(value)
+      value = value.encode(charset) if charset && value.respond_to?(:encode)
       (value.not_ascii_only? ? [value].pack("M").gsub("=\n", '') : value).gsub("\r", "=0D").gsub("\n", "=0A")
     end
     
