@@ -55,6 +55,8 @@ module Mail
         Mail::POP3
       when :imap
         Mail::IMAP
+      when :test
+        Mail::TestRetriever
       else
         method
       end
