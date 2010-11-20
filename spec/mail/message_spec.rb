@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe Mail::Message do
@@ -100,7 +100,22 @@ describe Mail::Message do
     end
 
   end
-  
+
+  describe "initialize with charset" do
+    it "should set header and body is same charset" do
+      @mail = Mail.new do
+        from    'yalab@localhost'
+        to      'test@example.com'
+        subject 'あ'
+        body    'あ'
+        charset 'iso-2022-jp'
+      end
+      @mail.charset.should == 'iso-2022-jp'
+      @mail.header.charset.should == 'iso-2022-jp'
+      @mail.body.charset.should == 'iso-2022-jp'
+    end
+  end
+
   describe "envelope line handling" do
     it "should respond to 'envelope from'" do
       Mail::Message.new.should respond_to(:envelope_from)

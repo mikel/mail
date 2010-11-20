@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 module Mail
   # The Message class provides a single point of access to all things to do with an
   # email message.
@@ -1417,7 +1417,9 @@ module Mail
     end
 
     # Returns the character set defined in the content type field
-    def charset
+    def charset(val=nil)
+      self.charset = val if val
+
       if @header
         content_type ? content_type_parameters['charset'] : @charset
       else
@@ -1430,6 +1432,7 @@ module Mail
       @defaulted_charset = false
       @charset = value
       @header.charset = value
+      @body.charset = value
     end
 
     # Returns the main content type
@@ -1840,7 +1843,7 @@ module Mail
        @body = Mail::Body.new(@body_raw[@body_raw_index, @body_raw.length-@body_raw_index])
        @body_raw = nil
        @body_raw_index = nil
-      separate_parts if @separate_parts
+       separate_parts if @separate_parts
 
        add_encoding_to_body
     end
@@ -1857,6 +1860,7 @@ module Mail
     end
 
     def add_encoding_to_body
+      @body.charset = @charset if @body && @charset
       if has_content_transfer_encoding?
         @body.encoding = content_transfer_encoding
       end
