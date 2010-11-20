@@ -162,7 +162,9 @@ module Mail
         else
             # Decode then encode to normalize and allow transforming 
             # from base64 to Q-P and vice versa
-            enc.encode(dec.decode(raw_source))
+            encoded_body = enc.encode(dec.decode(raw_source))
+            encoded_body.encode!(charset) if charset
+            encoded_body
         end
       end
     end

@@ -216,6 +216,12 @@ describe Mail::Body do
       body = Mail::Body.new("This is NOT plain text ASCII　− かきくけこ")
       body.should_not be_only_us_ascii
     end
+
+    it "should deocded is correct if body is not UTF-8" do
+      body = Mail::Body.new("あ")
+      body.charset = 'iso-2022-jp'
+      body.encoded.should == "あ".encode('iso-2022-jp')
+    end
   end
 
   describe "adding parts" do
