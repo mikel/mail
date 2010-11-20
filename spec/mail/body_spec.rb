@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe Mail::Body do
@@ -220,7 +220,7 @@ describe Mail::Body do
     it "should deocded is correct if body is not UTF-8" do
       body = Mail::Body.new("あ")
       body.charset = 'iso-2022-jp'
-      body.encoded.should == "あ".encode('iso-2022-jp')
+      body.encoded.force_encoding('iso-2022-jp').should == "あ".encode('iso-2022-jp')
     end
   end
 

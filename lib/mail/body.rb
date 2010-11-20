@@ -159,12 +159,12 @@ module Mail
         if transfer_encoding == encoding and dec.nil?
             # Cannot decode, so skip normalization
             raw_source
+        elsif ''.respond_to?(:encode) && charset && charset != 'UTF-8'
+            enc.encode(dec.decode(raw_source.encode(charset).force_encoding('BINARY')))
         else
             # Decode then encode to normalize and allow transforming 
             # from base64 to Q-P and vice versa
-            encoded_body = enc.encode(dec.decode(raw_source))
-            encoded_body.encode!(charset) if charset
-            encoded_body
+            enc.encode(dec.decode(raw_source))
         end
       end
     end
