@@ -1,0 +1,35 @@
+Delivered-To: e-r-w-a-4462@app.ar.com
+Received: by 10.1.1.1 with SMTP id w10cs10896muo;
+        Tue, 12 Oct 2010 13:20:24 -0700 (PDT)
+Received: by 10.2.1.5 with SMTP id bk15mr6105827qab.89.1286914824124;
+        Tue, 12 Oct 2010 13:20:24 -0700 (PDT)
+Return-Path: <j@yahoo-example.com>
+Received: from mail.ga-example.com (mail.ga-example.com [64.1.2.3])
+        by mx.google.com with ESMTP id 13si112341247qcd.23.2010.10.12.13.20.23;
+        Tue, 12 Oct 2010 13:20:24 -0700 (PDT)
+Received-SPF: neutral (google.com: 64.1.2.3 is neither permitted nor denied by best guess record for domain of j@yahoo-example.com) client-ip=64.1.2.3;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 64.1.2.3 is neither permitted nor denied by best guess record for domain of j@yahoo-example.com) smtp.mail=j@yahoo-example.com
+X-MDAV-Processed: mail.ga-example.com, Tue, 12 Oct 2010 16:21:07 -0400
+X-Spam-Processed: mail.ga-example.com, Tue, 12 Oct 2010 16:21:06 -0400
+X-Spam-Checker-Version: SpamAssassin 3.2.5 (2008-06-10) on
+	MAIL02.VD-example.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	FORGED_YAHOO_RCVD,INVALID_DATE,NO_RELAYS,SUBJECT_NEEDS_ENCODING
+	shortcircuit=no autolearn=no version=3.2.5
+Received: from GAWWW03 by ga-example.com (MDaemon PRO v11.0.3)
+	with ESMTP id md50004804310.msg
+	for <e-r-w-a-4462@app.ar.com>; Tue, 12 Oct 2010 16:21:05 -0400
+X-MDRemoteIP: 192.168.254.73
+X-Return-Path: j@yahoo-example.com
+X-Envelope-From: j@yahoo-example.com
+X-MDaemon-Deliver-To: e-r-w-a-4462@app.ar.com
+Date: Tue, 12 Oct 2010 16:21:05 H0500
+Subject: GA.comô has a lead for you
+To: c@ra-example.com,e-r-w-a-4462@app.ar.com,leads@ga-example.com
+MIME-Version: 1.0
+Content-type: text/plain; charset=iso-8859-1
+From: j@yahoo-example.com
+Message-ID: <MDAEMON-F201010121621.AA2105420md50000198258@ga-example.com>
+
+Body Text - not important

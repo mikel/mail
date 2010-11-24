@@ -1,0 +1,32 @@
+Delivered-To: e-f5f4@app.ar-example.com
+Received: by 10.2.1.1 with SMTP id p21cs62610wem;
+        Wed, 22 Sep 2010 00:30:55 -0700 (PDT)
+Received: by 10.15.2.1 with SMTP id p24mr499372ybh.380.1285140655013;
+        Wed, 22 Sep 2010 00:30:55 -0700 (PDT)
+Return-Path: <production@aquila.el-example.org>
+Received: from aquila.el-example.org ([174.1.8.2])
+        by mx.google.com with ESMTP id a6si11272839ybo.18.2010.09.22.00.30.54;
+        Wed, 22 Sep 2010 00:30:54 -0700 (PDT)
+Received-SPF: neutral (google.com: 174.1.8.2 is neither permitted nor denied by best guess record for domain of production@aquila.el-example.org) client-ip=174.1.8.2;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 174.1.8.2 is neither permitted nor denied by best guess record for domain of production@aquila.el-example.org) smtp.mail=production@aquila.el-example.org
+Received: from aquila.el-example.org (localhost [127.0.0.1])
+	by aquila.el-example.org (8.14.2/8.14.2) with ESMTP id o8M7UrfD018673
+	for <e-f5f4@app.ar-example.com>; Wed, 22 Sep 2010 02:30:54 -0500 (CDT)
+	(envelope-from production@aquila.el-example.org)
+Received: (from production@localhost)
+	by aquila.el-example.org (8.14.2/8.14.2/Submit) id o8M7Urh3018672;
+	Wed, 22 Sep 2010 02:30:53 -0500 (CDT)
+	(envelope-from production)
+Message-Id: <201009220730.o8M7Urh3018672@aquila.el-example.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Mailer: MIME::Lite 3.027 (F2.74; T1.28; A2.04; B3.07; Q3.07)
+Date: Wed, 22 Sep 2010 02:30:53 -0500
+From: no-reply@crm.el-example.org
+To: e-f5f4@app.ar-example.com
+Reply-To: "KLAUS- HÄNSCHEL" <>
+Subject: eBay Bid - 2008 Ford Super Duty F-350 DRW King Ranch Crew Cab 4x4 (156) - Stock# XXXX
+
+Body Text

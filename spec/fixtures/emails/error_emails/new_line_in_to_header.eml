@@ -1,0 +1,33 @@
+Delivered-To: e-s-a-g-8718@app.ar.com
+Received: by 10.2.1.1 with SMTP id c60cs12954wel;
+        Wed, 13 Oct 2010 07:44:39 -0700 (PDT)
+Received: by 10.15.1.1 with SMTP id f12mr1139775ybe.360.1286981078364;
+        Wed, 13 Oct 2010 07:44:38 -0700 (PDT)
+Return-Path: <l@gcn-example.com>
+Received: from services.travidiabamboo.com (services.travidiabamboo.com [72.21.1.1])
+        by mx.google.com with ESMTP id v33si16714378yba.88.2010.10.13.07.44.37;
+        Wed, 13 Oct 2010 07:44:38 -0700 (PDT)
+Received-SPF: pass (google.com: domain of l@gcn-example.com designates 72.21.1.1 as permitted sender) client-ip=72.21.1.1;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of l@gcn-example.com designates 72.21.1.1 as permitted sender) smtp.mail=l@gcn-example.com
+Received: from travidiabamboo.com (services [10.0.0.2])
+	by services.travidiabamboo.com (Postfix) with ESMTP id A532170702;
+	Wed, 13 Oct 2010 07:53:04 -0700 (PDT)
+Date: Wed, 13 Oct 2010 07:53:04 -0700
+From: l@gcn-example.com
+To: leads@sg.dc.com,
+	 sag@leads.gs.ry.com,
+	 sn@example-hotmail.com,
+	 e-s-a-g-8718@app.ar.com,
+	 jp@t-exmaple.com,
+	
+	cc@c-l-example.com
+Message-Id: <4cb5c7d0a3cce_120e..fdbed2b861958562@s.t-example.com.tmail>
+Subject: [Online Lead] Online Lead #1111111
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?ADF version="1.0"?><adf>
+  <prospect>
+    <requestdate>2010-10-13T07:53:04-09:00</requestdate>
+    ... (not important) ...
