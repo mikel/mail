@@ -60,6 +60,21 @@ describe Mail::AddressList do
       a.addresses.map {|addr| addr.to_s }.should == result
     end
 
+    it "should handle folding whitespace" do
+      parse_text = "foo@example.com,\r\n\tbar@example.com"
+      result = ['foo@example.com', 'bar@example.com']
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.map {|addr| addr.to_s }.should == result
+    end
+
+    it "should handle malformed folding whitespace" do
+      pending
+      parse_text = "leads@sg.dc.com,\n\t sag@leads.gs.ry.com,\n\t sn@example-hotmail.com,\n\t e-s-a-g-8718@app.ar.com,\n\t jp@t-exmaple.com,\n\t\n\t cc@c-l-example.com"
+      result = %w(leads@sg.dc.com sag@leads.gs.ry.com sn@example-hotmail.com e-s-a-g-8718@app.ar.com jp@t-exmaple.com cc@c-l-example.com)
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.map {|addr| addr.to_s }.should == result
+    end
+
   end
   
   describe "functionality" do
