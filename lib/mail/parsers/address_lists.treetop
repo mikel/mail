@@ -6,7 +6,7 @@ module Mail
     rule primary_address
       address_list {
         def addresses
-          [first_addr] + other_addr.elements.map { |o| o.addr_value }
+          ([first_addr] + other_addr.elements.map { |o| o.addr_value }).reject { |e| e.empty? }
         end
       } / obs_addr_list {
         def addresses

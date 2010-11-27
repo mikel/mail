@@ -13,7 +13,7 @@ module Mail
 
     module PrimaryAddress0
       def addresses
-        [first_addr] + other_addr.elements.map { |o| o.addr_value }
+        ([first_addr] + other_addr.elements.map { |o| o.addr_value }).reject { |e| e.empty? }
       end
     end
 

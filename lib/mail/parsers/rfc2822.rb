@@ -2866,7 +2866,7 @@ module Mail
 
     module AddressList0
       def addr_value
-        elements[2]
+        elements[3]
       end
     end
 
@@ -2892,52 +2892,70 @@ module Mail
       end
 
       i0, s0 = index, []
-      r1 = _nt_address
+      r2 = _nt_address
+      if r2
+        r1 = r2
+      else
+        r1 = instantiate_node(SyntaxNode,input, index...index)
+      end
       s0 << r1
       if r1
-        s2, i2 = [], index
+        s3, i3 = [], index
         loop do
-          i3, s3 = index, []
-          if has_terminal?(",", false, index)
-            r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
-            @index += 1
-          else
-            terminal_parse_failure(",")
-            r4 = nil
+          i4, s4 = index, []
+          s5, i5 = [], index
+          loop do
+            r6 = _nt_FWS
+            if r6
+              s5 << r6
+            else
+              break
+            end
           end
-          s3 << r4
-          if r4
-            s5, i5 = [], index
-            loop do
-              r6 = _nt_FWS
-              if r6
-                s5 << r6
-              else
-                break
+          r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+          s4 << r5
+          if r5
+            if has_terminal?(",", false, index)
+              r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure(",")
+              r7 = nil
+            end
+            s4 << r7
+            if r7
+              s8, i8 = [], index
+              loop do
+                r9 = _nt_FWS
+                if r9
+                  s8 << r9
+                else
+                  break
+                end
+              end
+              r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+              s4 << r8
+              if r8
+                r10 = _nt_address
+                s4 << r10
               end
             end
-            r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
-            s3 << r5
-            if r5
-              r7 = _nt_address
-              s3 << r7
-            end
           end
-          if s3.last
-            r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-            r3.extend(AddressList0)
+          if s4.last
+            r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+            r4.extend(AddressList0)
           else
-            @index = i3
-            r3 = nil
+            @index = i4
+            r4 = nil
           end
-          if r3
-            s2 << r3
+          if r4
+            s3 << r4
           else
             break
           end
         end
-        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-        s0 << r2
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        s0 << r3
       end
       if s0.last
         r0 = instantiate_node(SyntaxNode,input, i0...index, s0)

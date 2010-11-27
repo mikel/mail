@@ -46,12 +46,11 @@ describe Mail::AddressList do
       a.addresses.first.display_name.should == 'Mikel Lindsaar'
     end
 
-    it "should handle nil addresses" do
-      pending
-      parse_text  = ',info@othercompany.it,'
-      result      = 'info@othercompany.it'
+    it "should handle and ignore nil addresses" do
+      parse_text  = ' , user-example@aol.com, e-s-a-s-2200@app.ar.com'
+      result      = ['user-example@aol.com', 'e-s-a-s-2200@app.ar.com']
       a = Mail::AddressList.new(parse_text)
-      a.addresses.first.address.should == result
+      a.addresses.map {|addr| addr.to_s }.should == result
     end
 
   end
