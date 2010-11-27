@@ -265,7 +265,7 @@ module Mail
     end
   
     rule address_list
-      first_addr:address? other_addr:(FWS* "," FWS* addr_value:address)*
+      first_addr:address? other_addr:(FWS* "," FWS* addr_value:address?)*
     end
     
     rule date_time

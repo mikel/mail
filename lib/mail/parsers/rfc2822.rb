@@ -2936,7 +2936,12 @@ module Mail
               r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
               s4 << r8
               if r8
-                r10 = _nt_address
+                r11 = _nt_address
+                if r11
+                  r10 = r11
+                else
+                  r10 = instantiate_node(SyntaxNode,input, index...index)
+                end
                 s4 << r10
               end
             end

@@ -53,6 +53,13 @@ describe Mail::AddressList do
       a.addresses.map {|addr| addr.to_s }.should == result
     end
 
+    it "should handle truly horrific combinations of commas, spaces, and addresses" do
+      parse_text = '  ,, foo@example.com,  ,    ,,, bar@example.com  ,,'
+      result = ['foo@example.com', 'bar@example.com']
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.map {|addr| addr.to_s }.should == result
+    end
+
   end
   
   describe "functionality" do
