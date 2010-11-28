@@ -300,4 +300,20 @@ describe "Test emails" do
 
   end
   
+  describe "empty address lists" do
+
+    before(:each) do
+      @message = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'weird_to_header.eml')))
+    end
+
+    it "should parse the email and encode without crashing" do
+      doing { @message.encoded }.should_not raise_error
+    end
+
+    it "should return an empty groups list" do
+      @message.to.should == ['user-example@aol.com', 'e-s-a-s-2200@app.ar.com']
+    end
+    
+  end
+  
 end
