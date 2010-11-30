@@ -1,3 +1,12 @@
+== Tue 30 Nov 2010 00:36:11 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Allow address lists to handle and ignore empty addresses (Donald Ball)
+* Allow address lists to handle repeating strings of commas (Donald Ball)
+* Noting pending test for malformed folding whitespace (Donald Ball)
+* Adding spec to test error email for missing addresses in to header (Mikel)
+* Bumping i18n dependency to ~> 0.5.0
+* Version bump to 2.2.11 and gem release
+
 == Wed 17 Nov 2010 00:43:31 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Added test retriever and updated documentation (Donald Ball)
@@ -183,7 +192,7 @@
 
 == Sun Jan 28 02:59:34 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Removed old method of setting delivery_method 
+* Removed old method of setting delivery_method
 
 == Mon Jan 25 11:36:13 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
@@ -222,13 +231,13 @@
 * Message now adds multipart/mixed as the content type if nothing is set and there are parts to the message
 * Added #display_names and #addrs to all address fields.  #addrs returns the actual Mail::Address object for each address in the field.
 * Body should call to_s on given input... incase someone gave it an IO.readlines result (Array)
-* 
+*
 
 == Thu Jan 21 05:27:17 UTC 2010 Mikel Lindsaar <raasdnil@gmail.com>
 
 * Version bump to 2.0.2
 * Major change to attachments, add_file now only accepts
-  {:filename => 'full/path/to/file.png'} or 
+  {:filename => 'full/path/to/file.png'} or
   {:filename => 'file.png', :content => 'string of file content'}
   you can also now do mail.attachments['filename.png'] = File.read('path/to/file.png')
   which is nice too!
@@ -303,8 +312,8 @@
 
 == Sun Dec 27 09:51:27 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* Version bump to 1.4 because now :to_s calls :decoded for all fields and body 
-  while :to_s calls :encoded for Message and Header containers.  Makes sense... 
+* Version bump to 1.4 because now :to_s calls :decoded for all fields and body
+  while :to_s calls :encoded for Message and Header containers.  Makes sense...
   really.
 
 == Sun Dec 27 07:30:02 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
@@ -413,7 +422,7 @@
 
 == Fri Nov  6 22:52:10 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
-* a6ef2b4: Fixed Issue #4 - Can't call encoding on non existant 
+* a6ef2b4: Fixed Issue #4 - Can't call encoding on non existant
   content-transer-encoding header
 
 == Fri Nov  6 00:51:55 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
@@ -454,7 +463,7 @@
 == Sun Nov  1 12:00:00 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
 
 * handle OpenSSL::SSL::VERIFY_NONE returning 0 <jlindley>
-* doing Mail.new { content_type [text, plain, { charset => UTF-8 }] } is now 
+* doing Mail.new { content_type [text, plain, { charset => UTF-8 }] } is now
   possible (content type accepts an array) <mikel>
 
 == Sat Oct 31 11:00:41 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
