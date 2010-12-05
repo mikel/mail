@@ -1,3 +1,8 @@
+== Sun Dec  5 02:24:55 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
+
+* Updating requirement on i18n to be more relaxed for now until we nuke ActiveSupport dependency (Mikel)
+* Version bump to 2.2.12 and gem release
+
 == Tue 30 Nov 2010 00:36:11 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Allow address lists to handle and ignore empty addresses (Donald Ball)
