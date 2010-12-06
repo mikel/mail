@@ -58,18 +58,29 @@ describe Mail::Message do
 
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
+
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings
       errors = false
+      expected_failures = { '/error_emails/encoding_madness.eml' => nil }
       emails.each do |email|
         begin
           Mail::Message.new(File.read(email))
         rescue => e
-          puts "Failed on email #{email}"
-          puts "Failure was:\n#{e}"
-          errors = true
+          expected = false
+          expected_failures.keys.each do |key|
+            if email[-key.length, key.length] == key
+              expected = expected_failures[key] = true
+            end
+          end
+          unless expected
+            puts "Failed on email #{email}"
+            puts "Failure was:\n#{e}"
+            errors = true
+          end
         end
       end
       errors.should be_false
+      expected_failures.values.all?.should be_true
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
