@@ -1,3 +1,9 @@
+== Fri 10 Dec 2010 09:06:49 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Fixing problems with multibyte filenamed attachment (amatsuda)
+* Providing IMAP uid and imap object as options to IMAP calls (dball)
+* Fixing filename for windows (mikel)
+
 == Sun Dec  5 02:24:55 UTC 2010 Mikel Lindsaar <mikel@rubyx.com>
 
 * Updating requirement on i18n to be more relaxed for now until we nuke ActiveSupport dependency (Mikel)
