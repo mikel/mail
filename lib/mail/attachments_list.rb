@@ -37,9 +37,10 @@ module Mail
     end
 
     def []=(name, value)
-      default_values = { :content_type => "#{set_mime_type(name)}; filename=\"#{name}\"",
+      encoded_name = Mail::Encodings.decode_encode name, :encode
+      default_values = { :content_type => "#{set_mime_type(name)}; filename=\"#{encoded_name}\"",
                          :content_transfer_encoding => "#{guess_encoding}",
-                         :content_disposition => "#{@content_disposition_type}; filename=\"#{name}\"" }
+                         :content_disposition => "#{@content_disposition_type}; filename=\"#{encoded_name}\"" }
 
       if value.is_a?(Hash)
 
@@ -73,7 +74,7 @@ module Mail
           hash[:body].force_encoding("BINARY")
         end
       end
-      
+
       attachment = Part.new(hash)
       attachment.add_content_id(hash[:content_id])
 
@@ -102,4 +103,3 @@ module Mail
 
   end
 end
-

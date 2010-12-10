@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-def encode_base64( str )
+def encode_base64(str)
   Mail::Encodings::Base64.encode(str)
 end
 
@@ -36,10 +36,16 @@ describe "Attachments" do
 
     it "should assign the filename" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
-      @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
+      @mail.attachments['test.png'] = file_data
       @mail.attachments[0].filename.should == 'test.png'
     end
 
+    it "should assign mime-encoded multibyte filename" do
+      file_data = File.read(filename = fixture('attachments', 'てすと.txt'))
+      @mail.attachments['てすと.txt'] = file_data
+      @mail.attachments.should_not be_blank
+      Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode).should == 'てすと.txt'
+    end
   end
 
   describe "from a supplied Hash" do
@@ -131,11 +137,11 @@ describe "Attachments" do
       mail.attachments[2].filename.should == 'test.jpg'
       mail.attachments[3].filename.should == 'test.zip'
     end
-    
+
   end
-  
+
   describe "inline attachments" do
-    
+
     it "should set the content_disposition to inline or attachment as appropriate" do
       mail = Mail.new
       mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
@@ -155,25 +161,23 @@ describe "Attachments" do
       mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
       mail.attachments['test.png'].should be_inline
     end
-    
   end
-  
+
   describe "getting the content ID from an inline attachment" do
-    
     before(:each) do
       @mail = Mail.new
       @mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
       @cid = @mail.attachments['test.gif'].content_id
     end
-    
+
     it "should return a content-id for the attachment on creation if passed inline => true" do
       @cid.should_not be_nil
     end
-    
+
     it "should return a valid content-id on inline attachments" do
       Mail::ContentIdField.new(@cid).errors.should be_empty
     end
-    
+
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
       @inline = @mail.attachments['test.gif'].cid
       @inline.should == URI.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
