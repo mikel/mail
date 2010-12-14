@@ -9,3 +9,4 @@ spec/fixtures/emails/failed_emails/
 .rvmrc
 *.rbc
 *.swp
+.idea

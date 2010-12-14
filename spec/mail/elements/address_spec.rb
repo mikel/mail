@@ -37,6 +37,10 @@ describe Mail::Address do
       end
     end
 
+    it "should allow for funky spammy address with no domain" do
+        Mail::Address.new('"-Earnings...Notification-" <vodacom.co.rs>').address.should == nil
+    end
+
     it "should give it's address back on :to_s if there is no display name" do
       parse_text  = 'test@lindsaar.net'
       result      = 'test@lindsaar.net'
