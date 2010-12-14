@@ -433,6 +433,12 @@ describe Mail::Encodings do
       string = "This is a string " * 10000
       Mail::Encodings.value_decode(string).should == string
     end
+
+    it "should handle Base64 encoded ISO-2022-JP string" do
+      string = "ISO-2022-JP =?iso-2022-jp?B?GyRCJCQkPSRLITwkXiRrJEskSyE8JDgkJyQkJFQhPBsoQg==?="
+      result = "ISO-2022-JP いそにーまるににーじぇいぴー"
+      Mail::Encodings.value_decode(string).should == result
+    end
   end
   
   describe "altering an encoded text to decoded and visa versa" do
