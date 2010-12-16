@@ -10,3 +10,4 @@ spec/fixtures/emails/failed_emails/
 *.rbc
 *.swp
 .idea
+tmp

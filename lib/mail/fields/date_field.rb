@@ -41,6 +41,8 @@ module Mail
         value = ::DateTime.parse(value.to_s.squeeze(" ")).strftime('%a, %d %b %Y %H:%M:%S %z')
       end
       super(CAPITALIZED_FIELD, value, charset)
+    rescue ArgumentError => e
+      raise e unless "invalid date"==e.message
     end
     
     def encoded
