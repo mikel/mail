@@ -37,7 +37,7 @@ module Mail
     end
     
     def Ruby18.decode_base64(str)
-      Base64.decode64(str)
+      Base64.decode64(str) if str
     end
     
     def Ruby18.encode_base64(str)

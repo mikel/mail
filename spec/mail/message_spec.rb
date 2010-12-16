@@ -62,6 +62,13 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'bad_date_header2.eml'))) }
     end
 
+    it 'should be able to invoke subject on a funky subject header' do
+      Mail::Message.new(File.read(fixture('emails', 'error_emails', 'bad_subject.eml'))).subject
+    end
+
+
+
+
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
 
