@@ -188,7 +188,7 @@ module Mail
         @domain_text ||= tree.angle_addr.addr_spec.domain.text_value.strip
       elsif tree.respond_to?(:domain)
         @domain_text ||= tree.domain.text_value.strip
-      elsif tree.respond_to?(:addr_spec)
+      elsif tree.respond_to?(:addr_spec) && tree.addr_spec.respond_to?(:domain)
         tree.addr_spec.domain.text_value.strip
       else
         nil
@@ -294,7 +294,7 @@ module Mail
         tree.local_dot_atom_text.text_value
       when tree.respond_to?(:angle_addr) && tree.angle_addr.respond_to?(:addr_spec) && tree.angle_addr.addr_spec.respond_to?(:local_part)
         tree.angle_addr.addr_spec.local_part.text_value
-      when tree.respond_to?(:addr_spec)
+      when tree.respond_to?(:addr_spec) && tree.addr_spec.respond_to?(:local_part)
         tree.addr_spec.local_part.text_value
       else
         tree && tree.respond_to?(:local_part) ? tree.local_part.text_value : nil
