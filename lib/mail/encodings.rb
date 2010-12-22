@@ -128,7 +128,7 @@ module Mail
         
           # Separate encoded-words with a space, so we can treat them one by one
           text.gsub!(/\?\=\=\?/, '?= =?')
-          a = text.split(/ /).map do |word|
+          text.split(/ /).map do |word|
             word.to_str.
               gsub(/=\?.+\?[Bb]\?.+\?=/m) {|substr| b_value_decode(substr)}.
               gsub(/=\?.+\?[Qq]\?.+\?=/m) {|substr| q_value_decode(substr)}
