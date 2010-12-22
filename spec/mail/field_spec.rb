@@ -193,6 +193,17 @@ describe Mail::Field do
       field = Mail::ReplyToField.new(array, 'utf-8')
       field.encoded.should == "#{Mail::ReplyToField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
+    
+    it "issue 44" do
+      subject = Mail::SubjectField.new("=?ISO-8859-1?Q?2_=FAlt?=", 'utf-8')
+      subject.decoded.should == "2 últ"
+    end
+    
+      
+    it "should allow you to encoded text in the middle(issue 44b)" do
+      subject = Mail::SubjectField.new("ma=?ISO-8859-1?Q?=F1ana?=", 'utf-8')
+      subject.decoded.should == "mañana"
+    end
   end
 
 end

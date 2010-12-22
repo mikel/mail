@@ -120,7 +120,7 @@ module Mail
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
       str.split(/([ \t])/).map do |text|
-        if text.index('=?') != 0
+        if text.index('=?') .nil?
           text
         else
           # Join QP encoded-words that are adjacent to avoid decoding partial chars
@@ -128,16 +128,10 @@ module Mail
         
           # Separate encoded-words with a space, so we can treat them one by one
           text.gsub!(/\?\=\=\?/, '?= =?')
-
-          text.split(/ /).map do |word|
-            case 
-            when word.to_str =~ /=\?.+\?[Bb]\?/m
-              b_value_decode(word)
-            when text.to_str =~ /=\?.+\?[Qq]\?/m
-              q_value_decode(word)
-            else
-              word.to_str
-            end
+          a = text.split(/ /).map do |word|
+            word.to_str.
+              gsub(/=\?.+\?[Bb]\?.+\?=/m) {|substr| b_value_decode(substr)}.
+              gsub(/=\?.+\?[Qq]\?.+\?=/m) {|substr| q_value_decode(substr)}
           end
         end
       end.join("")
