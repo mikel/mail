@@ -226,6 +226,29 @@ describe "IMAP Retriever" do
       MockIMAP.should be_disconnected
     end
   end
+  
+  describe "authentication mechanism" do
+    before(:each) do
+      @imap = MockIMAP.new
+      MockIMAP.stub!(:new).and_return(@imap)
+    end
+    it "should be login by default" do
+      @imap.should_not_receive(:authenticate)
+      @imap.should_receive(:login).with('foo', 'secret')
+      Mail.defaults do
+        retriever_method :imap, {:user_name => 'foo', :password => 'secret'}
+      end
+      messages = Mail.find
+    end
+    it "should be changeable" do
+      @imap.should_receive(:authenticate).with('CRAM-MD5', 'foo', 'secret')
+      @imap.should_not_receive(:login)
+      Mail.defaults do
+        retriever_method :imap, {:authentication => 'CRAM-MD5', :user_name => 'foo', :password => 'secret'}
+      end
+      messages = Mail.find
+    end
+  end
 
 end
 
