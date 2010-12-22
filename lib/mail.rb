@@ -1,7 +1,6 @@
 # encoding: utf-8
 module Mail # :doc:
 
-  require 'rubygems'
   require 'date'
 
   require 'active_support'
