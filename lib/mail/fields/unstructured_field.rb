@@ -72,7 +72,7 @@ module Mail
     
     def do_decode
       result = value.blank? ? nil : Encodings.decode_encode(value, :decode)
-      result.encode(value.encoding || "UTF-8") if RUBY_VERSION >= '1.9'
+      result.encode(value.encoding || "UTF-8") if RUBY_VERSION >= '1.9' && !result.blank?
     end
     
     # 2.2.3. Long Header Fields
