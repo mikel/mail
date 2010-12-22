@@ -33,6 +33,7 @@ module Mail # :doc:
 
   require 'mail/core_extensions/nil'
   require 'mail/core_extensions/string'
+  require 'mail/core_extensions/smtp'
 
   require 'mail/patterns'
   require 'mail/utilities'
