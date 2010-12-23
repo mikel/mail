@@ -94,11 +94,11 @@ module Mail
         when /iso-?(\d{4})-?(\w{1,2})/i then return "ISO-#{$1}-#{$2}"
         # "ISO-2022-JP-KDDI"  and alike
         when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i then return "ISO-#{$1}-#{$2}-#{$3}"
-	# utf-8 and alike
+        # utf-8 and alike
         when /utf-?(.*)/i then return "UTF-#{$1}"
-	# Windows-1252 and alike
-	when /Windows-?(.*)/i then return "Windows-#{$1}"
-	#more aliases to be added if needed
+        # Windows-1252 and alike
+        when /Windows-?(.*)/i then return "Windows-#{$1}"
+        #more aliases to be added if needed
         else return encoding
       end
     end
