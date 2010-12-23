@@ -115,7 +115,7 @@ module Mail
       @delivery_method = Mail.delivery_method.dup
 
       @transport_encoding = Mail::Encodings.get_encoding('7bit')
-      
+
       @mark_for_delete = false
 
       if args.flatten.first.respond_to?(:each_pair)
@@ -1758,9 +1758,9 @@ module Mail
     end
 
     def find_first_mime_type(mt)
-      all_parts.detect { |p| p.mime_type == mt }
+      all_parts.detect { |p| p.mime_type == mt && !p.attachment? }
     end
-  
+
     # Skips the deletion of this message. All other messages
     # flagged for delete still will be deleted at session close (i.e. when
     # #find exits). Only has an effect if you're using #find_and_delete
@@ -1768,28 +1768,28 @@ module Mail
     def skip_deletion
       @mark_for_delete = false
     end
-    
-    # Sets whether this message should be deleted at session close (i.e. 
+
+    # Sets whether this message should be deleted at session close (i.e.
     # after #find). Message will only be deleted if messages are retrieved
-    # using the #find_and_delete method, or by calling #find with 
-    # :delete_after_find set to true.    
+    # using the #find_and_delete method, or by calling #find with
+    # :delete_after_find set to true.
     def mark_for_delete=(value = true)
       @mark_for_delete = value
     end
-    
+
     # Returns whether message will be marked for deletion.
-    # If so, the message will be deleted at session close (i.e. after #find 
-    # exits), but only if also using the #find_and_delete method, or by 
+    # If so, the message will be deleted at session close (i.e. after #find
+    # exits), but only if also using the #find_and_delete method, or by
     # calling #find with :delete_after_find set to true.
     #
     # Side-note: Just to be clear, this method will return true even if
-    # the message hasn't yet been marked for delete on the mail server. 
+    # the message hasn't yet been marked for delete on the mail server.
     # However, if this method returns true, it *will be* marked on the
-    # server after each block yields back to #find or #find_and_delete. 
+    # server after each block yields back to #find or #find_and_delete.
     def is_marked_for_delete?
       return @mark_for_delete
     end
-    
+
   private
 
     #  2.1. General Description
