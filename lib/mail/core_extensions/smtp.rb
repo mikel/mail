@@ -1,5 +1,9 @@
 module Net
   class SMTP
+    # This is a backport of r30294 from ruby trunk because of a bug in net/smtp.
+    # http://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=rev&amp;revision=30294
+    #
+    # Fixed in what will be Ruby 1.9.3
     remove_method :tlsconnect
 
     def tlsconnect(s)

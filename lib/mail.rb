@@ -33,7 +33,7 @@ module Mail # :doc:
 
   require 'mail/core_extensions/nil'
   require 'mail/core_extensions/string'
-  require 'mail/core_extensions/smtp'
+  require 'mail/core_extensions/smtp' if RUBY_VERSION < '1.9.3'
 
   require 'mail/patterns'
   require 'mail/utilities'
@@ -54,7 +54,7 @@ module Mail # :doc:
   require 'mail/envelope'
 
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
-                date_time received message_ids envelope_from rfc2045 
+                date_time received message_ids envelope_from rfc2045
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location ]
 
