@@ -153,10 +153,10 @@ module Mail
       end
 
       case
-      when val.chomp =~ /^\s*([\w\-_]+)\/([\w\-_]+)\s*;;+(.*)$/i
+      when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;;+(.*)$/i
         # Handles 'text/plain;; format="flowed"' (double semi colon)
         "#{$1}/#{$2}; #{$3}"
-      when val.chomp =~ /^\s*([\w\-_]+)\/([\w\-_]+)\s*;\s?(ISO[\w\-_]+)$/i
+      when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;\s?(ISO[\w\-]+)$/i
         # Microsoft helper:
         # Handles 'type/subtype;ISO-8559-1'
         "#{$1}/#{$2}; charset=#{quote_atom($3)}"
@@ -166,10 +166,10 @@ module Mail
       when val.chomp =~ /^(\w+);\s(.*)$/i
         # Handles 'text; <parameters>'
         "text/plain; #{$2}"
-      when val =~ /([\w\-_]+\/[\w\-_]+);\scharset="charset="(\w+)""/i
+      when val =~ /([\w\-]+\/[\w\-]+);\scharset="charset="(\w+)""/i
         # Handles text/html; charset="charset="GB2312""
         "#{$1}; charset=#{quote_atom($2)}"
-      when val =~ /([\w\-_]+\/[\w\-_]+);\s+(.*)/i
+      when val =~ /([\w\-]+\/[\w\-]+);\s+(.*)/i
         type = $1
         # Handles misquoted param values
         # e.g: application/octet-stream; name=archiveshelp1[1].htm
@@ -188,7 +188,7 @@ module Mail
 
     def get_mime_type( val )
       case
-      when val =~ /^([\w\-_]+)\/([\w\-_]+);.+$/i
+      when val =~ /^([\w\-]+)\/([\w\-]+);.+$/i
         "#{$1}/#{$2}"
       else
         'text/plain'
