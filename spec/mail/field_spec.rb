@@ -235,7 +235,7 @@ describe Mail::Field do
 
     it "more tolerable to encoding definitions, Windows (issue 120)" do
       next if RUBY_VERSION < '1.9'
-      subject = Mail::SubjectField.new("=?Windows-1252?Q?It=92s_a_test=3F?=", 'utf-8')
+      subject = Mail::SubjectField.new("=?Windows1252?Q?It=92s_a_test=3F?=", 'utf-8')
       subject.decoded.should == "It’s a test?"
     end
   end

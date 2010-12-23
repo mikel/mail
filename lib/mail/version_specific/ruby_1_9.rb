@@ -97,7 +97,7 @@ module Mail
 	# utf-8 and alike
         when /utf-?(.*)/i then return "UTF-#{$1}"
 	# Windows-1252 and alike
-	#~ when /Windows-?(.*)/i then return "Windows-#{$1}"
+	when /Windows-?(.*)/i then return "Windows-#{$1}"
 	#more aliases to be added if needed
         else return encoding
       end
