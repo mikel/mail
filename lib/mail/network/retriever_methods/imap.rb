@@ -139,7 +139,13 @@ module Mail
         raise ArgumentError.new("Mail::Retrievable#imap_start takes a block") unless block_given?
 
         imap = Net::IMAP.new(settings[:address], settings[:port], settings[:enable_ssl], nil, false)
-        imap.login(settings[:user_name], settings[:password])
+        if settings[:authentication].nil?
+          imap.login(settings[:user_name], settings[:password])
+        else
+          # Note that Net::IMAP#authenticate('LOGIN', ...) is not equal with Net::IMAP#login(...)!
+          # (see also http://www.ensta.fr/~diam/ruby/online/ruby-doc-stdlib/libdoc/net/imap/rdoc/classes/Net/IMAP.html#M000718)
+          imap.authenticate(settings[:authentication], settings[:user_name], settings[:password])
+        end
 
         yield imap
       ensure
