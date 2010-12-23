@@ -1,3 +1,14 @@
+== Thu 23 Dec 2010 09:15:58 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Added backport fix for net/smtp bug (Aaron Patterson)
+* Changed "Mail#text_part" so that it does not return a plain text attachment (Anton Mironov)
+* Added in rescue blocks for badly formatted dates as well as encoding problems (Karl Baum)
+* Fixed warning errors of duplicated regular expressions (Kouhei Sutou)
+* Removed duplication from Regex's containing [\w\d]+ as \w contains \d (mikel)
+* Add authentication selection for imap retriever (Björn Albers)
+* Removing warning on @name not being initialized (mikel)
+* Version bump to 2.2.13 and gem release
+
 == Fri 10 Dec 2010 09:06:49 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixing problems with multibyte filenamed attachment (amatsuda)
