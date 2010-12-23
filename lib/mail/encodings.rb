@@ -132,7 +132,7 @@ module Mail
             word.to_str.
               gsub(/=\?.+\?[Bb]\?.+\?=/m) {|substr| b_value_decode(substr)}.
               gsub(/=\?.+\?[Qq]\?.+\?=/m) {|substr| q_value_decode(substr)}
-          end
+            end
         end
       end.join("")
     end
@@ -147,8 +147,12 @@ module Mail
         output
       elsif original_encoding && to_encoding
         begin
-          require 'iconv'
-          Iconv.iconv(to_encoding, original_encoding, output).first
+          if RUBY_VERSION >= '1.9'
+            output.encode(to_encoding)
+          else
+            require 'iconv'
+            Iconv.iconv(to_encoding, original_encoding, output).first
+          end
         rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
           # actually is...not much we can do in this case but just return the

@@ -52,9 +52,9 @@ module Mail
       if match
         encoding = match[1]
         str = Ruby19.decode_base64(match[2])
-        str.force_encoding(encoding)
+        str.force_encoding(fix_encoding(encoding))
       end
-      str
+      str.encode("utf-8", :invalid => :replace, :replace => "") 
     end
     
     def Ruby19.q_value_encode(str, encoding = nil)
@@ -67,9 +67,9 @@ module Mail
       if match
         encoding = match[1]
         str = Encodings::QuotedPrintable.decode(match[2])
-        str.force_encoding(encoding)
+        str.force_encoding(fix_encoding(encoding))
       end
-      str
+      str.encode("utf-8", :invalid => :replace, :replace => "") 
     end
 
     def Ruby19.param_decode(str, encoding)
@@ -82,6 +82,25 @@ module Mail
       encoding = str.encoding.to_s.downcase
       language = Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
+    end
+
+     # mails somtimes includes invalid encodings like iso885915 or utf8 so we transform them to iso885915 or utf8 
+     # TODO: add this as a test somewhere 
+     # Encoding.list.map{|e| [e.to_s.upcase==fix_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
+     #  Encoding.list.map{|e| [e.to_s==fix_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
+    def Ruby19.fix_encoding(encoding)
+      case encoding
+        # ISO-8859-15, ISO-2022-JP and alike
+        when /iso-?(\d{4})-?(\w{1,2})/i then return "ISO-#{$1}-#{$2}"
+        # "ISO-2022-JP-KDDI"  and alike
+        when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i then return "ISO-#{$1}-#{$2}-#{$3}"
+	# utf-8 and alike
+        when /utf-?(.*)/i then return "UTF-#{$1}"
+	# Windows-1252 and alike
+	#~ when /Windows-?(.*)/i then return "Windows-#{$1}"
+	#more aliases to be added if needed
+        else return encoding
+      end
     end
   end
 end
