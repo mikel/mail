@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe "MIME Emails" do
-    
+
     describe "general helper methods" do
 
       it "should read a mime version from an email" do
@@ -34,7 +34,7 @@ describe "MIME Emails" do
         mail = Mail.new("Content-Type: text/plain; charset=utf-8")
         mail.charset.should == 'utf-8'
       end
-      
+
       it "should allow you to set the charset" do
         mail = Mail.new
         mail.charset = 'utf-8'
@@ -101,7 +101,7 @@ describe "MIME Emails" do
       end
 
     end
-    
+
     describe "multipart emails" do
       it "should add a boundary if there is none defined and a part is added" do
         mail = Mail.new do
@@ -110,45 +110,45 @@ describe "MIME Emails" do
         end
         mail.boundary.should_not be_nil
       end
-      
+
       it "should not add a boundary for a message that is only an attachment" do
         mail = Mail.new
         mail.attachments['test.png'] = "2938492384923849"
         mail.boundary.should be_nil
       end
     end
-    
+
     describe "multipart/alternative emails" do
-      
+
       it "should know what it's boundary is if it is a multipart document" do
         mail = Mail.new('Content-Type: multipart/mixed; boundary="--==Boundary"')
         mail.boundary.should == "--==Boundary"
       end
-      
+
       it "should return nil if there is no content-type defined" do
         mail = Mail.new
         mail.boundary.should == nil
       end
-      
+
       it "should allow you to assign a text part" do
         mail = Mail.new
         text_mail = Mail.new("This is Text")
         doing { mail.text_part = text_mail }.should_not raise_error
       end
-      
+
       it "should assign the text part and allow you to reference" do
         mail = Mail.new
         text_mail = Mail.new("This is Text")
         mail.text_part = text_mail
         mail.text_part.should == text_mail
       end
-      
+
       it "should allow you to assign a html part" do
         mail = Mail.new
         html_mail = Mail.new("<b>This is HTML</b>")
         doing { mail.text_part = html_mail }.should_not raise_error
       end
-      
+
       it "should assign the html part and allow you to reference" do
         mail = Mail.new
         html_mail = Mail.new("<b>This is HTML</b>")
@@ -169,7 +169,7 @@ describe "MIME Emails" do
         mail.parts.first.class.should == Mail::Part
         mail.parts.last.class.should == Mail::Part
       end
-      
+
       it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
         mail = Mail.new
         mail.text_part = Mail::Part.new do
@@ -181,7 +181,7 @@ describe "MIME Emails" do
         end
         mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
       end
-      
+
       it "should add the end boundary tag" do
         mail = Mail.new
         mail.text_part = Mail::Part.new do
@@ -193,7 +193,7 @@ describe "MIME Emails" do
         end
         mail.to_s.should =~ %r|#{mail.boundary}--|
       end
-      
+
       it "should not put message-ids into parts" do
         mail = Mail.new('Subject: FooBar')
         mail.text_part = Mail::Part.new do
@@ -228,7 +228,7 @@ describe "MIME Emails" do
         mail.html_part.class.should == Mail::Part
         mail.html_part.body.to_s.should == '<h1>This is HTML</h1>'
       end
-      
+
       it "should detect an html_part in an existing email" do
         m = Mail.new(:content_type => 'multipart/alternative')
         m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
@@ -236,7 +236,16 @@ describe "MIME Emails" do
         m.text_part.body.decoded.should == 'PLAIN TEXT'
         m.html_part.body.decoded.should == 'HTML TEXT'
       end
-      
+
+      it "should detect a text_part in an existing email with plain text attachment" do
+        m = Mail.new(:content_type => 'multipart/alternative')
+        m.add_file(fixture('attachments', 'てすと.txt'))
+        m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+        m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+        m.text_part.body.decoded.should == 'PLAIN TEXT'
+        m.html_part.body.decoded.should == 'HTML TEXT'
+      end
+
       it "should detect an html_part in a multi level mime email" do
         m = Mail.new(:content_type => 'multipart/mixed')
         a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
@@ -248,7 +257,7 @@ describe "MIME Emails" do
         m.text_part.body.decoded.should == 'PLAIN TEXT'
         m.html_part.body.decoded.should == 'HTML TEXT'
       end
-      
+
       it "should only the first part on a stupidly overly complex email" do
         m = Mail.new(:content_type => 'multipart/mixed')
         a = Mail::Part.new(:content_type => 'text/script', :body => '12345')
@@ -274,9 +283,9 @@ describe "MIME Emails" do
       end
 
     end
-  
+
     describe "finding attachments" do
-      
+
       it "should return an array of attachments" do
         mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
         mail.attachments.length.should == 1
@@ -291,7 +300,7 @@ describe "MIME Emails" do
       end
 
     end
-  
+
     describe "adding a file attachment" do
 
       it "should set to multipart/mixed if a text part and you add an attachment" do
@@ -325,7 +334,7 @@ describe "MIME Emails" do
         mail.add_file(fixture('attachments', 'test.png'))
         mail.attachments.first.class.should == Mail::Part
       end
-      
+
       it "should be return an aray of attachments" do
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
@@ -339,7 +348,7 @@ describe "MIME Emails" do
         mail.attachments.length.should == 4
         mail.attachments.each { |a| a.class.should == Mail::Part }
       end
-      
+
       it "should return the filename of each attachment" do
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
@@ -419,7 +428,7 @@ describe "MIME Emails" do
           mail.attachments[0].decoded.should == File.read(fixture('attachments', 'test.png'))
         end
       end
-      
+
       it "should be able to add a body before adding a file" do
         m = Mail.new do
           from    'mikel@from.lindsaar.net'
@@ -433,7 +442,7 @@ describe "MIME Emails" do
         m.parts[0].body.should == "Attached"
         m.parts[1].filename.should == "test.png"
       end
-      
+
       it "should allow you to add a body as text part if you have added a file" do
         m = Mail.new do
           from    'mikel@from.lindsaar.net'
@@ -448,5 +457,5 @@ describe "MIME Emails" do
       end
 
     end
-    
+
 end
