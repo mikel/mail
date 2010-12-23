@@ -14,7 +14,7 @@ module Mail
       str = escape_paren( str )
       '(' + str + ')'
     end
-    
+
     def Ruby19.escape_bracket( str )
       re = /(?<!\\)([\<\>])/          # Only match unescaped brackets
       str.gsub(re) { |s| '\\' + s }
@@ -29,34 +29,34 @@ module Mail
     def Ruby19.decode_base64(str)
       str.unpack( 'm' ).first.force_encoding(Encoding::BINARY)
     end
-    
+
     def Ruby19.encode_base64(str)
       [str].pack( 'm' )
     end
-    
+
     def Ruby19.has_constant?(klass, string)
       klass.constants.include?( string.to_sym )
     end
-    
+
     def Ruby19.get_constant(klass, string)
       klass.const_get( string.to_sym )
     end
-    
+
     def Ruby19.b_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
       [Ruby19.encode_base64(str), encoding]
     end
-    
+
     def Ruby19.b_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
-        str = Ruby19.decode_base64(match[2])
+        str = Ruby19.decode_base64(match[2].to_s)
         str.force_encoding(encoding)
       end
       str
     end
-    
+
     def Ruby19.q_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
       [Encodings::QuotedPrintable.encode(str), encoding]

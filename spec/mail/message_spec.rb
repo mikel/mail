@@ -71,9 +71,6 @@ describe Mail::Message do
       Mail::Message.new(File.read(fixture('emails', 'error_emails', 'must_supply_encoding.eml')))
     end
 
-
-
-
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
 
@@ -98,7 +95,7 @@ describe Mail::Message do
         end
       end
       errors.should be_false
-      #expected_failures.values.all?.should be_true
+      expected_failures.values.all?.should be_true
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
