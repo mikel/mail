@@ -193,6 +193,51 @@ describe Mail::Field do
       field = Mail::ReplyToField.new(array, 'utf-8')
       field.encoded.should == "#{Mail::ReplyToField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
+    
+    it "issue 44" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("=?ISO-8859-1?Q?2_=FAlt?=", 'utf-8')
+      subject.decoded.should == "2 últ"
+    end
+    
+      
+    it "should allow you to encoded text in the middle(issue 44b)" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("ma=?ISO-8859-1?Q?=F1ana?=", 'utf-8')
+      subject.decoded.should == "mañana"
+    end
+    
+    it "more tolerable to encoding definitions, ISO (issue 120)" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("ma=?ISO88591?Q?=F1ana?=", 'utf-8')
+      subject.decoded.should == "mañana"
+    end
+
+    it "more tolerable to encoding definitions, ISO-long (issue 120)" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("=?iso2022jp?B?SEVBUlQbJEIkSiQ0TyJNbRsoQg?=", 'utf-8')
+      subject.decoded.should ==  "HEARTなご連絡"
+    end
+
+    it "more tolerable to encoding definitions, UTF (issue 120)" do
+      next if RUBY_VERSION < '1.9'
+      to = Mail::ToField.new("=?utf8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>", 'utf-8')
+      to.encoded.should == "To: =?utf8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      to.decoded.should == "\"あdあ\" <ada@test.lindsaar.net>"
+    end
+    
+    it "more tolerable to encoding definitions, ISO (issue 120)" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("=?UTF8?B?UmU6IHRlc3QgZW52w61vIG1lbnNhamUgY29u?=", 'utf-8')
+      subject.decoded.should == "Re: test envío mensaje con"
+    end
+
+
+    it "more tolerable to encoding definitions, Windows (issue 120)" do
+      next if RUBY_VERSION < '1.9'
+      subject = Mail::SubjectField.new("=?Windows-1252?Q?It=92s_a_test=3F?=", 'utf-8')
+      subject.decoded.should == "It’s a test?"
+    end
   end
 
 end
