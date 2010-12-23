@@ -9,6 +9,7 @@ module Mail
     aspecial     = %Q|()<>[]:;@\\,."| # RFC5322
     tspecial     = %Q|()<>@,;:\\"/[]?=| # RFC2045
     lwsp         = %Q| \t\r\n|
+    sp           = %Q| |
     control      = %Q|\x00-\x1f\x7f-\xff|
     
     if control.respond_to?(:force_encoding)
@@ -27,8 +28,8 @@ module Mail
     QP_UNSAFE     = /[^#{qp_safe}]/
     QP_SAFE       = /[#{qp_safe}]/
     CONTROL_CHAR  = /[#{control}]/n
-    ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{lwsp}]/n
+    ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{sp}]/n
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
-    TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{lwsp}]/n
+    TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{sp}]/n
   end
 end
