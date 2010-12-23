@@ -171,12 +171,12 @@ describe Mail::ContentTypeField do
   describe "class methods" do
     it "should give back an initialized instance with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
-      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\sboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/mixed;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n}
     end
 
     it "should give back an initialized instance with different type with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
-      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\sboundary="--==_mimepart_[\w\d]+_[\w\d]+"\r\n}
+      boundary.encoded.should =~ %r{Content-Type: multipart/alternative;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n}
     end
 
     it "should give unique boundaries" do
