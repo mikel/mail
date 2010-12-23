@@ -76,26 +76,19 @@ describe Mail::Message do
 
       STDERR.stub!(:puts) # Don't want to get noisy about any warnings
       errors = false
-      expected_failures = { '/error_emails/encoding_madness.eml' => nil }
+      expected_failures = []
       emails.each do |email|
         begin
           Mail::Message.new(File.read(email))
         rescue => e
-          expected = false
-          expected_failures.keys.each do |key|
-            if email[-key.length, key.length] == key
-              expected = expected_failures[key] = true
-            end
-          end
-          unless expected
+          unless expected_failures.include?(email)
             puts "Failed on email #{email}"
-            puts "Failure was:\n#{e}"
+            puts "Failure was:\n#{e}\n\n"
             errors = true
           end
         end
       end
       errors.should be_false
-      expected_failures.values.all?.should be_true
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
