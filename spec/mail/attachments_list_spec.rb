@@ -238,6 +238,41 @@ describe "reading emails with attachments" do
       mail.attachments[0].decoded.length.should == 1026
     end
 
+    it "attach filename decoding (issue 83)" do
+      data = <<-limitMAIL
+Subject: aaa
+From: aaa@aaa.com
+To: bbb@aaa.com
+Content-Type: multipart/mixed; boundary=0016e64c0af257c3a7048b69e1ac
+
+--0016e64c0af257c3a7048b69e1ac
+Content-Type: multipart/alternative; boundary=0016e64c0af257c3a1048b69e1aa
+
+--0016e64c0af257c3a1048b69e1aa
+Content-Type: text/plain; charset=ISO-8859-1
+
+aaa
+
+--0016e64c0af257c3a1048b69e1aa
+Content-Type: text/html; charset=ISO-8859-1
+
+aaa<br>
+
+--0016e64c0af257c3a1048b69e1aa--
+--0016e64c0af257c3a7048b69e1ac
+Content-Type: text/plain; charset=US-ASCII; name="=?utf-8?b?Rm90bzAwMDkuanBn?="
+Content-Disposition: attachment; filename="=?utf-8?b?Rm90bzAwMDkuanBn?="
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_gbneqxxy0
+
+YWFhCg==
+--0016e64c0af257c3a7048b69e1ac--
+limitMAIL
+      mail = Mail.new(data)
+      #~ puts Mail::Encodings.decode_encode(mail.attachments[0].filename, :decode)
+      mail.attachments[0].filename.should == "Foto0009.jpg"
+    end
+
   end
 end
 
