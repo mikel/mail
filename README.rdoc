@@ -63,7 +63,7 @@ field and continue parsing.
 
 This means Mail won't (ever) crunch your data (I think).
 
-You can also create MIME emails.  There are helper methods for making a 
+You can also create MIME emails.  There are helper methods for making a
 multipart/alternate email for text/plain and text/html (the most common pair)
 and you can manually create any other type of MIME email.
 
@@ -103,14 +103,14 @@ if you are on gemcutter, if you aren't, you can by doing:
  # gem install gemcutter
  # gem tumble
  # gem install mail
- 
+
 Warning though, the above will change your first gem repository to gemcutter, this
 may or may not be a problem for you.
 
 If you want to install mail manually, you can download the gem from github and do:
 
  # gem install mail-2.2.0.gem
- 
+
 == Encodings
 
 If you didn't know, handling encodings in Emails is not as straight forward as you
@@ -122,26 +122,26 @@ I have tried to simplify it some:
    return the object as a complete string ready to send in the mail system, that is,
    it will include the header field and value and CRLF at the end and wrapped as
    needed.
-   
+
 2. All objects that can render into an email, have a :decoded method.  Decoded will
    return the object's "value" only as a string.  This means it will not include
    the header fields (like 'To:' or 'Subject:').
-   
+
 3. By default, calling :to_s on a container object will call it's encoded method, while
    :to_s on a field object will call it's decoded method.  So calling :to_s on a Mail
    object will return the mail, all encoded ready to send, while calling :to_s on the
    From field or the body will return the decoded value of the object.  The header object
    of Mail is considered a container.  If you are in doubt, call :encoded, or :decoded
    explicitly, this is safer if you are not sure.
-   
+
 4. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
    provide decoded parameter values when you call the parameter names as methods against
    the object.
-   
+
 5. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
-   provide encoded parameter values when you call the parameter names through the 
+   provide encoded parameter values when you call the parameter names through the
    object.parameters['<parameter_name>'] method call.
- 
+
 == Contributing
 
 Please do!  Contributing is easy in Mail:
@@ -163,7 +163,7 @@ So, you should be able to just "require 'mail'" to get started.
 === Making an email
 
  require 'mail'
- 
+
  mail = Mail.new do
       from 'mikel@test.lindsaar.net'
         to 'you@test.lindsaar.net'
@@ -176,7 +176,7 @@ So, you should be able to just "require 'mail'" to get started.
 === Making an email, have it your way:
 
  require 'mail'
- 
+
  mail = Mail.new do
    body File.read('body.txt')
  end
@@ -184,35 +184,35 @@ So, you should be able to just "require 'mail'" to get started.
  mail['from'] = 'mikel@test.lindsaar.net'
  mail[:to]    = 'you@test.lindsaar.net'
  mail.subject = 'This is a test email'
- 
+
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 
 === Don't Worry About Message IDs:
 
  require 'mail'
- 
+
  mail = Mail.new do
      to 'you@test.lindsaar.net'
    body 'Some simple body'
  end
 
  mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
- 
+
 Mail will automatically add a Message-ID field if it is missing and
 give it a unique, random Message-ID along the lines of:
 
  <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
- 
+
 === Or do worry about Message-IDs:
 
  require 'mail'
- 
+
  mail = Mail.new do
           to 'you@test.lindsaar.net'
   message_id '<ThisIsMyMessageId@some.domain.com>'
         body 'Some simple body'
  end
- 
+
  mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
 
 Mail will take the message_id you assign to it trusting that you know
@@ -220,7 +220,7 @@ what you are doing.
 
 === Sending an email:
 
-Mail defaults to sending via SMTP to local host port 25.  If you have a 
+Mail defaults to sending via SMTP to local host port 25.  If you have a
 sendmail or postfix daemon running on on this port, sending email is as
 easy as:
 
@@ -233,7 +233,7 @@ easy as:
  end
 
 or
- 
+
  mail = Mail.new do
        from 'me@test.lindsaar.net'
          to 'you@test.lindsaar.net'
@@ -241,7 +241,7 @@ or
        body File.read('body.txt')
    add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
  end
- 
+
  mail.deliver!
 
 Sending via sendmail can be done like so:
@@ -253,9 +253,9 @@ Sending via sendmail can be done like so:
         body File.read('body.txt')
     add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
   end
-  
+
   mail.delivery_method :sendmail
-  
+
   mail.deliver
 
 {Learn more about SMTP Delivery}[link:classes/Mail/SMTP.html]
@@ -318,9 +318,9 @@ Or even all emails:
 === Reading an Email
 
  require 'mail'
- 
+
  mail = Mail.read('/path/to/message.eml')
- 
+
  mail.envelope.from   #=> 'mikel@test.lindsaar.net'
  mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
  mail.sender.address  #=> 'mikel@test.lindsaar.net'
@@ -336,9 +336,9 @@ Many more methods available.
 === Reading a Multipart Email
 
  require 'mail'
- 
+
  mail = Mail.read('multipart_email')
- 
+
  mail.multipart?          #=> true
  mail.parts.length        #=> 2
  mail.preamble            #=> "Text before the first part"
@@ -356,7 +356,7 @@ content type and has a boundary defined.
 
 === Writing and sending a multipart/alternative (html and text) email
 
-Mail makes some basic assumptions and makes doing the common thing as 
+Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
 
  require 'mail'
@@ -373,7 +373,7 @@ simple as possible.... (asking a lot from a mail library)
      body '<h1>This is HTML</h1>'
    end
  end
- 
+
 Mail then delivers the email at the end of the block and returns the
 resulting Mail::Message object, which you can then inspect if you
 so desire...
@@ -409,7 +409,7 @@ so desire...
  <h1>This is HTML</h1>
  ----==_mimepart_4a914f0c911be_6f0f1ab8026659--
 
-Mail inserts the content transfer encoding, the mime version, 
+Mail inserts the content transfer encoding, the mime version,
 the content-id's and handles the content-type and boundary.
 
 Mail assumes that if your text in the body is only us-ascii, that your
@@ -423,7 +423,7 @@ can just do it declaratively.  However, you need to add Mail::Parts to
 an email, not Mail::Messages.
 
  require 'mail'
- 
+
  mail = Mail.new do
    to 'nicolas@test.lindsaar.net.au'
    from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
@@ -433,12 +433,12 @@ an email, not Mail::Messages.
  text_part = Mail::Part.new do
    body 'This is plain text'
  end
- 
+
  html_part = Mail::Part.new do
    content_type 'text/html; charset=UTF-8'
    body '<h1>This is HTML</h1>'
  end
- 
+
  mail.text_part = text_part
  mail.html_part = html_part
 
@@ -447,14 +447,14 @@ Results in the same email as done using the block form
 === Getting error reports from an email:
 
  require 'mail'
- 
+
  @mail = Mail.read('/path/to/bounce_message.eml')
- 
+
  @mail.bounced?         #=> true
  @mail.final_recipient  #=> rfc822;mikel@dont.exist.com
  @mail.action           #=> failed
  @mail.error_status     #=> 5.5.0
- @mail.diagnostic_code  #=> smtp;550 Requested action not taken: mailbox unavailable 
+ @mail.diagnostic_code  #=> smtp;550 Requested action not taken: mailbox unavailable
  @mail.retryable?       #=> false
 
 === Attaching and Detaching Files
@@ -463,7 +463,7 @@ Results in the same email as done using the block form
 
 You can just read the file off an absolute path, Mail will try
 to guess the mime_type and will encode the file in Base64 for you.
-  
+
   @mail = Mail.new
   @mail.add_file("/path/to/file.jpg")
   @mail.parts.first.attachment? #=> true
@@ -474,7 +474,7 @@ to guess the mime_type and will encode the file in Base64 for you.
 
 Or You can pass in file_data and give it a filename, again, mail
 will try and guess the mime_type for you.
-  
+
   @mail = Mail.new
   @mail.attachments['myfile.pdf'] = File.read('path/to/myfile.pdf')
   @mail.parts.first.attachment? #=> true
@@ -507,7 +507,7 @@ Of course... Mail will round trip an attachment as well
   end
 
   @round_tripped_mail = Mail.new(@mail.encoded)
-  
+
   @round_tripped_mail.attachments.length #=> 1
   @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 
@@ -540,9 +540,9 @@ sending emails, the TestMailer can do this for you.
 
 == Excerpts from TREC Spam Corpus 2005
 
-The spec fixture files in spec/fixtures/emails/from_trec_2005 are from the 
+The spec fixture files in spec/fixtures/emails/from_trec_2005 are from the
 2005 TREC Public Spam Corpus. They remain copyrighted under the terms of
-that project and license agreement. They are used in this project to verify 
+that project and license agreement. They are used in this project to verify
 and describe the development of this email parser implementation.
 
 http://plg.uwaterloo.ca/~gvcormac/treccorpus/
@@ -553,14 +553,14 @@ They are used as allowed by 'Permitted Uses, Clause 3':
      or published in a scientific or technical context, solely for
      the purpose of describing the research and development and
      related issues."
-     
+
      -- http://plg.uwaterloo.ca/~gvcormac/treccorpus/
 
 == License:
 
 (The MIT License)
 
-Copyright (c) 2009
+Copyright (c) 2009, 2010, 2011
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
