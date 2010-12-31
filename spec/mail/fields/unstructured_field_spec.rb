@@ -167,4 +167,10 @@ describe Mail::UnstructuredField do
     end
   end
 
+  describe "iso-2022-jp Subject" do
+    @field = Mail::UnstructuredField.new("Subject", "あいうえお")
+    @field.charset = 'iso-2022-jp'
+    expect = (RUBY_VERSION < '1.9') ? "Subject: =?ISO-2022-JP?Q?=E3=81=82=E3=81=84=E3=81=86=E3=81=88=E3=81=8A?=\r\n" : "Subject: =?ISO-2022-JP?Q?=1B$B$=22$$$&$=28$*=1B=28B?=\r\n"
+    @field.encoded.should == expect
+  end
 end
