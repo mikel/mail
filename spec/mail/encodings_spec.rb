@@ -246,7 +246,7 @@ describe Mail::Encodings do
       mail[:subject].charset = 'koi8-r'
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
-      orginial = original.force_encoding('koi8-r') if RUBY_VERSION >= "1.9"
+      orginial = original.force_encoding('koi8-r').encode!('utf-8') if RUBY_VERSION >= "1.9"
     
       unwrapped.gsub("Subject: ", "").should == original
     end
@@ -551,7 +551,7 @@ describe Mail::Encodings do
         a ="=?ISO-8859-1?Q?Brosch=FCre_Rand?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'iso-8859-1')
         expected = "Brosch\374re Rand"
-        expected.force_encoding 'iso-8859-1' if expected.respond_to?(:force_encoding)
+        expected.force_encoding('iso-8859-1').encode!('utf-8') if expected.respond_to?(:force_encoding)
         b.should == expected
       end
 
@@ -584,7 +584,7 @@ describe Mail::Encodings do
 
     it "should handle a new line in the text" do
       if RUBY_VERSION >= '1.9'
-        expected = "\nRe: ol\341".force_encoding('ISO-8859-1')
+        expected = "\nRe: ol\341".force_encoding('ISO-8859-1').encode('utf-8')
       else
         expected = "\nRe: ol\341"
       end
