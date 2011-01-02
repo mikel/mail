@@ -3,8 +3,8 @@ module Net
     # This is a backport of r30294 from ruby trunk because of a bug in net/smtp.
     # http://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=rev&amp;revision=30294
     #
-    # Fixed in what will be Ruby 1.9.3
-    remove_method :tlsconnect
+    # Fixed in what will be Ruby 1.9.3 - tlsconnect also does not exist in some early versions of ruby
+    remove_method :tlsconnect if defined?(Net::SMTP.new.tlsconnect)
 
     def tlsconnect(s)
       verified = false
