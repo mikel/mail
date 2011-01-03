@@ -1,3 +1,7 @@
+== Mon  3 Jan 2011 12:48:59 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Update field_spec to handle encodings, closes issues 44 and 120 (Luis Lopez)
+
 == Mon  3 Jan 2011 00:09:27 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Use default IANA port on the IMAP retriever_method (Adrian Silva)
