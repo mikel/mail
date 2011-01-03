@@ -241,7 +241,7 @@ describe Mail::Encodings do
     
     it "should round trip another complex string (koi-8)" do
       original = "Слово 9999 и число"
-      orginial = original.force_encoding('koi8-r') if RUBY_VERSION >= "1.9"
+      orginial = original.encode('koi8-r') if RUBY_VERSION >= "1.9"
       mail = Mail.new
       mail.subject = original
       mail[:subject].charset = 'koi8-r'
