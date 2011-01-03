@@ -27,16 +27,11 @@ you are doing, you can fiddle with every last bit of your email directly.
 
 Mail is tested and works on the following platforms:
 
-* jruby-1.4.0 [ [x86_64-java] ]
-* ree-1.8.7-2010.01 [ x86_64 ]
+* jruby-1.5.2 [ [x86_64-java] ]
+* ree-1.8.7-2010.02 [ x86_64 ]
 * ruby-1.8.6-p399 [ x86_64 ]
-* ruby-1.8.7-p249 [ x86_64 ]
-* ruby-1.9.1-head [ x86_64 ] (10 April 2010)
-* ruby-1.9.2-head [ x86_64 ] (10 April 2010)
-
-Mail seems to work fine on JRuby as well, however there is some weird QP
-problem that only shows up while running the specs, running it directly
-works fine.... weird.  Any jRuby gurus who want to help out, please do.
+* ruby-1.8.7-p302 [ x86_64 ]
+* ruby-1.9.2-p0 [ x86_64 ]
 
 == Discussion
 
@@ -73,7 +68,6 @@ Next TODO:
 
 * Improve MIME support for character sets in headers, currently works, mostly, needs
   refinement.
-* Add IMAP wrapper
 
 == Testing Policy
 
@@ -94,22 +88,9 @@ Also, all private or protected methods to be declared as such - though this is s
 
 == Installation
 
-Installation is fairly simple, I host mail on gemcutter, so you can just do:
+Installation is fairly simple, I host mail on rubygems, so you can just do:
 
  # gem install mail
-
-if you are on gemcutter, if you aren't, you can by doing:
-
- # gem install gemcutter
- # gem tumble
- # gem install mail
-
-Warning though, the above will change your first gem repository to gemcutter, this
-may or may not be a problem for you.
-
-If you want to install mail manually, you can download the gem from github and do:
-
- # gem install mail-2.2.0.gem
 
 == Encodings
 
