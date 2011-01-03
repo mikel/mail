@@ -1,3 +1,9 @@
+== Mon  3 Jan 2011 00:09:27 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Use default IANA port on the IMAP retriever_method (Adrian Silva)
+* Updated README to reflect latest ruby versions we test against (mikel)
+* Only remove tlsconnect if it exists (mikel)
+
 == Thu 23 Dec 2010 09:15:58 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Added backport fix for net/smtp bug (Aaron Patterson)
