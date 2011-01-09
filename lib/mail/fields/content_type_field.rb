@@ -128,7 +128,7 @@ module Mail
     private
 
     def method_missing(name, *args, &block)
-      if name.to_s =~ /([\w_]+)=/
+      if name.to_s =~ /(\w+)=/
         self.parameters[$1] = args.first
         @value = "#{content_type}; #{stringify(parameters)}"
       else
