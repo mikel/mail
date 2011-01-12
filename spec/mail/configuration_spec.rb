@@ -15,5 +15,12 @@ describe Mail::Configuration do
       Mail.delivery_method.settings[:location].should == "/usr/bin/sendmail"
     end
     
+    it "should configure an open SMTP connection" do
+      smtp = Net::SMTP.start('127.0.0.1', 25)
+      Mail.defaults { delivery_method :smtp_connection, {:connection => smtp} }
+      Mail.delivery_method.class.should == Mail::SMTPConnection
+      Mail.delivery_method.smtp.should == smtp
+    end
+    
   end
 end

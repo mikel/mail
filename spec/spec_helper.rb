@@ -54,7 +54,15 @@ class MockSMTP
   end
 
   def start(*args)
-    yield self
+    if block_given?
+      return yield(self)
+    else
+      return self
+    end
+  end
+  
+  def finish
+    return true
   end
   
   def self.clear_deliveries
