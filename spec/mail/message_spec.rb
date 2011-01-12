@@ -1562,6 +1562,10 @@ describe Mail::Message do
         @mail.reply[:references].message_ids.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
       end
 
+      it "should not append another RE:" do
+        @mail.reply.subject.should == "Re: Test reply email"
+      end
+
     end
 
     describe "to a reply with an in-reply-to with a single message id but no references header" do
