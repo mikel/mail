@@ -39,6 +39,7 @@ module Mail
     def initialize(values)
       raise ArgumentError.new('A Net::SMTP object is required for this delivery method') if values[:connection].nil?
       self.smtp = values[:connection]
+      self.settings = values
     end
     
     attr_accessor :smtp
@@ -64,9 +65,9 @@ module Mail
         raise ArgumentError.new('A encoded content is required to send a message')
       end
             
-      smtp.sendmail(message, envelope_from, destinations)
+      response = smtp.sendmail(message, envelope_from, destinations)
       
-      self
+      settings[:return_response] ? response : self 
     end
         
   end

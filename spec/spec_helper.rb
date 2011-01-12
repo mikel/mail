@@ -51,6 +51,7 @@ class MockSMTP
 
   def sendmail(mail, from, to)
     @@deliveries << [mail, from, to]
+    'OK'
   end
 
   def start(*args)
