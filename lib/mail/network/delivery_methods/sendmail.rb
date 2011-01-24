@@ -49,7 +49,7 @@ module Mail
 
       arguments = [settings[:arguments], return_path].compact.join(" ")
       
-      Sendmail.call(settings[:location], arguments, mail.destinations.collect! {|x| '"' + x + '"'}.join(" "), mail)
+      Sendmail.call(settings[:location], arguments, mail.destinations.collect! {|x| '"' + x.gsub(/\"/, '\"') + '"'}.join(" "), mail)
     end
     
     def Sendmail.call(path, arguments, destinations, mail)
