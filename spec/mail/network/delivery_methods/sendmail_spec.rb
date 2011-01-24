@@ -29,7 +29,7 @@ describe "sendmail delivery agent" do
     
     Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
                                               '-i -t -f "roger@test.lindsaar.net"', 
-                                              'marcel@test.lindsaar.net bob@test.lindsaar.net', 
+                                              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
                                               mail)
     mail.deliver!
   end
@@ -53,7 +53,7 @@ describe "sendmail delivery agent" do
       
       Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -t -f "return@test.lindsaar.net"', 
-                                                'to@test.lindsaar.net', 
+                                                '"to@test.lindsaar.net"', 
                                                 mail)
                                                 
       mail.deliver
@@ -76,7 +76,7 @@ describe "sendmail delivery agent" do
 
       Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -t -f "sender@test.lindsaar.net"', 
-                                                'to@test.lindsaar.net', 
+                                                '"to@test.lindsaar.net"', 
                                                 mail)
 
       mail.deliver
@@ -97,7 +97,7 @@ describe "sendmail delivery agent" do
 
       Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -t -f "from@test.lindsaar.net"', 
-                                                'to@test.lindsaar.net', 
+                                                '"to@test.lindsaar.net"', 
                                                 mail)
       mail.deliver
     end
@@ -118,7 +118,25 @@ describe "sendmail delivery agent" do
     
     Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
                                               '-f "from@test.lindsaar.net"', 
-                                              'marcel@test.lindsaar.net bob@test.lindsaar.net', 
+                                              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
+                                              mail)
+    mail.deliver!
+  end
+  
+  it "should quote the recipient address to allow ampersands" do
+    Mail.defaults do
+      delivery_method :sendmail, :arguments => nil
+    end
+    
+    mail = Mail.new do
+      from    'from@test.lindsaar.net'
+      to      'marcel.&.bob@test.lindsaar.net'
+      subject 'Ampersand test'
+    end
+    
+    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
+                                              '-f "from@test.lindsaar.net"', 
+                                              '"marcel.&.bob@test.lindsaar.net"', 
                                               mail)
     mail.deliver!
   end
