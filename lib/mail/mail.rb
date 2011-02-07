@@ -10,11 +10,11 @@ module Mail
   # 
   # Creating via a string:
   # 
-  #  string = 'To: mikel@test.lindsaar.net\r\n'
-  #  string << 'From: bob@test.lindsaar.net\r\n\r\n'
-  #  string << 'Subject: This is an email\r\n'
-  #  string << '\r\n'
-  #  string << 'This is the body'
+  #  string = "To: mikel@test.lindsaar.net\r\n"
+  #  string << "From: bob@test.lindsaar.net\r\n"
+  #  string << "Subject: This is an email\r\n"
+  #  string << "\r\n"
+  #  string << "This is the body"
   #  Mail.new(string)
   # 
   # Or creating via a block:
@@ -30,8 +30,8 @@ module Mail
   # 
   #  message = Mail.new({:to => 'mikel@test.lindsaar.net',
   #                      'from' => 'bob@test.lindsaar.net',
-  #                       :subject 'This is an email',
-  #                       :body 'This is the body' })
+  #                      :subject => 'This is an email',
+  #                      :body => 'This is the body' })
   # 
   # Note, the hash keys can be strings or symbols, the passed in object
   # does not need to be a hash, it just needs to respond to :each_pair

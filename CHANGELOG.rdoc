@@ -1,3 +1,8 @@
+== Wed 26 Jan 2011 02:23:09 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Update addresses passed into sendmail to escape them (Andy Lindeman)
+* Version bump to 2.2.15 and gem release
+
 == Mon  3 Jan 2011 12:48:59 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Update field_spec to handle encodings, closes issues 44 and 120 (Luis Lopez)
