@@ -1,4 +1,6 @@
 # encoding: utf-8
+require "yaml"
+
 module Mail
   # The Message class provides a single point of access to all things to do with an
   # email message.
@@ -1706,6 +1708,25 @@ module Mail
       buffer << "\r\n"
       buffer << body.encoded(content_transfer_encoding)
       buffer
+    end
+
+    def to_yaml
+      ready_to_send!
+      hash = {}
+      header.fields.each do |field|
+        hash[field.name] = field.value
+      end
+      hash['subject'] = subject
+      hash['body'] = body.encoded(content_transfer_encoding)
+      hash.to_yaml
+    end
+
+    def self.from_yaml(str)
+      from_hash(YAML::load(str))
+    end
+
+    def self.from_hash(hash)
+      Mail::Message.new(hash)
     end
 
     def to_s

@@ -56,8 +56,6 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
 
-
-
     it "should be able to parse an email with a funky date header" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'bad_date_header2.eml'))) }
     end
@@ -118,6 +116,14 @@ describe Mail::Message do
       mail.in_reply_to.should be_blank
     end
 
+    it "should allow serializing to YAML" do
+      Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject').to_yaml.should match /--- \nMime-Version: \"1.0\"\nCc: someoneelse@somewhere.com\nSubject: subject\nbody: body\nBcc: someonesecret@somewhere.com\nContent-Transfer-Encoding: 7bit\nMessage-ID: <.*>\nsubject: subject\nContent-Type: text\/plain\nTo: someone@somewhere.com\nDate: Mon, 07 Feb 2011 \d\d:\d\d:\d\d [+-]\d\d\d\d\n/
+    end
+
+    it "should deserialize after serializing" do
+      message = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject')
+      Mail::Message.from_yaml(message.to_yaml).should == message
+    end
   end
   
   describe "envelope line handling" do
