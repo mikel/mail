@@ -27,7 +27,7 @@ module Mail
     end
 
     def Ruby19.decode_base64(str)
-      str.unpack( 'm' ).first.force_encoding(Encoding::BINARY)
+      str.unpack( 'm' ).first
     end
     
     def Ruby19.encode_base64(str)
