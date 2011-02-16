@@ -73,7 +73,8 @@ module Mail
     #  h.fields = ['From: mikel@me.com', 'To: bob@you.com']
     def fields=(unfolded_fields)
       @fields = Mail::FieldList.new
-      unfolded_fields.each do |field|
+      warn "Warning: more than 1000 header fields only using the first 1000" if unfolded_fields.length > 1000
+      unfolded_fields[0..1000].each do |field|
 
         field = Field.new(field, nil, charset)
         field.errors.each { |error| self.errors << error }
