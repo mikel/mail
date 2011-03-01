@@ -11,6 +11,11 @@ describe Mail::ReturnPathField do
     rp.encoded.should == "Return-Path: <mikel@test.lindsaar.net>\r\n"
   end
 
+  it "should accept <>" do
+    rp = Mail::ReturnPathField.new('<>')
+    rp.encoded.should == "Return-Path: <>\r\n"
+  end
+  
   it "should set the return path" do
     mail = Mail.new do
       to "to@someemail.com"
