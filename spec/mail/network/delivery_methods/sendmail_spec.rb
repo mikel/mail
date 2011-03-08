@@ -101,7 +101,26 @@ describe "sendmail delivery agent" do
                                                 mail)
       mail.deliver
     end
-    
+
+    it "should escape the return path address" do
+      Mail.defaults do
+        delivery_method :sendmail
+      end
+
+      mail = Mail.new do
+        to 'to@test.lindsaar.net'
+        from '"from+suffix test"@test.lindsaar.net'
+        subject 'Can\'t set the return-path'
+        message_id '<1234@test.lindsaar.net>'
+        body 'body'
+      end
+
+      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+                                                '-i -t -f "\"from+suffix test\"@test.lindsaar.net"',
+                                                'to@test.lindsaar.net',
+                                                mail)
+      mail.deliver
+    end
   end
 
 
