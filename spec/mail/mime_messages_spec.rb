@@ -455,6 +455,21 @@ describe "MIME Emails" do
         m.parts.first[:content_type].content_type.should == 'image/png'
         m.parts.last[:content_type].content_type.should == 'text/plain'
       end
+      
+      it "should allow you to add a body as text part if you have added a file and not truncate after newlines - issue 208" do
+        m = Mail.new do
+          from    'mikel@from.lindsaar.net'
+          subject 'Hello there Mikel'
+          to      'mikel@to.lindsaar.net'
+          add_file fixture('attachments', 'test.png')
+          body    "First Line\n\nSecond Line\n\nThird Line\n\n"
+          #Note: trailing \n\n is stripped off by Mail::Part initialization
+        end
+        m.parts.length.should == 2
+        m.parts.first[:content_type].content_type.should == 'image/png'
+        m.parts.last[:content_type].content_type.should == 'text/plain'
+        m.parts.last.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+      end
 
     end
 
