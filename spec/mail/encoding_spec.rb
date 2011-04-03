@@ -76,7 +76,7 @@ describe "mail encoding" do
       mail[:to].encoded.should == result
     end
 
-    describe "quouting token safe chars" do
+    describe "quoting token safe chars" do
     
       it "should not quote the display name if unquoted" do
         mail = Mail.new
