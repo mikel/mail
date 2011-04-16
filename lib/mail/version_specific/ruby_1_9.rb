@@ -27,7 +27,7 @@ module Mail
     end
 
     def Ruby19.decode_base64(str)
-      str.unpack( 'm' ).first.force_encoding(Encoding::BINARY)
+      str.unpack( 'm' ).first
     end
     
     def Ruby19.encode_base64(str)
@@ -35,11 +35,11 @@ module Mail
     end
     
     def Ruby19.has_constant?(klass, string)
-      klass.constants.include?( string.to_sym )
+      klass.const_defined?( string, false )
     end
     
     def Ruby19.get_constant(klass, string)
-      klass.const_get( string.to_sym )
+      klass.const_get( string )
     end
     
     def Ruby19.b_value_encode(str, encoding = nil)
