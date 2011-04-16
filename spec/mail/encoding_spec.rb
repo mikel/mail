@@ -1,4 +1,4 @@
-# encoding: utf-8 
+# encoding: utf-8
 require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
 
 describe "mail encoding" do
@@ -8,7 +8,7 @@ describe "mail encoding" do
     mail.charset = 'utf-8'
     mail.charset.should == 'utf-8'
   end
-  
+
   describe "using default encoding" do
     it "should allow you to send in unencoded strings to fields and encode them" do
       mail = Mail.new
@@ -59,7 +59,7 @@ describe "mail encoding" do
         mail[field].encoded.should == result
       end
     end
-    
+
     it "should handle groups" do
       mail = Mail.new
       mail.charset = 'utf-8'
@@ -77,7 +77,7 @@ describe "mail encoding" do
     end
 
     describe "quoting token safe chars" do
-    
+
       it "should not quote the display name if unquoted" do
         mail = Mail.new
         mail.charset = 'utf-8'
@@ -93,7 +93,7 @@ describe "mail encoding" do
       end
 
     end
-    
+
     describe "quoting token unsafe chars" do
       it "should quote the display name" do
         pending
@@ -189,6 +189,10 @@ describe "mail encoding" do
   it "should skip invalid characters" do
     m = Mail.new
     m['Subject'] = Mail::SubjectField.new("=?utf-8?Q?Hello_=96_World?=")
-    lambda { m.subject.should be_valid_encoding }.should_not raise_error
+    if RUBY_VERSION > '1.9'
+      lambda { m.subject.should be_valid_encoding }.should_not raise_error
+    else
+      m.subject.should == "Hello \226 World"
+    end
   end
 end
