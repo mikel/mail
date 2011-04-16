@@ -242,9 +242,9 @@ module Mail
     #
     # Returns self
     def deliver!
-      delivery_method.deliver!(self)
+      response = delivery_method.deliver!(self)
       inform_observers
-      self
+      delivery_method.settings[:return_response] ? response : self
     end
 
     def delivery_method(method = nil, settings = {})

@@ -47,6 +47,21 @@ describe "SMTP Delivery Method" do
       MockSMTP.deliveries[0][2].should == mail.destinations
     end
     
+    it "should be able to return actual SMTP protocol response" do
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :return_response => true
+      end
+      
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+      
+      response = mail.deliver!
+      response.should eql 'OK'
+      
+    end
   end
     
   describe "enabling tls" do
