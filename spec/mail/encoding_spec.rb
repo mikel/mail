@@ -76,7 +76,7 @@ describe "mail encoding" do
       mail[:to].encoded.should == result
     end
 
-    describe "quouting token safe chars" do
+    describe "quoting token safe chars" do
     
       it "should not quote the display name if unquoted" do
         mail = Mail.new
@@ -186,4 +186,9 @@ describe "mail encoding" do
     mail.parts[0].content_type.should == "text/html; charset=ISO-8859-1"
   end
 
+  it "should skip invalid characters" do
+    m = Mail.new
+    m['Subject'] = Mail::SubjectField.new("=?utf-8?Q?Hello_=96_World?=")
+    lambda { m.subject.should be_valid_encoding }.should_not raise_error
+  end
 end
