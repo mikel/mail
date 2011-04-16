@@ -117,8 +117,18 @@ describe Mail::Message do
     end
 
     it "should allow serializing to YAML" do
-      result = %r|--- \nMime-Version: "1.0"\nCc: someoneelse@somewhere.com\nSubject: subject\nbody: body\nBcc: someonesecret@somewhere.com\nContent-Transfer-Encoding: 7bit\nMessage-ID: <.+?>\nsubject: subject\nContent-Type: text/plain\nTo: someone@somewhere.com\nDate: \w{3}, \d\d \w{3} \d{4} \d\d:\d\d:\d\d [+-]\d{4}\n|
-      Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject').to_yaml.should match(result)
+      yaml = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject').to_yaml
+      yaml_output = YAML.load(yaml)
+      yaml_output['Mime-Version'].should == "1.0"
+      yaml_output['Cc'].should == "someoneelse@somewhere.com"
+      yaml_output['Subject'].should == "subject"
+      yaml_output['body'].should == "body"
+      yaml_output['Bcc'].should == "someonesecret@somewhere.com"
+      yaml_output['Content-Transfer-Encoding'].should == "7bit"
+      yaml_output['Message-ID'].should =~ /<.+@.+>/
+      yaml_output['Content-Type'].should == "text/plain"
+      yaml_output['To'].should == "someone@somewhere.com"
+      yaml_output['Date'].should_not == ''
     end
 
     it "should deserialize after serializing" do
