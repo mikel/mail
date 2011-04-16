@@ -234,7 +234,7 @@ module Mail
     #
     # Example:
     #
-    #  Encodings.b_value_encode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
+    #  Encodings.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
     #  #=> 'This is あ string'
     def Encodings.b_value_decode(str)
       RubyVer.b_value_decode(str)
