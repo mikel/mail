@@ -41,4 +41,11 @@ describe Mail::ReceivedField do
     t = Mail::ReceivedField.new('from localhost (localhost [127.0.0.1]) by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)')
     t.decoded.should == 'from localhost (localhost [127.0.0.1]) by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000'
   end
+  
+  it "should handle a blank value" do
+    t = Mail::ReceivedField.new('')
+    t.decoded.should == ''
+    t.encoded.should == "Received: \r\n"
+  end
+  
 end

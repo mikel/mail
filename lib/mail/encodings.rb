@@ -6,12 +6,12 @@ module Mail
   end
 
   module Encodings
-    
+
     include Mail::Patterns
     extend  Mail::Utilities
 
     @transfer_encodings = {}
-   
+
     # Register transfer encoding
     #
     # Example
@@ -20,23 +20,23 @@ module Mail
     def Encodings.register(name, cls)
         @transfer_encodings[get_name(name)] = cls
     end
- 
+
     # Is the encoding we want defined?
-    # 
+    #
     # Example:
-    # 
+    #
     #  Encodings.defined?(:base64) #=> true
     def Encodings.defined?( str )
       @transfer_encodings.include? get_name(str)
     end
-    
+
     # Gets a defined encoding type, QuotedPrintable or Base64 for now.
-    # 
-    # Each encoding needs to be defined as a Mail::Encodings::ClassName for 
+    #
+    # Each encoding needs to be defined as a Mail::Encodings::ClassName for
     # this to work, allows us to add other encodings in the future.
-    # 
+    #
     # Example:
-    # 
+    #
     #  Encodings.get_encoding(:base64) #=> Mail::Encodings::Base64
     def Encodings.get_encoding( str )
       @transfer_encodings[get_name(str)]
@@ -52,16 +52,16 @@ module Mail
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
     # be set using Mail::Configuration, like so:
-    # 
+    #
     #  Mail.defaults.do
     #    param_encode_language 'jp'
     #  end
     #
-    # The character set used for encoding will either be the value of $KCODE for 
+    # The character set used for encoding will either be the value of $KCODE for
     # Ruby < 1.9 or the encoding on the string passed in.
-    # 
+    #
     # Example:
-    # 
+    #
     #  Mail::Encodings.param_encode("This is fun") #=> "us-ascii'en'This%20is%20fun"
     def Encodings.param_encode(str)
       case
@@ -75,9 +75,9 @@ module Mail
     end
 
     # Decodes a parameter value using URI Escaping.
-    # 
+    #
     # Example:
-    # 
+    #
     #  Mail::Encodings.param_decode("This%20is%20fun", 'us-ascii') #=> "This is fun"
     #
     #  str = Mail::Encodings.param_decode("This%20is%20fun", 'iso-8559-1')
@@ -86,14 +86,14 @@ module Mail
     def Encodings.param_decode(str, encoding)
       RubyVer.param_decode(str, encoding)
     end
-    
+
     # Decodes or encodes a string as needed for either Base64 or QP encoding types in
     # the =?<encoding>?[QB]?<string>?=" format.
-    # 
+    #
     # The output type needs to be :decode to decode the input string or :encode to
     # encode the input string.  The character set used for encoding will either be
     # the value of $KCODE for Ruby < 1.9 or the encoding on the string passed in.
-    # 
+    #
     # On encoding, will only send out Base64 encoded strings.
     def Encodings.decode_encode(str, output_type)
       case
@@ -110,12 +110,12 @@ module Mail
 
     # Decodes a given string as Base64 or Quoted Printable, depending on what
     # type it is.
-    # 
+    #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
       return str unless str.index("=?")
-      
+
       str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
@@ -125,18 +125,18 @@ module Mail
         else
           # Join QP encoded-words that are adjacent to avoid decoding partial chars
           text.gsub!(/\?\=\=\?.+?\?[Qq]\?/m, '') if text =~ /\?==\?/
-        
+
           # Separate encoded-words with a space, so we can treat them one by one
           text.gsub!(/\?\=\=\?/, '?= =?')
           text.split(/ /).map do |word|
             word.to_str.
-              gsub(/=\?.+\?[Bb]\?.+\?=/m) {|substr| b_value_decode(substr)}.
-              gsub(/=\?.+\?[Qq]\?.+\?=/m) {|substr| q_value_decode(substr)}
+              gsub( /=\?.+\?[Bb]\?.+\?=/m ) { |substr| b_value_decode(substr) }.
+              gsub( /=\?.+\?[Qq]\?.+\?=/m ) { |substr| q_value_decode(substr) }
             end
         end
       end.join("")
     end
-    
+
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
       original_encoding, string = split_encoding_from_string( str )
@@ -166,7 +166,7 @@ module Mail
         output
       end
     end
-    
+
     def Encodings.address_encode(address, charset = 'utf-8')
       if address.is_a?(Array)
         # loop back through for each element
@@ -196,13 +196,13 @@ module Mail
         end
       end.join(' ')
     end
-    
+
     # Encode a string with Base64 Encoding and returns it ready to be inserted
     # as a value for a field, that is, in the =?<charset>?B?<string>?= format
     #
     # Example:
-    # 
-    #  Encodings.b_value_encode('This is あ string', 'UTF-8') 
+    #
+    #  Encodings.b_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
     def Encodings.b_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
@@ -211,13 +211,13 @@ module Mail
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
     end
-    
+
     # Encode a string with Quoted-Printable Encoding and returns it ready to be inserted
     # as a value for a field, that is, in the =?<charset>?Q?<string>?= format
     #
     # Example:
-    # 
-    #  Encodings.q_value_encode('This is あ string', 'UTF-8') 
+    #
+    #  Encodings.q_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def Encodings.q_value_encode(str, encoding = nil)
       return str if str.to_s.ascii_only?
@@ -227,29 +227,29 @@ module Mail
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
       end.join(" ")
     end
-    
+
     private
-    
+
     # Decodes a Base64 string from the "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=" format
-    # 
+    #
     # Example:
-    # 
-    #  Encodings.b_value_encode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=") 
+    #
+    #  Encodings.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
     #  #=> 'This is あ string'
     def Encodings.b_value_decode(str)
       RubyVer.b_value_decode(str)
     end
-    
+
     # Decodes a Quoted-Printable string from the "=?UTF-8?Q?This_is_=E3=81=82_string?=" format
-    # 
+    #
     # Example:
-    # 
-    #  Encodings.b_value_encode("=?UTF-8?Q?This_is_=E3=81=82_string?=") 
+    #
+    #  Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
       RubyVer.q_value_decode(str).gsub(/_/, ' ')
     end
-    
+
     def Encodings.split_encoding_from_string( str )
       match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
       if match
@@ -258,7 +258,7 @@ module Mail
         nil
       end
     end
-    
+
     def Encodings.find_encoding(str)
       RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
     end

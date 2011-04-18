@@ -103,7 +103,7 @@ module Mail
         self.body   = body_part
       else
         self.header = "Content-Type: text/plain\r\n"
-        self.body   = header_part
+        self.body   = raw_source
       end
     end
     

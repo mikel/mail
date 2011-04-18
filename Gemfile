@@ -8,7 +8,6 @@ gem "i18n", ">= 0.4.0"
 
 group :test do
   gem "ZenTest",    "~> 4.4.0"
-  gem "rcov",       "~> 0.9.8"
   gem "rake",       "~> 0.8.7"
   gem "bundler"
   gem "rspec",      "~> 1.3.0"

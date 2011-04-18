@@ -59,7 +59,7 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
   rdoc.rdoc_files.include('lib/network/**/*.rb')
   rdoc.rdoc_files.exclude('lib/parsers/*')
-  
+
 end
 
 # load custom rake tasks

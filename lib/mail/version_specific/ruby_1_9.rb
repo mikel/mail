@@ -27,7 +27,7 @@ module Mail
     end
 
     def Ruby19.decode_base64(str)
-      str.unpack( 'm' ).first.force_encoding(Encoding::BINARY)
+      str.unpack( 'm' ).first
     end
     
     def Ruby19.encode_base64(str)
@@ -35,11 +35,11 @@ module Mail
     end
     
     def Ruby19.has_constant?(klass, string)
-      klass.constants.include?( string.to_sym )
+      klass.const_defined?( string, false )
     end
     
     def Ruby19.get_constant(klass, string)
-      klass.const_get( string.to_sym )
+      klass.const_get( string )
     end
     
     def Ruby19.b_value_encode(str, encoding = nil)
@@ -54,7 +54,8 @@ module Mail
         str = Ruby19.decode_base64(match[2])
         str.force_encoding(fix_encoding(encoding))
       end
-      str.encode("utf-8", :invalid => :replace, :replace => "") 
+      decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
+      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
     end
     
     def Ruby19.q_value_encode(str, encoding = nil)
@@ -69,7 +70,8 @@ module Mail
         str = Encodings::QuotedPrintable.decode(match[2])
         str.force_encoding(fix_encoding(encoding))
       end
-      str.encode("utf-8", :invalid => :replace, :replace => "") 
+      decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
+      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
     end
 
     def Ruby19.param_decode(str, encoding)
@@ -94,8 +96,8 @@ module Mail
         when /iso-?(\d{4})-?(\w{1,2})/i then return "ISO-#{$1}-#{$2}"
         # "ISO-2022-JP-KDDI"  and alike
         when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i then return "ISO-#{$1}-#{$2}-#{$3}"
-        # utf-8 and alike
-        when /utf-?(.*)/i then return "UTF-#{$1}"
+        # UTF-8, UTF-32BE and alike
+        when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}"
         # Windows-1252 and alike
         when /Windows-?(.*)/i then return "Windows-#{$1}"
         #more aliases to be added if needed

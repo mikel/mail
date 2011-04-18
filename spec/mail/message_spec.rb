@@ -37,7 +37,7 @@ describe Mail::Message do
       mail.from.should == ['mikel@me.com']
       mail.to.should == ['lindsaar@you.com']
     end
-  
+
     it "should initialize a body and header class even if called with nothing to begin with" do
       mail = Mail::Message.new
       mail.header.class.should == Mail::Header
@@ -55,8 +55,6 @@ describe Mail::Message do
     it "should be able to parse an email with only blank lines as body" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
-
-
 
     it "should be able to parse an email with a funky date header" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'bad_date_header2.eml'))) }
@@ -118,19 +116,38 @@ describe Mail::Message do
       mail.in_reply_to.should be_blank
     end
 
+    it "should allow serializing to YAML" do
+      yaml = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject').to_yaml
+      yaml_output = YAML.load(yaml)
+      yaml_output['Mime-Version'].should == "1.0"
+      yaml_output['Cc'].should == "someoneelse@somewhere.com"
+      yaml_output['Subject'].should == "subject"
+      yaml_output['body'].should == "body"
+      yaml_output['Bcc'].should == "someonesecret@somewhere.com"
+      yaml_output['Content-Transfer-Encoding'].should == "7bit"
+      yaml_output['Message-ID'].should =~ /<.+@.+>/
+      yaml_output['Content-Type'].should == "text/plain"
+      yaml_output['To'].should == "someone@somewhere.com"
+      yaml_output['Date'].should_not == ''
+    end
+
+    it "should deserialize after serializing" do
+      message = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject')
+      Mail::Message.from_yaml(message.to_yaml).should == message
+    end
   end
-  
+
   describe "envelope line handling" do
     it "should respond to 'envelope from'" do
       Mail::Message.new.should respond_to(:envelope_from)
     end
-    
+
     it "should strip off the envelope from field if present" do
       message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email.eml')))
       message.envelope_from.should == "jamis_buck@byu.edu"
       message.envelope_date.should == ::DateTime.parse("Mon May  2 16:07:05 2005")
     end
-    
+
     it "should strip off the envelope from field if present" do
       message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email.eml')))
       message.raw_envelope.should == "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
@@ -156,7 +173,7 @@ describe Mail::Message do
     end
 
   end
-  
+
   describe "accepting a plain text string email" do
 
     it "should accept some email text to parse and return an email" do
@@ -173,7 +190,7 @@ describe Mail::Message do
       mail = Mail::Message.new
       mail.raw_source.should == ""
     end
-  
+
     it "should give the header class the header to parse" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
       Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
@@ -185,14 +202,14 @@ describe Mail::Message do
       Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
-  
+
     it "should give the body class the body to parse" do
       body = Mail::Body.new("email message")
       Mail::Body.should_receive(:new).with("email message").and_return(body)
       mail = Mail::Message.new(basic_email)
       mail.body #body calculates now lazy so need to ask for it
     end
-  
+
     it "should still ask the body for a new instance even though these is nothing to parse, yet" do
       Mail::Body.should_receive(:new)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
@@ -206,7 +223,7 @@ describe Mail::Message do
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
       mail.body #body calculates now lazy so need to ask for it
     end
-  
+
     it "should give allow for whitespace on the gap line between header and body" do
       header = Mail::Header.new("To: mikel")
       body = Mail::Body.new("G'Day!")
@@ -221,19 +238,19 @@ describe Mail::Message do
       mail.from.should == ['mikel']
       mail.body.to_s.should == 'This is the body'
     end
-    
+
     it "should read in an email message with the word 'From' in it multiple times and parse it" do
       mail = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'two_from_in_message.eml')))
       mail.to.should_not be_nil
       mail.to.should == ["tester2@test.com"]
-    end    
+    end
 
   end
-  
+
   describe "directly setting values of a message" do
 
     describe "accessing fields directly" do
-      
+
       before(:each) do
         @mail = Mail::Message.new
       end
@@ -241,21 +258,21 @@ describe Mail::Message do
       it "should allow you to grab field objects if you really want to" do
         @mail.header_fields.class.should == Mail::FieldList
       end
-      
+
       it "should give you back the fields in the header" do
         @mail['bar'] = 'abcd'
         @mail.header_fields.length.should == 1
         @mail['foo'] = '4321'
         @mail.header_fields.length.should == 2
       end
-      
+
       it "should delete a field if it is set to nil" do
         @mail['foo'] = '4321'
         @mail.header_fields.length.should == 1
         @mail['foo'] = nil
         @mail.header_fields.length.should == 0
       end
-      
+
     end
 
     describe "with :method=" do
@@ -294,7 +311,7 @@ describe Mail::Message do
         @mail.body.decoded.should == "email message\n"
       end
     end
-    
+
     describe "with :method(value)" do
 
       before(:each) do
@@ -331,7 +348,7 @@ describe Mail::Message do
         @mail.body.decoded.should == "email message\n"
       end
     end
-    
+
     describe "setting arbitrary headers" do
 
       before(:each) do
@@ -341,20 +358,20 @@ describe Mail::Message do
       it "should allow you to set them" do
         doing {@mail['foo'] = 1234}.should_not raise_error
       end
-      
+
       it "should allow you to read arbitrary headers" do
         @mail['foo'] = 1234
         @mail['foo'].value.to_s.should == '1234'
       end
-      
+
       it "should instantiate a new Header" do
         @mail['foo'] = 1234
         @mail.header_fields.first.class.should == Mail::Field
       end
     end
-    
+
     describe "replacing header values" do
-    
+
       it "should allow you to replace a from field" do
         mail = Mail.new
         mail.from.should == nil
@@ -363,7 +380,7 @@ describe Mail::Message do
         mail.from = 'bob@test.lindsaar.net'
         mail.from.should == ['bob@test.lindsaar.net']
       end
-    
+
       it "should maintain the class of the field" do
         mail = Mail.new
         mail.from = 'mikel@test.lindsaar.net'
@@ -372,9 +389,9 @@ describe Mail::Message do
         mail[:from].field.class.should == Mail::FromField
       end
     end
-    
+
     describe "setting headers" do
-      
+
       it "should accept them in block form" do
         message = Mail.new do
           bcc           'mikel@bcc.lindsaar.net'
@@ -406,7 +423,7 @@ describe Mail::Message do
           mime_version  '1.0'
           body          'This is a body of text'
         end
-        
+
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
@@ -497,7 +514,7 @@ describe Mail::Message do
         message.mime_version.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
-      
+
       it "should accept them in key, value form as symbols" do
         message = Mail.new
         message[:bcc] =           'mikel@bcc.lindsaar.net'
@@ -528,7 +545,7 @@ describe Mail::Message do
         message[:content_id] =                '<1234@message_id.lindsaar.net>'
         message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
-        
+
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
@@ -558,7 +575,7 @@ describe Mail::Message do
         message.mime_version.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
-      
+
       it "should accept them in key, value form as strings" do
         message = Mail.new
         message['bcc'] =           'mikel@bcc.lindsaar.net'
@@ -589,7 +606,7 @@ describe Mail::Message do
         message['content_id'] =                '<1234@message_id.lindsaar.net>'
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
-        
+
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
@@ -619,7 +636,7 @@ describe Mail::Message do
         message.mime_version.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
-      
+
       it "should accept them as a hash with symbols" do
         message = Mail.new({
           :bcc =>           'mikel@bcc.lindsaar.net',
@@ -651,7 +668,7 @@ describe Mail::Message do
           :mime_version =>  '1.0',
           :body =>          'This is a body of text'
         })
-        
+
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
@@ -681,7 +698,7 @@ describe Mail::Message do
         message.mime_version.should              == '1.0'
         message.body.to_s.should          == 'This is a body of text'
       end
-      
+
       it "should accept them as a hash with strings" do
         message = Mail.new({
           'bcc' =>           'mikel@bcc.lindsaar.net',
@@ -713,7 +730,7 @@ describe Mail::Message do
           'mime_version' =>  '1.0',
           'body' =>          'This is a body of text'
         })
-        
+
         message.bcc.should           == ['mikel@bcc.lindsaar.net']
         message.cc.should            == ['mikel@cc.lindsaar.net']
         message.comments.should      == 'this is a comment'
@@ -748,14 +765,14 @@ describe Mail::Message do
         message = Mail.new(:headers => {'custom-header' => 'mikel'})
         message['custom-header'].decoded.should == 'mikel'
       end
-      
+
       it "should assign the body to a part on creation" do
         message = Mail.new do
           part({:content_type=>"multipart/alternative", :content_disposition=>"inline", :body=>"Nothing to see here."})
         end
         message.parts.first.body.decoded.should == "Nothing to see here."
       end
-      
+
       it "should not overwrite bodies on creation" do
         message = Mail.new do
           part({:content_type=>"multipart/alternative", :content_disposition=>"inline", :body=>"Nothing to see here."}) do |p|
@@ -767,32 +784,32 @@ describe Mail::Message do
         message.encoded.should match %r{Nothing to see here\.}
         message.encoded.should match %r{<b>test</b> HTML<br/>}
       end
-      
+
       it "should allow you to init on an array of addresses from a hash" do
         mail = Mail.new(:to => ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
         mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
-      
+
       it "should allow you to init on an array of addresses directly" do
         mail = Mail.new
         mail.to = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
         mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
-      
+
       it "should allow you to init on an array of addresses directly" do
         mail = Mail.new
         mail[:to] = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
         mail.to.should == ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
-      
+
     end
-    
+
   end
-    
+
   describe "handling missing required fields:" do
-    
+
     describe "every email" do
-    
+
       describe "Message-ID" do
         it "should say if it has a message id" do
           mail = Mail.new do
@@ -834,7 +851,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil      
+          (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil
         end
 
         it "should add the message id to the message permanently once sent to_s" do
@@ -847,7 +864,7 @@ describe Mail::Message do
           mail.to_s
           mail.should be_has_message_id
         end
-      
+
         it "should add a body part if it is missing" do
           mail = Mail.new
           mail.to_s
@@ -911,9 +928,9 @@ describe Mail::Message do
       end
 
     end
-    
+
     describe "mime emails" do
-      
+
       describe "mime-version" do
         it "should say if it has a mime-version" do
           mail = Mail.new do
@@ -968,9 +985,9 @@ describe Mail::Message do
           mail.should be_has_mime_version
         end
       end
-      
+
       describe "content type" do
-      
+
         it "should say if it has a content type" do
           mail = Mail.new('Content-Type: text/plain')
           mail.should be_has_content_type
@@ -1005,7 +1022,7 @@ describe Mail::Message do
           mail.body = body
           mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
         end
-        
+
         it "should not set the charset if the file is an attachment" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
@@ -1040,16 +1057,16 @@ describe Mail::Message do
           mail.content_transfer_encoding = "8bit"
           mail.content_type = "text/plain; charset=UTF-8"
           STDERR.should_not_receive(:puts)
-          mail.to_s 
+          mail.to_s
         end
-        
+
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
           mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\scharset=US-ASCII\r\n]
           mail.content_type_parameters.should == {"charset" => "US-ASCII"}
         end
-        
+
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
@@ -1061,9 +1078,9 @@ describe Mail::Message do
           mail = Mail.new { content_type ["text", "plain", { "charset" => "UTF-8" }] }
           mail.content_type_parameters.should == {"charset" => "UTF-8"}
         end
-        
+
       end
-      
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do
@@ -1103,13 +1120,13 @@ describe Mail::Message do
         end
 
       end
-      
+
     end
-    
+
   end
 
   describe "output" do
-    
+
     it "should make an email and allow you to call :to_s on it to get a string" do
       mail = Mail.new do
            from 'mikel@test.lindsaar.net'
@@ -1117,14 +1134,14 @@ describe Mail::Message do
         subject 'This is a test email'
            body 'This is a body of the email'
       end
-      
+
       mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
       mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
       mail.to_s.should =~ /Subject: This is a test email\r\n/
       mail.to_s.should =~ /This is a body of the email/
 
     end
-    
+
     it "should raise an error and message if you try and call decoded on a multipart email" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'
@@ -1178,11 +1195,11 @@ describe Mail::Message do
       end
 
     end
-    
+
   end
-  
+
   describe "helper methods" do
-    
+
     describe "==" do
       it "should be implemented" do
         doing { Mail.new == Mail.new }.should_not raise_error
@@ -1211,21 +1228,21 @@ describe Mail::Message do
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should_not == m2
       end
-      
+
       it "should preserve the message id of self if set" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m1 == m2
         m1.message_id.should == '1234@test.lindsaar.net'
       end
-      
+
       it "should preserve the message id of other if set" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m1 == m2
         m2.message_id.should == '1234@test.lindsaar.net'
       end
-      
+
       it "should preserve the message id of both if set" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
@@ -1234,7 +1251,7 @@ describe Mail::Message do
         m2.message_id.should == '1234@test.lindsaar.net'
       end
     end
-    
+
     it "should implement the spaceship operator on the date field" do
       now = Time.now
       mail1 = Mail.new do
@@ -1245,7 +1262,7 @@ describe Mail::Message do
       end
       [mail2, mail1].sort.should == [mail2, mail1]
     end
-    
+
     it "should have a destinations method" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'
@@ -1313,7 +1330,7 @@ describe Mail::Message do
       end
       mail.destinations.length.should == 1
     end
-    
+
     it "should be able to encode with only one destination" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'
@@ -1322,7 +1339,7 @@ describe Mail::Message do
     end
 
   end
-  
+
   describe "nested parts" do
     it "should provide a way to instantiate a new part as you go down" do
       mail = Mail.new do
@@ -1346,31 +1363,31 @@ describe Mail::Message do
       mail.parts.first.parts[1].body.decoded.should == "<b>test</b> HTML<br/>\nline #2"
     end
   end
-  
+
   describe "deliver" do
     it "should return self after delivery" do
       mail = Mail.new
       mail.perform_deliveries = false
       mail.deliver.should == mail
     end
-    
+
     class DeliveryAgent
       def self.deliver_mail(mail)
       end
     end
-    
+
     it "should pass self to a delivery agent" do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
       DeliveryAgent.should_receive(:deliver_mail).with(mail)
       mail.deliver
     end
-    
+
     class ObserverAgent
       def self.delivered_email(mail)
       end
     end
-    
+
     it "should inform observers that the mail was sent" do
       mail = Mail.new
       mail.delivery_method :test
@@ -1378,7 +1395,7 @@ describe Mail::Message do
       ObserverAgent.should_receive(:delivered_email).with(mail)
       mail.deliver
     end
-    
+
     it "should inform observers that the mail was sent, even if a delivery agent is used" do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
@@ -1386,7 +1403,7 @@ describe Mail::Message do
       ObserverAgent.should_receive(:delivered_email).with(mail)
       mail.deliver
     end
-    
+
     class InterceptorAgent
       @@intercept = false
       def self.intercept=(val)
@@ -1408,7 +1425,7 @@ describe Mail::Message do
       mail.deliver
       InterceptorAgent.intercept = false
     end
-    
+
     it "should let the interceptor that the mail was sent" do
       mail = Mail.new
       mail.to = 'fred@example.com'
@@ -1419,9 +1436,9 @@ describe Mail::Message do
       InterceptorAgent.intercept = false
       mail.to.should == ['bob@example.com']
     end
-    
+
   end
-  
+
   describe "error handling" do
     it "should collect up any of its fields' errors" do
       mail = Mail.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b\r\n")
@@ -1433,7 +1450,7 @@ describe Mail::Message do
       mail.errors[1][1].should == 'a b b'
     end
   end
-  
+
   describe "header case should be preserved" do
     it "should handle mail[] and keep the header case" do
       mail = Mail.new
@@ -1478,37 +1495,37 @@ describe Mail::Message do
       doing { mail.attachment? }.should_not raise_error
     end
 
-  end  
+  end
 
   describe "replying" do
-  
+
     describe "to a basic message" do
-  
+
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml')))
       end
-    
+
       it "should create a new message" do
         @mail.reply.should be_a_kind_of(Mail::Message)
       end
-  
+
       it "should be in-reply-to the original message" do
         @mail.reply.in_reply_to.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
-  
+
       it "should reference the original message" do
         @mail.reply.references.should == '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
-  
+
       it "should RE: the original subject" do
         @mail.reply.subject.should == 'RE: Testing 123'
       end
-  
+
       it "should be sent to the original sender" do
         @mail.reply.to.should == ['test@lindsaar.net']
         @mail.reply[:to].to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
       end
-  
+
       it "should be sent from the original recipient" do
         @mail.reply.from.should == ['raasdnil@gmail.com']
         @mail.reply[:from].to_s.should == 'Mikel Lindsaar <raasdnil@gmail.com>'
@@ -1521,7 +1538,7 @@ describe Mail::Message do
       it "should accept a block" do
         @mail.reply { from('Donald Ball <donald.ball@gmail.com>') }.from.should == ['donald.ball@gmail.com']
       end
-  
+
     end
 
     describe "to a message with an explicit reply-to address" do
@@ -1549,7 +1566,7 @@ describe Mail::Message do
     end
 
     describe "to a reply" do
-  
+
       before do
         @mail = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_reply.eml')))
       end
@@ -1560,6 +1577,10 @@ describe Mail::Message do
 
       it "should append to the original's references list" do
         @mail.reply[:references].message_ids.should == ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+      end
+
+      it "should not append another RE:" do
+        @mail.reply.subject.should == "Re: Test reply email"
       end
 
     end
