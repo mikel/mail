@@ -1,3 +1,8 @@
+== Tue Apr 19 00:20:54 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Fixed an exception with nil in Reply-To and References field - https://github.com/dcormier
+* Version bump to 2.2.17 and gem release
+
 == Sat Apr 16 12:57:27 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Added support for open SMTP connections and returning the Mail server's response - https://github.com/spiegela
@@ -13,6 +18,7 @@
 * Tighten up allowed encodings - https://github.com/scsmith
 * Added to_yaml & from_yaml (as well as to_hash & from_hash) - https://github.com/srushti
 * Fix up some comments - https://github.com/takahashim
+* Version bump to 2.2.16 and gem release
 
 == Wed 26 Jan 2011 02:23:09 UTC Mikel Lindsaar <mikel@rubyx.com>
 
