@@ -1,3 +1,7 @@
+== Wed 20 Apr 2011 15:16:20 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Mail::Field.new("Subject: foobar", 'iso-2022-jp') does not set charset - https://github.com/yalab
+
 == Tue Apr 19 00:20:54 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixed an exception with nil in Reply-To and References field - https://github.com/dcormier
