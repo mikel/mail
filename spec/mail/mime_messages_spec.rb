@@ -471,6 +471,17 @@ describe "MIME Emails" do
         m.parts.last.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
       end
 
+      it "should not raise a warning if there is a charset defined and there are non ascii chars in the body" do
+        body = "This is NOT plain text ASCII　− かきくけこ"
+        mail = Mail.new
+        mail.body = body
+        mail.charset = 'UTF-8'
+        mail.add_file fixture('attachments', 'test.png')
+        STDERR.should_not_receive(:puts)
+        mail.to_s
+      end
+
+
     end
 
 end
