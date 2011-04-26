@@ -198,7 +198,9 @@ class MockIMAP
   @@mailbox = nil
   @@marked_for_deletion = []
 
-  cattr_reader :examples
+  def self.examples
+    @@examples
+  end
 
   def initialize
     @@examples = []
