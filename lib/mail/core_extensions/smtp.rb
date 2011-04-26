@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Net
   class SMTP
     # This is a backport of r30294 from ruby trunk because of a bug in net/smtp.

@@ -1,5 +1,9 @@
+# encoding: utf-8
+
+# This is an almost cut and paste from ActiveSupport v3.0.6, copied in here so that Mail
+# itself does not depend on ActiveSupport to avoid versioning conflicts
+
 module Mail
-  # Sort of like ActiveSupport HashWithIndifferentAccess, but lighter
   class IndifferentHash < Hash
 
     def initialize(constructor = {})

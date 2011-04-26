@@ -20,7 +20,7 @@ class String #:nodoc:
       !(self =~ /[^#{US_ASCII_REGEXP}]/)
     end
   end
-  
+
   def not_ascii_only?
     !ascii_only?
   end
