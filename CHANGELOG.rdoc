@@ -1,3 +1,10 @@
+== Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Remove ActiveSupport from the dependencies, load Active Support if present, or use internals if not
+* Created v2.2 branch for all 2.2 related commits
+* Update activesupport require to use inflector - closes #217
+* Version bump to 2.3 and gem release
+
 == Tue Apr 26 06:18:19 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixed charset warning issue with multipart messages - https://github.com/arvindsv
