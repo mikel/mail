@@ -1679,6 +1679,7 @@ module Mail
       self.body = ''
       text_part = Mail::Part.new({:content_type => 'text/plain;',
                                   :body => text})
+      text_part.charset = charset unless @defaulted_charset
       self.body << text_part
     end
 
