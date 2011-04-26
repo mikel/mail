@@ -147,10 +147,10 @@ So, you should be able to just <code>require 'mail'</code> to get started.
  require 'mail'
 
  mail = Mail.new do
-      from 'mikel@test.lindsaar.net'
-        to 'you@test.lindsaar.net'
+   from    'mikel@test.lindsaar.net'
+   to      'you@test.lindsaar.net'
    subject 'This is a test email'
-      body File.read('body.txt')
+   body    File.read('body.txt')
  end
 
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
@@ -174,7 +174,7 @@ So, you should be able to just <code>require 'mail'</code> to get started.
  require 'mail'
 
  mail = Mail.new do
-     to 'you@test.lindsaar.net'
+   to   'you@test.lindsaar.net'
    body 'Some simple body'
  end
 
@@ -190,9 +190,9 @@ give it a unique, random Message-ID along the lines of:
  require 'mail'
 
  mail = Mail.new do
-          to 'you@test.lindsaar.net'
-  message_id '<ThisIsMyMessageId@some.domain.com>'
-        body 'Some simple body'
+   to         'you@test.lindsaar.net'
+   message_id '<ThisIsMyMessageId@some.domain.com>'
+   body       'Some simple body'
  end
 
  mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
@@ -207,21 +207,21 @@ sendmail or postfix daemon running on on this port, sending email is as
 easy as:
 
  Mail.deliver do
-       from 'me@test.lindsaar.net'
-         to 'you@test.lindsaar.net'
+    from    'me@test.lindsaar.net'
+    to      'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
-       body File.read('body.txt')
+    body    File.read('body.txt')
    add_file '/full/path/to/somefile.png'
  end
 
 or
 
  mail = Mail.new do
-       from 'me@test.lindsaar.net'
-         to 'you@test.lindsaar.net'
-    subject 'Here is the image you wanted'
-       body File.read('body.txt')
-   add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+   from     'me@test.lindsaar.net'
+   to       'you@test.lindsaar.net'
+   subject  'Here is the image you wanted'
+   body     File.read('body.txt')
+   add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
  end
 
  mail.deliver!
@@ -229,11 +229,11 @@ or
 Sending via sendmail can be done like so:
 
   mail = Mail.new do
-        from 'me@test.lindsaar.net'
-          to 'you@test.lindsaar.net'
-     subject 'Here is the image you wanted'
-        body File.read('body.txt')
-    add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+    from     'me@test.lindsaar.net'
+    to       'you@test.lindsaar.net'
+    subject  'Here is the image you wanted'
+    body     File.read('body.txt')
+    add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
   end
 
   mail.delivery_method :sendmail
@@ -330,12 +330,14 @@ simple as possible.... (asking a lot from a mail library)
  require 'mail'
 
  mail = Mail.deliver do
-   to 'nicolas@test.lindsaar.net.au'
-   from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+   to      'nicolas@test.lindsaar.net.au'
+   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
    subject 'First multipart email sent with Mail'
+
    text_part do
      body 'This is plain text'
    end
+
    html_part do
      content_type 'text/html; charset=UTF-8'
      body '<h1>This is HTML</h1>'
@@ -393,8 +395,8 @@ an email, not Mail::Messages.
  require 'mail'
 
  mail = Mail.new do
-   to 'nicolas@test.lindsaar.net.au'
-   from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+   to      'nicolas@test.lindsaar.net.au'
+   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
    subject 'First multipart email sent with Mail'
  end
 
@@ -461,16 +463,19 @@ than mail (this should be rarely needed)
 Of course... Mail will round trip an attachment as well
 
   @mail = Mail.new do
-    to 'nicolas@test.lindsaar.net.au'
-    from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+    to      'nicolas@test.lindsaar.net.au'
+    from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
     subject 'First multipart email sent with Mail'
+
     text_part do
       body 'Here is the attachment you wanted'
     end
+
     html_part do
       content_type 'text/html; charset=UTF-8'
       body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
     end
+
     add_file '/path/to/myfile.pdf'
   end
 
