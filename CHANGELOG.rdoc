@@ -1,6 +1,7 @@
 == Tue Apr 26 06:18:19 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Fixed charset warning issue with multipart messages - https://github.com/arvindsv
+* Version bump to 2.2.18 and gem release
 
 == Wed 20 Apr 2011 15:16:20 UTC Mikel Lindsaar <mikel@rubyx.com>
 
