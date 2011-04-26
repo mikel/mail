@@ -249,15 +249,20 @@ Sending via sendmail can be done like so:
 
 === Getting emails from a pop server:
 
-The most recent email:
+You can configure Mail to receive email using <code>retriever_method</code>
+within <code>Mail.defaults</code>:
 
  Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
+   retriever_method :pop3, :address    => "pop.gmail.com",
+                           :port       => 995,
+                           :user_name  => '<username>',
+                           :password   => '<password>',
+                           :enable_ssl => true
  end
+
+You can access incoming email in a number of ways.
+
+The most recent email:
 
  Mail.all    #=> Returns an array of all emails
  Mail.first  #=> Returns the first unread email
@@ -265,31 +270,12 @@ The most recent email:
 
 The first 10 emails sorted by date in ascending order:
 
- require 'mail'
-
- Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
- end
-
  emails = Mail.find(:what => :first, :count => 10, :order => :asc)
  emails.length #=> 10
 
 Or even all emails:
 
- Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
- end
-
  emails = Mail.all
-
  emails.length #=> LOTS!
 
 {Learn more about POP3}[link:classes/Mail/POP3.html]
