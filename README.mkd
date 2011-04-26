@@ -1,6 +1,8 @@
-= Mail
+Mail
+====
 
-== Introduction
+Introduction
+------------
 
 Mail is an internet library for Ruby that is designed to handle emails
 generation, parsing and sending in a simple, rubyesque manner.
@@ -23,27 +25,30 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
-== Compatibility
+Compatibility
+-------------
 
 Mail is tested and works on the following platforms:
 
-* jruby-1.5.2 [ x86_64-java ]
-* ree-1.8.7-2010.02 [ x86_64 ]
-* ruby-1.8.6-p399 [ x86_64 ]
-* ruby-1.8.7-p302 [ x86_64 ]
-* ruby-1.9.2-p0 [ x86_64 ]
+* jruby-1.5.2 [ x86\_64-java ]
+* ree-1.8.7-2010.02 [ x86\_64 ]
+* ruby-1.8.6-p399 [ x86\_64 ]
+* ruby-1.8.7-p302 [ x86\_64 ]
+* ruby-1.9.2-p0 [ x86\_64 ]
 
-== Discussion
+Discussion
+----------
 
 If you want to discuss mail with like minded individuals, please subscribe to
-the {Google Group}[http://groups.google.com/group/mail-ruby].
+the [Google Group](http://groups.google.com/group/mail-ruby).
 
-== Current Capabilities of Mail
+Current Capabilities of Mail
+----------------------------
 
 * RFC2822 Support, Reading and Writing
 * RFC2045-2049 Support for multipart emails
 * Support for creating multipart alternate emails
-* Support for reading multipart/report emails & getting details from such
+* Support for reading multipart/report emails &amp; getting details from such
 * Support for multibyte emails - needs quite a lot of work and testing
 * Wrappers for File, Net/POP3, Net/SMTP
 * Auto encoding of non US-ASCII header fields
@@ -62,14 +67,16 @@ You can also create MIME emails.  There are helper methods for making a
 multipart/alternate email for text/plain and text/html (the most common pair)
 and you can manually create any other type of MIME email.
 
-== Roadmap
+Roadmap
+-------
 
 Next TODO:
 
 * Improve MIME support for character sets in headers, currently works, mostly, needs
   refinement.
 
-== Testing Policy
+Testing Policy
+--------------
 
 Basically... we do BDD on Mail.  No method gets written in Mail without a
 corresponding or covering spec.  We expect as a minimum 100% coverage
@@ -79,20 +86,23 @@ the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
 
-== API Policy
+API Policy
+----------
 
 No API removals within a single point release.  All removals to be depreciated with
 warnings for at least one MINOR point release before removal.
 
 Also, all private or protected methods to be declared as such - though this is still I/P.
 
-== Installation
+Installation
+------------
 
 Installation is fairly simple, I host mail on rubygems, so you can just do:
 
  # gem install mail
 
-== Encodings
+Encodings
+---------
 
 If you didn't know, handling encodings in Emails is not as straight forward as you
 would hope.
@@ -124,7 +134,8 @@ I have tried to simplify it some:
    provide encoded parameter values when you call the parameter names through the
    <code>object.parameters['<parameter_name>']</code> method call.
 
-== Contributing
+Contributing
+------------
 
 Please do!  Contributing is easy in Mail:
 
@@ -137,100 +148,115 @@ Please do!  Contributing is easy in Mail:
 7. With all specs passing push your changes back to your fork
 8. Send me a pull request
 
-== Usage
+Usage
+-----
 
 All major mail functions should be able to happen from the Mail module.
 So, you should be able to just <code>require 'mail'</code> to get started.
 
-=== Making an email
+### Making an email
 
- mail = Mail.new do
-   from    'mikel@test.lindsaar.net'
-   to      'you@test.lindsaar.net'
-   subject 'This is a test email'
-   body    File.read('body.txt')
- end
+```ruby
+mail = Mail.new do
+  from    'mikel@test.lindsaar.net'
+  to      'you@test.lindsaar.net'
+  subject 'This is a test email'
+  body    File.read('body.txt')
+end
 
- mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+```
 
-=== Making an email, have it your way:
+### Making an email, have it your way:
 
- mail = Mail.new do
-   body File.read('body.txt')
- end
+```ruby
+mail = Mail.new do
+  body File.read('body.txt')
+end
 
- mail['from'] = 'mikel@test.lindsaar.net'
- mail[:to]    = 'you@test.lindsaar.net'
- mail.subject = 'This is a test email'
+mail['from'] = 'mikel@test.lindsaar.net'
+mail[:to]    = 'you@test.lindsaar.net'
+mail.subject = 'This is a test email'
 
- mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+```
 
-=== Don't Worry About Message IDs:
+### Don't Worry About Message IDs:
 
- mail = Mail.new do
-   to   'you@test.lindsaar.net'
-   body 'Some simple body'
- end
+```ruby
+mail = Mail.new do
+  to   'you@test.lindsaar.net'
+  body 'Some simple body'
+end
 
- mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
+mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
+```
 
 Mail will automatically add a Message-ID field if it is missing and
 give it a unique, random Message-ID along the lines of:
 
  <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
 
-=== Or do worry about Message-IDs:
+### Or do worry about Message-IDs:
 
- mail = Mail.new do
-   to         'you@test.lindsaar.net'
-   message_id '<ThisIsMyMessageId@some.domain.com>'
-   body       'Some simple body'
- end
+```ruby
+mail = Mail.new do
+  to         'you@test.lindsaar.net'
+  message_id '<ThisIsMyMessageId@some.domain.com>'
+  body       'Some simple body'
+end
 
- mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
+mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
+```
 
 Mail will take the message_id you assign to it trusting that you know
 what you are doing.
 
-=== Sending an email:
+### Sending an email:
 
 Mail defaults to sending via SMTP to local host port 25.  If you have a
 sendmail or postfix daemon running on on this port, sending email is as
 easy as:
 
- Mail.deliver do
-    from    'me@test.lindsaar.net'
-    to      'you@test.lindsaar.net'
-    subject 'Here is the image you wanted'
-    body    File.read('body.txt')
-   add_file '/full/path/to/somefile.png'
- end
+```ruby
+Mail.deliver do
+   from    'me@test.lindsaar.net'
+   to      'you@test.lindsaar.net'
+   subject 'Here is the image you wanted'
+   body    File.read('body.txt')
+  add_file '/full/path/to/somefile.png'
+end
+```
 
 or
 
- mail = Mail.new do
-   from     'me@test.lindsaar.net'
-   to       'you@test.lindsaar.net'
-   subject  'Here is the image you wanted'
-   body     File.read('body.txt')
-   add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
- end
+```ruby
+mail = Mail.new do
+  from     'me@test.lindsaar.net'
+  to       'you@test.lindsaar.net'
+  subject  'Here is the image you wanted'
+  body     File.read('body.txt')
+  add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
+end
 
- mail.deliver!
+mail.deliver!
+```
 
 Sending via sendmail can be done like so:
 
-  mail = Mail.new do
-    from     'me@test.lindsaar.net'
-    to       'you@test.lindsaar.net'
-    subject  'Here is the image you wanted'
-    body     File.read('body.txt')
-    add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
-  end
+```ruby
+mail = Mail.new do
+  from     'me@test.lindsaar.net'
+  to       'you@test.lindsaar.net'
+  subject  'Here is the image you wanted'
+  body     File.read('body.txt')
+  add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
+end
 
-  mail.delivery_method :sendmail
+mail.delivery_method :sendmail
 
-  mail.deliver
+mail.deliver
+```
 
 {Learn more about SMTP Delivery}[link:classes/Mail/SMTP.html]
 
@@ -240,69 +266,81 @@ Sending via sendmail can be done like so:
 
 {Learn more about Test Email Delivery}[link:classes/Mail/TestMailer.html]
 
-=== Getting emails from a pop server:
+### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
 within <code>Mail.defaults</code>:
 
- Mail.defaults do
-   retriever_method :pop3, :address    => "pop.gmail.com",
-                           :port       => 995,
-                           :user_name  => '<username>',
-                           :password   => '<password>',
-                           :enable_ssl => true
- end
+```ruby
+Mail.defaults do
+  retriever_method :pop3, :address    => "pop.gmail.com",
+                          :port       => 995,
+                          :user_name  => '<username>',
+                          :password   => '<password>',
+                          :enable_ssl => true
+end
+```
 
 You can access incoming email in a number of ways.
 
 The most recent email:
 
- Mail.all    #=> Returns an array of all emails
- Mail.first  #=> Returns the first unread email
- Mail.last   #=> Returns the first unread email
+```ruby
+Mail.all    #=> Returns an array of all emails
+Mail.first  #=> Returns the first unread email
+Mail.last   #=> Returns the first unread email
+```
 
 The first 10 emails sorted by date in ascending order:
 
- emails = Mail.find(:what => :first, :count => 10, :order => :asc)
- emails.length #=> 10
+```ruby
+emails = Mail.find(:what => :first, :count => 10, :order => :asc)
+emails.length #=> 10
+```
 
 Or even all emails:
 
- emails = Mail.all
- emails.length #=> LOTS!
+```ruby
+emails = Mail.all
+emails.length #=> LOTS!
+```
 
 {Learn more about POP3}[link:classes/Mail/POP3.html]
 
 {Learn more about IMAP}[link:classes/Mail/IMAP.html]
 
-=== Reading an Email
+### Reading an Email
 
- mail = Mail.read('/path/to/message.eml')
+```ruby
+mail = Mail.read('/path/to/message.eml')
 
- mail.envelope.from   #=> 'mikel@test.lindsaar.net'
- mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
- mail.sender.address  #=> 'mikel@test.lindsaar.net'
- mail.to              #=> 'bob@test.lindsaar.net'
- mail.cc              #=> 'sam@test.lindsaar.net'
- mail.subject         #=> "This is the subject"
- mail.date.to_s       #=> '21 Nov 1997 09:55:06 -0600'
- mail.message_id      #=> '<4D6AA7EB.6490534@xxx.xxx>'
- mail.body.decoded    #=> 'This is the body of the email...
+mail.envelope.from   #=> 'mikel@test.lindsaar.net'
+mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+mail.sender.address  #=> 'mikel@test.lindsaar.net'
+mail.to              #=> 'bob@test.lindsaar.net'
+mail.cc              #=> 'sam@test.lindsaar.net'
+mail.subject         #=> "This is the subject"
+mail.date.to_s       #=> '21 Nov 1997 09:55:06 -0600'
+mail.message_id      #=> '<4D6AA7EB.6490534@xxx.xxx>'
+mail.body.decoded    #=> 'This is the body of the email...
+```
 
 Many more methods available.
 
-=== Reading a Multipart Email
+### Reading a Multipart Email
 
- mail = Mail.read('multipart_email')
+```ruby
+mail = Mail.read('multipart_email')
 
- mail.multipart?          #=> true
- mail.parts.length        #=> 2
- mail.preamble            #=> "Text before the first part"
- mail.epilogue            #=> "Text after the last part"
- mail.parts.map { |p| p.content_type }  #=> ['text/plain', 'application/pdf']
- mail.parts.map { |p| p.class }         #=> [Mail::Message, Mail::Message]
- mail.parts[0].content_type_parameters  #=> {'charset' => 'ISO-8859-1'}
- mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
+mail.multipart?          #=> true
+mail.parts.length        #=> 2
+mail.preamble            #=> "Text before the first part"
+mail.epilogue            #=> "Text after the last part"
+mail.parts.map { |p| p.content_type }  #=> ['text/plain', 'application/pdf']
+mail.parts.map { |p| p.class }         #=> [Mail::Message, Mail::Message]
+mail.parts[0].content_type_parameters  #=> {'charset' => 'ISO-8859-1'}
+mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
+```
 
 Mail generates a tree of parts.  Each message has many or no parts.  Each part
 is another message which can have many or no parts.
@@ -310,60 +348,64 @@ is another message which can have many or no parts.
 A message will only have parts if it is a multipart/mixed or related/mixed
 content type and has a boundary defined.
 
-=== Writing and sending a multipart/alternative (html and text) email
+### Writing and sending a multipart/alternative (html and text) email
 
 Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
 
- mail = Mail.deliver do
-   to      'nicolas@test.lindsaar.net.au'
-   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-   subject 'First multipart email sent with Mail'
+```ruby
+mail = Mail.deliver do
+  to      'nicolas@test.lindsaar.net.au'
+  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+  subject 'First multipart email sent with Mail'
 
-   text_part do
-     body 'This is plain text'
-   end
+  text_part do
+    body 'This is plain text'
+  end
 
-   html_part do
-     content_type 'text/html; charset=UTF-8'
-     body '<h1>This is HTML</h1>'
-   end
- end
+  html_part do
+    content_type 'text/html; charset=UTF-8'
+    body '<h1>This is HTML</h1>'
+  end
+end
+```
 
 Mail then delivers the email at the end of the block and returns the
 resulting Mail::Message object, which you can then inspect if you
 so desire...
 
- puts mail.to_s #=>
+```
+puts mail.to_s #=>
 
- To: nicolas@test.lindsaar.net.au
- From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
- Subject: First multipart email sent with Mail
- Content-Type: multipart/alternative;
-   boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
- Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
- Date: Mon, 24 Aug 2009 00:15:46 +1000
- Mime-Version: 1.0
- Content-Transfer-Encoding: 7bit
+To: nicolas@test.lindsaar.net.au
+From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
+Subject: First multipart email sent with Mail
+Content-Type: multipart/alternative;
+  boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
+Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
+Date: Mon, 24 Aug 2009 00:15:46 +1000
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
 
- ----==_mimepart_4a914f0c911be_6f0f1ab8026659
- Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
- Date: Mon, 24 Aug 2009 00:15:46 +1000
- Mime-Version: 1.0
- Content-Type: text/plain
- Content-Transfer-Encoding: 7bit
+----==_mimepart_4a914f0c911be_6f0f1ab8026659
+Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
+Date: Mon, 24 Aug 2009 00:15:46 +1000
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
- This is plain text
- ----==_mimepart_4a914f0c911be_6f0f1ab8026659
- Content-Type: text/html; charset=UTF-8
- Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
- Date: Mon, 24 Aug 2009 00:15:46 +1000
- Mime-Version: 1.0
- Content-Transfer-Encoding: 7bit
+This is plain text
+----==_mimepart_4a914f0c911be_6f0f1ab8026659
+Content-Type: text/html; charset=UTF-8
+Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
+Date: Mon, 24 Aug 2009 00:15:46 +1000
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
- <h1>This is HTML</h1>
- ----==_mimepart_4a914f0c911be_6f0f1ab8026659--
+<h1>This is HTML</h1>
+----==_mimepart_4a914f0c911be_6f0f1ab8026659--
+```
 
 Mail inserts the content transfer encoding, the mime version,
 the content-id's and handles the content-type and boundary.
@@ -372,126 +414,142 @@ Mail assumes that if your text in the body is only us-ascii, that your
 transfer encoding is 7bit and it is text/plain.  You can override this
 by explicitly declaring it.
 
-=== Making Multipart/Alternate, without a block
+### Making Multipart/Alternate, without a block
 
 You don't have to use a block with the text and html part included, you
 can just do it declaratively.  However, you need to add Mail::Parts to
 an email, not Mail::Messages.
 
- mail = Mail.new do
-   to      'nicolas@test.lindsaar.net.au'
-   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-   subject 'First multipart email sent with Mail'
- end
+```ruby
+mail = Mail.new do
+  to      'nicolas@test.lindsaar.net.au'
+  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+  subject 'First multipart email sent with Mail'
+end
 
- text_part = Mail::Part.new do
-   body 'This is plain text'
- end
+text_part = Mail::Part.new do
+  body 'This is plain text'
+end
 
- html_part = Mail::Part.new do
-   content_type 'text/html; charset=UTF-8'
-   body '<h1>This is HTML</h1>'
- end
+html_part = Mail::Part.new do
+  content_type 'text/html; charset=UTF-8'
+  body '<h1>This is HTML</h1>'
+end
 
- mail.text_part = text_part
- mail.html_part = html_part
+mail.text_part = text_part
+mail.html_part = html_part
+```
 
 Results in the same email as done using the block form
 
-=== Getting error reports from an email:
+### Getting error reports from an email:
 
- @mail = Mail.read('/path/to/bounce_message.eml')
+```ruby
+@mail = Mail.read('/path/to/bounce_message.eml')
 
- @mail.bounced?         #=> true
- @mail.final_recipient  #=> rfc822;mikel@dont.exist.com
- @mail.action           #=> failed
- @mail.error_status     #=> 5.5.0
- @mail.diagnostic_code  #=> smtp;550 Requested action not taken: mailbox unavailable
- @mail.retryable?       #=> false
+@mail.bounced?         #=> true
+@mail.final_recipient  #=> rfc822;mikel@dont.exist.com
+@mail.action           #=> failed
+@mail.error_status     #=> 5.5.0
+@mail.diagnostic_code  #=> smtp;550 Requested action not taken: mailbox unavailable
+@mail.retryable?       #=> false
+```
 
-=== Attaching and Detaching Files
+### Attaching and Detaching Files
 
 You can just read the file off an absolute path, Mail will try
 to guess the mime_type and will encode the file in Base64 for you.
 
-  @mail = Mail.new
-  @mail.add_file("/path/to/file.jpg")
-  @mail.parts.first.attachment? #=> true
-  @mail.parts.first.content_transfer_encoding.to_s #=> 'base64'
-  @mail.attachments.first.mime_type #=> 'image/jpg'
-  @mail.attachments.first.filename #=> 'file.jpg'
-  @mail.attachments.first.decoded == File.read('/path/to/file.jpg') #=> true
+```ruby
+@mail = Mail.new
+@mail.add_file("/path/to/file.jpg")
+@mail.parts.first.attachment? #=> true
+@mail.parts.first.content_transfer_encoding.to_s #=> 'base64'
+@mail.attachments.first.mime_type #=> 'image/jpg'
+@mail.attachments.first.filename #=> 'file.jpg'
+@mail.attachments.first.decoded == File.read('/path/to/file.jpg') #=> true
+```
 
 Or You can pass in file_data and give it a filename, again, mail
 will try and guess the mime_type for you.
 
-  @mail = Mail.new
-  @mail.attachments['myfile.pdf'] = File.read('path/to/myfile.pdf')
-  @mail.parts.first.attachment? #=> true
-  @mail.attachments.first.mime_type #=> 'application/pdf'
-  @mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true
+```ruby
+@mail = Mail.new
+@mail.attachments['myfile.pdf'] = File.read('path/to/myfile.pdf')
+@mail.parts.first.attachment? #=> true
+@mail.attachments.first.mime_type #=> 'application/pdf'
+@mail.attachments.first.decoded == File.read('path/to/myfile.pdf') #=> true
+```
 
 You can also override the guessed MIME media type if you really know better
 than mail (this should be rarely needed)
 
-  @mail = Mail.new
-  file_data = File.read('path/to/myfile.pdf')
-  @mail.attachments['myfile.pdf'] = { :mime_type => 'application/x-pdf',
-                                      :content => File.read('path/to/myfile.pdf') }
-  @mail.parts.first.mime_type #=> 'application/x-pdf'
+```ruby
+@mail = Mail.new
+file_data = File.read('path/to/myfile.pdf')
+@mail.attachments['myfile.pdf'] = { :mime_type => 'application/x-pdf',
+                                    :content => File.read('path/to/myfile.pdf') }
+@mail.parts.first.mime_type #=> 'application/x-pdf'
+```
 
 Of course... Mail will round trip an attachment as well
 
-  @mail = Mail.new do
-    to      'nicolas@test.lindsaar.net.au'
-    from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-    subject 'First multipart email sent with Mail'
+```ruby
+@mail = Mail.new do
+  to      'nicolas@test.lindsaar.net.au'
+  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+  subject 'First multipart email sent with Mail'
 
-    text_part do
-      body 'Here is the attachment you wanted'
-    end
-
-    html_part do
-      content_type 'text/html; charset=UTF-8'
-      body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
-    end
-
-    add_file '/path/to/myfile.pdf'
+  text_part do
+    body 'Here is the attachment you wanted'
   end
 
-  @round_tripped_mail = Mail.new(@mail.encoded)
+  html_part do
+    content_type 'text/html; charset=UTF-8'
+    body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
+  end
 
-  @round_tripped_mail.attachments.length #=> 1
-  @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
+  add_file '/path/to/myfile.pdf'
+end
 
-== Using Mail with Testing or Spec'ing Libraries
+@round_tripped_mail = Mail.new(@mail.encoded)
+
+@round_tripped_mail.attachments.length #=> 1
+@round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
+```
+
+Using Mail with Testing or Spec'ing Libraries
+---------------------------------------------
 
 If mail is part of your system, you'll need a way to test it without actually
 sending emails, the TestMailer can do this for you.
 
-  require 'mail'
-  => true
-  Mail.defaults do
-    delivery_method :test
-  end
-  => #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
-  Mail::TestMailer.deliveries
-  => []
-  Mail.deliver do
-    to 'mikel@me.com'
-    from 'you@you.com'
-    subject 'testing'
-    body 'hello'
-  end
-  => #<Mail::Message:0x19284ec ...
-  Mail::TestMailer.deliveries.length
-  => 1
-  Mail::TestMailer.deliveries.first
-  => #<Mail::Message:0x19284ec ...
-  Mail::TestMailer.deliveries.clear
-  => []
+```
+require 'mail'
+=> true
+Mail.defaults do
+  delivery_method :test
+end
+=> #<Mail::Configuration:0x19345a8 @delivery_method=Mail::TestMailer>
+Mail::TestMailer.deliveries
+=> []
+Mail.deliver do
+  to 'mikel@me.com'
+  from 'you@you.com'
+  subject 'testing'
+  body 'hello'
+end
+=> #<Mail::Message:0x19284ec ...
+Mail::TestMailer.deliveries.length
+=> 1
+Mail::TestMailer.deliveries.first
+=> #<Mail::Message:0x19284ec ...
+Mail::TestMailer.deliveries.clear
+=> []
+```
 
-== Excerpts from TREC Spam Corpus 2005
+Excerpts from TREC Spam Corpus 2005
+-----------------------------------
 
 The spec fixture files in spec/fixtures/emails/from_trec_2005 are from the
 2005 TREC Public Spam Corpus. They remain copyrighted under the terms of
@@ -509,7 +567,8 @@ They are used as allowed by 'Permitted Uses, Clause 3':
 
      -- http://plg.uwaterloo.ca/~gvcormac/treccorpus/
 
-== License:
+License
+-------
 
 (The MIT License)
 
