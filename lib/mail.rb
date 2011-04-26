@@ -8,7 +8,7 @@ module Mail # :doc:
   require 'active_support/core_ext/class/attribute_accessors'
   require 'active_support/core_ext/hash/indifferent_access'
   require 'active_support/core_ext/object/blank'
-  require 'active_support/core_ext/string'
+  require 'active_support/inflector'
 
   require 'uri'
   require 'net/smtp'
