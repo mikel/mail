@@ -144,8 +144,6 @@ So, you should be able to just <code>require 'mail'</code> to get started.
 
 === Making an email
 
- require 'mail'
-
  mail = Mail.new do
    from    'mikel@test.lindsaar.net'
    to      'you@test.lindsaar.net'
@@ -156,8 +154,6 @@ So, you should be able to just <code>require 'mail'</code> to get started.
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 
 === Making an email, have it your way:
-
- require 'mail'
 
  mail = Mail.new do
    body File.read('body.txt')
@@ -170,8 +166,6 @@ So, you should be able to just <code>require 'mail'</code> to get started.
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 
 === Don't Worry About Message IDs:
-
- require 'mail'
 
  mail = Mail.new do
    to   'you@test.lindsaar.net'
@@ -186,8 +180,6 @@ give it a unique, random Message-ID along the lines of:
  <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
 
 === Or do worry about Message-IDs:
-
- require 'mail'
 
  mail = Mail.new do
    to         'you@test.lindsaar.net'
@@ -285,8 +277,6 @@ Or even all emails:
 
 === Reading an Email
 
- require 'mail'
-
  mail = Mail.read('/path/to/message.eml')
 
  mail.envelope.from   #=> 'mikel@test.lindsaar.net'
@@ -302,8 +292,6 @@ Or even all emails:
 Many more methods available.
 
 === Reading a Multipart Email
-
- require 'mail'
 
  mail = Mail.read('multipart_email')
 
@@ -326,8 +314,6 @@ content type and has a boundary defined.
 
 Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
-
- require 'mail'
 
  mail = Mail.deliver do
    to      'nicolas@test.lindsaar.net.au'
@@ -392,8 +378,6 @@ You don't have to use a block with the text and html part included, you
 can just do it declaratively.  However, you need to add Mail::Parts to
 an email, not Mail::Messages.
 
- require 'mail'
-
  mail = Mail.new do
    to      'nicolas@test.lindsaar.net.au'
    from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
@@ -416,8 +400,6 @@ Results in the same email as done using the block form
 
 === Getting error reports from an email:
 
- require 'mail'
-
  @mail = Mail.read('/path/to/bounce_message.eml')
 
  @mail.bounced?         #=> true
@@ -428,8 +410,6 @@ Results in the same email as done using the block form
  @mail.retryable?       #=> false
 
 === Attaching and Detaching Files
-
-  require 'mail'
 
 You can just read the file off an absolute path, Mail will try
 to guess the mime_type and will encode the file in Base64 for you.
