@@ -9,58 +9,6 @@ unless ''.respond_to?(:mb_chars)
   end
 end
 
-# Need this crap from ActiveSupport
-# Do not create if already there
-unless Class.respond_to?(:cattr_accessor)
-  class Class
-    def cattr_reader(*syms)
-      syms.each do |sym|
-        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          unless defined? @@#{sym}
-            @@#{sym} = nil
-          end
-
-          def self.#{sym}
-            @@#{sym}
-          end
-        EOS
-
-        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          def #{sym}
-            @@#{sym}
-          end
-        EOS
-      end
-    end
-
-    def cattr_writer(*syms)
-      syms.each do |sym|
-        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          unless defined? @@#{sym}
-            @@#{sym} = nil
-          end
-
-          def self.#{sym}=(obj)
-            @@#{sym} = obj
-          end
-        EOS
-
-        class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          def #{sym}=(obj)
-            @@#{sym} = obj
-          end
-        EOS
-        self.send("#{sym}=", yield) if block_given?
-      end
-    end
-
-    def cattr_accessor(*syms, &blk)
-      cattr_reader(*syms)
-      cattr_writer(*syms, &blk)
-    end
-  end
-end
-
 module Mail
   class Ruby19
 
@@ -76,7 +24,7 @@ module Mail
       str = escape_paren( str )
       '(' + str + ')'
     end
-    
+
     def Ruby19.escape_bracket( str )
       re = /(?<!\\)([\<\>])/          # Only match unescaped brackets
       str.gsub(re) { |s| '\\' + s }
@@ -91,24 +39,24 @@ module Mail
     def Ruby19.decode_base64(str)
       str.unpack( 'm' ).first
     end
-    
+
     def Ruby19.encode_base64(str)
       [str].pack( 'm' )
     end
-    
+
     def Ruby19.has_constant?(klass, string)
       klass.const_defined?( string, false )
     end
-    
+
     def Ruby19.get_constant(klass, string)
       klass.const_get( string )
     end
-    
+
     def Ruby19.b_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
       [Ruby19.encode_base64(str), encoding]
     end
-    
+
     def Ruby19.b_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
       if match
@@ -119,7 +67,7 @@ module Mail
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
     end
-    
+
     def Ruby19.q_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
       [Encodings::QuotedPrintable.encode(str), encoding]
@@ -148,8 +96,8 @@ module Mail
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
 
-     # mails somtimes includes invalid encodings like iso885915 or utf8 so we transform them to iso885915 or utf8 
-     # TODO: add this as a test somewhere 
+     # mails somtimes includes invalid encodings like iso885915 or utf8 so we transform them to iso885915 or utf8
+     # TODO: add this as a test somewhere
      # Encoding.list.map{|e| [e.to_s.upcase==fix_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
      #  Encoding.list.map{|e| [e.to_s==fix_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def Ruby19.fix_encoding(encoding)
