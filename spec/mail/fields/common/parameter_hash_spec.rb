@@ -5,8 +5,8 @@ describe Mail::ParameterHash do
   it "should return the values in the hash" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value1' => 'one', 'value2' => 'two'})
-    hash.keys.should include(:value1)
-    hash.keys.should include(:value2)
+    hash.keys.should include("value1")
+    hash.keys.should include("value2")
     hash.values.should include('one')
     hash.values.should include('two')
   end

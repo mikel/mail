@@ -53,7 +53,7 @@ describe "MIME Emails" do
 
       it "should return the content-type parameters" do
         mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
-        mail.content_type_parameters.should == {:charset => 'US-ASCII', :format => 'flowed'}
+        mail.content_type_parameters.should == {"charset" => 'US-ASCII', "format" => 'flowed'}
       end
 
       it "should recognize a multipart email" do
@@ -455,7 +455,7 @@ describe "MIME Emails" do
         m.parts.first[:content_type].content_type.should == 'image/png'
         m.parts.last[:content_type].content_type.should == 'text/plain'
       end
-      
+
       it "should allow you to add a body as text part if you have added a file and not truncate after newlines - issue 208" do
         m = Mail.new do
           from    'mikel@from.lindsaar.net'

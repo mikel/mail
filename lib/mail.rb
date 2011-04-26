@@ -26,13 +26,19 @@ module Mail # :doc:
 
   require 'mail/version'
 
-  require 'mail/core_extensions/nil'
-  require 'mail/core_extensions/string'
+  # Only load our extensions if AS is not already loaded
+  unless defined?(ActiveSupport)
+    require 'mail/core_extensions/nil'
+    require 'mail/core_extensions/string'
+    require 'mail/core_extensions/string/access'
+    require 'mail/core_extensions/string/multibyte'
+    require 'mail/core_extensions/object'
+    require 'mail/multibyte'
+    require 'mail/indifferent_hash'
+  end
+
   require 'mail/core_extensions/shellwords' unless String.new.respond_to?(:shellescape)
   require 'mail/core_extensions/smtp' if RUBY_VERSION < '1.9.3'
-  require 'mail/core_extensions/object'
-
-  require 'mail/indifferent_hash'
 
   require 'mail/patterns'
   require 'mail/utilities'

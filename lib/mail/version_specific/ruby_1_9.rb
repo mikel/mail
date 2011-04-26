@@ -1,14 +1,5 @@
 # encoding: utf-8
 
-unless ''.respond_to?(:mb_chars)
-  class String
-    # Compatability with ActiveSupport, which returns self in 1.9
-    def mb_chars
-      self
-    end
-  end
-end
-
 module Mail
   class Ruby19
 

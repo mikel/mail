@@ -1065,19 +1065,19 @@ describe Mail::Message do
           mail = Mail.new
           mail.content_type = ["text", "plain", { :charset => 'US-ASCII' }]
           mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\scharset=US-ASCII\r\n]
-          mail.content_type_parameters.should == {:charset => "US-ASCII"}
+          mail.content_type_parameters.should == {"charset" => "US-ASCII"}
         end
 
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { :charset => 'UTF-8' }]
           mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\scharset=UTF-8\r\n]
-          mail.content_type_parameters.should == {:charset => "UTF-8"}
+          mail.content_type_parameters.should == {"charset" => "UTF-8"}
         end
 
         it "should allow us to specify a content type in a block" do
           mail = Mail.new { content_type ["text", "plain", { "charset" => "UTF-8" }] }
-          mail.content_type_parameters.should == {:charset => "UTF-8"}
+          mail.content_type_parameters.should == {"charset" => "UTF-8"}
         end
 
       end
@@ -1494,6 +1494,7 @@ describe Mail::Message do
 
     it "shouldn't die with an invalid Content-Type header" do
       mail = Mail.new('Content-Type: invalid/invalid; charset="iso-8859-1"')
+      mail.attachment?
       doing { mail.attachment? }.should_not raise_error
     end
 
