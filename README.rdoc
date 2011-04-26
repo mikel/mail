@@ -27,7 +27,7 @@ you are doing, you can fiddle with every last bit of your email directly.
 
 Mail is tested and works on the following platforms:
 
-* jruby-1.5.2 [ [x86_64-java] ]
+* jruby-1.5.2 [ x86_64-java ]
 * ree-1.8.7-2010.02 [ x86_64 ]
 * ruby-1.8.6-p399 [ x86_64 ]
 * ruby-1.8.7-p302 [ x86_64 ]
@@ -36,7 +36,7 @@ Mail is tested and works on the following platforms:
 == Discussion
 
 If you want to discuss mail with like minded individuals, please subscribe to
-the Google Group http://groups.google.com/group/mail-ruby
+the {Google Group}[http://groups.google.com/group/mail-ruby].
 
 == Current Capabilities of Mail
 
@@ -108,11 +108,12 @@ I have tried to simplify it some:
    return the object's "value" only as a string.  This means it will not include
    the header fields (like 'To:' or 'Subject:').
 
-3. By default, calling :to_s on a container object will call it's encoded method, while
-   :to_s on a field object will call it's decoded method.  So calling :to_s on a Mail
-   object will return the mail, all encoded ready to send, while calling :to_s on the
-   From field or the body will return the decoded value of the object.  The header object
-   of Mail is considered a container.  If you are in doubt, call :encoded, or :decoded
+3. By default, calling <code>#to_s</code> on a container object will call its encoded
+   method, while <code>#to_s</code> on a field object will call it's decoded method.
+   So calling <code>#to_s</code> on a Mail object will return the mail, all encoded
+   ready to send, while calling <code>#to_s</code> on the From field or the body will
+   return the decoded value of the object. The header object of Mail is considered a
+   container. If you are in doubt, call <code>#encoded</code>, or <code>#decoded</code>
    explicitly, this is safer if you are not sure.
 
 4. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
@@ -121,15 +122,15 @@ I have tried to simplify it some:
 
 5. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
    provide encoded parameter values when you call the parameter names through the
-   object.parameters['<parameter_name>'] method call.
+   <code>object.parameters['<parameter_name>']</code> method call.
 
 == Contributing
 
 Please do!  Contributing is easy in Mail:
 
 1. Check the Reference RFCs, they are in the References directory, so no excuses.
-2. Open a ticket on github, maybe someone else has the problem too
-3. Make a fork of my github repository
+2. Open a ticket on GitHub, maybe someone else has the problem too
+3. Make a fork of my GitHub repository
 4. Make a spec driven change to the code base
 5. Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
 6. Update the README if needed to reflect your change / addition
@@ -138,25 +139,21 @@ Please do!  Contributing is easy in Mail:
 
 == Usage
 
-All major mail functions should be able to happen from the Mail::module.
-So, you should be able to just "require 'mail'" to get started.
+All major mail functions should be able to happen from the Mail module.
+So, you should be able to just <code>require 'mail'</code> to get started.
 
 === Making an email
 
- require 'mail'
-
  mail = Mail.new do
-      from 'mikel@test.lindsaar.net'
-        to 'you@test.lindsaar.net'
+   from    'mikel@test.lindsaar.net'
+   to      'you@test.lindsaar.net'
    subject 'This is a test email'
-      body File.read('body.txt')
+   body    File.read('body.txt')
  end
 
  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 
 === Making an email, have it your way:
-
- require 'mail'
 
  mail = Mail.new do
    body File.read('body.txt')
@@ -170,10 +167,8 @@ So, you should be able to just "require 'mail'" to get started.
 
 === Don't Worry About Message IDs:
 
- require 'mail'
-
  mail = Mail.new do
-     to 'you@test.lindsaar.net'
+   to   'you@test.lindsaar.net'
    body 'Some simple body'
  end
 
@@ -186,12 +181,10 @@ give it a unique, random Message-ID along the lines of:
 
 === Or do worry about Message-IDs:
 
- require 'mail'
-
  mail = Mail.new do
-          to 'you@test.lindsaar.net'
-  message_id '<ThisIsMyMessageId@some.domain.com>'
-        body 'Some simple body'
+   to         'you@test.lindsaar.net'
+   message_id '<ThisIsMyMessageId@some.domain.com>'
+   body       'Some simple body'
  end
 
  mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
@@ -206,21 +199,21 @@ sendmail or postfix daemon running on on this port, sending email is as
 easy as:
 
  Mail.deliver do
-       from 'me@test.lindsaar.net'
-         to 'you@test.lindsaar.net'
+    from    'me@test.lindsaar.net'
+    to      'you@test.lindsaar.net'
     subject 'Here is the image you wanted'
-       body File.read('body.txt')
+    body    File.read('body.txt')
    add_file '/full/path/to/somefile.png'
  end
 
 or
 
  mail = Mail.new do
-       from 'me@test.lindsaar.net'
-         to 'you@test.lindsaar.net'
-    subject 'Here is the image you wanted'
-       body File.read('body.txt')
-   add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+   from     'me@test.lindsaar.net'
+   to       'you@test.lindsaar.net'
+   subject  'Here is the image you wanted'
+   body     File.read('body.txt')
+   add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
  end
 
  mail.deliver!
@@ -228,11 +221,11 @@ or
 Sending via sendmail can be done like so:
 
   mail = Mail.new do
-        from 'me@test.lindsaar.net'
-          to 'you@test.lindsaar.net'
-     subject 'Here is the image you wanted'
-        body File.read('body.txt')
-    add_file {:filename => 'somefile.png', :content => File.read('/somefile.png')}
+    from     'me@test.lindsaar.net'
+    to       'you@test.lindsaar.net'
+    subject  'Here is the image you wanted'
+    body     File.read('body.txt')
+    add_file :filename => 'somefile.png', :content => File.read('/somefile.png')
   end
 
   mail.delivery_method :sendmail
@@ -249,15 +242,20 @@ Sending via sendmail can be done like so:
 
 === Getting emails from a pop server:
 
-The most recent email:
+You can configure Mail to receive email using <code>retriever_method</code>
+within <code>Mail.defaults</code>:
 
  Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
+   retriever_method :pop3, :address    => "pop.gmail.com",
+                           :port       => 995,
+                           :user_name  => '<username>',
+                           :password   => '<password>',
+                           :enable_ssl => true
  end
+
+You can access incoming email in a number of ways.
+
+The most recent email:
 
  Mail.all    #=> Returns an array of all emails
  Mail.first  #=> Returns the first unread email
@@ -265,31 +263,12 @@ The most recent email:
 
 The first 10 emails sorted by date in ascending order:
 
- require 'mail'
-
- Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
- end
-
  emails = Mail.find(:what => :first, :count => 10, :order => :asc)
  emails.length #=> 10
 
 Or even all emails:
 
- Mail.defaults do
-   retriever_method :pop3, { :address             => "pop.gmail.com",
-                             :port                => 995,
-                             :user_name           => '<username>',
-                             :password            => '<password>',
-                             :enable_ssl          => true }
- end
-
  emails = Mail.all
-
  emails.length #=> LOTS!
 
 {Learn more about POP3}[link:classes/Mail/POP3.html]
@@ -297,8 +276,6 @@ Or even all emails:
 {Learn more about IMAP}[link:classes/Mail/IMAP.html]
 
 === Reading an Email
-
- require 'mail'
 
  mail = Mail.read('/path/to/message.eml')
 
@@ -315,8 +292,6 @@ Or even all emails:
 Many more methods available.
 
 === Reading a Multipart Email
-
- require 'mail'
 
  mail = Mail.read('multipart_email')
 
@@ -340,15 +315,15 @@ content type and has a boundary defined.
 Mail makes some basic assumptions and makes doing the common thing as
 simple as possible.... (asking a lot from a mail library)
 
- require 'mail'
-
  mail = Mail.deliver do
-   to 'nicolas@test.lindsaar.net.au'
-   from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+   to      'nicolas@test.lindsaar.net.au'
+   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
    subject 'First multipart email sent with Mail'
+
    text_part do
      body 'This is plain text'
    end
+
    html_part do
      content_type 'text/html; charset=UTF-8'
      body '<h1>This is HTML</h1>'
@@ -403,11 +378,9 @@ You don't have to use a block with the text and html part included, you
 can just do it declaratively.  However, you need to add Mail::Parts to
 an email, not Mail::Messages.
 
- require 'mail'
-
  mail = Mail.new do
-   to 'nicolas@test.lindsaar.net.au'
-   from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+   to      'nicolas@test.lindsaar.net.au'
+   from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
    subject 'First multipart email sent with Mail'
  end
 
@@ -427,8 +400,6 @@ Results in the same email as done using the block form
 
 === Getting error reports from an email:
 
- require 'mail'
-
  @mail = Mail.read('/path/to/bounce_message.eml')
 
  @mail.bounced?         #=> true
@@ -439,8 +410,6 @@ Results in the same email as done using the block form
  @mail.retryable?       #=> false
 
 === Attaching and Detaching Files
-
-  require 'mail'
 
 You can just read the file off an absolute path, Mail will try
 to guess the mime_type and will encode the file in Base64 for you.
@@ -474,16 +443,19 @@ than mail (this should be rarely needed)
 Of course... Mail will round trip an attachment as well
 
   @mail = Mail.new do
-    to 'nicolas@test.lindsaar.net.au'
-    from 'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+    to      'nicolas@test.lindsaar.net.au'
+    from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
     subject 'First multipart email sent with Mail'
+
     text_part do
       body 'Here is the attachment you wanted'
     end
+
     html_part do
       content_type 'text/html; charset=UTF-8'
       body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
     end
+
     add_file '/path/to/myfile.pdf'
   end
 
