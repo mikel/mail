@@ -173,16 +173,16 @@ describe "IMAP Retriever" do
       retrievable = Mail::IMAP.new({})
       options = retrievable.send(:validate_options, {})
 
-      options[:count].should be_present
+      options[:count].should_not be_blank
       options[:count].should == 10
 
-      options[:order].should be_present
+      options[:order].should_not be_blank
       options[:order].should == :asc
 
-      options[:what].should be_present
+      options[:what].should_not be_blank
       options[:what].should == :first
 
-      options[:mailbox].should be_present
+      options[:mailbox].should_not be_blank
       options[:mailbox].should == 'INBOX'
     end
     it "should not replace given configuration" do
@@ -194,16 +194,16 @@ describe "IMAP Retriever" do
         :what => :first
       })
 
-      options[:count].should be_present
+      options[:count].should_not be_blank
       options[:count].should == 2
 
-      options[:order].should be_present
+      options[:order].should_not be_blank
       options[:order].should == :asc
 
-      options[:what].should be_present
+      options[:what].should_not be_blank
       options[:what].should == :first
 
-      options[:mailbox].should be_present
+      options[:mailbox].should_not be_blank
       options[:mailbox].should == 'some/mail/box'
     end
     it "should ensure utf7 conversion for mailbox names" do

@@ -211,7 +211,8 @@ describe Mail::Message do
     end
 
     it "should still ask the body for a new instance even though these is nothing to parse, yet" do
-      Mail::Body.should_receive(:new)
+      body = Mail::Body.new('')
+      Mail::Body.should_receive(:new).and_return(body)
       mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
 
@@ -1062,21 +1063,21 @@ describe Mail::Message do
 
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
-          mail.content_type = ["text", "plain", { "charset" => 'US-ASCII' }]
+          mail.content_type = ["text", "plain", { :charset => 'US-ASCII' }]
           mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\scharset=US-ASCII\r\n]
-          mail.content_type_parameters.should == {"charset" => "US-ASCII"}
+          mail.content_type_parameters.should == {:charset => "US-ASCII"}
         end
 
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
-          mail.content_type = ["text", "plain", { "charset" => 'UTF-8' }]
+          mail.content_type = ["text", "plain", { :charset => 'UTF-8' }]
           mail[:content_type].encoded.should == %Q[Content-Type: text/plain;\r\n\scharset=UTF-8\r\n]
-          mail.content_type_parameters.should == {"charset" => "UTF-8"}
+          mail.content_type_parameters.should == {:charset => "UTF-8"}
         end
 
         it "should allow us to specify a content type in a block" do
           mail = Mail.new { content_type ["text", "plain", { "charset" => "UTF-8" }] }
-          mail.content_type_parameters.should == {"charset" => "UTF-8"}
+          mail.content_type_parameters.should == {:charset => "UTF-8"}
         end
 
       end
@@ -1470,6 +1471,7 @@ describe Mail::Message do
 
   describe "ordering messages" do
     it "should put all attachments as the last item" do
+      # XXX: AFAICT, this is not actually working. The code does not appear to implement this. -- singpolyma
       mail = Mail.new
       mail.attachments['image.png'] = "\302\302\302\302"
       p = Mail::Part.new(:content_type => 'multipart/alternative')

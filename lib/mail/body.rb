@@ -201,10 +201,11 @@ module Mail
     end
     
     def encoding=( val )
-      if val == "text" || val.blank? then
-        val = "8bit"
+      @encoding = if val == "text" || val.blank?
+          (only_us_ascii? ? '7bit' : '8bit')
+      else
+          val
       end
-      @encoding = (val == "text") ? "8bit" : val
     end
 
     # Returns the preamble (any text that is before the first MIME boundary)
