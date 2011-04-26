@@ -99,7 +99,7 @@ Installation
 
 Installation is fairly simple, I host mail on rubygems, so you can just do:
 
- # gem install mail
+    # gem install mail
 
 Encodings
 ---------
@@ -195,7 +195,7 @@ mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
 Mail will automatically add a Message-ID field if it is missing and
 give it a unique, random Message-ID along the lines of:
 
- <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
+    <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
 
 ### Or do worry about Message-IDs:
 
@@ -258,13 +258,13 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
-{Learn more about SMTP Delivery}[link:classes/Mail/SMTP.html]
+[Learn more about SMTP Delivery](link:classes/Mail/SMTP.html)
 
-{Learn more about File Delivery}[link:classes/Mail/FileDelivery.html]
+[Learn more about File Delivery](link:classes/Mail/FileDelivery.html)
 
-{Learn more about Sendmail Delivery}[link:classes/Mail/Sendmail.html]
+[Learn more about Sendmail Delivery](link:classes/Mail/Sendmail.html)
 
-{Learn more about Test Email Delivery}[link:classes/Mail/TestMailer.html]
+[Learn more about Test Email Delivery](link:classes/Mail/TestMailer.html)
 
 ### Getting emails from a pop server:
 
