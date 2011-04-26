@@ -36,7 +36,7 @@ Mail is tested and works on the following platforms:
 == Discussion
 
 If you want to discuss mail with like minded individuals, please subscribe to
-the Google Group http://groups.google.com/group/mail-ruby
+the {Google Group}[http://groups.google.com/group/mail-ruby].
 
 == Current Capabilities of Mail
 
