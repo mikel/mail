@@ -109,7 +109,7 @@ would hope.
 
 I have tried to simplify it some:
 
-1. All objects that can render into an email, have an :encoded method.  Encoded will
+1. All objects that can render into an email, have an `#encoded` method.  Encoded will
    return the object as a complete string ready to send in the mail system, that is,
    it will include the header field and value and CRLF at the end and wrapped as
    needed.
@@ -258,14 +258,6 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
-[Learn more about SMTP Delivery](link:classes/Mail/SMTP.html)
-
-[Learn more about File Delivery](link:classes/Mail/FileDelivery.html)
-
-[Learn more about Sendmail Delivery](link:classes/Mail/Sendmail.html)
-
-[Learn more about Test Email Delivery](link:classes/Mail/TestMailer.html)
-
 ### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
@@ -305,9 +297,6 @@ emails = Mail.all
 emails.length #=> LOTS!
 ```
 
-{Learn more about POP3}[link:classes/Mail/POP3.html]
-
-{Learn more about IMAP}[link:classes/Mail/IMAP.html]
 
 ### Reading an Email
 
