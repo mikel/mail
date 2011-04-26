@@ -108,11 +108,12 @@ I have tried to simplify it some:
    return the object's "value" only as a string.  This means it will not include
    the header fields (like 'To:' or 'Subject:').
 
-3. By default, calling :to_s on a container object will call it's encoded method, while
-   :to_s on a field object will call it's decoded method.  So calling :to_s on a Mail
-   object will return the mail, all encoded ready to send, while calling :to_s on the
-   From field or the body will return the decoded value of the object.  The header object
-   of Mail is considered a container.  If you are in doubt, call :encoded, or :decoded
+3. By default, calling <code>#to_s</code> on a container object will call its encoded
+   method, while <code>#to_s</code> on a field object will call it's decoded method.
+   So calling <code>#to_s</code> on a Mail object will return the mail, all encoded
+   ready to send, while calling <code>#to_s</code> on the From field or the body will
+   return the decoded value of the object. The header object of Mail is considered a
+   container. If you are in doubt, call <code>#encoded</code>, or <code>#decoded</code>
    explicitly, this is safer if you are not sure.
 
 4. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
@@ -121,7 +122,7 @@ I have tried to simplify it some:
 
 5. Structured fields that have parameter values that can be encoded (e.g. Content-Type) will
    provide encoded parameter values when you call the parameter names through the
-   object.parameters['<parameter_name>'] method call.
+   <code>object.parameters['<parameter_name>']</code> method call.
 
 == Contributing
 
@@ -138,8 +139,8 @@ Please do!  Contributing is easy in Mail:
 
 == Usage
 
-All major mail functions should be able to happen from the Mail::module.
-So, you should be able to just "require 'mail'" to get started.
+All major mail functions should be able to happen from the Mail module.
+So, you should be able to just <code>require 'mail'</code> to get started.
 
 === Making an email
 
