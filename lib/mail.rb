@@ -35,10 +35,7 @@ module Mail # :doc:
 
   # Only load our multibyte extensions if AS is not already loaded
   if defined?(ActiveSupport)
-    puts("====================================================")
-    puts("               USING ACTIVE SUPPORT                 ")
-    puts("====================================================")
-    require 'active_support/core_ext/string'
+    require 'active_support/inflector'
   else
     require 'mail/core_extensions/string/access'
     require 'mail/core_extensions/string/multibyte'
