@@ -1732,9 +1732,15 @@ module Mail
       hash.delete('headers')
       hash.each do |k,v|
         case
-        when k == 'delivery_handler'    then m.delivery_handler = Object.const_get(v) unless v.blank?
-        when k == 'transport_encoding'  then m.transport_encoding(v)
-        when k =~ /^@/                  then m.instance_variable_set(k.to_sym, v)
+        when k == 'delivery_handler'
+          begin
+            m.delivery_handler = Object.const_get(v) unless v.blank?
+          rescue NameError
+          end
+        when k == 'transport_encoding'
+          m.transport_encoding(v)
+        when k =~ /^@/
+          m.instance_variable_set(k.to_sym, v)
         end
       end
       m
