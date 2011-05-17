@@ -1711,7 +1711,7 @@ module Mail
       buffer
     end
 
-    def to_yaml
+    def to_yaml(opts = {})
       hash = {}
       hash['headers'] = {}
       header.fields.each do |field|
@@ -1723,7 +1723,7 @@ module Mail
       (instance_variables - special_variables).each do |var|
         hash[var.to_s] = instance_variable_get(var)
       end
-      hash.to_yaml
+      hash.to_yaml(opts)
     end
 
     def self.from_yaml(str)
