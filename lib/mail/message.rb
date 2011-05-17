@@ -1712,18 +1712,32 @@ module Mail
     end
 
     def to_yaml
-      ready_to_send!
       hash = {}
+      hash['headers'] = {}
       header.fields.each do |field|
-        hash[field.name] = field.value
+        hash['headers'][field.name] = field.value
       end
-      hash['subject'] = subject
-      hash['body'] = body.encoded(content_transfer_encoding)
+      hash['delivery_handler'] = delivery_handler.to_s if delivery_handler
+      hash['transport_encoding'] = transport_encoding.to_s
+      special_variables = [:@header, :@delivery_handler, :@transport_encoding]
+      (instance_variables - special_variables).each do |var|
+        hash[var.to_s] = instance_variable_get(var)
+      end
       hash.to_yaml
     end
 
     def self.from_yaml(str)
-      from_hash(YAML::load(str))
+      hash = YAML.load(str)
+      m = Mail::Message.new(:headers => hash['headers'])
+      hash.delete('headers')
+      hash.each do |k,v|
+        case
+        when k == 'delivery_handler'    then m.delivery_handler = Object.const_get(v) unless v.blank?
+        when k == 'transport_encoding'  then m.transport_encoding(v)
+        when k =~ /^@/                  then m.instance_variable_set(k.to_sym, v)
+        end
+      end
+      m
     end
 
     def self.from_hash(hash)

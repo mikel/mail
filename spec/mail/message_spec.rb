@@ -116,24 +116,38 @@ describe Mail::Message do
       mail.in_reply_to.should be_blank
     end
 
-    it "should allow serializing to YAML" do
-      yaml = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject').to_yaml
-      yaml_output = YAML.load(yaml)
-      yaml_output['Mime-Version'].should == "1.0"
-      yaml_output['Cc'].should == "someoneelse@somewhere.com"
-      yaml_output['Subject'].should == "subject"
-      yaml_output['body'].should == "body"
-      yaml_output['Bcc'].should == "someonesecret@somewhere.com"
-      yaml_output['Content-Transfer-Encoding'].should == "7bit"
-      yaml_output['Message-ID'].should =~ /<.+@.+>/
-      yaml_output['Content-Type'].should == "text/plain"
-      yaml_output['To'].should == "someone@somewhere.com"
-      yaml_output['Date'].should_not == ''
-    end
+    describe "YAML serialization" do
+      before(:each) do
+        @yaml_mail = Mail::Message.new(:to => 'someone@somewhere.com',
+                                  :cc => 'someoneelse@somewhere.com',
+                                  :bcc => 'someonesecret@somewhere.com',
+                                  :body => 'body',
+                                  :subject => 'subject')
+        @yaml_mail.delivery_handler = DeliveryAgent
+        @smtp_settings = { :address=>"smtp.somewhere.net",
+          :port=>"587", :domain=>"somewhere.net", :user_name=>"someone@somewhere.net",
+          :password=>"password", :authentication=>:plain, :enable_starttls_auto => true,
+          :openssl_verify_mode => nil }
+        @yaml_mail.delivery_method :smtp, @smtp_settings
+      end
 
-    it "should deserialize after serializing" do
-      message = Mail::Message.new(:to => 'someone@somewhere.com', :cc => 'someoneelse@somewhere.com', :bcc => 'someonesecret@somewhere.com', :body => 'body', :subject => 'subject')
-      Mail::Message.from_yaml(message.to_yaml).should == message
+      it "should allow serializing to YAML" do
+        yaml = @yaml_mail.to_yaml
+        yaml_output = YAML.load(yaml)
+        yaml_output['headers']['To'].should       == "someone@somewhere.com"
+        yaml_output['headers']['Cc'].should       == "someoneelse@somewhere.com"
+        yaml_output['headers']['Subject'].should  == "subject"
+        yaml_output['headers']['Bcc'].should      == "someonesecret@somewhere.com"
+        yaml_output['@body_raw'].should           == "body"
+        yaml_output['delivery_handler'].should    == "DeliveryAgent"
+      end
+
+      it "should deserialize after serializing" do
+        deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
+        deserialized.should == @yaml_mail
+        deserialized.delivery_handler.should == DeliveryAgent
+        deserialized.delivery_method.settings.should == @smtp_settings
+      end
     end
   end
 
