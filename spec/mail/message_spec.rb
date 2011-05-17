@@ -123,7 +123,6 @@ describe Mail::Message do
                                   :bcc => 'someonesecret@somewhere.com',
                                   :body => 'body',
                                   :subject => 'subject')
-        @yaml_mail.delivery_handler = DeliveryAgent
         @smtp_settings = { :address=>"smtp.somewhere.net",
           :port=>"587", :domain=>"somewhere.net", :user_name=>"someone@somewhere.net",
           :password=>"password", :authentication=>:plain, :enable_starttls_auto => true,
@@ -131,7 +130,7 @@ describe Mail::Message do
         @yaml_mail.delivery_method :smtp, @smtp_settings
       end
 
-      it "should allow serializing to YAML" do
+      it "should serialize the basic information to YAML" do
         yaml = @yaml_mail.to_yaml
         yaml_output = YAML.load(yaml)
         yaml_output['headers']['To'].should       == "someone@somewhere.com"
@@ -139,14 +138,34 @@ describe Mail::Message do
         yaml_output['headers']['Subject'].should  == "subject"
         yaml_output['headers']['Bcc'].should      == "someonesecret@somewhere.com"
         yaml_output['@body_raw'].should           == "body"
-        yaml_output['delivery_handler'].should    == "DeliveryAgent"
+        yaml_output['@delivery_method'].should_not be_blank
       end
 
       it "should deserialize after serializing" do
         deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
         deserialized.should == @yaml_mail
-        deserialized.delivery_handler.should == DeliveryAgent
         deserialized.delivery_method.settings.should == @smtp_settings
+      end
+
+      it "should serialize a Message with a custom delivery_handler" do
+        @yaml_mail.delivery_handler = DeliveryAgent
+        yaml = @yaml_mail.to_yaml
+        yaml_output = YAML.load(yaml)
+        yaml_output['delivery_handler'].should == "DeliveryAgent"
+      end
+
+      it "should load a serialized delivery handler" do
+        @yaml_mail.delivery_handler = DeliveryAgent
+        deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
+        deserialized.delivery_handler.should == DeliveryAgent
+      end
+
+      it "should not deserialize a delivery_handler that does not exist" do
+        yaml = @yaml_mail.to_yaml
+        yaml_hash = YAML.load(yaml)
+        yaml_hash['delivery_handler'] = "NotARealClass"
+        deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
+        deserialized.delivery_handler.should be_nil
       end
     end
   end
