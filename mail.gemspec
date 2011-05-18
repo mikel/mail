@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
+  s.extra_rdoc_files = ["README.mkd", "CHANGELOG.rdoc", "TODO.rdoc"]
 
   s.add_dependency('mime-types', "~> 1.16")
   s.add_dependency('treetop', '~> 1.4.8')
