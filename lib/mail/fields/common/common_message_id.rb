@@ -37,7 +37,7 @@ module Mail
     end
     
     def do_decode
-      "#{message_ids.map { |m| "<#{m}>" }.join(' ')}"
+      "#{message_ids.map { |m| "<#{m}>" }.join(' ')}" if message_ids
     end
     
   end

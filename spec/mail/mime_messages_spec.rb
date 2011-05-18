@@ -53,7 +53,7 @@ describe "MIME Emails" do
 
       it "should return the content-type parameters" do
         mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
-        mail.content_type_parameters.should == {'charset' => 'US-ASCII', 'format' => 'flowed'}
+        mail.content_type_parameters.should == {"charset" => 'US-ASCII', "format" => 'flowed'}
       end
 
       it "should recognize a multipart email" do
@@ -455,6 +455,32 @@ describe "MIME Emails" do
         m.parts.first[:content_type].content_type.should == 'image/png'
         m.parts.last[:content_type].content_type.should == 'text/plain'
       end
+
+      it "should allow you to add a body as text part if you have added a file and not truncate after newlines - issue 208" do
+        m = Mail.new do
+          from    'mikel@from.lindsaar.net'
+          subject 'Hello there Mikel'
+          to      'mikel@to.lindsaar.net'
+          add_file fixture('attachments', 'test.png')
+          body    "First Line\n\nSecond Line\n\nThird Line\n\n"
+          #Note: trailing \n\n is stripped off by Mail::Part initialization
+        end
+        m.parts.length.should == 2
+        m.parts.first[:content_type].content_type.should == 'image/png'
+        m.parts.last[:content_type].content_type.should == 'text/plain'
+        m.parts.last.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+      end
+
+      it "should not raise a warning if there is a charset defined and there are non ascii chars in the body" do
+        body = "This is NOT plain text ASCII　− かきくけこ"
+        mail = Mail.new
+        mail.body = body
+        mail.charset = 'UTF-8'
+        mail.add_file fixture('attachments', 'test.png')
+        STDERR.should_not_receive(:puts)
+        mail.to_s
+      end
+
 
     end
 

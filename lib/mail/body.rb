@@ -162,7 +162,12 @@ module Mail
         else
             # Decode then encode to normalize and allow transforming 
             # from base64 to Q-P and vice versa
-            enc.encode(dec.decode(raw_source))
+            decoded = dec.decode(raw_source)
+            if defined?(Encoding) && charset && charset != "US-ASCII"
+              decoded.encode!(charset)
+              decoded.force_encoding('BINARY') unless Encoding.find(charset).ascii_compatible?
+            end
+            enc.encode(decoded)
         end
       end
     end
@@ -196,10 +201,11 @@ module Mail
     end
     
     def encoding=( val )
-      if val == "text" || val.blank? then
-        val = "8bit"
+      @encoding = if val == "text" || val.blank?
+          (only_us_ascii? ? '7bit' : '8bit')
+      else
+          val
       end
-      @encoding = (val == "text") ? "8bit" : val
     end
 
     # Returns the preamble (any text that is before the first MIME boundary)

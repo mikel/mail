@@ -41,4 +41,10 @@ describe Mail::ReferencesField do
     t.to_s.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
   end
 
+  it "should accept no message ids" do
+    t = Mail::ReferencesField.new('')
+    t.name.should == 'References'
+    t.decoded.should == nil
+  end
+
 end

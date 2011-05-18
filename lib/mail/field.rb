@@ -69,7 +69,8 @@ module Mail
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     def initialize(name, value = nil, charset = 'utf-8')
       case
-      when name =~ /:/ && value.blank?   # Field.new("field-name: field data")
+      when name =~ /:/                  # Field.new("field-name: field data")
+        charset = value unless value.blank?
         name, value = split(name)
         create_field(name, value, charset)
       when name !~ /:/ && value.blank?  # Field.new("field-name")

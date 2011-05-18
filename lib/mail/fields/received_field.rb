@@ -52,15 +52,23 @@ module Mail
     end
    
     def formatted_date
-        date_time.strftime("%a, %d %b %Y %H:%M:%S ") + date_time.zone.delete(':')
+      date_time.strftime("%a, %d %b %Y %H:%M:%S ") + date_time.zone.delete(':')
     end
  
     def encoded
-      "#{CAPITALIZED_FIELD}: #{info}; #{formatted_date}\r\n"
+      if value.blank?
+        "#{CAPITALIZED_FIELD}: \r\n"
+      else
+        "#{CAPITALIZED_FIELD}: #{info}; #{formatted_date}\r\n"
+      end
     end
     
     def decoded
-      "#{info}; #{formatted_date}" 
+      if value.blank?
+        ""
+      else
+        "#{info}; #{formatted_date}" 
+      end
     end
     
   end

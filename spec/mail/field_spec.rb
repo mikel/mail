@@ -111,6 +111,11 @@ describe Mail::Field do
       field.field.class.should == Mail::MessageIdField
     end
 
+    it "should inherit charset" do
+      charset = 'iso-2022-jp'
+      field = Mail::Field.new('Subject: こんにちは', charset)
+      field.charset.should == charset
+    end
   end
 
   describe "error handling" do

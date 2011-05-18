@@ -8,6 +8,10 @@ class String #:nodoc:
     gsub(/\n|\r\n|\r/) { "\n" }
   end
 
+  def blank?
+    self !~ /\S/
+  end
+
   unless method_defined?(:ascii_only?)
     # Provides all strings with the Ruby 1.9 method of .ascii_only? and
     # returns true or false
@@ -16,7 +20,7 @@ class String #:nodoc:
       !(self =~ /[^#{US_ASCII_REGEXP}]/)
     end
   end
-  
+
   def not_ascii_only?
     !ascii_only?
   end

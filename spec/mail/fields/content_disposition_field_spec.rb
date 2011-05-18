@@ -53,12 +53,12 @@ describe Mail::ContentDispositionField do
       c.decoded.should == 'attachment'
     end
   end
-  
+
   describe "instance methods" do
     it "should give it's disposition type" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.disposition_type.should == 'attachment'
-      c.parameters.should == {'filename' => 'File'}
+      c.parameters.should == {"filename" => 'File'}
     end
 
     # see spec/fixtures/trec_2005_corpus/missing_content_disposition.eml

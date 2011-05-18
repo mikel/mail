@@ -141,5 +141,13 @@ ENDPART
     end
 
   end
+  
+  it "should correctly parse plain text raw source and not truncate after newlines - issue 208" do
+    plain_text = "First Line\n\nSecond Line\n\nThird Line\n\n"
+    #Note: trailing \n\n is stripped off by Mail::Part initialization
+    part = Mail::Part.new(plain_text)
+    part[:content_type].content_type.should == 'text/plain'
+    part.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+  end
 
 end

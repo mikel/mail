@@ -6,9 +6,12 @@ gem "mime-types", "~> 1.16"
 gem "treetop", "~> 1.4.8"
 gem "i18n", ">= 0.4.0"
 
+if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  gem 'jruby-openssl'
+end
+
 group :test do
   gem "ZenTest",    "~> 4.4.0"
-  gem "rcov",       "~> 0.9.8"
   gem "rake",       "~> 0.8.7"
   gem "bundler"
   gem "rspec",      "~> 1.3.0"

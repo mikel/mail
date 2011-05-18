@@ -1,3 +1,41 @@
+== Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Remove ActiveSupport from the dependencies, load Active Support if present, or use internals if not
+* Created v2.2 branch for all 2.2 related commits
+* Update activesupport require to use inflector - closes #217
+* Version bump to 2.3 and gem release
+
+== Tue Apr 26 06:18:19 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Fixed charset warning issue with multipart messages - https://github.com/arvindsv
+* Version bump to 2.2.18 and gem release
+
+== Wed 20 Apr 2011 15:16:20 UTC Mikel Lindsaar <mikel@rubyx.com>
+
+* Mail::Field.new("Subject: foobar", 'iso-2022-jp') does not set charset - https://github.com/yalab
+
+== Tue Apr 19 00:20:54 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Fixed an exception with nil in Reply-To and References field - https://github.com/dcormier
+* Version bump to 2.2.17 and gem release
+
+== Sat Apr 16 12:57:27 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+
+* Added support for open SMTP connections and returning the Mail server's response - https://github.com/spiegela
+* RE: not appended to subject when replying to a reply - https://github.com/prateekdayal
+* Support not ascii compatible charset mail send - https://github.com/yalab
+* Fix for issue 208 "mail.body after mail.add_file truncates message body" - https://github.com/glongman
+* Handle bad subject encoding (or ":invalid => :replace" is ineffective for utf-8 to utf-8 encoding) - https://github.com/choonkeat
+* Handle blank Received header field - https://github.com/bcantin
+* Handle part with missing content type - https://github.com/bcantin
+* Handle a "<>" Return field - https://github.com/bcantin
+* Performance improvements for 1.9 - https://github.com/nobu
+* Fix heavy CPU issues when messages are missing a space - https://github.com/scsmith
+* Tighten up allowed encodings - https://github.com/scsmith
+* Added to_yaml & from_yaml (as well as to_hash & from_hash) - https://github.com/srushti
+* Fix up some comments - https://github.com/takahashim
+* Version bump to 2.2.16 and gem release
+
 == Wed 26 Jan 2011 02:23:09 UTC Mikel Lindsaar <mikel@rubyx.com>
 
 * Update addresses passed into sendmail to escape them (Andy Lindeman)

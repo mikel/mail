@@ -3,7 +3,14 @@
 module Mail
 
   class TestRetriever < Retriever
-    cattr_accessor :emails
+
+    def self.emails
+      @@emails
+    end
+
+    def self.emails=(val)
+      @@emails = val
+    end
 
     def initialize(values)
       @@emails = []

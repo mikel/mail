@@ -50,6 +50,12 @@ describe Mail::InReplyToField do
       t.decoded.should == '<1234@test.lindsaar.net> <4567@test.lindsaar.net>'
     end
     
+    it "should handle an empty value" do
+      t = Mail::InReplyToField.new('')
+      t.name.should == 'In-Reply-To'
+      t.decoded.should == nil
+    end
+    
   end
 
   describe "handlign multiple message ids" do

@@ -35,6 +35,8 @@ module Mail
         Mail::Sendmail
       when :file
         Mail::FileDelivery
+      when :smtp_connection
+        Mail::SMTPConnection
       when :test
         Mail::TestMailer
       else
