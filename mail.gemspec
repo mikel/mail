@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency('tlsmail', '~> 0.0.1') if RUBY_VERSION == '1.8.6'
 
   s.require_path = 'lib'
-  s.files = %w(README.rdoc CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w(README.mkd CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
 end
