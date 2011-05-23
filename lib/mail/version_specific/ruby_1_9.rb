@@ -76,7 +76,7 @@ module Mail
     end
 
     def Ruby19.param_decode(str, encoding)
-      string = URI.unescape(str)
+      string = uri_parser.unescape(str)
       string.force_encoding(encoding) if encoding
       string
     end
@@ -84,7 +84,11 @@ module Mail
     def Ruby19.param_encode(str)
       encoding = str.encoding.to_s.downcase
       language = Configuration.instance.param_encode_language
-      "#{encoding}'#{language}'#{URI.escape(str)}"
+      "#{encoding}'#{language}'#{uri_parser.escape(str)}"
+    end
+
+    def Ruby19.uri_parser
+      @uri_parser ||= URI::Parser.new
     end
 
      # mails somtimes includes invalid encodings like iso885915 or utf8 so we transform them to iso885915 or utf8
