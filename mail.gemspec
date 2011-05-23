@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.rdoc", "CHANGELOG.rdoc", "TODO.rdoc"]
+  s.extra_rdoc_files = ["README.mkd", "CHANGELOG.rdoc", "TODO.rdoc"]
 
   s.add_dependency('mime-types', "~> 1.16")
   s.add_dependency('treetop', '~> 1.4.8')
@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency('tlsmail', '~> 0.0.1') if RUBY_VERSION == '1.8.6'
 
   s.require_path = 'lib'
-  s.files = %w(README.rdoc CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w(README.mkd CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
 end
