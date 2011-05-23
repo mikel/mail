@@ -320,7 +320,8 @@ describe "Utilities Module" do
     end
 
     it "should have a wrapper on URI.unescape" do
-      uri_unescape("@?@!").should == URI.unescape("@?@!")
+      uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+      uri_unescape("@?@!").should == uri_parser.unescape("@?@!")
     end
   end
   

@@ -180,7 +180,8 @@ describe "Attachments" do
 
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
       @inline = @mail.attachments['test.gif'].cid
-      @inline.should == URI.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
+      uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+      @inline.should == uri_parser.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
     end
   end
 

@@ -116,11 +116,15 @@ module Mail
     end
     
     def uri_escape( str )
-      URI.escape(str)
+      uri_parser.escape(str)
     end
     
     def uri_unescape( str )
-      URI.unescape(str)
+      uri_parser.unescape(str)
+    end
+    
+    def uri_parser
+      @uri_parser ||= URI.const_defined?(:Parser) ? URI::Parser.new : URI
     end
     
     # Matches two objects with their to_s values case insensitively
