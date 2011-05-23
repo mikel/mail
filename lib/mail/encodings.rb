@@ -204,9 +204,9 @@ module Mail
     #
     #  Encodings.b_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
-    def Encodings.b_value_encode(str, encoding = nil)
-      return str if str.to_s.ascii_only?
-      string, encoding = RubyVer.b_value_encode(str, encoding)
+    def Encodings.b_value_encode(encoded_str, encoding = nil)
+      return encoded_str if encoded_str.to_s.ascii_only?
+      string, encoding = RubyVer.b_value_encode(encoded_str, encoding)
       map_lines(string) do |str|
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
@@ -219,9 +219,9 @@ module Mail
     #
     #  Encodings.q_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
-    def Encodings.q_value_encode(str, encoding = nil)
-      return str if str.to_s.ascii_only?
-      string, encoding = RubyVer.q_value_encode(str, encoding)
+    def Encodings.q_value_encode(encoded_str, encoding = nil)
+      return encoded_str if encoded_str.to_s.ascii_only?
+      string, encoding = RubyVer.q_value_encode(encoded_str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
       map_lines(string) do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
