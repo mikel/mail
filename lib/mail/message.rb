@@ -1720,7 +1720,7 @@ module Mail
       hash['delivery_handler'] = delivery_handler.to_s if delivery_handler
       hash['transport_encoding'] = transport_encoding.to_s
       special_variables = [:@header, :@delivery_handler, :@transport_encoding]
-      (instance_variables - special_variables).each do |var|
+      (instance_variables.map(&:to_sym) - special_variables).each do |var|
         hash[var.to_s] = instance_variable_get(var)
       end
       hash.to_yaml(opts)
