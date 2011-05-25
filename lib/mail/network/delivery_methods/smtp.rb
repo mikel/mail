@@ -125,8 +125,8 @@ module Mail
       end
       
       response = nil
-      smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp|
-        response = smtp.sendmail(message, envelope_from, destinations)
+      smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp_obj|
+        response = smtp_obj.sendmail(message, envelope_from, destinations)
       end
 
       return settings[:return_response] ? response : self
