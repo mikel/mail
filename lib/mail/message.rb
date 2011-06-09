@@ -1734,6 +1734,11 @@ module Mail
       hash['delivery_handler'] = delivery_handler.to_s if delivery_handler
       hash['transport_encoding'] = transport_encoding.to_s
       special_variables = [:@header, :@delivery_handler, :@transport_encoding]
+      if multipart?
+        hash['multipart_body'] = []
+        body.parts.map { |part| hash['multipart_body'] << part.to_yaml }
+        special_variables.push(:@body, :@text_part, :@html_part)
+      end
       (instance_variables.map(&:to_sym) - special_variables).each do |var|
         hash[var.to_s] = instance_variable_get(var)
       end
@@ -1742,7 +1747,7 @@ module Mail
 
     def self.from_yaml(str)
       hash = YAML.load(str)
-      m = Mail::Message.new(:headers => hash['headers'])
+      m = self.new(:headers => hash['headers'])
       hash.delete('headers')
       hash.each do |k,v|
         case
@@ -1753,6 +1758,8 @@ module Mail
           end
         when k == 'transport_encoding'
           m.transport_encoding(v)
+        when k == 'multipart_body'
+          v.map {|part| m.add_part Mail::Part.from_yaml(part) }
         when k =~ /^@/
           m.instance_variable_set(k.to_sym, v)
         end
