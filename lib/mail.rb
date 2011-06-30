@@ -84,6 +84,8 @@ module Mail # :doc:
   require 'mail/encodings/base64'
   require 'mail/encodings/quoted_printable'
 
+  require 'mail/matchers/has_sent_mail'
+
   # Finally... require all the Mail.methods
   require 'mail/mail'
 end
