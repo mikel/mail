@@ -113,10 +113,11 @@ module Mail
         result += "with subject matching \"#{@subject_matcher}\" " if instance_variable_defined?('@subject_matcher')
         result += "with body \"#{@body}\" " if instance_variable_defined?('@body')
         result += "with body matching \"#{@body_matcher}\" " if instance_variable_defined?('@body_matcher')
+        result
       end
 
       def dump_deliveries
-        result = "(actual deliveries: " + Mail::TestMailer.deliveries.inspect + ")"
+        "(actual deliveries: " + Mail::TestMailer.deliveries.inspect + ")"
       end
     end
   end
