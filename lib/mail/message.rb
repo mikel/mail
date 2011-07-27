@@ -1686,8 +1686,7 @@ module Mail
     # Encodes the message, calls encode on all it's parts, gets an email message
     # ready to send
     def ready_to_send!
-      identify_and_set_transfer_encoding
-      parts.sort!([ "text/plain", "text/enriched", "text/html", "multipart/alternative" ])
+      identify_and_set_transfer_encoding      
       parts.each do |part|
         part.transport_encoding = transport_encoding
         part.ready_to_send!
