@@ -125,6 +125,7 @@ module Mail
     #
     # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
     def sort_parts!
+      return if @part_sort_order.nil?
       @parts.each do |p|
         p.body.set_sort_order(@part_sort_order)
         @parts.sort!(@part_sort_order)
