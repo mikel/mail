@@ -267,7 +267,7 @@ module Mail
     end
     
     def only_us_ascii?
-      ! raw_source =~ /[^\x01-\x7f]/
+      !(raw_source =~ /[^\x01-\x7f]/)
     end
     
     def empty?
