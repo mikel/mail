@@ -340,17 +340,18 @@ content type and has a boundary defined.
 ### Testing and extracting attachments
 ```ruby
 mail.attachments.each do | attachment |
-	# Attachments is an AttachmentsList object containing a 
-	# number of Part objects
-	if (attachment.content_type.start_with?('image/'))
-		# extracting images for example...
-		filename = attachment.filename
-		begin
-			File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
-		rescue Exception => e
-			puts "Unable to save data for #{filename} because #{e.message}"
-		end
-	end
+  # Attachments is an AttachmentsList object containing a 
+  # number of Part objects
+  if (attachment.content_type.start_with?('image/'))
+    # extracting images for example...
+    filename = attachment.filename
+    begin
+      File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
+    rescue Exception => e
+      puts "Unable to save data for #{filename} because #{e.message}"
+    end
+  end
+end
 ```
 ### Writing and sending a multipart/alternative (html and text) email
 
