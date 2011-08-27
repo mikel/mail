@@ -1711,6 +1711,21 @@ module Mail
       buffer
     end
 
+    def without_attachments!
+      return self unless has_attachments?
+
+      parts.delete_if { |p| p.attachment? }
+      body_raw = if parts.empty?
+                   ''
+                 else
+                   body.encoded
+                 end
+
+      @body = Mail::Body.new(body_raw)
+
+      self
+    end
+
     def to_yaml(opts = {})
       hash = {}
       hash['headers'] = {}

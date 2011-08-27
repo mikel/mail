@@ -1533,6 +1533,24 @@ describe Mail::Message do
 
   end
 
+  describe "without_attachments!" do
+    it "should delete all attachments" do
+      emails_with_attachments = ['content_disposition', 'content_location',
+                                 'pdf', 'with_encoded_name', 'with_quoted_filename']
+
+      emails_with_attachments.each { |email|
+        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', "attachment_#{email}.eml")))
+        mail_length_with_attachments = mail.to_s.length
+        mail.has_attachments?.should be_true
+        mail.without_attachments!
+
+        mail_length_without_attachments = mail.to_s.length
+        mail_length_without_attachments.should < mail_length_with_attachments
+        mail.has_attachments?.should be_false
+      }
+    end
+  end
+
   describe "replying" do
 
     describe "to a basic message" do
