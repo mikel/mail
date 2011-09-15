@@ -139,17 +139,29 @@ describe Mail::Encodings do
     end
 
     it "should decode UTF-16 encoded string" do
-      string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
-      result = "あいうえお"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      if RUBY_VERSION >= '1.9'
+        string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
+        result = "あいうえお"
+        result.force_encoding('UTF-8')
+        Mail::Encodings.value_decode(string).should == result
+      else
+        string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
+        result = "0B0D0F0H0J"
+        Mail::Encodings.value_decode(string).should == result
+      end
     end
 
     it "should decode UTF-32 encoded string" do
-      string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
-      result = "あいうえお"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      if RUBY_VERSION >= '1.9'
+        string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
+        result = "あいうえお"
+        result.force_encoding('UTF-8')
+        Mail::Encodings.value_decode(string).should == result
+      else
+        string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
+        result = "\000\0000B\000\0000D\000\0000F\000\0000H\000\0000J"
+        Mail::Encodings.value_decode(string).should == result
+      end
     end
   end
 
@@ -414,17 +426,29 @@ describe Mail::Encodings do
     end
 
     it "should decode UTF-16 encoded string" do
-      string = "=?UTF-16?Q?0B0D0F0H0J=?="
-      result = "あいうえお"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      if RUBY_VERSION >= '1.9'
+        string = "=?UTF-16?Q?0B0D0F0H0J=?="
+        result = "あいうえお"
+        result.force_encoding('UTF-8')
+        Mail::Encodings.value_decode(string).should == result
+      else
+        string = "=?UTF-16?Q?0B0D0F0H0J=?="
+        result = "0B0D0F0H0J"
+        Mail::Encodings.value_decode(string).should == result
+      end
     end
 
     it "should decode UTF-32 encoded string" do
-      string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
-      result = "あいうえお"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      if RUBY_VERSION >= '1.9'
+        string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
+        result = "あいうえお"
+        result.force_encoding('UTF-8')
+        Mail::Encodings.value_decode(string).should == result
+      else
+        string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
+        result = "\x00\x000B\x00\x000D\x00\x000F\x00\x000H\x00\x000J"
+        Mail::Encodings.value_decode(string).should == result
+      end
     end
 
     it "should detect multiple encoded QP string to the decoded string" do

@@ -102,7 +102,7 @@ module Mail
         # "ISO-2022-JP-KDDI"  and alike
         when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i then return "ISO-#{$1}-#{$2}-#{$3}"
         # UTF-8, UTF-32BE and alike
-        when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}"
+        when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
         # Windows-1252 and alike
         when /Windows-?(.*)/i then return "Windows-#{$1}"
         #more aliases to be added if needed
