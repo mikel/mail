@@ -138,6 +138,19 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should == result
     end
 
+    it "should decode UTF-16 encoded string" do
+      string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
+      result = "あいうえお"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should decode UTF-32 encoded string" do
+      string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
+      result = "あいうえお"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
   end
 
   describe "Q encodings" do
@@ -389,6 +402,20 @@ describe Mail::Encodings do
     it "should detect an encoded QP string to the decoded string" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should decode UTF-16 encoded string" do
+      string = "=?UTF-16?Q?0B0D0F0H0J=?="
+      result = "あいうえお"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
+    it "should decode UTF-32 encoded string" do
+      string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
+      result = "あいうえお"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       Mail::Encodings.value_decode(string).should == result
     end
