@@ -155,7 +155,16 @@ describe Mail::Field do
       list = [Mail::Field.new("To: mikel"), Mail::Field.new("Return-Path: bob")]
       list.sort[0].name.should == "Return-Path"
     end
+  end
 
+  describe 'user defined fields' do
+    it "should say it is == to another if their field names match" do
+      Mail::Field.new("X-Foo: mikel").same(Mail::Field.new("X-Foo: bob")).should be_true
+    end
+
+    it "should say it is not == to another if their field names do not match" do
+      Mail::Field.new("X-Foo: mikel").should_not == Mail::Field.new("X-Bar: bob")
+    end
   end
 
   describe "passing an encoding" do
