@@ -1422,7 +1422,7 @@ module Mail
     # Returns the character set defined in the content type field
     def charset
       if @header
-        content_type ? content_type_parameters['charset'] : @charset
+        has_content_type? ? content_type_parameters['charset'] : @charset
       else
         @charset
       end
