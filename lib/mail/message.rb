@@ -100,7 +100,6 @@ module Mail
     def initialize(*args, &block)
       @body = nil
       @body_raw = nil
-      @body_raw_index = nil
       @separate_parts = false
       @text_part = nil
       @html_part = nil
@@ -1134,7 +1133,7 @@ module Mail
     #  mail.parts.length #=> 2
     #  mail.parts.last.content_type.content_type #=> 'This is a body'
     def body=(value)
-      body_lazy(value, 0)
+      body_lazy(value)
     end
 
     # Returns the body of the message object. Or, if passed
@@ -1859,31 +1858,28 @@ module Mail
       @raw_source = value.to_crlf
     end
 
-    # see comments to body=. We take data starting from index and process it lazily
-    def body_lazy(value, index)
+    # see comments to body=. We take data and process it lazily
+    def body_lazy(value)
       process_body_raw if @body_raw && value
       case
-      when value == nil || value.length<=index
+      when value == nil || value.length<=0
         @body = Mail::Body.new('')
         @body_raw = nil
-        @body_raw_index = nil
         add_encoding_to_body
       when @body && @body.multipart?
-        @body << Mail::Part.new(value[index, value.length-index])
+        @body << Mail::Part.new(value)
         add_encoding_to_body
       else
         @body_raw = value
-        @body_raw_index = index
 #        process_body_raw
       end
     end
 
 
     def process_body_raw
-       @body = Mail::Body.new(@body_raw[@body_raw_index, @body_raw.length-@body_raw_index])
+       @body = Mail::Body.new(@body_raw)
        @body_raw = nil
-       @body_raw_index = nil
-      separate_parts if @separate_parts
+       separate_parts if @separate_parts
 
        add_encoding_to_body
     end
