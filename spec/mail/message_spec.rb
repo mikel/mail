@@ -1232,6 +1232,30 @@ describe Mail::Message do
 
   end
 
+  describe "text messages" do
+    def message_with_iso_8859_1_charset
+      "From: test@example.com\r\n"+
+      "Content-Type: text/plain; charset=iso-8859-1\r\n"+
+      "Content-Transfer-Encoding: quoted-printable\r\n"+
+      "Date: Tue, 27 Sep 2011 16:59:48 +0100 (BST)\r\n"+
+      "Subject: test\r\n\r\n"+
+      "Am=E9rica"
+    end
+
+    before(:each) do
+      @message = Mail.new(message_with_iso_8859_1_charset)
+    end
+
+    it "should be decoded using content type charset" do
+      @message.decoded.should == "América"
+    end
+
+    it "should respond true to text?" do
+      @message.text?.should == true
+    end
+
+  end
+
   describe "helper methods" do
 
     describe "==" do

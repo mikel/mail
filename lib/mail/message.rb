@@ -1759,6 +1759,8 @@ module Mail
 
     def decoded
       case
+      when self.text?
+        decode_body_as_text
       when self.attachment?
         decode_body
       when !self.multipart?
@@ -1831,6 +1833,10 @@ module Mail
     # server after each block yields back to #find or #find_and_delete.
     def is_marked_for_delete?
       return @mark_for_delete
+    end
+
+    def text?
+      has_content_type? ? !!(main_type =~ /^text$/i) : false
     end
 
   private
@@ -2007,6 +2013,22 @@ module Mail
       rescue Exception => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
+    end
+
+    def decode_body_as_text
+      body_text = decode_body
+      if charset
+        if RUBY_VERSION < '1.9'
+          require 'iconv'
+          return Iconv.conv("UTF-8//TRANSLIT//IGNORE", charset, body_text)
+        else
+          if encoding = Encoding.find(charset) rescue nil
+            body_text.force_encoding(encoding)
+            return body_text.encode(Encoding::UTF_8)
+          end
+        end
+      end
+      body_text
     end
 
   end
