@@ -623,6 +623,12 @@ describe Mail::Encodings do
       Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
     end
 
+    it "should encode a quoted display name with us-ascii and non-usascii that ends with a non-usascii part" do
+      raw     = '"Marc André" <marc@test.lindsaar.net>'
+      encoded = '=?UTF-8?B?TWFyYyBBbmRyw6k=?= <marc@test.lindsaar.net>'
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+    end
+
     it "should encode multiple addresses correctly" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>, "あdあ" <ada@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
