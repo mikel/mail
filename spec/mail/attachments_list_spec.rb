@@ -194,6 +194,17 @@ describe "Attachments" do
     end
   end
 
+  describe "should handle filenames with non-7bit characters correctly" do
+    it "should not raise an exception with a filename that contains a non-7bit-character" do
+      filename = "f\u00f6\u00f6.b\u00e4r"
+      filename.encoding.should == Encoding::UTF_8
+      mail = Mail.new
+      doing {
+        mail.attachments[filename] = File.read(fixture('attachments', 'test.pdf'))
+      }.should_not raise_error
+    end
+  end
+
 end
 
 describe "reading emails with attachments" do
