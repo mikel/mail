@@ -29,7 +29,7 @@ module Mail
         super(exact || key_name)
       else # Dealing with a multiple value pair or a single encoded value pair
         string = pairs.sort { |a,b| a.first.to_s <=> b.first.to_s }.map { |v| v.last }.join('')
-        if mt = string.match(/([\w\d\-]+)'(\w\w)'(.*)/)
+        if mt = string.match(/([\w\-]+)'(\w\w)'(.*)/)
           string = mt[3]
           encoding = mt[1]
         else
