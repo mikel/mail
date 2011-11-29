@@ -640,7 +640,12 @@ describe Mail::Encodings do
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= test1@lindsaar.net, group: =?UTF-8?B?44GCZOOBgg==?= test2@lindsaar.net, me@lindsaar.net;'
       Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
     end
-    
+
+    it "should correctly match and encode non-usascii letters at the end of a quoted string" do
+      raw = '"Felix Baarß" <test@example.com>'
+      encoded = '=?UTF-8?B?RmVsaXggQmFhcsOf?= <test@example.com>'
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+    end
   end
 
   describe "address encoding" do
