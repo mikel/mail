@@ -103,10 +103,7 @@ module Mail
     #  preference to other places where the field could be folded, even if
     #  it is allowed elsewhere.
     def wrapped_value # :nodoc:
-      @folded_line = []
-      @unfolded_line = decoded.to_s.split(/[ \t]/)
-      fold("#{name}: ".length)
-      wrap_lines(name, @folded_line)
+      wrap_lines(name, fold("#{name}: ".length))
     end
    
     # 6.2. Display of 'encoded-word's
@@ -126,13 +123,15 @@ module Mail
     end
 
     def fold(prepend = 0) # :nodoc:
-      encoding = @charset.to_s.upcase.gsub('_', '-')
-      while !@unfolded_line.empty?
+      encoding      = charset.to_s.upcase.gsub('_', '-')
+      words         = decoded.to_s.split(/[ \t]/)
+      folded_lines  = []
+      while !words.empty?
         encoded = false
         limit = 78 - prepend
         line = ""
-        while !@unfolded_line.empty?          
-          break unless word = @unfolded_line.first.dup
+        while !words.empty?          
+          break unless word = words.first.dup
           # Remember whether it was non-ascii before we encode it ('cause then we can't tell anymore)
           non_ascii = word.not_ascii_only?
           encoded_word = encode(word)
@@ -149,20 +148,21 @@ module Mail
             limit = limit - 8 - encoding.length  # minus the =?...?Q?...?= part, the possible leading white-space, and the name of the encoding
           end
           # Remove the word from the queue ...
-          @unfolded_line.shift
+          words.shift
           # ... add it in encoded form to the current line
           line << " " unless line.empty?
           encoded_word_safify!(encoded_word) if encoded
           line << encoded_word          
         end
         # Add leading whitespace if both this and the last line were encoded, because whitespace between two encoded-words is ignored when decoding
-        line = " " + line if encoded && @folded_line.last && @folded_line.last.index('=?') == 0
+        line = " " + line if encoded && folded_lines.last && folded_lines.last.index('=?') == 0
         # Encode the line if necessary
         line = "=?#{encoding}?Q?#{line.gsub(/ /, '_')}?=" if encoded
         # Add the line to the output and reset the prepend
-        @folded_line << line
+        folded_lines << line
         prepend = 0
       end
+      folded_lines
     end
         
     def encode(value)
