@@ -18,9 +18,11 @@ module Mail
     
     include Mail::CommonField
     include Mail::Utilities
-    
+   
+    attr_accessor :charset
+    attr_reader :errors
+ 
     def initialize(name, value, charset = nil)
-      self.charset = charset
       @errors = []
       if charset
         self.charset = charset
@@ -35,21 +37,9 @@ module Mail
       self.value = value
       self
     end
-    
-    def charset
-      @charset
-    end
-    
-    def charset=(val)
-      @charset = val
-    end
-
-    def errors
-      @errors
-    end
-    
+   
     def encoded
-      do_encode(self.name)
+      do_encode
     end
     
     def decoded
@@ -66,7 +56,7 @@ module Mail
 
     private
     
-    def do_encode(name)
+    def do_encode
       value.nil? ? '' : "#{wrapped_value}\r\n"
     end
     
@@ -115,9 +105,7 @@ module Mail
     #  without having to separate 'encoded-word's where spaces occur in the
     #  unencoded text.)
     def wrap_lines(name, folded_lines)
-      result = []
-      index = 0
-      result[index] = "#{name}: #{folded_lines.shift}"
+      result = ["#{name}: #{folded_lines.shift}"]
       result.concat(folded_lines)
       result.join("\r\n\s")
     end
