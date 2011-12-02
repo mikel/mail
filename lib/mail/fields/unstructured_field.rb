@@ -123,59 +123,80 @@ module Mail
     end
 
     def fold(prepend = 0) # :nodoc:
-      encoding      = charset.to_s.upcase.gsub('_', '-')
-      words         = decoded.to_s.split(/[ \t]/)
-      folded_lines  = []
+      encoding       = normalized_encoding
+      decoded_string = decoded.to_s
+      should_encode  = decoded_string.not_ascii_only?
+      if should_encode
+        first = true
+        words = decoded_string.split(/[ \t]/).map do |word|
+          if first
+            first = !first
+          else
+            word = " " << word
+          end
+          if word.not_ascii_only?
+            word
+          else
+            word.scan(/.{7}|.+$/)
+          end
+        end.flatten
+      else
+        words = decoded_string.split(/[ \t]/)
+      end
+      
+      folded_lines   = []
       while !words.empty?
-        encoded = false
         limit = 78 - prepend
+        limit = limit - 7 - encoding.length if should_encode
         line = ""
-        while !words.empty?          
+        while !words.empty?
           break unless word = words.first.dup
-          # Remember whether it was non-ascii before we encode it ('cause then we can't tell anymore)
-          non_ascii = word.not_ascii_only?
-          encoded_word = encode(word)
+          word.encode!(charset) if defined?(Encoding) && charset
+          word = encode(word) if should_encode
+          word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit
           # Unless this is the first word, in which case we're going to add it anyway
           # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
           # (The fix, it seems, would be to use encoded-word encoding on it, because that way you can break it across multiple lines and 
           # the linebreak will be ignored)
-          break if !line.empty? && (line.length + encoded_word.length + 1 > limit)
-          # If word was the first non-ascii word, we're going to make the entire line encoded and we're going to reduce the limit accordingly
-          if non_ascii && !encoded
-            encoded = true
-            encoded_word_safify!(line)
-            limit = limit - 8 - encoding.length  # minus the =?...?Q?...?= part, the possible leading white-space, and the name of the encoding
-          end
+          break if !line.empty? && (line.length + word.length + 1 > limit)
           # Remove the word from the queue ...
           words.shift
+          # Add word separator
+          line << " " unless (line.empty? || should_encode)
           # ... add it in encoded form to the current line
-          line << " " unless line.empty?
-          encoded_word_safify!(encoded_word) if encoded
-          line << encoded_word          
+          line << word          
         end
-        # Add leading whitespace if both this and the last line were encoded, because whitespace between two encoded-words is ignored when decoding
-        line = " " + line if encoded && folded_lines.last && folded_lines.last.index('=?') == 0
         # Encode the line if necessary
-        line = "=?#{encoding}?Q?#{line.gsub(/ /, '_')}?=" if encoded
+        line = "=?#{encoding}?Q?#{line}?=" if should_encode
         # Add the line to the output and reset the prepend
         folded_lines << line
         prepend = 0
       end
       folded_lines
     end
-        
+ 
     def encode(value)
-      value.encode!(charset) if defined?(Encoding) && charset
-      (value.not_ascii_only? ? [value].pack("M").gsub("=\n", '') : value).gsub("\r", "=0D").gsub("\n", "=0A")
-    end
-    
-    def encoded_word_safify!(value)
+      value = [value].pack("M").gsub("=\n", '')
       value.gsub!(/"/,  '=22')
       value.gsub!(/\(/, '=28')
       value.gsub!(/\)/, '=29')
       value.gsub!(/\?/, '=3F')
       value.gsub!(/_/,  '=5F')
+      value.gsub!(/ /,  '_')
+      value
+    end
+
+    def encode_crlf(value)
+      value.gsub!("\r", '=0D')
+      value.gsub!("\n", '=0A')
+      value
+    end
+
+    def normalized_encoding
+      encoding = charset.to_s.upcase.gsub('_', '-')
+      encoding = 'UTF-8' if encoding == 'UTF8' # Ruby 1.8.x and $KCODE == 'u'
+      encoding
     end
 
   end

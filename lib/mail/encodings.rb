@@ -247,7 +247,7 @@ module Mail
     #  Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
-      RubyVer.q_value_decode(str).gsub(/_/, ' ')
+      RubyVer.q_value_decode(str)
     end
 
     def Encodings.split_encoding_from_string( str )
