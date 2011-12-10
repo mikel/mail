@@ -68,7 +68,7 @@ module Mail
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
-        str = Encodings::QuotedPrintable.decode(match[2])
+        str = Encodings::QuotedPrintable.decode(match[2].gsub(/_/, " "))
         str.force_encoding(fix_encoding(encoding))
       end
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")

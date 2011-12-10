@@ -136,7 +136,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long_string?=\r\n"
+      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long?=\r\n\s=?UTF8?Q?_string?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
@@ -151,7 +151,7 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "X-SMTPAPI: {\"unique_args\": {\"mailing_id\":147,\"account_id\":2}, \"to\":\r\n\s[\"larspind@gmail.com\"], \"category\": \"mailing\", \"filters\": {\"domainkeys\":\r\n\s{\"settings\": {\"domain\":1,\"enable\":1}}}, \"sub\": {\"{{open_image_url}}\":\r\n\s[\"http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient\"],\r\n\s\"{{name}}\": [\"[FIRST NAME]\"], \"{{signup_reminder}}\": [\"(her kommer til at\r\n\s=?UTF8?Q?st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n\s\"{{unsubscribe_url}}\":\r\n\s[\"http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient\"],\r\n\s\"{{email}}\": [\"larspind@gmail.com\"], \"{{link:308}}\":\r\n\s[\"http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient\"],\r\n\s\"{{confirm_url}}\": [\"\"], \"{{ref}}\": [\"[REF]\"]}}\r\n"
+      result = "X-SMTPAPI: =?UTF8?Q?{=22unique=5Fargs=22:_{=22mailing=5Fid=22:147,=22a?=\r\n =?UTF8?Q?ccount=5Fid=22:2},_=22to=22:_[=22larspind@gmail.com=22],_=22categ?=\r\n =?UTF8?Q?ory=22:_=22mailing=22,_=22filters=22:_{=22domainkeys=22:_{=22sett?=\r\n =?UTF8?Q?ings=22:_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:_{=22{{op?=\r\n =?UTF8?Q?en=5Fimage=5Furl}}=22:_[=22http://betaling.larspind.local/O?=\r\n =?UTF8?Q?/token/147/Mailing::FakeRecipient=22],_=22{{name}}=22:_[=22[FIRST?=\r\n =?UTF8?Q?_NAME]=22],_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at?=\r\n =?UTF8?Q?_st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF8?Q?_=22{{unsubscribe=5Furl}}=22:_[=22http://betaling.larspind.?=\r\n =?UTF8?Q?local/U/token/147/Mailing::FakeRecipient=22],_=22{{email}}=22:?=\r\n =?UTF8?Q?_[=22larspind@gmail.com=22],_=22{{link:308}}=22:_[=22http://beta?=\r\n =?UTF8?Q?ling.larspind.local/L/308/0/Mailing::FakeRecipient=22],_=22{{con?=\r\n =?UTF8?Q?firm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:_[=22[REF]=22]}}?=\r\n"
       @field.encoded.gsub("UTF-8", "UTF8").should == result
       @field.decoded.should == string
       $KCODE = @original if RUBY_VERSION < '1.9'
@@ -163,7 +163,7 @@ describe Mail::UnstructuredField do
     it "should encode an ascii string that has carriage returns if asked to" do
       result = "Subject: =0Aasdf=0A\r\n"
       @field = Mail::UnstructuredField.new("Subject", "\nasdf\n")
-      @field.encoded.should == "Subject: =0Aasdf=0A\r\n"
+      @field.encoded.should == result
     end
   end
 

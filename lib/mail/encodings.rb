@@ -139,7 +139,7 @@ module Mail
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
-      original_encoding, string = split_encoding_from_string( str )
+      original_encoding, _ = split_encoding_from_string( str )
 
       output = value_decode( str ).to_s
 
@@ -247,7 +247,7 @@ module Mail
     #  Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
-      RubyVer.q_value_decode(str).gsub(/_/, ' ')
+      RubyVer.q_value_decode(str)
     end
 
     def Encodings.split_encoding_from_string( str )
