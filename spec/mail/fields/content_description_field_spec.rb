@@ -24,14 +24,14 @@ describe Mail::ContentDescriptionField do
 
     it "should accept a string with the field name" do
       t = Mail::ContentDescriptionField.new('Content-Description: This is a description')
-      t.name.should == 'Content-Description'
-      t.value.should == 'This is a description'
+      t.name.should eql 'Content-Description'
+      t.value.should eql 'This is a description'
     end
 
     it "should accept a string without the field name" do
       t = Mail::ContentDescriptionField.new('This is a description')
-      t.name.should == 'Content-Description'
-      t.value.should == 'This is a description'
+      t.name.should eql 'Content-Description'
+      t.value.should eql 'This is a description'
     end
 
   end

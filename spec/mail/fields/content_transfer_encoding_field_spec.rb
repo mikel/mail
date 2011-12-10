@@ -45,24 +45,24 @@ describe Mail::ContentTransferEncodingField do
 
     it "should accept a string with the field name" do
       t = Mail::ContentTransferEncodingField.new('Content-Transfer-Encoding: 7bit')
-      t.name.should == 'Content-Transfer-Encoding'
-      t.value.should == '7bit'
+      t.name.should eql 'Content-Transfer-Encoding'
+      t.value.should eql '7bit'
     end
 
     it "should accept a string without the field name" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.name.should == 'Content-Transfer-Encoding'
-      t.value.should == '7bit'
+      t.name.should eql 'Content-Transfer-Encoding'
+      t.value.should eql '7bit'
     end
 
     it "should render an encoded field" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.encoded.should == "Content-Transfer-Encoding: 7bit\r\n"
+      t.encoded.should eql "Content-Transfer-Encoding: 7bit\r\n"
     end
 
     it "should render a decoded field" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.decoded.should == '7bit'
+      t.decoded.should eql '7bit'
     end
 
   end
@@ -72,24 +72,24 @@ describe Mail::ContentTransferEncodingField do
     it "should return an encoding string" do
       ["7bit", "8bit", "binary", 'quoted-printable', "base64"].each do |encoding|
         t = Mail::ContentTransferEncodingField.new(encoding)
-        t.encoding.should == encoding
+        t.encoding.should eql encoding
       end
     end
     
     it "should handle any valid 'x-token' value" do
       t = Mail::ContentTransferEncodingField.new('X-This-is_MY-encoding')
-      t.encoding.should == 'x-this-is_my-encoding'
+      t.encoding.should eql 'x-this-is_my-encoding'
     end
     
     it "should handle an x-encoding" do
       t = Mail::ContentTransferEncodingField.new("x-uuencode")
-      t.encoding.should == "x-uuencode"
+      t.encoding.should eql "x-uuencode"
     end
 
     it "should replace the existing value" do
       t = Mail::ContentTransferEncodingField.new("7bit")
       t.parse("quoted-printable")
-      t.encoding.should == 'quoted-printable'
+      t.encoding.should eql 'quoted-printable'
     end
 
     it "should raise an error on bogus values" do
@@ -98,14 +98,14 @@ describe Mail::ContentTransferEncodingField do
     
     it "should handle an empty content transfer encoding" do
       t = Mail::ContentTransferEncodingField.new("")
-      t.encoding.should == ""
+      t.encoding.should eql ""
     end
 
     it "should handle a hyphen" do
       t = Mail::ContentTransferEncodingField.new('7-bit')
-      t.decoded.should == '7bit'
+      t.decoded.should eql '7bit'
       t = Mail::ContentTransferEncodingField.new('8-bit')
-      t.decoded.should == '8bit'
+      t.decoded.should eql '8bit'
     end
 
   end

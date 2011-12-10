@@ -12,34 +12,34 @@ describe Mail::Address do
     end
 
     it "should allow us to instantiate an empty address object and call to_s" do
-      Mail::Address.new.to_s.should == ''
+      Mail::Address.new.to_s.should eql ''
     end
 
     it "should allow us to instantiate an empty address object and call format" do
-      Mail::Address.new.format.should == ''
+      Mail::Address.new.format.should eql ''
     end
 
     it "should allow us to instantiate an empty address object and call address" do
       [nil, '', ' '].each do |input|
-        Mail::Address.new(input).address.should == nil
+        Mail::Address.new(input).address.should eql nil
       end
     end
 
     it "should allow us to instantiate an empty address object and call local" do
       [nil, '', ' '].each do |input|
-        Mail::Address.new(input).local.should == nil
+        Mail::Address.new(input).local.should eql nil
       end
     end
 
     it "should allow us to instantiate an empty address object and call domain" do
       [nil, '', ' '].each do |input|
-        Mail::Address.new(input).domain.should == nil
+        Mail::Address.new(input).domain.should eql nil
       end
     end
 
     ['"-Earnings...Notification-" <vodacom.co.rs>', '<56253817>'].each do |spammy_address|
       it "should allow for funky spammy address #{spammy_address}" do
-        Mail::Address.new(spammy_address).address.should == nil
+        Mail::Address.new(spammy_address).address.should eql nil
       end
     end
 
@@ -47,83 +47,83 @@ describe Mail::Address do
     it "should give it's address back on :to_s if there is no display name" do
       parse_text = 'test@lindsaar.net'
       result     = 'test@lindsaar.net'
-      Mail::Address.new(parse_text).to_s.should == 'test@lindsaar.net'
+      Mail::Address.new(parse_text).to_s.should eql 'test@lindsaar.net'
     end
 
     it "should give it's format back on :to_s if there is a display name" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar <test@lindsaar.net>'
-      Mail::Address.new(parse_text).to_s.should == 'Mikel Lindsaar <test@lindsaar.net>'
+      Mail::Address.new(parse_text).to_s.should eql 'Mikel Lindsaar <test@lindsaar.net>'
     end
 
     it "should give back the display name" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar'
       a          = Mail::Address.new(parse_text)
-      a.display_name.should == result
+      a.display_name.should eql result
     end
 
     it "should preserve the display name passed in" do
       parse_text = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
       result     = 'Mikel Lindsaar'
       a          = Mail::Address.new(parse_text)
-      a.display_name.should == result
+      a.display_name.should eql result
     end
 
     it "should preserve the display name passed in with token unsafe chars" do
       parse_text = '"Mikel@@@Lindsaar" <mikel@test.lindsaar.net>'
       result     = 'Mikel@@@Lindsaar'
       a          = Mail::Address.new(parse_text)
-      a.display_name.should == result
+      a.display_name.should eql result
     end
 
     it "should give back the local part" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'test'
       a          = Mail::Address.new(parse_text)
-      a.local.should == result
+      a.local.should eql result
     end
 
     it "should give back the domain" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'lindsaar.net'
       a          = Mail::Address.new(parse_text)
-      a.domain.should == result
+      a.domain.should eql result
     end
 
     it "should give back the formated address" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar <test@lindsaar.net>'
       a          = Mail::Address.new(parse_text)
-      a.format.should == result
+      a.format.should eql result
     end
 
     it "should handle an address without a domain" do
       parse_text = 'test'
       result     = 'test'
       a          = Mail::Address.new(parse_text)
-      a.address.should == result
+      a.address.should eql result
     end
 
     it "should handle comments" do
       parse_text = "Mikel Lindsaar (author) <test@lindsaar.net>"
       result     = ['author']
       a          = Mail::Address.new(parse_text)
-      a.comments.should == result
+      a.comments.should eql result
     end
 
     it "should handle multiple comments" do
       parse_text = "Mikel (first name) Lindsaar (author) <test@lindsaar.net>"
       result     = ['first name', 'author']
       a          = Mail::Address.new(parse_text)
-      a.comments.should == result
+      a.comments.should eql result
     end
 
     it "should give back the raw value" do
       parse_text = "Mikel (first name) Lindsaar (author) <test@lindsaar.net>"
       result     = "Mikel (first name) Lindsaar (author) <test@lindsaar.net>"
       a          = Mail::Address.new(parse_text)
-      a.raw.should == result
+      a.raw.should eql result
     end
 
   end
@@ -132,27 +132,27 @@ describe Mail::Address do
     it "should allow you to assign an address" do
       a         = Mail::Address.new
       a.address = 'mikel@test.lindsaar.net'
-      a.address.should == 'mikel@test.lindsaar.net'
-      a.format.should == 'mikel@test.lindsaar.net'
+      a.address.should eql 'mikel@test.lindsaar.net'
+      a.format.should eql 'mikel@test.lindsaar.net'
     end
 
     it "should allow you to assign a display name" do
       a              = Mail::Address.new
       a.display_name = 'Mikel Lindsaar'
-      a.display_name.should == 'Mikel Lindsaar'
+      a.display_name.should eql 'Mikel Lindsaar'
     end
 
     it "should return an empty format a display name and no address defined" do
       a              = Mail::Address.new
       a.display_name = 'Mikel Lindsaar'
-      a.format.should == ''
+      a.format.should eql ''
     end
 
     it "should allow you to assign an address and a display name" do
       a              = Mail::Address.new
       a.address      = 'mikel@test.lindsaar.net'
       a.display_name = 'Mikel Lindsaar'
-      a.format.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      a.format.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
   end
 
@@ -167,7 +167,7 @@ describe Mail::Address do
 
         ].each do |(words, ok)|
           a = Mail::Address.new(words)
-          a.local.should == ok
+          a.local.should eql ok
         end
       end
 
@@ -180,7 +180,7 @@ describe Mail::Address do
 
         ].each do |(words, ok)|
           a = Mail::Address.new(%Q|me@#{words}|)
-          a.domain.should == ok
+          a.domain.should eql ok
         end
       end
     end
@@ -577,7 +577,7 @@ describe Mail::Address do
       it "should add a display name" do
         address              = Mail::Address.new
         address.display_name = "Mikel Lindsaar"
-        address.display_name.should == 'Mikel Lindsaar'
+        address.display_name.should eql 'Mikel Lindsaar'
       end
     end
 
@@ -593,21 +593,21 @@ describe Mail::Address do
     it "should add a display name" do
       address              = Mail::Address.new
       address.display_name = "Mikel Lindsaar"
-      address.display_name.should == 'Mikel Lindsaar'
+      address.display_name.should eql 'Mikel Lindsaar'
     end
 
     it "should take an address and a display name and join them" do
       address              = Mail::Address.new
       address.address      = "mikel@test.lindsaar.net"
       address.display_name = "Mikel Lindsaar"
-      address.format.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      address.format.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
 
     it "should take a display name and an address and join them" do
       address              = Mail::Address.new
       address.display_name = "Mikel Lindsaar"
       address.address      = "mikel@test.lindsaar.net"
-      address.format.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      address.format.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
 
   end
@@ -617,7 +617,7 @@ describe Mail::Address do
       address              = Mail::Address.new
       address.display_name = "Mikel Lindsaar"
       address.address      = "mikel@test.lindsaar.net"
-      address.encoded.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      address.encoded.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
 
     it "should provide an encoded output for non us-ascii" do
@@ -625,9 +625,9 @@ describe Mail::Address do
       address.display_name = "まける"
       address.address      = "mikel@test.lindsaar.net"
       if RUBY_VERSION >= '1.9'
-        address.encoded.should == '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+        address.encoded.should eql '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
       else
-        address.encoded.should == '=?UTF8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
+        address.encoded.should eql '=?UTF8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
       end
     end
 
@@ -635,7 +635,7 @@ describe Mail::Address do
       address              = Mail::Address.new
       address.display_name = "まける"
       address.address      = "mikel@test.lindsaar.net"
-      address.decoded.should == '"まける" <mikel@test.lindsaar.net>'
+      address.decoded.should eql '"まける" <mikel@test.lindsaar.net>'
     end
 
   end

@@ -34,8 +34,8 @@ describe "Mail::TestMailer" do
       body 'hello'
     end
     mail.deliver
-    Mail::TestMailer.deliveries.length.should == 1
-    Mail::TestMailer.deliveries.first.should == mail
+    Mail::TestMailer.deliveries.length.should eql 1
+    Mail::TestMailer.deliveries.first.should eql mail
   end
   
   it "should clear the deliveries when told to" do
@@ -49,7 +49,7 @@ describe "Mail::TestMailer" do
       body 'hello'
     end
     mail.deliver
-    Mail::TestMailer.deliveries.length.should == 1
+    Mail::TestMailer.deliveries.length.should eql 1
     Mail::TestMailer.deliveries.clear
     Mail::TestMailer.deliveries.should be_empty
   end

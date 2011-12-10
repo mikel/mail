@@ -20,31 +20,31 @@ describe Mail::ReferencesField do
 
   it "should accept a string with the field name" do
     t = Mail::ReferencesField.new('References: <1234@test.lindsaar.net>')
-    t.name.should == 'References'
-    t.value.should == '<1234@test.lindsaar.net>'
-    t.message_id.should == '1234@test.lindsaar.net'
+    t.name.should eql 'References'
+    t.value.should eql '<1234@test.lindsaar.net>'
+    t.message_id.should eql '1234@test.lindsaar.net'
   end
   
   it "should accept a string without the field name" do
     t = Mail::ReferencesField.new('<1234@test.lindsaar.net>')
-    t.name.should == 'References'
-    t.value.should == '<1234@test.lindsaar.net>'
-    t.message_id.should == '1234@test.lindsaar.net'
+    t.name.should eql 'References'
+    t.value.should eql '<1234@test.lindsaar.net>'
+    t.message_id.should eql '1234@test.lindsaar.net'
   end
 
   it "should accept multiple message ids" do
     t = Mail::ReferencesField.new('<1234@test.lindsaar.net> <5678@test.lindsaar.net>')
-    t.name.should == 'References'
-    t.value.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
-    t.message_id.should == '1234@test.lindsaar.net'
-    t.message_ids.should == ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
-    t.to_s.should == '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+    t.name.should eql 'References'
+    t.value.should eql '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+    t.message_id.should eql '1234@test.lindsaar.net'
+    t.message_ids.should eql ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+    t.to_s.should eql '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
   end
 
   it "should accept no message ids" do
     t = Mail::ReferencesField.new('')
-    t.name.should == 'References'
-    t.decoded.should == nil
+    t.name.should eql 'References'
+    t.decoded.should eql nil
   end
 
 end
