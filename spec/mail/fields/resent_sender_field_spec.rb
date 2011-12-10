@@ -17,14 +17,14 @@ describe Mail::ResentSenderField do
 
     it "should accept a string with the field name" do
       t = Mail::ResentSenderField.new('Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Resent-Sender'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eql 'Resent-Sender'
+      t.value.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Resent-Sender'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eql 'Resent-Sender'
+      t.value.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
   end
@@ -34,22 +34,22 @@ describe Mail::ResentSenderField do
   describe "instance methods" do
     it "should return an address" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.formatted.should == ['Mikel Lindsaar <mikel@test.lindsaar.net>']
+      t.formatted.should eql ['Mikel Lindsaar <mikel@test.lindsaar.net>']
     end
 
     it "should return two addresses" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.address.to_s.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.address.to_s.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the formatted line on to_s" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.value.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the encoded line" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.encoded.should == "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
+      t.encoded.should eql "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
     end
     
   end

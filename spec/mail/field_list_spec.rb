@@ -14,10 +14,10 @@ describe Mail::FieldList do
     fl << Mail::Field.new("From: mikel@me.com")
     fl << Mail::Field.new("Received: from xxx.xxxx.xxx by xxx.xxxx.xxx with ESMTP id 6AAEE3B4D23 for <xxx@xxxx.xxx>; Sun, 8 May 2005 12:30:23 -0500")
     fl << Mail::Field.new("Return-Path: mikel@me.com")
-    fl[0].field.class.should == Mail::ReturnPathField
-    fl[1].field.class.should == Mail::ReceivedField
-    fl[2].field.class.should == Mail::FromField
-    fl[3].field.class.should == Mail::ToField
+    fl[0].field.class.should eql Mail::ReturnPathField
+    fl[1].field.class.should eql Mail::ReceivedField
+    fl[2].field.class.should eql Mail::FromField
+    fl[3].field.class.should eql Mail::ToField
   end
   
   it "should add new Received items after the existing ones" do

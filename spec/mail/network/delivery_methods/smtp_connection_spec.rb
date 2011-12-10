@@ -21,9 +21,9 @@ describe "SMTP Delivery Method" do
       subject 'invalid RFC2822'
     end
 
-    MockSMTP.deliveries[0][0].should == mail.encoded
-    MockSMTP.deliveries[0][1].should == mail.from[0]
-    MockSMTP.deliveries[0][2].should == mail.destinations    
+    MockSMTP.deliveries[0][0].should eql mail.encoded
+    MockSMTP.deliveries[0][1].should eql mail.from[0]
+    MockSMTP.deliveries[0][2].should eql mail.destinations    
   end
   
   it "should be able to return actual SMTP protocol response" do

@@ -18,15 +18,15 @@ describe Mail::Encodings do
     end
   
     it "should return the Base64 Encoding class" do
-      Mail::Encodings.get_encoding('Base64').should == Mail::Encodings::Base64
+      Mail::Encodings.get_encoding('Base64').should eql Mail::Encodings::Base64
     end
   
     it "should return the base64 Encoding class" do
-      Mail::Encodings.get_encoding('base64').should == Mail::Encodings::Base64
+      Mail::Encodings.get_encoding('base64').should eql Mail::Encodings::Base64
     end
   
     it "should return the base64 Encoding class" do
-      Mail::Encodings.get_encoding(:base64).should == Mail::Encodings::Base64
+      Mail::Encodings.get_encoding(:base64).should eql Mail::Encodings::Base64
     end
 
   end
@@ -46,15 +46,15 @@ describe Mail::Encodings do
     end
   
     it "should return the QuotedPrintable Encoding class" do
-      Mail::Encodings.get_encoding('quoted-printable').should == Mail::Encodings::QuotedPrintable
+      Mail::Encodings.get_encoding('quoted-printable').should eql Mail::Encodings::QuotedPrintable
     end
   
     it "should return the QuotedPrintable Encoding class" do
-      Mail::Encodings.get_encoding('Quoted-Printable').should == Mail::Encodings::QuotedPrintable
+      Mail::Encodings.get_encoding('Quoted-Printable').should eql Mail::Encodings::QuotedPrintable
     end
   
     it "should return the QuotedPrintable Encoding class" do
-      Mail::Encodings.get_encoding(:quoted_printable).should == Mail::Encodings::QuotedPrintable
+      Mail::Encodings.get_encoding(:quoted_printable).should eql Mail::Encodings::QuotedPrintable
     end
 
   end
@@ -80,11 +80,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.b_value_encode(string).should == "This is a string"
+        Mail::Encodings.b_value_encode(string).should eql "This is a string"
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.b_value_encode(string, encoding).should == "This is a string"
+        Mail::Encodings.b_value_encode(string, encoding).should eql "This is a string"
       end
     end
     
@@ -92,11 +92,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is あ string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.b_value_encode(string).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+        Mail::Encodings.b_value_encode(string).should eql '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       else
         string = "This is あ string"
         encoding = 'UTF-8'
-        Mail::Encodings.b_value_encode(string, encoding).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+        Mail::Encodings.b_value_encode(string, encoding).should eql '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       end
     end
 
@@ -116,11 +116,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.b_value_encode(string).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
+        Mail::Encodings.b_value_encode(string).should eql '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       else
         string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
         encoding = 'UTF-8'
-        Mail::Encodings.b_value_encode(string, encoding).should == '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
+        Mail::Encodings.b_value_encode(string, encoding).should eql '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       end
     end
 
@@ -128,14 +128,14 @@ describe Mail::Encodings do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should decode a long encoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       result = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
   end
@@ -161,11 +161,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is a string"
         string = string.force_encoding('US-ASCII')
-        Mail::Encodings.q_value_encode(string).should == "This is a string"
+        Mail::Encodings.q_value_encode(string).should eql "This is a string"
       else
         string = "This is a string"
         encoding = 'US-ASCII'
-        Mail::Encodings.q_value_encode(string, encoding).should == "This is a string"
+        Mail::Encodings.q_value_encode(string, encoding).should eql "This is a string"
       end
     end
     
@@ -185,11 +185,11 @@ describe Mail::Encodings do
       if RUBY_VERSION >= "1.9.1"
         string = "This is あ string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.q_value_encode(string).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+        Mail::Encodings.q_value_encode(string).should eql '=?UTF-8?Q?This_is_=E3=81=82_string?='
       else
         string = "This is あ string"
         encoding = 'UTF-8'
-        Mail::Encodings.q_value_encode(string, encoding).should == '=?UTF-8?Q?This_is_=E3=81=82_string?='
+        Mail::Encodings.q_value_encode(string, encoding).should eql '=?UTF-8?Q?This_is_=E3=81=82_string?='
       end
     end
 
@@ -197,14 +197,14 @@ describe Mail::Encodings do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
     
     it "should detect a q encoded string and decode it" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should not fold a long string that has no spaces" do
@@ -217,8 +217,8 @@ describe Mail::Encodings do
       end
       mail = Mail.new
       mail.subject = original
-      mail[:subject].decoded.should == original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+      mail[:subject].decoded.should eql original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eql result
     end
 
     it "should round trip a complex string properly" do
@@ -229,14 +229,14 @@ describe Mail::Encodings do
       result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n =?UTF8?Q?_This_is_a_NUT=3F=3F=3F=3F=3FZ=5F=5Fstring_that=3D=3D_could?=\r\n =?UTF8?Q?_=28break=29_anything?=\r\n"
       mail = Mail.new
       mail.subject = original
-      mail[:subject].decoded.should == original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+      mail[:subject].decoded.should eql original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eql result
       mail = Mail.new(mail.encoded)
-      mail[:subject].decoded.should == original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+      mail[:subject].decoded.should eql original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eql result
       mail = Mail.new(mail.encoded)
-      mail[:subject].decoded.should == original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should == result
+      mail[:subject].decoded.should eql original
+      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eql result
     end
     
     it "should round trip another complex string (koi-8)" do
@@ -247,7 +247,7 @@ describe Mail::Encodings do
       mail[:subject].charset = 'koi8-r'
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
-      unwrapped.gsub("Subject: ", "").should == original
+      unwrapped.gsub("Subject: ", "").should eql original
     end
   end
   
@@ -289,54 +289,54 @@ describe Mail::Encodings do
     it "should leave an unencoded string alone" do
       string = "this isn't encoded"
       result = "this isn't encoded"
-      Mail::Encodings.param_decode(string, 'us-ascii').should == result
+      Mail::Encodings.param_decode(string, 'us-ascii').should eql result
     end
     
     it "should unencode an encoded string" do
       string = "This%20is%20even%20more%20"
       result = "This is even more "
       result.force_encoding('us-ascii') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.param_decode(string, 'us-ascii').should == result
+      Mail::Encodings.param_decode(string, 'us-ascii').should eql result
     end
     
     it "should unencoded an encoded string and return the right charset on 1.9" do
       string = "This%20is%20even%20more%20"
       result = "This is even more "
       result.force_encoding('us-ascii') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.param_decode(string, 'us-ascii').should == result
+      Mail::Encodings.param_decode(string, 'us-ascii').should eql result
     end
     
     it "should unencode a complete string that included unencoded parts" do
       string = "This%20is%20even%20more%20%2A%2A%2Afun%2A%2A%2A%20isn't it"
       result = "This is even more ***fun*** isn't it"
       result.force_encoding('iso-8859-1') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.param_decode(string, 'iso-8859-1').should == result
+      Mail::Encodings.param_decode(string, 'iso-8859-1').should eql result
     end
     
     it "should encode a string" do
       string = "This is  あ string"
       if RUBY_VERSION >= '1.9'
-        Mail::Encodings.param_encode(string).should == "utf-8'en'This%20is%20%20%E3%81%82%20string"
+        Mail::Encodings.param_encode(string).should eql "utf-8'en'This%20is%20%20%E3%81%82%20string"
       else
-        Mail::Encodings.param_encode(string).should == "utf8'en'This%20is%20%20%E3%81%82%20string"
+        Mail::Encodings.param_encode(string).should eql "utf8'en'This%20is%20%20%E3%81%82%20string"
       end
     end
 
     it "should just quote US-ASCII with spaces" do
       string = "This is even more"
       if RUBY_VERSION >= '1.9'
-        Mail::Encodings.param_encode(string).should == '"This is even more"'
+        Mail::Encodings.param_encode(string).should eql '"This is even more"'
       else
-        Mail::Encodings.param_encode(string).should == '"This is even more"'
+        Mail::Encodings.param_encode(string).should eql '"This is even more"'
       end
     end
 
     it "should leave US-ASCII without spaces alone" do
       string = "fun"
       if RUBY_VERSION >= '1.9'
-        Mail::Encodings.param_encode(string).should == 'fun'
+        Mail::Encodings.param_encode(string).should eql 'fun'
       else
-        Mail::Encodings.param_encode(string).should == 'fun'
+        Mail::Encodings.param_encode(string).should eql 'fun'
       end
     end
     
@@ -348,96 +348,96 @@ describe Mail::Encodings do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a multiple encoded Base64 string to the decoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?==?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a multiple encoded Base64 string with a space to the decoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a multiple encoded Base64 string with a whitespace to the decoded string" do
       string = "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\s=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should decode B and Q encodings together if needed" do
       string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
       result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a encoded and unencoded Base64 string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
       result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect an encoded QP string to the decoded string" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect multiple encoded QP string to the decoded string" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect multiple encoded QP string with a space to the decoded string" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?= =?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect multiple encoded QP string with a space to the decoded string" do
       string = "=?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\s=?UTF-8?Q?This_is_=E3=81=82_string?="
       result = "This is あ stringThis is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a encoded and unencoded QP string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\sMore non encoded stuff"
       result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should detect a plain string and return it" do
       string = 'This is あ string'
       result = "This is あ string"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
 
     it "should handle a very long string efficiently" do
       string = "This is a string " * 10000
-      Mail::Encodings.value_decode(string).should == string
+      Mail::Encodings.value_decode(string).should eql string
     end
 
     it "should handle Base64 encoded ISO-2022-JP string" do
       pending
       string = "ISO-2022-JP =?iso-2022-jp?B?GyRCJCQkPSRLITwkXiRrJEskSyE8JDgkJyQkJFQhPBsoQg==?="
       result = "ISO-2022-JP いそにーまるににーじぇいぴー"
-      Mail::Encodings.value_decode(string).should == result
+      Mail::Encodings.value_decode(string).should eql result
     end
   end
   
@@ -461,7 +461,7 @@ describe Mail::Encodings do
         else
           $KCODE = 'UTF-8'
         end
-        Mail::Encodings.decode_encode(string, :decode).should == result
+        Mail::Encodings.decode_encode(string, :decode).should eql result
       end
 
       it "should detect an encoded QP string and return the decoded string" do
@@ -472,7 +472,7 @@ describe Mail::Encodings do
         else
           $KCODE = 'UTF-8'
         end
-        Mail::Encodings.decode_encode(string, :decode).should == result
+        Mail::Encodings.decode_encode(string, :decode).should eql result
       end
 
       it "should detect an a string is already decoded and leave it alone" do
@@ -483,7 +483,7 @@ describe Mail::Encodings do
         else
           $KCODE = 'UTF-8'
         end
-        Mail::Encodings.decode_encode(string, :decode).should == result
+        Mail::Encodings.decode_encode(string, :decode).should eql result
       end
 
     end
@@ -499,7 +499,7 @@ describe Mail::Encodings do
           result = '=?UTF8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
           $KCODE = 'UTF-8'
         end
-        Mail::Encodings.decode_encode(string, :encode).should == result
+        Mail::Encodings.decode_encode(string, :encode).should eql result
       end
 
       it "should leave a string that doesn't need encoding alone" do
@@ -510,7 +510,7 @@ describe Mail::Encodings do
         else
           $KCODE = 'UTF-8'
         end
-        Mail::Encodings.decode_encode(string, :encode).should == result
+        Mail::Encodings.decode_encode(string, :encode).should eql result
       end
 
     end
@@ -519,31 +519,31 @@ describe Mail::Encodings do
       it "should unquote quoted printable and convert to utf-8" do
         a ="=?ISO-8859-1?Q?[166417]_Bekr=E6ftelse_fra_Rejsefeber?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "[166417] Bekr\303\246ftelse fra Rejsefeber"
+        b.should eql "[166417] Bekr\303\246ftelse fra Rejsefeber"
       end
 
       it "should unquote base64 and convert to utf-8" do
         a ="=?ISO-8859-1?B?WzE2NjQxN10gQmVrcuZmdGVsc2UgZnJhIFJlanNlZmViZXI=?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "[166417] Bekr\303\246ftelse fra Rejsefeber"
+        b.should eql "[166417] Bekr\303\246ftelse fra Rejsefeber"
       end
 
       it "should handle no charset" do
         a ="[166417]_Bekr=E6ftelse_fra_Rejsefeber"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "[166417]_Bekr=E6ftelse_fra_Rejsefeber"
+        b.should eql "[166417]_Bekr=E6ftelse_fra_Rejsefeber"
       end
 
       it "should unquote multiple lines" do
         a ="=?utf-8?q?Re=3A_=5B12=5D_=23137=3A_Inkonsistente_verwendung_von_=22Hin?==?utf-8?b?enVmw7xnZW4i?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "Re: [12] #137: Inkonsistente verwendung von \"Hinzuf\303\274gen\""
+        b.should eql "Re: [12] #137: Inkonsistente verwendung von \"Hinzuf\303\274gen\""
       end
 
       it "should unquote a string in the middle of the text" do
         a ="Re: Photos =?ISO-8859-1?Q?Brosch=FCre_Rand?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "Re: Photos Brosch\303\274re Rand"
+        b.should eql "Re: Photos Brosch\303\274re Rand"
       end
 
       it "should unquote and change to an ISO encoding if we really want" do
@@ -551,13 +551,13 @@ describe Mail::Encodings do
         b = Mail::Encodings.unquote_and_convert_to(a, 'iso-8859-1')
         expected = "Brosch\374re Rand"
         expected.force_encoding('iso-8859-1').encode!('utf-8') if expected.respond_to?(:force_encoding)
-        b.should == expected
+        b.should eql expected
       end
 
       it "should unquote multiple strings in the middle of the text" do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        b.should == "日本語 <a@example.com>, 日本語 <b@example.com>"
+        b.should eql "日本語 <a@example.com>, 日本語 <b@example.com>"
       end      
     end
   end
@@ -566,19 +566,19 @@ describe Mail::Encodings do
     it "should handle underscores in the text" do
       expected = 'something_with_underscores'
       encoded = [expected].pack('*M')
-      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
+      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should eql expected
     end
 
     it "should handle underscores in the text" do
       expected = 'something with_underscores'
       encoded = [expected].pack('*M')
-      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
+      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should eql expected
     end
 
     it "should keep the underscores in the text" do
       expected = 'something_with_underscores'
       encoded = Mail::Encodings.get_encoding(:quoted_printable).encode(expected)
-      Mail::Encodings.get_encoding(:quoted_printable).decode(encoded).should == expected
+      Mail::Encodings.get_encoding(:quoted_printable).decode(encoded).should eql expected
     end
 
     it "should handle a new line in the text" do
@@ -588,7 +588,7 @@ describe Mail::Encodings do
         expected = "\nRe: ol\341"
       end
       encoded = "=?ISO-8859-1?Q?\nRe=3A_ol=E1?="
-      Mail::Encodings.value_decode(encoded).should == expected
+      Mail::Encodings.value_decode(encoded).should eql expected
     end
 
   end
@@ -596,49 +596,49 @@ describe Mail::Encodings do
   describe "pre encoding non usascii text" do
     it "should not change an ascii string" do
       raw     = 'mikel@test.lindsaar.net'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == raw
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql raw
     end
 
     it "should encode a display that contains non usascii" do
       raw     = 'Lindsああr <mikel@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode a display that contains non usascii with quotes as no quotes" do
       raw     = '"Lindsああr" <mikel@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode a display name with us-ascii and non-usascii parts" do
       raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>'
       encoded = 'Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode a display name with us-ascii and non-usascii parts ignoring quotes" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode multiple addresses correctly" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>, "あdあ" <ada@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode multiple unquoted addresses correctly" do
       raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>, あdあ <ada@test.lindsaar.net>'
       encoded = 'Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
 
     it "should encode multiple un bracketed addresses and groups correctly" do
       raw     = '"Mikel Lindsああr" test1@lindsaar.net, group: "あdあ" test2@lindsaar.net, me@lindsaar.net;'
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= test1@lindsaar.net, group: =?UTF-8?B?44GCZOOBgg==?= test2@lindsaar.net, me@lindsaar.net;'
-      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should == encoded
+      Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eql encoded
     end
     
   end
@@ -647,37 +647,37 @@ describe Mail::Encodings do
     it "should not do anything to a plain address" do
       raw     = 'mikel@test.lindsaar.net'
       encoded = 'mikel@test.lindsaar.net'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
     it "should encode an address correctly" do
       raw     = '"Mikel Lindsああr" <mikel@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
     it "should encode multiple addresses correctly" do
       raw     = ['"Mikel Lindsああr" <mikel@test.lindsaar.net>', '"あdあ" <ada@test.lindsaar.net>']
       encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
     it "should handle a single ascii address correctly from a string" do
       raw     = ['"Mikel Lindsaar" <mikel@test.lindsaar.net>']
       encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
     it "should handle multiple ascii addresses correctly from a string" do
       raw     = 'Mikel Lindsaar <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
       encoded = 'Mikel Lindsaar <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
     it "should handle ascii addresses correctly as an array" do
       raw     = ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'Ada <ada@test.lindsaar.net>']
       encoded = 'Mikel Lindsaar <mikel@test.lindsaar.net>, Ada <ada@test.lindsaar.net>'
-      Mail::Encodings.address_encode(raw, 'utf-8').should == encoded
+      Mail::Encodings.address_encode(raw, 'utf-8').should eql encoded
     end
 
   end

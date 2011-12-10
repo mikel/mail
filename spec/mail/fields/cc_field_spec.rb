@@ -20,14 +20,14 @@ describe Mail::CcField do
 
     it "should accept a string with the field name" do
       t = Mail::CcField.new('Cc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Cc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eql 'Cc'
+      t.value.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Cc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eql 'Cc'
+      t.value.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
   end
@@ -37,40 +37,40 @@ describe Mail::CcField do
   describe "instance methods" do
     it "should return an address" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.formatted.should == ['Mikel Lindsaar <mikel@test.lindsaar.net>']
+      t.formatted.should eql ['Mikel Lindsaar <mikel@test.lindsaar.net>']
     end
 
     it "should return two addresses" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, Ada Lindsaar <ada@test.lindsaar.net>')
-      t.formatted.first.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-      t.addresses.last.should == 'ada@test.lindsaar.net'
+      t.formatted.first.should eql 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.addresses.last.should eql 'ada@test.lindsaar.net'
     end
 
     it "should return one address and a group" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.addresses[0].should == 'sam@me.com'
-      t.addresses[1].should == 'mikel@me.com'
-      t.addresses[2].should == 'bob@you.com'
+      t.addresses[0].should eql 'sam@me.com'
+      t.addresses[1].should eql 'mikel@me.com'
+      t.addresses[2].should eql 'bob@you.com'
     end
     
     it "should return the formatted line on to_s" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      t.value.should eql 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
     it "should return the encoded line for one address" do
       t = Mail::CcField.new('sam@me.com')
-      t.encoded.should == "Cc: sam@me.com\r\n"
+      t.encoded.should eql "Cc: sam@me.com\r\n"
     end
     
     it "should return the encoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == "Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
+      t.encoded.should eql "Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
     
     it "should return the decoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
+      t.decoded.should eql "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

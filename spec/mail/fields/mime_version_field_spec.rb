@@ -88,14 +88,14 @@ describe Mail::MimeVersionField do
 
     it "should accept a string with the field name" do
       t = Mail::MimeVersionField.new('Mime-Version: 1.0')
-      t.name.should == 'Mime-Version'
-      t.value.should == '1.0'
+      t.name.should eql 'Mime-Version'
+      t.value.should eql '1.0'
     end
 
     it "should accept a string without the field name" do
       t = Mail::MimeVersionField.new('1.0')
-      t.name.should == 'Mime-Version'
-      t.value.should == '1.0'
+      t.name.should eql 'Mime-Version'
+      t.value.should eql '1.0'
     end
 
   end
@@ -103,47 +103,47 @@ describe Mail::MimeVersionField do
   describe "parsing a version string" do
     it "should get a major value" do
       t = Mail::MimeVersionField.new('1.0')
-      t.major.should == 1
+      t.major.should eql 1
     end
 
     it "should get a minor value" do
       t = Mail::MimeVersionField.new('1.0')
-      t.minor.should == 0
+      t.minor.should eql 0
     end
 
     it "should get a version string" do
       t = Mail::MimeVersionField.new('1.0')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
     
     it "should handle comments before the major version" do
       t = Mail::MimeVersionField.new('(This is a comment) 1.0')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
 
     it "should handle comments before the major version without space" do
       t = Mail::MimeVersionField.new('(This is a comment)1.0')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
 
     it "should handle comments after the major version without space" do
       t = Mail::MimeVersionField.new('1(This is a comment).0')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
 
     it "should handle comments before the minor version without space" do
       t = Mail::MimeVersionField.new('1.(This is a comment)0')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
 
     it "should handle comments after the minor version without space" do
       t = Mail::MimeVersionField.new('1.0(This is a comment)')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
 
     it "should handle comments after the minor version" do
       t = Mail::MimeVersionField.new('1.0 (This is a comment)')
-      t.version.should == '1.0'
+      t.version.should eql '1.0'
     end
     
     it "should accept nil as a value" do
@@ -153,12 +153,12 @@ describe Mail::MimeVersionField do
     
     it "should provide an encoded value" do
       t = Mail::MimeVersionField.new('1.0 (This is a comment)')
-      t.encoded.should == "Mime-Version: 1.0\r\n"
+      t.encoded.should eql "Mime-Version: 1.0\r\n"
     end
 
     it "should provide an decoded value" do
       t = Mail::MimeVersionField.new('1.0 (This is a comment)')
-      t.decoded.should == '1.0'
+      t.decoded.should eql '1.0'
     end
 
   end

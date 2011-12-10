@@ -11,14 +11,14 @@ describe Mail::CommentsField do
 
   it "should accept a string with the field name" do
     t = Mail::CommentsField.new('Comments: this is a comment')
-    t.name.should == 'Comments'
-    t.value.should == 'this is a comment'
+    t.name.should eql 'Comments'
+    t.value.should eql 'this is a comment'
   end
 
   it "should accept a string with the field name" do
     t = Mail::CommentsField.new('this is a comment')
-    t.name.should == 'Comments'
-    t.value.should == 'this is a comment'
+    t.name.should eql 'Comments'
+    t.value.should eql 'this is a comment'
   end
   
   

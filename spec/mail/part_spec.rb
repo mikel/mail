@@ -15,7 +15,7 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
-    part.content_id.should == "<thisis@acontentid>"
+    part.content_id.should eql "<thisis@acontentid>"
   end
   
   it "should return an inline content_id" do
@@ -23,9 +23,9 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
-    part.cid.should == "thisis@acontentid"
+    part.cid.should eql "thisis@acontentid"
     STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
-    part.inline_content_id.should == "thisis@acontentid"
+    part.inline_content_id.should eql "thisis@acontentid"
   end
   
   
@@ -34,9 +34,9 @@ describe Mail::Part do
       content_id "<thi%%sis@acontentid>"
       body "This is Text"
     end
-    part.cid.should == "thi%25%25sis@acontentid"
+    part.cid.should eql "thi%25%25sis@acontentid"
     STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
-    part.inline_content_id.should == "thi%25%25sis@acontentid"
+    part.inline_content_id.should eql "thi%25%25sis@acontentid"
   end
   
   it "should add a content_id if there is none and is asked for an inline_content_id" do
@@ -117,23 +117,23 @@ ENDPART
     end
     
     it "should say action 'delayed'" do
-      @delivery_report.action.should == 'failed'
+      @delivery_report.action.to_s.should eql 'failed'
     end
     
     it "should give a final recipient" do
-      @delivery_report.final_recipient.should == 'RFC822; edwin@zzzzzzz.com'
+      @delivery_report.final_recipient.to_s.should eql 'RFC822; edwin@zzzzzzz.com'
     end
     
     it "should give an error code" do
-      @delivery_report.error_status.should == '5.3.0'
+      @delivery_report.error_status.to_s.should eql '5.3.0'
     end
     
     it "should give a diagostic code" do
-      @delivery_report.diagnostic_code.should == 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
+      @delivery_report.diagnostic_code.to_s.should eql 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
     end
     
     it "should give a remote-mta" do
-      @delivery_report.remote_mta.should == 'DNS; mail.zzzzzz.com'
+      @delivery_report.remote_mta.to_s.should eql 'DNS; mail.zzzzzz.com'
     end
     
     it "should be retryable" do
@@ -146,8 +146,8 @@ ENDPART
     plain_text = "First Line\n\nSecond Line\n\nThird Line\n\n"
     #Note: trailing \n\n is stripped off by Mail::Part initialization
     part = Mail::Part.new(plain_text)
-    part[:content_type].content_type.should == 'text/plain'
-    part.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+    part[:content_type].content_type.should eql 'text/plain'
+    part.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
   end
 
 end
