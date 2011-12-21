@@ -52,6 +52,11 @@ describe Mail::Message do
       doing { Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'basic_email.eml'))) }.should_not raise_error
     end
 
+    it "should be able to parse an email with @ in display name" do
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_with_at_display_name.eml')))
+      message.to.should == ["smith@gmail.com", "raasdnil@gmail.com", "tom@gmail.com"]
+    end
+
     it "should be able to parse an email with only blank lines as body" do
       doing { Mail::Message.new(File.read(fixture('emails', 'error_emails', 'missing_body.eml'))) }.should_not raise_error
     end
