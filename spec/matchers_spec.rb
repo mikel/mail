@@ -31,6 +31,7 @@ describe "have_sent_email" do
   context "without any modifiers" do
     context "when no e-mail has been sent" do
       before(:each) do
+        Mail::TestMailer.deliveries.clear
         Mail::TestMailer.deliveries.should be_empty
       end
 
