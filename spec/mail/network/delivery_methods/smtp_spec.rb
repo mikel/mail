@@ -13,7 +13,10 @@ describe "SMTP Delivery Method" do
                                :password             => nil,
                                :authentication       => nil,
                                :enable_starttls_auto => true,
-                               :openssl_verify_mode  => nil }
+                               :openssl_verify_mode  => nil,
+                               :tls                  => nil,
+                               :ssl                  => nil
+                                }
     end
     MockSMTP.clear_deliveries
   end
@@ -94,6 +97,47 @@ describe "SMTP Delivery Method" do
       redefine_verify_none(0)
       Mail.defaults do
         delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      doing { mail.deliver! }.should_not raise_error(TypeError)
+    end
+  end
+  
+  describe "enabling ssl" do
+    def redefine_verify_none(new_value)
+      OpenSSL::SSL.send(:remove_const, :VERIFY_NONE)
+      OpenSSL::SSL.send(:const_set, :VERIFY_NONE, new_value)
+    end
+    
+    it "should use OpenSSL::SSL::VERIFY_NONE if a context" do
+
+      # config can't be setup until redefined
+      redefine_verify_none(OpenSSL::SSL::SSLContext.new)
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :tls => true
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      doing { mail.deliver! }.should_not raise_error(TypeError)
+    end
+    
+    it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
+
+      # config can't be setup until redefined
+      redefine_verify_none(0)
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :tls => true
       end
 
       mail = Mail.deliver do
