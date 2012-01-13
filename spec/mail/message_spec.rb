@@ -126,7 +126,7 @@ describe Mail::Message do
         @smtp_settings = { :address=>"smtp.somewhere.net",
           :port=>"587", :domain=>"somewhere.net", :user_name=>"someone@somewhere.net",
           :password=>"password", :authentication=>:plain, :enable_starttls_auto => true,
-          :openssl_verify_mode => nil }
+          :openssl_verify_mode => nil, :ssl=>nil, :tls=>nil }
         @yaml_mail.delivery_method :smtp, @smtp_settings
       end
 
