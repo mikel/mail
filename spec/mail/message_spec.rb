@@ -1235,6 +1235,12 @@ describe Mail::Message do
   describe "helper methods" do
 
     describe "==" do
+      before(:each) do
+        # Ensure specs don't randomly fail due to messages being generated 1 second apart
+        time = Time.now
+        Time.should_receive(:now).twice.and_return(time)
+      end
+
       it "should be implemented" do
         doing { Mail.new == Mail.new }.should_not raise_error
       end
