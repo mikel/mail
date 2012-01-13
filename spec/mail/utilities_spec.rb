@@ -315,12 +315,13 @@ describe "Utilities Module" do
   end
 
   describe "url escaping" do
+    uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+
     it "should have a wrapper on URI.escape" do
-      uri_escape("@?@!").should == URI.escape("@?@!")
+      uri_escape("@?@!").should == uri_parser.escape("@?@!")
     end
 
     it "should have a wrapper on URI.unescape" do
-      uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
       uri_unescape("@?@!").should == uri_parser.unescape("@?@!")
     end
   end
