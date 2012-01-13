@@ -221,6 +221,10 @@ class MockIMAP
     @@mailbox = mailbox
   end
 
+  def examine(mailbox)
+    select(mailbox)
+  end
+
   def uid_search(keys, charset=nil)
     [*(0..@@examples.size - 1)]
   end
