@@ -614,7 +614,11 @@ describe Mail::ContentTypeField do
       end
       c = Mail::ContentTypeField.new('application/octet-stream')
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
-      if RUBY_VERSION >= '1.9'
+      case 
+      when RUBY_VERSION >= '1.9.3'
+        string.force_encoding('SJIS')
+        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=windows-31j'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
+      when RUBY_VERSION >= '1.9'
         string.force_encoding('SJIS')
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       else
