@@ -10,7 +10,7 @@ module Mail
   #
   # A Message object by default has the following objects inside it:
   #
-  # * A Header object which contians all information and settings of the header of the email
+  # * A Header object which contains all information and settings of the header of the email
   # * Body object which contains all parts of the email that are not part of the header, this
   #   includes any attachments, body text, MIME parts etc.
   #
