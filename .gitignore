@@ -12,3 +12,4 @@ spec/fixtures/emails/failed_emails/
 .idea
 tmp
 tags
+.rbx
