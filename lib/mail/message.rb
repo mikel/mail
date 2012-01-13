@@ -1711,19 +1711,39 @@ module Mail
       buffer
     end
 
-    def to_yaml
-      ready_to_send!
+    def to_yaml(opts = {})
       hash = {}
+      hash['headers'] = {}
       header.fields.each do |field|
-        hash[field.name] = field.value
+        hash['headers'][field.name] = field.value
       end
-      hash['subject'] = subject
-      hash['body'] = body.encoded(content_transfer_encoding)
-      hash.to_yaml
+      hash['delivery_handler'] = delivery_handler.to_s if delivery_handler
+      hash['transport_encoding'] = transport_encoding.to_s
+      special_variables = [:@header, :@delivery_handler, :@transport_encoding]
+      (instance_variables.map(&:to_sym) - special_variables).each do |var|
+        hash[var.to_s] = instance_variable_get(var)
+      end
+      hash.to_yaml(opts)
     end
 
     def self.from_yaml(str)
-      from_hash(YAML::load(str))
+      hash = YAML.load(str)
+      m = Mail::Message.new(:headers => hash['headers'])
+      hash.delete('headers')
+      hash.each do |k,v|
+        case
+        when k == 'delivery_handler'
+          begin
+            m.delivery_handler = Object.const_get(v) unless v.blank?
+          rescue NameError
+          end
+        when k == 'transport_encoding'
+          m.transport_encoding(v)
+        when k =~ /^@/
+          m.instance_variable_set(k.to_sym, v)
+        end
+      end
+      m
     end
 
     def self.from_hash(hash)
