@@ -26,6 +26,10 @@ module Mail
       raise NoMethodError, "#collect! is not defined, please call #collect and create a new PartsList"
     end
 
+    def sort
+      self.class.new(super)
+    end
+
     def sort!(order)
       sorted = self.sort do |a, b|
         # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
