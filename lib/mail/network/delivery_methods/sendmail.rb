@@ -45,7 +45,7 @@ module Mail
 
     def deliver!(mail)
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
-      return_path = "-f \"#{envelope_from.to_s.shellescape}\"" if envelope_from
+      return_path = "-f \"#{envelope_from.to_s.gsub('"', '\"')}\"" if envelope_from
 
       arguments = [settings[:arguments], return_path].compact.join(" ")
 
