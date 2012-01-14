@@ -258,6 +258,14 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
+Exim requires it's own delivery manager, and can be used like so:
+
+```ruby
+mail.delivery_method :exim, :location => "/usr/bin/exim"
+
+mail.deliver
+```
+
 ### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
@@ -340,7 +348,7 @@ content type and has a boundary defined.
 ### Testing and extracting attachments
 ```ruby
 mail.attachments.each do | attachment |
-  # Attachments is an AttachmentsList object containing a 
+  # Attachments is an AttachmentsList object containing a
   # number of Part objects
   if (attachment.content_type.start_with?('image/'))
     # extracting images for example...
@@ -522,7 +530,7 @@ end
 @round_tripped_mail.attachments.length #=> 1
 @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 ```
-See "Testing and extracting attachments" above for more details. 
+See "Testing and extracting attachments" above for more details.
 
 Using Mail with Testing or Spec'ing Libraries
 ---------------------------------------------
@@ -581,13 +589,13 @@ describe "sending an email" do
   it { should have_sent_email.to('mike1@me.com') }
 
   # can specify a list of recipients...
-  it { should have_sent_email.to(['mike1@me.com', 'mike2@me.com']) } 
+  it { should have_sent_email.to(['mike1@me.com', 'mike2@me.com']) }
 
   # ...or chain recipients together
-  it { should have_sent_email.to('mike1@me.com').to('mike2@me.com') } 
+  it { should have_sent_email.to('mike1@me.com').to('mike2@me.com') }
 
   it { should have_sent_email.with_subject('testing') }
-    
+
   it { should have_sent_email.with_body('hello') }
 
   # Can match subject or body with a regex

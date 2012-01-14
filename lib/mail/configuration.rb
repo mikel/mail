@@ -5,10 +5,10 @@
 require 'singleton'
 
 module Mail
-  
+
   # The Configuration class is a Singleton used to hold the default
   # configuration for all Mail objects.
-  # 
+  #
   # Each new mail object gets a copy of these values at initialization
   # which can be overwritten on a per mail object basis.
   class Configuration
@@ -33,6 +33,8 @@ module Mail
         Mail::SMTP
       when :sendmail
         Mail::Sendmail
+      when :exim
+        Mail::Exim
       when :file
         Mail::FileDelivery
       when :smtp_connection
@@ -48,7 +50,7 @@ module Mail
       return @retriever_method if @retriever_method && method.nil?
       @retriever_method = lookup_retriever_method(method).new(settings)
     end
-    
+
     def lookup_retriever_method(method)
       case method
       when nil
