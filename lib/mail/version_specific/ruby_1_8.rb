@@ -80,7 +80,7 @@ module Mail
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
-        str = Encodings::QuotedPrintable.decode(match[2])
+        str = Encodings::QuotedPrintable.decode(match[2].gsub(/_/, '=20'))
       end
       str
     end
