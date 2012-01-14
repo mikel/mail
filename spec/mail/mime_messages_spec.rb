@@ -162,8 +162,8 @@ describe "MIME Emails" do
           body "This is Text"
         end
         mail.html_part = Mail::Part.new do
-          content_type = "text/html; charset=US-ASCII"
-          body = "<b>This is HTML</b>"
+          content_type "text/html; charset=US-ASCII"
+          body "<b>This is HTML</b>"
         end
         mail.parts.length.should eq 2
         mail.parts.first.class.should eq Mail::Part
@@ -176,7 +176,7 @@ describe "MIME Emails" do
           body "This is Text"
         end
         mail.html_part = Mail::Part.new do
-          content_type = "text/html; charset=US-ASCII"
+          content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
         mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
@@ -188,7 +188,7 @@ describe "MIME Emails" do
           body "This is Text"
         end
         mail.html_part = Mail::Part.new do
-          content_type = "text/html; charset=US-ASCII"
+          content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
         mail.to_s.should =~ %r|#{mail.boundary}--|
@@ -200,7 +200,7 @@ describe "MIME Emails" do
           body "This is Text"
         end
         mail.html_part = Mail::Part.new do
-          content_type = "text/html; charset=US-ASCII"
+          content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
         mail.to_s
