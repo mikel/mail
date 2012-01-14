@@ -223,7 +223,8 @@ describe "Mail" do
     
     class MyDeliveryHandler
       def deliver_mail(mail)
-        yield
+        postman = MyDeliveryMethod.new
+        postman.deliver!(mail)
       end
     end
 
@@ -292,7 +293,7 @@ describe "Mail" do
       
       it "should tell it's observers that it was told to deliver an email even if it is using a delivery_handler" do
         Mail.register_observer(MyObserver)
-        @message.delivery_handler = MyDeliveryHandler.new
+        @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.perform_deliveries = false
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
@@ -320,31 +321,31 @@ describe "Mail" do
     describe "delivery_handler" do
       
       it "should allow you to hand off performing the actual delivery to another object" do
-        delivery_handler = MyDeliveryHandler.new
+        delivery_handler = MyYieldingDeliveryHandler.new
         delivery_handler.should_receive(:deliver_mail).with(@message).exactly(:once)
         @message.delivery_handler = delivery_handler
         @message.deliver
       end
 
       it "mail should be told to :deliver once and then :deliver! once by the delivery handler" do
-        @message.delivery_handler = MyDeliveryHandler.new
+        @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:do_delivery).exactly(:once)
         @message.deliver
       end
 
       it "mail only call it's delivery_method once" do
-        @message.delivery_handler = MyDeliveryHandler.new
+        @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:delivery_method).exactly(:once).and_return(Mail::TestMailer.new({}))
         @message.deliver
       end
 
       it "mail should not catch any exceptions when using a delivery_handler" do
-        @message.delivery_handler = MyDeliveryHandler.new
+        @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:delivery_method).and_raise(Exception)
         doing { @message.deliver }.should raise_error(Exception)
       end
 
-      it "mail should not modify the Mail.deliveries object if using a delivery_handler" do
+      it "mail should not modify the Mail.deliveries object if using a delivery_handler that does not append to deliveries" do
         @message.delivery_handler = MyDeliveryHandler.new
         doing { @message.deliver }.should_not change(Mail::TestMailer, :deliveries)
       end
