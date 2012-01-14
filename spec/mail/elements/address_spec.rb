@@ -246,18 +246,10 @@ describe Mail::Address do
                                          :raw          => 'Minero Aoki<aamine@0246.loveruby.net>'})
       end
 
-      it "should handle lots of dots" do
-        1.upto(10) do |times|
+      it "should reject multiple dots" do
+        2.upto(10) do |times|
           dots    = "." * times
-          address = Mail::Address.new("hoge#{dots}test@docomo.ne.jp")
-          address.should break_down_to({
-                                           :display_name => nil,
-                                           :address      => "hoge#{dots}test@docomo.ne.jp",
-                                           :local        => "hoge#{dots}test",
-                                           :domain       => 'docomo.ne.jp',
-                                           :format       => "hoge#{dots}test@docomo.ne.jp",
-                                           :comments     => nil,
-                                           :raw          => "hoge#{dots}test@docomo.ne.jp"})
+          doing { Mail::Address.new("hoge#{dots}test@docomo.ne.jp") }.should raise_error
         end
       end
 
