@@ -249,6 +249,13 @@ describe "Test emails" do
       doing { Mail::Message.new(email) }.should_not raise_error
     end
 
+    it "should handle folding subject" do
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example14.eml'))
+      mail.from.should == ["atsushi@example.com"]
+      mail.subject.should == "Re: TEST テストテスト"
+      mail.message_id.should == '0CC5E11ED2C1D@example.com'
+      mail.body.should == "Hello"
+    end
   end
 
   describe "from the wild" do
@@ -315,5 +322,4 @@ describe "Test emails" do
     end
     
   end
-  
 end
