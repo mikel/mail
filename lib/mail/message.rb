@@ -100,7 +100,6 @@ module Mail
     def initialize(*args, &block)
       @body = nil
       @body_raw = nil
-      @body_raw_index = nil
       @separate_parts = false
       @text_part = nil
       @html_part = nil
@@ -1134,7 +1133,7 @@ module Mail
     #  mail.parts.length #=> 2
     #  mail.parts.last.content_type.content_type #=> 'This is a body'
     def body=(value)
-      body_lazy(value, 0)
+      body_lazy(value)
     end
 
     # Returns the body of the message object. Or, if passed
@@ -1775,6 +1774,8 @@ module Mail
 
     def decoded
       case
+      when self.text?
+        decode_body_as_text
       when self.attachment?
         decode_body
       when !self.multipart?
@@ -1849,6 +1850,10 @@ module Mail
       return @mark_for_delete
     end
 
+    def text?
+      has_content_type? ? !!(main_type =~ /^text$/i) : false
+    end
+
   private
 
     #  2.1. General Description
@@ -1874,31 +1879,28 @@ module Mail
       @raw_source = value.to_crlf
     end
 
-    # see comments to body=. We take data starting from index and process it lazily
-    def body_lazy(value, index)
+    # see comments to body=. We take data and process it lazily
+    def body_lazy(value)
       process_body_raw if @body_raw && value
       case
-      when value == nil || value.length<=index
+      when value == nil || value.length<=0
         @body = Mail::Body.new('')
         @body_raw = nil
-        @body_raw_index = nil
         add_encoding_to_body
       when @body && @body.multipart?
-        @body << Mail::Part.new(value[index, value.length-index])
+        @body << Mail::Part.new(value)
         add_encoding_to_body
       else
         @body_raw = value
-        @body_raw_index = index
 #        process_body_raw
       end
     end
 
 
     def process_body_raw
-       @body = Mail::Body.new(@body_raw[@body_raw_index, @body_raw.length-@body_raw_index])
+       @body = Mail::Body.new(@body_raw)
        @body_raw = nil
-       @body_raw_index = nil
-      separate_parts if @separate_parts
+       separate_parts if @separate_parts
 
        add_encoding_to_body
     end
@@ -2026,6 +2028,22 @@ module Mail
       rescue Exception => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
+    end
+
+    def decode_body_as_text
+      body_text = decode_body
+      if charset
+        if RUBY_VERSION < '1.9'
+          require 'iconv'
+          return Iconv.conv("UTF-8//TRANSLIT//IGNORE", charset, body_text)
+        else
+          if encoding = Encoding.find(charset) rescue nil
+            body_text.force_encoding(encoding)
+            return body_text.encode(Encoding::UTF_8)
+          end
+        end
+      end
+      body_text
     end
 
   end
