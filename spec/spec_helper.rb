@@ -10,13 +10,19 @@ unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
 end
 
+require 'rspec'
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
 
-Spec::Runner.configure do |config|
-  config.include(CustomMatchers)
+RSpec.configure do |c|
+  c.mock_with :rspec
+  c.include(CustomMatchers)
 end
+
+# NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
+#       to default to "NONE" (Why!?).
+$KCODE='UTF8' if RUBY_VERSION < '1.9'
 
 def fixture(*name)
   File.join(SPEC_ROOT, 'fixtures', name)
