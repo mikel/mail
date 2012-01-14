@@ -28,7 +28,7 @@ you are doing, you can fiddle with every last bit of your email directly.
 Compatibility
 -------------
 
-Mail is tested and works on the following platforms:
+Mail is tested and works on the following platforms: ![Travis Build Status](https://secure.travis-ci.org/mikel/mail.png "Build Status")
 
 * jruby-1.6.5.1 [ x86_64 ]
 * rbx-head-d18 [ x86_64 ]
