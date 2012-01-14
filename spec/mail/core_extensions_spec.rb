@@ -49,50 +49,50 @@ describe Object do
 
   describe "to_lf method on String" do
     it "should leave lf as lf" do
-      "\n".to_lf.should == "\n"
+      "\n".to_lf.should eq "\n"
     end
 
     it "should clean just cr to lf" do
-      "\r".to_lf.should == "\n"
+      "\r".to_lf.should eq "\n"
     end
 
     it "should leave crlf as lf" do
-      "\r\n".to_lf.should == "\n"
+      "\r\n".to_lf.should eq "\n"
     end
     
     it "should handle japanese characters" do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
-      string.to_lf.should == "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\n\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\n\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\n\n"
+      string.to_lf.should eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\n\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\n\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\n\n"
     end
   end
 
   describe "to_crlf method on String" do
     it "should clean just lf to crlf" do
-      "\n".to_crlf.should == "\r\n"
+      "\n".to_crlf.should eq "\r\n"
     end
 
     it "should clean just cr to crlf" do
-      "\r".to_crlf.should == "\r\n"
+      "\r".to_crlf.should eq "\r\n"
     end
 
     it "should leave crlf as crlf" do
-      "\r\n".to_crlf.should == "\r\n"
+      "\r\n".to_crlf.should eq "\r\n"
     end
 
     it "should handle japanese characters" do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
-      string.to_crlf.should == "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
+      string.to_crlf.should eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
     end
     
   end
 
   describe "methods on NilClass" do
     it "should return empty string on to_crlf" do
-      nil.to_crlf.should == ''
+      nil.to_crlf.should eq ''
     end
 
     it "should return empty string on to_lf" do
-      nil.to_lf.should == ''
+      nil.to_lf.should eq ''
     end
   end
 

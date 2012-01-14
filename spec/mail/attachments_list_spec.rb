@@ -8,9 +8,9 @@ end
 
 def check_decoded(actual, expected)
   if RUBY_VERSION >= '1.9'
-    actual.should == expected.force_encoding(Encoding::BINARY)
+    actual.should eq expected.force_encoding(Encoding::BINARY)
   else
-    actual.should == expected
+    actual.should eq expected
   end
 end
 
@@ -24,27 +24,27 @@ describe "Attachments" do
     it "should work" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
-      @mail.attachments['test.png'].filename.should == 'test.png'
+      @mail.attachments['test.png'].filename.should eq 'test.png'
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
     it "should work out magically the mime_type" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
-      @mail.attachments[0].mime_type.should == 'image/png'
+      @mail.attachments[0].mime_type.should eq 'image/png'
     end
 
     it "should assign the filename" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = file_data
-      @mail.attachments[0].filename.should == 'test.png'
+      @mail.attachments[0].filename.should eq 'test.png'
     end
 
     it "should assign mime-encoded multibyte filename" do
       file_data = File.read(filename = fixture('attachments', 'てすと.txt'))
       @mail.attachments['てすと.txt'] = file_data
       @mail.attachments.should_not be_blank
-      Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode).should == 'てすと.txt'
+      Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode).should eq 'てすと.txt'
     end
   end
 
@@ -52,7 +52,7 @@ describe "Attachments" do
     it "should work" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
-      @mail.attachments[0].filename.should == 'test.png'
+      @mail.attachments[0].filename.should eq 'test.png'
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
@@ -60,14 +60,14 @@ describe "Attachments" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data,
                                         :content_type => "application/x-gzip" }
-      @mail.attachments[0].content_type.should == 'application/x-gzip'
+      @mail.attachments[0].content_type.should eq 'application/x-gzip'
     end
 
     it "should allow you to override the mime_type" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data,
                                         :mime_type => "application/x-gzip" }
-      @mail.attachments[0].mime_type.should == 'application/x-gzip'
+      @mail.attachments[0].mime_type.should eq 'application/x-gzip'
     end
 
     it "should allow you to override the mime_type" do
@@ -75,7 +75,7 @@ describe "Attachments" do
       @mail.attachments['invoice.jpg'] = { :data => "you smiling",
                                            :mime_type => "image/x-jpg",
                                            :transfer_encoding => "base64" }
-      @mail.attachments[0].mime_type.should == 'image/x-jpg'
+      @mail.attachments[0].mime_type.should eq 'image/x-jpg'
     end
 
   end
@@ -86,7 +86,7 @@ describe "Attachments" do
       file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       @mail.ready_to_send!
-      @mail.attachments[0].content_transfer_encoding.should == 'base64'
+      @mail.attachments[0].content_transfer_encoding.should eq 'base64'
     end
 
     it "should encode it's body to base64" do
@@ -119,7 +119,7 @@ describe "Attachments" do
       else
         expected = @mail.attachments[0].read
       end
-      expected.should == file_data
+      expected.should eq file_data
     end
 
   end
@@ -132,10 +132,10 @@ describe "Attachments" do
       mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
       mail.attachments['test.jpg'] = File.read(fixture('attachments', 'test.jpg'))
       mail.attachments['test.zip'] = File.read(fixture('attachments', 'test.zip'))
-      mail.attachments[0].filename.should == 'test.pdf'
-      mail.attachments[1].filename.should == 'test.gif'
-      mail.attachments[2].filename.should == 'test.jpg'
-      mail.attachments[3].filename.should == 'test.zip'
+      mail.attachments[0].filename.should eq 'test.pdf'
+      mail.attachments[1].filename.should eq 'test.gif'
+      mail.attachments[2].filename.should eq 'test.jpg'
+      mail.attachments[3].filename.should eq 'test.zip'
     end
 
   end
@@ -145,15 +145,15 @@ describe "Attachments" do
     it "should set the content_disposition to inline or attachment as appropriate" do
       mail = Mail.new
       mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
-      mail.attachments['test.pdf'].content_disposition.should == 'attachment; filename=test.pdf'
+      mail.attachments['test.pdf'].content_disposition.should eq 'attachment; filename=test.pdf'
       mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
-      mail.attachments.inline['test.png'].content_disposition.should == 'inline; filename=test.png'
+      mail.attachments.inline['test.png'].content_disposition.should eq 'inline; filename=test.png'
     end
 
     it "should return a cid" do
       mail = Mail.new
       mail.attachments.inline['test.png'] = File.read(fixture('attachments', 'test.png'))
-      mail.attachments['test.png'].url.should == "cid:#{mail.attachments['test.png'].cid}"
+      mail.attachments['test.png'].url.should eq "cid:#{mail.attachments['test.png'].cid}"
     end
 
     it "should respond true to inline?" do
@@ -181,7 +181,7 @@ describe "Attachments" do
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
       @inline = @mail.attachments['test.gif'].cid
       uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
-      @inline.should == uri_parser.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
+      @inline.should eq uri_parser.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
     end
   end
 
@@ -190,7 +190,7 @@ describe "Attachments" do
       mail = Mail.new
       mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
       mail.encoded
-      mail.mime_type.should == 'multipart/mixed'
+      mail.mime_type.should eq 'multipart/mixed'
     end
   end
 
@@ -198,7 +198,7 @@ describe "Attachments" do
     it "should not raise an exception with a filename that contains a non-7bit-character" do
       filename = "f\u00f6\u00f6.b\u00e4r"
       if RUBY_VERSION >= '1.9'
-        filename.encoding.should == Encoding::UTF_8
+        filename.encoding.should eq Encoding::UTF_8
       end
       mail = Mail.new
       doing {
@@ -214,42 +214,42 @@ describe "reading emails with attachments" do
 
     it "should find the attachment using content location" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_location.eml')))
-      mail.attachments.length.should == 1
+      mail.attachments.length.should eq 1
     end
 
     it "should find an attachment defined with 'name' and Content-Disposition: attachment" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
-      mail.attachments.length.should == 1
+      mail.attachments.length.should eq 1
     end
 
     it "should use the content-type filename or name over the content-disposition filename" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
-      mail.attachments[0].filename.should == 'hello.rb'
+      mail.attachments[0].filename.should eq 'hello.rb'
     end
 
     it "should decode an attachment" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
-      mail.attachments[0].decoded.length.should == 1026
+      mail.attachments[0].decoded.length.should eq 1026
     end
 
     it "should find an attachment that has an encoded name value" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_with_encoded_name.eml')))
-      mail.attachments.length.should == 1
+      mail.attachments.length.should eq 1
       result = mail.attachments[0].filename
       if RUBY_VERSION >= '1.9'
         expected = "01 Quien Te Dij\212at. Pitbull.mp3".force_encoding(result.encoding)
       else
         expected = "01 Quien Te Dij\212at. Pitbull.mp3"
       end
-      result.should == expected
+      result.should eq expected
     end
 
     it "should find attachments inside parts with content-type message/rfc822" do
       mail = Mail.read(fixture(File.join("emails",
                                          "attachment_emails",
                                          "attachment_message_rfc822.eml")))
-      mail.attachments.length.should == 1
-      mail.attachments[0].decoded.length.should == 1026
+      mail.attachments.length.should eq 1
+      mail.attachments[0].decoded.length.should eq 1026
     end
 
     it "attach filename decoding (issue 83)" do
@@ -284,7 +284,7 @@ YWFhCg==
 limitMAIL
       mail = Mail.new(data)
       #~ puts Mail::Encodings.decode_encode(mail.attachments[0].filename, :decode)
-      mail.attachments[0].filename.should == "Foto0009.jpg"
+      mail.attachments[0].filename.should eq "Foto0009.jpg"
     end
 
   end
@@ -307,16 +307,16 @@ describe "attachment order" do
     mail.attachments['test.pdf'] = File.read(fixture('attachments', 'test.pdf'))
     mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
     mail.attachments['test.jpg'] = File.read(fixture('attachments', 'test.jpg'))
-    mail.attachments[0].filename.should == 'test.zip'
-    mail.attachments[1].filename.should == 'test.pdf'
-    mail.attachments[2].filename.should == 'test.gif'
-    mail.attachments[3].filename.should == 'test.jpg'
+    mail.attachments[0].filename.should eq 'test.zip'
+    mail.attachments[1].filename.should eq 'test.pdf'
+    mail.attachments[2].filename.should eq 'test.gif'
+    mail.attachments[3].filename.should eq 'test.jpg'
 
 
     mail2 = Mail.new(mail.encoded)
-    mail2.attachments[0].filename.should == 'test.zip'
-    mail2.attachments[1].filename.should == 'test.pdf'
-    mail2.attachments[2].filename.should == 'test.gif'
-    mail2.attachments[3].filename.should == 'test.jpg'
+    mail2.attachments[0].filename.should eq 'test.zip'
+    mail2.attachments[1].filename.should eq 'test.pdf'
+    mail2.attachments[2].filename.should eq 'test.gif'
+    mail2.attachments[3].filename.should eq 'test.jpg'
   end
 end

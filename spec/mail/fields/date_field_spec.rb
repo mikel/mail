@@ -27,7 +27,7 @@ describe Mail::DateField do
     end
 
     it "should be able to tell the time" do
-      Mail::DateField.new("12 Aug 2009 00:00:02 GMT").date_time.class.should == DateTime
+      Mail::DateField.new("12 Aug 2009 00:00:02 GMT").date_time.class.should eq DateTime
     end
 
     it "should mix in the CommonAddress module" do
@@ -36,16 +36,16 @@ describe Mail::DateField do
 
     it "should accept a string with the field name" do
       t = Mail::DateField.new('Date: 12 Aug 2009 00:00:02 GMT')
-      t.name.should == 'Date'
-      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
-      t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
+      t.name.should eq 'Date'
+      t.value.should eq 'Wed, 12 Aug 2009 00:00:02 +0000'
+      t.date_time.should eq ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
 
     it "should accept a string without the field name" do
       t = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
-      t.name.should == 'Date'
-      t.value.should == 'Wed, 12 Aug 2009 00:00:02 +0000'
-      t.date_time.should == ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
+      t.name.should eq 'Date'
+      t.value.should eq 'Wed, 12 Aug 2009 00:00:02 +0000'
+      t.date_time.should eq ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
     
     it "should accept nil as a value" do
@@ -55,23 +55,23 @@ describe Mail::DateField do
     
     it "should allow us to encode an date field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
-      field.encoded.should == "Date: Wed, 12 Aug 2009 00:00:02 +0000\r\n"
+      field.encoded.should eq "Date: Wed, 12 Aug 2009 00:00:02 +0000\r\n"
     end
     
     it "should allow us to decode an address field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
-      field.decoded.should == "Wed, 12 Aug 2009 00:00:02 +0000"
+      field.decoded.should eq "Wed, 12 Aug 2009 00:00:02 +0000"
     end
 
     it "should be able to parse a really bad spacing example" do
       field = Mail::DateField.new("Fri, 21 Nov 1997 09(comment):   55  :  06 -0600")
-      field.decoded.should == "Fri, 21 Nov 1997 09:55:06 -0600"
+      field.decoded.should eq "Fri, 21 Nov 1997 09:55:06 -0600"
     end
 
     it "should give today's date if no date is specified" do
       now = Time.now
       Time.stub!(:now).and_return(now)
-      Mail::DateField.new.date_time.should == ::DateTime.parse(now.to_s)
+      Mail::DateField.new.date_time.should eq ::DateTime.parse(now.to_s)
     end
     
   end

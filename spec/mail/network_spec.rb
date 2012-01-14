@@ -32,12 +32,12 @@ describe "Mail" do
       Mail.defaults do
         delivery_method :smtp
       end
-      Mail.delivery_method.class.should == Mail::SMTP
+      Mail.delivery_method.class.should eq Mail::SMTP
     end
     
     it "should default to settings for smtp" do
-      Mail.delivery_method.class.should == Mail::SMTP
-      Mail.delivery_method.settings.should == { :address              => "localhost",
+      Mail.delivery_method.class.should eq Mail::SMTP
+      Mail.delivery_method.settings.should eql({:address              => "localhost",
                                                 :port                 => 25,
                                                 :domain               => 'localhost.localdomain',
                                                 :user_name            => nil,
@@ -46,47 +46,47 @@ describe "Mail" do
                                                 :enable_starttls_auto => true,
                                                 :openssl_verify_mode  => nil,
                                                 :ssl                  => nil,
-                                                :tls                  => nil }
+                                                :tls                  => nil })
     end
 
     it "should set the retriever method" do
       Mail.defaults do
         retriever_method :pop3
       end
-      Mail.retriever_method.class.should == Mail::POP3
+      Mail.retriever_method.class.should eq Mail::POP3
     end
 
     it "should default to settings for pop3" do
-      Mail.retriever_method.class.should == Mail::POP3
-      Mail.retriever_method.settings.should == { :address              => "localhost",
+      Mail.retriever_method.class.should eq Mail::POP3
+      Mail.retriever_method.settings.should eql({:address              => "localhost",
                                                  :port                 => 110,
                                                  :user_name            => nil,
                                                  :password             => nil,
                                                  :authentication       => nil,
-                                                 :enable_ssl           => true  }
+                                                 :enable_ssl           => true  })
     end
 
     it "should allow us to overwrite anything we need on SMTP" do
       Mail.defaults do
         delivery_method :smtp, :port => 999
       end
-      Mail.delivery_method.settings[:address].should == 'localhost'
-      Mail.delivery_method.settings[:port].should == 999
+      Mail.delivery_method.settings[:address].should eq 'localhost'
+      Mail.delivery_method.settings[:port].should eq 999
     end
 
     it "should allow us to overwrite anything we need on POP3" do
       Mail.defaults do
         retriever_method :pop3, :address => 'foo.bar.com'
       end
-      Mail.retriever_method.settings[:address].should == 'foo.bar.com'
-      Mail.retriever_method.settings[:port].should == 110
+      Mail.retriever_method.settings[:address].should eq 'foo.bar.com'
+      Mail.retriever_method.settings[:port].should eq 110
     end
 
     it "should allow you to pass in your own delivery method" do
       Mail.defaults do
         delivery_method MyDelivery
       end
-      Mail.delivery_method.class.should == MyDelivery
+      Mail.delivery_method.class.should eq MyDelivery
     end
 
     it "should ask the custom delivery agent for it's settings" do
@@ -96,14 +96,14 @@ describe "Mail" do
       Mail.defaults do
         delivery_method MyDelivery
       end
-      Mail.delivery_method.settings.should == {:these_are => :settings}
+      Mail.delivery_method.settings.should eql({:these_are => :settings})
     end
 
     it "should allow you to pass in your own retriever method" do
       Mail.defaults do
         retriever_method MyRetriever
       end
-      Mail.retriever_method.class.should == MyRetriever
+      Mail.retriever_method.class.should eq MyRetriever
     end
 
     it "should ask the custom retriever agent for it's settings" do
@@ -113,7 +113,7 @@ describe "Mail" do
       Mail.defaults do
         retriever_method MyRetriever
       end
-      Mail.retriever_method.settings.should == {:these_are => :settings}
+      Mail.retriever_method.settings.should eql({:these_are => :settings})
     end
 
   end
@@ -122,39 +122,39 @@ describe "Mail" do
     
     it "should copy the defaults defined by Mail.defaults" do
       mail = Mail.new
-      mail.delivery_method.class.should == Mail::SMTP
+      mail.delivery_method.class.should eq Mail::SMTP
     end
   
     it "should be able to change the delivery_method" do
       mail = Mail.new
       mail.delivery_method :file
-      mail.delivery_method.class.should == Mail::FileDelivery
+      mail.delivery_method.class.should eq Mail::FileDelivery
     end
 
     it "should be able to change the delivery_method and pass in settings" do
       mail = Mail.new
       tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
       mail.delivery_method :file, :location => tmpdir
-      mail.delivery_method.class.should == Mail::FileDelivery
-      mail.delivery_method.settings.should == {:location => tmpdir}
+      mail.delivery_method.class.should eq Mail::FileDelivery
+      mail.delivery_method.settings.should eql({:location => tmpdir})
     end
   
     it "should not change the default when it changes the delivery_method" do
       mail1 = Mail.new
       mail2 = Mail.new
       mail1.delivery_method :file
-      Mail.delivery_method.class.should == Mail::SMTP
-      mail1.delivery_method.class.should == Mail::FileDelivery
-      mail2.delivery_method.class.should == Mail::SMTP
+      Mail.delivery_method.class.should eq Mail::SMTP
+      mail1.delivery_method.class.should eq Mail::FileDelivery
+      mail2.delivery_method.class.should eq Mail::SMTP
     end
   
     it "should not change the default settings when it changes the delivery_method settings" do
       mail1 = Mail.new
       mail2 = Mail.new
       mail1.delivery_method :smtp, :address => 'my.own.address'
-      Mail.delivery_method.settings[:address].should == 'localhost'
-      mail1.delivery_method.settings[:address].should == 'my.own.address'
-      mail2.delivery_method.settings[:address].should == 'localhost'
+      Mail.delivery_method.settings[:address].should eq 'localhost'
+      mail1.delivery_method.settings[:address].should eq 'my.own.address'
+      mail2.delivery_method.settings[:address].should eq 'localhost'
     end
 
   end
@@ -186,9 +186,9 @@ describe "Mail" do
         # add_file 'New Header Image', '/somefile.png'
       end
 
-      MockSMTP.deliveries[0][0].should == message.encoded
-      MockSMTP.deliveries[0][1].should == "mikel@test.lindsaar.net"
-      MockSMTP.deliveries[0][2].should == ["ada@test.lindsaar.net"]
+      MockSMTP.deliveries[0][0].should eq message.encoded
+      MockSMTP.deliveries[0][1].should eq "mikel@test.lindsaar.net"
+      MockSMTP.deliveries[0][2].should eq ["ada@test.lindsaar.net"]
     end
 
     it "should deliver itself" do
@@ -202,9 +202,9 @@ describe "Mail" do
       
       message.deliver!
 
-      MockSMTP.deliveries[0][0].should == message.encoded
-      MockSMTP.deliveries[0][1].should == "mikel@test.lindsaar.net"
-      MockSMTP.deliveries[0][2].should == ["ada@test.lindsaar.net"]
+      MockSMTP.deliveries[0][0].should eq message.encoded
+      MockSMTP.deliveries[0][1].should eq "mikel@test.lindsaar.net"
+      MockSMTP.deliveries[0][2].should eq ["ada@test.lindsaar.net"]
     end
     
   end

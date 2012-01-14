@@ -12,7 +12,7 @@ describe "ContentTransferEncodingParser" do
     text = "quoted-printable"
     a = Mail::ContentTransferEncodingParser.new
     a.parse(text).should_not be_nil
-    a.parse(text).encoding.text_value.should == 'quoted-printable'
+    a.parse(text).encoding.text_value.should eq 'quoted-printable'
   end
 
   describe "trailing semi colons" do
@@ -21,28 +21,28 @@ describe "ContentTransferEncodingParser" do
       text = "quoted-printable;"
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == 'quoted-printable'
+      a.parse(text).encoding.text_value.should eq 'quoted-printable'
     end
 
     it "should parse with pre white space" do
       text = 'quoted-printable  ;'
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == 'quoted-printable'
+      a.parse(text).encoding.text_value.should eq 'quoted-printable'
     end
 
     it "should parse with trailing white space" do
       text = 'quoted-printable; '
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == 'quoted-printable'
+      a.parse(text).encoding.text_value.should eq 'quoted-printable'
     end
 
     it "should parse with pre and trailing white space" do
       text = 'quoted-printable  ;  '
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == 'quoted-printable'
+      a.parse(text).encoding.text_value.should eq 'quoted-printable'
     end
   end
   
@@ -51,7 +51,7 @@ describe "ContentTransferEncodingParser" do
       text = 'x-my-token'
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == 'x-my-token'
+      a.parse(text).encoding.text_value.should eq 'x-my-token'
     end
   end
   
@@ -60,14 +60,14 @@ describe "ContentTransferEncodingParser" do
       text = '8bits'
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == '8bit'
+      a.parse(text).encoding.text_value.should eq '8bit'
     end
 
     it "should convert 7bits to 7bit" do
       text = '7bits'
       a = Mail::ContentTransferEncodingParser.new
       a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should == '7bit'
+      a.parse(text).encoding.text_value.should eq '7bit'
     end
   end
 end

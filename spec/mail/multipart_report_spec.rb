@@ -52,23 +52,23 @@ describe "multipart/report emails" do
       end
       
       it "should say action 'delayed'" do
-        @mail.action.should == 'delayed'
+        @mail.action.should eq 'delayed'
       end
       
       it "should give a final recipient" do
-        @mail.final_recipient.should == 'RFC822; fraser@oooooooo.com.au'
+        @mail.final_recipient.should eq 'RFC822; fraser@oooooooo.com.au'
       end
       
       it "should give an error code" do
-        @mail.error_status.should == '4.2.2'
+        @mail.error_status.should eq '4.2.2'
       end
       
       it "should give a diagostic code" do
-        @mail.diagnostic_code.should == 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
+        @mail.diagnostic_code.should eq 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
       end
       
       it "should give a remote-mta" do
-        @mail.remote_mta.should == 'DNS; mail.oooooooo.com.au'
+        @mail.remote_mta.should eq 'DNS; mail.oooooooo.com.au'
       end
       
       it "should be retryable" do
@@ -87,23 +87,23 @@ describe "multipart/report emails" do
       end
       
       it "should say action 'failed'" do
-        @mail.action.should == 'failed'
+        @mail.action.should eq 'failed'
       end
       
       it "should give a final recipient" do
-        @mail.final_recipient.should == 'RFC822; edwin@zzzzzzz.com'
+        @mail.final_recipient.should eq 'RFC822; edwin@zzzzzzz.com'
       end
       
       it "should give an error code" do
-        @mail.error_status.should == '5.3.0'
+        @mail.error_status.should eq '5.3.0'
       end
       
       it "should give a diagostic code" do
-        @mail.diagnostic_code.should == 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
+        @mail.diagnostic_code.should eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
       end
       
       it "should give a remote-mta" do
-        @mail.remote_mta.should == 'DNS; mail.zzzzzz.com'
+        @mail.remote_mta.should eq 'DNS; mail.zzzzzz.com'
       end
       
       it "should be retryable" do

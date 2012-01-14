@@ -35,14 +35,14 @@ describe Mail::BccField do
 
     it "should accept a string with the field name" do
       t = Mail::BccField.new('Bcc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Bcc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eq 'Bcc'
+      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do
       t = Mail::BccField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should == 'Bcc'
-      t.value.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.name.should eq 'Bcc'
+      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
   end
@@ -52,35 +52,35 @@ describe Mail::BccField do
   describe "instance methods" do
     it "should return an address" do
       t = Mail::BccField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.formatted.should == ['Mikel Lindsaar <mikel@test.lindsaar.net>']
+      t.formatted.should eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
     end
 
     it "should return two addresses" do
       t = Mail::BccField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, Ada Lindsaar <ada@test.lindsaar.net>')
-      t.formatted.first.should == 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-      t.addresses.last.should == 'ada@test.lindsaar.net'
+      t.formatted.first.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      t.addresses.last.should eq 'ada@test.lindsaar.net'
     end
 
     it "should return one address and a group" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.addresses[0].should == 'sam@me.com'
-      t.addresses[1].should == 'mikel@me.com'
-      t.addresses[2].should == 'bob@you.com'
+      t.addresses[0].should eq 'sam@me.com'
+      t.addresses[1].should eq 'mikel@me.com'
+      t.addresses[2].should eq 'bob@you.com'
     end
     
     it "should return the formatted line on to_s" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.value.should == 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      t.value.should eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
     it "should return nothing on encoded as Bcc should not be in the mail" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should == ""
+      t.encoded.should eq ""
     end
     
     it "should return the decoded line" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.decoded.should == "sam@me.com, my_group: mikel@me.com, bob@you.com;"
+      t.decoded.should eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

@@ -22,12 +22,12 @@ describe Mail::StructuredField do
     end
     
     it "should provide access to the text of the field once set" do
-      @field.value.should == "bob@me.com"
+      @field.value.should eq "bob@me.com"
     end
     
     it "should provide a means to change the value" do
       @field.value = "bob@you.com"
-      @field.value.should == "bob@you.com"
+      @field.value.should eq "bob@you.com"
     end
   end
 
@@ -38,25 +38,25 @@ describe Mail::StructuredField do
     end
     
     it "should provide a to_s function that returns the decoded string" do
-      @field.to_s.should == "bob@me.com"
+      @field.to_s.should eq "bob@me.com"
     end
     
     it "should return '' on to_s if there is no value" do
       @field.value = nil
-      @field.encoded.should == ''
+      @field.encoded.should eq ''
     end
     
     it "should give an encoded value ready to insert into an email" do
-      @field.encoded.should == "From: bob@me.com\r\n"
+      @field.encoded.should eq "From: bob@me.com\r\n"
     end
     
     it "should return an empty string on encoded if it has no value" do
       @field.value = nil
-      @field.encoded.should == ''
+      @field.encoded.should eq ''
     end
     
     it "should return the field name and value in proper format when called to_s" do
-      @field.encoded.should == "From: bob@me.com\r\n"
+      @field.encoded.should eq "From: bob@me.com\r\n"
     end
     
   end

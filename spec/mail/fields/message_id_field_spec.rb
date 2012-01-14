@@ -62,21 +62,21 @@ describe Mail::MessageIdField do
 
     it "should accept a string with the field name" do
       m = Mail::MessageIdField.new('Message-ID: <1234@test.lindsaar.net>')
-      m.name.should == 'Message-ID'
-      m.value.should == '<1234@test.lindsaar.net>'
-      m.message_id.should == '1234@test.lindsaar.net'
+      m.name.should eq 'Message-ID'
+      m.value.should eq '<1234@test.lindsaar.net>'
+      m.message_id.should eq '1234@test.lindsaar.net'
     end
 
     it "should accept a string without the field name" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.name.should == 'Message-ID'
-      m.value.should == '<1234@test.lindsaar.net>'
-      m.message_id.should == '1234@test.lindsaar.net'
+      m.name.should eq 'Message-ID'
+      m.value.should eq '<1234@test.lindsaar.net>'
+      m.message_id.should eq '1234@test.lindsaar.net'
     end
 
     it "should accept a nil value and generate a message_id" do
       m = Mail::MessageIdField.new(nil)
-      m.name.should == 'Message-ID'
+      m.name.should eq 'Message-ID'
       m.value.should_not be_nil
     end
 
@@ -86,17 +86,17 @@ describe Mail::MessageIdField do
 
     it "should not accept a string with multiple message IDs but only return the first" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
-      m.name.should == 'Message-ID'
-      m.to_s.should == '<1234@test.lindsaar.net>'
-      m.message_id.should == '1234@test.lindsaar.net'
-      m.message_ids.should == ['1234@test.lindsaar.net']
+      m.name.should eq 'Message-ID'
+      m.to_s.should eq '<1234@test.lindsaar.net>'
+      m.message_id.should eq '1234@test.lindsaar.net'
+      m.message_ids.should eq ['1234@test.lindsaar.net']
     end
 
     it "should change the message id if given a new message id" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should == '<1234@test.lindsaar.net>'
+      m.to_s.should eq '<1234@test.lindsaar.net>'
       m.value = '<4567@test.lindsaar.net>'
-      m.to_s.should == '<4567@test.lindsaar.net>'
+      m.to_s.should eq '<4567@test.lindsaar.net>'
     end
 
   end
@@ -104,18 +104,18 @@ describe Mail::MessageIdField do
   describe "instance methods" do
     it "should provide to_s" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should == '<1234@test.lindsaar.net>'
-      m.message_id.to_s.should == '1234@test.lindsaar.net'
+      m.to_s.should eq '<1234@test.lindsaar.net>'
+      m.message_id.to_s.should eq '1234@test.lindsaar.net'
     end
 
     it "should provide encoded" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.encoded.should == "Message-ID: <1234@test.lindsaar.net>\r\n"
+      m.encoded.should eq "Message-ID: <1234@test.lindsaar.net>\r\n"
     end
 
     it "should provide decoded" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.decoded.should == "<1234@test.lindsaar.net>"
+      m.decoded.should eq "<1234@test.lindsaar.net>"
     end
     
     it "should respond to :responsible_for?" do
@@ -141,7 +141,7 @@ describe Mail::MessageIdField do
   describe "weird message IDs" do
     it "should be able to parse <000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>" do
       m = Mail::MessageIdField.new('<000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>')
-      m.message_id.should == '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
+      m.message_id.should eq '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
     end
   end
 end

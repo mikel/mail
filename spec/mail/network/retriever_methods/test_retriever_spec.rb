@@ -19,13 +19,13 @@ describe "Test Retriever" do
     end
 
     it "should return all emails without a block" do
-      Mail.all.should == @emails
+      Mail.all.should eq @emails
     end
 
     it "should return all emails with a block" do
       messages = []
       Mail.all { |message| messages << message }
-      messages.should == @emails
+      messages.should eq @emails
     end
 
   end
@@ -37,27 +37,27 @@ describe "Test Retriever" do
     end
 
     it "should handle the :count option" do
-      Mail.find(:count => :all).should == @emails
-      Mail.find(:count => 1).should == @emails.first
-      Mail.find(:count => 5).should == @emails[0, 5]
+      Mail.find(:count => :all).should eq @emails
+      Mail.find(:count => 1).should eq @emails.first
+      Mail.find(:count => 5).should eq @emails[0, 5]
     end
 
     it "should handle the :order option" do
-      Mail.find(:order => :asc).should == @emails
-      Mail.find(:order => :desc).should == @emails.reverse
+      Mail.find(:order => :asc).should eq @emails
+      Mail.find(:order => :desc).should eq @emails.reverse
     end
 
     it "should handle the :what option" do
-      Mail.find(:what => :first).should == @emails
-      Mail.find(:what => :first, :count => 5).should == @emails[0, 5]
-      Mail.find(:what => :last).should == @emails
-      Mail.find(:what => :last, :count => 5).should == @emails[10, 5]
+      Mail.find(:what => :first).should eq @emails
+      Mail.find(:what => :first, :count => 5).should eq @emails[0, 5]
+      Mail.find(:what => :last).should eq @emails
+      Mail.find(:what => :last, :count => 5).should eq @emails[10, 5]
     end
 
     it "should handle the :delete_after_find option" do
-      Mail.find(:delete_after_find => false).should == @emails
-      Mail.find(:delete_after_find => false).should == @emails
-      Mail.find(:delete_after_find => true).should == @emails
+      Mail.find(:delete_after_find => false).should eq @emails
+      Mail.find(:delete_after_find => false).should eq @emails
+      Mail.find(:delete_after_find => true).should eq @emails
       Mail.find(:delete_after_find => false).should be_empty
     end
 
@@ -71,7 +71,7 @@ describe "Test Retriever" do
         end
         i += 1
       end
-      Mail.all.should == messages
+      Mail.all.should eq messages
     end
 
   end

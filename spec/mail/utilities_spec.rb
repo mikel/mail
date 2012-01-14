@@ -24,16 +24,16 @@ describe "Utilities Module" do
 
     describe "quoting" do
       it "should return true if a string is token safe" do
-        quote_token('.abc').should == '.abc'
+        quote_token('.abc').should eq '.abc'
       end
 
       it "should return false if a string is token safe" do
-        quote_token('?=abc').should == '"?=abc"'
+        quote_token('?=abc').should eq '"?=abc"'
       end
 
       it "should work with mb_chars" do
-        quote_token('.abc'.mb_chars).should == '.abc'
-        quote_token('?=abc'.mb_chars).should == '"?=abc"'
+        quote_token('.abc'.mb_chars).should eq '.abc'
+        quote_token('?=abc'.mb_chars).should eq '"?=abc"'
       end
     end
 
@@ -58,26 +58,26 @@ describe "Utilities Module" do
 
     describe "quoting" do
       it "should return true if a string is token safe" do
-        quote_atom('?=abc').should == '?=abc'
+        quote_atom('?=abc').should eq '?=abc'
       end
 
       it "should return false if a string is token safe" do
-        quote_atom('.abc').should == '".abc"'
+        quote_atom('.abc').should eq '".abc"'
       end
 
       it "should work with mb_chars" do
-        quote_atom('?=abc'.mb_chars).should == '?=abc'
-        quote_atom('.abc'.mb_chars).should == '".abc"'
+        quote_atom('?=abc'.mb_chars).should eq '?=abc'
+        quote_atom('.abc'.mb_chars).should eq '".abc"'
       end
 
       it "should work with mb_chars" do
-        quote_atom('?=abc'.mb_chars).should == '?=abc'
-        quote_atom('.abc'.mb_chars).should == '".abc"'
+        quote_atom('?=abc'.mb_chars).should eq '?=abc'
+        quote_atom('.abc'.mb_chars).should eq '".abc"'
       end
       
       it "should quote white space" do
-        quote_atom('ab abc'.mb_chars).should == '"ab abc"'
-        quote_atom("a\sb\ta\r\nbc".mb_chars).should == %{"a\sb\ta\r\nbc"}
+        quote_atom('ab abc'.mb_chars).should eq '"ab abc"'
+        quote_atom("a\sb\ta\r\nbc".mb_chars).should eq %{"a\sb\ta\r\nbc"}
       end
     end
 
@@ -87,19 +87,19 @@ describe "Utilities Module" do
     it "should escape parens" do
       test = 'This is not (escaped)'
       result = 'This is not \(escaped\)'
-      escape_paren(test).should == result
+      escape_paren(test).should eq result
     end
 
     it "should not double escape parens" do
       test = 'This is not \(escaped\)'
       result = 'This is not \(escaped\)'
-      escape_paren(test).should == result
+      escape_paren(test).should eq result
     end
 
     it "should escape all parens" do
       test = 'This is not \()escaped(\)'
       result = 'This is not \(\)escaped\(\)'
-      escape_paren(test).should == result
+      escape_paren(test).should eq result
     end
     
   end
@@ -109,25 +109,25 @@ describe "Utilities Module" do
     it "should work" do
       test = '(This is a string)'
       result = 'This is a string'
-      unparen(test).should == result
+      unparen(test).should eq result
     end
 
     it "should work without parens" do
       test = 'This is a string'
       result = 'This is a string'
-      unparen(test).should == result
+      unparen(test).should eq result
     end
 
     it "should work using ActiveSupport mb_chars" do
       test = '(This is a string)'.mb_chars
       result = 'This is a string'
-      unparen(test).should == result
+      unparen(test).should eq result
     end
 
     it "should work without parens using ActiveSupport mb_chars" do
       test = 'This is a string'.mb_chars
       result = 'This is a string'
-      unparen(test).should == result
+      unparen(test).should eq result
     end
 
   end
@@ -137,25 +137,25 @@ describe "Utilities Module" do
     it "should work" do
       test = '<This is a string>'
       result = 'This is a string'
-      unbracket(test).should == result
+      unbracket(test).should eq result
     end
 
     it "should work without brackets" do
       test = 'This is a string'
       result = 'This is a string'
-      unbracket(test).should == result
+      unbracket(test).should eq result
     end
 
     it "should work using ActiveSupport mb_chars" do
       test = '<This is a string>'.mb_chars
       result = 'This is a string'
-      unbracket(test).should == result
+      unbracket(test).should eq result
     end
 
     it "should work without parens using ActiveSupport mb_chars" do
       test = 'This is a string'.mb_chars
       result = 'This is a string'
-      unbracket(test).should == result
+      unbracket(test).should eq(result)
     end
 
   end
@@ -164,25 +164,25 @@ describe "Utilities Module" do
     it "should quote a phrase if it is unsafe" do
       test = 'this.needs quoting'
       result = '"this.needs quoting"'
-      dquote(test).should == result
+      dquote(test).should eq result
     end
 
     it "should properly quote a string, even if quoted but not escaped properly" do
       test = '"this needs "escaping"'
       result = '"this needs \"escaping"'
-      dquote(test).should == result
+      dquote(test).should eq result
     end
     
     it "should quote correctly a phrase with an escaped quote in it" do
       test = 'this needs \"quoting'
       result = '"this needs \"quoting"'
-      dquote(test).should == result
+      dquote(test).should eq result
     end
     
     it "should quote correctly a phrase with an escaped backslash followed by an escaped quote in it" do
       test = 'this needs \\\"quoting'
       result = '"this needs \\\"quoting"'
-      dquote(test).should == result
+      dquote(test).should eq result
     end
   end
   
@@ -191,61 +191,61 @@ describe "Utilities Module" do
     it "should parenthesize a phrase" do
       test = 'this.needs parenthesizing'
       result = '(this.needs parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
 
     it "should properly parenthesize a string, and escape properly" do
       test = 'this needs (escaping'
       result = '(this needs \(escaping)'
-      paren(test).should == result
+      paren(test).should eq result
     end
 
     it "should properly parenthesize a string, and escape properly (other way)" do
       test = 'this needs )escaping'
       result = '(this needs \)escaping)'
-      paren(test).should == result
+      paren(test).should eq result
     end
 
     it "should properly parenthesize a string, even if parenthesized but not escaped properly" do
       test = '(this needs (escaping)'
       result = '(this needs \(escaping)'
-      paren(test).should == result
+      paren(test).should eq result
     end
 
     it "should properly parenthesize a string, even if parenthesized but not escaped properly (other way)" do
       test = '(this needs )escaping)'
       result = '(this needs \)escaping)'
-      paren(test).should == result
+      paren(test).should eq result
     end
     
     it "should parenthesize correctly a phrase with an escaped parentheses in it" do
       test = 'this needs \(parenthesizing'
       result = '(this needs \(parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
     
     it "should parenthesize correctly a phrase with an escaped parentheses in it (other way)" do
       test = 'this needs \)parenthesizing'
       result = '(this needs \)parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
     
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it" do
       test = 'this needs \\\(parenthesizing'
       result = '(this needs \\\(parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
     
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it (other way)" do
       test = 'this needs \\\)parenthesizing'
       result = '(this needs \\\)parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
 
     it "should parenthesize correctly a phrase with a set of parentheses" do
       test = 'this (needs) parenthesizing'
       result = '(this \(needs\) parenthesizing)'
-      paren(test).should == result
+      paren(test).should eq result
     end
     
   end
@@ -255,61 +255,61 @@ describe "Utilities Module" do
     it "should bracketize a phrase" do
       test = 'this.needs bracketizing'
       result = '<this.needs bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
 
     it "should properly bracketize a string, and escape properly" do
       test = 'this needs <escaping'
       result = '<this needs \<escaping>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
 
     it "should properly bracketize a string, and escape properly (other way)" do
       test = 'this needs >escaping'
       result = '<this needs \>escaping>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
 
     it "should properly bracketize a string, even if bracketized but not escaped properly" do
       test = '<this needs <escaping>'
       result = '<this needs \<escaping>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
 
     it "should properly bracketize a string, even if bracketized but not escaped properly (other way)" do
       test = '<this needs >escaping>'
       result = '<this needs \>escaping>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
     
     it "should bracketize correctly a phrase with an escaped brackets in it" do
       test = 'this needs \<bracketizing'
       result = '<this needs \<bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
     
     it "should bracketize correctly a phrase with an escaped brackets in it (other way)" do
       test = 'this needs \>bracketizing'
       result = '<this needs \>bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
     
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it" do
       test = 'this needs \\\<bracketizing'
       result = '<this needs \\\<bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
     
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it (other way)" do
       test = 'this needs \\\>bracketizing'
       result = '<this needs \\\>bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
 
     it "should bracketize correctly a phrase with a set of brackets" do
       test = 'this <needs> bracketizing'
       result = '<this \<needs\> bracketizing>'
-      bracket(test).should == result
+      bracket(test).should eq result
     end
     
   end
@@ -318,11 +318,11 @@ describe "Utilities Module" do
     uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
 
     it "should have a wrapper on URI.escape" do
-      uri_escape("@?@!").should == uri_parser.escape("@?@!")
+      uri_escape("@?@!").should eq uri_parser.escape("@?@!")
     end
 
     it "should have a wrapper on URI.unescape" do
-      uri_unescape("@?@!").should == uri_parser.unescape("@?@!")
+      uri_unescape("@?@!").should eq uri_parser.unescape("@?@!")
     end
   end
   

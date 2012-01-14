@@ -31,9 +31,9 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
 
-      MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from[0]
-      MockSMTP.deliveries[0][2].should == mail.destinations
+      MockSMTP.deliveries[0][0].should eq mail.encoded
+      MockSMTP.deliveries[0][1].should eq mail.from[0]
+      MockSMTP.deliveries[0][2].should eq mail.destinations
     end
 
     it "should be able to send itself" do
@@ -45,9 +45,9 @@ describe "SMTP Delivery Method" do
 
       mail.deliver!
 
-      MockSMTP.deliveries[0][0].should == mail.encoded
-      MockSMTP.deliveries[0][1].should == mail.from[0]
-      MockSMTP.deliveries[0][2].should == mail.destinations
+      MockSMTP.deliveries[0][0].should eq mail.encoded
+      MockSMTP.deliveries[0][1].should eq mail.from[0]
+      MockSMTP.deliveries[0][2].should eq mail.destinations
     end
     
     it "should be able to return actual SMTP protocol response" do
@@ -62,7 +62,7 @@ describe "SMTP Delivery Method" do
       end
       
       response = mail.deliver!
-      response.should eql 'OK'
+      response.should eq 'OK'
       
     end
   end
@@ -162,7 +162,7 @@ describe "SMTP Delivery Method" do
         message_id "<1234@someemail.com>"
         body "body"
       end
-      MockSMTP.deliveries[0][1].should == "bounce@someemail.com"
+      MockSMTP.deliveries[0][1].should eq "bounce@someemail.com"
     end
 
     it "should use the sender address is no return path is specified" do
@@ -174,7 +174,7 @@ describe "SMTP Delivery Method" do
         message_id "<1234@someemail.com>"
         body "body"
       end
-      MockSMTP.deliveries[0][1].should == "sender@test.lindsaar.net"
+      MockSMTP.deliveries[0][1].should eq "sender@test.lindsaar.net"
     end
     
     it "should use the from address is no return path or sender is specified" do
@@ -185,7 +185,7 @@ describe "SMTP Delivery Method" do
         message_id "<1234@someemail.com>"
         body "body"
       end
-      MockSMTP.deliveries[0][1].should == "from@someemail.com"
+      MockSMTP.deliveries[0][1].should eq "from@someemail.com"
     end
     
   end

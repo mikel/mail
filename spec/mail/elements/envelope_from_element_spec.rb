@@ -19,12 +19,12 @@ describe Mail::EnvelopeFromElement do
   describe "accessor methods" do
     it "should return the address" do
       envelope = Mail::EnvelopeFromElement.new("mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009")
-      envelope.address.should == "mikel@test.lindsaar.net"
+      envelope.address.should eq "mikel@test.lindsaar.net"
     end
 
     it "should return the date_time" do
       envelope = Mail::EnvelopeFromElement.new("mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009")
-      envelope.date_time.should == ::DateTime.parse("Mon Aug 17 00:39:21 2009")
+      envelope.date_time.should eq ::DateTime.parse("Mon Aug 17 00:39:21 2009")
     end
   end
 

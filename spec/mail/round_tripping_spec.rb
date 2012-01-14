@@ -7,8 +7,8 @@ describe "Round Tripping" do
     mail = Mail.new('Subject: FooBar')
     mail.body "This is Text"
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.subject.to_s.should == "FooBar"
-    parsed_mail.body.to_s.should == "This is Text"
+    parsed_mail.subject.to_s.should eq "FooBar"
+    parsed_mail.body.to_s.should eq "This is Text"
   end
 
   it "should round trip a html multipart email" do
@@ -21,11 +21,11 @@ describe "Round Tripping" do
       body "<b>This is HTML</b>"
     end
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.mime_type.should == 'multipart/alternative'
-    parsed_mail.boundary.should == mail.boundary
-    parsed_mail.parts.length.should == 2
-    parsed_mail.parts[0].body.to_s.should == "This is Text"
-    parsed_mail.parts[1].body.to_s.should == "<b>This is HTML</b>"
+    parsed_mail.mime_type.should eq 'multipart/alternative'
+    parsed_mail.boundary.should eq mail.boundary
+    parsed_mail.parts.length.should eq 2
+    parsed_mail.parts[0].body.to_s.should eq "This is Text"
+    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>"
   end
 
   it "should round trip an email" do
@@ -38,7 +38,7 @@ describe "Round Tripping" do
       bcc       "bob@test.lindsaar.net"
       date      Time.local(2009, 11, 6)
     end
-    Mail.new(initial.encoded).encoded.should == initial.encoded
+    Mail.new(initial.encoded).encoded.should eq initial.encoded
   end
 
 end

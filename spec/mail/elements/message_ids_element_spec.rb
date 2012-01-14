@@ -25,19 +25,19 @@ describe Mail::MessageIdsElement do
   it "should respond to message_ids" do
     msg_id_text  = '<1234@test.lindsaar.net> <1234@test.lindsaar.net>'
     msg_ids = Mail::MessageIdsElement.new(msg_id_text)
-    msg_ids.message_ids.should == ['1234@test.lindsaar.net', '1234@test.lindsaar.net']
+    msg_ids.message_ids.should eq ['1234@test.lindsaar.net', '1234@test.lindsaar.net']
   end
 
   it "should respond to message_id" do
     msg_id_text  = '<1234@test.lindsaar.net>'
     msg_ids = Mail::MessageIdsElement.new(msg_id_text)
-    msg_ids.message_id.should == '1234@test.lindsaar.net'
+    msg_ids.message_id.should eq '1234@test.lindsaar.net'
   end
   
   it "should not fail to parse a message id with dots in it" do
     text = "<4afb664ca3078_48dc..fdbe32b865532b@ax-desktop.mail>"
     m = Mail::MessageIdsElement.new(text)
-    m.message_id.should == "4afb664ca3078_48dc..fdbe32b865532b@ax-desktop.mail"
+    m.message_id.should eq "4afb664ca3078_48dc..fdbe32b865532b@ax-desktop.mail"
   end
 
 end

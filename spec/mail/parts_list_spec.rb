@@ -7,7 +7,7 @@ describe "PartsList" do
     p = Mail::PartsList.new
     p << 2
     p << 1
-    p.sort.class.should == Mail::PartsList
+    p.sort.class.should eq Mail::PartsList
   end
 
   it "should not fail if we do not have a content_type" do
