@@ -113,6 +113,8 @@ module Mail
       match_to_s(other.name, field.name)
     end
     
+    alias_method :==, :same
+    
     def <=>( other )
       self_order = FIELD_ORDER.rindex(self.name.to_s.downcase) || 100
       other_order = FIELD_ORDER.rindex(other.name.to_s.downcase) || 100

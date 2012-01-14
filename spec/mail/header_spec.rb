@@ -342,6 +342,14 @@ describe Mail::Header do
       header.fields.length.should == 0
     end
     
+    it "should delete only matching fields found" do
+      header = Mail::Header.new
+      header.fields = ['X-SPAM: 1000', 'X-AUTHOR: Steve']
+      header['X-SPAM'] = nil
+      header['X-AUTHOR'].should_not be_nil
+      header.fields.length.should == 1
+    end
+    
     # Handle empty X-Optional header from Microsoft Exchange
     it "should handle an empty X-* header value" do
       header = Mail::Header.new("X-MS-TNEF-Correlator:\r\n")
