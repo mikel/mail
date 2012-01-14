@@ -2,7 +2,7 @@
 
 module Mail #:nodoc:
   module Multibyte #:nodoc:
-    if Kernel.const_defined?(:Encoding)
+    if RUBY_VERSION >= "1.9"
       # Returns a regular expression that matches valid characters in the current encoding
       def self.valid_character
         VALID_CHARACTER[Encoding.default_external.to_s]

@@ -1,4 +1,6 @@
-require File.dirname(__FILE__) + "/lib/mail/version"
+lib_dir = File.expand_path('../lib', __FILE__)
+$:.unshift lib_dir unless $:.include? lib_dir
+require 'mail/version'
 
 Gem::Specification.new do |s|
   s.name        = "mail"
