@@ -572,14 +572,14 @@ describe Mail::Encodings do
   describe "quoted printable encoding and decoding" do
     it "should handle underscores in the text" do
       expected = 'something_with_underscores'
-      encoded = [expected].pack('*M')
-      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
+      encoded = [expected].pack('M')
+      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("M").first.should == expected
     end
 
     it "should handle underscores in the text" do
       expected = 'something with_underscores'
-      encoded = [expected].pack('*M')
-      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("*M").first.should == expected
+      encoded = [expected].pack('M')
+      Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("M").first.should == expected
     end
 
     it "should keep the underscores in the text" do
