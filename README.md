@@ -32,7 +32,6 @@ Mail is tested and works on the following platforms:
 
 * jruby-1.6.5.1 [ x86_64 ]
 * rbx-head-d18 [ x86_64 ]
-* rbx-head-d19 [ x86_64 ]
 * ree-1.8.7-2011.03 [ i686 ]
 * ruby-1.8.7-p357 [ i686 ]
 * ruby-1.9.2-p290 [ x86_64 ]
