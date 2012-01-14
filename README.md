@@ -30,11 +30,13 @@ Compatibility
 
 Mail is tested and works on the following platforms:
 
-* jruby-1.5.2 [ x86\_64-java ]
-* ree-1.8.7-2010.02 [ x86\_64 ]
-* ruby-1.8.6-p399 [ x86\_64 ]
-* ruby-1.8.7-p302 [ x86\_64 ]
-* ruby-1.9.2-p0 [ x86\_64 ]
+* jruby-1.6.5.1 [ x86_64 ]
+* rbx-head-d18 [ x86_64 ]
+* rbx-head-d19 [ x86_64 ]
+* ree-1.8.7-2011.03 [ i686 ]
+* ruby-1.8.7-p357 [ i686 ]
+* ruby-1.9.2-p290 [ x86_64 ]
+* ruby-1.9.3-p0 [ x86_64 ]
 
 Discussion
 ----------
@@ -137,16 +139,7 @@ I have tried to simplify it some:
 Contributing
 ------------
 
-Please do!  Contributing is easy in Mail:
-
-1. Check the Reference RFCs, they are in the References directory, so no excuses.
-2. Open a ticket on GitHub, maybe someone else has the problem too
-3. Make a fork of my GitHub repository
-4. Make a spec driven change to the code base
-5. Make sure it works and all specs pass, on Ruby versions 1.8.6, 1.8.7 and 1.9
-6. Update the README if needed to reflect your change / addition
-7. With all specs passing push your changes back to your fork
-8. Send me a pull request
+Please do!  Contributing is easy in Mail.  Please read the CONTRIBUTING.md document for more info
 
 Usage
 -----
@@ -635,7 +628,7 @@ License
 
 (The MIT License)
 
-Copyright (c) 2009, 2010, 2011
+Copyright (c) 2009, 2010, 2011, 2012
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
