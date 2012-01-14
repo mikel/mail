@@ -1,5 +1,13 @@
 require 'spec_helper'
 
+class MyTestDeliveryMethod
+  attr_accessor :settings
+
+  def initialize(values)
+    self.settings = {}.merge!(values)
+  end
+end
+
 describe Mail::Configuration do
 
   describe "network configurations" do
@@ -26,6 +34,13 @@ describe Mail::Configuration do
       Mail.defaults { delivery_method :smtp_connection, {:connection => smtp} }
       Mail.delivery_method.class.should == Mail::SMTPConnection
       Mail.delivery_method.smtp.should == smtp
+    end
+
+    it "should accept a plug-in delivery method" do
+      Mail.defaults { delivery_method MyTestDeliveryMethod, { :option1 => "one", :option2 => "two" }}
+      Mail.delivery_method.class.should == MyTestDeliveryMethod
+      Mail.delivery_method.settings[:option1].should == "one"
+      Mail.delivery_method.settings[:option2].should == "two"
     end
 
   end
