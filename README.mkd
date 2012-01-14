@@ -337,6 +337,22 @@ is another message which can have many or no parts.
 A message will only have parts if it is a multipart/mixed or related/mixed
 content type and has a boundary defined.
 
+### Testing and extracting attachments
+```ruby
+mail.attachments.each do | attachment |
+  # Attachments is an AttachmentsList object containing a 
+  # number of Part objects
+  if (attachment.content_type.start_with?('image/'))
+    # extracting images for example...
+    filename = attachment.filename
+    begin
+      File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
+    rescue Exception => e
+      puts "Unable to save data for #{filename} because #{e.message}"
+    end
+  end
+end
+```
 ### Writing and sending a multipart/alternative (html and text) email
 
 Mail makes some basic assumptions and makes doing the common thing as
@@ -506,6 +522,7 @@ end
 @round_tripped_mail.attachments.length #=> 1
 @round_tripped_mail.attachments.first.filename #=> 'myfile.pdf'
 ```
+See "Testing and extracting attachments" above for more details. 
 
 Using Mail with Testing or Spec'ing Libraries
 ---------------------------------------------
