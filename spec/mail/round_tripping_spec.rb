@@ -17,7 +17,7 @@ describe "Round Tripping" do
       body "This is Text"
     end
     mail.html_part = Mail::Part.new do
-      content_type = "text/html; charset=US-ASCII"
+      content_type "text/html; charset=US-ASCII"
       body "<b>This is HTML</b>"
     end
     parsed_mail = Mail.new(mail.to_s)

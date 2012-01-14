@@ -163,7 +163,7 @@ describe Mail::UnstructuredField do
     it "should encode an ascii string that has carriage returns if asked to" do
       result = "Subject: =0Aasdf=0A\r\n"
       @field = Mail::UnstructuredField.new("Subject", "\nasdf\n")
-      @field.encoded.should eq "Subject: =0Aasdf=0A\r\n"
+      @field.encoded.should eq result
     end
   end
 

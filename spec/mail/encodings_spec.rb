@@ -107,7 +107,6 @@ describe Mail::Encodings do
         doing {Mail::Encodings.b_value_encode(string)}.should_not raise_error
       else
         string = "This is あ string"
-        encoding = 'UTF-8'
         doing {Mail::Encodings.b_value_encode(string, nil)}.should raise_error("Must supply an encoding")
       end
     end
@@ -201,7 +200,6 @@ describe Mail::Encodings do
         doing {Mail::Encodings.q_value_encode(string)}.should_not raise_error
       else
         string = "This is あ string"
-        encoding = 'UTF-8'
         doing {Mail::Encodings.q_value_encode(string)}.should raise_error("Must supply an encoding")
       end
     end
@@ -273,13 +271,13 @@ describe Mail::Encodings do
     
     it "should round trip another complex string (koi-8)" do
       original = "Слово 9999 и число"
-      orginial = original.encode('koi8-r') if RUBY_VERSION >= "1.9"
+      original = original.encode('koi8-r') if RUBY_VERSION >= "1.9"
       mail = Mail.new
       mail.subject = original
       mail[:subject].charset = 'koi8-r'
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
-      unwrapped.gsub("Subject: ", "").should eq original
+      unwrapped.gsub("Subject: ", "").should eq original.encode('UTF-8')
     end
   end
   
@@ -623,13 +621,11 @@ describe Mail::Encodings do
   describe "quoted printable encoding and decoding" do
     it "should handle underscores in the text" do
       expected = 'something_with_underscores'
-      encoded = [expected].pack('M')
       Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("M").first.should eq expected
     end
 
     it "should handle underscores in the text" do
       expected = 'something with_underscores'
-      encoded = [expected].pack('M')
       Mail::Encodings.get_encoding(:quoted_printable).encode(expected).unpack("M").first.should eq expected
     end
 
