@@ -20,7 +20,7 @@ module Mail
     end
 
     rule obs_phrase
-      (word / ".")+
+      (word / "." / "@")+
     end
 
     rule obs_phrase_list
