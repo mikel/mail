@@ -49,11 +49,11 @@ module Mail
 
       arguments = [settings[:arguments], return_path].compact.join(" ")
 
-      Sendmail.call(settings[:location], arguments, mail.destinations.collect(&:shellescape).join(" "), mail)
+      Sendmail.call(settings[:location], arguments, mail)
     end
 
-    def Sendmail.call(path, arguments, destinations, mail)
-      IO.popen("#{path} #{arguments} #{destinations}", "w+") do |io|
+    def Sendmail.call(path, arguments, mail)
+      IO.popen("#{path} #{arguments}", "w+") do |io|
         io.puts mail.encoded.to_lf
         io.flush
       end
