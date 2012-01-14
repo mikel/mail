@@ -197,7 +197,9 @@ describe "Attachments" do
   describe "should handle filenames with non-7bit characters correctly" do
     it "should not raise an exception with a filename that contains a non-7bit-character" do
       filename = "f\u00f6\u00f6.b\u00e4r"
-      filename.encoding.should == Encoding::UTF_8
+      if RUBY_VERSION >= '1.9'
+        filename.encoding.should == Encoding::UTF_8
+      end
       mail = Mail.new
       doing {
         mail.attachments[filename] = File.read(fixture('attachments', 'test.pdf'))
