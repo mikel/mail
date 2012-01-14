@@ -207,6 +207,13 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should == result
     end
 
+    it "should decode q encoded =5F as underscore" do
+      string = "=?UTF-8?Q?This_=C2=AD_and=5Fthat?="
+      result = "This ­ and_that"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should == result
+    end
+
     it "should not fold a long string that has no spaces" do
       original = "ВосстановлениеВосстановлениеВашегопароля"
       if RUBY_VERSION >= '1.9'
