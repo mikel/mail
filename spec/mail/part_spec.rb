@@ -147,7 +147,7 @@ ENDPART
     #Note: trailing \n\n is stripped off by Mail::Part initialization
     part = Mail::Part.new(plain_text)
     part[:content_type].content_type.should eq 'text/plain'
-    part.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+    part.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
   end
 
 end

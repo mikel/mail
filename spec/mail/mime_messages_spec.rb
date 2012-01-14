@@ -468,7 +468,7 @@ describe "MIME Emails" do
         m.parts.length.should eq 2
         m.parts.first[:content_type].content_type.should eq 'image/png'
         m.parts.last[:content_type].content_type.should eq 'text/plain'
-        m.parts.last.to_s.should match /^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/
+        m.parts.last.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
       end
 
       it "should not raise a warning if there is a charset defined and there are non ascii chars in the body" do
