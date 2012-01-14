@@ -1,6 +1,6 @@
 module Mail
 
-  class Exim  < Sendmail
+  class Exim < Sendmail
 
     def deliver!(mail)
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
