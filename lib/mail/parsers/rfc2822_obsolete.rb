@@ -257,8 +257,19 @@ module Mail
           if r3
             r1 = r3
           else
-            @index = i1
-            r1 = nil
+            if has_terminal?("@", false, index)
+              r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure("@")
+              r4 = nil
+            end
+            if r4
+              r1 = r4
+            else
+              @index = i1
+              r1 = nil
+            end
           end
         end
         if r1
