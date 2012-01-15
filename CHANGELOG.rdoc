@@ -1,3 +1,9 @@
+== Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Bunch of bug fixes from contributed pull requests
+* Added explicit exim support
+* Version bump to 2.4.0 and gem release
+
 == Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Remove ActiveSupport from the dependencies, load Active Support if present, or use internals if not
