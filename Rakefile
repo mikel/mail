@@ -21,7 +21,6 @@ end
 
 require File.expand_path('../spec/environment', __FILE__)
 
-require 'rake/rdoctask'
 require 'rake/testtask'
 require 'rspec/core/rake_task'
 
@@ -32,30 +31,9 @@ end
 
 task :default => :spec
 
-RSpec::Core::RakeTask.new(:rcov) do |t|
-  t.rcov = true
-  t.rcov_opts ||= []
-  t.rcov_opts = t.rcov_opts << ['--exclude', '/Library,/opt,/System,/usr']
-end
-
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.ruby_opts = '-w'
   t.rspec_opts = %w(--backtrace --color)
-end
-
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Mail - A Ruby Mail Library'
-
-  rdoc.options << '-c' << 'utf-8'
-  rdoc.options << '--line-numbers'
-  rdoc.options << '--inline-source'
-  rdoc.options << '-m' << 'README.rdoc'
-
-  rdoc.rdoc_files.include('README.rdoc')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-  rdoc.rdoc_files.include('lib/network/**/*.rb')
-  rdoc.rdoc_files.exclude('lib/parsers/*')
 end
 
 # load custom rake tasks

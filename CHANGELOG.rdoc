@@ -1,3 +1,29 @@
+== Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Speed up reading of messages by about 12x
+* Added Message#without_attachments! that removes all message's attachments
+* Added shoulda-style RSpec matchers
+* Added support for @ in display name
+* Added support for the :tls and :ssl options
+* Added UTF-16 and UTF-32 support
+* Added Exim as it's own delivery manager
+* Added Ruby 1.9.3 compatibility
+* Fix for Sendmail return-path escaping
+* Fix for alias for SJIS was changed from shift_jis to windows-31J in Ruby 1.9.3
+* Fix for undefined method 'constantize' error when no ActiveSupport loaded
+* Fix Mail::Field#== comparison
+* Fixed Regexp warning: character class has duplicated range
+* Fixed encoding non-latin names in addresses
+* Fixed issue with non-7bit attachment filenames
+* Now define String#blank? only if not defined yet
+* Decoding text parts using charset from Content-Type field
+* Per RFC 5322, do not accept emails with consecutive dots
+* Bunch of bug fixes from contributed pull requests
+* Travis CI setup and passing on 6 rubies
+* Upgrade RSpec to 2.8.0
+* Lots of warnings fixed
+* Version bump to 2.4.0 and gem release
+
 == Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Remove ActiveSupport from the dependencies, load Active Support if present, or use internals if not
