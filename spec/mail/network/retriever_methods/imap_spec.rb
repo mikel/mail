@@ -76,7 +76,7 @@ describe "IMAP Retriever" do
       messages.map { |m| m.raw_source }.should eq MockIMAP.examples.map { |m| m.attr['RFC822'] }[-5..-1]
     end
     it "should handle the :mailbox option" do
-      messages = Mail.find(:mailbox => 'SOME-RANDOM-MAILBOX')
+      Mail.find(:mailbox => 'SOME-RANDOM-MAILBOX')
 
       MockIMAP.mailbox.should eq 'SOME-RANDOM-MAILBOX'
     end
@@ -86,7 +86,7 @@ describe "IMAP Retriever" do
       messages.size.should eq 10
     end
     it "should search the mailbox 'INBOX' by default" do
-      messages = Mail.find
+      Mail.find
 
       MockIMAP.mailbox.should eq 'INBOX'
     end
@@ -148,7 +148,7 @@ describe "IMAP Retriever" do
 
   describe "delete_all" do
     it "should delete all messages" do
-      messages = Mail.all
+      Mail.all
 
       Net::IMAP.should_receive(:encode_utf7).once
       Mail.delete_all
@@ -238,7 +238,7 @@ describe "IMAP Retriever" do
       Mail.defaults do
         retriever_method :imap, {:user_name => 'foo', :password => 'secret'}
       end
-      messages = Mail.find
+      Mail.find
     end
     it "should be changeable" do
       @imap.should_receive(:authenticate).with('CRAM-MD5', 'foo', 'secret')
@@ -246,7 +246,7 @@ describe "IMAP Retriever" do
       Mail.defaults do
         retriever_method :imap, {:authentication => 'CRAM-MD5', :user_name => 'foo', :password => 'secret'}
       end
-      messages = Mail.find
+      Mail.find
     end
   end
 

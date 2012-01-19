@@ -622,7 +622,6 @@ describe Mail::ContentTypeField do
         string.force_encoding('SJIS')
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       else
-        storedkcode = $KCODE
         $KCODE = 'SJIS'
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3\r\n}
       end
