@@ -22,27 +22,24 @@ describe "Attachments" do
 
   describe "from direct content" do
     it "should work" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'].filename.should eq 'test.png'
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
     it "should work out magically the mime_type" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
       @mail.attachments[0].mime_type.should eq 'image/png'
     end
 
     it "should assign the filename" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
-      @mail.attachments['test.png'] = file_data
+      @mail.attachments['test.png'] = File.read(fixture('attachments', 'test.png'))
       @mail.attachments[0].filename.should eq 'test.png'
     end
 
     it "should assign mime-encoded multibyte filename" do
-      file_data = File.read(filename = fixture('attachments', 'てすと.txt'))
-      @mail.attachments['てすと.txt'] = file_data
+      @mail.attachments['てすと.txt'] = File.read(fixture('attachments', 'てすと.txt'))
       @mail.attachments.should_not be_blank
       Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode).should eq 'てすと.txt'
     end
@@ -50,28 +47,27 @@ describe "Attachments" do
 
   describe "from a supplied Hash" do
     it "should work" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       @mail.attachments[0].filename.should eq 'test.png'
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
     it "should allow you to override the content_type" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data,
                                         :content_type => "application/x-gzip" }
       @mail.attachments[0].content_type.should eq 'application/x-gzip'
     end
 
     it "should allow you to override the mime_type" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data,
                                         :mime_type => "application/x-gzip" }
       @mail.attachments[0].mime_type.should eq 'application/x-gzip'
     end
 
     it "should allow you to override the mime_type" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
       @mail.attachments['invoice.jpg'] = { :data => "you smiling",
                                            :mime_type => "image/x-jpg",
                                            :transfer_encoding => "base64" }
@@ -83,21 +79,21 @@ describe "Attachments" do
   describe "decoding and encoding" do
 
     it "should set it's content_transfer_encoding" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       @mail.ready_to_send!
       @mail.attachments[0].content_transfer_encoding.should eq 'base64'
     end
 
     it "should encode it's body to base64" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       @mail.ready_to_send!
       @mail.attachments[0].encoded.should include(encode_base64(file_data))
     end
 
     it "should allow you to pass in an encoded attachment with an encoding" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       encoded_data = encode_base64(file_data)
       @mail.attachments['test.png'] = { :content => encoded_data,
                                         :encoding => 'base64' }
@@ -105,14 +101,14 @@ describe "Attachments" do
     end
 
     it "should not allow you to pass in an encoded attachment with an unknown encoding" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       base64_encoded_data = encode_base64(file_data)
       doing {@mail.attachments['test.png'] = { :content => base64_encoded_data,
                                                :encoding => 'weird_encoding' }}.should raise_error
     end
 
    it "should be able to call read on the attachment to return the decoded data" do
-      file_data = File.read(filename = fixture('attachments', 'test.png'))
+      file_data = File.read(fixture('attachments', 'test.png'))
       @mail.attachments['test.png'] = { :content => file_data }
       if RUBY_VERSION >= '1.9'
         expected = @mail.attachments[0].read.force_encoding(file_data.encoding)
