@@ -172,6 +172,14 @@ describe Mail::Message do
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         deserialized.delivery_handler.should be_nil
       end
+
+      it "should handle multipart mail" do
+        @yaml_mail.add_part Mail::Part.new(:content_type => 'text/html', :body => '<b>body</b>')
+        deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
+        deserialized.should be_multipart
+        deserialized.parts.each {|part| part.should be_a(Mail::Part)}
+        deserialized.parts.map(&:body).should == ['body', '<b>body</b>']
+      end
     end
   end
 
