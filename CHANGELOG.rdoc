@@ -1,3 +1,8 @@
+== Thu Jan 19 13:49:34 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Fix non ascii character folding problems
+* Handle multipart mail in Mail::Message#to_yaml / #from_yaml
+
 == Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Speed up reading of messages by about 12x
