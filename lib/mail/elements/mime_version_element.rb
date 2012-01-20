@@ -10,7 +10,7 @@ module Mail
         @major = tree.major.text_value
         @minor = tree.minor.text_value
       else
-        raise Mail::Field::ParseError, "MimeVersionElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(MimeVersionElement, string, parser.failure_reason)
       end
     end
     

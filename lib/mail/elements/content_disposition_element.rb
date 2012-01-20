@@ -10,7 +10,7 @@ module Mail
         @disposition_type = tree.disposition_type.text_value.downcase
         @parameters = tree.parameters
       else
-        raise Mail::Field::ParseError, "ContentDispositionElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(ContentDispositionElement, string, parser.failure_reason)
       end
     end
     
