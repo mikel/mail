@@ -6,6 +6,7 @@
 * Normalize the Parse Error class and messages
 * Fix for Mail::Encodings.unquote_and_convert not handling unquoted characters mixed in between quoted strings
 * Updated treetop to latest version, specs now run approximately 25-30% faster!
+* Version bump to 2.4.1 and gem release
 
 == Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
 
