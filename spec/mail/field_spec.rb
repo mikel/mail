@@ -79,7 +79,7 @@ describe Mail::Field do
     end
 
     it "should return an unstuctured field if the structured field parsing raises an error" do
-      Mail::ToField.should_receive(:new).and_raise(Mail::Field::ParseError)
+      Mail::ToField.should_receive(:new).and_raise(Mail::Field::ParseError.new(Mail::ToField, 'To: Bob, ,,, Frank, Smith', "Some reason"))
       field = Mail::Field.new('To: Bob, ,,, Frank, Smith')
       field.field.class.should eq Mail::UnstructuredField
       field.name.should eq 'To'
@@ -249,6 +249,22 @@ describe Mail::Field do
       subject = Mail::SubjectField.new("=?Windows1252?Q?It=92s_a_test=3F?=", 'utf-8')
       subject.decoded.should eq "It’s a test?"
     end
+  end
+
+  describe Mail::Field::ParseError do
+    it "should be structured" do
+      error = nil
+      begin
+        Mail::DateTimeElement.new("invalid")
+      rescue Mail::Field::ParseError => e
+        error = e
+      end
+      error.should_not be_nil
+      error.element.should == Mail::DateTimeElement
+      error.value.should == "invalid"
+      error.reason.should_not be_nil
+    end
+
   end
 
 end

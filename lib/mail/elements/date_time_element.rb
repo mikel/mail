@@ -10,7 +10,7 @@ module Mail
         @date_string = tree.date.text_value
         @time_string = tree.time.text_value
       else
-        raise Mail::Field::ParseError, "DateTimeElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(DateTimeElement, string, parser.failure_reason)
       end
     end
     
