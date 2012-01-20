@@ -12,7 +12,7 @@ module Mail
       when tree = parser.parse(string.to_s.downcase)
         @encoding = tree.encoding.text_value
       else
-        raise Mail::Field::ParseError, "ContentTransferEncodingElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(ContentTransferEncodingElement, string, parser.failure_reason)
       end
     end
     

@@ -9,7 +9,7 @@ module Mail
       if tree = parser.parse(string)
         @location = tree.location.text_value
       else
-        raise Mail::Field::ParseError, "ContentLocationElement can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(ContentLocationElement, string, parser.failure_reason)
       end
     end
     

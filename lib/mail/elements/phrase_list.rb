@@ -9,7 +9,7 @@ module Mail
       if tree = parser.parse(string)
         @phrases = tree.phrases
       else
-        raise Mail::Field::ParseError, "PhraseList can not parse |#{string}|\nReason was: #{parser.failure_reason}\n"
+        raise Mail::Field::ParseError.new(PhraseList, string, parser.failure_reason)
       end
     end
     
