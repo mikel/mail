@@ -2,6 +2,7 @@
 
 * Fix non ascii character folding problems
 * Handle multipart mail in Mail::Message#to_yaml / #from_yaml
+* More warning fixes
 
 == Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
 
