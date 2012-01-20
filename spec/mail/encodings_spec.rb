@@ -616,7 +616,14 @@ describe Mail::Encodings do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
         b.should eq "日本語 <a@example.com>, 日本語 <b@example.com>"
-      end      
+      end
+
+      it "should handle multiline quoted headers with mixed content" do
+        a = "=?iso-2022-jp?B?GyRCP3AwQxsoQg==?=2=?iso-2022-jp?B?GyRCIiobKEI=?= =?iso-2022-jp?B?GyRCOkc2YUxnPj4kcj5+JGsySCQsJFskSCRzJEk4K0V2GyhC?= =?iso-2022-jp?B?GyRCJD8kaSRKJCQhKjxkJDckJCQzJEgkRyQ5JE0hI0Z8GyhC?= =?iso-2022-jp?B?GyRCS1wkTiQkJCQkSCQzJG0hIiRvJFMkNSRTJE5AJDMmGyhC?= =?iso-2022-jp?B?GyRCJCw8OiRvJGwkRCREJCIkazg9Ol8hIiRKJHMkSCQrGyhC?= =?iso-2022-jp?B?GyRCOGVAJCRLO0QkNSRNJFAhIkxeQk4kSiQkISokSCReGyhC?= =?iso-2022-jp?B?GyRCJF4kTztXJCYkTiRAISMbKEI=?="
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "瑞庵2→最近門松を飾る家がほとんど見当たらない！寂しいことですね。日本のいいところ、わびさびの世界が失われつつある現在、なんとか後世に残さねば、勿体ない！とままは思うのだ。"
+      end
+
     end
   end
   

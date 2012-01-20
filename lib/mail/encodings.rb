@@ -126,13 +126,21 @@ module Mail
           # Join QP encoded-words that are adjacent to avoid decoding partial chars
           text.gsub!(/\?\=\=\?.+?\?[Qq]\?/m, '') if text =~ /\?==\?/
 
-          # Separate encoded-words with a space, so we can treat them one by one
-          text.gsub!(/\?\=\=\?/, '?= =?')
-          text.split(/ /).map do |word|
-            word.to_str.
-              gsub( /=\?.+\?[Bb]\?.+\?=/m ) { |substr| b_value_decode(substr) }.
-              gsub( /=\?.+\?[Qq]\?.+\?=/m ) { |substr| q_value_decode(substr) }
+          # Search for occurences of quoted strings or plain strings
+          text.scan(/(                                  # Group around entire regex to include it in matches
+                       \=\?[^?]+\?([QB])\?[^?]+?\?\=  # Quoted String with subgroup for encoding method
+                       |                                # or
+                       .+?(?=\=\?)                      # Plain String
+                     )/xmi).map do |matches|
+            string, method = *matches
+            if    method == 'b' || method == 'B'
+              b_value_decode(string)
+            elsif method == 'q' || method == 'Q'
+              q_value_decode(string)
+            else
+              string
             end
+          end
         end
       end.join("")
     end
