@@ -240,13 +240,13 @@ describe Mail::Message do
     it "should give the header class the header to parse" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
       Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
-      mail = Mail::Message.new(basic_email)
+      Mail::Message.new(basic_email)
     end
 
     it "should give the header class the header to parse even if there is no body" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
       Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
-      mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
 
     it "should give the body class the body to parse" do
@@ -259,7 +259,7 @@ describe Mail::Message do
     it "should still ask the body for a new instance even though these is nothing to parse, yet" do
       body = Mail::Body.new('')
       Mail::Body.should_receive(:new).and_return(body)
-      mail = Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
+      Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
 
     it "should give the header the part before the line without spaces and the body the part without" do

@@ -139,7 +139,7 @@ module Mail
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
-      original_encoding, string = split_encoding_from_string( str )
+      original_encoding = split_encoding_from_string( str )
 
       output = value_decode( str ).to_s
 
@@ -253,7 +253,7 @@ module Mail
     def Encodings.split_encoding_from_string( str )
       match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
       if match
-        [match[1], match[2]]
+        match[1]
       else
         nil
       end

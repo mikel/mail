@@ -153,7 +153,7 @@ describe "SMTP Delivery Method" do
   describe "return path" do
 
     it "should use the return path if specified" do
-      mail = Mail.deliver do
+      Mail.deliver do
         to "to@someemail.com"
         from "from@someemail.com"
         sender "sender@test.lindsaar.net"
@@ -166,7 +166,7 @@ describe "SMTP Delivery Method" do
     end
 
     it "should use the sender address is no return path is specified" do
-      mail = Mail.deliver do
+      Mail.deliver do
         to "to@someemail.com"
         from "from@someemail.com"
         sender "sender@test.lindsaar.net"
@@ -178,7 +178,7 @@ describe "SMTP Delivery Method" do
     end
     
     it "should use the from address is no return path or sender is specified" do
-      mail = Mail.deliver do
+      Mail.deliver do
         to "to@someemail.com"
         from "from@someemail.com"
         subject "Can't set the return-path"

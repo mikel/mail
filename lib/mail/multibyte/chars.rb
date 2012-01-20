@@ -435,7 +435,7 @@ module Mail #:nodoc:
 
           begin
             @wrapped_string[0...byte_offset].unpack('U*').length
-          rescue ArgumentError => e
+          rescue ArgumentError
             byte_offset -= 1
             retry
           end
