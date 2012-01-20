@@ -3,6 +3,9 @@
 * Fix non ascii character folding problems
 * Handle multipart mail in Mail::Message#to_yaml / #from_yaml
 * More warning fixes
+* Normalize the Parse Error class and messages
+* Fix for Mail::Encodings.unquote_and_convert not handling unquoted characters mixed in between quoted strings
+* Updated treetop to latest version, specs now run approximately 25-30% faster!
 
 == Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
 
