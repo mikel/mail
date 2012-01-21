@@ -138,29 +138,15 @@ describe Mail::Encodings do
     end
 
     it "should decode UTF-16 encoded string" do
-      if RUBY_VERSION >= '1.9'
-        string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
-        result = "あいうえお"
-        result.force_encoding('UTF-8')
-        Mail::Encodings.value_decode(string).should == result
-      else
-        string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
-        result = "0B0D0F0H0J"
-        Mail::Encodings.value_decode(string).should == result
-      end
+      string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
+      result = "あいうえお"
+      Mail::Encodings.value_decode(string).should == result
     end
 
     it "should decode UTF-32 encoded string" do
-      if RUBY_VERSION >= '1.9'
-        string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
-        result = "あいうえお"
-        result.force_encoding('UTF-8')
-        Mail::Encodings.value_decode(string).should == result
-      else
-        string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
-        result = "\000\0000B\000\0000D\000\0000F\000\0000H\000\0000J"
-        Mail::Encodings.value_decode(string).should == result
-      end
+      string = "=?UTF-32?B?AAAwQgAAMEQAADBGAAAwSAAAMEo=?="
+      result = "あいうえお"
+      Mail::Encodings.value_decode(string).should == result
     end
   end
 
@@ -272,7 +258,7 @@ describe Mail::Encodings do
     it "should round trip another complex string (koi-8)" do
       original = "Слово 9999 и число"
       mail = Mail.new
-      mail.subject = (RUBY_VERSION >= "1.9" ? original.encode('koi8-r') : original)
+      mail.subject = (RUBY_VERSION >= "1.9" ? original.encode('koi8-r') : Iconv.conv('koi8-r', 'UTF-8', original))
       mail[:subject].charset = 'koi8-r'
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
@@ -423,29 +409,15 @@ describe Mail::Encodings do
     end
 
     it "should decode UTF-16 encoded string" do
-      if RUBY_VERSION >= '1.9'
-        string = "=?UTF-16?Q?0B0D0F0H0J=?="
-        result = "あいうえお"
-        result.force_encoding('UTF-8')
-        Mail::Encodings.value_decode(string).should == result
-      else
-        string = "=?UTF-16?Q?0B0D0F0H0J=?="
-        result = "0B0D0F0H0J"
-        Mail::Encodings.value_decode(string).should == result
-      end
+      string = "=?UTF-16?Q?0B0D0F0H0J=?="
+      result = "あいうえお"
+      Mail::Encodings.value_decode(string).should == result
     end
 
     it "should decode UTF-32 encoded string" do
-      if RUBY_VERSION >= '1.9'
-        string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
-        result = "あいうえお"
-        result.force_encoding('UTF-8')
-        Mail::Encodings.value_decode(string).should == result
-      else
-        string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
-        result = "\x00\x000B\x00\x000D\x00\x000F\x00\x000H\x00\x000J"
-        Mail::Encodings.value_decode(string).should == result
-      end
+      string = "=?UTF-32?Q?=00=000B=00=000D=00=000F=00=000H=00=000J=?="
+      result = "あいうえお"
+      Mail::Encodings.value_decode(string).should == result
     end
 
     it "should detect multiple encoded QP string to the decoded string" do
@@ -602,10 +574,10 @@ describe Mail::Encodings do
       end
 
       it "should unquote and change to an ISO encoding if we really want" do
-        a ="=?ISO-8859-1?Q?Brosch=FCre_Rand?="
+        a = "=?ISO-8859-1?Q?Brosch=FCre_Rand?="
         b = Mail::Encodings.unquote_and_convert_to(a, 'iso-8859-1')
         expected = "Brosch\374re Rand"
-        expected.force_encoding('iso-8859-1').encode!('utf-8') if expected.respond_to?(:force_encoding)
+        expected.force_encoding('iso-8859-1') if expected.respond_to?(:force_encoding)
         b.should eq expected
       end
 
@@ -645,7 +617,7 @@ describe Mail::Encodings do
       if RUBY_VERSION >= '1.9'
         expected = "\nRe: ol\341".force_encoding('ISO-8859-1').encode('utf-8')
       else
-        expected = "\nRe: ol\341"
+        expected = Iconv.conv("UTF-8", "ISO-8859-1", "\nRe: ol\341")
       end
       encoded = "=?ISO-8859-1?Q?\nRe=3A_ol=E1?="
       Mail::Encodings.value_decode(encoded).should eq expected
