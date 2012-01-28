@@ -621,6 +621,12 @@ describe Mail::Encodings do
         b.should eq "瑞庵2→最近門松を飾る家がほとんど見当たらない！寂しいことですね。日本のいいところ、わびさびの世界が失われつつある現在、なんとか後世に残さねば、勿体ない！とままは思うのだ。"
       end
 
+      it "should handle quoted string with mixed content that have a plain string at the end" do
+        a = 'Der Kunde ist K=?utf-8?B?w7Y=?=nig'
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "Der Kunde ist König"
+      end
+
     end
   end
   
