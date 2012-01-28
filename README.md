@@ -25,6 +25,20 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
+Donations
+-------------
+
+Mail has been downloaded millions of times, by people around the world, in fact,
+it represents more than 1% of *all* gems downloaded.  
+
+It is (like all open source software) a labour of love and something I am doing
+with my own free time.  If you would like to say thanks, please feel free to
+[make a donation](http://www.pledgie.com/campaigns/8790) and feel free to send
+me a nice email :)
+
+<a href='http://www.pledgie.com/campaigns/8790'><img alt='Click here to lend your support to: mail and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/8790.png?skin_name=chrome' border='0' /></a>
+
+
 Compatibility
 -------------
 
