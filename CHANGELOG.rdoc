@@ -1,8 +1,9 @@
-== Thu Jan 24 00:56:36 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
+== HEAD
 
 * Change Mail#deliver! to also inform the interceptors
+* Encodings.value_decode(str): Treat lines with mixed encoding correctly when the line ends with a plain text part.
 
-== Thu Jan 19 13:49:34 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
+== Version 2.4.1 - Thu Jan 19 13:49:34 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Fix non ascii character folding problems
 * Handle multipart mail in Mail::Message#to_yaml / #from_yaml
@@ -12,7 +13,7 @@
 * Updated treetop to latest version, specs now run approximately 25-30% faster!
 * Version bump to 2.4.1 and gem release
 
-== Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
+== Version 2.4.0 - Sun Jan 15 18:15:56 UTC 2011 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Speed up reading of messages by about 12x
 * Added Message#without_attachments! that removes all message's attachments
@@ -38,7 +39,7 @@
 * Lots of warnings fixed
 * Version bump to 2.4.0 and gem release
 
-== Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
+== Version 2.3.0 - Tue Apr 26 09:59:56 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Remove ActiveSupport from the dependencies, load Active Support if present, or use internals if not
 * Created v2.2 branch for all 2.2 related commits
