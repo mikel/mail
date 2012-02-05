@@ -1560,7 +1560,7 @@ module Mail
     def html_part(&block)
       if block_given?
         @html_part = Mail::Part.new(&block)
-        add_multipart_alternate_header unless html_part.blank?
+        add_multipart_alternate_header unless text_part.blank?
         add_part(@html_part)
       else
         @html_part || find_first_mime_type('text/html')
