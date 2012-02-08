@@ -1,5 +1,4 @@
 .bundle
-Gemfile.lock
 coverage
 gems
 /mail-*.gem
