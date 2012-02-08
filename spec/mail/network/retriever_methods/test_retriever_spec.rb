@@ -66,6 +66,15 @@ describe "Test Retriever" do
       Mail.find(:delete_after_find => false).should be_empty
     end
 
+    it "should handle the both of :delete_after_find and :count option" do
+      expect do
+        Mail.find(:count => 5, :delete_after_find => true).should have(5).items
+      end.to change { Mail.all.size }.by(-5)
+      expect do
+        Mail.find(:count => 5, :delete_after_find => true).should have(5).items
+      end.to change { Mail.all.size }.by(-5)
+    end
+
     it "should handle the :delete_after_find option with messages marked not for delete" do
       i = 0
       messages = []
