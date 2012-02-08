@@ -54,6 +54,11 @@ describe "Test Retriever" do
       Mail.find(:what => :last, :count => 5).should eq @emails[10, 5]
     end
 
+    it "should handle the both of :what and :order option with :count => 1" do
+      Mail.find(:count => 1, :what => :last, :order => :asc).should eq @emails.last
+      Mail.find(:count => 1, :what => :first, :order => :desc).should eq @emails.first
+    end
+
     it "should handle the :delete_after_find option" do
       Mail.find(:delete_after_find => false).should eq @emails
       Mail.find(:delete_after_find => false).should eq @emails

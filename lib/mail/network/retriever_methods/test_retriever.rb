@@ -24,7 +24,6 @@ module Mail
       emails.reverse! if options[:what] == :last
       emails = case count = options[:count]
         when :all then emails
-        when 1 then emails.first
         when Fixnum then emails[0, count]
         else
           raise 'Invalid count option value: ' + count.inspect
@@ -33,13 +32,9 @@ module Mail
         emails.reverse!
       end
       emails.each { |email| email.mark_for_delete = true } if options[:delete_after_find]
-      if block_given?
-        emails.each { |email| yield email }
-      else
-        emails
-      end.tap do |results|
-        emails.each { |email| @@emails.delete(email) if email.is_marked_for_delete? } if options[:delete_after_find]
-      end
+      emails.each { |email| yield email } if block_given?
+      emails.each { |email| @@emails.delete(email) if email.is_marked_for_delete? } if options[:delete_after_find]
+      emails.size == 1 && options[:count] == 1 ? emails.first : emails
     end
 
   end
