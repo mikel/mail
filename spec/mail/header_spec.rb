@@ -58,6 +58,11 @@ describe Mail::Header do
       header['Content-Type'] = 'invalid/invalid; charset="iso-8859-1"'
       doing { header.charset }.should_not raise_error
     end
+
+    it "should be Enumerable" do
+      header = Mail::Header.new("To: James Random\r\nFrom: Santa Claus\r\n")
+      header.find {|f| f.responsible_for?('From') }.should be_a(Mail::Field)
+    end
   end
 
   describe "creating fields" do

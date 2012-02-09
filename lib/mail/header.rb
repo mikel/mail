@@ -260,6 +260,13 @@ module Mail
     def limited_field?(name)
       LIMITED_FIELDS.include?(name.to_s.downcase)
     end
-    
+
+    # Enumerable support; yield each field in order to the block if there is one,
+    # or return an Enumerator for them if there isn't.
+    def each( &block )
+      return self.fields.each( &block ) if block
+      self.fields.each
+    end
+
   end
 end
