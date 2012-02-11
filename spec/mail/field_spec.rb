@@ -240,6 +240,29 @@ describe Mail::Field do
       subject = Mail::SubjectField.new("=?Windows1252?Q?It=92s_a_test=3F?=", 'utf-8')
       subject.decoded.should == "It’s a test?"
     end
+
+    it "should support ascii encoded utf-8 subjects" do
+      pending if RUBY_VERSION < '1.9'
+      s = "=?utf-8?Q?simp?= =?utf-8?Q?le_=E2=80=93_dash_=E2=80=93_?="
+      s.force_encoding 'us-ascii'
+      s.encoding.to_s.should == 'US-ASCII'
+      s.valid_encoding?.should be_true
+
+      subject = Mail::SubjectField.new(s, 'utf-8')
+      subject.decoded.should == "simple – dash – "
+    end
+
+    it "should support ascii encoded windows subjects" do
+      pending if RUBY_VERSION < '1.9'
+      s = "=?utf-8?Q?simp?= =?utf-8?Q?le_=E2=80=93_dash_=E2=80=93_?="
+      s = "=?WINDOWS-1252?Q?simp?= =?WINDOWS-1252?Q?le_=96_dash_=96_?="
+      s.force_encoding 'us-ascii'
+      s.encoding.to_s.should == 'US-ASCII'
+      s.valid_encoding?.should be_true
+
+      subject = Mail::SubjectField.new(s, 'utf-8')
+      subject.decoded.should == "simple – dash – "
+    end
   end
 
 end
