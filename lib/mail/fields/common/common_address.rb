@@ -81,8 +81,13 @@ module Mail
       when val.blank?
         parse(encoded)
       else
-        parse((formatted + [val]).join(", "))
+        self.value = [self.value, val].reject {|a| a.blank? }.join(", ")
       end
+    end
+
+    def value=(val)
+      super
+      parse(self.value)
     end
   
     private
