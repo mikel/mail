@@ -63,7 +63,7 @@ module Mail
       options = validate_options(options)
 
       start do |imap|
-        options[:read_only] ? imap.select(options[:mailbox]) : imap.examine(options[:mailbox])
+        options[:read_only] ? imap.examine(options[:mailbox]) : imap.select(options[:mailbox])
 
         message_ids = imap.uid_search(options[:keys])
         message_ids.reverse! if options[:what].to_sym == :last
