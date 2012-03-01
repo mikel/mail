@@ -104,7 +104,7 @@ It also means you can be sure Mail will behave correctly.
 API Policy
 ----------
 
-No API removals within a single point release.  All removals to be depreciated with
+No API removals within a single point release.  All removals to be deprecated with
 warnings for at least one MINOR point release before removal.
 
 Also, all private or protected methods to be declared as such - though this is still I/P.
