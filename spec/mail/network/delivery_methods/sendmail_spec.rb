@@ -148,13 +148,13 @@ describe "sendmail delivery agent" do
     
     mail = Mail.new do
       from    '"foo\";touch /tmp/PWNED;\""@blah.com'
-      to      'marcel@test.lindsaar.net'
+      to      '"foo\";touch /tmp/PWNED;\""@blah.com'
       subject 'invalid RFC2822'
     end
     
     Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
                                               "-f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\"", 
-                                              'marcel@test.lindsaar.net', 
+                                              "\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com", 
                                               mail)
     mail.deliver!
   end

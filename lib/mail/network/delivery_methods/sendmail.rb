@@ -49,7 +49,7 @@ module Mail
 
       arguments = [settings[:arguments], return_path].compact.join(" ")
 
-      self.class.call(settings[:location], arguments, mail.destinations.collect(&:shellescape).join(" "), mail)
+      self.class.call(settings[:location], arguments, mail.destinations.collect(&:escape_for_shell).join(" "), mail)
     end
 
     def self.call(path, arguments, destinations, mail)
