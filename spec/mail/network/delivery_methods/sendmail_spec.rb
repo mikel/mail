@@ -104,7 +104,6 @@ describe "sendmail delivery agent" do
     
   end
 
-
   it "should still send an email if the settings have been set to nil" do
     Mail.defaults do
       delivery_method :sendmail, :arguments => nil
@@ -119,6 +118,24 @@ describe "sendmail delivery agent" do
     Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
                                               '-f "from@test.lindsaar.net"', 
                                               'marcel@test.lindsaar.net bob@test.lindsaar.net', 
+                                              mail)
+    mail.deliver!
+  end
+
+  it "should escape evil haxxor attemptes" do
+    Mail.defaults do
+      delivery_method :sendmail, :arguments => nil
+    end
+    
+    mail = Mail.new do
+      from    '"foo\";touch /tmp/PWNED;\""@blah.com'
+      to      'marcel@test.lindsaar.net'
+      subject 'invalid RFC2822'
+    end
+    
+    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
+                                              "-f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\"", 
+                                              'marcel@test.lindsaar.net', 
                                               mail)
     mail.deliver!
   end
