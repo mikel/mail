@@ -33,6 +33,8 @@ module Mail
         Mail::SMTP
       when :sendmail
         Mail::Sendmail
+      when :exim
+        Mail::Exim
       when :file
         Mail::FileDelivery
       when :smtp_connection
