@@ -1,4 +1,5 @@
 .bundle
+.rbx
 Gemfile.lock
 coverage
 gems
