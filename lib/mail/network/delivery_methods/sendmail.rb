@@ -45,14 +45,14 @@ module Mail
 
     def deliver!(mail)
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
-      return_path = "-f \"#{envelope_from.to_s.gsub('"', '\"')}\"" if envelope_from
+      return_path = "-f " + '"' + envelope_from.escape_for_shell + '"' if envelope_from
 
       arguments = [settings[:arguments], return_path].compact.join(" ")
 
-      Sendmail.call(settings[:location], arguments, mail.destinations.collect(&:shellescape).join(" "), mail)
+      self.class.call(settings[:location], arguments, mail.destinations.collect(&:shellescape).join(" "), mail)
     end
 
-    def Sendmail.call(path, arguments, destinations, mail)
+    def self.call(path, arguments, destinations, mail)
       IO.popen("#{path} #{arguments} #{destinations}", "w+") do |io|
         io.puts mail.encoded.to_lf
         io.flush
