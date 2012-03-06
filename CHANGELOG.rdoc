@@ -1,6 +1,6 @@
 == HEAD
 
-== Version 2.4.2 - Tue Mar 6 19:38:00 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
+== Version 2.4.3 - Tue Mar 6 19:38:00 UTC 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Fix security vulnerability allowing command line exploit when using exim or sendmail from the command line
 * Change Mail#deliver! to also inform the interceptors
