@@ -15,6 +15,9 @@ group :test do
   gem "rake",       "~> 0.8.7"
   gem "bundler"
   gem "rspec",      "~> 1.3.0"
+  gem "rspec-core", "~> 2.4.0"
+  gem "rspec-mocks", "~> 2.4.0"
+  gem "rspec-expectations", "~> 2.4.0"
   gem "diff-lcs"
   case
   when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
