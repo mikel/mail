@@ -74,6 +74,21 @@ describe "SMTP Delivery Method" do
       File.exists?(delivery).should be_true
     end
 
+    it "should use the base name of the file name to prevent file system traversal" do
+      Mail.defaults do
+        delivery_method :file, :location => tmpdir
+      end
+      
+      Mail.deliver do
+        from    'roger@moore.com'
+        to      '../../../../../../../../../../../tmp/pwn'
+        subject 'evil hacker'
+      end
+
+      delivery = File.join(Mail.delivery_method.settings[:location], 'pwn')
+      File.exists?(delivery).should be_true
+    end
+
   end
   
 end

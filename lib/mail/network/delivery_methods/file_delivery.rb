@@ -6,7 +6,7 @@ module Mail
   # So if you have an email going to fred@test, bob@test, joe@anothertest, and you
   # set your location path to /path/to/mails then FileDelivery will create the directory
   # if it does not exist, and put one copy of the email in three files, called
-  # "fred@test", "bob@test" and "joe@anothertest"
+  # by their message id
   # 
   # Make sure the path you specify with :location is writable by the Ruby process
   # running Mail.
@@ -32,7 +32,7 @@ module Mail
       end
 
       mail.destinations.uniq.each do |to|
-        ::File.open(::File.join(settings[:location], to), 'a') { |f| "#{f.write(mail.encoded)}\r\n\r\n" }
+        ::File.open(::File.join(settings[:location], File.basename(to.to_s)), 'a') { |f| "#{f.write(mail.encoded)}\r\n\r\n" }
       end
     end
     
