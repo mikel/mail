@@ -54,8 +54,8 @@ module Mail
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
     #            instance of Message, not an array of Message instances.
-    #   ready_only: will ensure that no writes are made to the inbox during the session. 
-    #               This is helpful when you don't want your messages to be set to read automatically. Default is false.
+    #   read_only: will ensure that no writes are made to the inbox during the session. 
+    #              This is helpful when you don't want your messages to be set to read automatically. Default is false.
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is false. Use #find_and_delete if you would like this to default to true.
     #
