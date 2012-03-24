@@ -1,5 +1,8 @@
 == HEAD
 
+* Fixes #349 an inverted condition on imap open read_only
+* Remove duplicated line feed from regexp
+
 == Version 2.4.4 - Wed Mar 14 22:44:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Fix security vulnerability allowing command line exploit when using file delivery method
