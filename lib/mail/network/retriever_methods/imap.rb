@@ -28,8 +28,11 @@ module Mail
   #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
   #            instance of Message, not an array of Message instances.
+  #   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+  #            or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+  #            The default is 'ALL'
   #
-  #   Mail.find(:what => :first, :count => 10, :order => :asc)
+  #   Mail.find(:what => :first, :count => 10, :order => :asc, :keys=>'ALL')
   #   #=> Returns the first 10 emails in ascending order
   #
   class IMAP < Retriever
@@ -54,10 +57,15 @@ module Mail
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
     #            instance of Message, not an array of Message instances.
-    #   read_only: will ensure that no writes are made to the inbox during the session. 
+    #   read_only: will ensure that no writes are made to the inbox during the session.  Specifically, if this is
+    #              set to true, the code will use the EXAMINE command to retrieve the mail.  If set to false, which
+    #              is the default, a SELECT command will be used to retrieve the mail
     #              This is helpful when you don't want your messages to be set to read automatically. Default is false.
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is false. Use #find_and_delete if you would like this to default to true.
+    #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+    #           or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+    #           The default is 'ALL'
     #
     def find(options={}, &block)
       options = validate_options(options)
