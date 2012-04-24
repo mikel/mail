@@ -1875,12 +1875,7 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-#      index = raw_source.index(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-#      self.header = (index) ? header_part[0,index] : nil
-#      lazy_body ( [raw_source, index+1])
-      self.header = header_part
-      self.body   = body_part
+      self.header, self.body = raw_source.split(/#{CRLF}#{CRLF}/m, 2)
     end
 
     def raw_source=(value)
