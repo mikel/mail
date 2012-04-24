@@ -147,19 +147,17 @@ module Mail
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
-      original_encoding = split_encoding_from_string( str )
-
-      output = value_decode( str ).to_s
-
-      if original_encoding.to_s.downcase.gsub("-", "") == to_encoding.to_s.downcase.gsub("-", "")
+      output = value_decode( str ).to_s # output is already converted to UTF-8
+      
+      if 'utf8' == to_encoding.to_s.downcase.gsub("-", "")
         output
-      elsif original_encoding && to_encoding
+      elsif to_encoding
         begin
           if RUBY_VERSION >= '1.9'
             output.encode(to_encoding)
           else
             require 'iconv'
-            Iconv.iconv(to_encoding, original_encoding, output).first
+            Iconv.iconv(to_encoding, 'UTF-8', output).first 
           end
         rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
