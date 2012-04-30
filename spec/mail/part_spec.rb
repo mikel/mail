@@ -140,6 +140,15 @@ ENDPART
       @delivery_report.should_not be_retryable
     end
 
+    it "should not have a date header" do
+      @delivery_report.add_required_fields
+      @delivery_report.header['Date'].should be_nil
+    end
+
+    it "should not have a mime-version header" do
+      @delivery_report.add_required_fields
+      @delivery_report.header['Mime-Version'].should be_nil
+    end
   end
   
   it "should correctly parse plain text raw source and not truncate after newlines - issue 208" do

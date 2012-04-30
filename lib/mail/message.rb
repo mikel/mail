@@ -1942,8 +1942,10 @@ module Mail
       add_multipart_mixed_header    unless !body.multipart?
       body = nil                    if body.nil?
       add_message_id                unless (has_message_id? || self.class == Mail::Part)
-      add_date                      unless has_date?
-      add_mime_version              unless has_mime_version?
+      unless is_a?(Part)
+        add_date                      unless has_date?
+        add_mime_version              unless has_mime_version?
+      end
       add_content_type              unless has_content_type?
       add_charset                   unless has_charset?
       add_content_transfer_encoding unless has_content_transfer_encoding?
