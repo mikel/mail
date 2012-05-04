@@ -9,7 +9,7 @@ module Mail
     # 
     # It will preserve the content ID you specify if you do.
     def add_content_id(content_id_val = '')
-      header['content-id'] = content_id_val
+      header['content-id'] = content_id_val if inline?
     end
     
     # Returns true if the part has a content ID field, the field may or may
@@ -34,9 +34,9 @@ module Mail
     end
     
     def inline?
-      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition]
+      header[:content_disposition].nil? || header[:content_disposition].disposition_type == 'inline'
     end
-    
+
     def add_required_fields
       add_content_id unless has_content_id?
       super

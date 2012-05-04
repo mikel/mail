@@ -9,6 +9,12 @@ describe Mail::Part do
     part.to_s
     part.content_id.should_not be_nil
   end
+
+  it "should not put content-ids into parts which are not inline" do
+    part = Mail::Part.new(:content_disposition => 'attachment')
+    part.to_s
+    part.content_id.should be_nil
+  end
   
   it "should preserve any content id that you put into it" do
     part = Mail::Part.new do
