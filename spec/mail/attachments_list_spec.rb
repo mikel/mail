@@ -162,7 +162,7 @@ describe "Attachments" do
   describe "getting the content ID from an inline attachment" do
     before(:each) do
       @mail = Mail.new
-      @mail.attachments['test.gif'] = File.read(fixture('attachments', 'test.gif'))
+      @mail.attachments.inline['test.gif'] = File.read(fixture('attachments', 'test.gif'))
       @cid = @mail.attachments['test.gif'].content_id
     end
 
