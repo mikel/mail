@@ -260,8 +260,8 @@ describe Mail::Field do
         error = e
       end
       error.should_not be_nil
-      error.element.should == Mail::DateTimeElement
-      error.value.should == "invalid"
+      error.element.should eq Mail::DateTimeElement
+      error.value.should eq "invalid"
       error.reason.should_not be_nil
     end
 
