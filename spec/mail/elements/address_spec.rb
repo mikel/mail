@@ -261,6 +261,21 @@ describe Mail::Address do
         end
       end
 
+      it "should handle trailing dots" do
+        1.upto(10) do |times|
+          dots    = "." * times
+          address = Mail::Address.new("hogetest#{dots}@docomo.ne.jp")
+          address.should break_down_to({
+                                           :display_name => nil,
+                                           :address      => "hogetest#{dots}@docomo.ne.jp",
+                                           :local        => "hogetest#{dots}",
+                                           :domain       => 'docomo.ne.jp',
+                                           :format       => "hogetest#{dots}@docomo.ne.jp",
+                                           :comments     => nil,
+                                           :raw          => "hogetest#{dots}@docomo.ne.jp"})
+        end
+      end
+
       it 'should handle |"Joe & J. Harvey" <ddd @Org>|' do
         address = Mail::Address.new('"Joe & J. Harvey" <ddd @Org>')
         address.should break_down_to({
