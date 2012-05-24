@@ -1,3 +1,5 @@
+require 'mail/check_delivery_params'
+
 module Mail
   # A delivery method implementation which sends via sendmail.
   #
@@ -35,6 +37,7 @@ module Mail
   #
   #   mail.deliver!
   class Sendmail
+    include Mail::CheckDeliveryParams
 
     def initialize(values)
       self.settings = { :location       => '/usr/sbin/sendmail',
@@ -44,6 +47,8 @@ module Mail
     attr_accessor :settings
 
     def deliver!(mail)
+      check_params(mail)
+
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
       return_path = "-f " + '"' + envelope_from.escape_for_shell + '"' if envelope_from
 
