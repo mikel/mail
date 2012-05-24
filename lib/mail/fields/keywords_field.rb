@@ -29,7 +29,7 @@ module Mail
     end
     
     def encoded
-      "#{CAPITALIZED_FIELD}: #{keywords.join(', ')}\r\n"
+      "#{CAPITALIZED_FIELD}: #{keywords.join(",\r\n ")}\r\n"
     end
     
     def decoded
