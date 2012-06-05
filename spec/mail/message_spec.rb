@@ -225,6 +225,7 @@ describe Mail::Message do
       m.from.should eq ["News@InsideApple.Apple.com"]
       m.should be_multipart
     end
+
   end
 
   describe "accepting a plain text string email" do
