@@ -172,6 +172,10 @@ module Mail
     
     def parse(value = nil)
       @parsed = true
+      # flush format caches
+      @display_name = nil
+      @format_comments = nil
+      @domain_text = nil
       case
       when value.nil?
         nil
