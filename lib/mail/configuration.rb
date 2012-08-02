@@ -31,6 +31,8 @@ module Mail
         Mail::SMTP
       when :smtp
         Mail::SMTP
+      when :override_recipient_smtp
+        Mail::OverrideRecipientSMTP
       when :sendmail
         Mail::Sendmail
       when :exim
