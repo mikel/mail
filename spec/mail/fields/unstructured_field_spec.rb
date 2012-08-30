@@ -55,6 +55,16 @@ describe Mail::UnstructuredField do
       @field.encoded.should eq ''
     end
     
+    it "should handle array" do
+      @field.value = ['test']
+      @field.encoded.should eq "Subject: [\"test\"]\r\n"
+    end
+
+    it "should handle string" do
+      @field.value = 'test'
+      @field.encoded.should eq "Subject: test\r\n"
+    end    
+    
     it "should give an decoded value ready to insert into an email" do
       @field.decoded.should eq "Hello Frank"
     end
