@@ -294,7 +294,7 @@ The most recent email:
 ```ruby
 Mail.all    #=> Returns an array of all emails
 Mail.first  #=> Returns the first unread email
-Mail.last   #=> Returns the first unread email
+Mail.last   #=> Returns the last unread email
 ```
 
 The first 10 emails sorted by date in ascending order:
