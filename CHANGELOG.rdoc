@@ -3,6 +3,8 @@
 * Fixes #349 an inverted condition on imap open read_only
 * Remove duplicated line feed from regexp
 * Remove unused variable
+* Updated IMAP documentation
+* Tweak publisher
 
 == Version 2.4.4 - Wed Mar 14 22:44:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 

@@ -29,7 +29,7 @@ Donations
 -------------
 
 Mail has been downloaded millions of times, by people around the world, in fact,
-it represents more than 1% of *all* gems downloaded.  
+it represents more than 1% of *all* gems downloaded.
 
 It is (like all open source software) a labour of love and something I am doing
 with my own free time.  If you would like to say thanks, please feel free to
@@ -294,7 +294,7 @@ The most recent email:
 ```ruby
 Mail.all    #=> Returns an array of all emails
 Mail.first  #=> Returns the first unread email
-Mail.last   #=> Returns the first unread email
+Mail.last   #=> Returns the last unread email
 ```
 
 The first 10 emails sorted by date in ascending order:
@@ -641,7 +641,7 @@ License
 
 (The MIT License)
 
-Copyright (c) 2009, 2010, 2011, 2012
+Copyright (c) 2009, 2010, 2011, 2012 Mikel Lindsaar
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

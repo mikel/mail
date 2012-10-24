@@ -18,7 +18,7 @@ module Mail
   #
   #   Mail.all    #=> Returns an array of all emails
   #   Mail.first  #=> Returns the first unread email
-  #   Mail.last   #=> Returns the first unread email
+  #   Mail.last   #=> Returns the last unread email
   #
   # You can also pass options into Mail.find to locate an email in your imap mailbox
   # with the following options:
