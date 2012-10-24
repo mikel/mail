@@ -105,6 +105,10 @@ module Mail
         when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
         # Windows-1252 and alike
         when /Windows-?(.*)/i then return "Windows-#{$1}"
+        # Microsoft calls it ks_c_5601-1987, but it is code page 949 in Ruby
+        when /ks_c_5601-1987/i then return "CP949"
+        # Japanese
+        when /shift-jis/i then return "SHIFT_JIS"
         #more aliases to be added if needed
         else return encoding
       end
