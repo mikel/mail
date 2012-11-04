@@ -670,6 +670,12 @@ describe Mail::ContentTypeField do
       c.parameters['charset'].should eq 'iso-8559-1'
     end
 
+    it "should handle 'text/plain; charset = \"iso-8859-1\"'" do
+      c = Mail::ContentTypeField.new('text/plain; charset = "iso-8859-1"')
+      c.string.should eq 'text/plain'
+      c.parameters['charset'].should eq 'iso-8859-1'
+    end
+
     it "should handle text; params" do
       c = Mail::ContentTypeField.new('text; charset=utf-8')
       c.string.should eq 'text/plain'
