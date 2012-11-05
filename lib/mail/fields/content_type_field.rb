@@ -142,7 +142,7 @@ module Mail
 
       # TODO: check if there are cases where whitespace is not a separator
       val = val.
-        gsub(/\s*=\s/,'='). # remove whitespaces around equal sign
+        gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
         tr(' ',';').
         squeeze(';').
         gsub(';', '; '). #use '; ' as a separator (or EOL)
