@@ -292,6 +292,12 @@ describe Mail::Message do
       mail.to.should eq ["tester2@test.com"]
     end
 
+    it "should parse non-UTF8 sources" do
+      mail = Mail::Message.new(File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml')))
+      mail.to.should eq ["raasdnil@gmail.com"]
+      body_text = mail.body.decoded.force_encoding("iso-2022-jp").encode("UTF-8")
+      body_text.should eq "すみません。"
+    end
   end
 
   describe "directly setting values of a message" do
