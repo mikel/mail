@@ -14,7 +14,7 @@ module Mail
 
       # Decode the string from Quoted-Printable
       def self.decode(str)
-        str.unpack("M*").first
+        str.gsub(/\r\n/, "\n").unpack("M*").first
       end
 
       def self.encode(str)
