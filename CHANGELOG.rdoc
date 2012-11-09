@@ -1,5 +1,6 @@
 == HEAD
 
+* See #353 define NilClass#blank? only if not defined yet
 * Fixes #349 an inverted condition on imap open read_only
 * Remove duplicated line feed from regexp
 * Remove unused variable
