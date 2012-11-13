@@ -42,7 +42,7 @@ me a nice email :)
 Compatibility
 -------------
 
-Mail is tested by Travis (![Travis Build Status](https://secure.travis-ci.org/mikel/mail.png "Build Status")) and works on the following platforms:
+Mail is tested by Travis ([![Travis Build Status](https://travis-ci.org/mikel/mail.png "Build Status")](https://travis-ci.org/mikel/mail)) and works on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
 * jruby-1.6.5.1 [ x86_64 ]
 * rbx-head-d18 [ x86_64 ]
