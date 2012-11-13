@@ -178,10 +178,10 @@ module Mail
     def Encodings.address_encode(address, charset = 'utf-8')
       if address.is_a?(Array)
         # loop back through for each element
-        address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
+        address.compact.map { |a| Encodings.address_encode(a, charset) }.join(", ")
       else
         # find any word boundary that is not ascii and encode it
-        encode_non_usascii(address, charset)
+        encode_non_usascii(address, charset) if address
       end
     end
 
