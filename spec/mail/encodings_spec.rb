@@ -757,6 +757,12 @@ describe Mail::Encodings do
       Mail::Encodings.address_encode(raw, 'utf-8').should eq encoded
     end
 
+    it "should not throw an error when converting a b encoded character in one encoding to another encoding that does not support that character" do
+      invalid_string_in_utf_8 = "\xFE\xD3".force_encoding('GB2312')
+      b_value_encoded = Mail::Encodings.b_value_encode(invalid_string_in_utf_8)
+      Mail::Encodings.value_decode(b_value_encoded).should eq ''
+    end
+
   end
   
 end
