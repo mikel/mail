@@ -42,7 +42,7 @@ me a nice email :)
 Compatibility
 -------------
 
-Mail is tested by Travis (![Travis Build Status](https://secure.travis-ci.org/mikel/mail.png "Build Status")) and works on the following platforms:
+Mail is tested by Travis ([![Travis Build Status](https://travis-ci.org/mikel/mail.png "Build Status")](https://travis-ci.org/mikel/mail)) and works on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
 * ruby-1.8.7-p370 [ i686 ]
 * ruby-1.9.2-p290 [ x86_64 ]
