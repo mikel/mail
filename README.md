@@ -44,12 +44,13 @@ Compatibility
 
 Mail is tested by Travis (![Travis Build Status](https://secure.travis-ci.org/mikel/mail.png "Build Status")) and works on the following platforms:
 
-* jruby-1.6.5.1 [ x86_64 ]
-* rbx-head-d18 [ x86_64 ]
-* ree-1.8.7-2011.03 [ i686 ]
-* ruby-1.8.7-p357 [ i686 ]
+* ruby-1.8.7-p370 [ i686 ]
 * ruby-1.9.2-p290 [ x86_64 ]
-* ruby-1.9.3-p0 [ x86_64 ]
+* ruby-1.9.3-p327 [ x86_64 ]
+* jruby-1.6.8 [ x86_64 ]
+* jruby-1.7.0 [ x86_64 ]
+* rbx-d18 [ x86_64 ]
+* rbx-d19 [ x86_64 ]
 
 Discussion
 ----------
