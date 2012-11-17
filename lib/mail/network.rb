@@ -2,6 +2,7 @@ require 'mail/network/retriever_methods/base'
 
 module Mail
   autoload :SMTP, 'mail/network/delivery_methods/smtp'
+  autoload :OverrideRecipientSMTP, 'mail/network/delivery_methods/override_recipient_smtp'
   autoload :FileDelivery, 'mail/network/delivery_methods/file_delivery'
   autoload :Sendmail, 'mail/network/delivery_methods/sendmail'
   autoload :Exim, 'mail/network/delivery_methods/exim'
