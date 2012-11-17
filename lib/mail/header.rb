@@ -171,15 +171,15 @@ module Mail
         # Need to insert in correct order for trace fields
         self.fields << Field.new(name.to_s, value, charset)
       end
+      if dasherize(fn) == "content-type"
+        # Update charset if specified in Content-Type
+        params = self[:content_type].parameters rescue nil
+        @charset = params && params[:charset]
+      end
     end
     
     def charset
-      params = self[:content_type].parameters rescue nil
-      if params
-        params[:charset]
-      else
-        @charset
-      end
+      @charset
     end
     
     def charset=(val)
