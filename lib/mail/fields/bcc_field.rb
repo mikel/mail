@@ -36,7 +36,7 @@ module Mail
     FIELD_NAME = 'bcc'
     CAPITALIZED_FIELD = 'Bcc'
     
-    def initialize(value = '', charset = 'utf-8')
+    def initialize(value = nil, charset = 'utf-8')
       @charset = charset
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
       self.parse
@@ -45,7 +45,7 @@ module Mail
     
     # Bcc field should never be :encoded
     def encoded
-      ''
+      do_encode(CAPITALIZED_FIELD)
     end
     
     def decoded
