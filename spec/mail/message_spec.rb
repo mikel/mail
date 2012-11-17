@@ -1476,7 +1476,7 @@ describe Mail::Message do
     end
 
     it "should inform observers that the mail was sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_observer(ObserverAgent)
       ObserverAgent.should_receive(:delivered_email).with(mail)
@@ -1504,7 +1504,7 @@ describe Mail::Message do
     end
 
     it "should pass to the interceptor the email just before it gets sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
       InterceptorAgent.should_receive(:delivering_email).with(mail)
@@ -1514,7 +1514,7 @@ describe Mail::Message do
     end
 
     it "should let the interceptor that the mail was sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.to = 'fred@example.com'
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
