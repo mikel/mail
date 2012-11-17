@@ -94,6 +94,14 @@ describe Mail::Message do
       errors.should be_false
     end
 
+    it "should be able to parse a large email without raising an exception" do
+      m = Mail.new
+      m.add_file(:filename => "attachment.data", :content => "a" * (8 * 1024 * 1024))
+      raw_email = "From jamis_buck@byu.edu Mon May  2 16:07:05 2005\r\n#{m.to_s}"
+
+      doing { Mail::Message.new(raw_email) }.should_not raise_error
+    end
+
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
       STDERR.should_not_receive(:puts)
       Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')))

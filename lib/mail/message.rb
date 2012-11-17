@@ -1912,9 +1912,10 @@ module Mail
     end
 
     def set_envelope_header
-      if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}(.*)/m)
+      raw_string = raw_source.to_s
+      if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = match_data[2]
+        self.raw_source = raw_string.sub(match_data[0], "") 
       end
     end
 
