@@ -1,23 +1,23 @@
 == HEAD
 
 Features:
-* Close pull request 366 - Headers parsing performance optimization
-* Close pull request 365 - Add maximum_amount of parsed headers configuration parameter
-* Close pull request 362 - Enable TLS in Ruby 1.8
-* Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii
-* Close pull request 350 - Makes mail Header object ennumerable
+* Close pull request 366 - Headers parsing performance optimization (bogdan)
+* Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
+* Close pull request 362 - Enable TLS in Ruby 1.8 (kingargyle)
+* Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii (mrkn)
+* Close pull request 350 - Makes mail Header object ennumerable (ged)
 
 Bugs:
-* Close pull request 277 - Fix specific email decoding failure example
-* Close pull request 361 - Support 8bit encoding for ruby 1.9
-* Close pull request 346 - Fix two bugs of TestRetriever
-* Close pull request 337 - Make the behavior of value_decode the same between Ruby 1.8 and Ruby 1.9.
-* Close pull request 336 - Fix more warning: possibly useless use of == in void context
-* Close pull request 293 - make charset and mime type more resliant to bad header values
+* Close pull request 277 - Fix specific email decoding failure example (yalab)
+* Close pull request 361 - Support 8bit encoding for ruby 1.9 (bogdan)
+* Close pull request 346 - Fix two bugs of TestRetriever (ermaker)
+* Close pull request 337 - Make the behavior of value_decode the same between Ruby 1.8 and Ruby 1.9. (kennyj)
+* Close pull request 336 - Fix more warning: possibly useless use of == in void context (kennyj)
+* Close pull request 293 - make charset and mime type more resliant to bad header values (kmeehl)
 * Fix failing spec Issue 453 on Ruby 1.9.3
 * Fix mail reading: don't raise invalid byte sequence in UTF-8 when reading non-UTF-8 emails (mreinsch)
-* See #353 define NilClass#blank? only if not defined yet
-* Fixes #349 an inverted condition on imap open read_only
+* Close pull request 353 - define NilClass#blank? only if not defined yet (amatsuda)
+* Close pull request 357 - Fixes #349 an inverted condition on imap open read_only (felixroeser)
 * Remove duplicated line feed from regexp
 * Remove unused variable
 * Updated IMAP documentation
