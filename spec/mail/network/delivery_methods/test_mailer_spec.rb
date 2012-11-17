@@ -54,4 +54,30 @@ describe "Mail::TestMailer" do
     Mail::TestMailer.deliveries.should be_empty
   end
 
+  it "should raise an error if no sender is defined" do
+    Mail.defaults do
+      delivery_method :test
+    end
+    lambda do
+      Mail.deliver do
+        to "to@somemail.com"
+        subject "Email with no sender"
+        body "body"
+      end
+    end.should raise_error('A sender (Return-Path, Sender or From) required to send a message')
+  end
+
+  it "should raise an error if no recipient if defined" do
+    Mail.defaults do
+      delivery_method :test
+    end
+    lambda do
+      Mail.deliver do
+        from "from@somemail.com"
+        subject "Email with no recipient"
+        body "body"
+      end
+    end.should raise_error('At least one recipient (To, Cc or Bcc) is required to send a message')
+  end
+
 end
