@@ -12,6 +12,7 @@ Performance:
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 
 Bugs:
+* Close pull request 384 - copy dat unicode over from active support (technoweenie)
 * Close pull request 380 - Split strictly on MIME boundary lines (ConradIrwin)
 * Close pull request 277 - Fix specific email decoding failure example (yalab)
 * Close pull request 361 - Support 8bit encoding for ruby 1.9 (bogdan)
