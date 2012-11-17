@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Close pull request 366 - Headers parsing performance optimization
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter
 * Close pull request 362 - Enable TLS in Ruby 1.8
 * Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii
