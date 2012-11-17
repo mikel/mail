@@ -753,6 +753,13 @@ describe Mail::Encodings do
       Mail::Encodings.address_encode(raw, 'utf-8').should eq encoded
     end
 
+    it "should ignore single nil" do
+      Mail::Encodings.address_encode(nil, 'utf-8').should eq nil
+    end
+
+    it "should ignore nil in arrays" do
+      Mail::Encodings.address_encode(["aa@bb.com", nil], 'utf-8').should eq "aa@bb.com"
+    end
   end
 
 end
