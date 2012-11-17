@@ -69,7 +69,7 @@ module Mail
       if match
         encoding = match[1]
         string = match[2].gsub(/_/, '=20')
-        # Remove trailing = if it exists in a Q encoding as Ruby 1.9.3 does not silently discard
+        # Remove trailing = if it exists in a Q encoding
         string = string.sub(/\=$/, '')
         str = Encodings::QuotedPrintable.decode(string)
         str.force_encoding(fix_encoding(encoding))

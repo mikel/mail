@@ -216,13 +216,6 @@ describe Mail::Encodings do
       end
     end
 
-    it "should decode JIS with Q decoding" do
-      string = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?="
-      result = "日本語"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      Mail::Encodings.q_value_decode(string).should eq result
-    end
-
     it "should decode an encoded string" do
       string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
       result = "This is あ string"
@@ -615,6 +608,12 @@ describe Mail::Encodings do
         expected = "Brosch\374re Rand"
         expected.force_encoding('iso-8859-1').encode!('utf-8') if expected.respond_to?(:force_encoding)
         b.should eq expected
+      end
+
+      it "should unquote Shift_JIS QP with trailing =" do
+        a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?="
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "日本語"
       end
 
       it "should unquote multiple strings in the middle of the text" do
