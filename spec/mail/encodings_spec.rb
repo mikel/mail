@@ -148,6 +148,14 @@ describe Mail::Encodings do
       result = "あいうえお"
       Mail::Encodings.value_decode(string).should == result
     end
+
+    it "should decode 8bit encoded string" do
+      if RUBY_VERSION >= '1.9'
+        string = "=?8bit?Q?ALPH=C3=89E?="
+        result = "ALPH\xC3\x89E"
+        Mail::Encodings.value_decode(string).should == result
+      end
+    end
   end
 
   describe "Q encodings" do
