@@ -1,5 +1,6 @@
 == HEAD
 
+* Close pull request 350 - Makes mail Header object ennumerable
 * Close pull request 346 - Fix two bugs of TestRetriever
 * Close pull request 337 - Make the behavior of value_decode the same between Ruby 1.8 and Ruby 1.9.
 * Close pull request 336 - Fix more warning: possibly useless use of == in void context
