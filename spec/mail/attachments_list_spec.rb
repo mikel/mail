@@ -240,6 +240,12 @@ describe "reading emails with attachments" do
       result.should eq expected
     end
 
+    it "should find an attachment that has a name not surrounded by quotes" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', "attachment_with_unquoted_name.eml")))
+      mail.attachments.length.should eq 1
+      mail.attachments.first.filename.should eq "This is a test.txt"
+    end
+
     it "should find attachments inside parts with content-type message/rfc822" do
       mail = Mail.read(fixture(File.join("emails",
                                          "attachment_emails",

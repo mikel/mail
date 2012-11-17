@@ -36,6 +36,17 @@ describe Mail::ContentDispositionField do
       c.encoded.should eq "Content-Disposition: inline\r\n"
     end
 
+    it "should wrap a filename in double quotation marks only if the filename contains spaces and does not already have double quotation marks" do
+      c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=This is a bad filename.txt')
+      c.value.should eq 'attachment; filename="This is a bad filename.txt"'
+
+      c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=some.jpg')
+      c.value.should eq 'attachment; filename=some.jpg'
+
+      c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename="Bad filename but at least it is wrapped in quotes.txt"')
+      c.value.should eq 'attachment; filename="Bad filename but at least it is wrapped in quotes.txt"'
+    end
+
     it "should render decoded" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.decoded.should eq 'attachment; filename=File'
