@@ -192,7 +192,7 @@ describe "mail encoding" do
     if RUBY_VERSION > '1.9'
       lambda { m.subject.should be_valid_encoding }.should_not raise_error
     else
-      m.subject.should eq "Hello \226 World"
+      m.subject.should eq "Hello  World"
     end
   end
 end
