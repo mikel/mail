@@ -616,6 +616,15 @@ describe Mail::Encodings do
         b.should eq "日本語"
       end
 
+      it "handles Windows 1252 QP encoding" do
+        # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
+        pending if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
+
+        a = "=?WINDOWS-1252?Q?simple_=96_dash_=96_?="
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "simple – dash – "
+      end
+
       it "should unquote multiple strings in the middle of the text" do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
