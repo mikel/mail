@@ -1,0 +1,45 @@
+Received: from xxxx.xxxxxxx.xxx (127.0.0.1) by
+ xxxx.xxxxxxxx.xxx (127.0.01) with Microsoft SMTP Server id
+ 11.1.111.1; Thu, 5 Apr 2012 01:01:01 -0700
+Message-ID: <e4b473$b3jkq@xxxx.xxxx.xxxxxxxx.xxx>
+To: <xxxxxxx@xxxxxxxxxxx.xxx>
+Subject: Xxxxxx
+Date: Fri, 6 Apr 2012 01:01:01 +0000
+From: Xxxxx <xxxxxx@xxxxxxxx.xxx>
+X-Mailer: PHP/5.2.6
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
+MIME-Version: 1.0
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt"
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Test
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd"><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Test</title>
+<body>
+<p>Test</p>
+</body>
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt--
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73
+Content-Type: application/octetstream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="LOGO.png"
+Content-ID: <LOGO.png>
+
+SNIP
+
+------=_NextPart_476c4fde88e507bb8028170e8cf47c73--
