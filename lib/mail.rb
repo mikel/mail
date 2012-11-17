@@ -46,6 +46,16 @@ module Mail # :doc:
   require 'mail/utilities'
   require 'mail/configuration'
 
+  @@autoloads = {}
+  def self.register_autoload(name, path)
+    @@autoloads[name] = path
+    autoload(name, path)
+  end
+
+  def self.eager_autoload!
+    @@autoloads.each { |_,path| require(path) }
+  end
+
   # Autoload mail send and receive classes.
   require 'mail/network'
 
