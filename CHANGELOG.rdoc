@@ -1,5 +1,6 @@
 == HEAD
 
+* Close pull request 277 - Fix specific email decoding failure example
 * Close pull request 361 - Support 8bit encoding for ruby 1.9
 * Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii
 * Close pull request 350 - Makes mail Header object ennumerable
