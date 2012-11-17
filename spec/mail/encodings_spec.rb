@@ -609,6 +609,12 @@ describe Mail::Encodings do
         b.should eq expected
       end
 
+      it "should unquote Shift_JIS QP with trailing =" do
+        a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?="
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "日本語"
+      end
+
       it "should unquote multiple strings in the middle of the text" do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
