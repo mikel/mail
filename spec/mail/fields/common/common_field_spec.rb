@@ -65,4 +65,12 @@ describe Mail::CommonField do
     
   end
 
+  describe '#to_s' do
+    it 'should always return String' do
+      field = Mail::OptionalField.new('random', 0)
+      field.stub(:decoded).and_return(nil)
+      field.to_s.should be_a(String)
+    end
+  end
+
 end

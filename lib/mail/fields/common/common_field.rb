@@ -22,7 +22,7 @@ module Mail
     end
 
     def to_s
-      decoded
+      decoded.to_s
     end
 
     def default
