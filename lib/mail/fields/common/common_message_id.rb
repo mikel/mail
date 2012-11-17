@@ -31,14 +31,18 @@ module Mail
     end
 
     private
-    
+
     def do_encode(field_name)
-      %Q{#{field_name}: #{do_decode}\r\n}
+      %Q{#{field_name}: #{formated_message_ids("\r\n ")}\r\n}
     end
-    
+
     def do_decode
-      "#{message_ids.map { |m| "<#{m}>" }.join(' ')}" if message_ids
+      formated_message_ids(' ')
     end
-    
+
+    def formated_message_ids(join)
+      message_ids.map{ |m| "<#{m}>" }.join(join) if message_ids
+    end
+
   end
 end
