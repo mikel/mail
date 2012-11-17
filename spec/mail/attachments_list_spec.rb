@@ -188,6 +188,15 @@ describe "Attachments" do
       mail.encoded
       mail.mime_type.should eq 'multipart/mixed'
     end
+
+    it "allows you to set the attachment before the content type" do
+      mail = Mail.new
+      mail.attachments["test.png"] = File.read(fixture('attachments', 'test.png'))
+      mail.body = "Lots of HTML"
+      mail.mime_version = '1.0'
+      mail.content_type = 'text/html; charset=UTF-8'
+    end
+
   end
 
   describe "should handle filenames with non-7bit characters correctly" do
