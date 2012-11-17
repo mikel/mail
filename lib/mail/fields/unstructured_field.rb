@@ -61,7 +61,7 @@ module Mail
     end
 
     def do_decode
-      value.blank? ? nil : Encodings.decode_encode(value, :decode)
+      value.blank? ? nil : Encodings.decode_encode(value.to_s, :decode)
     end
 
     # 2.2.3. Long Header Fields
