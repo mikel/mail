@@ -17,6 +17,7 @@ Performance:
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 
 Bugs:
+* Close pull request 425 - Remove Gemfile.lock from generated gem (kbackowski)
 * Close pull request 414 - Fix typo on "ignoring" (derwiki)
 * Close pull request 405 - Fix stack overflow (RegexpError) triggered by large emails with an envelope (bpot)
 * Close pull request 402 - Prevent InReplyTo, Keyword, References or ResentMessageId fields from  generating lines longer than 998 chars (pplr)
