@@ -6,6 +6,7 @@ Features:
 * Close pull request 350 - Makes mail Header object ennumerable (ged)
 
 Performance:
+* Close pull request 369 - Mail::Header#charset is called pretty often during header parser work (bogdan)
 * Close pull request 368 - Improve existing code by moving some objects to contstant instead of constructing them over and over again. (bogdan)
 * Close pull request 366 - Headers parsing performance optimization (bogdan)
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
