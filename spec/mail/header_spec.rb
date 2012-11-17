@@ -21,6 +21,16 @@ describe Mail::Header do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
       header.raw_source.should eq "To: Mikel\r\nFrom: bob\r\n"
     end
+
+    it "should count the number of headers" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      header.count.should eq 2
+    end
+
+    it "should have the correct headers and values" do
+      header = Mail::Header.new("To: Daniel\r\nFrom: bob\r\n")
+      header.to_a.should eq [["From", "bob"], ["To", "Daniel"]]
+    end
     
     it "should say if it has a message_id field defined" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")

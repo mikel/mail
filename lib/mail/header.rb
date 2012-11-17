@@ -92,6 +92,14 @@ module Mail
     def errors
       @errors
     end
+
+    # enumerator containing header name and header value.
+    # This allows for the use of many Enumerable functions.
+    def each
+      @fields.each do |field|
+        yield field.name,field.value
+      end
+    end
     
     #  3.6. Field definitions
     #  
