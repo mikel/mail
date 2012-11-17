@@ -33,7 +33,8 @@ module Mail
     attr_accessor :settings
 
     def deliver!(mail)
-      Mail::TestMailer.deliveries << mail
+      clone = Marshal.load(Marshal.dump(mail))
+      Mail::TestMailer.deliveries << clone
     end
     
   end

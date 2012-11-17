@@ -54,4 +54,24 @@ describe "Mail::TestMailer" do
     Mail::TestMailer.deliveries.should be_empty
   end
 
+  it "should clone mail objects" do
+    Mail.defaults do
+      delivery_method :test
+    end
+
+    mail = Mail.new do
+      to 'foo@me.com'
+      from 'you@you.com'
+      subject 'testing'
+      body 'testing'
+    end
+    mail.deliver
+
+    # Modify the message and send again
+    mail.to = "bar@me.com"
+    mail.deliver
+    Mail::TestMailer.deliveries.first.to.should eq ["foo@me.com"]
+    Mail::TestMailer.deliveries.last.to.should eq ["bar@me.com"]
+  end
+
 end
