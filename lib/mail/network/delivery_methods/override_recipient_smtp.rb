@@ -21,6 +21,16 @@ module Mail
   #     delivery_method :override_recipient_smtp,
   #       :to => ['dan@example.com', 'harlow@example.com']
   #   end
+  #
+  # === Debug
+  #
+  # The original to, cc, and bcc fields are stored in these custom email headers
+  # for debugging:
+  #
+  #   X-Override-To
+  #   X-Override-Cc
+  #   X-Override-Bcc
+  #
   class OverrideRecipientSMTP < Mail::SMTP
     def initialize(values)
       unless values[:to]
@@ -31,11 +41,29 @@ module Mail
     end
 
     def deliver!(mail)
+      store_in_custom_headers(mail)
+
       mail.to = settings[:to]
       mail.cc = nil
       mail.bcc = nil
 
       super(mail)
+    end
+
+    private
+
+    def store_in_custom_headers(mail)
+      {
+        'X-Override-To' => mail.to,
+        'X-Override-Cc' => mail.cc,
+        'X-Override-Bcc' => mail.bcc
+      }.each do |header, addresses|
+        if addresses
+          addresses.each do |address|
+            mail.header = "#{mail.header}\n#{header}: #{address}"
+          end
+        end
+      end
     end
   end
 end

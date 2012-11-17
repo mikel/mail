@@ -23,9 +23,13 @@ describe 'override recipient SMTP delivery method' do
     end
 
     response = mail.deliver!
+
     response.to.should eq ['staging@example.com']
     response.cc.should eq []
     response.bcc.should eq []
+    response.header['X-Override-To'].to_s.should eq '[marcel@example.com, staging@example.com]'
+    response.header['X-Override-Cc'].to_s.should eq 'bob@example.com'
+    response.header['X-Override-Bcc'].to_s.should eq 'dan@example.com'
   end
 
   it 'can accept an array as configuration' do
@@ -39,6 +43,7 @@ describe 'override recipient SMTP delivery method' do
     end
 
     response = mail.deliver!
+
     response.to.should eq ['dan@example.com', 'harlow@example.com']
   end
 end
