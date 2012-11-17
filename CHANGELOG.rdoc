@@ -1,5 +1,6 @@
 == HEAD
 
+* Close pull request 336 - Fix more warning: possibly useless use of == in void context
 * Close pull request 293 - make charset and mime type more resliant to bad header values
 * Fix failing spec Issue 453 on Ruby 1.9.3
 * Fix mail reading: don't raise invalid byte sequence in UTF-8 when reading non-UTF-8 emails (mreinsch)
