@@ -24,11 +24,20 @@ module Mail
 
     def initialize(name, value, charset = nil)
       @errors = []
+
+      if value.is_a?(Array)
+        # Probably has arrived here from a failed parse of an AddressList Field
+        value = value.join(', ')
+      else
+        # Ensure we are dealing with a string
+        value = value.to_s
+      end
+
       if charset
         self.charset = charset
       else
-        if value.to_s.respond_to?(:encoding)
-          self.charset = value.to_s.encoding
+        if value.respond_to?(:encoding)
+          self.charset = value.encoding
         else
           self.charset = $KCODE
         end
@@ -61,7 +70,7 @@ module Mail
     end
 
     def do_decode
-      value.blank? ? nil : Encodings.decode_encode(value.to_s, :decode)
+      value.blank? ? nil : Encodings.decode_encode(value, :decode)
     end
 
     # 2.2.3. Long Header Fields

@@ -56,8 +56,8 @@ describe Mail::UnstructuredField do
     end
 
     it "should handle array" do
-      @field.value = ['test']
-      @field.encoded.should eq "Subject: test\r\n"
+      @field = Mail::UnstructuredField.new("To", ['mikel@example.com', 'bob@example.com'])
+      @field.encoded.should eq "To: mikel@example.com, bob@example.com\r\n"
     end
 
     it "should handle string" do
