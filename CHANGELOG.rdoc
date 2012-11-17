@@ -19,6 +19,7 @@ Performance:
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 
 Bugs:
+* Close pull request 430 - Unstructured field converts to string before calling encoding on it (brupm)
 * Close pull request 424 - Use String#to_crlf instead of String#gsub (okkez)
 * Close pull request 429 - Fix an obvious bug in exim delivery_method (dskim)
 * Close pull request 425 - Remove Gemfile.lock from generated gem (kbackowski)
