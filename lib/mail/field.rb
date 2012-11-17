@@ -35,6 +35,38 @@ module Mail
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
     
+    FIELDS_MAP = {
+      "to" => ToField,
+      "cc" => CcField,
+      "bcc" => BccField,
+      "message-id" => MessageIdField,
+      "in-reply-to" => InReplyToField,
+      "references" => ReferencesField,
+      "subject" => SubjectField,
+      "comments" => CommentsField,
+      "keywords" => KeywordsField,
+      "date" => DateField,
+      "from" => FromField,
+      "sender" => SenderField,
+      "reply-to" => ReplyToField,
+      "resent-date" => ResentDateField,
+      "resent-from" => ResentFromField,
+      "resent-sender" =>  ResentSenderField,
+      "resent-to" => ResentToField,
+      "resent-cc" => ResentCcField,
+      "resent-bcc" => ResentBccField,
+      "resent-message-id" => ResentMessageIdField,
+      "return-path" => ReturnPathField,
+      "received" => ReceivedField,
+      "mime-version" => MimeVersionField,
+      "content-transfer-encoding" => ContentTransferEncodingField,
+      "content-description" => ContentDescriptionField,
+      "content-disposition" => ContentDispositionField,
+      "content-type" => ContentTypeField,
+      "content-id" => ContentIdField,
+      "content-location" => ContentLocationField,
+    }
+
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -162,67 +194,13 @@ module Mail
     end
 
     def new_field(name, value, charset)
-      # Could do this with constantize and make it "as DRY as", but a simple case 
-      # statement is, well, simpler... 
-      case name.to_s.downcase
-      when /^to$/i
-        ToField.new(value, charset)
-      when /^cc$/i
-        CcField.new(value, charset)
-      when /^bcc$/i
-        BccField.new(value, charset)
-      when /^message-id$/i
-        MessageIdField.new(value, charset)
-      when /^in-reply-to$/i
-        InReplyToField.new(value, charset)
-      when /^references$/i
-        ReferencesField.new(value, charset)
-      when /^subject$/i
-        SubjectField.new(value, charset)
-      when /^comments$/i
-        CommentsField.new(value, charset)
-      when /^keywords$/i
-        KeywordsField.new(value, charset)
-      when /^date$/i
-        DateField.new(value, charset)
-      when /^from$/i
-        FromField.new(value, charset)
-      when /^sender$/i
-        SenderField.new(value, charset)
-      when /^reply-to$/i
-        ReplyToField.new(value, charset)
-      when /^resent-date$/i
-        ResentDateField.new(value, charset)
-      when /^resent-from$/i
-        ResentFromField.new(value, charset)
-      when /^resent-sender$/i 
-        ResentSenderField.new(value, charset)
-      when /^resent-to$/i
-        ResentToField.new(value, charset)
-      when /^resent-cc$/i
-        ResentCcField.new(value, charset)
-      when /^resent-bcc$/i
-        ResentBccField.new(value, charset)
-      when /^resent-message-id$/i
-        ResentMessageIdField.new(value, charset)
-      when /^return-path$/i
-        ReturnPathField.new(value, charset)
-      when /^received$/i
-        ReceivedField.new(value, charset)
-      when /^mime-version$/i
-        MimeVersionField.new(value, charset)
-      when /^content-transfer-encoding$/i
-        ContentTransferEncodingField.new(value, charset)
-      when /^content-description$/i
-        ContentDescriptionField.new(value, charset)
-      when /^content-disposition$/i
-        ContentDispositionField.new(value, charset)
-      when /^content-type$/i
-        ContentTypeField.new(value, charset)
-      when /^content-id$/i
-        ContentIdField.new(value, charset)
-      when /^content-location$/i
-        ContentLocationField.new(value, charset)
+      lower_case_name = name.to_s.downcase
+      header_name = nil
+      FIELDS_MAP.each do |name, _|
+        header_name = name if lower_case_name == name
+      end
+      if header_name
+        FIELDS_MAP[header_name].new(value, charset)
       else 
         OptionalField.new(name, value, charset)
       end
