@@ -1411,7 +1411,7 @@ module Mail
 
     # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
-      content_type ? header[:content_type].string : nil rescue nil
+      has_content_type? ? header[:content_type].string : nil rescue nil
     end
 
     def message_content_type
@@ -1422,7 +1422,7 @@ module Mail
     # Returns the character set defined in the content type field
     def charset
       if @header
-        content_type ? content_type_parameters['charset'] : @charset
+        has_content_type? ? content_type_parameters['charset'] : @charset
       else
         @charset
       end
