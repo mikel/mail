@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Close pull request 397 - Support dots in local part of the addresses (eac)
 * Close pull request 477 - Fixed handling content_type with superfluous spaces (ledermann)
 * Close pull request 451 - Ignore nil in addresses so things do not blow up when e.g. a user had no email (grosser)
 * Close pull request 362 - Enable TLS in Ruby 1.8 (kingargyle)
