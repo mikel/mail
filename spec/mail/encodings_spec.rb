@@ -111,15 +111,16 @@ describe Mail::Encodings do
       end
     end
 
-    it "should split the string up into bite sized chunks that can be wrapped easily" do
+    it "should not split the string up into bite sized chunks" do
+      string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
+      expected = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJlYWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJpbmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJlYWxseSBsb25nIHN0cmluZw==?='
+
       if RUBY_VERSION >= "1.9.1"
-        string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
         string = string.force_encoding('UTF-8')
-        Mail::Encodings.b_value_encode(string).should eq '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
+        Mail::Encodings.b_value_encode(string).should eq expected
       else
-        string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
         encoding = 'UTF-8'
-        Mail::Encodings.b_value_encode(string, encoding).should eq '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
+        Mail::Encodings.b_value_encode(string, encoding).should expected
       end
     end
 

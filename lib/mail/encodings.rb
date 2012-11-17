@@ -213,9 +213,7 @@ module Mail
     def Encodings.b_value_encode(encoded_str, encoding = nil)
       return encoded_str if encoded_str.to_s.ascii_only?
       string, encoding = RubyVer.b_value_encode(encoded_str, encoding)
-      map_lines(string) do |str|
-        "=?#{encoding}?B?#{str.chomp}?="
-      end.join(" ")
+      "=?#{encoding}?B?#{map_lines(string) {|str| str.chomp }.join}?="
     end
 
     # Encode a string with Quoted-Printable Encoding and returns it ready to be inserted
