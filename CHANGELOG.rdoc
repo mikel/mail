@@ -1,11 +1,14 @@
 == HEAD
 
 Features:
-* Close pull request 366 - Headers parsing performance optimization (bogdan)
-* Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 * Close pull request 362 - Enable TLS in Ruby 1.8 (kingargyle)
 * Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii (mrkn)
 * Close pull request 350 - Makes mail Header object ennumerable (ged)
+
+Performance:
+* Close pull request 368 - Improve existing code by moving some objects to contstant instead of constructing them over and over again. (bogdan)
+* Close pull request 366 - Headers parsing performance optimization (bogdan)
+* Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 
 Bugs:
 * Close pull request 277 - Fix specific email decoding failure example (yalab)
