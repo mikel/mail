@@ -83,7 +83,7 @@ describe Mail::AddressList do
       list.address_nodes.length.should eq 2
     end
 
-    it "should have each nood a class of SyntaxNode" do
+    it "should make each node a class of SyntaxNode" do
       list = Mail::AddressList.new('mikel@me.com, bob@you.com')
       list.address_nodes.each { |n| n.class.should eq Treetop::Runtime::SyntaxNode }
     end
