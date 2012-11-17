@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Close pull request 461 - Allow string as delivery_method (skyeagle, radar)
 * Close pull request 407 - Do not require Net::IMAP or Net::POP if they're already loaded (bpot)
 * Close pull request 400 - Raise exception if delivery values or from values are missing completely from an email that is getting delivered (dmathieu)
 * Close pull request 397 - Support dots in local part of the addresses (eac)
