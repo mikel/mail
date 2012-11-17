@@ -19,6 +19,7 @@ module Mail
         @parameters = nil
         value = strip_field(FIELD_NAME, value)
       end
+      ensure_filename_quoted(value)
       super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
