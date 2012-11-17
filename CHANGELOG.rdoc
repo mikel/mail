@@ -12,6 +12,7 @@ Performance:
 * Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
 
 Bugs:
+* Close pull request 391 - Fixed failed attachment parsing when file name in headers contains spaces and is not wrapped in quotes (danieltreacy)
 * Close pull request 385 - Fix Multibyte::Chars#upcase/downcase (technoweenie)
 * Close pull request 384 - copy dat unicode over from active support (technoweenie)
 * Close pull request 380 - Split strictly on MIME boundary lines (ConradIrwin)
