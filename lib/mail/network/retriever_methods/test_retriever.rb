@@ -20,26 +20,22 @@ module Mail
       options[:count] ||= :all
       options[:order] ||= :asc
       options[:what] ||= :first
-      emails = @@emails.dup
-      emails.reverse! if options[:what] == :last
-      emails = case count = options[:count]
-        when :all then emails
-        when 1 then emails.first
-        when Fixnum then emails[0, count]
+      emails_index = (0...@@emails.size).to_a
+      emails_index.reverse! if options[:what] == :last
+      emails_index = case count = options[:count]
+        when :all then emails_index
+        when Fixnum then emails_index[0, count]
         else
           raise 'Invalid count option value: ' + count.inspect
       end
       if options[:what] == :last && options[:order] == :asc || options[:what] == :first && options[:order] == :desc
-        emails.reverse!
+        emails_index.reverse!
       end
-      emails.each { |email| email.mark_for_delete = true } if options[:delete_after_find]
-      if block_given?
-        emails.each { |email| yield email }
-      else
-        emails
-      end.tap do |results|
-        emails.each { |email| @@emails.delete(email) if email.is_marked_for_delete? } if options[:delete_after_find]
-      end
+      emails_index.each { |idx| @@emails[idx].mark_for_delete = true } if options[:delete_after_find]
+      emails = emails_index.map { |idx| @@emails[idx] }
+      emails.each { |email| yield email } if block_given?
+      @@emails.reject!(&:is_marked_for_delete?) if options[:delete_after_find]
+      emails.size == 1 && options[:count] == 1 ? emails.first : emails
     end
 
   end
