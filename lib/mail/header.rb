@@ -21,6 +21,20 @@ module Mail
     include Utilities
     include Enumerable
     
+    @@maximum_amount = 1000
+
+    # Large amount of headers in Email might create extra high CPU load
+    # Use this parameter to limit number of headers that will be parsed by 
+    # mail library.
+    # Default: 1000
+    def self.maximum_amount
+      @@maximum_amount
+    end
+
+    def self.maximum_amount=(value)
+      @@maximum_amount = value
+    end
+
     # Creates a new header object.
     # 
     # Accepts raw text or nothing.  If given raw text will attempt to parse
@@ -73,8 +87,8 @@ module Mail
     #  h.fields = ['From: mikel@me.com', 'To: bob@you.com']
     def fields=(unfolded_fields)
       @fields = Mail::FieldList.new
-      warn "Warning: more than 1000 header fields only using the first 1000" if unfolded_fields.length > 1000
-      unfolded_fields[0..1000].each do |field|
+      warn "Warning: more than #{self.class.maximum_amount} header fields only using the first #{self.class.maximum_amount}" if unfolded_fields.length > self.class.maximum_amount
+      unfolded_fields[0..(self.class.maximum_amount-1)].each do |field|
 
         field = Field.new(field, nil, charset)
         field.errors.each { |error| self.errors << error }
