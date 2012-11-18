@@ -187,6 +187,7 @@ module Mail
       begin
         self.field = new_field(name, value, charset)
       rescue Mail::Field::ParseError => e
+        STDERR.puts "Could not parse field #{name} with value #{value} got error #{e}"
         self.field = Mail::UnstructuredField.new(name, value)
         self.field.errors << [name, value, e]
         self.field
