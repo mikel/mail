@@ -1321,6 +1321,7 @@ module Mail
       def domain_text
         elements[1]
       end
+
     end
 
     def _nt_local_dot_atom_text
@@ -1357,6 +1358,25 @@ module Mail
         if r2
           r4 = _nt_domain_text
           s1 << r4
+          if r4
+            s5, i5 = [], index
+            loop do
+              if has_terminal?(".", false, index)
+                r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
+              else
+                terminal_parse_failure(".")
+                r6 = nil
+              end
+              if r6
+                s5 << r6
+              else
+                break
+              end
+            end
+            r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+            s1 << r5
+          end
         end
         if s1.last
           r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
@@ -2714,17 +2734,35 @@ module Mail
         s3, i3 = [], index
         loop do
           i4, s4 = index, []
+          i5 = index
           if has_terminal?(",", false, index)
-            r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             terminal_parse_failure(",")
-            r5 = nil
+            r6 = nil
+          end
+          if r6
+            r5 = r6
+          else
+            if has_terminal?(";", false, index)
+              r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              @index += 1
+            else
+              terminal_parse_failure(";")
+              r7 = nil
+            end
+            if r7
+              r5 = r7
+            else
+              @index = i5
+              r5 = nil
+            end
           end
           s4 << r5
           if r5
-            r6 = _nt_mailbox
-            s4 << r6
+            r8 = _nt_mailbox
+            s4 << r8
           end
           if s4.last
             r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
@@ -2752,9 +2790,9 @@ module Mail
       if r1
         r0 = r1
       else
-        r7 = _nt_obs_mbox_list
-        if r7
-          r0 = r7
+        r9 = _nt_obs_mbox_list
+        if r9
+          r0 = r9
         else
           @index = i0
           r0 = nil
@@ -2915,34 +2953,52 @@ module Mail
           r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
           s4 << r5
           if r5
+            i7 = index
             if has_terminal?(",", false, index)
-              r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
+              r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
               @index += 1
             else
               terminal_parse_failure(",")
-              r7 = nil
+              r8 = nil
+            end
+            if r8
+              r7 = r8
+            else
+              if has_terminal?(";", false, index)
+                r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
+              else
+                terminal_parse_failure(";")
+                r9 = nil
+              end
+              if r9
+                r7 = r9
+              else
+                @index = i7
+                r7 = nil
+              end
             end
             s4 << r7
             if r7
-              s8, i8 = [], index
+              s10, i10 = [], index
               loop do
-                r9 = _nt_FWS
-                if r9
-                  s8 << r9
+                r11 = _nt_FWS
+                if r11
+                  s10 << r11
                 else
                   break
                 end
               end
-              r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
-              s4 << r8
-              if r8
-                r11 = _nt_address
-                if r11
-                  r10 = r11
+              r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
+              s4 << r10
+              if r10
+                r13 = _nt_address
+                if r13
+                  r12 = r13
                 else
-                  r10 = instantiate_node(SyntaxNode,input, index...index)
+                  r12 = instantiate_node(SyntaxNode,input, index...index)
                 end
-                s4 << r10
+                s4 << r12
               end
             end
           end
