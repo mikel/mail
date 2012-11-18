@@ -1,5 +1,18 @@
 == HEAD
 
+== Version 2.5.2 - Sun Nov 18 15:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Removing double loading of treetop parsers to remove warnings
+* Making parsers auto compile on spec suite and load in production code to avoid error that caused yank of 2.5.0
+* Reapply pull request 443 - CC fields with semicolon are now parsed right (paulwittmann)
+
+== Version 2.5.1 - Sun Nov 18 14:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Yanked 2.5.0
+* Reverted pull request 443 - CC fields with semicolon are now parsed right (paulwittmann)
+
+== Version 2.5.0 - Sun Nov 18 12:20:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
 Features:
 * Close pull request 406 - Add Mail#eager_autoload! to load all autoloaded files on demand (bpot)
 * Close pull request 461 - Allow string as delivery_method (skyeagle, radar)
