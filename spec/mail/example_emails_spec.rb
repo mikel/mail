@@ -251,10 +251,10 @@ describe "Test emails" do
 
     it "should handle folding subject" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example14.eml'))
-      mail.from.should == ["atsushi@example.com"]
-      mail.subject.should == "Re: TEST テストテスト"
-      mail.message_id.should == '0CC5E11ED2C1D@example.com'
-      mail.body.should == "Hello"
+      mail.from.should eq ["atsushi@example.com"]
+      mail.subject.should eq "Re: TEST テストテスト"
+      mail.message_id.should eq '0CC5E11ED2C1D@example.com'
+      mail.body.should eq "Hello"
     end
   end
 

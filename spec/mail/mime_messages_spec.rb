@@ -102,10 +102,10 @@ describe "MIME Emails" do
 
       it "should only split on exact boundary matches" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'email_with_similar_boundaries.eml'))
-        mail.parts.size.should == 2
-        mail.parts.first.parts.size.should == 2
-        mail.boundary.should == "----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
-        mail.parts.first.boundary.should == "----=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt"
+        mail.parts.size.should eq 2
+        mail.parts.first.parts.size.should eq 2
+        mail.boundary.should eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
+        mail.parts.first.boundary.should eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt"
       end
     end
 
