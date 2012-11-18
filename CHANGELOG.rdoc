@@ -1,5 +1,7 @@
 == HEAD
 
+* Fix up spec warnings
+
 == Version 2.5.2 - Sun Nov 18 15:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Removing double loading of treetop parsers to remove warnings
