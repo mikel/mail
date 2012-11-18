@@ -1337,18 +1337,22 @@ module Mail
       s0, i0 = [], index
       loop do
         i1, s1 = index, []
-        if has_terminal?(".", false, index)
-          r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
-          @index += 1
-        else
-          terminal_parse_failure(".")
-          r3 = nil
+        s2, i2 = [], index
+        loop do
+          if has_terminal?(".", false, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure(".")
+            r3 = nil
+          end
+          if r3
+            s2 << r3
+          else
+            break
+          end
         end
-        if r3
-          r2 = r3
-        else
-          r2 = instantiate_node(SyntaxNode,input, index...index)
-        end
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
         s1 << r2
         if r2
           r4 = _nt_domain_text
@@ -2710,11 +2714,11 @@ module Mail
         s3, i3 = [], index
         loop do
           i4, s4 = index, []
-          if has_terminal?(";", false, index)
+          if has_terminal?(",", false, index)
             r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
-            terminal_parse_failure(";")
+            terminal_parse_failure(",")
             r5 = nil
           end
           s4 << r5
@@ -2911,11 +2915,11 @@ module Mail
           r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
           s4 << r5
           if r5
-            if has_terminal?(";", false, index)
+            if has_terminal?(",", false, index)
               r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
               @index += 1
             else
-              terminal_parse_failure(";")
+              terminal_parse_failure(",")
               r7 = nil
             end
             s4 << r7
