@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 require 'spec_helper'
 
 def encode_base64(str)
