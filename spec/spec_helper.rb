@@ -10,13 +10,16 @@ unless defined?(SPEC_ROOT)
   SPEC_ROOT = File.join(File.dirname(__FILE__))
 end
 
+unless defined?(MAIL_SPEC_SUITE_RUNNING)
+  # Used to force compile all the parsers on each spec suite load
+  MAIL_SPEC_SUITE_RUNNING = true
+end
+
 require 'rspec'
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
-# Used to force compile all the parsers on each spec suite load
-MAIL_SPEC_SUITE_RUNNING = true
-
 require 'mail'
+
 STDERR.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 
 RSpec.configure do |c|
