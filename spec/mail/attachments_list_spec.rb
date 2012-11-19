@@ -218,9 +218,9 @@ describe "reading emails with attachments" do
       mail.attachments.length.should eq 1
     end
 
-    it "should use the content-type filename or name over the content-disposition filename" do
+    it "should use the content-disposition filename over the content-type filename or name" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
-      mail.attachments[0].filename.should eq 'hello.rb'
+      mail.attachments[0].filename.should eq 'api.rb'
     end
 
     it "should decode an attachment" do

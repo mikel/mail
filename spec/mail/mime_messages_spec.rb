@@ -289,13 +289,13 @@ describe "MIME Emails" do
       it "should return an array of attachments" do
         mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
         mail.attachments.length.should eq 1
-        mail.attachments.first.filename.should eq 'hello.rb'
+        mail.attachments.first.filename.should eq 'api.rb'
       end
 
       it "should return an array of attachments" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml'))
         mail.attachments.length.should eq 2
-        mail.attachments[0].filename.should eq 'byo-ror-cover.png'
+        mail.attachments[0].filename.should eq 'truncated.png'
         mail.attachments[1].filename.should eq 'smime.p7s'
       end
 
