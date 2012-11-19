@@ -17,6 +17,7 @@ Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
 
 Compatibility:
+* #464 - Improve attachment filename detection by preferring Content-Disposition filename. (lawrencepit)
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
 * #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 
