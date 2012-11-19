@@ -1,6 +1,9 @@
 == HEAD
 
 * Fix up spec warnings
+* Remove un needed require
+* Ensure spec_helper constants only defined once
+* Use stub against time instead of DateTime to avoid double redefinition error
 
 == Version 2.5.2 - Sun Nov 18 15:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
