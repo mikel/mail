@@ -17,7 +17,7 @@ describe "Mail" do
                                :password             => nil,
                                :authentication       => nil,
                                :enable_starttls_auto => true  }
-    
+
       retriever_method :pop3, { :address             => "localhost",
                                 :port                => 110,
                                 :user_name           => nil,
@@ -27,14 +27,14 @@ describe "Mail" do
   end
 
   describe "default delivery and retriever methods" do
-    
+
     it "should set the delivery method" do
       Mail.defaults do
         delivery_method :smtp
       end
       Mail.delivery_method.class.should eq Mail::SMTP
     end
-    
+
     it "should default to settings for smtp" do
       Mail.delivery_method.class.should eq Mail::SMTP
       Mail.delivery_method.settings.should eql({:address              => "localhost",
@@ -119,12 +119,12 @@ describe "Mail" do
   end
 
   describe "instance delivery methods" do
-    
+
     it "should copy the defaults defined by Mail.defaults" do
       mail = Mail.new
       mail.delivery_method.class.should eq Mail::SMTP
     end
-  
+
     it "should be able to change the delivery_method" do
       mail = Mail.new
       mail.delivery_method :file
@@ -138,7 +138,7 @@ describe "Mail" do
       mail.delivery_method.class.should eq Mail::FileDelivery
       mail.delivery_method.settings.should eql({:location => tmpdir})
     end
-  
+
     it "should not change the default when it changes the delivery_method" do
       mail1 = Mail.new
       mail2 = Mail.new
@@ -147,7 +147,7 @@ describe "Mail" do
       mail1.delivery_method.class.should eq Mail::FileDelivery
       mail2.delivery_method.class.should eq Mail::SMTP
     end
-  
+
     it "should not change the default settings when it changes the delivery_method settings" do
       mail1 = Mail.new
       mail2 = Mail.new
@@ -158,7 +158,7 @@ describe "Mail" do
     end
 
   end
-  
+
   describe "retrieving emails via POP3" do
     it "should retrieve all emails via POP3" do
       messages = Mail.all
@@ -169,7 +169,7 @@ describe "Mail" do
       end
     end
   end
-  
+
   describe "sending emails via SMTP" do
 
     before(:each) do
@@ -199,28 +199,28 @@ describe "Mail" do
         body 'Yeah sure'
         # add_file 'New Header Image', '/somefile.png'
       end
-      
+
       message.deliver!
 
       MockSMTP.deliveries[0][0].should eq message.encoded
       MockSMTP.deliveries[0][1].should eq "mikel@test.lindsaar.net"
       MockSMTP.deliveries[0][2].should eq ["ada@test.lindsaar.net"]
     end
-    
+
   end
 
   describe "deliveries" do
-    
+
     class MyDeliveryMethod
       attr_accessor :settings
       def initialize(values = {}); end
       def deliver!(message); true; end
     end
-    
+
     class MyObserver
       def self.delivered_email(message); end
     end
-    
+
     class MyDeliveryHandler
       def deliver_mail(mail)
         postman = MyDeliveryMethod.new
@@ -233,7 +233,7 @@ describe "Mail" do
         yield
       end
     end
-    
+
     before(:each) do
       @message = Mail.new do
         from 'mikel@test.lindsaar.net'
@@ -243,13 +243,13 @@ describe "Mail" do
       end
       @message.delivery_method :test
     end
-    
+
     describe "adding to Mail.deliveries" do
       it "should add itself to the deliveries collection on mail on delivery" do
         doing { @message.deliver }.should change(Mail::TestMailer.deliveries, :size).by(1)
       end
     end
-    
+
     describe "perform_deliveries" do
       it "should call deliver! on the delivery method by default" do
         delivery_agent = MyDeliveryMethod.new
@@ -261,7 +261,7 @@ describe "Mail" do
       it "should not call deliver if perform deliveries is set to false" do
         @message.perform_deliveries = false
         delivery_agent = MyDeliveryMethod.new
-        @message.should_not_receive(:delivery_method).and_return(delivery_agent)
+        @message.should_not_receive(:delivery_method)
         delivery_agent.should_not_receive(:deliver!)
         @message.deliver
       end
@@ -276,21 +276,21 @@ describe "Mail" do
         doing { @message.deliver }.should_not change(Mail::TestMailer.deliveries, :size)
       end
     end
-    
+
     describe "observers" do
       it "should tell it's observers that it was told to deliver an email" do
         Mail.register_observer(MyObserver)
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
-      
+
       it "should tell it's observers that it was told to deliver an email even if perform_deliveries is false" do
         Mail.register_observer(MyObserver)
         @message.perform_deliveries = false
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
-      
+
       it "should tell it's observers that it was told to deliver an email even if it is using a delivery_handler" do
         Mail.register_observer(MyObserver)
         @message.delivery_handler = MyYieldingDeliveryHandler.new
@@ -298,9 +298,9 @@ describe "Mail" do
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
-      
+
     end
-    
+
     describe "raise_delivery_errors" do
       it "should pass on delivery errors if raised" do
         delivery_agent = MyDeliveryMethod.new
@@ -317,9 +317,9 @@ describe "Mail" do
         doing { @message.deliver }.should_not raise_error(Exception)
       end
     end
-    
+
     describe "delivery_handler" do
-      
+
       it "should allow you to hand off performing the actual delivery to another object" do
         delivery_handler = MyYieldingDeliveryHandler.new
         delivery_handler.should_receive(:deliver_mail).with(@message).exactly(:once)
@@ -349,15 +349,15 @@ describe "Mail" do
         @message.delivery_handler = MyDeliveryHandler.new
         doing { @message.deliver }.should_not change(Mail::TestMailer, :deliveries)
       end
-      
+
       it "should be able to just yield and let mail do it's thing" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:do_delivery).exactly(:once)
         @message.deliver
       end
-      
+
     end
-    
+
   end
-  
+
 end
