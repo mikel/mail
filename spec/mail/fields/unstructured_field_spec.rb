@@ -76,30 +76,30 @@ describe Mail::UnstructuredField do
 
     it "should just add the CRLF at the end of the line" do
       @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
-      result = "Subject: =?UTF8?Q?testing_testing_=D6=A4?=\r\n"
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "Subject: =?UTF-8?Q?testing_testing_=D6=A4?=\r\n"
+      @field.encoded.should eq result
       @field.decoded.should eq "testing testing \326\244"
     end
 
     it "should do encoded-words encoding correctly without extra equal sign" do
       @field = Mail::SubjectField.new("testing testing æøå")
-      result = "Subject: =?UTF8?Q?testing_testing_=C3=A6=C3=B8=C3=A5?=\r\n"
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "Subject: =?UTF-8?Q?testing_testing_=C3=A6=C3=B8=C3=A5?=\r\n"
+      @field.encoded.should eq result
       @field.decoded.should eq "testing testing æøå"
     end
 
     it "should encode the space between two adjacent encoded-words" do
       @field = Mail::SubjectField.new("Her er æ ø å")
-      result = "Subject: =?UTF8?Q?Her_er_=C3=A6_=C3=B8_=C3=A5?=\r\n"
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "Subject: =?UTF-8?Q?Her_er_=C3=A6_=C3=B8_=C3=A5?=\r\n"
+      @field.encoded.should eq result
       @field.decoded.should eq "Her er æ ø å"
     end
 
     it "should encode additional special characters inside encoded-word-encoded strings" do
       string = %Q(Her er æ()<>@,;:\\"/[]?.=)
       @field = Mail::SubjectField.new(string)
-      result = %Q(Subject: =?UTF8?Q?Her_er_=C3=A6=28=29<>@,;:\\=22/[]=3F.=3D?=\r\n)
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = %Q(Subject: =?UTF-8?Q?Her_er_=C3=A6=28=29<>@,;:\\=22/[]=3F.=3D?=\r\n)
+      @field.encoded.should eq result
       @field.decoded.should eq string
     end
   end
@@ -146,8 +146,8 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long?=\r\n\s=?UTF8?Q?_string?=\r\n"
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "Subject: =?UTF-8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF-8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF-8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long?=\r\n\s=?UTF-8?Q?_string?=\r\n"
+      @field.encoded.should eq result
       @field.decoded.should eq string
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
@@ -161,8 +161,8 @@ describe Mail::UnstructuredField do
       else
         $KCODE = 'u'
       end
-      result = "X-SMTPAPI: =?UTF8?Q?{=22unique=5Fargs=22:_{=22mailing=5Fid=22:147,=22a?=\r\n =?UTF8?Q?ccount=5Fid=22:2},_=22to=22:_[=22larspind@gmail.com=22],_=22categ?=\r\n =?UTF8?Q?ory=22:_=22mailing=22,_=22filters=22:_{=22domainkeys=22:_{=22sett?=\r\n =?UTF8?Q?ings=22:_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:_{=22{{op?=\r\n =?UTF8?Q?en=5Fimage=5Furl}}=22:_[=22http://betaling.larspind.local/O?=\r\n =?UTF8?Q?/token/147/Mailing::FakeRecipient=22],_=22{{name}}=22:_[=22[FIRST?=\r\n =?UTF8?Q?_NAME]=22],_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at?=\r\n =?UTF8?Q?_st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF8?Q?_=22{{unsubscribe=5Furl}}=22:_[=22http://betaling.larspind.?=\r\n =?UTF8?Q?local/U/token/147/Mailing::FakeRecipient=22],_=22{{email}}=22:?=\r\n =?UTF8?Q?_[=22larspind@gmail.com=22],_=22{{link:308}}=22:_[=22http://beta?=\r\n =?UTF8?Q?ling.larspind.local/L/308/0/Mailing::FakeRecipient=22],_=22{{con?=\r\n =?UTF8?Q?firm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:_[=22[REF]=22]}}?=\r\n"
-      @field.encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "X-SMTPAPI: =?UTF-8?Q?{=22unique=5Fargs=22:_{=22mailing=5Fid=22:147,=22a?=\r\n =?UTF-8?Q?ccount=5Fid=22:2},_=22to=22:_[=22larspind@gmail.com=22],_=22categ?=\r\n =?UTF-8?Q?ory=22:_=22mailing=22,_=22filters=22:_{=22domainkeys=22:_{=22sett?=\r\n =?UTF-8?Q?ings=22:_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:_{=22{{op?=\r\n =?UTF-8?Q?en=5Fimage=5Furl}}=22:_[=22http://betaling.larspind.local/O?=\r\n =?UTF-8?Q?/token/147/Mailing::FakeRecipient=22],_=22{{name}}=22:_[=22[FIRST?=\r\n =?UTF-8?Q?_NAME]=22],_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at?=\r\n =?UTF-8?Q?_st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF-8?Q?_=22{{unsubscribe=5Furl}}=22:_[=22http://betaling.larspind.?=\r\n =?UTF-8?Q?local/U/token/147/Mailing::FakeRecipient=22],_=22{{email}}=22:?=\r\n =?UTF-8?Q?_[=22larspind@gmail.com=22],_=22{{link:308}}=22:_[=22http://beta?=\r\n =?UTF-8?Q?ling.larspind.local/L/308/0/Mailing::FakeRecipient=22],_=22{{con?=\r\n =?UTF-8?Q?firm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:_[=22[REF]=22]}}?=\r\n"
+      @field.encoded.should eq result
       @field.decoded.should eq string
       $KCODE = @original if RUBY_VERSION < '1.9'
     end

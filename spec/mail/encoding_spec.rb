@@ -14,8 +14,8 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.subject = "This is あ string"
-      result = "Subject: =?UTF8?Q?This_is_=E3=81=82_string?=\r\n"
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eq result
+      result = "Subject: =?UTF-8?Q?This_is_=E3=81=82_string?=\r\n"
+      mail[:subject].encoded.should eq result
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do

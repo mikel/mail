@@ -639,11 +639,7 @@ describe Mail::Address do
       address              = Mail::Address.new
       address.display_name = "まける"
       address.address      = "mikel@test.lindsaar.net"
-      if RUBY_VERSION >= '1.9'
-        address.encoded.should eq '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
-      else
-        address.encoded.should eq '=?UTF8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
-      end
+      address.encoded.should eq '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
     end
 
     it "should provide an encoded output for non us-ascii" do
