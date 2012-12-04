@@ -1,5 +1,8 @@
 == HEAD
 
+== Version 2.5.3 - Sun Dec 4 15:52:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Close pull request 468 - Remove debug output to STDOUT (tadman)
 * Fix up spec warnings
 * Remove un needed require
 * Ensure spec_helper constants only defined once
