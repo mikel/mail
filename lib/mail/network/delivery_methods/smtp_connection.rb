@@ -44,18 +44,18 @@ module Mail
       self.smtp = values[:connection]
       self.settings = values
     end
-    
+
     attr_accessor :smtp
     attr_accessor :settings
-    
+
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
-      envelope_from, destinations, message = check_delivery_params(mail)
-      response = smtp.sendmail(message, envelope_from, destinations)
+      smtp_from, smtp_to, message = check_delivery_params(mail)
+      response = smtp.sendmail(message, smtp_from, smtp_to)
 
-      settings[:return_response] ? response : self 
+      settings[:return_response] ? response : self
     end
-        
+
   end
 end

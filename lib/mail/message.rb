@@ -108,6 +108,9 @@ module Mail
       @charset = 'UTF-8'
       @defaulted_charset = true
 
+      @smtp_envelope_from = nil
+      @smtp_envelope_to = nil
+
       @perform_deliveries = true
       @raise_delivery_errors = true
 
@@ -1021,6 +1024,82 @@ module Mail
     #  mail.sender #=> 'mikel@test.lindsaar.net'
     def sender=( val )
       header[:sender] = val
+    end
+
+    # Returns the SMTP Envelope From value of the mail object, as a single
+    # string of an address spec.
+    #
+    # Defaults to Return-Path, Sender, or the first From address.
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
+    #
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_from 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
+    def smtp_envelope_from( val = nil )
+      if val
+        self.smtp_envelope_from = val
+      else
+        @smtp_envelope_from || return_path || sender || from_addrs.first
+      end
+    end
+
+    # Sets the From address on the SMTP Envelope.
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_from = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
+    def smtp_envelope_from=( val )
+      @smtp_envelope_from = val
+    end
+
+    # Returns the SMTP Envelope To value of the mail object.
+    #
+    # Defaults to #destinations: To, Cc, and Bcc addresses.
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.smtp_envelope_to #=> 'mikel@test.lindsaar.net'
+    #
+    # Also allows you to set the value by passing a value as a parameter
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_to ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
+    #  mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
+    def smtp_envelope_to( val = nil )
+      if val
+        self.smtp_envelope_to = val
+      else
+        @smtp_envelope_to || destinations
+      end
+    end
+
+    # Sets the To addresses on the SMTP Envelope.
+    #
+    # Example:
+    #
+    #  mail.smtp_envelope_to = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.smtp_envelope_to #=> 'mikel@test.lindsaar.net'
+    #
+    #  mail.smtp_envelope_to = ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
+    #  mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
+    def smtp_envelope_to=( val )
+      @smtp_envelope_to =
+        case val
+        when Array, NilClass
+          val
+        else
+          [val]
+        end
     end
 
     # Returns the decoded value of the subject field, as a single string.

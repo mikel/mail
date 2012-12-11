@@ -29,11 +29,14 @@ describe "SMTP Delivery Method" do
         from    'roger@moore.com'
         to      'marcel@amont.com'
         subject 'invalid RFC2822'
+
+        smtp_envelope_from 'smtp_from'
+        smtp_envelope_to 'smtp_to'
       end
 
       MockSMTP.deliveries[0][0].should eq mail.encoded
-      MockSMTP.deliveries[0][1].should eq mail.from[0]
-      MockSMTP.deliveries[0][2].should eq mail.destinations
+      MockSMTP.deliveries[0][1].should eq 'smtp_from'
+      MockSMTP.deliveries[0][2].should eq %w(smtp_to)
     end
 
     it "should be able to send itself" do
@@ -149,53 +152,31 @@ describe "SMTP Delivery Method" do
       doing { mail.deliver! }.should_not raise_error(TypeError)
     end
   end
-  
-  describe "return path" do
 
-    it "should use the return path if specified" do
+  describe "SMTP Envelope" do
+
+    it "uses the envelope From and To addresses" do
       Mail.deliver do
         to "to@someemail.com"
         from "from@someemail.com"
-        sender "sender@test.lindsaar.net"
-        subject "Can't set the return-path"
-        return_path "bounce@someemail.com" 
         message_id "<1234@someemail.com>"
         body "body"
+
+        smtp_envelope_to "smtp_to@someemail.com"
+        smtp_envelope_from "smtp_from@someemail.com"
       end
-      MockSMTP.deliveries[0][1].should eq "bounce@someemail.com"
+      MockSMTP.deliveries[0][1].should eq 'smtp_from@someemail.com'
+      MockSMTP.deliveries[0][2].should eq %w(smtp_to@someemail.com)
     end
 
-    it "should use the sender address is no return path is specified" do
-      Mail.deliver do
-        to "to@someemail.com"
-        from "from@someemail.com"
-        sender "sender@test.lindsaar.net"
-        subject "Can't set the return-path"
-        message_id "<1234@someemail.com>"
-        body "body"
-      end
-      MockSMTP.deliveries[0][1].should eq "sender@test.lindsaar.net"
-    end
-    
-    it "should use the from address is no return path or sender is specified" do
-      Mail.deliver do
-        to "to@someemail.com"
-        from "from@someemail.com"
-        subject "Can't set the return-path"
-        message_id "<1234@someemail.com>"
-        body "body"
-      end
-      MockSMTP.deliveries[0][1].should eq "from@someemail.com"
-    end
-
-    it "should raise an error if no sender is defined" do
+    it "should raise if there is no envelope From address" do
       lambda do
         Mail.deliver do
           to "to@somemail.com"
           subject "Email with no sender"
           body "body"
         end
-      end.should raise_error('A sender (Return-Path, Sender or From) required to send a message')
+      end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -205,8 +186,8 @@ describe "SMTP Delivery Method" do
           subject "Email with no recipient"
           body "body"
         end
-      end.should raise_error('At least one recipient (To, Cc or Bcc) is required to send a message')
+      end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
     end
   end
-  
+
 end
