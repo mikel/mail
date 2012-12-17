@@ -254,7 +254,7 @@ describe "Test emails" do
       mail.from.should eq ["atsushi@example.com"]
       mail.subject.should eq "Re: TEST テストテスト"
       mail.message_id.should eq '0CC5E11ED2C1D@example.com'
-      mail.body.should eq "Hello"
+      mail.body.decoded.should eq "Hello\n"
     end
   end
 
