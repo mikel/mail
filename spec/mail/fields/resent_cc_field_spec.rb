@@ -8,7 +8,7 @@ describe Mail::ResentCcField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ResentCcField.new("ResentCc", "Mikel") }.should_not raise_error
+      doing { Mail::ResentCcField.new("Resent-Cc: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do

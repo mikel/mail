@@ -8,7 +8,7 @@ describe Mail::ResentSenderField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ResentSenderField.new("ResentSender", "Mikel") }.should_not raise_error
+      doing { Mail::ResentSenderField.new("Resent-Sender: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do

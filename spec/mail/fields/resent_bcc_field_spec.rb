@@ -8,7 +8,7 @@ describe Mail::ResentBccField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ResentBccField.new("ResentBcc", "Mikel") }.should_not raise_error
+      doing { Mail::ResentBccField.new("Resent-Bcc: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do

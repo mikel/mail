@@ -9,7 +9,7 @@ describe Mail::ReplyToField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ReplyToField.new("ReplyTo", "Mikel") }.should_not raise_error
+      doing { Mail::ReplyToField.new("Reply-To: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do
