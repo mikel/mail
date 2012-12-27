@@ -28,4 +28,9 @@ describe Mail::EnvelopeFromElement do
     end
   end
 
+  it "returns correctly formatted line on to_s" do
+    s = "mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009"
+    Mail::EnvelopeFromElement.new(s).to_s.should eq s
+  end
+
 end
