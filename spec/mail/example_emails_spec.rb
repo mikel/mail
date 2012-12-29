@@ -187,7 +187,7 @@ describe "Test emails" do
     it "should handle the rfc whitespace test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
       mail.from.should eq ["pete(his account)@silly.test"]
-      mail.to.should eq  ["c@(Chris's host.)public.example", "joe@example.org", "jdoe@one.test"]
+      mail.to.should eq  ["c@public.example", "joe@example.org", "jdoe@one.test"]
       mail[:cc].group_names.should eq ['(Empty list)(start)Undisclosed recipients ']
       mail.date.should eq ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
       mail.message_id.should eq 'testabcd.1234@silly.test'
