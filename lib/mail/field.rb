@@ -156,9 +156,11 @@ module Mail
     alias_method :==, :same
 
     def <=>( other )
-      self_order = FIELD_ORDER.rindex(self.name.to_s.downcase) || 100
-      other_order = FIELD_ORDER.rindex(other.name.to_s.downcase) || 100
-      self_order <=> other_order
+      self.field_order_id <=> other.field_order_id
+    end
+
+    def field_order_id
+      @field_order_id ||= (FIELD_ORDER_LOOKUP[self.name.to_s.downcase] || 100)
     end
 
     def method_missing(name, *args, &block)
@@ -173,6 +175,8 @@ module Mail
                       subject comments keywords
                       mime-version content-type content-transfer-encoding
                       content-location content-disposition content-description ]
+
+    FIELD_ORDER_LOOKUP = Hash[FIELD_ORDER.each_with_index.to_a]
 
     private
 
