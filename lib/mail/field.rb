@@ -195,16 +195,11 @@ module Mail
 
     def new_field(name, value, charset)
       lower_case_name = name.to_s.downcase
-      header_name = nil
-      FIELDS_MAP.each do |field_name, _|
-        header_name = field_name if lower_case_name == field_name
-      end
-      if header_name
-        FIELDS_MAP[header_name].new(value, charset)
+      if field_klass = FIELDS_MAP[lower_case_name]
+        field_klass.new(value, charset)
       else
         OptionalField.new(name, value, charset)
       end
-
     end
 
   end
