@@ -53,7 +53,7 @@ module Mail
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
     # be set using Mail::Configuration, like so:
     #
-    #  Mail.defaults.do
+    #  Mail.defaults do
     #    param_encode_language 'jp'
     #  end
     #
