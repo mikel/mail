@@ -85,34 +85,14 @@ describe Mail::AddressList do
   end
   
   describe "functionality" do
-    it "should give back a list of address nodes" do
-      list = Mail::AddressList.new('mikel@me.com, bob@you.com')
-      list.address_nodes.length.should eq 2
-    end
-
-    it "should make each node a class of SyntaxNode" do
-      list = Mail::AddressList.new('mikel@me.com, bob@you.com')
-      list.address_nodes.each { |n| n.class.should eq Treetop::Runtime::SyntaxNode }
-    end
-
-    it "should give a block of address nodes with groups" do
-      list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      list.address_nodes.length.should eq 2
-    end
-
-    it "should give all the recipients when asked" do
-      list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      list.individual_recipients.length.should eq 1
-    end
-
     it "should give all the groups when asked" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      list.group_recipients.length.should eq 1
+      list.addresses_grouped_by_group.length.should eq 1
     end
 
     it "should ask the group for all its addresses" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      list.group_recipients.first.group_list.addresses.length.should eq 2
+      list.addresses_grouped_by_group.values.first.length.should eq 2
     end
 
     it "should give all the addresses when asked" do

@@ -124,6 +124,13 @@ describe Mail::Address do
       a.comments.should eq result
     end
 
+    it "should handle nested comments" do
+      parse_text  = "bob@example.com (hello   (nested) yeah)"
+      result      = ["hello \(nested\) yeah"]
+      a           = Mail::Address.new(parse_text)
+      a.comments.should eq result
+    end
+
     it "should give back the raw value" do
       parse_text = "Mikel (first name) Lindsaar (author) <test@lindsaar.net>"
       result     = "Mikel (first name) Lindsaar (author) <test@lindsaar.net>"

@@ -5,14 +5,10 @@ module Mail
     include Mail::Utilities
     
     def initialize( string )
-      parser = Mail::ContentTypeParser.new
-      if tree = parser.parse(cleaned(string))
-        @main_type = tree.main_type.text_value.downcase
-        @sub_type = tree.sub_type.text_value.downcase
-        @parameters = tree.parameters
-      else
-        raise Mail::Field::ParseError.new(ContentTypeElement, string, parser.failure_reason)
-      end
+      content_type = Mail::Parsers::ContentTypeParser.new.parse(cleaned(string))
+      @main_type = content_type.main_type
+      @sub_type = content_type.sub_type
+      @parameters = content_type.parameters
     end
     
     def main_type

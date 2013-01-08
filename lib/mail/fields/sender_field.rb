@@ -48,7 +48,7 @@ module Mail
     end
 
     def address
-      tree.addresses.first
+      address_list.addresses.first
     end
     
     def encoded
