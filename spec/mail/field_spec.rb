@@ -227,27 +227,55 @@ describe Mail::Field do
     end
 
     it "more tolerable to encoding definitions, ISO-long (issue 120)" do
+      # Rubies under 1.9 don't handle encoding conversions
       pending if RUBY_VERSION < '1.9'
+
+      # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
+      pending if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
+
       subject = Mail::SubjectField.new("=?iso2022jp?B?SEVBUlQbJEIkSiQ0TyJNbRsoQg?=", 'utf-8')
       subject.decoded.should eq  "HEARTなご連絡"
     end
 
     it "more tolerable to encoding definitions, UTF (issue 120)" do
-      to = Mail::ToField.new("=?utf8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>", 'utf-8')
-      to.encoded.should eq "To: =?utf8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      to = Mail::ToField.new("=?utf-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>", 'utf-8')
+      to.encoded.should eq "To: =?utf-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       to.decoded.should eq "\"あdあ\" <ada@test.lindsaar.net>"
     end
 
     it "more tolerable to encoding definitions, ISO (issue 120)" do
-      subject = Mail::SubjectField.new("=?UTF8?B?UmU6IHRlc3QgZW52w61vIG1lbnNhamUgY29u?=", 'utf-8')
+      subject = Mail::SubjectField.new("=?UTF-8?B?UmU6IHRlc3QgZW52w61vIG1lbnNhamUgY29u?=", 'utf-8')
       subject.decoded.should eq "Re: test envío mensaje con"
     end
 
 
     it "more tolerable to encoding definitions, Windows (issue 120)" do
       pending if RUBY_VERSION < '1.9'
+
+      # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
+      pending if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
+
       subject = Mail::SubjectField.new("=?Windows1252?Q?It=92s_a_test=3F?=", 'utf-8')
       subject.decoded.should eq "It’s a test?"
+    end
+
+    it "should support ascii encoded utf-8 subjects" do
+      s = "=?utf-8?Q?simp?= =?utf-8?Q?le_=E2=80=93_dash_=E2=80=93_?="
+
+      subject = Mail::SubjectField.new(s, 'utf-8')
+      subject.decoded.should == "simple – dash – "
+    end
+
+    it "should support ascii encoded windows subjects" do
+      pending if RUBY_VERSION < '1.9'
+
+      # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
+      pending if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
+
+      s = "=?WINDOWS-1252?Q?simp?= =?WINDOWS-1252?Q?le_=96_dash_=96_?="
+
+      subject = Mail::SubjectField.new(s, "UTF-8")
+      subject.decoded.should == "simple – dash – "
     end
   end
 
@@ -260,8 +288,8 @@ describe Mail::Field do
         error = e
       end
       error.should_not be_nil
-      error.element.should == Mail::DateTimeElement
-      error.value.should == "invalid"
+      error.element.should eq Mail::DateTimeElement
+      error.value.should eq "invalid"
       error.reason.should_not be_nil
     end
 

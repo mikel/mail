@@ -61,7 +61,6 @@ describe Mail::CommonField do
       field = Mail::FromField.new(value)
       field.encoded.should eq result
       field.decoded.should eq value
-      field.value.should eq "=?UTF-8?B?44GL44GN44GP44GR44GT?= <mikel@test.lindsaar.net>"
     end
     
   end

@@ -12,7 +12,7 @@ end
 
 group :test do
   gem "rake",       "> 0.8.7"
-  gem "rspec",      "~> 2.8.0"
+  gem "rspec",      "~> 2.12.0"
   case
   when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
     # Skip it

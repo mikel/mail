@@ -24,20 +24,20 @@ describe Mail::Body do
   # which are uninterpreted for the purposes of this standard.
   #
   describe "initialization" do
-    
+
     it "should be instantiated" do
       doing { Mail::Body.new }.should_not raise_error
     end
-    
+
     it "should initialize on a nil value" do
       doing { Mail::Body.new(nil) }.should_not raise_error
     end
-    
+
     it "should accept text as raw source data" do
       body = Mail::Body.new('this is some text')
       body.to_s.should eq 'this is some text'
     end
-    
+
     it "should accept nil as a value and return an empty body" do
       body = Mail::Body.new
       body.to_s.should eq ''
@@ -60,12 +60,12 @@ describe Mail::Body do
       body = Mail::Body.new('this is some text')
       body.encoded.should eq 'this is some text'
     end
-    
+
     it "should set it's own encoding to us_ascii if it is ascii only body" do
       body = Mail::Body.new('This is some text')
       body.charset.should eq 'US-ASCII'
     end
-    
+
     it "should allow you to set it's encoding" do
       body = Mail::Body.new('')
       body.charset = 'UTF-8'
@@ -77,7 +77,7 @@ describe Mail::Body do
       body.encoding = 'base64'
       body.encoding.should eq 'base64'
     end
-    
+
     it "should convert all new lines to crlf" do
       body = Mail::Body.new("This has \n various \r new \r\n lines")
       body.encoded.should eq "This has \r\n various \r\n new \r\n lines"
@@ -86,12 +86,12 @@ describe Mail::Body do
   end
 
   describe "decoding" do
-    
+
     it "should convert all new lines to crlf" do
       body = Mail::Body.new("This has \n various \r new \r\n lines")
       body.decoded.should eq "This has \n various \n new \n lines"
     end
-    
+
     it "should not change a body on decode if not given an encoding type to decode" do
       body = Mail::Body.new("The=3Dbody")
       body.decoded.should eq "The=3Dbody"
@@ -118,7 +118,7 @@ describe Mail::Body do
   end
 
   describe "splitting up a multipart document" do
-    
+
     it "should store the boundary passed in" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
@@ -138,7 +138,7 @@ describe Mail::Body do
       body.split!('----=_Part_2192_32400445')
       body.preamble.should eq "this is some text"
     end
-    
+
     it "should return the parts as their own messages" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
@@ -146,14 +146,14 @@ describe Mail::Body do
       body.parts[0].class.should eq Mail::Part
       body.parts[1].class.should eq Mail::Part
     end
-    
+
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       body.split!('----=_Part_2192_32400445')
       body.parts[0].content_type.should eq "text/plain; charset=ISO-8859-1"
     end
-    
+
     it "should return the first part as it's own message" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\nn------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
@@ -238,7 +238,7 @@ describe Mail::Body do
       body.parts[1].content_type.should eq "text/enriched"
       body.parts[2].content_type.should eq "text/html"
     end
-    
+
     it "should allow you to sort the parts with an arbitrary sort order" do
       body = Mail::Body.new('')
       body.set_sort_order([ "text/plain", "text/html", "text/enriched" ])
@@ -252,7 +252,7 @@ describe Mail::Body do
       body.parts[1].content_type.should eq "text/html"
       body.parts[2].content_type.should eq "text/enriched"
     end
-    
+
     it "should allow you to sort the parts with an arbitrary sort order" do
       body = Mail::Body.new('')
       body.set_sort_order(["application/x-yaml", "text/plain"])
@@ -266,7 +266,7 @@ describe Mail::Body do
       body.parts[1].content_type.should eq "text/plain"
       body.parts[2].content_type.should eq "text/html"
     end
-    
+
     it "should sort the parts on encode" do
       body = Mail::Body.new('')
       body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
@@ -279,7 +279,7 @@ describe Mail::Body do
       body.parts[1].content_type.should eq "text/enriched"
       body.parts[2].content_type.should eq "text/html"
     end
-    
+
     it "should put the part types it doesn't know about at the end" do
       body = Mail::Body.new('')
       body << Mail::Part.new("content-type: text/html\r\nsubject: HTML")
@@ -292,7 +292,7 @@ describe Mail::Body do
       body.parts[1].content_type.should eq "text/html"
       body.parts[2].content_type.should eq "image/jpeg"
     end
-    
+
     it "should allow you to sort the parts recursively" do
       part = Mail::Part.new('Content-Type: multipart/alternate')
       part.add_part(Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text"))
@@ -304,13 +304,13 @@ describe Mail::Body do
       body.parts.length.should eq 2
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)} 
+      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)}
       body.parts[1].content_type.should eq "image/jpeg"
       body.parts[0].parts[0].content_type.should eq "text/plain"
       body.parts[0].parts[1].content_type.should eq "text/enriched"
       body.parts[0].parts[2].content_type.should eq "text/html"
     end
-    
+
     it "should allow you to sort the parts recursively" do
       part = Mail::Part.new('Content-Type: multipart/alternate')
       part.add_part(Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched"))
@@ -322,13 +322,13 @@ describe Mail::Body do
       body.parts.length.should eq 2
       body.should be_multipart
       body.sort_parts!
-      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)} 
+      body.parts[0].content_type.should match %r{\Amultipart/alternate(;|\Z)}
       body.parts[1].content_type.should eq "image/jpeg"
       body.parts[0].parts[0].content_type.should eq "text/plain"
       body.parts[0].parts[1].content_type.should eq "text/enriched"
       body.parts[0].parts[2].content_type.should eq "text/html"
     end
-    
+
   end
 
   describe "matching" do
@@ -370,12 +370,12 @@ describe Mail::Body do
       body.encoding = 'base64'
       (body.match(/The/))[0].should eq 'The'
     end
-    
+
     it "should match on the body part decoded if given a string to include?" do
       body = Mail::Body.new('The Body')
       body.should include('The')
     end
-    
+
     it "should match on the body part decoded if given a string to include?" do
       body = Mail::Body.new("VGhlIGJvZHk=\n")
       body.encoding = 'base64'

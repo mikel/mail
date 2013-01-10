@@ -36,7 +36,7 @@ module Mail
   #   #=> Returns the first 10 emails in ascending order
   #
   class IMAP < Retriever
-    require 'net/imap'
+    require 'net/imap' unless defined?(Net::IMAP)
     
     def initialize(values)
       self.settings = { :address              => "localhost",

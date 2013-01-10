@@ -1,8 +1,68 @@
 == HEAD
 
+== Version 2.5.3 - Sun Dec 4 15:52:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Close pull request 468 - Remove debug output to STDOUT (tadman)
+* Fix up spec warnings
+* Remove un needed require
+* Ensure spec_helper constants only defined once
+* Use stub against time instead of DateTime to avoid double redefinition error
+
+== Version 2.5.2 - Sun Nov 18 15:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Removing double loading of treetop parsers to remove warnings
+* Making parsers auto compile on spec suite and load in production code to avoid error that caused yank of 2.5.0
+* Reapply pull request 443 - CC fields with semicolon are now parsed right (paulwittmann)
+
+== Version 2.5.1 - Sun Nov 18 14:01:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+* Yanked 2.5.0
+* Reverted pull request 443 - CC fields with semicolon are now parsed right (paulwittmann)
+
+== Version 2.5.0 - Sun Nov 18 12:20:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
+
+Features:
+* Close pull request 406 - Add Mail#eager_autoload! to load all autoloaded files on demand (bpot)
+* Close pull request 461 - Allow string as delivery_method (skyeagle, radar)
+* Close pull request 407 - Do not require Net::IMAP or Net::POP if they're already loaded (bpot)
+* Close pull request 400 - Raise exception if delivery values or from values are missing completely from an email that is getting delivered (dmathieu)
+* Close pull request 397 - Support dots in local part of the addresses (eac)
+* Close pull request 477 - Fixed handling content_type with superfluous spaces (ledermann)
+* Close pull request 451 - Ignore nil in addresses so things do not blow up when e.g. a user had no email (grosser)
+* Close pull request 362 - Enable TLS in Ruby 1.8 (kingargyle)
+* Close pull request 358 - Fix Mail::CommonAddress#value=, Mail::CommonAddress#<< and Mail::Encodings.encode_non_usascii (mrkn)
+* Close pull request 350 - Makes mail Header object ennumerable (ged)
+
+Performance:
+* Close pull request 369 - Mail::Header#charset is called pretty often during header parser work (bogdan)
+* Close pull request 368 - Improve existing code by moving some objects to contstant instead of constructing them over and over again. (bogdan)
+* Close pull request 366 - Headers parsing performance optimization (bogdan)
+* Close pull request 365 - Add maximum_amount of parsed headers configuration parameter (bogdan)
+
+Bugs:
+* Close pull request 444 - Fix typo in spec (cczona)
+* Close pull request 439 - Fix Ruby 1.9 behaviour to match 1.8.7 behaviour on ignoring invalid or undefined characters (ochko)
+* Close pull request 430 - Unstructured field converts to string before calling encoding on it (brupm mikel)
+* Close pull request 424 - Use String#to_crlf instead of String#gsub (okkez)
+* Close pull request 429 - Fix an obvious bug in exim delivery_method (dskim)
+* Close pull request 425 - Remove Gemfile.lock from generated gem (kbackowski)
+* Close pull request 414 - Fix typo on "ignoring" (derwiki)
+* Close pull request 405 - Fix stack overflow (RegexpError) triggered by large emails with an envelope (bpot)
+* Close pull request 402 - Prevent InReplyTo, Keyword, References or ResentMessageId fields from  generating lines longer than 998 chars (pplr)
+* Close pull request 391 - Fixed failed attachment parsing when file name in headers contains spaces and is not wrapped in quotes (danieltreacy)
+* Close pull request 385 - Fix Multibyte::Chars#upcase/downcase (technoweenie)
+* Close pull request 384 - copy dat unicode over from active support (technoweenie)
+* Close pull request 380 - Split strictly on MIME boundary lines (ConradIrwin)
+* Close pull request 277 - Fix specific email decoding failure example (yalab)
+* Close pull request 361 - Support 8bit encoding for ruby 1.9 (bogdan)
+* Close pull request 346 - Fix two bugs of TestRetriever (ermaker)
+* Close pull request 337 - Make the behavior of value_decode the same between Ruby 1.8 and Ruby 1.9. (kennyj)
+* Close pull request 336 - Fix more warning: possibly useless use of == in void context (kennyj)
+* Close pull request 293 - make charset and mime type more resliant to bad header values (kmeehl)
+* Fix failing spec Issue 453 on Ruby 1.9.3
 * Fix mail reading: don't raise invalid byte sequence in UTF-8 when reading non-UTF-8 emails (mreinsch)
-* See #353 define NilClass#blank? only if not defined yet
-* Fixes #349 an inverted condition on imap open read_only
+* Close pull request 353 - define NilClass#blank? only if not defined yet (amatsuda)
+* Close pull request 357 - Fixes #349 an inverted condition on imap open read_only (felixroeser)
 * Remove duplicated line feed from regexp
 * Remove unused variable
 * Updated IMAP documentation

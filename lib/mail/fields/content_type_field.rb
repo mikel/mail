@@ -19,6 +19,7 @@ module Mail
         @parameters = nil
         value = strip_field(FIELD_NAME, value)
       end
+      ensure_filename_quoted(value)
       super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
@@ -141,7 +142,9 @@ module Mail
     def sanatize( val )
 
       # TODO: check if there are cases where whitespace is not a separator
-      val = val.tr(' ',';').
+      val = val.
+        gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
+        tr(' ',';').
         squeeze(';').
         gsub(';', '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below

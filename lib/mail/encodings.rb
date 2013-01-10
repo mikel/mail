@@ -147,19 +147,17 @@ module Mail
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
-      original_encoding = split_encoding_from_string( str )
-
-      output = value_decode( str ).to_s
-
-      if original_encoding.to_s.downcase.gsub("-", "") == to_encoding.to_s.downcase.gsub("-", "")
+      output = value_decode( str ).to_s # output is already converted to UTF-8
+      
+      if 'utf8' == to_encoding.to_s.downcase.gsub("-", "")
         output
-      elsif original_encoding && to_encoding
+      elsif to_encoding
         begin
           if RUBY_VERSION >= '1.9'
             output.encode(to_encoding)
           else
             require 'iconv'
-            Iconv.iconv(to_encoding, original_encoding, output).first
+            Iconv.iconv(to_encoding, 'UTF-8', output).first 
           end
         rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
@@ -178,10 +176,10 @@ module Mail
     def Encodings.address_encode(address, charset = 'utf-8')
       if address.is_a?(Array)
         # loop back through for each element
-        address.map { |a| Encodings.address_encode(a, charset) }.join(", ")
+        address.compact.map { |a| Encodings.address_encode(a, charset) }.join(", ")
       else
         # find any word boundary that is not ascii and encode it
-        encode_non_usascii(address, charset)
+        encode_non_usascii(address, charset) if address
       end
     end
 
@@ -189,7 +187,7 @@ module Mail
       return address if address.ascii_only? or charset.nil?
       us_ascii = %Q{\x00-\x7f}
       # Encode any non usascii strings embedded inside of quotes
-      address.gsub!(/(".*?[^#{us_ascii}].*?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+      address = address.gsub(/(".*?[^#{us_ascii}].*?")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
       # Then loop through all remaining items and encode as needed
       tokens = address.split(/\s/)
       map_with_index(tokens) do |word, i|

@@ -46,6 +46,23 @@ module Mail # :doc:
   require 'mail/utilities'
   require 'mail/configuration'
 
+  @@autoloads = {}
+  def self.register_autoload(name, path)
+    @@autoloads[name] = path
+    autoload(name, path)
+  end
+
+  # This runs through the autoload list and explictly requires them for you.
+  # Useful when running mail in a threaded process.
+  #
+  # Usage:
+  #
+  #   require 'mail'
+  #   Mail.eager_autoload!
+  def self.eager_autoload!
+    @@autoloads.each { |_,path| require(path) }
+  end
+
   # Autoload mail send and receive classes.
   require 'mail/network'
 
@@ -60,23 +77,7 @@ module Mail # :doc:
 
   require 'mail/envelope'
 
-  parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
-                date_time received message_ids envelope_from rfc2045
-                mime_version content_type content_disposition
-                content_transfer_encoding content_location ]
-
-  parsers.each do |parser|
-    begin
-      # Try requiring the pre-compiled ruby version first
-      require 'treetop/runtime'
-      require "mail/parsers/#{parser}"
-    rescue LoadError
-      # Otherwise, get treetop to compile and load it
-      require 'treetop/runtime'
-      require 'treetop/compiler'
-      Treetop.load(File.join(File.dirname(__FILE__)) + "/mail/parsers/#{parser}")
-    end
-  end
+  require 'load_parsers'
 
   # Autoload header field elements and transfer encodings.
   require 'mail/elements'

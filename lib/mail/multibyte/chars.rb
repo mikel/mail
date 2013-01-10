@@ -339,7 +339,7 @@ module Mail #:nodoc:
       # Example:
       #   'Laurent, où sont les tests ?'.mb_chars.upcase.to_s # => "LAURENT, OÙ SONT LES TESTS ?"
       def upcase
-        chars(Unicode.apply_mapping(@wrapped_string), :uppercase_mapping)
+        chars(Unicode.apply_mapping(@wrapped_string, :uppercase_mapping))
       end
 
       # Convert characters in the string to lowercase.
@@ -347,7 +347,7 @@ module Mail #:nodoc:
       # Example:
       #   'VĚDA A VÝZKUM'.mb_chars.downcase.to_s # => "věda a výzkum"
       def downcase
-        chars(Unicode.apply_mapping(@wrapped_string), :lowercase_mapping)
+        chars(Unicode.apply_mapping(@wrapped_string, :lowercase_mapping))
       end
 
       # Converts the first character to uppercase and the remainder to lowercase.

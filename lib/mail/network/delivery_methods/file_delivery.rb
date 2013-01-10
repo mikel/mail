@@ -1,3 +1,5 @@
+require 'mail/check_delivery_params'
+
 module Mail
   
   # FileDelivery class delivers emails into multiple files based on the destination
@@ -11,6 +13,7 @@ module Mail
   # Make sure the path you specify with :location is writable by the Ruby process
   # running Mail.
   class FileDelivery
+    include Mail::CheckDeliveryParams
 
     if RUBY_VERSION >= '1.9.1'
       require 'fileutils'
@@ -25,6 +28,8 @@ module Mail
     attr_accessor :settings
     
     def deliver!(mail)
+      check_params(mail)
+
       if ::File.respond_to?(:makedirs)
         ::File.makedirs settings[:location]
       else

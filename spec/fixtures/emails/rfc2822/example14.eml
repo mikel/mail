@@ -1,0 +1,16 @@
+From test@example.com  Mon Aug 22 09:45:15 2011
+Date: Fri, 19 Aug 2011 10:47:17 +0900
+From: Atsushi Yoshida <atsushi@example.com>
+Reply-To: rudeboyjet@gmail.com
+Subject: Re: TEST
+ 
+	=?ISO-2022-JP?B?GyRCJUYlOSVIGyhC?=
+  =?ISO-2022-JP?B?GyRCJUYlOSVIGyhC?=
+To: rudeboyjet@gmail.com
+Message-Id: <0CC5E11ED2C1D@example.com>
+In-Reply-To: <rid_5582199198@msgid.example.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+
+Hello

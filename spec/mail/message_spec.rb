@@ -94,13 +94,21 @@ describe Mail::Message do
       errors.should be_false
     end
 
+    it "should be able to parse a large email without raising an exception" do
+      m = Mail.new
+      m.add_file(:filename => "attachment.data", :content => "a" * (8 * 1024 * 1024))
+      raw_email = "From jamis_buck@byu.edu Mon May  2 16:07:05 2005\r\n#{m.to_s}"
+
+      doing { Mail::Message.new(raw_email) }.should_not raise_error
+    end
+
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
       STDERR.should_not_receive(:puts)
       Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')))
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-      STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignorning) 'quite Delivered-To: xxx@xxx.xxx'")
+      STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
       Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')))
     end
 
@@ -295,8 +303,12 @@ describe Mail::Message do
     it "should parse non-UTF8 sources" do
       mail = Mail::Message.new(File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml')))
       mail.to.should eq ["raasdnil@gmail.com"]
-      body_text = mail.body.decoded.force_encoding("iso-2022-jp").encode("UTF-8")
-      body_text.should eq "すみません。"
+      if RUBY_VERSION >= '1.9'
+        expected = mail.body.decoded.force_encoding("iso-2022-jp").encode("UTF-8")
+      else
+        expected = "すみません。"
+      end
+      expected.should eq "すみません。"
     end
   end
 
@@ -1281,7 +1293,7 @@ describe Mail::Message do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
         time = Time.now
-        DateTime.should_receive(:now).twice.and_return(time)
+        Time.stub!(:now).and_return(time)
       end
 
       it "should be implemented" do
@@ -1472,7 +1484,7 @@ describe Mail::Message do
     end
 
     it "should inform observers that the mail was sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_observer(ObserverAgent)
       ObserverAgent.should_receive(:delivered_email).with(mail)
@@ -1500,7 +1512,7 @@ describe Mail::Message do
     end
 
     it "should pass to the interceptor the email just before it gets sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
       InterceptorAgent.should_receive(:delivering_email).with(mail)
@@ -1510,7 +1522,7 @@ describe Mail::Message do
     end
 
     it "should let the interceptor that the mail was sent" do
-      mail = Mail.new
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.to = 'fred@example.com'
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)

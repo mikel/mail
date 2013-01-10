@@ -12,6 +12,14 @@ describe Mail::Configuration do
 
   describe "network configurations" do
 
+    it "defaults delivery_method to smtp" do
+      # Need to clear out any prior configuration, as setting nil on the config
+      # will not clear it.
+      Mail::Configuration.instance.send(:initialize)
+      Mail.defaults { delivery_method nil, { :address => 'some.host' } }
+      Mail.delivery_method.settings[:address].should eq 'some.host'
+    end
+
     it "should be available from the Mail.defaults method" do
       Mail.defaults { delivery_method :smtp, { :address => 'some.host' } }
       Mail.delivery_method.settings[:address].should eq 'some.host'
@@ -19,6 +27,12 @@ describe Mail::Configuration do
 
     it "should configure sendmail" do
       Mail.defaults { delivery_method :sendmail, :location => "/usr/bin/sendmail" }
+      Mail.delivery_method.class.should eq Mail::Sendmail
+      Mail.delivery_method.settings[:location].should eq "/usr/bin/sendmail"
+    end
+
+    it "should configure sendmail using a string" do
+      Mail.defaults { delivery_method 'sendmail', :location => "/usr/bin/sendmail" }
       Mail.delivery_method.class.should eq Mail::Sendmail
       Mail.delivery_method.settings[:location].should eq "/usr/bin/sendmail"
     end

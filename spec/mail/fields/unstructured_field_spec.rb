@@ -4,27 +4,27 @@ require 'spec_helper'
 describe Mail::UnstructuredField do
 
   describe "initialization" do
-    
+
     it "should be instantiated" do
       doing {Mail::UnstructuredField.new("Name", "Value")}.should_not raise_error
     end
-    
+
   end
 
   describe "manipulation" do
-    
+
     before(:each) do
       @field = Mail::UnstructuredField.new("Subject", "Hello Frank")
     end
-    
+
     it "should allow us to set a text value at initialization" do
       doing{Mail::UnstructuredField.new("Subject", "Value")}.should_not raise_error
     end
-    
+
     it "should provide access to the text of the field once set" do
       @field.value.should eq "Hello Frank"
     end
-    
+
     it "should provide a means to change the value" do
       @field.value = "Goodbye Frank"
       @field.value.should eq "Goodbye Frank"
@@ -32,38 +32,48 @@ describe Mail::UnstructuredField do
   end
 
   describe "displaying encoded field and decoded value" do
-    
+
     before(:each) do
       @field = Mail::UnstructuredField.new("Subject", "Hello Frank")
     end
-    
+
     it "should provide a to_s function that returns the field name and value" do
       @field.value.should eq "Hello Frank"
     end
-    
+
     it "should return '' on to_s if there is no value" do
       @field.value = nil
       @field.encoded.should eq ''
     end
-    
+
     it "should give an encoded value ready to insert into an email" do
       @field.encoded.should eq "Subject: Hello Frank\r\n"
     end
-    
+
     it "should return nil on encoded if it has no value" do
       @field.value = nil
       @field.encoded.should eq ''
     end
-    
+
+    it "should handle array" do
+      @field = Mail::UnstructuredField.new("To", ['mikel@example.com', 'bob@example.com'])
+      @field.encoded.should eq "To: mikel@example.com, bob@example.com\r\n"
+    end
+
+    it "should handle string" do
+      @field.value = 'test'
+      @field.encoded.should eq "Subject: test\r\n"
+    end
+
     it "should give an decoded value ready to insert into an email" do
       @field.decoded.should eq "Hello Frank"
     end
-    
+
     it "should return a nil on decoded if it has no value" do
       @field.value = nil
       @field.decoded.should eq nil
     end
-    
+
     it "should just add the CRLF at the end of the line" do
       @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
       result = "Subject: =?UTF8?Q?testing_testing_=D6=A4?=\r\n"
@@ -77,7 +87,7 @@ describe Mail::UnstructuredField do
       @field.encoded.gsub("UTF-8", "UTF8").should eq result
       @field.decoded.should eq "testing testing æøå"
     end
-    
+
     it "should encode the space between two adjacent encoded-words" do
       @field = Mail::SubjectField.new("Her er æ ø å")
       result = "Subject: =?UTF8?Q?Her_er_=C3=A6_=C3=B8_=C3=A5?=\r\n"
@@ -100,7 +110,7 @@ describe Mail::UnstructuredField do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters....")
       @field.encoded.should eq "Subject: This is a subject header message that is _exactly_ 78 characters....\r\n"
     end
-    
+
     it "should fold itself if it is 79 chracters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is absolutely 79 characters long")
       result = "Subject: This is a subject header message that is absolutely 79 characters\r\n\slong\r\n"
@@ -112,14 +122,14 @@ describe Mail::UnstructuredField do
       lines = @field.encoded.split("\r\n\s")
       lines.each { |line| line.length.should < 78 }
     end
-    
+
     it "should fold itself if it is 998 characters long" do
       value = "This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. This is a subject header message that is going to be 998 characters long. And this makes it 998 long"
       @field = Mail::UnstructuredField.new("Subject", value)
       lines = @field.encoded.split("\r\n\s")
       lines.each { |line| line.length.should < 78 }
     end
-    
+
     it "should fold itself if it is 999 characters long" do
       value = "This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. This is a subject header message that is going to be 999 characters long. And this makes it 999 long."
       @field = Mail::UnstructuredField.new("Subject", value)
@@ -156,9 +166,9 @@ describe Mail::UnstructuredField do
       @field.decoded.should eq string
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
-  
+
   end
-  
+
   describe "encoding non QP safe chars" do
     it "should encode an ascii string that has carriage returns if asked to" do
       result = "Subject: =0Aasdf=0A\r\n"

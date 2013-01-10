@@ -3,6 +3,7 @@
 module Mail
   class Ruby18
     require 'base64'
+    require 'iconv'
 
     # Escapes any parenthesis in a string that are unescaped. This can't
     # use the Ruby 1.9.1 regexp feature of negative look behind so we have
@@ -65,6 +66,7 @@ module Mail
       if match
         encoding = match[1]
         str = Ruby18.decode_base64(match[2])
+        str = Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str)
       end
       str
     end
@@ -80,7 +82,11 @@ module Mail
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
-        str = Encodings::QuotedPrintable.decode(match[2].gsub(/_/, '=20'))
+        string = match[2].gsub(/_/, '=20')
+        # Remove trailing = if it exists in a Q encoding
+        string = string.sub(/\=$/, '')
+        str = Encodings::QuotedPrintable.decode(string)
+        str = Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str)
       end
       str
     end
@@ -93,6 +99,17 @@ module Mail
       encoding = $KCODE.to_s.downcase
       language = Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
+    end
+
+    private
+
+    def Ruby18.fix_encoding(encoding)
+      case encoding.upcase
+      when 'UTF8'
+        'UTF-8'
+      else
+        encoding
+      end
     end
   end
 end

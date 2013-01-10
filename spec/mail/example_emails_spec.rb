@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe "Test emails" do
-  
+
   describe "from RFC2822" do
 
     # From RFC 2822:
@@ -45,7 +45,7 @@ describe "Test emails" do
     # also that jdoe@example.org and boss@nil.test have no display names
     # associated with them at all, and jdoe@example.org uses the simpler
     # address form without the angle brackets.
-    # 
+    #
     # "Giant; \"Big\" Box" <sysservices@example.net>
     it "should handle multiple recipients test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
@@ -77,7 +77,7 @@ describe "Test emails" do
     # conversation thread between John and Mary.  John firsts sends a
     # message to Mary, Mary then replies to John's message, and then John
     # replies to Mary's reply message.
-    # 
+    #
     # Note especially the "Message-ID:", "References:", and "In-Reply-To:"
     # fields in each message.
     it "should handle reply messages" do
@@ -213,7 +213,7 @@ describe "Test emails" do
     end
 
     # A.6.2. Obsolete dates
-    # 
+    #
     # The following message uses an obsolete date format, including a non-
     # numeric time zone and a two digit year.  Note that although the
     # day-of-week is missing, that is not specific to the obsolete syntax;
@@ -228,11 +228,11 @@ describe "Test emails" do
     end
 
     # A.6.3. Obsolete white space and comments
-    # 
+    #
     # White space and comments can appear between many more elements than
     # in the current syntax.  Also, folding lines that are made up entirely
     # of white space are legal.
-    # 
+    #
     # Note especially the second line of the "To:" field.  It starts with
     # two space characters.  (Note that "__" represent blank spaces.)
     # Therefore, it is considered part of the folding as described in
@@ -249,6 +249,13 @@ describe "Test emails" do
       doing { Mail::Message.new(email) }.should_not raise_error
     end
 
+    it "should handle folding subject" do
+      mail = Mail.read(fixture('emails', 'rfc2822', 'example14.eml'))
+      mail.from.should eq ["atsushi@example.com"]
+      mail.subject.should eq "Re: TEST テストテスト"
+      mail.message_id.should eq '0CC5E11ED2C1D@example.com'
+      mail.body.should eq "Hello"
+    end
   end
 
   describe "from the wild" do
@@ -272,18 +279,18 @@ describe "Test emails" do
       before(:each) do
         @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'sig_only_email.eml')))
       end
-      
+
       it "should not error on multiart/signed emails" do
         doing { @message.encoded }.should_not raise_error
       end
-      
+
       it "should have one attachment called signature.asc" do
         @message.attachments.length.should eq 1
         @message.attachments.first.filename.should eq 'signature.asc'
       end
-      
+
     end
-    
+
     describe "handling invalid group lists" do
       before(:each) do
         @message = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'empty_group_lists.eml')))
@@ -299,7 +306,7 @@ describe "Test emails" do
     end
 
   end
-  
+
   describe "empty address lists" do
 
     before(:each) do
@@ -313,7 +320,7 @@ describe "Test emails" do
     it "should return an empty groups list" do
       @message.to.should eq ['user-example@aol.com', 'e-s-a-s-2200@app.ar.com']
     end
-    
+
   end
-  
+
 end

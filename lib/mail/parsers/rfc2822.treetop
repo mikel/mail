@@ -110,7 +110,7 @@ module Mail
     end
     
     rule local_dot_atom_text
-      ("."? domain_text)+
+      ("."* domain_text "."*)+
     end
     
     rule domain_text
@@ -218,7 +218,7 @@ module Mail
     end
     
     rule mailbox_list
-      (first_addr:mailbox other_addr:("," addr_value:mailbox)*) / obs_mbox_list
+      (first_addr:mailbox other_addr:(("," / ";") addr_value:mailbox)*) / obs_mbox_list
     end
   
     rule mailbox
@@ -265,7 +265,7 @@ module Mail
     end
   
     rule address_list
-      first_addr:address? other_addr:(FWS* "," FWS* addr_value:address?)*
+      first_addr:address? other_addr:(FWS* ("," / ";") FWS* addr_value:address?)*
     end
     
     rule date_time

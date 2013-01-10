@@ -1,7 +1,10 @@
+language: ruby
 rvm:
   - 1.8.7
   - 1.9.2
   - 1.9.3
-  - ree
-  - jruby
+  - jruby-18mode
+# Travis doesn't have JRuby 1.7.0 installed yet
+#  - jruby-1.7.0
   - rbx-18mode
+  - rbx-19mode

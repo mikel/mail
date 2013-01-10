@@ -18,7 +18,7 @@ module Mail
       end
 
       def self.encode(str)
-        [str].pack("M").gsub(/\n/, "\r\n")
+        [str].pack("M").to_crlf
       end
 
       def self.cost(str)

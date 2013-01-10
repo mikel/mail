@@ -122,6 +122,17 @@ describe Mail::ContentTypeField do
       c.main_type.should eq 'message'
       c.sub_type.should eq 'delivery-status'
     end
+
+    it "should wrap a filename in double quotation marks only if the filename contains spaces and does not already have double quotation marks" do
+      c = Mail::ContentTypeField.new('text/plain; name=This is a bad filename.txt')
+      c.value.should eq 'text/plain; name="This is a bad filename.txt"'
+
+      c = Mail::ContentTypeField.new('image/jpg; name=some.jpg')
+      c.value.should eq 'image/jpg; name=some.jpg'
+
+      c = Mail::ContentTypeField.new('text/plain; name="Bad filename but at least it is wrapped in quotes.txt"')
+      c.value.should eq 'text/plain; name="Bad filename but at least it is wrapped in quotes.txt"'
+    end
   end
 
   describe "instance methods" do
@@ -668,6 +679,12 @@ describe Mail::ContentTypeField do
       c = Mail::ContentTypeField.new('text/plain;ISO-8559-1')
       c.string.should eq 'text/plain'
       c.parameters['charset'].should eq 'iso-8559-1'
+    end
+
+    it "should handle 'text/plain; charset = \"iso-8859-1\"'" do
+      c = Mail::ContentTypeField.new('text/plain; charset = "iso-8859-1"')
+      c.string.should eq 'text/plain'
+      c.parameters['charset'].should eq 'iso-8859-1'
     end
 
     it "should handle text; params" do

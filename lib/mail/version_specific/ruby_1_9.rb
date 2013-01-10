@@ -68,11 +68,16 @@ module Mail
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
         encoding = match[1]
-        str = Encodings::QuotedPrintable.decode(match[2].gsub(/_/, '=20'))
+        string = match[2].gsub(/_/, '=20')
+        # Remove trailing = if it exists in a Q encoding
+        string = string.sub(/\=$/, '')
+        str = Encodings::QuotedPrintable.decode(string)
         str.force_encoding(fix_encoding(encoding))
       end
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
+    rescue Encoding::UndefinedConversionError
+      str.dup.force_encoding("utf-8")
     end
 
     def Ruby19.param_decode(str, encoding)
@@ -105,6 +110,7 @@ module Mail
         when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
         # Windows-1252 and alike
         when /Windows-?(.*)/i then return "Windows-#{$1}"
+        when /^8bit$/ then return "ASCII-8BIT"
         #more aliases to be added if needed
         else return encoding
       end

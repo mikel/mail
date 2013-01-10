@@ -1411,7 +1411,7 @@ module Mail
 
     # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
-      content_type ? header[:content_type].string : nil rescue nil
+      has_content_type? ? header[:content_type].string : nil rescue nil
     end
 
     def message_content_type
@@ -1422,7 +1422,7 @@ module Mail
     # Returns the character set defined in the content type field
     def charset
       if @header
-        content_type ? content_type_parameters['charset'] : @charset
+        has_content_type? ? content_type_parameters['charset'] : @charset
       else
         @charset
       end
@@ -1875,10 +1875,7 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-#      index = raw_source.index(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-#      self.header = (index) ? header_part[0,index] : nil
-#      lazy_body ( [raw_source, index+1])
+      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
       self.header = header_part
       self.body   = body_part
     end
@@ -1915,9 +1912,10 @@ module Mail
     end
 
     def set_envelope_header
-      if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}(.*)/m)
+      raw_string = raw_source.to_s
+      if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = match_data[2]
+        self.raw_source = raw_string.sub(match_data[0], "") 
       end
     end
 
@@ -2048,7 +2046,7 @@ module Mail
         else
           if encoding = Encoding.find(charset) rescue nil
             body_text.force_encoding(encoding)
-            return body_text.encode(Encoding::UTF_8)
+            return body_text.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
           end
         end
       end

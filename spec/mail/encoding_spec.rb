@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'spec_helper')
+require 'spec_helper'
 
 describe "mail encoding" do
 
@@ -192,7 +192,7 @@ describe "mail encoding" do
     if RUBY_VERSION > '1.9'
       lambda { m.subject.should be_valid_encoding }.should_not raise_error
     else
-      m.subject.should eq "Hello \226 World"
+      m.subject.should eq "Hello  World"
     end
   end
 end

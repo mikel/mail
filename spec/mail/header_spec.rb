@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require "active_support/core_ext/kernel/reporting"
 
 describe Mail::Header do
 
@@ -57,6 +58,11 @@ describe Mail::Header do
       header = Mail::Header.new
       header['Content-Type'] = 'invalid/invalid; charset="iso-8859-1"'
       doing { header.charset }.should_not raise_error
+    end
+
+    it "should be Enumerable" do
+      header = Mail::Header.new("To: James Random\r\nFrom: Santa Claus\r\n")
+      header.find {|f| f.responsible_for?('From') }.should be_a(Mail::Field)
     end
   end
 
@@ -590,6 +596,27 @@ TRACEHEADER
     it "should return nil if no content-description header field" do
       header = Mail::Header.new
       header['Content-Description'].should eq nil
+    end
+    
+  end
+
+  describe "configuration option .maximum_amount" do
+
+    it "should be 1000 by default" do
+      Mail::Header.maximum_amount.should == 1000
+    end
+
+    it "should limit amount of parsed headers" do
+      old_maximum_amount = Mail::Header.maximum_amount
+      begin
+        Mail::Header.maximum_amount = 10
+        silence_warnings do
+          header = Mail::Header.new("X-SubscriberID: 345\n" * 11)
+          header.fields.size.should == 10
+        end
+      ensure
+        Mail::Header.maximum_amount = old_maximum_amount
+      end
     end
     
   end
