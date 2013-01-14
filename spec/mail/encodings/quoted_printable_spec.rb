@@ -22,4 +22,9 @@ describe Mail::Encodings::QuotedPrintable do
     Mail::Encodings::QuotedPrintable.decode("=00=00=00=00").should eq result
   end
   
+  it "should not double encode line endings" do
+    result = "\r\n"
+    Mail::Encodings::QuotedPrintable.decode(Mail::Encodings::QuotedPrintable.encode(result)).should eq result
+  end
+  
 end
