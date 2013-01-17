@@ -130,7 +130,7 @@ I have tried to simplify it some:
    it will include the header field and value and CRLF at the end and wrapped as
    needed.
 
-2. All objects that can render into an email, have a :decoded method.  Decoded will
+2. All objects that can render into an email, have a `#decoded` method.  Decoded will
    return the object's "value" only as a string.  This means it will not include
    the header fields (like 'To:' or 'Subject:').
 
