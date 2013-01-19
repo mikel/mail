@@ -107,6 +107,10 @@ module Mail
       case encoding.upcase
       when 'UTF8'
         'UTF-8'
+      when 'UTF16', 'UTF-16'
+        'UTF-16BE'
+      when 'UTF32', 'UTF-32'
+        'UTF-32BE'
       else
         encoding
       end
