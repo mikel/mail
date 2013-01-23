@@ -47,15 +47,10 @@ module Mail
       end
     end
 
-    WORD_CHAR_WITHOUT_QUOTE = '[\w[^"]]'
-    WORD_WITHOUT_QUOTE = "#{WORD_CHAR_WITHOUT_QUOTE}+?"
-    WORD_WITHOUT_QUOTE_FOLLOWED_BY_WSP = "#{WORD_WITHOUT_QUOTE}\\s+?"
-    PARAM_ENDING = '(\r|\z)'
-    FILENAME_RE = /\s((filename|name)=((#{WORD_WITHOUT_QUOTE_FOLLOWED_BY_WSP})+?(#{WORD_CHAR_WITHOUT_QUOTE})*?))#{PARAM_ENDING}/
-
+    FILENAME_RE = /\b(filename|name)=([^"\r\n]+\s[^"\r\n]+)/
     def ensure_filename_quoted(value)
-      if value && !value.is_a?(Array) && matches = value.match(FILENAME_RE)
-        value.sub!(matches[1], "#{matches[2]}=\"#{matches[3]}\"")
+      if value.is_a?(String)
+        value.sub! FILENAME_RE, '\1="\2"'
       end
     end
   end
