@@ -1,5 +1,9 @@
 == HEAD
 
+* Close pull request 471 - Fix Ruby 1.8 build when UTF16/32 default to little-endian (kennyj)
+* Close pull request 475 - Shush warning on Object#blank? redefinition (amatsuda)
+* Close pull request 489, 495 - Docs typos (JackDanger, francois)
+
 == Version 2.5.3 - Sun Dec 4 15:52:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
 * Close pull request 468 - Remove debug output to STDOUT (tadman)
