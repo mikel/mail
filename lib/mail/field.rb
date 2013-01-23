@@ -156,9 +156,11 @@ module Mail
     alias_method :==, :same
 
     def <=>( other )
-      self_order = FIELD_ORDER.rindex(self.name.to_s.downcase) || 100
-      other_order = FIELD_ORDER.rindex(other.name.to_s.downcase) || 100
-      self_order <=> other_order
+      self.field_order_id <=> other.field_order_id
+    end
+
+    def field_order_id
+      @field_order_id ||= (FIELD_ORDER_LOOKUP[self.name.to_s.downcase] || 100)
     end
 
     def method_missing(name, *args, &block)
@@ -174,10 +176,12 @@ module Mail
                       mime-version content-type content-transfer-encoding
                       content-location content-disposition content-description ]
 
+    FIELD_ORDER_LOOKUP = Hash[FIELD_ORDER.each_with_index.to_a]
+
     private
 
     def split(raw_field)
-      match_data = raw_field.mb_chars.match(/^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/)
+      match_data = raw_field.mb_chars.match(FIELD_SPLIT)
       [match_data[1].to_s.mb_chars.strip, match_data[2].to_s.mb_chars.strip]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
@@ -195,16 +199,11 @@ module Mail
 
     def new_field(name, value, charset)
       lower_case_name = name.to_s.downcase
-      header_name = nil
-      FIELDS_MAP.each do |field_name, _|
-        header_name = field_name if lower_case_name == field_name
-      end
-      if header_name
-        FIELDS_MAP[header_name].new(value, charset)
+      if field_klass = FIELDS_MAP[lower_case_name]
+        field_klass.new(value, charset)
       else
         OptionalField.new(name, value, charset)
       end
-
     end
 
   end
