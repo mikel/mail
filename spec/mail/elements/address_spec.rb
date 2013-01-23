@@ -38,7 +38,7 @@ describe Mail::Address do
     end
 
     ['"-Earnings...Notification-" <vodacom.co.rs>', '<56253817>'].each do |spammy_address|
-      it "should allow for funky spammy address #{spammy_address}" do
+      it "should ignore funky local-only spammy addresses in angle brackets #{spammy_address}" do
         Mail::Address.new(spammy_address).address.should eq nil
       end
     end
