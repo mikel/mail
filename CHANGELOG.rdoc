@@ -6,6 +6,7 @@
 * Close pull request 485 - Be explicit about unsupported address parsing (bpot)
 * Close pull request 484 - Remove #tree specs in preparation for deprecation removal (bpot)
 * Close pull request 482 - Update address field specs to reflect to #initialize API (bpot)
+* Close pull request 481 - Correctly quote filename attributes (bpot)
 * Close pull request 475 - Shush warning on Object#blank? redefinition (amatsuda)
 * Close pull request 471 - Fix Ruby 1.8 build when UTF16/32 default to little-endian (kennyj)
 * Close pull request 399 - Accept :ca_path and :ca_file options for SMTP delivery (ndbroadbent)
