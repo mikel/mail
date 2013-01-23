@@ -8,7 +8,7 @@ describe Mail::ResentToField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ResentToField.new("ResentTo", "Mikel") }.should_not raise_error
+      doing { Mail::ResentToField.new("Resent-To: Mikel") }.should_not raise_error
     end
 
     it "should mix in the CommonAddress module" do
