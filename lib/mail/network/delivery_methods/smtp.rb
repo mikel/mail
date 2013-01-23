@@ -100,35 +100,11 @@ module Mail
       smtp = Net::SMTP.new(settings[:address], settings[:port])
       if settings[:tls] || settings[:ssl]
         if smtp.respond_to?(:enable_tls)
-          unless settings[:openssl_verify_mode]
-            smtp.enable_tls
-          else
-            openssl_verify_mode = settings[:openssl_verify_mode]
-            if openssl_verify_mode.kind_of?(String)
-              openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
-            end
-            context = Net::SMTP.default_ssl_context
-            context.verify_mode = openssl_verify_mode
-            smtp.enable_tls(context)
-          end        
+          smtp.enable_tls(ssl_context)
         end
       elsif settings[:enable_starttls_auto]
-        if smtp.respond_to?(:enable_starttls_auto) 
-          unless settings[:openssl_verify_mode]
-            smtp.enable_starttls_auto
-          else
-            openssl_verify_mode = settings[:openssl_verify_mode]
-            if openssl_verify_mode.kind_of?(String)
-              openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
-            end
-            if RUBY_VERSION >= '1.9.0'
-              context = Net::SMTP.default_ssl_context
-              context.verify_mode = openssl_verify_mode
-              smtp.enable_tls(context)
-            else
-              smtp.enable_tls(openssl_verify_mode)
-            end
-          end
+        if smtp.respond_to?(:enable_starttls_auto)
+          smtp.enable_starttls_auto(ssl_context)
         end
       end
       
@@ -140,6 +116,25 @@ module Mail
       return settings[:return_response] ? response : self
     end
     
-    
+
+    private
+
+    # Allow SSL context to be configured via settings, for Ruby >= 1.9
+    # Just returns openssl verify mode for Ruby 1.8.x
+    def ssl_context
+      openssl_verify_mode = settings[:openssl_verify_mode]
+      if openssl_verify_mode.kind_of?(String)
+        openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
+      end
+      if RUBY_VERSION < '1.9.0'
+        return openssl_verify_mode
+      end
+
+      context = Net::SMTP.default_ssl_context
+      context.verify_mode = openssl_verify_mode
+      context.ca_path = settings[:ca_path] if settings[:ca_path]
+      context.ca_file = settings[:ca_file] if settings[:ca_file]
+      context
+    end
   end
 end
