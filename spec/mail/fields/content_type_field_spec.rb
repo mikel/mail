@@ -133,6 +133,11 @@ describe Mail::ContentTypeField do
       c = Mail::ContentTypeField.new('text/plain; name="Bad filename but at least it is wrapped in quotes.txt"')
       c.value.should eq 'text/plain; name="Bad filename but at least it is wrapped in quotes.txt"'
     end
+
+    it "should only wrap filenames in double quotation marks" do
+      c = Mail::ContentTypeField.new("image/jpg;\r\n\sname=some .jpg\r\n\ssize=100")
+      c.value.should eq %Q{image/jpg;\r\n\sname="some .jpg"\r\n\ssize=100}
+    end
   end
 
   describe "instance methods" do
