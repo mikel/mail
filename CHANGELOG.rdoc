@@ -1,5 +1,6 @@
 == HEAD
 
+* Close pull request 399 - Accept :ca_path and :ca_file options for SMTP delivery (ndbroadbent)
 * Close pull request 471 - Fix Ruby 1.8 build when UTF16/32 default to little-endian (kennyj)
 * Close pull request 475 - Shush warning on Object#blank? redefinition (amatsuda)
 * Close pull request 489, 495 - Docs typos (JackDanger, francois)
