@@ -222,7 +222,22 @@ module Mail
     end
   
     rule mailbox
-      name_addr / addr_spec
+      (name_addr / addr_spec) {
+        def dig_comments(comments, elements)
+          elements.each { |elem|
+            if elem.respond_to?(:comment)
+              comments << elem.comment
+            end
+            dig_comments(comments, elem.elements) if elem.elements
+           }
+        end
+
+        def comments
+          comments = []
+          dig_comments(comments, elements)
+          comments
+        end
+      }
     end
 
     rule address
@@ -244,24 +259,7 @@ module Mail
         end
 
       } /
-      mailbox {
-
-      def dig_comments(comments, elements)
-        elements.each { |elem|
-          if elem.respond_to?(:comment)
-            comments << elem.comment
-          end
-          dig_comments(comments, elem.elements) if elem.elements
-         }
-      end
-
-      def comments
-        comments = []
-        dig_comments(comments, elements)
-        comments
-      end
-
-      }
+      mailbox
     end
   
     rule address_list

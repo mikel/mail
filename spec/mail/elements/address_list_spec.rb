@@ -75,6 +75,13 @@ describe Mail::AddressList do
       a.addresses.map {|addr| addr.to_s }.should eq result
     end
 
+    it "should extract comments in addreses which are part of a group" do
+      parse_text = "group: jimmy <jimmy@(comment)example.com>;";
+      result = ["comment"]
+      a = Mail::AddressList.new(parse_text)
+      a.addresses.first.comments.should eq result
+    end
+
   end
   
   describe "functionality" do
