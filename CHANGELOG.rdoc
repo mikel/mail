@@ -1,6 +1,7 @@
 == HEAD
 
 * Close pull request 489, 495 - Docs typos (JackDanger, francois)
+* Close pull request 488 - Speed up field construction & comparison (bpot)
 * Close pull request 487 - Extract comments from group email addresses (bpot)
 * Close pull request 485 - Be explicit about unsupported address parsing (bpot)
 * Close pull request 484 - Remove #tree specs in preparation for deprecation removal (bpot)
