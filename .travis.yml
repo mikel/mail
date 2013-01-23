@@ -7,4 +7,5 @@ rvm:
 # Travis doesn't have JRuby 1.7.0 installed yet
 #  - jruby-1.7.0
   - rbx-18mode
-  - rbx-19mode
+# rbx is segfaulting in String#ascii_only?
+#  - rbx-19mode
