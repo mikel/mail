@@ -22,6 +22,7 @@ module Mail
     FIELD_NAME    = /[#{field_name}]+/
     FIELD_BODY    = /.+/
     FIELD_LINE    = /^[#{field_name}]+:\s*.+$/
+    FIELD_SPLIT   = /^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/
     HEADER_LINE   = /^([#{field_name}]+:\s*.+)$/
 
     QP_UNSAFE     = /[^#{qp_safe}]/

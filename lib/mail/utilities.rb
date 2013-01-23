@@ -135,7 +135,7 @@ module Mail
     #  obj1 = :this_IS_an_object
     #  match_to_s( obj1, obj2 ) #=> true
     def match_to_s( obj1, obj2 )
-      obj1.to_s.downcase == obj2.to_s.downcase
+      obj1.to_s.casecmp(obj2.to_s) == 0
     end
     
     # Capitalizes a string that is joined by hyphens correctly.
