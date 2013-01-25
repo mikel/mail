@@ -32,6 +32,7 @@ module Mail
       @epilogue = nil
       @charset  = nil
       @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
+      @need_to_sort = false
       @parts = Mail::PartsList.new
       if string.blank?
         @raw_source = ''
@@ -127,7 +128,8 @@ module Mail
     def sort_parts!
       @parts.each do |p|
         p.body.set_sort_order(@part_sort_order)
-        @parts.sort!(@part_sort_order)
+        @parts.sort!(@part_sort_order) if need_to_sort?
+        @need_to_sort = false
         p.body.sort_parts!
       end
     end
@@ -248,6 +250,7 @@ module Mail
     end
     
     def <<( val )
+      @need_to_sort = true
       if @parts
         @parts << val
       else
@@ -272,6 +275,10 @@ module Mail
     
     def empty?
       !!raw_source.to_s.empty?
+    end
+
+    def need_to_sort?
+      @need_to_sort
     end
     
     private

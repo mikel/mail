@@ -1578,6 +1578,21 @@ describe Mail::Message do
       mail.parts[0].parts[1].mime_type.should eq "text/html"
       mail.parts[1].mime_type.should eq "image/png"
     end
+
+    it "should not reorder messages that were parsed" do
+      ensure_correct_structure = lambda{ |mail|
+        mail.mime_type.should eq 'multipart/alternative'
+        mail.parts[0].mime_type.should eq 'text/plain'
+        mail.parts[1].mime_type.should eq 'multipart/mixed'
+        mail.parts[1].parts[0].mime_type.should eq 'text/html'
+        mail.parts[1].parts[1].mime_type.should eq 'image/jpg'
+        mail.parts[1].parts[2].mime_type.should eq 'text/html'
+      }
+
+      original = Mail.new(File.read(fixture('emails', 'mime_emails', 'image_in_the_middle.eml')))
+      ensure_correct_structure.call original
+      ensure_correct_structure.call Mail.new(original.encoded)
+    end
   end
 
   describe "attachment query methods" do
