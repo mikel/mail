@@ -303,12 +303,7 @@ describe Mail::Message do
     it "should parse non-UTF8 sources" do
       mail = Mail::Message.new(File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml')))
       mail.to.should eq ["raasdnil@gmail.com"]
-      if RUBY_VERSION >= '1.9'
-        expected = mail.body.decoded.force_encoding("iso-2022-jp").encode("UTF-8")
-      else
-        expected = "すみません。"
-      end
-      expected.should eq "すみません。"
+      mail.decoded.should eq "すみません。"
     end
   end
 
