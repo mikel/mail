@@ -1559,7 +1559,7 @@ module Mail
     # Accessor for html_part
     def html_part(&block)
       if block_given?
-        self.html_part = Mail::Part.new(&block)
+        self.html_part = Mail::Part.new(:content_type => 'text/html', &block)
       else
         @html_part || find_first_mime_type('text/html')
       end
@@ -1568,7 +1568,7 @@ module Mail
     # Accessor for text_part
     def text_part(&block)
       if block_given?
-        self.text_part = Mail::Part.new(&block)
+        self.text_part = Mail::Part.new(:content_type => 'text/plain', &block)
       else
         @text_part || find_first_mime_type('text/plain')
       end
@@ -1581,6 +1581,7 @@ module Mail
       # Assign the html part and set multipart/alternative if there's a text part.
       if msg
         @html_part = msg
+        @html_part.content_type = 'text/html' unless @html_part.has_content_type?
         add_multipart_alternate_header if text_part
         add_part @html_part
 
@@ -1602,6 +1603,7 @@ module Mail
       # Assign the text part and set multipart/alternative if there's an html part.
       if msg
         @text_part = msg
+        @text_part.content_type = 'text/plain' unless @text_part.has_content_type?
         add_multipart_alternate_header if html_part
         add_part @text_part
 

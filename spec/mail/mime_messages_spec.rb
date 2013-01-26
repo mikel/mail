@@ -163,6 +163,30 @@ describe "MIME Emails" do
         mail.html_part.should be_nil
       end
 
+      it "should set default content type on assigned text and html parts" do
+        mail = Mail.new
+        mail.text_part = Mail.new
+        mail.text_part.content_type.should eq 'text/plain'
+        mail.html_part = Mail.new
+        mail.html_part.content_type.should eq 'text/html'
+      end
+
+      it "should set default content type on declared text and html parts" do
+        mail = Mail.new
+        mail.text_part { }
+        mail.text_part.content_type.should eq 'text/plain'
+        mail.html_part { }
+        mail.html_part.content_type.should eq 'text/html'
+      end
+
+      it "should not override content type" do
+        mail = Mail.new
+        mail.text_part { content_type 'text/plain+foo' }
+        mail.text_part.content_type.should eq 'text/plain+foo'
+        mail.html_part { content_type 'text/html+foo' }
+        mail.html_part.content_type.should eq 'text/html+foo'
+      end
+
       it "should add the html part and text part" do
         mail = Mail.new
         mail.text_part = Mail::Part.new do
