@@ -60,7 +60,7 @@ module Mail
         if value[:mime_type]
           default_values[:content_type] = value.delete(:mime_type)
           @mime_type = MIME::Types[default_values[:content_type]].first
-          default_values[:content_transfer_encoding] = guess_encoding
+          default_values[:content_transfer_encoding] ||= guess_encoding
         end
 
         hash = default_values.merge(value)

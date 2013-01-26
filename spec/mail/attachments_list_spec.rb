@@ -99,6 +99,13 @@ describe "Attachments" do
       check_decoded(@mail.attachments[0].decoded, file_data)
     end
 
+    it "should allow you set a mime type and encoding without overriding the encoding" do
+      encoded = encode_base64('<foo/>')
+      @mail.attachments['test.png'] = { :mime_type => 'text/xml', :content => encoded, :encoding => 'base64' }
+      @mail.attachments[0].content_transfer_encoding.should eq 'base64'
+      check_decoded(@mail.attachments[0].decoded, '<foo/>')
+    end
+
     it "should not allow you to pass in an encoded attachment with an unknown encoding" do
       file_data = File.read(fixture('attachments', 'test.png'))
       base64_encoded_data = encode_base64(file_data)
