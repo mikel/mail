@@ -202,7 +202,7 @@ mail.to_s =~ /Message\-ID: <[\d\w_]+@.+.mail/ #=> 27
 Mail will automatically add a Message-ID field if it is missing and
 give it a unique, random Message-ID along the lines of:
 
-    <4a7ff76d7016_13a81ab802e1@local.fqdn.mail>
+    <4a7ff76d7016_13a81ab802e1@local.host.mail>
 
 ### Or do worry about Message-IDs:
 

@@ -900,8 +900,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_message_id
-          fqdn ||= ::Socket.gethostname
-          mail.to_s.should =~ /Message-ID: <[\w]+@#{fqdn}.mail>\r\n/
+          mail.to_s.should =~ /Message-ID: <[\w]+@#{::Socket.gethostname}.mail>\r\n/
         end
 
         it "should make an email and inject a message ID if none was set if told to_s" do
