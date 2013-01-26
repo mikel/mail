@@ -40,6 +40,11 @@ describe Mail::InReplyToField do
       t.encoded.should eq "In-Reply-To: <1234@test.lindsaar.net>\r\n <4567@test.lindsaar.net>\r\n"
     end
 
+    it "should handle an array of message IDs" do
+      t = Mail::InReplyToField.new(['<1234@test.lindsaar.net>', '<4567@test.lindsaar.net>'])
+      t.encoded.should eq "In-Reply-To: <1234@test.lindsaar.net>\r\n <4567@test.lindsaar.net>\r\n"
+    end
+
     it "should provide decoded" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
       t.decoded.should eq "<1234@test.lindsaar.net>"

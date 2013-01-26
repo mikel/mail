@@ -41,6 +41,11 @@ describe Mail::ReferencesField do
     t.to_s.should eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
   end
 
+  it "should accept an array of message ids" do
+    t = Mail::ReferencesField.new(['<1234@test.lindsaar.net>', '<5678@test.lindsaar.net>'])
+    t.encoded.should eq "References: <1234@test.lindsaar.net>\r\n <5678@test.lindsaar.net>\r\n"
+  end
+
   it "should accept no message ids" do
     t = Mail::ReferencesField.new('')
     t.name.should eq 'References'

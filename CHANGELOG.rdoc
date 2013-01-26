@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Can assign arrays of Message-IDs to References and In-Reply-To (jeremy)
 * Setting the html_ or text_part sets a default text/html or text/plain content type (jeremy)
 * Setting the html_ or text_part to nil removes it (jeremy)
 * Addresses without a parsable email or display name still format as their raw text (jeremy)
