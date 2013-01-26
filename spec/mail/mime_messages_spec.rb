@@ -211,6 +211,25 @@ describe "MIME Emails" do
         mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
       end
 
+      it "should set the content type to multipart/alternative if you declare html and text parts" do
+        mail = Mail.new
+        mail.text_part { }
+        mail.html_part { }
+        mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+      end
+
+      it "should not set the content type to multipart/alternative if you declare an html part but not a text part" do
+        mail = Mail.new
+        mail.html_part { }
+        mail.to_s.should_not =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+      end
+
+      it "should not set the content type to multipart/alternative if you declare a text part but not an html part" do
+        mail = Mail.new
+        mail.text_part { }
+        mail.to_s.should_not =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+      end
+
       it "should add the end boundary tag" do
         mail = Mail.new
         mail.text_part = Mail::Part.new do

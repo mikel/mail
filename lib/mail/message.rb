@@ -1559,9 +1559,7 @@ module Mail
     # Accessor for html_part
     def html_part(&block)
       if block_given?
-        @html_part = Mail::Part.new(&block)
-        add_multipart_alternate_header unless html_part.blank?
-        add_part(@html_part)
+        self.html_part = Mail::Part.new(&block)
       else
         @html_part || find_first_mime_type('text/html')
       end
@@ -1570,9 +1568,7 @@ module Mail
     # Accessor for text_part
     def text_part(&block)
       if block_given?
-        @text_part = Mail::Part.new(&block)
-        add_multipart_alternate_header unless html_part.blank?
-        add_part(@text_part)
+        self.text_part = Mail::Part.new(&block)
       else
         @text_part || find_first_mime_type('text/plain')
       end
