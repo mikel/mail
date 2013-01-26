@@ -126,6 +126,11 @@ describe Mail::Address do
       a.raw.should eq result
     end
 
+    it "should format junk addresses as raw text" do
+      junk = '<"somename@gmail.com">'
+      Mail::Address.new(junk).format.should eq junk
+    end
+
   end
 
   describe "assigning values directly" do

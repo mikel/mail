@@ -53,8 +53,10 @@ module Mail
         ''
       when display_name
         [quote_phrase(display_name), "<#{address}>", format_comments].compact.join(" ")
-      else
+      when address
         [address, format_comments].compact.join(" ")
+      else
+        tree.text_value
       end
     end
 
