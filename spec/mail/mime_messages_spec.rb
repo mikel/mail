@@ -137,12 +137,6 @@ describe "MIME Emails" do
         mail.boundary.should eq nil
       end
 
-      it "should allow you to assign a text part" do
-        mail = Mail.new
-        text_mail = Mail.new("This is Text")
-        doing { mail.text_part = text_mail }.should_not raise_error
-      end
-
       it "should assign the text part and allow you to reference" do
         mail = Mail.new
         text_mail = Mail.new("This is Text")
@@ -150,10 +144,10 @@ describe "MIME Emails" do
         mail.text_part.should eq text_mail
       end
 
-      it "should allow you to assign a html part" do
+      it "should not assign a nil text part" do
         mail = Mail.new
-        html_mail = Mail.new("<b>This is HTML</b>")
-        doing { mail.text_part = html_mail }.should_not raise_error
+        mail.text_part = nil
+        mail.text_part.should be_nil
       end
 
       it "should assign the html part and allow you to reference" do
@@ -161,6 +155,12 @@ describe "MIME Emails" do
         html_mail = Mail.new("<b>This is HTML</b>")
         mail.html_part = html_mail
         mail.html_part.should eq html_mail
+      end
+
+      it "should not assign a nil html part" do
+        mail = Mail.new
+        mail.html_part = nil
+        mail.html_part.should be_nil
       end
 
       it "should add the html part and text part" do
@@ -177,7 +177,29 @@ describe "MIME Emails" do
         mail.parts.last.class.should eq Mail::Part
       end
 
-      it "should set the content type to multipart/alternative if you use the html_part and text_part helpers" do
+      it "should remove the html part and back out of multipart/alternative if set to nil" do
+        mail = Mail.new
+        mail.text_part = Mail::Part.new
+        mail.html_part = Mail::Part.new
+
+        mail.html_part = nil
+        mail.parts.length.should eq 1
+        mail.boundary.should be_nil
+        mail.content_type.should be_nil
+      end
+
+      it "should remove the text part and back out of multipart/alternative if set to nil" do
+        mail = Mail.new
+        mail.text_part = Mail::Part.new
+        mail.html_part = Mail::Part.new
+
+        mail.text_part = nil
+        mail.parts.length.should eq 1
+        mail.boundary.should be_nil
+        mail.content_type.should be_nil
+      end
+
+      it "should set the content type to multipart/alternative if you assign html and text parts" do
         mail = Mail.new
         mail.text_part = Mail::Part.new do
           body "This is Text"

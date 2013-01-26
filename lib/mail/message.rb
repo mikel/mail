@@ -1581,27 +1581,43 @@ module Mail
     # Helper to add a html part to a multipart/alternative email.  If this and
     # text_part are both defined in a message, then it will be a multipart/alternative
     # message and set itself that way.
-    def html_part=(msg = nil)
+    def html_part=(msg)
+      # Assign the html part and set multipart/alternative if there's a text part.
       if msg
         @html_part = msg
-      else
-        @html_part = Mail::Part.new('Content-Type: text/html;')
+        add_multipart_alternate_header if text_part
+        add_part @html_part
+
+      # If nil, delete the html part and back out of multipart/alternative.
+      elsif @html_part
+        parts.delete @html_part
+        @html_part = nil
+        if text_part
+          self.content_type = nil
+          body.boundary = nil
+        end
       end
-      add_multipart_alternate_header unless text_part.blank?
-      add_part(@html_part)
     end
 
     # Helper to add a text part to a multipart/alternative email.  If this and
     # html_part are both defined in a message, then it will be a multipart/alternative
     # message and set itself that way.
-    def text_part=(msg = nil)
+    def text_part=(msg)
+      # Assign the text part and set multipart/alternative if there's an html part.
       if msg
         @text_part = msg
-      else
-        @text_part = Mail::Part.new('Content-Type: text/plain;')
+        add_multipart_alternate_header if html_part
+        add_part @text_part
+
+      # If nil, delete the text part and back out of multipart/alternative.
+      elsif @text_part
+        parts.delete @text_part
+        @text_part = nil
+        if html_part
+          self.content_type = nil
+          body.boundary = nil
+        end
       end
-      add_multipart_alternate_header unless html_part.blank?
-      add_part(@text_part)
     end
 
     # Adds a part to the parts list or creates the part list

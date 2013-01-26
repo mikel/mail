@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Setting the html_ or text_part to nil removes it (jeremy)
 * Close pull request 399 - Accept :ca_path and :ca_file options for SMTP delivery (ndbroadbent)
 
 Performance:
