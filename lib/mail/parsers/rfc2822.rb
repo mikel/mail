@@ -2389,12 +2389,7 @@ module Mail
               break
             end
           end
-          if s4.empty?
-            @index = i4
-            r4 = nil
-          else
-            r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
-          end
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
           s0 << r4
           if r4
             r10 = _nt_FWS
