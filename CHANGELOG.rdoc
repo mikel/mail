@@ -23,6 +23,7 @@ Coping with third-party bugs:
 * Parse multipart boundary from Content-Type headers containing extra semicolons (jeremy)
 
 Housekeeping:
+* Add an MIT-LICENSE file to make licensing clear & obvious; update to 2013 (jeremy)
 * Close pull request 499 - Clean up some dead code (ConradIrwin)
 * Close pull request 489, 495 - Docs typos (JackDanger, francois)
 * Close pull request 485 - Be explicit about unsupported address parsing (bpot)
