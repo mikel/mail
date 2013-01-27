@@ -43,7 +43,7 @@ describe Mail::UnstructuredField do
 
     it "should return '' on to_s if there is no value" do
       @field.value = nil
-      @field.encoded.should eq ''
+      @field.to_s.should eq ''
     end
 
     it "should give an encoded value ready to insert into an email" do
