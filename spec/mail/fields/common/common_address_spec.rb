@@ -208,6 +208,16 @@ describe "Mail::CommonAddress" do
       field.addresses.should eq ['test1@lindsaar.net', 'test2@lindsaar.net']
     end
 
+    it "should handle missing display names with an angle address" do
+      field = Mail::ToField.new('<mikel@test.lindsaar.net>')
+      field.encoded.should eq "To: mikel@test.lindsaar.net\r\n"
+    end
+
+    it "should handle empty display names with an angle address" do
+      field = Mail::ToField.new('"" <mikel@test.lindsaar.net>')
+      field.encoded.should eq "To: mikel@test.lindsaar.net\r\n"
+    end
+
   end
 
   describe "encoding and decoding fields" do
