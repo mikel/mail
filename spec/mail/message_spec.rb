@@ -237,7 +237,7 @@ describe Mail::Message do
 
     it "should set a raw source instance variable to equal the passed in message" do
       mail = Mail::Message.new(basic_email)
-      mail.raw_source.should eq basic_email.strip
+      mail.raw_source.should eq basic_email
     end
 
     it "should set the raw source instance variable to '' if no message is passed in" do
@@ -259,7 +259,7 @@ describe Mail::Message do
 
     it "should give the body class the body to parse" do
       body = Mail::Body.new("email message")
-      Mail::Body.should_receive(:new).with("email message").and_return(body)
+      Mail::Body.should_receive(:new).with("email message\r\n").and_return(body)
       mail = Mail::Message.new(basic_email)
       mail.body #body calculates now lazy so need to ask for it
     end
@@ -290,8 +290,8 @@ describe Mail::Message do
 
     it "should allow for whitespace at the start of the email" do
       mail = Mail.new("\r\n\r\nFrom: mikel\r\n\r\nThis is the body")
-      mail.from.should eq ['mikel']
       mail.body.to_s.should eq 'This is the body'
+      mail.from.should eq ['mikel']
     end
 
     it "should read in an email message with the word 'From' in it multiple times and parse it" do
@@ -303,7 +303,7 @@ describe Mail::Message do
     it "should parse non-UTF8 sources" do
       mail = Mail.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
       mail.to.should eq ["raasdnil@gmail.com"]
-      mail.decoded.should eq "すみません。"
+      mail.decoded.should eq "すみません。\n\n"
     end
   end
 
@@ -1251,6 +1251,10 @@ describe Mail::Message do
         end
         mail.body.decoded.should eq "The body"
         mail.body.encoded.should eq "VGhlIGJvZHk=\r\n"
+      end
+
+      it 'should not strip the raw mail source in case the trailing \r\n is meaningful' do
+        Mail.new("Content-Transfer-Encoding: quoted-printable;\r\n\r\nfoo=\r\nbar=\r\nbaz=\r\n").decoded.should eq 'foobarbaz'
       end
 
     end
