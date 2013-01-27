@@ -465,16 +465,16 @@ describe "MIME Emails" do
         end
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
-          original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
+          original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
           tripped.should eq original
           tripped = mail.attachments[1].decoded
-          original = File.read(fixture('attachments', 'test.jpg')).force_encoding(Encoding::BINARY)
+          original = File.open(fixture('attachments', 'test.jpg'), 'rb', &:read)
           tripped.should eq original
           tripped = mail.attachments[2].decoded
-          original = File.read(fixture('attachments', 'test.pdf')).force_encoding(Encoding::BINARY)
+          original = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
           tripped.should eq original
           tripped = mail.attachments[3].decoded
-          original = File.read(fixture('attachments', 'test.zip')).force_encoding(Encoding::BINARY)
+          original = File.open(fixture('attachments', 'test.zip'), 'rb', &:read)
           tripped.should eq original
         else
           mail.attachments[0].decoded.should eq File.read(fixture('attachments', 'test.png'))
@@ -485,7 +485,7 @@ describe "MIME Emails" do
       end
 
       it "should allow you to send in file data instead of having to read it" do
-        file_data = File.read(fixture('attachments', 'test.png'))
+        file_data = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
@@ -494,10 +494,10 @@ describe "MIME Emails" do
         end
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
-          original = File.read(fixture('attachments', 'test.png')).force_encoding(Encoding::BINARY)
+          original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
           tripped.should eq original
         else
-          mail.attachments[0].decoded.should eq File.read(fixture('attachments', 'test.png'))
+          mail.attachments[0].decoded.should eq File.open(fixture('attachments', 'test.png'), 'rb', &:read)
         end
       end
 

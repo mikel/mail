@@ -262,7 +262,7 @@ describe "Test emails" do
 
     describe "raw_email_encoded_stack_level_too_deep.eml" do
       before(:each) do
-        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml')))
+        @message = Mail.read(fixture('emails', 'mime_emails', 'raw_email_encoded_stack_level_too_deep.eml'))
       end
 
       it "should return an 'encoded' version without raising a SystemStackError" do
@@ -277,7 +277,7 @@ describe "Test emails" do
 
     describe "sig_only_email.eml" do
       before(:each) do
-        @message = Mail::Message.new(File.read(fixture('emails', 'mime_emails', 'sig_only_email.eml')))
+        @message = Mail.read(fixture('emails', 'mime_emails', 'sig_only_email.eml'))
       end
 
       it "should not error on multiart/signed emails" do
@@ -293,7 +293,7 @@ describe "Test emails" do
 
     describe "handling invalid group lists" do
       before(:each) do
-        @message = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'empty_group_lists.eml')))
+        @message = Mail.read(fixture('emails', 'error_emails', 'empty_group_lists.eml'))
       end
 
       it "should parse the email and encode without crashing" do
@@ -310,7 +310,7 @@ describe "Test emails" do
   describe "empty address lists" do
 
     before(:each) do
-      @message = Mail::Message.new(File.read(fixture('emails', 'error_emails', 'weird_to_header.eml')))
+      @message = Mail.read(fixture('emails', 'error_emails', 'weird_to_header.eml'))
     end
 
     it "should parse the email and encode without crashing" do
