@@ -14,7 +14,6 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head    # green, but unstable
-    - rvm: jruby-19mode # unknown status
-    - rvm: jruby-head   # unknown status
+    - rvm: jruby-head   # green, but unstable
     - rvm: rbx-18mode   # seems to be running 1.9 mode instead!?
     - rvm: rbx-19mode   # segfaulting in String#ascii_only?
