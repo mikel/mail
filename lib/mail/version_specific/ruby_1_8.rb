@@ -58,7 +58,7 @@ module Mail
       # Ruby 1.8 requires an encoding to work
       raise ArgumentError, "Must supply an encoding" if encoding.nil?
       encoding = encoding.to_s.upcase.gsub('_', '-')
-      [Encodings::Base64.encode(str), encoding]
+      [Encodings::Base64.encode(str), fix_encoding(encoding)]
     end
 
     def Ruby18.b_value_decode(str)

@@ -245,14 +245,14 @@ describe Mail::Encodings do
       original = "ВосстановлениеВосстановлениеВашегопароля"
       if RUBY_VERSION >= '1.9'
         original.force_encoding('UTF-8')
-        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       else
-        result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       end
       mail = Mail.new
       mail.subject = original
       mail[:subject].decoded.should eq original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eq result
+      mail[:subject].encoded.should eq result
     end
 
     it "should round trip a complex string properly" do
@@ -260,17 +260,17 @@ describe Mail::Encodings do
       if RUBY_VERSION >= '1.9'
         original.force_encoding('UTF-8')
       end
-      result = "Subject: =?UTF8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n =?UTF8?Q?_This_is_a_NUT=3F=3F=3F=3F=3FZ=5F=5Fstring_that=3D=3D_could?=\r\n =?UTF8?Q?_=28break=29_anything?=\r\n"
+      result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n =?UTF-8?Q?_This_is_a_NUT=3F=3F=3F=3F=3FZ=5F=5Fstring_that=3D=3D_could?=\r\n =?UTF-8?Q?_=28break=29_anything?=\r\n"
       mail = Mail.new
       mail.subject = original
       mail[:subject].decoded.should eq original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eq result
+      mail[:subject].encoded.should eq result
       mail = Mail.new(mail.encoded)
       mail[:subject].decoded.should eq original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eq result
+      mail[:subject].encoded.should eq result
       mail = Mail.new(mail.encoded)
       mail[:subject].decoded.should eq original
-      mail[:subject].encoded.gsub("UTF-8", "UTF8").should eq result
+      mail[:subject].encoded.should eq result
     end
 
     it "should round trip another complex string (koi-8)" do
@@ -542,7 +542,7 @@ describe Mail::Encodings do
           result = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
           result.force_encoding('UTF-8')
         else
-          result = '=?UTF8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
+          result = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?='
           $KCODE = 'UTF-8'
         end
         Mail::Encodings.decode_encode(string, :encode).should eq result
