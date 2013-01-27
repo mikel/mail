@@ -12,6 +12,7 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Address elements should return decoded display names by default (jeremy)
 * Fix up tests that depend on utf-8 external encoding; read fixtures as binary (jeremy)
 * Capture stderr from Sendmail and Exim deliveries (jeremy)
 * RFC2822 quoted_string content may be empty (jeremy)

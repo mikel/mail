@@ -62,7 +62,17 @@ module Mail
   
     # Returns the addresses that are part of groups
     def group_addresses
-      groups.map { |k,v| v.map { |a| a.format } }.flatten
+      decoded_group_addresses
+    end
+
+    # Returns a list of decoded group addresses
+    def decoded_group_addresses
+      groups.map { |k,v| v.map { |a| a.decoded } }.flatten
+    end
+
+    # Returns a list of encoded group addresses
+    def encoded_group_addresses
+      groups.map { |k,v| v.map { |a| a.encoded } }.flatten
     end
 
     # Returns the name of all the groups in a string
@@ -94,7 +104,7 @@ module Mail
   
     def do_encode(field_name)
       return '' if value.blank?
-      address_array = tree.addresses.reject { |a| group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
+      address_array = tree.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
       address_text  = address_array.join(", \r\n\s")
       group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
       group_text  = group_array.join(" \r\n\s")
@@ -104,7 +114,7 @@ module Mail
 
     def do_decode
       return nil if value.blank?
-      address_array = tree.addresses.reject { |a| group_addresses.include?(a.decoded) }.map { |a| a.decoded }
+      address_array = tree.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
       address_text  = address_array.join(", ")
       group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
       group_text  = group_array.join(" ")

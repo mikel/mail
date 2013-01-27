@@ -77,6 +77,11 @@ describe Mail::Address do
       a.display_name.should eq result
     end
 
+    it "should decode the display name without calling #decoded first" do
+      encoded = '=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>'
+      Mail::Address.new(encoded).display_name.should eq 'Jan Krütisch'
+    end
+
     it "should give back the local part" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'test'
