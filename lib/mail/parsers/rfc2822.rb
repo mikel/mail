@@ -2804,6 +2804,23 @@ module Mail
       r0
     end
 
+    module Mailbox0
+      def dig_comments(comments, elements)
+        elements.each { |elem|
+          if elem.respond_to?(:comment)
+            comments << elem.comment
+          end
+          dig_comments(comments, elem.elements) if elem.elements
+         }
+      end
+
+      def comments
+        comments = []
+        dig_comments(comments, elements)
+        comments
+      end
+    end
+
     def _nt_mailbox
       start_index = index
       if node_cache[:mailbox].has_key?(index)
@@ -2819,10 +2836,12 @@ module Mail
       r1 = _nt_name_addr
       if r1
         r0 = r1
+        r0.extend(Mailbox0)
       else
         r2 = _nt_addr_spec
         if r2
           r0 = r2
+          r0.extend(Mailbox0)
         else
           @index = i0
           r0 = nil
@@ -2852,24 +2871,6 @@ module Mail
       end
     end
 
-    module Address1
-
-      def dig_comments(comments, elements)
-        elements.each { |elem|
-          if elem.respond_to?(:comment)
-            comments << elem.comment
-          end
-          dig_comments(comments, elem.elements) if elem.elements
-         }
-      end
-
-      def comments
-        comments = []
-        dig_comments(comments, elements)
-        comments
-      end
-    end
-
     def _nt_address
       start_index = index
       if node_cache[:address].has_key?(index)
@@ -2888,7 +2889,6 @@ module Mail
         r0 = r1
       else
         r2 = _nt_mailbox
-        r2.extend(Address1)
         if r2
           r0 = r2
         else
