@@ -338,7 +338,7 @@ module Mail
     end
     
     rule name_val_list
-      (CFWS)? (name_val_pair (CFWS name_val_pair)*)
+      (CFWS)? (name_val_pair (CFWS name_val_pair)*)?
     end
     
     rule name_val_pair

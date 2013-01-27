@@ -41,7 +41,12 @@ describe Mail::ReceivedField do
     t = Mail::ReceivedField.new('from localhost (localhost [127.0.0.1]) by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)')
     t.decoded.should eq 'from localhost (localhost [127.0.0.1]) by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000'
   end
-  
+
+  it "should handle empty name-value lists with a comment only (qmail style)" do
+    t = Mail::ReceivedField.new('(qmail 24365 invoked by uid 99); 25 Jan 2011 12:31:11 -0000')
+    t.info.should eq '(qmail 24365 invoked by uid 99)'
+  end
+
   it "should handle a blank value" do
     t = Mail::ReceivedField.new('')
     t.decoded.should eq ''

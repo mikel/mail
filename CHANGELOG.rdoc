@@ -11,6 +11,7 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* The Received header may contain zero name/value pairs, qmail-style (jeremy)
 * Fix that setting an attachment with a :mime_type and :encoding would override the :encoding (jeremy)
 * Fix that declaring an html_part but no text_part would use multipart/alternative anyway (jeremy)
 * Close pull request 487 - Extract comments from group email addresses (bpot)
