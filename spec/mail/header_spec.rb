@@ -235,6 +235,10 @@ describe Mail::Header do
         header.encoded.should match(/^User-Agent: /)
         header.encoded.should_not match(/^user-agent: /)
       end
+
+      it "should not accept field names containing colons" do
+        doing { Mail::Header.new['a:b'] = 'c' }.should raise_error
+      end
       
     end
   
@@ -259,6 +263,13 @@ describe Mail::Header do
     it "should accept any valid header field name" do
       test_name = ascii.reject { |c| c == ':' }.join
       doing { Mail::Header.new("#{test_name}: This is a crazy name") }.should_not raise_error
+    end
+
+    it "should not try to accept colons in header field names" do
+      header = Mail::Header.new("Colon:in:header: oops")
+      header.fields.size.should eq 1
+      header.fields.first.name.should eq 'Colon'
+      header['Colon'].value.should eq 'in:header: oops'
     end
 
     # A field body may be composed of any US-ASCII characters,

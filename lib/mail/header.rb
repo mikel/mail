@@ -154,6 +154,9 @@ module Mail
     #  h['X-Mail-SPAM'] # => nil
     def []=(name, value)
       name = dasherize(name)
+      if name.include?(':')
+        raise ArgumentError, "Header names may not contain a colon: #{name.inspect}"
+      end
       fn = name.downcase
       selected = select_field_for(fn)
       
