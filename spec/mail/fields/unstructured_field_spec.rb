@@ -102,6 +102,17 @@ describe Mail::UnstructuredField do
       @field.encoded.gsub("UTF-8", "UTF8").should eq result
       @field.decoded.should eq string
     end
+
+    if !'1.9'.respond_to?(:force_encoding)
+      it "shouldn't get fooled into encoding on 1.8 due to an unrelated Encoding constant" do
+        begin
+          Mail::UnstructuredField::Encoding = 'derp'
+          @field.encoded.should eq "Subject: Hello Frank\r\n"
+        ensure
+          Mail::UnstructuredField.send :remove_const, :Encoding
+        end
+      end
+    end
   end
 
   describe "folding" do
