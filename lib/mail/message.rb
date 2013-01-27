@@ -122,7 +122,7 @@ module Mail
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
-        init_with_string(args.flatten[0].to_s.strip)
+        init_with_string(args.flatten[0].to_s)
       end
 
       if block_given?
@@ -1889,7 +1889,7 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
       self.header = header_part
       self.body   = body_part
     end

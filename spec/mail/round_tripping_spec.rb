@@ -24,8 +24,8 @@ describe "Round Tripping" do
     parsed_mail.mime_type.should eq 'multipart/alternative'
     parsed_mail.boundary.should eq mail.boundary
     parsed_mail.parts.length.should eq 2
-    parsed_mail.parts[0].body.to_s.should eq "This is Text"
-    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>"
+    parsed_mail.parts[0].body.to_s.should eq "This is Text\n\n"
+    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>\n\n"
   end
 
   it "should round trip an email" do
