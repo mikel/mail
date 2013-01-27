@@ -34,6 +34,22 @@ describe "sendmail delivery agent" do
     mail.deliver!
   end
 
+  it "should spawn a sendmail process" do
+    Mail.defaults do
+      delivery_method :sendmail
+    end
+
+    mail = Mail.new do
+      from    'roger@test.lindsaar.net'
+      to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
+      subject 'invalid RFC2822'
+    end
+
+    Mail::Sendmail.should_receive(:popen).with('/usr/sbin/sendmail -i -t -f "roger@test.lindsaar.net" marcel@test.lindsaar.net bob@test.lindsaar.net')
+
+    mail.deliver!
+  end
+
   describe "return path" do
 
     it "should send an email with a return-path using sendmail" do

@@ -58,9 +58,19 @@ module Mail
     end
 
     def self.call(path, arguments, destinations, mail)
-      IO.popen("#{path} #{arguments} #{destinations}", "w+") do |io|
+      popen "#{path} #{arguments} #{destinations}" do |io|
         io.puts mail.encoded.to_lf
         io.flush
+      end
+    end
+
+    if RUBY_VERSION < '1.9.0'
+      def self.popen(command, &block)
+        IO.popen "#{command} 2>&1", 'w+', &block
+      end
+    else
+      def self.popen(command, &block)
+        IO.popen command, 'w+', :err => :out, &block
       end
     end
   end

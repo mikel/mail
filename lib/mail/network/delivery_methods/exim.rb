@@ -47,7 +47,7 @@ module Mail
 
     def self.call(path, arguments, destinations, mail)
       check_params(mail)
-      IO.popen("#{path} #{arguments}", "w+") do |io|
+      popen "#{path} #{arguments}" do |io|
         io.puts mail.encoded.to_lf
         io.flush
       end
