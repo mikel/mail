@@ -16,15 +16,20 @@ describe Mail::SenderField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>')
       t.name.should eq 'Sender'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
 
     it "should accept a string without the field name" do
-      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
       t.name.should eq 'Sender'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+    end
+
+    it "should reject headers with multiple mailboxes" do
+      pending 'Sender accepts an address list now, but should only accept a single address'
+      doing { Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.should raise_error
     end
 
   end
