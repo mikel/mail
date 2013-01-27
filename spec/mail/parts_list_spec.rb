@@ -17,4 +17,13 @@ describe "PartsList" do
     p << 'text/html'
     p.sort!(order)
   end
+
+  it "should not raise an error when the part is content_type and Mail::UnstructuredField" do
+    part = Mail::Part.new do
+      content_type 'unknown/unknown; name="image.gif"'
+    end
+
+    Mail::PartsList.new.send(:get_order_value, part, [])
+  end
+
 end
