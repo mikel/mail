@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Add support for ks_c_5601-1987 charset, aliased to CP949 Ruby encoding (jeremy)
 * Don't allow colons in header names (jeremy)
 * Can assign arrays of Message-IDs to References and In-Reply-To (jeremy)
 * Setting the html_ or text_part sets a default text/html or text/plain content type (jeremy)

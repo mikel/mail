@@ -124,6 +124,10 @@ module Mail
       when /^8bit$/
         Encoding::ASCII_8BIT
 
+      # Microsoft-specific alias for CP949 (Korean)
+      when 'ks_c_5601-1987'
+        Encoding::CP949
+
       else
         charset
       end

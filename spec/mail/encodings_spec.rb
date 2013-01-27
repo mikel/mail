@@ -149,11 +149,16 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should == result
     end
 
-    it "should decode 8bit encoded string" do
-      if RUBY_VERSION >= '1.9'
+    if '1.9'.respond_to?(:force_encoding)
+      it "should decode 8bit encoded string" do
         string = "=?8bit?Q?ALPH=C3=89E?="
         result = "ALPH\xC3\x89E"
         Mail::Encodings.value_decode(string).should == result
+      end
+
+      it "should decode ks_c_5601-1987 encoded string" do
+        string = '=?ks_c_5601-1987?B?seggx/bB+A==?= <a@b.org>'.force_encoding('us-ascii')
+        Mail::Encodings.value_decode(string).should == "김 현진 <a@b.org>"
       end
     end
   end
