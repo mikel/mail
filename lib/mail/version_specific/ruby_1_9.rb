@@ -51,9 +51,9 @@ module Mail
     def Ruby19.b_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
       if match
-        encoding = match[1]
+        charset = match[1]
         str = Ruby19.decode_base64(match[2])
-        str.force_encoding(fix_encoding(encoding))
+        str.force_encoding(pick_encoding(charset))
       end
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
@@ -67,12 +67,12 @@ module Mail
     def Ruby19.q_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
       if match
-        encoding = match[1]
+        charset = match[1]
         string = match[2].gsub(/_/, '=20')
         # Remove trailing = if it exists in a Q encoding
         string = string.sub(/\=$/, '')
         str = Encodings::QuotedPrintable.decode(string)
-        str.force_encoding(fix_encoding(encoding))
+        str.force_encoding(pick_encoding(charset))
       end
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
@@ -96,23 +96,36 @@ module Mail
       @uri_parser ||= URI::Parser.new
     end
 
-     # mails somtimes includes invalid encodings like iso885915 or utf8 so we transform them to iso885915 or utf8
-     # TODO: add this as a test somewhere
-     # Encoding.list.map{|e| [e.to_s.upcase==fix_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
-     #  Encoding.list.map{|e| [e.to_s==fix_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
-    def Ruby19.fix_encoding(encoding)
-      case encoding
-        # ISO-8859-15, ISO-2022-JP and alike
-        when /iso-?(\d{4})-?(\w{1,2})/i then return "ISO-#{$1}-#{$2}"
-        # "ISO-2022-JP-KDDI"  and alike
-        when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i then return "ISO-#{$1}-#{$2}-#{$3}"
-        # UTF-8, UTF-32BE and alike
-        when /utf-?(\d{1,2})?(\w{1,2})/i then return "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
-        # Windows-1252 and alike
-        when /Windows-?(.*)/i then return "Windows-#{$1}"
-        when /^8bit$/ then return "ASCII-8BIT"
-        #more aliases to be added if needed
-        else return encoding
+    # Pick a Ruby encoding corresponding to the message charset. Most
+    # charsets have a Ruby encoding, but some need manual aliasing here.
+    #
+    # TODO: add this as a test somewhere:
+    #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
+    #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
+    def Ruby19.pick_encoding(charset)
+      case charset
+
+      # ISO-8859-15, ISO-2022-JP and alike
+      when /iso-?(\d{4})-?(\w{1,2})/i
+        "ISO-#{$1}-#{$2}"
+
+      # "ISO-2022-JP-KDDI"  and alike
+      when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i
+        "ISO-#{$1}-#{$2}-#{$3}"
+
+      # UTF-8, UTF-32BE and alike
+      when /utf-?(\d{1,2})?(\w{1,2})/i
+        "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
+
+      # Windows-1252 and alike
+      when /Windows-?(.*)/i
+        "Windows-#{$1}"
+
+      when /^8bit$/
+        Encoding::ASCII_8BIT
+
+      else
+        charset
       end
     end
   end
