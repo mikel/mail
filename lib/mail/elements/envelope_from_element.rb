@@ -26,8 +26,8 @@ module Mail
       @address
     end
     
-    def to_s(*args)
-      "#{@info}; #{@date_time.to_s(*args)}"
+    def to_s
+      "#{@address} #{@date_time.strftime("%a %b %d %H:%M:%S %Y")}"
     end
     
   end
