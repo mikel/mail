@@ -128,6 +128,10 @@ module Mail
       when 'ks_c_5601-1987'
         Encoding::CP949
 
+      # Wrongly written Shift_JIS (Japanese)
+      when 'shift-jis'
+        Encoding::Shift_JIS
+
       else
         charset
       end

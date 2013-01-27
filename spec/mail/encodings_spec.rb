@@ -160,6 +160,11 @@ describe Mail::Encodings do
         string = '=?ks_c_5601-1987?B?seggx/bB+A==?= <a@b.org>'.force_encoding('us-ascii')
         Mail::Encodings.value_decode(string).should == "김 현진 <a@b.org>"
       end
+
+      it "should decode shift-jis encoded string" do
+        string = '=?shift-jis?Q?=93=FA=96{=8C=EA=?='.force_encoding('us-ascii')
+        Mail::Encodings.value_decode(string).should == "日本語"
+      end
     end
   end
 
