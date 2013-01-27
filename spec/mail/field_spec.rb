@@ -120,9 +120,10 @@ describe Mail::Field do
 
   describe "error handling" do
     it "should populate the errors array if it finds a field it can't deal with" do
-      field = Mail::Field.new('Content-Transfer-Encoding: bit')
+      field = Mail::Field.new('Content-Transfer-Encoding: 8@bit')
+      field.field.errors.size.should eq 1
       field.field.errors[0][0].should eq 'Content-Transfer-Encoding'
-      field.field.errors[0][1].should eq 'bit'
+      field.field.errors[0][1].should eq '8@bit'
       field.field.errors[0][2].to_s.should =~ /ContentTransferEncodingElement can not parse |17-bit|/
     end
   end

@@ -601,6 +601,15 @@ describe Mail::ContentTypeField do
       c.parameters.should eql({"name" => "IM 006.jpg"})
     end
 
+    it "should handle 'unknown/unknown'" do
+      string = %(unknown/unknown; charset=iso-8859-1; name=IMSTP19.gif)
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should eq 'unknown/unknown'
+      c.main_type.should eq 'unknown'
+      c.sub_type.should eq 'unknown'
+      c.parameters.should eql('charset' => 'iso-8859-1', 'name' => 'IMSTP19.gif')
+    end
+
   end
 
   describe "finding a filename" do

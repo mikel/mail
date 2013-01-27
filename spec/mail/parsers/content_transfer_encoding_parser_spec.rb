@@ -51,18 +51,12 @@ describe "ContentTransferEncodingParser" do
   end
 
   describe "wild content-transfer-encoding" do
-    it "should convert 8bits to 8bit" do
-      text = '8bits'
-      a = Mail::ContentTransferEncodingParser.new
-      a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should eq '8bit'
-    end
-
-    it "should convert 7bits to 7bit" do
-      text = '7bits'
-      a = Mail::ContentTransferEncodingParser.new
-      a.parse(text).should_not be_nil
-      a.parse(text).encoding.text_value.should eq '7bit'
+    %w(7bits 8bits 7-bit 8-bit).each do |mechanism|
+      it "should parse #{mechanism} variant" do
+        a = Mail::ContentTransferEncodingParser.new
+        a.parse(mechanism).should_not be_nil
+        a.parse(mechanism).encoding.text_value.should eq mechanism
+      end
     end
   end
 end

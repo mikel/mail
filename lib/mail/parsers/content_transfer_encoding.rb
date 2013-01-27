@@ -85,19 +85,6 @@ module Mail
       r0
     end
 
-    module Encoding0
-      def ietf_token
-        elements[0]
-      end
-
-    end
-
-    module Encoding1
-      def text_value
-        ietf_token.text_value
-      end
-    end
-
     def _nt_encoding
       start_index = index
       if node_cache[:encoding].has_key?(index)
@@ -110,41 +97,93 @@ module Mail
       end
 
       i0 = index
-      i1, s1 = index, []
-      r2 = _nt_ietf_token
-      s1 << r2
-      if r2
-        if has_terminal?("s", false, index)
-          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
-          @index += 1
-        else
-          terminal_parse_failure("s")
-          r4 = nil
-        end
-        if r4
-          r3 = r4
-        else
-          r3 = instantiate_node(SyntaxNode,input, index...index)
-        end
-        s1 << r3
-      end
-      if s1.last
-        r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-        r1.extend(Encoding0)
-        r1.extend(Encoding1)
+      if has_terminal?("7bits", false, index)
+        r1 = instantiate_node(SyntaxNode,input, index...(index + 5))
+        @index += 5
       else
-        @index = i1
+        terminal_parse_failure("7bits")
         r1 = nil
       end
       if r1
         r0 = r1
       else
-        r5 = _nt_custom_x_token
-        if r5
-          r0 = r5
+        if has_terminal?("8bits", false, index)
+          r2 = instantiate_node(SyntaxNode,input, index...(index + 5))
+          @index += 5
         else
-          @index = i0
-          r0 = nil
+          terminal_parse_failure("8bits")
+          r2 = nil
+        end
+        if r2
+          r0 = r2
+        else
+          if has_terminal?("7bit", false, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 4))
+            @index += 4
+          else
+            terminal_parse_failure("7bit")
+            r3 = nil
+          end
+          if r3
+            r0 = r3
+          else
+            if has_terminal?("8bit", false, index)
+              r4 = instantiate_node(SyntaxNode,input, index...(index + 4))
+              @index += 4
+            else
+              terminal_parse_failure("8bit")
+              r4 = nil
+            end
+            if r4
+              r0 = r4
+            else
+              if has_terminal?("binary", false, index)
+                r5 = instantiate_node(SyntaxNode,input, index...(index + 6))
+                @index += 6
+              else
+                terminal_parse_failure("binary")
+                r5 = nil
+              end
+              if r5
+                r0 = r5
+              else
+                if has_terminal?("quoted-printable", false, index)
+                  r6 = instantiate_node(SyntaxNode,input, index...(index + 16))
+                  @index += 16
+                else
+                  terminal_parse_failure("quoted-printable")
+                  r6 = nil
+                end
+                if r6
+                  r0 = r6
+                else
+                  if has_terminal?("base64", false, index)
+                    r7 = instantiate_node(SyntaxNode,input, index...(index + 6))
+                    @index += 6
+                  else
+                    terminal_parse_failure("base64")
+                    r7 = nil
+                  end
+                  if r7
+                    r0 = r7
+                  else
+                    r8 = _nt_ietf_token
+                    if r8
+                      r0 = r8
+                    else
+                      r9 = _nt_custom_x_token
+                      if r9
+                        r0 = r9
+                      else
+                        @index = i0
+                        r0 = nil
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
         end
       end
 

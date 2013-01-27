@@ -458,11 +458,11 @@ HERE
   
   describe "error handling" do
     it "should collect up any of its fields' errors" do
-      header = Mail::Header.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b")
+      header = Mail::Header.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b")
       header.errors.should_not be_blank
       header.errors.size.should eq 2
       header.errors[0][0].should eq 'Content-Transfer-Encoding'
-      header.errors[0][1].should eq 'vlad'
+      header.errors[0][1].should eq 'vl@d'
       header.errors[1][0].should eq 'Reply-To'
       header.errors[1][1].should eq 'a b b'
     end

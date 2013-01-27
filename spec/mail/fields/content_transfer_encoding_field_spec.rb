@@ -75,6 +75,16 @@ describe Mail::ContentTransferEncodingField do
         t.encoding.should eq encoding
       end
     end
+
+    it "should treat 7bits/7-bit and 8bits/8-bit as 7bit and 8bit" do
+      %w(7bits 7-bit).each do |mechanism|
+        Mail::ContentTransferEncodingField.new(mechanism).encoding.should eq '7bit'
+      end
+
+      %w(8bits 8-bit).each do |mechanism|
+        Mail::ContentTransferEncodingField.new(mechanism).encoding.should eq '8bit'
+      end
+    end
     
     it "should handle any valid 'x-token' value" do
       t = Mail::ContentTransferEncodingField.new('X-This-is_MY-encoding')
@@ -84,6 +94,11 @@ describe Mail::ContentTransferEncodingField do
     it "should handle an x-encoding" do
       t = Mail::ContentTransferEncodingField.new("x-uuencode")
       t.encoding.should eq "x-uuencode"
+    end
+
+    it "should handle an ietf encoding (practically, any token)" do
+      t = Mail::ContentTransferEncodingField.new("ietf-token")
+      t.encoding.should eq "ietf-token"
     end
 
     it "should replace the existing value" do

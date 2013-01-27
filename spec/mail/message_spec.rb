@@ -1534,11 +1534,11 @@ describe Mail::Message do
 
   describe "error handling" do
     it "should collect up any of its fields' errors" do
-      mail = Mail.new("Content-Transfer-Encoding: vlad\r\nReply-To: a b b\r\n")
+      mail = Mail.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b\r\n")
       mail.errors.should_not be_blank
       mail.errors.size.should eq 2
       mail.errors[0][0].should eq 'Content-Transfer-Encoding'
-      mail.errors[0][1].should eq 'vlad'
+      mail.errors[0][1].should eq 'vl@d'
       mail.errors[1][0].should eq 'Reply-To'
       mail.errors[1][1].should eq 'a b b'
     end
