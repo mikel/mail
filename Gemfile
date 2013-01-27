@@ -1,24 +1,13 @@
-source :rubygems
+source 'https://rubygems.org'
 
-gem "tlsmail" if RUBY_VERSION <= '1.8.6'
-gem "mime-types", "~> 1.16"
+gemspec
+
 gem "treetop", "~> 1.4.10"
+gem "mime-types", "~> 1.16"
+gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-  gem 'jruby-openssl'
-end
+gem 'jruby-openssl', :platform => :jruby
 
 group :test do
-  gem "rake",       "> 0.8.7"
-  gem "rspec",      "~> 2.12.0"
-  case
-  when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
-    # Skip it
-  when RUBY_PLATFORM == 'java'
-    # Skip it
-  when RUBY_VERSION < '1.9'
-    gem "ruby-debug"
-  else
-    # Skip it
-  end
+  gem "ruby-debug", :platform => :mri_18
 end
