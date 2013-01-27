@@ -201,6 +201,7 @@ module Mail
 
     def encoded
       buffer = ''
+      buffer.force_encoding('us-ascii') if buffer.respond_to?(:force_encoding)
       fields.each do |field|
         buffer << field.encoded
       end

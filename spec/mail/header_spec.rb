@@ -545,9 +545,13 @@ TRACEHEADER
 
   describe "encoding" do
     it "should output a parsed version of itself to US-ASCII on encoded and tidy up and sort correctly" do
-      header = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\s \t \t \t    badly formatted             \r\n       \t\t  \t       field")
+      encoded = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\s \t \t \t    badly formatted             \r\n       \t\t  \t       field").encoded
       result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long badly formatted field\r\n"
-      header.encoded.should eq result
+      if result.respond_to?(:encode!)
+        result.encode!(Encoding::US_ASCII)
+        encoded.encoding.should eq Encoding::US_ASCII if encoded.respond_to?(:encoding)
+      end
+      encoded.should eq result
     end
   end
   
