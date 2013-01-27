@@ -17,6 +17,9 @@ Bugs:
 * Close pull request 481 - Correctly quote filename attributes (bpot)
 * Close pull request 471 - Fix Ruby 1.8 build when UTF16/32 default to little-endian (kennyj)
 
+Coping with third-party bugs:
+* Parse multipart boundary from Content-Type headers containing extra semicolons (jeremy)
+
 Housekeeping:
 * Close pull request 499 - Clean up some dead code (ConradIrwin)
 * Close pull request 489, 495 - Docs typos (JackDanger, francois)

@@ -360,6 +360,13 @@ describe Mail::ContentTypeField do
       c.parameters.should eql({"boundary" =>"MuLtIpArT_BoUnDaRy"})
     end
 
+    it %(should handle 'multipart/alternative; boundary="----jkhkjgyurlkmn789809";; charset="us-ascii"') do
+      string = %(multipart/alternative; boundary="----jkhkjgyurlkmn789809";; charset="us-ascii")
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should eq 'multipart/alternative'
+      c.parameters['boundary'].should == '----jkhkjgyurlkmn789809'
+    end
+
     it "should handle 'multipart/mixed'" do
       string = %q{multipart/mixed}
       c = Mail::ContentTypeField.new(string)

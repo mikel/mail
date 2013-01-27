@@ -82,18 +82,22 @@ module Mail
               r6 = _nt_CFWS
               s5 << r6
               if r6
-                if has_terminal?(";", false, index)
-                  r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
-                  @index += 1
-                else
-                  terminal_parse_failure(";")
-                  r8 = nil
+                s7, i7 = [], index
+                loop do
+                  if has_terminal?(";", false, index)
+                    r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                    @index += 1
+                  else
+                    terminal_parse_failure(";")
+                    r8 = nil
+                  end
+                  if r8
+                    s7 << r8
+                  else
+                    break
+                  end
                 end
-                if r8
-                  r7 = r8
-                else
-                  r7 = instantiate_node(SyntaxNode,input, index...index)
-                end
+                r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
                 s5 << r7
                 if r7
                   r9 = _nt_parameter
