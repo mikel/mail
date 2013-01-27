@@ -28,4 +28,12 @@ describe Mail::EnvelopeFromElement do
     end
   end
 
+  describe 'formatting' do
+    it 'should format delivery date using UNIX ctime style' do
+      time = Time.now
+      envelope = Mail::EnvelopeFromElement.new("mikel@test.lindsaar.net #{time.ctime}")
+      envelope.to_s.should eq "mikel@test.lindsaar.net #{time.ctime}"
+    end
+  end
+
 end
