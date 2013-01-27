@@ -47,6 +47,7 @@ Mail is tested by Travis ([![Travis Build Status](https://travis-ci.org/mikel/ma
 * ruby-1.8.7-p370 [ i686 ]
 * ruby-1.9.2-p290 [ x86_64 ]
 * ruby-1.9.3-p327 [ x86_64 ]
+* ruby-2.0.0-rc1 [ x86_64 ]
 * jruby-1.6.8 [ x86_64 ]
 * jruby-1.7.0 [ x86_64 ]
 * rbx-d18 [ x86_64 ]
