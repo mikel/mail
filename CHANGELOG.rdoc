@@ -28,6 +28,7 @@ Coping with third-party bugs:
 * Parse multipart boundary from Content-Type headers containing extra semicolons (jeremy)
 
 Housekeeping:
+* Add development gem dependency on rdoc (jeremy)
 * Refresh Bundler dependencies & setup (jeremy)
 * Remove i18n dependency and last vestiges of activesupport dependency in specs (jeremy)
 * Clarify that Sender is a single address, not an address list (jeremy)
