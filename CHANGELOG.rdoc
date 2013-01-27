@@ -45,6 +45,7 @@ Housekeeping:
 * Close pull request 484 - Remove #tree specs in preparation for deprecation removal (bpot)
 * Close pull request 482 - Update address field specs to reflect to #initialize API (bpot)
 * Close pull request 475 - Shush warning on Object#blank? redefinition (amatsuda)
+* Close pull request 472 - Clean up UTF8/UTF-8 internals (kennyj)
 
 == Version 2.5.3 - Sun Dec 4 15:52:00 +1100 2012 Mikel Lindsaar <mikel@reinteractive.net>
 
