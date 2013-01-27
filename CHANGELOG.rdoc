@@ -14,6 +14,7 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Fix bogus '=' at the end of some quoted-printable messages (jeremy)
 * Shouldn't be fooled into encoding strings on 1.8 by unrelated Encoding constant (emiellohr, jeremy)
 * Header encoding should be US-ASCII, not the default external encoding (jeremy)
 * Address elements should return decoded display names by default (jeremy)
