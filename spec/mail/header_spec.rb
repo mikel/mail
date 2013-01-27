@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'spec_helper'
-require "active_support/core_ext/kernel/reporting"
 
 describe Mail::Header do
 
@@ -610,9 +609,12 @@ TRACEHEADER
       old_maximum_amount = Mail::Header.maximum_amount
       begin
         Mail::Header.maximum_amount = 10
-        silence_warnings do
+        begin
+          $VERBOSE, old_verbose = nil, $VERBOSE
           header = Mail::Header.new("X-SubscriberID: 345\n" * 11)
           header.fields.size.should == 10
+        ensure
+          $VERBOSE = old_verbose
         end
       ensure
         Mail::Header.maximum_amount = old_maximum_amount
