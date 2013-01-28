@@ -282,7 +282,15 @@ describe Mail::Encodings do
       unwrapped = Mail::Encodings.value_decode(wrapped)
       unwrapped.gsub("Subject: ", "").should eq original
     end
+  end
 
+  describe "mixed Q and B encodings" do
+    it "should decode an encoded string" do
+      string = '=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= =?UTF-8?Q?_This_was_=E3=81=82_string?='
+      result = "This is あ string This was あ string"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should eq result
+    end
   end
 
   describe "parameter MIME encodings" do

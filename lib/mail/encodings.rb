@@ -116,39 +116,38 @@ module Mail
       # Optimization: If there's no encoded-words in the string, just return it
       return str unless str.index("=?")
 
-      str = str.gsub(/\?=(\s*)=\?/, '?==?') # Remove whitespaces between 'encoded-word's
+      lines = collapse_adjacent_encodings(str)
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
-      str.split(/([ \t])/).map do |text|
-        if text.index('=?') .nil?
-          text
-        else
-          # Join QP encoded-words that are adjacent to avoid decoding partial chars
-          text.gsub!(/\?\=\=\?.+?\?[Qq]\?/m, '') if text =~ /\?==\?/
-
-          # Search for occurences of quoted strings or plain strings
-          text.scan(/(                                  # Group around entire regex to include it in matches
-                       \=\?[^?]+\?([QB])\?[^?]+?\?\=  # Quoted String with subgroup for encoding method
-                       |                                # or
-                       .+?(?=\=\?|$)                    # Plain String
-                     )/xmi).map do |matches|
-            string, method = *matches
-            if    method == 'b' || method == 'B'
-              b_value_decode(string)
-            elsif method == 'q' || method == 'Q'
-              q_value_decode(string)
-            else
-              string
+      lines.map do |line|
+        line.split(/([ \t])/).map do |text|
+          if text.index('=?') .nil?
+            text
+          else
+            # Search for occurences of quoted strings or plain strings
+            text.scan(/(                                  # Group around entire regex to include it in matches
+                        \=\?[^?]+\?([QB])\?[^?]+?\?\=  # Quoted String with subgroup for encoding method
+                        |                                # or
+                        .+?(?=\=\?|$)                    # Plain String
+                      )/xmi).map do |matches|
+              string, method = *matches
+              if    method == 'b' || method == 'B'
+                b_value_decode(string)
+              elsif method == 'q' || method == 'Q'
+                q_value_decode(string)
+              else
+                string
+              end
             end
           end
         end
-      end.join("")
+      end.flatten.join("")
     end
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def Encodings.unquote_and_convert_to(str, to_encoding)
       output = value_decode( str ).to_s # output is already converted to UTF-8
-      
+
       if 'utf8' == to_encoding.to_s.downcase.gsub("-", "")
         output
       elsif to_encoding
@@ -157,7 +156,7 @@ module Mail
             output.encode(to_encoding)
           else
             require 'iconv'
-            Iconv.iconv(to_encoding, 'UTF-8', output).first 
+            Iconv.iconv(to_encoding, 'UTF-8', output).first
           end
         rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
@@ -267,6 +266,40 @@ module Mail
 
     def Encodings.find_encoding(str)
       RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
+    end
+
+    # Gets the encoding type (Q or B) from the string.
+    def Encodings.split_value_encoding_from_string(str)
+      match = str.match(/\=\?[^?]+?\?([QB])\?(.+)?\?\=/mi)
+      if match
+        match[1]
+      else
+        nil
+      end
+    end
+
+    # When the encoded string consists of multiple lines, lines with the same
+    # encoding (Q or B) can be joined together.
+    #
+    # String has to be of the format =?<encoding>?[QB]?<string>?=
+    def Encodings.collapse_adjacent_encodings(str)
+      lines = str.split(/(\?=)\s*(=\?)/).each_slice(2).map(&:join)
+      results = []
+      previous_encoding = nil
+
+      lines.each do |line|
+        encoding = split_value_encoding_from_string(line)
+
+        if encoding == previous_encoding
+          line = results.pop + line
+          line.gsub!(/\?\=\=\?.+?\?[QqBb]\?/m, '')
+        end
+
+        previous_encoding = encoding
+        results << line
+      end
+
+      results
     end
   end
 end
