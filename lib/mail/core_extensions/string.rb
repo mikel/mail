@@ -15,12 +15,12 @@ class String #:nodoc:
   end
 
   unless method_defined?(:ascii_only?)
-    # Provides all strings with the Ruby 1.9 method of .ascii_only? and
-    # returns true or false
-    US_ASCII_REGEXP = %Q{\x00-\x7f}
+    # Backport from Ruby 1.9 checks for non-us-ascii characters.
     def ascii_only?
-      !(self =~ /[^#{US_ASCII_REGEXP}]/)
+      self !~ MATCH_NON_US_ASCII
     end
+
+    MATCH_NON_US_ASCII = /[^\x00-\x7f]/
   end
 
   def not_ascii_only?
