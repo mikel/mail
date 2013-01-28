@@ -12,6 +12,10 @@ describe Mail::CommonField do
     after(:each) do
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
+
+    it "should return '' on to_s if there is no value" do
+      Mail::SubjectField.new(nil).to_s.should eq ''
+    end
     
     it "should leave ascii alone" do
       field = Mail::SubjectField.new("This is a test")
