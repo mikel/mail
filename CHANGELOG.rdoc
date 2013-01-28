@@ -16,6 +16,7 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Fix sendmail delivery to addresses with a leading hyphen (lifo, jeremy)
 * Correctly format mbox From headers per RFC4155 (bpot, jeremy)
 * Fix bogus '=' at the end of some quoted-printable messages (jeremy)
 * Shouldn't be fooled into encoding strings on 1.8 by unrelated Encoding constant (emiellohr, jeremy)

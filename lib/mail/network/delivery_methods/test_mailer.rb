@@ -36,7 +36,7 @@ module Mail
     attr_accessor :settings
 
     def deliver!(mail)
-      check_params(mail)
+      check_delivery_params(mail)
       Mail::TestMailer.deliveries << mail
     end
     

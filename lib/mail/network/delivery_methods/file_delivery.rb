@@ -28,7 +28,7 @@ module Mail
     attr_accessor :settings
     
     def deliver!(mail)
-      check_params(mail)
+      check_delivery_params(mail)
 
       if ::File.respond_to?(:makedirs)
         ::File.makedirs settings[:location]
