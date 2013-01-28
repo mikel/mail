@@ -31,5 +31,21 @@ describe Mail::Encodings::QuotedPrintable do
     result = "\000\000\000\000"
     Mail::Encodings::QuotedPrintable.decode("=00=00=00=00").should eq result
   end
+
+  %w(=0D =0A =0D=0A).each do |linebreak|
+    expected = "first line wraps\n\nsecond paragraph"
+    it "should cope with inappropriate #{linebreak} line break encoding" do
+      body = "first line=\r\n wraps#{linebreak}\r\n#{linebreak}\r\nsecond paragraph=\r\n"
+      Mail::Encodings::QuotedPrintable.decode(body).should eq expected
+    end
+  end
+
+  [["\r", "=0D"], ["\n", "=0A"], ["\r\n", "=0D=0A"]].each do |crlf, linebreak|
+    expected = "first line wraps\n\nsecond paragraph"
+    it "should allow encoded #{linebreak} line breaks with soft line feeds" do
+      body = "first line=\r\n wraps#{linebreak}=\r\n#{linebreak}=\r\nsecond paragraph=\r\n"
+      Mail::Encodings::QuotedPrintable.decode(body).should eq expected
+    end
+  end
   
 end
