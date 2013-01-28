@@ -28,6 +28,7 @@ Bugs:
 * Fix that setting an attachment with a :mime_type and :encoding would override the :encoding (jeremy)
 * Fix that declaring an html_part but no text_part would use multipart/alternative anyway (jeremy)
 * Close pull request 496 - Correctly handle quoted-printable line breaks (jeremy)
+* Close pull request 493 - Repair misencoded quoted-printable line breaks (jeremy)
 * Close pull request 487 - Extract comments from group email addresses (bpot)
 * Close pull request 481 - Correctly quote filename attributes (bpot)
 * Close pull request 480 - Support mixed encodings in a single header body (adamvaughan)
