@@ -3,13 +3,23 @@ require 'spec_helper'
 describe Mail::Encodings::QuotedPrintable do
   
   it "should encode quoted printable from text" do
-    result = "This is a test=\r\n"
-    Mail::Encodings::QuotedPrintable.encode('This is a test').should eq result
+    result = "This is\r\na test=\r\n"
+    Mail::Encodings::QuotedPrintable.encode("This is\na test").should eq result
+  end
+
+  it "should encode quoted printable from crlf text" do
+    result = "This is\r\na test=\r\n"
+    Mail::Encodings::QuotedPrintable.encode("This is\r\na test").should eq result
+  end
+
+  it "should encode quoted printable from cr text" do
+    result = "This is\r\na test=\r\n"
+    Mail::Encodings::QuotedPrintable.encode("This is\ra test").should eq result
   end
   
   it "should decode quoted printable" do
-    result = "This is a test"
-    Mail::Encodings::QuotedPrintable.decode("This is a test").should eq result
+    result = "This is\na test"
+    Mail::Encodings::QuotedPrintable.decode("This is\r\na test").should eq result
   end
   
   it "should encode quoted printable from binary" do
