@@ -47,7 +47,7 @@ module Mail
       end
     end
 
-    FILENAME_RE = /\b(filename|name)=([^"\r\n]+\s[^"\r\n]+)/
+    FILENAME_RE = /\b(filename|name)=([^;"\r\n]+\s[^;"\r\n]+)/
     def ensure_filename_quoted(value)
       if value.is_a?(String)
         value.sub! FILENAME_RE, '\1="\2"'

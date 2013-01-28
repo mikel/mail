@@ -127,8 +127,8 @@ describe Mail::ContentTypeField do
       c = Mail::ContentTypeField.new('text/plain; name=This is a bad filename.txt')
       c.value.should eq 'text/plain; name="This is a bad filename.txt"'
 
-      c = Mail::ContentTypeField.new('image/jpg; name=some.jpg')
-      c.value.should eq 'image/jpg; name=some.jpg'
+      c = Mail::ContentTypeField.new('image/jpg; name=some.jpg; size=100')
+      c.value.should eq 'image/jpg; name=some.jpg; size=100'
 
       c = Mail::ContentTypeField.new('text/plain; name="Bad filename but at least it is wrapped in quotes.txt"')
       c.value.should eq 'text/plain; name="Bad filename but at least it is wrapped in quotes.txt"'
