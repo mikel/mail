@@ -94,7 +94,7 @@ module Mail
     def set_mime_type(filename)
       # Have to do this because MIME::Types is not Ruby 1.9 safe yet
       if RUBY_VERSION >= '1.9'
-         filename   = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
+        filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
       end
 
       @mime_type = MIME::Types.type_for(filename).first

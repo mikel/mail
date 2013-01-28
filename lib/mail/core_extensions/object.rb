@@ -6,7 +6,7 @@ unless Object.method_defined? :blank?
       if respond_to?(:empty?)
         empty?
       else
-       !self
+        !self
       end
     end
   end

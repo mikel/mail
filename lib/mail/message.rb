@@ -1621,10 +1621,10 @@ module Mail
     # Adds a part to the parts list or creates the part list
     def add_part(part)
       if !body.multipart? && !self.body.decoded.blank?
-         @text_part = Mail::Part.new('Content-Type: text/plain;')
-         @text_part.body = body.decoded
-         self.body << @text_part
-         add_multipart_alternate_header
+        @text_part = Mail::Part.new('Content-Type: text/plain;')
+        @text_part.body = body.decoded
+        self.body << @text_part
+        add_multipart_alternate_header
       end
       add_boundary
       self.body << part
@@ -1918,11 +1918,11 @@ module Mail
 
 
     def process_body_raw
-       @body = Mail::Body.new(@body_raw)
-       @body_raw = nil
-       separate_parts if @separate_parts
+      @body = Mail::Body.new(@body_raw)
+      @body_raw = nil
+      separate_parts if @separate_parts
 
-       add_encoding_to_body
+      add_encoding_to_body
     end
 
     def set_envelope_header

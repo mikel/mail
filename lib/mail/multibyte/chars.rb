@@ -412,7 +412,7 @@ module Mail #:nodoc:
         chars(Unicode.tidy_bytes(@wrapped_string, force))
       end
 
-       %w(capitalize downcase lstrip reverse rstrip slice strip tidy_bytes upcase).each do |method|
+      %w(capitalize downcase lstrip reverse rstrip slice strip tidy_bytes upcase).each do |method|
         # Only define a corresponding bang method for methods defined in the proxy; On 1.9 the proxy will
         # exclude lstrip!, rstrip! and strip! because they are already work as expected on multibyte strings.
         if public_method_defined?(method)

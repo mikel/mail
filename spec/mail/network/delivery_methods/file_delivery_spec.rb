@@ -100,7 +100,7 @@ describe "SMTP Delivery Method" do
           subject "Email with no sender"
           body "body"
         end
-       end.should raise_error('A sender (Return-Path, Sender or From) required to send a message')
+      end.should raise_error('A sender (Return-Path, Sender or From) required to send a message')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -114,7 +114,7 @@ describe "SMTP Delivery Method" do
           subject "Email with no recipient"
           body "body"
         end
-       end.should raise_error('At least one recipient (To, Cc or Bcc) is required to send a message')
+      end.should raise_error('At least one recipient (To, Cc or Bcc) is required to send a message')
     end
 
   end
