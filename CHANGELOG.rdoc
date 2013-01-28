@@ -29,6 +29,7 @@ Bugs:
 * Fix that declaring an html_part but no text_part would use multipart/alternative anyway (jeremy)
 * Close pull request 487 - Extract comments from group email addresses (bpot)
 * Close pull request 481 - Correctly quote filename attributes (bpot)
+* Close pull request 480 - Support mixed encodings in a single header body (adamvaughan)
 * Close pull request 471 - Fix Ruby 1.8 build when UTF16/32 default to little-endian (kennyj)
 
 Coping with third-party bugs:
