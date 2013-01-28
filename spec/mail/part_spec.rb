@@ -2,14 +2,32 @@ require 'spec_helper'
 
 describe Mail::Part do
 
-  it "should put content-ids into parts" do
-    part = Mail::Part.new do
-      body "This is Text"
-    end
+  it "should not add a default Content-ID" do
+    part = Mail::Part.new
+    part.to_s
+    part.content_id.should be_nil
+  end
+
+  it "should not add a default Content-ID to non-inline attachments" do
+    part = Mail::Part.new(:content_disposition => 'attachment')
+    part.to_s
+    part.content_id.should be_nil
+  end
+
+  it "should add a default Content-ID to inline attachments" do
+    part = Mail::Part.new(:content_disposition => 'inline')
     part.to_s
     part.content_id.should_not be_nil
   end
-  
+
+  it "should not add a Date, MIME-Version, or Message-ID" do
+    part = Mail::Part.new
+    part.to_s
+    part.date.should be_nil
+    part.mime_version.should be_nil
+    part.message_id.should be_nil
+  end
+
   it "should preserve any content id that you put into it" do
     part = Mail::Part.new do
       content_id "<thisis@acontentid>"

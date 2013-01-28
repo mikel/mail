@@ -10,6 +10,7 @@ Features:
 * Setting the html_ or text_part to nil removes it (jeremy)
 * Addresses without a parsable email or display name still format as their raw text (jeremy)
 * Close pull request 399 - Accept :ca_path and :ca_file options for SMTP delivery (ndbroadbent)
+* Close pull request 389 - Don't add superfluous message headers to MIME parts (djmaze, jeremy)
 
 Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
@@ -36,6 +37,7 @@ Bugs:
 
 Coping with third-party bugs:
 * Parse multipart boundary from Content-Type headers containing extra semicolons (jeremy)
+* Close pull request 389 - Only add Content-ID to inline attachments to appease Outlook (djmaze, jeremy)
 
 Housekeeping:
 * Add development gem dependency on rdoc (jeremy)

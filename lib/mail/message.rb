@@ -1587,7 +1587,7 @@ module Mail
 
       # If nil, delete the html part and back out of multipart/alternative.
       elsif @html_part
-        parts.delete @html_part
+        parts.delete_if { |p| p.object_id == @html_part.object_id }
         @html_part = nil
         if text_part
           self.content_type = nil
@@ -1609,7 +1609,7 @@ module Mail
 
       # If nil, delete the text part and back out of multipart/alternative.
       elsif @text_part
-        parts.delete @text_part
+        parts.delete_if { |p| p.object_id == @text_part.object_id }
         @text_part = nil
         if html_part
           self.content_type = nil
@@ -1952,13 +1952,17 @@ module Mail
     end
 
     def add_required_fields
-      add_multipart_mixed_header    unless !body.multipart?
-      add_message_id                unless (has_message_id? || self.class == Mail::Part)
-      add_date                      unless has_date?
-      add_mime_version              unless has_mime_version?
+      add_required_message_fields
+      add_multipart_mixed_header    if body.multipart?
       add_content_type              unless has_content_type?
       add_charset                   unless has_charset?
       add_content_transfer_encoding unless has_content_transfer_encoding?
+    end
+
+    def add_required_message_fields
+      add_date          unless has_date?
+      add_mime_version  unless has_mime_version?
+      add_message_id    unless has_message_id?
     end
 
     def add_multipart_alternate_header

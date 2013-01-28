@@ -38,8 +38,12 @@ module Mail
     end
     
     def add_required_fields
-      add_content_id unless has_content_id?
       super
+      add_content_id if !has_content_id? && inline?
+    end
+
+    def add_required_message_fields
+      # Override so we don't add Date, MIME-Version, or Message-ID.
     end
     
     def delivery_status_report_part?

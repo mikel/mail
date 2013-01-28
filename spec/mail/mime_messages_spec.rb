@@ -205,6 +205,7 @@ describe "MIME Emails" do
         mail = Mail.new
         mail.text_part = Mail::Part.new
         mail.html_part = Mail::Part.new
+        mail.parts.length.should eq 2
 
         mail.html_part = nil
         mail.parts.length.should eq 1
@@ -216,6 +217,7 @@ describe "MIME Emails" do
         mail = Mail.new
         mail.text_part = Mail::Part.new
         mail.html_part = Mail::Part.new
+        mail.parts.length.should eq 2
 
         mail.text_part = nil
         mail.parts.length.should eq 1

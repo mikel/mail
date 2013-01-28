@@ -158,7 +158,7 @@ describe "Attachments" do
     end
   end
 
-  describe "getting the content ID from an inline attachment" do
+  describe "getting the content ID from an attachment" do
     before(:each) do
       @mail = Mail.new
       @mail.attachments['test.gif'] = File.open(fixture('attachments', 'test.gif'), 'rb', &:read)
