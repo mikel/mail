@@ -5,21 +5,20 @@ module Net
     # http://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=rev&amp;revision=30294
     #
     # Fixed in what will be Ruby 1.9.3 - tlsconnect also does not exist in some early versions of ruby
-    remove_method :tlsconnect if defined?(Net::SMTP.new.tlsconnect)
+    begin
+      alias_method :original_tlsconnect, :tlsconnect
 
-    def tlsconnect(s)
-      verified = false
-      s = OpenSSL::SSL::SSLSocket.new s, @ssl_context
-      logging "TLS connection started"
-      s.sync_close = true
-      s.connect
-      if @ssl_context.verify_mode != OpenSSL::SSL::VERIFY_NONE
-        s.post_connection_check(@address)
+      def tlsconnect(s)
+        verified = false
+        begin
+          original_tlsconnect(s).tap { verified = true }
+        ensure
+          unless verified
+            s.close rescue nil
+          end
+        end
       end
-      verified = true
-      s
-    ensure
-      s.close unless verified
+    rescue NameError
     end
   end
 end
