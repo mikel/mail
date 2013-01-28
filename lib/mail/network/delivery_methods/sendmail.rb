@@ -52,7 +52,7 @@ module Mail
       envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
       return_path = "-f #{self.class.shellquote(envelope_from)}" if envelope_from
 
-      arguments = [settings[:arguments], return_path].compact.join(" ")
+      arguments = [settings[:arguments], return_path, '--'].compact.join(" ")
 
       quoted_destinations = mail.destinations.collect { |d| self.class.shellquote(d) }
       self.class.call(settings[:location], arguments, quoted_destinations.join(' '), mail)

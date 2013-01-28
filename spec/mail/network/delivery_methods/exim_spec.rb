@@ -28,7 +28,7 @@ describe "exim delivery agent" do
     end
     
     Mail::Exim.should_receive(:call).with('/usr/sbin/exim', 
-                                          '-i -t -f "roger@test.lindsaar.net"', 
+                                          '-i -t -f "roger@test.lindsaar.net" --', 
                                           '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
                                           mail)
     mail.deliver!
@@ -52,7 +52,7 @@ describe "exim delivery agent" do
       end
       
       Mail::Exim.should_receive(:call).with('/usr/sbin/exim',
-                                                '-i -t -f "return@test.lindsaar.net"', 
+                                                '-i -t -f "return@test.lindsaar.net" --', 
                                                 '"to@test.lindsaar.net"', 
                                                 mail)
                                                 
@@ -75,7 +75,7 @@ describe "exim delivery agent" do
       end
 
       Mail::Exim.should_receive(:call).with('/usr/sbin/exim',
-                                                '-i -t -f "sender@test.lindsaar.net"', 
+                                                '-i -t -f "sender@test.lindsaar.net" --', 
                                                 '"to@test.lindsaar.net"', 
                                                 mail)
 
@@ -96,7 +96,7 @@ describe "exim delivery agent" do
       end
 
       Mail::Exim.should_receive(:call).with('/usr/sbin/exim',
-                                                '-i -t -f "from@test.lindsaar.net"', 
+                                                '-i -t -f "from@test.lindsaar.net" --', 
                                                 '"to@test.lindsaar.net"', 
                                                 mail)
       mail.deliver
@@ -116,7 +116,7 @@ describe "exim delivery agent" do
       end
 
       Mail::Exim.should_receive(:call).with('/usr/sbin/exim',
-                                                '-i -t -f "\"from+suffix test\"@test.lindsaar.net"',
+                                                '-i -t -f "\"from+suffix test\"@test.lindsaar.net" --',
                                                 '"to@test.lindsaar.net"',
                                                 mail)
       mail.deliver
@@ -133,7 +133,7 @@ describe "exim delivery agent" do
       end
 
       Mail::Exim.should_receive(:call).with('/usr/sbin/exim',
-                                                '-i -t -f "from@test.lindsaar.net"',
+                                                '-i -t -f "from@test.lindsaar.net" --',
                                                 '"-hyphen@test.lindsaar.net"',
                                                 mail)
       mail.deliver
@@ -152,7 +152,7 @@ describe "exim delivery agent" do
     end
     
     Mail::Exim.should_receive(:call).with('/usr/sbin/exim', 
-                                              '-f "from@test.lindsaar.net"', 
+                                              '-f "from@test.lindsaar.net" --', 
                                               '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
                                               mail)
     mail.deliver!
@@ -170,7 +170,7 @@ describe "exim delivery agent" do
     end
     
     Mail::Exim.should_receive(:call).with('/usr/sbin/exim', 
-                                              "-f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\"", 
+                                              "-f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --", 
                                               '"marcel@test.lindsaar.net"', 
                                               mail)
     mail.deliver!
