@@ -66,7 +66,7 @@ describe Mail::ContentDispositionField do
   end
 
   describe "instance methods" do
-    it "should give it's disposition type" do
+    it "should give its disposition type" do
       c = Mail::ContentDispositionField.new('Content-Disposition: attachment; filename=File')
       c.disposition_type.should eq 'attachment'
       c.parameters.should eql({"filename" => 'File'})

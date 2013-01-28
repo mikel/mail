@@ -110,7 +110,7 @@ describe Mail::AddressList do
       list.group_recipients.length.should eq 1
     end
 
-    it "should ask the group for all it's addresses" do
+    it "should ask the group for all its addresses" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.group_recipients.first.group_list.addresses.length.should eq 2
     end

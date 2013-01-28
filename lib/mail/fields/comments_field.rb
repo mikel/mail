@@ -6,7 +6,7 @@
 # header field in the email.
 # 
 # Sending comments to a mail message will instantiate a Mail::Field object that
-# has a CommentsField as it's field type.
+# has a CommentsField as its field type.
 #  
 # An email header can have as many comments fields as it wants.  There is no upper
 # limit, the comments field is also optional (that is, no comment is needed)

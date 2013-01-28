@@ -86,20 +86,20 @@ describe Mail::Field do
       field.value.should eq 'Bob, ,,, Frank, Smith'
     end
 
-    it "should call to_s on it's field when sent to_s" do
+    it "should call to_s on its field when sent to_s" do
       @field = Mail::SubjectField.new('Subject: Hello bob')
       Mail::SubjectField.should_receive(:new).and_return(@field)
       @field.should_receive(:to_s).once
       Mail::Field.new('Subject: Hello bob').to_s
     end
 
-    it "should pass missing methods to it's instantiated field class" do
+    it "should pass missing methods to its instantiated field class" do
       field = Mail::Field.new('To: Bob')
       field.field.should_receive(:addresses).once
       field.addresses
     end
 
-    it "should change it's type if you change the name" do
+    it "should change its type if you change the name" do
       field = Mail::Field.new("To: mikel@me.com")
       field.field.class.should eq Mail::ToField
       field.value = "bob@me.com"

@@ -6,7 +6,7 @@
 # field in the email.
 # 
 # Sending resent_cc to a mail message will instantiate a Mail::Field object that
-# has a ResentCcField as it's field type.  This includes all Mail::CommonAddress
+# has a ResentCcField as its field type.  This includes all Mail::CommonAddress
 # module instance metods.
 # 
 # Only one Resent-Cc field can appear in a header, though it can have multiple

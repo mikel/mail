@@ -136,7 +136,7 @@ I have tried to simplify it some:
    the header fields (like 'To:' or 'Subject:').
 
 3. By default, calling <code>#to_s</code> on a container object will call its encoded
-   method, while <code>#to_s</code> on a field object will call it's decoded method.
+   method, while <code>#to_s</code> on a field object will call its decoded method.
    So calling <code>#to_s</code> on a Mail object will return the mail, all encoded
    ready to send, while calling <code>#to_s</code> on the From field or the body will
    return the decoded value of the object. The header object of Mail is considered a
@@ -266,7 +266,7 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
-Exim requires it's own delivery manager, and can be used like so:
+Exim requires its own delivery manager, and can be used like so:
 
 ```ruby
 mail.delivery_method :exim, :location => "/usr/bin/exim"

@@ -6,7 +6,7 @@
 # field in the email.
 #
 # Sending date to a mail message will instantiate a Mail::Field object that
-# has a DateField as it's field type.  This includes all Mail::CommonAddress
+# has a DateField as its field type.  This includes all Mail::CommonAddress
 # module instance methods.
 #
 # There must be excatly one Date field in an RFC2822 email.

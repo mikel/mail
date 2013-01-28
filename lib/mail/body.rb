@@ -5,7 +5,7 @@ module Mail
   # 
   # The body is where the text of the email is stored.  Mail treats the body
   # as a single object.  The body itself has no information about boundaries
-  # used in the MIME standard, it just looks at it's content as either a single
+  # used in the MIME standard, it just looks at its content as either a single
   # block of text, or (if it is a multipart message) as an array of blocks of text.
   # 
   # A body has to be told to split itself up into a multipart message by calling

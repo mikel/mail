@@ -89,7 +89,7 @@ describe "Mail" do
       Mail.delivery_method.class.should eq MyDelivery
     end
 
-    it "should ask the custom delivery agent for it's settings" do
+    it "should ask the custom delivery agent for its settings" do
       mock_my_delivery = mock(MyDelivery)
       mock_my_delivery.should_receive(:settings).and_return({:these_are => :settings})
       MyDelivery.should_receive(:new).and_return(mock_my_delivery)
@@ -106,7 +106,7 @@ describe "Mail" do
       Mail.retriever_method.class.should eq MyRetriever
     end
 
-    it "should ask the custom retriever agent for it's settings" do
+    it "should ask the custom retriever agent for its settings" do
       mock_my_retriever = mock(MyRetriever)
       mock_my_retriever.should_receive(:settings).and_return({:these_are => :settings})
       MyRetriever.should_receive(:new).and_return(mock_my_retriever)
@@ -278,20 +278,20 @@ describe "Mail" do
     end
 
     describe "observers" do
-      it "should tell it's observers that it was told to deliver an email" do
+      it "should tell its observers that it was told to deliver an email" do
         Mail.register_observer(MyObserver)
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
 
-      it "should tell it's observers that it was told to deliver an email even if perform_deliveries is false" do
+      it "should tell its observers that it was told to deliver an email even if perform_deliveries is false" do
         Mail.register_observer(MyObserver)
         @message.perform_deliveries = false
         MyObserver.should_receive(:delivered_email).with(@message).once
         @message.deliver
       end
 
-      it "should tell it's observers that it was told to deliver an email even if it is using a delivery_handler" do
+      it "should tell its observers that it was told to deliver an email even if it is using a delivery_handler" do
         Mail.register_observer(MyObserver)
         @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.perform_deliveries = false
@@ -333,7 +333,7 @@ describe "Mail" do
         @message.deliver
       end
 
-      it "mail only call it's delivery_method once" do
+      it "mail only call its delivery_method once" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:delivery_method).exactly(:once).and_return(Mail::TestMailer.new({}))
         @message.deliver
@@ -350,7 +350,7 @@ describe "Mail" do
         doing { @message.deliver }.should_not change(Mail::TestMailer, :deliveries)
       end
 
-      it "should be able to just yield and let mail do it's thing" do
+      it "should be able to just yield and let mail do its thing" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.should_receive(:do_delivery).exactly(:once)
         @message.deliver

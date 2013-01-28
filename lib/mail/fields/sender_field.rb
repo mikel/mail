@@ -6,7 +6,7 @@
 # field in the email.
 # 
 # Sending sender to a mail message will instantiate a Mail::Field object that
-# has a SenderField as it's field type.  This includes all Mail::CommonAddress
+# has a SenderField as its field type.  This includes all Mail::CommonAddress
 # module instance metods.
 # 
 # Only one Sender field can appear in a header, though it can have multiple

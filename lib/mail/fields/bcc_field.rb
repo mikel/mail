@@ -6,7 +6,7 @@
 # field in the email.
 # 
 # Sending bcc to a mail message will instantiate a Mail::Field object that
-# has a BccField as it's field type.  This includes all Mail::CommonAddress
+# has a BccField as its field type.  This includes all Mail::CommonAddress
 # module instance metods.
 # 
 # Only one Bcc field can appear in a header, though it can have multiple

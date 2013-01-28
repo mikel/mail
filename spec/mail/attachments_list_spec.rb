@@ -75,13 +75,13 @@ describe "Attachments" do
 
   describe "decoding and encoding" do
 
-    it "should set it's content_transfer_encoding" do
+    it "should set its content_transfer_encoding" do
       @mail.attachments['test.png'] = { :content => @test_png }
       @mail.ready_to_send!
       @mail.attachments[0].content_transfer_encoding.should eq 'base64'
     end
 
-    it "should encode it's body to base64" do
+    it "should encode its body to base64" do
       @mail.attachments['test.png'] = { :content => @test_png }
       @mail.ready_to_send!
       @mail.attachments[0].encoded.should include(encode_base64(@test_png))

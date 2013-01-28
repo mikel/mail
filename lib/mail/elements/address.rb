@@ -5,7 +5,7 @@ module Mail
     include Mail::Utilities
     
     # Mail::Address handles all email addresses in Mail.  It takes an email address string
-    # and parses it, breaking it down into it's component parts and allowing you to get the
+    # and parses it, breaking it down into its component parts and allowing you to get the
     # address, comments, display name, name, local part, domain part and fully formatted
     # address.
     # 
@@ -40,7 +40,7 @@ module Mail
     end
 
     # Returns a correctly formatted address for the email going out.  If given
-    # an incorrectly formatted address as input, Mail::Address will do it's best
+    # an incorrectly formatted address as input, Mail::Address will do its best
     # to format it correctly.  This includes quoting display names as needed and
     # putting the address in angle brackets etc.
     #

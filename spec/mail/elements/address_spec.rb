@@ -44,13 +44,13 @@ describe Mail::Address do
     end
 
 
-    it "should give it's address back on :to_s if there is no display name" do
+    it "should give its address back on :to_s if there is no display name" do
       parse_text = 'test@lindsaar.net'
       result     = 'test@lindsaar.net'
       Mail::Address.new(parse_text).to_s.should eq result
     end
 
-    it "should give it's format back on :to_s if there is a display name" do
+    it "should give its format back on :to_s if there is a display name" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar <test@lindsaar.net>'
       Mail::Address.new(parse_text).to_s.should eq result

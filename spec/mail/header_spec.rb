@@ -42,12 +42,12 @@ describe Mail::Header do
       header.should be_has_content_id
     end
     
-    it "should know it's own charset" do
+    it "should know its own charset" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nContent-ID: <1234@me.com>")
       header.charset.should eq nil
     end
     
-    it "should know it's own charset if set" do
+    it "should know its own charset if set" do
       header = Mail::Header.new
       header['content-type'] = 'text/plain; charset=utf-8'
       header.charset.should eq 'utf-8'

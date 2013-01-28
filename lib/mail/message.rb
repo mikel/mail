@@ -169,7 +169,7 @@ module Mail
     #   obj.mail.deliver
     #
     # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
-    # which then can just yield and let Mail do it's own private do_delivery
+    # which then can just yield and let Mail do its own private do_delivery
     # method.
     attr_accessor :delivery_handler
 
@@ -1516,7 +1516,7 @@ module Mail
 
     # Returns an AttachmentsList object, which holds all of the attachments in
     # the receiver object (either the entier email or a part within) and all
-    # of it's descendants.
+    # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
     #
@@ -1660,7 +1660,7 @@ module Mail
     #  m.add_file(:filename => 'filename.png', :content => File.read('/path/to/file.jpg'))
     #
     # Note also that if you add a file to an existing message, Mail will convert that message
-    # to a MIME multipart email, moving whatever plain text body you had into it's own text
+    # to a MIME multipart email, moving whatever plain text body you had into its own text
     # plain part.
     #
     # Example:
@@ -1697,7 +1697,7 @@ module Mail
       self.body << text_part
     end
 
-    # Encodes the message, calls encode on all it's parts, gets an email message
+    # Encodes the message, calls encode on all its parts, gets an email message
     # ready to send
     def ready_to_send!
       identify_and_set_transfer_encoding

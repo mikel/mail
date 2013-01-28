@@ -6,7 +6,7 @@
 # field in the email.
 # 
 # Sending references to a mail message will instantiate a Mail::Field object that
-# has a ReferencesField as it's field type.  This includes all Mail::CommonAddress
+# has a ReferencesField as its field type.  This includes all Mail::CommonAddress
 # module instance metods.
 # 
 # Note that, the #message_ids method will return an array of message IDs without the

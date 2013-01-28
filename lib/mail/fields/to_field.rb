@@ -6,7 +6,7 @@
 # field in the email.
 # 
 # Sending to to a mail message will instantiate a Mail::Field object that
-# has a ToField as it's field type.  This includes all Mail::CommonAddress
+# has a ToField as its field type.  This includes all Mail::CommonAddress
 # module instance metods.
 # 
 # Only one To field can appear in a header, though it can have multiple

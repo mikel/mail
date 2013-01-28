@@ -127,7 +127,7 @@ describe "MIME Emails" do
 
     describe "multipart/alternative emails" do
 
-      it "should know what it's boundary is if it is a multipart document" do
+      it "should know what its boundary is if it is a multipart document" do
         mail = Mail.new('Content-Type: multipart/mixed; boundary="--==Boundary"')
         mail.boundary.should eq "--==Boundary"
       end

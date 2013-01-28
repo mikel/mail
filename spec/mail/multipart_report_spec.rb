@@ -15,7 +15,7 @@ describe "multipart/report emails" do
       mail.should be_delivery_status_report
     end
 
-    it "should find it's message/delivery-status part" do
+    it "should find its message/delivery-status part" do
       mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
       mail.delivery_status_part.should_not be_nil
     end
