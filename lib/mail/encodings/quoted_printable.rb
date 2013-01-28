@@ -12,9 +12,10 @@ module Mail
         EightBit.can_encode? str
       end
 
-      # Decode the string from Quoted-Printable
+      # Decode the string from Quoted-Printable. Cope with hard line breaks
+      # that were incorrectly encoded as hex instead of literal CRLF.
       def self.decode(str)
-        str.unpack("M*").first.to_lf
+        str.gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n").unpack("M*").first.to_lf
       end
 
       def self.encode(str)
