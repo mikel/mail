@@ -151,21 +151,21 @@ module Mail
       if 'utf8' == to_encoding.to_s.downcase.gsub("-", "")
         output
       elsif to_encoding
-        begin
-          if RUBY_VERSION >= '1.9'
-            output.encode(to_encoding)
-          else
+        if RUBY_VERSION >= '1.9'
+          output.encode(to_encoding)
+        else
+          begin
             require 'iconv'
             Iconv.iconv(to_encoding, 'UTF-8', output).first
+          rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
+            # the 'from' parameter specifies a charset other than what the text
+            # actually is...not much we can do in this case but just return the
+            # unconverted text.
+            #
+            # Ditto if either parameter represents an unknown charset, like
+            # X-UNKNOWN.
+            output
           end
-        rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
-          # the 'from' parameter specifies a charset other than what the text
-          # actually is...not much we can do in this case but just return the
-          # unconverted text.
-          #
-          # Ditto if either parameter represents an unknown charset, like
-          # X-UNKNOWN.
-          output
         end
       else
         output
