@@ -165,6 +165,11 @@ describe Mail::Encodings do
         string = '=?shift-jis?Q?=93=FA=96{=8C=EA=?='.force_encoding('us-ascii')
         Mail::Encodings.value_decode(string).should == "日本語"
       end
+
+      it "should decode GB18030 encoded string misidentified as GB2312" do
+        string = '=?GB2312?B?6V8=?='.force_encoding('us-ascii')
+        Mail::Encodings.value_decode(string).should == "開"
+      end
     end
   end
 
