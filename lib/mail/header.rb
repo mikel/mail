@@ -48,7 +48,6 @@ module Mail
     # these cases, please make a patch and send it in, or at the least, send
     # me the example so we can fix it.
     def initialize(header_text = nil, charset = nil)
-      @errors = []
       @charset = charset
       self.raw_source = header_text.to_crlf.lstrip
       split_header if header_text
@@ -91,7 +90,6 @@ module Mail
       unfolded_fields[0..(self.class.maximum_amount-1)].each do |field|
 
         field = Field.new(field, nil, charset)
-        field.errors.each { |error| self.errors << error }
         if limited_field?(field.name) && (selected = select_field_for(field.name)) && selected.any? 
           selected.first.update(field.name, field.value)
         else
@@ -102,7 +100,7 @@ module Mail
     end
     
     def errors
-      @errors
+      @fields.map(&:errors).flatten(1)
     end
     
     #  3.6. Field definitions

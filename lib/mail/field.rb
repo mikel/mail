@@ -22,7 +22,7 @@ module Mail
   #
   class Field
 
-    include Patterns
+    include Utilities
     include Comparable
 
     STRUCTURED_FIELDS = %w[ bcc cc content-description content-disposition
@@ -67,6 +67,10 @@ module Mail
       "content-location" => ContentLocationField,
     }
 
+    FIELD_NAME_MAP = FIELDS_MAP.inject({}) do |map, (field, field_klass)|
+      map.update(field => field_klass::CAPITALIZED_FIELD)
+    end
+
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -110,13 +114,16 @@ module Mail
     def initialize(name, value = nil, charset = 'utf-8')
       case
       when name =~ /:/                  # Field.new("field-name: field data")
-        charset = value unless value.blank?
-        name, value = split(name)
-        create_field(name, value, charset)
+        @charset = value.blank? ? charset : value
+        @name, @value = split(name)
       when name !~ /:/ && value.blank?  # Field.new("field-name")
-        create_field(name, nil, charset)
+        @name = name
+        @value = nil
+        @charset = charset
       else                              # Field.new("field-name", "value")
-        create_field(name, value, charset)
+        @name = name
+        @value = value
+        @charset = charset
       end
       return self
     end
@@ -126,11 +133,11 @@ module Mail
     end
 
     def field
-      @field
+      @field ||= create_field(@name, @value, @charset)
     end
 
     def name
-      field.name
+      FIELD_NAME_MAP[@name.to_s.downcase] || @name
     end
 
     def value
@@ -138,7 +145,7 @@ module Mail
     end
 
     def value=(val)
-      create_field(name, val, charset)
+      @field = create_field(name, val, @charset)
     end
 
     def to_s
@@ -146,11 +153,15 @@ module Mail
     end
 
     def update(name, value)
-      create_field(name, value, charset)
+      @field = create_field(name, value, @charset)
     end
 
     def same( other )
-      match_to_s(other.name, field.name)
+      match_to_s(other.name, self.name)
+    end
+
+    def responsible_for?( val )
+      name.to_s.casecmp(val.to_s) == 0
     end
 
     alias_method :==, :same
@@ -189,11 +200,11 @@ module Mail
 
     def create_field(name, value, charset)
       begin
-        self.field = new_field(name, value, charset)
+        new_field(name, value, charset)
       rescue Mail::Field::ParseError => e
-        self.field = Mail::UnstructuredField.new(name, value)
-        self.field.errors << [name, value, e]
-        self.field
+        field = Mail::UnstructuredField.new(name, value)
+        field.errors << [name, value, e]
+        field
       end
     end
 

@@ -1537,10 +1537,10 @@ describe Mail::Message do
       mail = Mail.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b\r\n")
       mail.errors.should_not be_blank
       mail.errors.size.should eq 2
-      mail.errors[0][0].should eq 'Content-Transfer-Encoding'
-      mail.errors[0][1].should eq 'vl@d'
-      mail.errors[1][0].should eq 'Reply-To'
-      mail.errors[1][1].should eq 'a b b'
+      mail.errors[0][0].should eq 'Reply-To'
+      mail.errors[0][1].should eq 'a b b'
+      mail.errors[1][0].should eq 'Content-Transfer-Encoding'
+      mail.errors[1][1].should eq 'vl@d'
     end
   end
 
