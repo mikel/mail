@@ -244,27 +244,10 @@ module Mail
       @raw_source = val
     end
     
-    # 2.2.3. Long Header Fields
-    # 
-    #  The process of moving from this folded multiple-line representation
-    #  of a header field to its single line representation is called
-    #  "unfolding". Unfolding is accomplished by simply removing any CRLF
-    #  that is immediately followed by WSP.  Each header field should be
-    #  treated in its unfolded form for further syntactic and semantic
-    #  evaluation.
-    def unfold(string)
-      string.gsub(/#{CRLF}#{WSP}+/, ' ').gsub(/#{WSP}+/, ' ')
-    end
-    
-    # Returns the header with all the folds removed
-    def unfolded_header
-      @unfolded_header ||= unfold(raw_source)
-    end
-    
     # Splits an unfolded and line break cleaned header into individual field
     # strings.
     def split_header
-      self.fields = unfolded_header.split(CRLF)
+      self.fields = raw_source.split(HEADER_SPLIT)
     end
     
     def select_field_for(name)

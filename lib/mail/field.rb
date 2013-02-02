@@ -115,7 +115,8 @@ module Mail
       case
       when name =~ /:/                  # Field.new("field-name: field data")
         @charset = value.blank? ? charset : value
-        @name, @value = split(name)
+        @name = name[FIELD_PREFIX]
+        @raw_value = name
       when name !~ /:/ && value.blank?  # Field.new("field-name")
         @name = name
         @value = nil
@@ -125,7 +126,7 @@ module Mail
         @value = value
         @charset = charset
       end
-      return self
+      @name = FIELD_NAME_MAP[@name.to_s.downcase] || @name
     end
 
     def field=(value)
@@ -133,11 +134,12 @@ module Mail
     end
 
     def field
+      _, @value = split(@raw_value) if @raw_value && !@value
       @field ||= create_field(@name, @value, @charset)
     end
 
     def name
-      FIELD_NAME_MAP[@name.to_s.downcase] || @name
+      @name
     end
 
     def value
@@ -198,7 +200,21 @@ module Mail
       STDERR.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
     end
 
+    # 2.2.3. Long Header Fields
+    #
+    #  The process of moving from this folded multiple-line representation
+    #  of a header field to its single line representation is called
+    #  "unfolding". Unfolding is accomplished by simply removing any CRLF
+    #  that is immediately followed by WSP.  Each header field should be
+    #  treated in its unfolded form for further syntactic and semantic
+    #  evaluation.
+    def unfold(string)
+      string.gsub(/[\r\n \t]+/m, ' ')
+    end
+
     def create_field(name, value, charset)
+      value = unfold(value) if value.is_a?(String) || value.is_a?(Mail::Multibyte::Chars)
+
       begin
         new_field(name, value, charset)
       rescue Mail::Field::ParseError => e

@@ -109,7 +109,7 @@ describe Mail::Message do
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
       STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
-      Mail.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml'))
+      Mail.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')).to_s
     end
 
     it "should read in an email message and basically parse it" do
