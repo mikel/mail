@@ -41,28 +41,36 @@ module Mail
       token_safe?( str ) ? str : dquote(str)
     end
 
-    # Wraps supplied string in double quotes unless it is already wrapped.
-    # 
-    # Additionally will escape any double quotation marks in the string with a single
-    # backslash in front of the '"' character.
-    def dquote( str )
-      match = str.match(/^"(.*)?"$/)
-      str = match[1] if match
-      # First remove all escaped double quotes:
-      str = str.gsub(/\\"/, '"')
-      # Then wrap and re-escape all double quotes
-      '"' + str.gsub(/["]/n) {|s| '\\' + s } + '"'
-    end
-    
-    # Unwraps supplied string from inside double quotes.
-    # 
+    # Wraps supplied string in double quotes and applies \-escaping as necessary,
+    # unless it is already wrapped.
+    #
     # Example:
-    # 
+    #
+    #  string = 'This is a string'
+    #  dquote(string) #=> '"This is a string"'
+    #
+    #  string = 'This is "a string"'
+    #  dquote(string #=> '"This is \"a string\"'
+    def dquote( str )
+      '"' + unquote(str).gsub(/[\\"]/n) {|s| '\\' + s } + '"'
+    end
+
+    # Unwraps supplied string from inside double quotes and
+    # removes any \-escaping.
+    #
+    # Example:
+    #
     #  string = '"This is a string"'
     #  unquote(string) #=> 'This is a string'
+    #
+    #  string = '"This is \"a string\""'
+    #  unqoute(string) #=> 'This is "a string"'
     def unquote( str )
-      match = str.match(/^"(.*?)"$/)
-      match ? match[1] : str
+      if str =~ /^"(.*?)"$/
+        $1.gsub(/\\(.)/, '\1')
+      else
+        str
+      end
     end
     
     # Wraps a string in parenthesis and escapes any that are in the string itself.
