@@ -257,7 +257,7 @@ module Mail
     
     def split!(boundary)
       self.boundary = boundary
-      parts = raw_source.split(/--#{Regexp.escape(boundary)}(?=(?:--)?\s*$)/)
+      parts = raw_source.split(/(?:\A|\r\n)--#{Regexp.escape(boundary)}(?=(?:--)?\s*$)/)
       # Make the preamble equal to the preamble (if any)
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)

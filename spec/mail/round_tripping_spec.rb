@@ -24,8 +24,8 @@ describe "Round Tripping" do
     parsed_mail.mime_type.should eq 'multipart/alternative'
     parsed_mail.boundary.should eq mail.boundary
     parsed_mail.parts.length.should eq 2
-    parsed_mail.parts[0].body.to_s.should eq "This is Text\n"
-    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>\n"
+    parsed_mail.parts[0].body.to_s.should eq "This is Text"
+    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>"
   end
 
   it "should round trip an email" do
@@ -39,6 +39,21 @@ describe "Round Tripping" do
       date      Time.local(2009, 11, 6)
     end
     Mail.new(initial.encoded).encoded.should eq initial.encoded
+  end
+
+  describe "round trip with attachment" do
+
+    let(:contents) { "I have \ntwo lines\n\n" }
+    let(:parsed) { Mail.new(initial.encoded) }
+    let(:initial) do
+      mail = Mail.new('Subject: FooBar')
+      mail.add_file :filename => "foo.txt", :content => contents
+      mail
+    end
+
+    it {parsed.encoded.should == initial.encoded}
+    it {parsed.attachments.first.decoded.should == contents}
+
   end
 
 end
