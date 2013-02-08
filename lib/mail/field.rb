@@ -195,7 +195,7 @@ module Mail
 
     def split(raw_field)
       match_data = raw_field.mb_chars.match(FIELD_SPLIT)
-      [match_data[1].to_s.mb_chars.strip, match_data[2].to_s.mb_chars.strip]
+      [match_data[1].to_s.mb_chars.strip, match_data[2].to_s.mb_chars.strip.to_s]
     rescue
       STDERR.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
     end
@@ -213,7 +213,7 @@ module Mail
     end
 
     def create_field(name, value, charset)
-      value = unfold(value) if value.is_a?(String) || value.is_a?(Mail::Multibyte::Chars)
+      value = unfold(value) if value.is_a?(String)
 
       begin
         new_field(name, value, charset)
