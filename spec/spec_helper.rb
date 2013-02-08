@@ -211,6 +211,7 @@ class MockIMAP
   @@connection = false
   @@mailbox = nil
   @@marked_for_deletion = []
+  ARCHIVE_FOLDER = "INBOX.Archive"
 
   def self.examples
     @@examples
@@ -218,6 +219,7 @@ class MockIMAP
 
   def initialize
     @@examples = []
+    @@examples_archived = []
     (0..19).each do |i|
       @@examples << MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i)
     end
@@ -240,11 +242,25 @@ class MockIMAP
   end
 
   def uid_search(keys, charset=nil)
-    [*(0..@@examples.size - 1)]
+    unless @@mailbox == ARCHIVE_FOLDER
+      [*(0..@@examples.size - 1)]
+    else
+      [*(0..@@examples_archived.size - 1)]
+    end
+  end
+
+  def uid_copy(set, mailbox)
+    if mailbox == ARCHIVE_FOLDER
+      @@examples_archived << @@examples[set]
+    end
   end
 
   def uid_fetch(set, attr)
-    [@@examples[set]]
+    unless @@mailbox == ARCHIVE_FOLDER
+      [@@examples[set]]
+    else
+      [@@examples_archived[set]]
+    end
   end
 
   def uid_store(set, attr, flags)
