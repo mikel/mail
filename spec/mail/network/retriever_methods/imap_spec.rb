@@ -102,11 +102,22 @@ describe "IMAP Retriever" do
       MockIMAP.examples.size.should eq 10
     end
 
+    it "should handle the archive_after_find_option" do
+      Mail.find(:archive_after_find => false)
+      MockIMAP.examples.size.should eq 20
+
+      Mail.find(:archive_after_find => true)
+      MockIMAP.examples.size.should eq 10
+
+      Mail.find(:archive_after_find => true) { |message| }
+      MockIMAP.examples.size.should eq 10
+    end
+
     it "should handle the find_and_delete method" do
       Mail.find_and_delete(:count => 15)
       MockIMAP.examples.size.should eq 5
     end
-    
+
   end
 
   describe "last" do
@@ -155,7 +166,7 @@ describe "IMAP Retriever" do
 
       MockIMAP.examples.size.should eq 0
     end
-  end 
+  end
 
   describe "connection" do
     it "should raise an Error if no block is given" do
@@ -218,7 +229,7 @@ describe "IMAP Retriever" do
   end
 
   describe "error handling" do
-    it "should finish the IMAP connection if an exception is raised" do 
+    it "should finish the IMAP connection if an exception is raised" do
       MockIMAP.should be_disconnected
 
       lambda { Mail.all { |m| raise ArgumentError.new } }.should raise_error
@@ -226,7 +237,7 @@ describe "IMAP Retriever" do
       MockIMAP.should be_disconnected
     end
   end
-  
+
   describe "authentication mechanism" do
     before(:each) do
       @imap = MockIMAP.new
