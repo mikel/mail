@@ -149,6 +149,11 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should == result
     end
 
+    it "should decode a string that looks similar to an encoded string (contains '=?')" do
+      string = "1+1=?"
+      Mail::Encodings.value_decode(string).should == string
+    end
+
     if '1.9'.respond_to?(:force_encoding)
       it "should decode 8bit encoded string" do
         string = "=?8bit?Q?ALPH=C3=89E?="
