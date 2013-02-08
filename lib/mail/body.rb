@@ -277,11 +277,11 @@ module Mail
     private
     
     def crlf_boundary
-      "\r\n\r\n--#{boundary}\r\n"
+      "\r\n--#{boundary}\r\n"
     end
     
     def end_boundary
-      "\r\n\r\n--#{boundary}--\r\n"
+      "\r\n--#{boundary}--\r\n"
     end
     
     def set_charset
