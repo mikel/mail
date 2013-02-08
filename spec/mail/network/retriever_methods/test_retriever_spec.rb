@@ -61,13 +61,11 @@ describe "Test Retriever" do
 
     it "should handle the :delete_after_find option" do
       Mail.find(:delete_after_find => false).should eq @emails
-      Mail.find(:delete_after_find => false).should eq @emails
       Mail.find(:delete_after_find => true).should eq @emails
       Mail.find(:delete_after_find => false).should be_empty
     end
 
     it "should handle the :archive_after_find option" do
-      Mail.find(:archive_after_find => false).should eq @emails
       Mail.find(:archive_after_find => false).should eq @emails
       Mail.find(:archive_after_find => true).should eq @emails
       Mail.find(:archive_after_find => false).should be_empty
