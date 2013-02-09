@@ -114,9 +114,14 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
-      return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
+      return str unless str.index('=?')
 
-      lines = collapse_adjacent_encodings(str)
+      lines =
+        if str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
+          collapse_adjacent_encodings(str)
+        else
+          [str]
+        end
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
       lines.map do |line|
