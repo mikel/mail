@@ -313,6 +313,21 @@ emails = Mail.all
 emails.length #=> LOTS!
 ```
 
+### Getting emails from an imap server:
+
+IMAP has 2 additional options which may be passed to the find method: <code>mailbox_archive</code>
+and <code>archive_after_find</code>
+```ruby
+batch = Mail.find(mailbox: "INBOX",
+                  mailbox_archive: "INBOX.Archives.#{Time.now.year}", # Mimick Thunderbird's archiving scheme
+                  archive_after_find: true,
+                  count: 10)
+```
+For example, this gives you the option to download email attachments in batch for further
+processing, while leaving the original emails archived on the mail server.
+
+If <code>archive_after_find</code> is passed as true, without specifying a <code>mailbox_archive</code>,
+then it's default value will be "INBOX.Archive"
 
 ### Reading an Email
 
