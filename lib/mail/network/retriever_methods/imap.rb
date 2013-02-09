@@ -28,7 +28,7 @@ module Mail
   #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
   #            instance of Message, not an array of Message instances.
-  #   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+  #   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
   #            or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
   #            The default is 'ALL'
   #
@@ -37,7 +37,7 @@ module Mail
   #
   class IMAP < Retriever
     require 'net/imap' unless defined?(Net::IMAP)
-    
+
     def initialize(values)
       self.settings = { :address              => "localhost",
                         :port                 => 143,
@@ -53,6 +53,7 @@ module Mail
     #
     # Possible options:
     #   mailbox: mailbox to search the email(s) in. The default is 'INBOX'.
+    #   mailbox_archive: This mailbox will receive email for archiving. The default is 'INBOX.Archive'.
     #   what:    last or first emails. The default is :first.
     #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
@@ -63,7 +64,9 @@ module Mail
     #              This is helpful when you don't want your messages to be set to read automatically. Default is false.
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is false. Use #find_and_delete if you would like this to default to true.
-    #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+    #   archive_after_find: flag for whether to archive each retreived email after find. Default
+    #           is false. Archiving with IMAP consists of copying to another folder, then mark the orignal email for deletion
+    #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
     #           or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
     #           The default is 'ALL'
     #
@@ -83,6 +86,10 @@ module Mail
           message_ids.each do |message_id|
             fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
+            if options[:archive_after_find]
+              imap.uid_copy(message_id, options[:mailbox_archive])
+              options[:delete_after_find] = true
+            end
             new_message.mark_for_delete = true if options[:delete_after_find]
             if block.arity == 3
               yield new_message, imap, message_id
@@ -97,6 +104,10 @@ module Mail
           message_ids.each do |message_id|
             fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
             emails << Mail.new(fetchdata.attr['RFC822'])
+            if options[:archive_after_find]
+              imap.uid_copy(message_id, options[:mailbox_archive])
+              options[:delete_after_find] = true
+            end
             imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find]
           end
           imap.expunge if options[:delete_after_find]
@@ -133,11 +144,13 @@ module Mail
       def validate_options(options)
         options ||= {}
         options[:mailbox] ||= 'INBOX'
+        options[:mailbox_archive] ||= 'INBOX.Archive'
         options[:count]   ||= 10
         options[:order]   ||= :asc
         options[:what]    ||= :first
         options[:keys]    ||= 'ALL'
         options[:delete_after_find] ||= false
+        options[:archive_after_find] ||= false
         options[:mailbox] = Net::IMAP.encode_utf7(options[:mailbox])
         options[:read_only] ||= false
 

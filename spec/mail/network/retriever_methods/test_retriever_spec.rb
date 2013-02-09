@@ -120,12 +120,12 @@ describe "Test Retriever" do
       Mail.all.should eq messages
     end
 
-    it "should handle the :archive_after_find option with messages marked not for archive" do
+    it "should handle the :archive_after_find option with messages marked not for delete" do
       i = 0
       messages = []
       Mail.find(:archive_after_find => true) do |message|
         if i % 2
-          message.mark_for_archive = false
+          message.mark_for_delete = false
           messages << message
         end
         i += 1
