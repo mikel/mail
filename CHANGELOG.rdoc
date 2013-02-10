@@ -30,6 +30,7 @@ Bugs:
 * Fix that setting an attachment with a :mime_type and :encoding would override the :encoding (jeremy)
 * Fix that declaring an html_part but no text_part would use multipart/alternative anyway (jeremy)
 * Close pull request 508 - Don't add an extra CRLF to MIME parts; split MIME parts on correct CRLF boundaries (Aalanar)
+* Close pull request 506 - Escape backslashes in quoted strings (ConradIrwin)
 * Close pull request 496 - Correctly handle quoted-printable line breaks (jeremy)
 * Close pull request 493 - Repair misencoded quoted-printable line breaks (jeremy)
 * Close pull request 487 - Extract comments from group email addresses (bpot)
