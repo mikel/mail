@@ -132,6 +132,12 @@ module Mail
       when 'shift-jis'
         Encoding::Shift_JIS
 
+      # Many encoded fields which self identify as GB2312 are
+      # actually GB18030.  Just use GB18030 since it is a superset
+      # of GB2312.
+      when /gb2312/i
+        Encoding::GB18030
+
       else
         charset
       end
