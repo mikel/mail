@@ -13,7 +13,7 @@ describe "Test Retriever" do
   end
 
   describe "all" do
-    
+
     before do
       @emails = populate(15)
     end
@@ -29,7 +29,7 @@ describe "Test Retriever" do
     end
 
   end
-  
+
   describe "find" do
 
     before do
@@ -61,12 +61,17 @@ describe "Test Retriever" do
 
     it "should handle the :delete_after_find option" do
       Mail.find(:delete_after_find => false).should eq @emails
-      Mail.find(:delete_after_find => false).should eq @emails
       Mail.find(:delete_after_find => true).should eq @emails
       Mail.find(:delete_after_find => false).should be_empty
     end
 
-    it "should handle the both of :delete_after_find and :count option" do
+    it "should handle the :archive_after_find option" do
+      Mail.find(:archive_after_find => false).should eq @emails
+      Mail.find(:archive_after_find => true).should eq @emails
+      Mail.find(:archive_after_find => false).should be_empty
+    end
+
+    it "should handle both of the :delete_after_find and :count option" do
       expect do
         Mail.find(:count => 5, :delete_after_find => true).should have(5).items
       end.to change { Mail.all.size }.by(-5)
@@ -75,7 +80,16 @@ describe "Test Retriever" do
       end.to change { Mail.all.size }.by(-5)
     end
 
-    it "should handle the both of :count and :delete_after_find option" do
+    it "should handle both of the :archive_after_find and :count option" do
+      expect do
+        Mail.find(:count => 5, :archive_after_find => true).should have(5).items
+      end.to change { Mail.all.size }.by(-5)
+      expect do
+        Mail.find(:count => 5, :archive_after_find => true).should have(5).items
+      end.to change { Mail.all.size }.by(-5)
+    end
+
+    it "should handle both of the :count and :delete_after_find option" do
       15.times do |idx|
         expect do
           Mail.find(:count => 1, :delete_after_find => true).should eq @emails[idx]
@@ -84,10 +98,32 @@ describe "Test Retriever" do
       Mail.find(:count => 1, :delete_after_find => true).should be_empty
     end
 
+    it "should handle both of the :count and :archive_after_find option" do
+      15.times do |idx|
+        expect do
+          Mail.find(:count => 1, :archive_after_find => true).should eq @emails[idx]
+        end.to change { Mail.all.size }.by(-1)
+      end
+      Mail.find(:count => 1, :archive_after_find => true).should be_empty
+    end
+
     it "should handle the :delete_after_find option with messages marked not for delete" do
       i = 0
       messages = []
       Mail.find(:delete_after_find => true) do |message|
+        if i % 2
+          message.mark_for_delete = false
+          messages << message
+        end
+        i += 1
+      end
+      Mail.all.should eq messages
+    end
+
+    it "should handle the :archive_after_find option with messages marked not for delete" do
+      i = 0
+      messages = []
+      Mail.find(:archive_after_find => true) do |message|
         if i % 2
           message.mark_for_delete = false
           messages << message

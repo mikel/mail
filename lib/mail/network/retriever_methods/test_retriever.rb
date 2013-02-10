@@ -31,6 +31,7 @@ module Mail
       if options[:what] == :last && options[:order] == :asc || options[:what] == :first && options[:order] == :desc
         emails_index.reverse!
       end
+      options[:delete_after_find] = true if options[:archive_after_find]
       emails_index.each { |idx| @@emails[idx].mark_for_delete = true } if options[:delete_after_find]
       emails = emails_index.map { |idx| @@emails[idx] }
       emails.each { |email| yield email } if block_given?
