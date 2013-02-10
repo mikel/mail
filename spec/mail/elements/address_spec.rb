@@ -516,7 +516,7 @@ describe Mail::Address do
                                          :comments     => ['foo@bar.com (foobar), ned@foo.com (nedfoo) '],
                                          :domain       => 'goess.org',
                                          :local        => 'kevin',
-                                         :format       => '"(foo@bar.com \\(foobar\\), ned@foo.com \(nedfoo\) )" <kevin@goess.org> (foo@bar.com \(foobar\), ned@foo.com \(nedfoo\) )',
+                                         :format       => '"(foo@bar.com \\\\(foobar\\\\), ned@foo.com \\\\(nedfoo\\\\) )" <kevin@goess.org> (foo@bar.com \(foobar\), ned@foo.com \(nedfoo\) )',
                                          :raw          => '(foo@bar.com (foobar), ned@foo.com (nedfoo) ) <kevin@goess.org>'})
       end
 
