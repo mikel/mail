@@ -189,6 +189,44 @@ describe Mail::Message do
         deserialized.parts.map(&:body).should == ['body', '<b>body</b>']
       end
     end
+
+    describe "splitting" do
+      it "should split the body from the header" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\nHello there\r\n")
+        message.decoded.should == "Hello there\n"
+      end
+
+      it "should split when the body starts with a space" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n Hello there\r\n")
+        message.decoded.should == " Hello there\n"
+      end
+
+      it "should split if the body starts with an empty line" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n\r\nHello there\r\n")
+        message.decoded.should == "\nHello there\n"
+      end
+
+      it "should split if the body starts with a blank line" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n\t\r\nHello there\r\n")
+        message.decoded.should == "\t\nHello there\n"
+      end
+
+      it 'should split after headers that contain "\r\n "' do
+        message = Mail::Message.new("To: Example\r\n <example@cirw.in>\r\n\r\n Hello there\r\n")
+        message.decoded.should == " Hello there\n"
+      end
+
+      it 'should split only once if there are "\r\n\r\n"s in the body' do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\nHello\r\n\r\nthere\r\n")
+        message.decoded.should == "Hello\n\nthere\n"
+      end
+
+      # N.B. this is not in any RFCs
+      it "should split on a line with whitespace on it" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\n \r\nHello there\r\n")
+        message.decoded.should == "Hello there\n"
+      end
+    end
   end
 
   describe "envelope line handling" do
