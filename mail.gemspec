@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/mikel/mail"
   s.description = "A really Ruby Mail handler."
   s.summary     = "Mail provides a nice Ruby DSL for making, sending and reading emails."
+  s.license     = "MIT"
 
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
