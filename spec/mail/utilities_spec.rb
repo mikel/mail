@@ -175,14 +175,40 @@ describe "Utilities Module" do
     
     it "should quote correctly a phrase with an escaped quote in it" do
       test = 'this needs \"quoting'
-      result = '"this needs \"quoting"'
+      result = '"this needs \\\\\\"quoting"'
       dquote(test).should eq result
     end
     
     it "should quote correctly a phrase with an escaped backslash followed by an escaped quote in it" do
       test = 'this needs \\\"quoting'
-      result = '"this needs \\\"quoting"'
+      result = '"this needs \\\\\\\\\\"quoting"'
       dquote(test).should eq result
+    end
+  end
+
+  describe "unquoting phrases" do
+    it "should remove quotes from the edge" do
+      unquote('"This is quoted"').should eq 'This is quoted'
+    end
+
+    it "should remove backslash escaping from quotes" do
+      unquote('"This is \\"quoted\\""').should eq 'This is "quoted"'
+    end
+
+    it "should remove backslash escaping from any char" do
+      unquote('"This is \\quoted"').should eq 'This is quoted'
+    end
+
+    it "should be able to handle unquoted strings" do
+      unquote('This is not quoted').should eq 'This is not quoted'
+    end
+
+    it "should preserve backslashes in unquoted strings" do
+      unquote('This is not \"quoted').should eq 'This is not \"quoted'
+    end
+
+    it "should be able to handle unquoted quotes" do
+      unquote('"This is "quoted"').should eq 'This is "quoted'
     end
   end
   
