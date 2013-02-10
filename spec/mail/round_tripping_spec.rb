@@ -37,23 +37,15 @@ describe "Round Tripping" do
       cc        "nobody@test.lindsaar.net"
       bcc       "bob@test.lindsaar.net"
       date      Time.local(2009, 11, 6)
+      add_file  :filename => "foo.txt", :content => "I have \ntwo lines\n\n"
     end
     Mail.new(initial.encoded).encoded.should eq initial.encoded
   end
 
-  describe "round trip with attachment" do
-
-    let(:contents) { "I have \ntwo lines\n\n" }
-    let(:parsed) { Mail.new(initial.encoded) }
-    let(:initial) do
-      mail = Mail.new('Subject: FooBar')
-      mail.add_file :filename => "foo.txt", :content => contents
-      mail
-    end
-
-    it {parsed.encoded.should == initial.encoded}
-    it {parsed.attachments.first.decoded.should == contents}
-
+  it "should round trip attachment newlines" do
+    body = "I have \ntwo lines\n\n"
+    initial = Mail.new
+    initial.add_file :filename => "foo.txt", :content => body
+    Mail.new(initial.encoded).attachments.first.decoded.should eq body
   end
-
 end
