@@ -66,6 +66,9 @@ module Mail::Parsers
         when :address_s
           address_s = p
         when :address_e
+          # Ignore address end events if they don't have
+          # a matching address start event.
+          next if address_s.nil?
           if address.local.nil? && local_dot_atom_pre_comment_e && local_dot_atom_e
             if address.domain
               address.local = s[local_dot_atom_s..local_dot_atom_e] if address
@@ -79,6 +82,7 @@ module Mail::Parsers
           # Start next address
           address = AddressStruct.new(nil, nil, [], nil, nil, nil, nil)
           address.group = group_name
+          address_s = nil
 
         # Don't set the display name until the
         # address has actually started. This allows
