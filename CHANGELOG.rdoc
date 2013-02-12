@@ -49,6 +49,7 @@ Housekeeping:
 * Remove i18n dependency and last vestiges of activesupport dependency in specs (jeremy)
 * Clarify that Sender is a single address, not an address list (jeremy)
 * Add an MIT-LICENSE file to make licensing clear & obvious; update to 2013 (jeremy)
+* Close pull request 501 - Tighten up header/body whitespace splitting (ConradIrwin)
 * Close pull request 499 - Clean up some dead code (ConradIrwin)
 * Close pull request 489, 495 - Docs typos (JackDanger, francois)
 * Close pull request 485 - Be explicit about unsupported address parsing (bpot)
