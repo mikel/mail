@@ -184,8 +184,8 @@ describe Mail::Body do
       new_body = Mail::Body.new(body.encoded)
       new_body.split!('----=_Part_2192_32400445')
       new_body.parts.length.should eq 2
-      new_body.parts[0].decoded.should == "This is a plain text\n"
-      new_body.parts[1].decoded.should == "<p>This is HTML</p>"
+      new_body.parts[0].decoded.should eq "This is a plain text\n"
+      new_body.parts[1].decoded.should eq "<p>This is HTML</p>"
       new_body.preamble.should eq "Really! this is some text"
       new_body.epilogue.should eq "And this is the end"
     end
