@@ -1,0 +1,74 @@
+From: A User <a.user@example.com>
+To: A Nother <a.nother@example.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-89-565160509
+Subject: just testing
+Date: Fri, 1 Jul 2011 22:34:02 -0700
+Mime-Version: 1.0 (Apple Message framework v1084)
+X-Mailer: Apple Mail (2.1084)
+
+
+--Apple-Mail-89-565160509
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+With Apple Mail, you can put a picture in the middle of a message. This =
+is what it looks like:
+
+
+
+(that's a picture of Fooooo)
+
+Oh look I am PLaying around with fonts!=
+
+--Apple-Mail-89-565160509
+Content-Type: multipart/mixed;
+	boundary=Apple-Mail-90-565160509
+
+
+--Apple-Mail-90-565160509
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+	charset=us-ascii
+
+
+<html><head></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; "><div>With&nbsp;<a href="http://en.wikipedia.org/wiki/Mail_(application)">Apple Mail</a>, you can put a picture in the middle of a message. <b>This</b> is what it looks like:</div><div><br></div></body></html>
+--Apple-Mail-90-565160509
+Content-Disposition: inline;
+	filename=IMG_2583.jpeg
+Content-Type: image/JPG;
+	name="IMG_2583.jpeg"
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/4gxYSUNDX1BST0ZJTEUAAQEAAAxITGlubwIQAABtbnRyUkdC
+REDACTED
+
+
+--Apple-Mail-90-565160509
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
+"><div><br></div><div>(that's a picture of&nbsp;<a =
+href=3D"https://example.com/foo">Fo=
+oooo</a>)</div><div><br></div><div>Oh <i>look</i> I am <font =
+class=3D"Apple-style-span" face=3D"Desdemona" size=3D"6"><span =
+class=3D"Apple-style-span" style=3D"font-size: 28px; ">PLaying =
+</span><font class=3D"Apple-style-span" face=3D"'Edwardian Script ITC'" =
+size=3D"6" style=3D"font-size: 34px; "><span class=3D"Apple-style-span" =
+style=3D"font-size: 28px; ">around</span></font><span =
+class=3D"Apple-style-span" style=3D""> </span><font =
+class=3D"Apple-style-span" face=3D"'Engravers MT'" size=3D"6" =
+style=3D"font-size: 34px; "><span class=3D"Apple-style-span" =
+style=3D"font-size: 28px; ">with</span></font><span =
+class=3D"Apple-style-span" style=3D""> </span><font =
+class=3D"Apple-style-span" face=3D"'Gill Sans Ultra Bold'" size=3D"6" =
+style=3D"font-size: 34px; "><span class=3D"Apple-style-span" =
+style=3D"font-size: 28px; =
+"><b>fonts!</b></span></font></font></div></body></html>=
+
+--Apple-Mail-90-565160509--
+
+--Apple-Mail-89-565160509--
