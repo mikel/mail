@@ -34,7 +34,7 @@ module Mail # :doc:
 
   require 'mail/core_extensions/nil'
   require 'mail/core_extensions/string'
-  require 'mail/core_extensions/shellwords' unless String.new.respond_to?(:shellescape)
+  require 'mail/core_extensions/shell_escape'
   require 'mail/core_extensions/smtp' if RUBY_VERSION < '1.9.3'
 
   require 'mail/patterns'
