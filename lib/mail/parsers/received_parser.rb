@@ -33,7 +33,8 @@ module Mail::Parsers
              :domain_e, :domain_s, :local_dot_atom_e,
              :local_dot_atom_pre_comment_e,
              :local_dot_atom_pre_comment_s,
-             :local_dot_atom_s, :qstr_e, :qstr_s
+             :local_dot_atom_s, :qstr_e, :qstr_s,
+             :local_quoted_string_s, :local_quoted_string_e
           # ignored actions
 
         else
