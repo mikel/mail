@@ -1344,7 +1344,7 @@ describe Mail::Message do
 
       it "should ignore the message id value if self has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <temp@test>\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should eq m2
       end
 

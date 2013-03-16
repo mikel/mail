@@ -73,31 +73,35 @@ module Mail
       start do |imap|
         options[:read_only] ? imap.examine(options[:mailbox]) : imap.select(options[:mailbox])
 
-        message_ids = imap.uid_search(options[:keys])
-        message_ids.reverse! if options[:what].to_sym == :last
-        message_ids = message_ids.first(options[:count]) if options[:count].is_a?(Integer)
-        message_ids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
+        uids = imap.uid_search(options[:keys])
+        uids.reverse! if options[:what].to_sym == :last
+        uids = uids.first(options[:count]) if options[:count].is_a?(Integer)
+        uids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
                                 (options[:what].to_sym != :last && options[:order].to_sym == :desc)
 
         if block_given?
-          message_ids.each do |message_id|
-            fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
+          uids.each do |uid|
+            uid = options[:uid].to_i unless options[:uid].nil?
+            fetchdata = imap.uid_fetch(uid, ['RFC822'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
             if block.arity == 3
-              yield new_message, imap, message_id
+              yield new_message, imap, uid
             else
               yield new_message
             end
-            imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
+            imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
+            break unless options[:uid].nil?
           end
           imap.expunge if options[:delete_after_find]
         else
           emails = []
-          message_ids.each do |message_id|
-            fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
+          uids.each do |uid|
+            uid = options[:uid].to_i unless options[:uid].nil?
+            fetchdata = imap.uid_fetch(uid, ['RFC822'])[0]
             emails << Mail.new(fetchdata.attr['RFC822'])
-            imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find]
+            imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find]
+            break unless options[:uid].nil?
           end
           imap.expunge if options[:delete_after_find]
           emails.size == 1 && options[:count] == 1 ? emails.first : emails
@@ -111,8 +115,8 @@ module Mail
       mailbox = Net::IMAP.encode_utf7(mailbox)
 
       start do |imap|
-        imap.uid_search(['ALL']).each do |message_id|
-          imap.uid_store(message_id, "+FLAGS", [Net::IMAP::DELETED])
+        imap.uid_search(['ALL']).each do |uid|
+          imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED])
         end
         imap.expunge
       end
@@ -137,6 +141,7 @@ module Mail
         options[:order]   ||= :asc
         options[:what]    ||= :first
         options[:keys]    ||= 'ALL'
+        options[:uid]     ||= nil
         options[:delete_after_find] ||= false
         options[:mailbox] = Net::IMAP.encode_utf7(options[:mailbox])
         options[:read_only] ||= false
