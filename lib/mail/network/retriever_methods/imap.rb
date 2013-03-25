@@ -109,6 +109,26 @@ module Mail
       end
     end
 
+    def fetch_thread(command, search, charset, options = {})
+      options = validate_options(options)
+      start do |imap|
+        options[:read_only] ? imap.examine(options[:mailbox]) : imap.select(options[:mailbox])
+        imap.uid_thread(command, search, charset)
+      end
+    end
+
+    def list(refname, mailbox)
+      start do |imap|
+        imap.list(refname, mailbox)
+      end
+    end
+
+    def create_mailbox(mailbox)
+      start do |imap|
+        imap.create(mailbox)
+      end
+    end
+
     # Delete all emails from a IMAP mailbox
     def delete_all(mailbox='INBOX')
       mailbox ||= 'INBOX'
