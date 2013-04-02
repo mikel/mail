@@ -16,7 +16,7 @@
 # 
 #  mail = Mail.new
 #  mail.cc = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.cc    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail.cc    #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:cc]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
 #  mail['cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4
 #  mail['Cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::CcField:0x180e1c4

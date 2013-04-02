@@ -16,7 +16,7 @@
 # 
 #  mail = Mail.new
 #  mail.bcc = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.bcc    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail.bcc    #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:bcc]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::BccField:0x180e1c4
 #  mail['bcc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::BccField:0x180e1c4
 #  mail['Bcc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::BccField:0x180e1c4

@@ -16,7 +16,7 @@
 # 
 #  mail = Mail.new
 #  mail.sender = 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-#  mail.sender    #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+#  mail.sender    #=> 'mikel@test.lindsaar.net'
 #  mail[:sender]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
 #  mail['sender'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4
 #  mail['Sender'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::SenderField:0x180e1c4

@@ -938,8 +938,8 @@ module Mail
     #
     # Example:
     #
-    #  mail.sender = 'Mikel <mikel@test.lindsaar.net>'
-    #  mail.sender #=> 'mikel@test.lindsaar.net'
+    #  mail.resent_sender = 'Mikel <mikel@test.lindsaar.net>'
+    #  mail.resent_sender #=> 'mikel@test.lindsaar.net'
     def resent_sender=( val )
       header[:resent_sender] = val
     end
