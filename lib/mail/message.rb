@@ -2061,9 +2061,13 @@ module Mail
           require 'iconv'
           return Iconv.conv("UTF-8//TRANSLIT//IGNORE", charset, body_text)
         else
-          if encoding = Encoding.find(charset) rescue nil
-            body_text.force_encoding(encoding)
-            return body_text.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
+          begin
+            if encoding = Encoding.find(charset)
+              body_text_dup = body_text.dup.force_encoding(encoding)
+              return body_text_dup.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
+            end
+          rescue
+            nil
           end
         end
       end
