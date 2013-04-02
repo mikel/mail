@@ -16,7 +16,7 @@
 # 
 #  mail = Mail.new
 #  mail.from = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.from    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail.from    #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:from]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::FromField:0x180e1c4
 #  mail['from'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::FromField:0x180e1c4
 #  mail['From'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::FromField:0x180e1c4

@@ -16,7 +16,7 @@
 # 
 #  mail = Mail.new
 #  mail.resent_cc = 'Mikel Lindsaar <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
-#  mail.resent_cc    #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
+#  mail.resent_cc    #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_cc]  #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentCcField:0x180e1c4
 #  mail['resent-cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentCcField:0x180e1c4
 #  mail['Resent-Cc'] #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::ResentCcField:0x180e1c4
