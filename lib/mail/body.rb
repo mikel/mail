@@ -27,6 +27,9 @@ module Mail
   class Body
 
     def initialize(string = '')
+      if string.respond_to?(:encoding) && string.encoding.to_s.downcase == 'iso-2022-jp'
+        string.force_encoding('US-ASCII')
+      end
       @boundary = nil
       @preamble = nil
       @epilogue = nil

@@ -5,6 +5,10 @@ module Mail
   class UnknownEncodingType < StandardError #:nodoc:
   end
 
+  # Raised when attempting to convert non-UTF-8 characters with NKF
+  class InvalidEncodingError < StandardError #:nodoc:
+  end
+
   module Encodings
 
     include Mail::Patterns

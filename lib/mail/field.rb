@@ -108,6 +108,7 @@ module Mail
     #
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     def initialize(name, value = nil, charset = 'utf-8')
+      value = RubyVer.preprocess(charset, value)
       case
       when name =~ /:/                  # Field.new("field-name: field data")
         charset = value unless value.blank?
