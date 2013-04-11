@@ -36,20 +36,5 @@ module Mail
     FIELD_NAME = 'resent-bcc'
     CAPITALIZED_FIELD = 'Resent-Bcc'
     
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
-      self.parse
-      self
-    end
-    
-    def encoded
-      do_encode(CAPITALIZED_FIELD)
-    end
-    
-    def decoded
-      do_decode
-    end
-    
   end
 end
