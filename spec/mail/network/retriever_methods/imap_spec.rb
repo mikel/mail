@@ -34,6 +34,7 @@ describe "IMAP Retriever" do
 
       expect(MockIMAP).to be_disconnected
     end
+
     it "should get all emails and yield the imap, uid, and email when given a block of arity 3" do
       expect(MockIMAP).to be_disconnected
 
@@ -44,11 +45,33 @@ describe "IMAP Retriever" do
         messages << message
         uids << uid
       end
-      expect(messages.map { |m| m.raw_source }.sort).to eq MockIMAP.examples.map { |m| m.attr['RFC822']}.sort
+
+      expect(messages.map { |m| m.raw_source }.sort).to eq MockIMAP.examples.map { |m| m.attr['RFC822'] }.sort
       expect(uids.sort).to eq MockIMAP.examples.map { |m| m.number }.sort
 
       expect(MockIMAP).to be_disconnected
     end
+
+    it "should get all emails and yield the imap, uid, flag, and email when given a block of arity 4" do
+      expect(MockIMAP).to be_disconnected
+
+      messages = []
+      uids = []
+      flags = []
+      Mail.all do |message, imap, uid, flag|
+        expect(MockIMAP).to be === imap
+        messages << message
+        uids << uid
+        flags << flag
+      end
+
+      expect(messages.map { |m| m.raw_source }.sort).to eq MockIMAP.examples.map { |m| m.attr['RFC822']}.sort
+      expect(uids.sort).to eq MockIMAP.examples.map { |m| m.number }.sort
+      expect(flags.sort).to eq MockIMAP.examples.map { |m| m.attr['FLAGS'] }.sort
+
+      expect(MockIMAP).to be_disconnected
+    end
+
   end
 
   describe "find and options" do

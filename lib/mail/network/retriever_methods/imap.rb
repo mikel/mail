@@ -83,14 +83,18 @@ module Mail
         if block_given?
           uids.each do |uid|
             uid = options[:uid].to_i unless options[:uid].nil?
-            fetchdata = imap.uid_fetch(uid, ['RFC822'])[0]
+            fetchdata = imap.uid_fetch(uid, ['RFC822', 'FLAGS'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
-            if block.arity == 3
+
+            if block.arity == 4
+              yield new_message, imap, uid, fetchdata.attr['FLAGS']
+            elsif block.arity == 3
               yield new_message, imap, uid
             else
               yield new_message
             end
+
             imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
             break unless options[:uid].nil?
           end

@@ -221,8 +221,8 @@ end
 class MockIMAPFetchData
   attr_reader :attr, :number
 
-  def initialize(rfc822, number)
-    @attr = { 'RFC822' => rfc822 }
+  def initialize(rfc822, number, flag)
+    @attr = { 'RFC822' => rfc822, 'FLAGS' => flag }
     @number = number
   end
 
@@ -240,7 +240,7 @@ class MockIMAP
   def initialize
     @@examples = []
     (0..19).each do |i|
-      @@examples << MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i)
+      @@examples << MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i, "DummyFlag#{i}")
     end
   end
 
