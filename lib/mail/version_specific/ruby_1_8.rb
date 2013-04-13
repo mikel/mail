@@ -117,9 +117,13 @@ module Mail
     end
 
     def Ruby18.encode_with_iso_2022_jp(value)
-      value = Mail::Preprocessor.process(value)
-      value = NKF.nkf(NKF_OPTIONS, value)
-      "=?ISO-2022-JP?B?#{Base64.encode64(value).gsub("\n", "")}?="
+      if value.nil? || value.ascii_only?
+        value
+      else
+        value = Mail::Preprocessor.process(value)
+        value = NKF.nkf(NKF_OPTIONS, value)
+        "=?ISO-2022-JP?B?#{Base64.encode64(value).gsub("\n", "")}?="
+      end
     end
 
     private

@@ -33,6 +33,42 @@ describe "mail with iso-2022-jp encoding" do
     NKF.guess(mail.body.encoded).should eq NKF::JIS
   end
 
+  it "should not encode empty subject" do
+    mail = Mail.new(:charset => 'ISO-2022-JP') do
+      from '山田太郎 <taro@example.com>'
+      to '佐藤花子 <hanako@example.com>'
+      subject ''
+      body '日本語本文'
+    end
+
+    mail.charset.should eq 'ISO-2022-JP'
+    mail[:subject].encoded.should eq "Subject: \r\n"
+  end
+
+  it "should not encode when the subject includes only ascii characters" do
+    mail = Mail.new(:charset => 'ISO-2022-JP') do
+      from '山田太郎 <taro@example.com>'
+      to '佐藤花子 <hanako@example.com>'
+      subject 'Hello!'
+      body '日本語本文'
+    end
+
+    mail.charset.should eq 'ISO-2022-JP'
+    mail[:subject].encoded.should eq "Subject: Hello!\r\n"
+  end
+
+  it "should not encode when the subject is already encoded" do
+    mail = Mail.new(:charset => 'ISO-2022-JP') do
+      from '山田太郎 <taro@example.com>'
+      to '佐藤花子 <hanako@example.com>'
+      subject "=?ISO-2022-JP?B?GyRCRnxLXDhsGyhCIBskQjdvTD4bKEI=\?="
+      body '日本語本文'
+    end
+
+    mail.charset.should eq 'ISO-2022-JP'
+    mail[:subject].encoded.should eq "Subject: =?ISO-2022-JP?B?GyRCRnxLXDhsGyhCIBskQjdvTD4bKEI=\?=\r\n"
+  end
+
   it "should handle array correctly" do
     mail = Mail.new(:charset => 'ISO-2022-JP') do
       from [ '山田太郎 <taro@example.com>', '山田次郎 <jiro@example.com>' ]

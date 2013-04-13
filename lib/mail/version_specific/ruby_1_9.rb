@@ -172,9 +172,13 @@ module Mail
     end
 
     def Ruby19.encode_with_iso_2022_jp(value)
-      value = Mail::Preprocessor.process(value)
-      value = encoding_to_charset(value, 'iso-2022-jp')
-      Encodings.b_value_encode(value, 'iso-2022-jp')
+      if value.nil? || value.ascii_only?
+        value
+      else
+        value = Mail::Preprocessor.process(value)
+        value = encoding_to_charset(value, 'iso-2022-jp')
+        Encodings.b_value_encode(value, 'iso-2022-jp')
+      end
     end
   end
 end
