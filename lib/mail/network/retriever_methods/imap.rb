@@ -79,13 +79,12 @@ module Mail
         message_ids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
                                 (options[:what].to_sym != :last && options[:order].to_sym == :desc)
 
-        fetchattr = options[:flags] ? ['RFC822', 'FLAGS'] : ['RFC822']
         if block_given?
           message_ids.each do |message_id|
-            fetchdata = imap.uid_fetch(message_id, fetchattr)[0]
+            fetchdata = imap.uid_fetch(message_id, ['RFC822', 'FLAGS'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
-            if options[:flags] && block.arity == 4
+            if block.arity == 4
               yield new_message, imap, message_id, fetchdata.attr['FLAGS']
             elsif block.arity == 3
               yield new_message, imap, message_id
