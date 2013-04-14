@@ -48,6 +48,25 @@ describe "IMAP Retriever" do
 
       MockIMAP.should be_disconnected
     end
+    it "should get all emails and yield the imap, uid, flag, and email when given a block of arity 4" do
+      MockIMAP.should be_disconnected
+
+      messages = []
+      uids = []
+      flags = []
+      Mail.all do |message, imap, uid, flag|
+        MockIMAP.should === imap
+        messages << message
+        uids << uid
+        flags << flag
+      end
+      messages.map { |m| m.raw_source }.sort.should eq MockIMAP.examples.map { |m| m.attr['RFC822']}.sort
+      uids.sort.should eq MockIMAP.examples.map { |m| m.number }.sort
+      flags.sort.should eq MockIMAP.examples.map { |m| m.attr['FLAGS'] }.sort
+
+      MockIMAP.should be_disconnected
+    end
+
   end
 
   describe "find and options" do

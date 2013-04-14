@@ -81,10 +81,12 @@ module Mail
 
         if block_given?
           message_ids.each do |message_id|
-            fetchdata = imap.uid_fetch(message_id, ['RFC822'])[0]
+            fetchdata = imap.uid_fetch(message_id, ['RFC822', 'FLAGS'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
-            if block.arity == 3
+            if block.arity == 4
+              yield new_message, imap, message_id, fetchdata.attr['FLAGS']
+            elsif block.arity == 3
               yield new_message, imap, message_id
             else
               yield new_message
