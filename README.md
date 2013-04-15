@@ -339,8 +339,8 @@ mail = Mail.read('multipart_email')
 
 mail.multipart?          #=> true
 mail.parts.length        #=> 2
-mail.preamble            #=> "Text before the first part"
-mail.epilogue            #=> "Text after the last part"
+mail.body.preamble       #=> "Text before the first part"
+mail.body.epilogue       #=> "Text after the last part"
 mail.parts.map { |p| p.content_type }  #=> ['text/plain', 'application/pdf']
 mail.parts.map { |p| p.class }         #=> [Mail::Message, Mail::Message]
 mail.parts[0].content_type_parameters  #=> {'charset' => 'ISO-8859-1'}
