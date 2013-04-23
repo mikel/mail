@@ -1885,11 +1885,8 @@ module Mail
     #   this standard. The body is simply a sequence of characters that
     #   follows the header and is separated from the header by an empty line
     #   (i.e., a line with nothing preceding the CRLF).
-    #
-    # Additionally, I allow for the case where someone might have put whitespace
-    # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}/, 2)
       self.header = header_part
       self.body   = body_part
     end
