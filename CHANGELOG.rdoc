@@ -17,6 +17,7 @@ Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
 
 Bugs:
+* #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)
 * #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
 * #876 - Strip valid RFC-1342 separator characters between non-matching encoded-words (Caleb W. Corliss)
 * #978 - Fix for invalid chars being left in a string for invalid b_value from encoding. (kjg)

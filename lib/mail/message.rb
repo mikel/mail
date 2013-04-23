@@ -1976,7 +1976,7 @@ module Mail
 
   private
 
-    HEADER_SEPARATOR = /#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m
+    HEADER_SEPARATOR = /#{CRLF}#{CRLF}/
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -1985,9 +1985,6 @@ module Mail
     #   this standard. The body is simply a sequence of characters that
     #   follows the header and is separated from the header by an empty line
     #   (i.e., a line with nothing preceding the CRLF).
-    #
-    # Additionally, I allow for the case where someone might have put whitespace
-    # on the "gap line"
     def parse_message
       header_part, body_part = raw_source.lstrip.split(HEADER_SEPARATOR, 2)
       self.header = header_part

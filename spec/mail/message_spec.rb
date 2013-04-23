@@ -235,9 +235,8 @@ describe Mail::Message do
         expect(message.decoded).to eq("Hello\n\nthere\n")
       end
 
-      # N.B. this is not in any RFCs
-      it "should split on a line with whitespace on it" do
-        message = Mail::Message.new("To: Example <example@cirw.in>\r\n \r\nHello there\r\n")
+      it "should allow headers that end in trailing whitespace" do
+        message = Mail::Message.new("To: Example <example@cirw.in>\r\nThread-Topic: -= MAINTENANCE =- Canasta - Wednesday 4/24/2013 8am - 10am\r\n                                         \r\n\r\nHello there\r\n")
         expect(message.decoded).to eq("Hello there\n")
       end
     end
@@ -328,15 +327,6 @@ describe Mail::Message do
       expect(Mail::Header).to receive(:new).with("To: mikel", 'UTF-8').and_return(header)
       expect(Mail::Body).to receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
-      mail.body #body calculates now lazy so need to ask for it
-    end
-
-    it "should give allow for whitespace on the gap line between header and body" do
-      header = Mail::Header.new("To: mikel")
-      body = Mail::Body.new("G'Day!")
-      expect(Mail::Header).to receive(:new).with("To: mikel", 'UTF-8').and_return(header)
-      expect(Mail::Body).to receive(:new).with("G'Day!").and_return(body)
-      mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
       mail.body #body calculates now lazy so need to ask for it
     end
 
