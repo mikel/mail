@@ -11,7 +11,14 @@ module Mail # :doc:
     Treetop.load(File.join(File.dirname(__FILE__)) + "/mail/parsers/#{parser}")
   end
 
+=begin
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
+                date_time received message_ids envelope_from rfc2045
+                mime_version content_type content_disposition
+                content_transfer_encoding content_location ]
+=end
+
+  parsers = %w[ rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location ]
