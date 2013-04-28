@@ -8,17 +8,14 @@ module Mail # :doc:
 
   def self.compile_parser(parser)
     require 'treetop/compiler'
-    Treetop.load(File.join(File.dirname(__FILE__)) + "/mail/parsers/#{parser}")
+    begin
+      Treetop.load(File.join(File.dirname(__FILE__)) + "/mail/parsers/#{parser}")
+    rescue
+      puts "Mail failed to compile #{parser}."
+    end
   end
 
-=begin
   parsers = %w[ rfc2822_obsolete rfc2822 address_lists phrase_lists
-                date_time received message_ids envelope_from rfc2045
-                mime_version content_type content_disposition
-                content_transfer_encoding content_location ]
-=end
-
-  parsers = %w[ rfc2822 address_lists phrase_lists
                 date_time received message_ids envelope_from rfc2045
                 mime_version content_type content_disposition
                 content_transfer_encoding content_location ]
