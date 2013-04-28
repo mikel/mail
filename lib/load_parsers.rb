@@ -28,8 +28,7 @@ module Mail # :doc:
       rescue LoadError
         compile_parser(parser)
       rescue => e
-        puts "Mail failed to compile: #{parser}"
-        puts e
+        puts "Mail failed to compile: #{parser} ... " + e.to_s
       end
     end
 
