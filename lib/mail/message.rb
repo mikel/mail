@@ -1748,7 +1748,8 @@ module Mail
       end
       hash['delivery_handler'] = delivery_handler.to_s if delivery_handler
       hash['transport_encoding'] = transport_encoding.to_s
-      special_variables = [:@header, :@delivery_handler, :@transport_encoding]
+      hash['charset'] = charset
+      special_variables = [:@header, :@delivery_handler, :@transport_encoding, :@charset]
       if multipart?
         hash['multipart_body'] = []
         body.parts.map { |part| hash['multipart_body'] << part.to_yaml }
@@ -1762,8 +1763,13 @@ module Mail
 
     def self.from_yaml(str)
       hash = YAML.load(str)
-      m = self.new(:headers => hash['headers'])
-      hash.delete('headers')
+      m = self.new
+
+      # Set the charset first so header fields are encoded properly
+      m.charset = hash['charset'] unless hash['charset'].blank?
+
+      m.headers hash.delete('headers')
+
       hash.each do |k,v|
         case
         when k == 'delivery_handler'
@@ -1775,6 +1781,9 @@ module Mail
           m.transport_encoding(v)
         when k == 'multipart_body'
           v.map {|part| m.add_part Mail::Part.from_yaml(part) }
+        when k == 'charset'
+          # Reapply the charset so it is not overridden by the content type
+          m.charset = v unless v.blank?
         when k =~ /^@/
           m.instance_variable_set(k.to_sym, v)
         end
