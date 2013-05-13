@@ -1,7 +1,7 @@
 
-# line 1 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 1 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
 
-# line 10 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 10 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
 
 
 module Mail
@@ -9,7 +9,7 @@ module Mail
     module Ragel
       module PhraseListsMachine
         
-# line 13 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 class << self
 	attr_accessor :_phrase_lists_trans_keys
 	private :_phrase_lists_trans_keys, :_phrase_lists_trans_keys=
@@ -336,7 +336,7 @@ end
 self.phrase_lists_en_main = 1;
 
 
-# line 17 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
 
         def self.parse(data)
           p = 0
@@ -346,7 +346,7 @@ self.phrase_lists_en_main = 1;
           actions = []
           data_unpacked = data.bytes.to_a
           
-# line 350 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 350 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -354,9 +354,9 @@ begin
 	top = 0
 end
 
-# line 26 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 26 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
           
-# line 360 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 360 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -393,31 +393,31 @@ begin
 	if _phrase_lists_trans_actions[_trans] != 0
 	case _phrase_lists_trans_actions[_trans]
 	when 7 then
-# line 7 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 9 then
-# line 8 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
 	when 13 then
-# line 39 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 39 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(36, p) 		end
 	when 1 then
-# line 40 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 40 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(37, p) 		end
 	when 6 then
-# line 41 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
 	when 4 then
-# line 42 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
 	when 3 then
-# line 5 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -428,7 +428,7 @@ begin
 	end
  		end
 	when 12 then
-# line 6 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		top -= 1
@@ -438,17 +438,17 @@ begin
 	end
  		end
 	when 14 then
-# line 7 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 39 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 39 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(36, p) 		end
 	when 8 then
-# line 7 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -459,10 +459,10 @@ begin
 	end
  		end
 	when 10 then
-# line 8 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 5 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -473,10 +473,10 @@ begin
 	end
  		end
 	when 11 then
-# line 8 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 6 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		top -= 1
@@ -486,10 +486,10 @@ begin
 	end
  		end
 	when 2 then
-# line 40 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 40 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(37, p) 		end
-# line 5 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -500,13 +500,13 @@ begin
 	end
  		end
 	when 5 then
-# line 42 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
-# line 41 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
-# line 510 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 510 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 	end
 	end
 	end
@@ -525,17 +525,17 @@ begin
 	if p == eof
 	  case _phrase_lists_eof_actions[cs]
 	when 13 then
-# line 39 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 39 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(36, p) 		end
 	when 14 then
-# line 7 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 39 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 39 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(36, p) 		end
-# line 539 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 539 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 	  end
 	end
 
@@ -546,12 +546,12 @@ begin
 end
 	end
 
-# line 27 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 27 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
 
           if p == eof && cs >= 
-# line 553 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 553 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 21
-# line 28 "/home/bpot/src/Dist/GH/mikel/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
+# line 28 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb.rl"
 
             return actions, nil
           else

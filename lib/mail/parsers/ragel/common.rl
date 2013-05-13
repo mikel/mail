@@ -68,7 +68,7 @@
   local_part_no_capture = (local_dot_atom | quoted_string | obs_local_part);
 
   # domain:
-  dot_atom_text = ("."+)? domain_text (("."+)? domain_text)*;
+  dot_atom_text = "."* domain_text ("."* domain_text)*;
   dtext = 0x21..0x5a | 0x5e..0x7e | obs_dtext;
   dot_atom = CFWS? dot_atom_text (CFWS? >(comment_after_address,1));
   domain_literal = CFWS? "[" (FWS? dtext)* FWS? "]" CFWS?;
