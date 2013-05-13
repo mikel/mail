@@ -21,4 +21,14 @@ describe "AddressListsParser" do
       a.parse(text).addresses.size.should eq 1
     end
   end
+
+  context "parsing an address which begins with a comment" do
+    it "extracts local string correctly" do
+      text = '(xxxx xxxxxx xxxx)ababab@example.com'
+
+      a = Mail::Parsers::AddressListsParser.new
+      a.parse(text).addresses.size.should eq 1
+      a.parse(text).addresses.first.local.should eq 'ababab'
+    end
+  end
 end

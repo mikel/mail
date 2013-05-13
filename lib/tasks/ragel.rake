@@ -49,5 +49,6 @@ namespace :ragel do
 
   task :generate_ruby_parsers => RB_PARSERS
 
+  desc "Generate ruby parsers from ragel files"
   task :generate => [:generate_ragel_files, :generate_ruby_parsers]
 end

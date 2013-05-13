@@ -55,9 +55,9 @@
   # local_part:
   domain_text = (DQUOTE (FWS? qcontent)+ FWS? DQUOTE) | atext+;
   local_dot_atom_text = ("."* domain_text "."*)+;
-  local_dot_atom = (CFWS?
-                   local_dot_atom_text %local_dot_atom_pre_comment_e
-                   CFWS?);
+  local_dot_atom = CFWS?
+                   (local_dot_atom_text >local_dot_atom_s %local_dot_atom_pre_comment_e)
+                   CFWS?;
   obs_local_part = word ("." word)*;
   local_part = (local_dot_atom >local_dot_atom_s %local_dot_atom_e |
                 (quoted_string %local_quoted_string_e) |

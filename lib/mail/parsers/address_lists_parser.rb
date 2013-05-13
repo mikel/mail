@@ -69,7 +69,7 @@ module Mail::Parsers
           # Ignore address end events if they don't have
           # a matching address start event.
           next if address_s.nil?
-          if address.local.nil? && local_dot_atom_pre_comment_e && local_dot_atom_e
+          if address.local.nil? && local_dot_atom_pre_comment_e && local_dot_atom_s && local_dot_atom_e
             if address.domain
               address.local = s[local_dot_atom_s..local_dot_atom_e] if address
             else
