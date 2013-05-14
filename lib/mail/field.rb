@@ -117,13 +117,16 @@ module Mail
         @charset = value.blank? ? charset : value
         @name = name[FIELD_PREFIX]
         @raw_value = name
+        @value = nil
       when name !~ /:/ && value.blank?  # Field.new("field-name")
         @name = name
         @value = nil
+        @raw_value = nil
         @charset = charset
       else                              # Field.new("field-name", "value")
         @name = name
         @value = value
+        @raw_value = nil
         @charset = charset
       end
       @name = FIELD_NAME_MAP[@name.to_s.downcase] || @name
