@@ -80,4 +80,7 @@ describe "Mail::TestMailer" do
     end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
   end
 
+  it "should save settings passed to initialize" do
+    Mail::TestMailer.new(setting: true).settings.should include(setting: true)
+  end
 end
