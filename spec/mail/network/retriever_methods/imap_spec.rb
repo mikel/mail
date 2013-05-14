@@ -80,6 +80,11 @@ describe "IMAP Retriever" do
 
       MockIMAP.mailbox.should eq 'SOME-RANDOM-MAILBOX'
     end
+    it "should handle the :uid option" do
+      messages = Mail.find(:uid => 1)
+
+      messages[0].raw_source.should eq MockIMAP.examples.map { |m| m.attr['RFC822'] }[1]
+    end
     it "should find the last 10 messages by default" do
       messages = Mail.find
 
