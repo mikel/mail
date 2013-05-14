@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Fix fencepost encoding problem with binhex strings and only one token (drasch)
 * Allow the setting of envelope from directly (jeremy)
 * Accept other IETF/IANA-registered Content-Types and Content-Transfer-Encodings (jeremy)
 * Alias shift-jis charset to Shift_JIS Ruby encoding (jeremy)
