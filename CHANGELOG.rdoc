@@ -1,8 +1,7 @@
 == HEAD
 
 Features:
-* Don't include separating semicolon in paramter value when sanitizing (bpot)
-* Fix fencepost encoding problem with binhex strings and only one token (drasch)
+* Save settings passed to TestMailer#new (svanderbleek)
 * Allow the setting of envelope from directly (jeremy)
 * Accept other IETF/IANA-registered Content-Types and Content-Transfer-Encodings (jeremy)
 * Alias shift-jis charset to Shift_JIS Ruby encoding (jeremy)
@@ -20,6 +19,8 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Don't include separating semicolon in paramter value when sanitizing (bpot)
+* Fix fencepost encoding problem with binhex strings and only one token (drasch)
 * Fix sendmail delivery to addresses with a leading hyphen (lifo, jeremy)
 * Correctly format mbox From headers per RFC4155 (bpot, jeremy)
 * Fix bogus '=' at the end of some quoted-printable messages (jeremy)
