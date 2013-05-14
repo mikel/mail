@@ -17,6 +17,7 @@ Features:
 * Close pull request 389 - Don't add superfluous message headers to MIME parts (djmaze, jeremy)
 
 Performance:
+* Migrate to RAGEL based parser, awesome work by (bpot)
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
