@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Added feature to find the mail in uid (taketin)
 * Save settings passed to TestMailer#new (svanderbleek)
 * Allow the setting of envelope from directly (jeremy)
 * Accept other IETF/IANA-registered Content-Types and Content-Transfer-Encodings (jeremy)
