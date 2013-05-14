@@ -22,7 +22,7 @@ describe "Mail::TestMailer" do
     end
     Mail::TestMailer.deliveries.should be_empty
   end
-  
+
   it "should deliver an email to the Mail::TestMailer.deliveries array" do
     Mail.defaults do
       delivery_method :test
@@ -37,7 +37,7 @@ describe "Mail::TestMailer" do
     Mail::TestMailer.deliveries.length.should eq 1
     Mail::TestMailer.deliveries.first.should eq mail
   end
-  
+
   it "should clear the deliveries when told to" do
     Mail.defaults do
       delivery_method :test
@@ -81,6 +81,6 @@ describe "Mail::TestMailer" do
   end
 
   it "should save settings passed to initialize" do
-    Mail::TestMailer.new(setting: true).settings.should include(setting: true)
+    Mail::TestMailer.new(:setting => true).settings.should include(:setting => true)
   end
 end
