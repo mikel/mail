@@ -1,3 +1,7 @@
+== Tue May 14 14:22:00 +1100 2013 Mikel Lindsaar <mikel@lindsaar.net>
+
+* Backport 2.4.2 2.4.4 fixes (fractious)
+
 == Tue Apr 26 09:49:54 UTC 2011 Mikel Lindsaar <mikel@rubyx.com>
 
 * Update activesupport require to use inflector - closes #217
