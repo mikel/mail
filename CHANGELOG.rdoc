@@ -1,5 +1,8 @@
 == HEAD
 
+
+== Version 2.5.4 - Tue May 14 14:45:00 +1100 2013 Mikel Lindsaar <mikel@lindsaar.net>
+
 Features:
 * Save settings passed to TestMailer#new (svanderbleek)
 * Allow the setting of envelope from directly (jeremy)
