@@ -1769,4 +1769,66 @@ describe Mail::Message do
 
   end
 
+  describe 'SMTP envelope From' do
+    it 'should respond' do
+      Mail::Message.new.should respond_to(:smtp_envelope_from)
+    end
+
+    it 'should default to return_path, sender, or first from address' do
+      message = Mail::Message.new do
+        return_path 'return'
+        sender 'sender'
+        from 'from'
+      end
+      message.smtp_envelope_from.should eq 'return'
+
+      message.return_path = nil
+      message.smtp_envelope_from.should eq 'sender'
+
+      message.sender = nil
+      message.smtp_envelope_from.should eq 'from'
+    end
+
+    it 'can be overridden' do
+      message = Mail::Message.new { return_path 'return' }
+
+      message.smtp_envelope_from = 'envelope_from'
+      message.smtp_envelope_from.should eq 'envelope_from'
+
+      message.smtp_envelope_from = 'declared_from'
+      message.smtp_envelope_from.should eq 'declared_from'
+
+      message.smtp_envelope_from = nil
+      message.smtp_envelope_from.should eq 'return'
+    end
+  end
+
+  describe 'SMTP envelope To' do
+    it 'should respond' do
+      Mail::Message.new.should respond_to(:smtp_envelope_to)
+    end
+
+    it 'should default to destinations' do
+      message = Mail::Message.new do
+        to 'to'
+        cc 'cc'
+        bcc 'bcc'
+      end
+      message.smtp_envelope_to.should eq message.destinations
+    end
+
+    it 'can be overridden' do
+      message = Mail::Message.new { to 'to' }
+
+      message.smtp_envelope_to = 'envelope_to'
+      message.smtp_envelope_to.should eq %w(envelope_to)
+
+      message.smtp_envelope_to = 'declared_to'
+      message.smtp_envelope_to.should eq %w(declared_to)
+
+      message.smtp_envelope_to = nil
+      message.smtp_envelope_to.should eq %w(to)
+    end
+  end
+
 end

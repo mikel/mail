@@ -41,26 +41,24 @@ module Mail
 
     def initialize(values)
       self.settings = { :location       => '/usr/sbin/sendmail',
-                        :arguments      => '-i -t' }.merge(values)
+                        :arguments      => '-i' }.merge(values)
     end
 
     attr_accessor :settings
 
     def deliver!(mail)
-      check_delivery_params(mail)
+      smtp_from, smtp_to, message = check_delivery_params(mail)
 
-      envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
-      return_path = "-f #{self.class.shellquote(envelope_from)}" if envelope_from
+      from = "-f #{self.class.shellquote(smtp_from)}"
+      to = smtp_to.map { |to| self.class.shellquote(to) }.join(' ')
 
-      arguments = [settings[:arguments], return_path, '--'].compact.join(" ")
-
-      quoted_destinations = mail.destinations.collect { |d| self.class.shellquote(d) }
-      self.class.call(settings[:location], arguments, quoted_destinations.join(' '), mail)
+      arguments = "#{settings[:arguments]} #{from} --"
+      self.class.call(settings[:location], arguments, to, message)
     end
 
-    def self.call(path, arguments, destinations, mail)
+    def self.call(path, arguments, destinations, encoded_message)
       popen "#{path} #{arguments} #{destinations}" do |io|
-        io.puts mail.encoded.to_lf
+        io.puts encoded_message.to_lf
         io.flush
       end
     end

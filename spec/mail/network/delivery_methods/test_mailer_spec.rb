@@ -64,7 +64,7 @@ describe "Mail::TestMailer" do
         subject "Email with no sender"
         body "body"
       end
-    end.should raise_error('A sender (Return-Path, Sender or From) required to send a message')
+    end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
   end
 
   it "should raise an error if no recipient if defined" do
@@ -77,7 +77,7 @@ describe "Mail::TestMailer" do
         subject "Email with no recipient"
         body "body"
       end
-    end.should raise_error('At least one recipient (To, Cc or Bcc) is required to send a message')
+    end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
   end
 
 end
