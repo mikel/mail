@@ -20,10 +20,12 @@ module Mail
     FWS           = /#{CRLF}#{WSP}*/
     TEXT          = /[#{text}]/ # + obs-text
     FIELD_NAME    = /[#{field_name}]+/
-    FIELD_BODY    = /.+/
+    FIELD_PREFIX  = /\A(#{FIELD_NAME})/
+    FIELD_BODY    = /.+/m
     FIELD_LINE    = /^[#{field_name}]+:\s*.+$/
     FIELD_SPLIT   = /^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/
     HEADER_LINE   = /^([#{field_name}]+:\s*.+)$/
+    HEADER_SPLIT  = /#{CRLF}(?!#{WSP})/
 
     QP_UNSAFE     = /[^#{qp_safe}]/
     QP_SAFE       = /[#{qp_safe}]/
