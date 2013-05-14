@@ -44,6 +44,7 @@ module Mail # :doc:
   require 'mail/patterns'
   require 'mail/utilities'
   require 'mail/configuration'
+  require 'mail/preprocessor'
 
   @@autoloads = {}
   def self.register_autoload(name, path)

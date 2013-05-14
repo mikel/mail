@@ -32,31 +32,16 @@ module Mail
   class SenderField < StructuredField
     
     include Mail::CommonAddress
-    
+
     FIELD_NAME = 'sender'
     CAPITALIZED_FIELD = 'Sender'
-
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
-      self.parse
-      self
-    end
-
+    
     def addresses
       [address.address]
     end
 
     def address
       tree.addresses.first
-    end
-    
-    def encoded
-      do_encode(CAPITALIZED_FIELD)
-    end
-    
-    def decoded
-      do_decode
     end
     
     def default

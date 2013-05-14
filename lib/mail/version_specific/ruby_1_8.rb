@@ -3,7 +3,10 @@
 module Mail
   class Ruby18
     require 'base64'
+    require 'nkf'
     require 'iconv'
+
+    NKF_OPTIONS = "--oc=CP50220 -xjW --fb-subchar"
 
     # Escapes any parenthesis in a string that are unescaped. This can't
     # use the Ruby 1.9.1 regexp feature of negative look behind so we have
@@ -99,6 +102,28 @@ module Mail
       encoding = $KCODE.to_s.downcase
       language = Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{URI.escape(str)}"
+    end
+
+    def Ruby18.preprocess(charset, value)
+      value
+    end
+
+    def Ruby18.preprocess_body_raw(charset, body_raw)
+      if charset.to_s.downcase == 'iso-2022-jp'
+        NKF.nkf(NKF_OPTIONS, Mail::Preprocessor.process(body_raw))
+      else
+        body_raw
+      end
+    end
+
+    def Ruby18.encode_with_iso_2022_jp(value)
+      if value.nil? || value.ascii_only?
+        value
+      else
+        value = Mail::Preprocessor.process(value)
+        value = NKF.nkf(NKF_OPTIONS, value)
+        "=?ISO-2022-JP?B?#{Base64.encode64(value).gsub("\n", "")}?="
+      end
     end
 
     private
