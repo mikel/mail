@@ -18,6 +18,7 @@ Features:
 
 Performance:
 * Migrate to RAGEL based parser, awesome work by (bpot)
+* Performance improvements for people parsing email headers (ConradIrwin)
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
