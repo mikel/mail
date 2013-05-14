@@ -755,6 +755,11 @@ describe Mail::ContentTypeField do
       c.string.should eq 'text/html'
     end
 
+    it "shouldn't include separating semicolon in parameter value when sanitizing" do
+      c = Mail::ContentTypeField.new(%Q{Multipart/Related;boundary=boundary123?WUT; type="application/xml";})
+      c.parameters['boundary'].should eq 'boundary123?WUT'
+    end
+
   end
 
 end

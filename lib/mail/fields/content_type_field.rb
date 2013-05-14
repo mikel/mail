@@ -180,7 +180,7 @@ module Mail
         params = $2.to_s.split(/\s+/)
         params = params.map { |i| i.to_s.chomp.strip }
         params = params.map { |i| i.split(/\s*\=\s*/) }
-        params = params.map { |i| "#{i[0]}=#{dquote(i[1].to_s)}" }.join('; ')
+        params = params.map { |i| "#{i[0]}=#{dquote(i[1].to_s.gsub(/;$/,""))}" }.join('; ')
         "#{type}; #{params}"
       when val =~ /^\s*$/
         'text/plain'
