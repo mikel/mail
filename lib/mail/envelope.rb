@@ -14,11 +14,6 @@ module Mail
       super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
     end
     
-    def tree
-      @element ||= Mail::EnvelopeFromElement.new(value)
-      @tree ||= @element.tree
-    end
-    
     def element
       @element ||= Mail::EnvelopeFromElement.new(value)
     end
