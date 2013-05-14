@@ -5,12 +5,8 @@ module Mail
     include Mail::Utilities
     
     def initialize( string )
-      parser = Mail::ContentLocationParser.new
-      if tree = parser.parse(string)
-        @location = tree.location.text_value
-      else
-        raise Mail::Field::ParseError.new(ContentLocationElement, string, parser.failure_reason)
-      end
+      content_location = Mail::Parsers::ContentLocationParser.new.parse(string)
+      @location = content_location.location
     end
     
     def location

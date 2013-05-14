@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md", "CONTRIBUTING.md", "CHANGELOG.rdoc", "TODO.rdoc"]
 
   s.add_dependency('mime-types', "~> 1.16")
-  s.add_dependency('treetop', '~> 1.4.8')
   s.add_dependency('jruby-openssl') if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
   s.add_dependency('tlsmail', '~> 0.0.1') if RUBY_VERSION == '1.8.6'
 

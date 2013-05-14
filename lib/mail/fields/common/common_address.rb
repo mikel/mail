@@ -6,7 +6,7 @@ module Mail
       
     def parse(val = value)
       unless val.blank?
-        @tree = AddressList.new(encode_if_needed(val))
+        @address_list = AddressList.new(encode_if_needed(val))
       else
         nil
       end
@@ -20,44 +20,40 @@ module Mail
       Encodings.address_encode(val, charset)
     end
     
-    # Allows you to iterate through each address object in the syntax tree
+    # Allows you to iterate through each address object in the address_list
     def each
-      tree.addresses.each do |address|
+      address_list.addresses.each do |address|
         yield(address)
       end
     end
 
     # Returns the address string of all the addresses in the address list
     def addresses
-      list = tree.addresses.map { |a| a.address }
+      list = address_list.addresses.map { |a| a.address }
       Mail::AddressContainer.new(self, list)
     end
 
     # Returns the formatted string of all the addresses in the address list
     def formatted
-      list = tree.addresses.map { |a| a.format }
+      list = address_list.addresses.map { |a| a.format }
       Mail::AddressContainer.new(self, list)
     end
   
     # Returns the display name of all the addresses in the address list
     def display_names
-      list = tree.addresses.map { |a| a.display_name }
+      list = address_list.addresses.map { |a| a.display_name }
       Mail::AddressContainer.new(self, list)
     end
   
     # Returns the actual address objects in the address list
     def addrs
-      list = tree.addresses
+      list = address_list.addresses
       Mail::AddressContainer.new(self, list)
     end
   
     # Returns a hash of group name => address strings for the address list
     def groups
-      @groups = Hash.new
-      tree.group_recipients.each do |group|
-        @groups[group.group_name.text_value.to_str] = get_group_addresses(group.group_list)
-      end
-      @groups
+      address_list.addresses_grouped_by_group
     end
   
     # Returns the addresses that are part of groups
@@ -77,7 +73,7 @@ module Mail
 
     # Returns the name of all the groups in a string
     def group_names # :nodoc:
-      tree.group_names
+      address_list.group_names
     end
   
     def default
@@ -104,7 +100,7 @@ module Mail
   
     def do_encode(field_name)
       return '' if value.blank?
-      address_array = tree.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
+      address_array = address_list.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
       address_text  = address_array.join(", \r\n\s")
       group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
       group_text  = group_array.join(" \r\n\s")
@@ -114,7 +110,7 @@ module Mail
 
     def do_decode
       return nil if value.blank?
-      address_array = tree.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
+      address_array = address_list.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
       address_text  = address_array.join(", ")
       group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
       group_text  = group_array.join(" ")
@@ -122,15 +118,14 @@ module Mail
       return_array.join(", ")
     end
 
-    # Returns the syntax tree of the Addresses
-    def tree # :nodoc:
-      @tree ||= AddressList.new(value)
+    def address_list # :nodoc:
+      @address_list ||= AddressList.new(value)
     end
   
     def get_group_addresses(group_list)
       if group_list.respond_to?(:addresses)
-        group_list.addresses.map do |address_tree|
-          Mail::Address.new(address_tree)
+        group_list.addresses.map do |address|
+          Mail::Address.new(address)
         end
       else
         []

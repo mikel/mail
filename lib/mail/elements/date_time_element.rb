@@ -5,13 +5,9 @@ module Mail
     include Mail::Utilities
     
     def initialize( string )
-      parser = Mail::DateTimeParser.new
-      if tree = parser.parse(string)
-        @date_string = tree.date.text_value
-        @time_string = tree.time.text_value
-      else
-        raise Mail::Field::ParseError.new(DateTimeElement, string, parser.failure_reason)
-      end
+      date_time = Mail::Parsers::DateTimeParser.new.parse(string)
+      @date_string = date_time.date_string
+      @time_string = date_time.time_string
     end
     
     def date_string

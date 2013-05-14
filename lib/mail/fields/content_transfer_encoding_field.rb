@@ -23,12 +23,6 @@ module Mail
       end
     end
     
-    def tree
-      STDERR.puts("tree is deprecated.  Please use encoding to get parse result\n#{caller}")
-      @element ||= Mail::ContentTransferEncodingElement.new(value)
-      @tree ||= @element.tree
-    end
-    
     def element
       @element ||= Mail::ContentTransferEncodingElement.new(value)
     end
