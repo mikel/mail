@@ -80,14 +80,15 @@ module Mail
                                 (options[:what].to_sym != :last && options[:order].to_sym == :desc)
 
         if block_given?
-          message_ids.each do |message_id|
+          uids.each do |uid|
+            uid = options[:uid].to_i unless options[:uid].nil?
             fetchdata = imap.uid_fetch(message_id, ['RFC822', 'FLAGS'])[0]
             new_message = Mail.new(fetchdata.attr['RFC822'])
             new_message.mark_for_delete = true if options[:delete_after_find]
             if block.arity == 4
-              yield new_message, imap, message_id, fetchdata.attr['FLAGS']
+              yield new_message, imap, uid, fetchdata.attr['FLAGS']
             elsif block.arity == 3
-              yield new_message, imap, message_id
+              yield new_message, imap, uid
             else
               yield new_message
             end
