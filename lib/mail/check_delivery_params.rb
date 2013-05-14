@@ -1,22 +1,20 @@
 module Mail
   module CheckDeliveryParams
     def check_delivery_params(mail)
-      envelope_from = mail.return_path || mail.sender || mail.from_addrs.first
-      if envelope_from.blank?
-        raise ArgumentError.new('A sender (Return-Path, Sender or From) required to send a message')
+      if mail.smtp_envelope_from.blank?
+        raise ArgumentError.new('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
       end
 
-      destinations ||= mail.destinations if mail.respond_to?(:destinations) && mail.destinations
-      if destinations.blank?
-        raise ArgumentError.new('At least one recipient (To, Cc or Bcc) is required to send a message')
+      if mail.smtp_envelope_to.blank?
+        raise ArgumentError.new('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
       end
 
-      message ||= mail.encoded if mail.respond_to?(:encoded)
+      message = mail.encoded if mail.respond_to?(:encoded)
       if message.blank?
-        raise ArgumentError.new('A encoded content is required to send a message')
+        raise ArgumentError.new('An encoded message is required to send an email')
       end
 
-      [envelope_from, destinations, message]
+      [mail.smtp_envelope_from, mail.smtp_envelope_to, message]
     end
   end
 end
