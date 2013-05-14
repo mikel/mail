@@ -27,6 +27,8 @@ module Mail # :doc:
         require "mail/parsers/#{parser}"
       rescue LoadError
         compile_parser(parser)
+      rescue => e
+        puts "Mail failed to compile: #{parser} ... " + e.to_s
       end
     end
 
