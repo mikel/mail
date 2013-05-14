@@ -8,26 +8,26 @@ module Mail
 
     include Enumerable
 
+    # Insert the field in sorted order.
+    #
+    # Heavily based on bisect.insort from Python, which is:
+    #   Copyright (C) 2001-2013 Python Software Foundation.
+    #   Licensed under <http://docs.python.org/license.html>
+    #   From <http://hg.python.org/cpython/file/2.7/Lib/bisect.py>
     def <<( new_field )
-      current_entry = self.rindex(new_field)
-      if current_entry
-        self.insert((current_entry + 1), new_field)
-      else
-        insert_idx = -1
-        self.each_with_index do |item, idx|
-          case item <=> new_field
-          when -1
-            next
-          when 0
-            next
-          when 1
-            insert_idx = idx
-            break
-          end
+      lo = 0
+      hi = size
+
+      while lo < hi
+        mid = (lo + hi) / 2
+        if new_field < self[mid]
+          hi = mid
+        else
+          lo = mid + 1
         end
-        insert(insert_idx, new_field)
       end
+
+      insert(lo, new_field)
     end
-    
   end
 end
