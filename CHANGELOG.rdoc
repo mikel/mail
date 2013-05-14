@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Don't include separating semicolon in paramter value when sanitizing (bpot)
 * Fix fencepost encoding problem with binhex strings and only one token (drasch)
 * Allow the setting of envelope from directly (jeremy)
 * Accept other IETF/IANA-registered Content-Types and Content-Transfer-Encodings (jeremy)
