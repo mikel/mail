@@ -193,8 +193,8 @@ module Mail
         if word.ascii_only?
           word
         else
-          previous_non_ascii = tokens[i-1] && !tokens[i-1].ascii_only?
-          if previous_non_ascii
+          previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
+          if previous_non_ascii #why are we adding an extra space here?
             word = " #{word}"
           end
           Encodings.b_value_encode(word, charset)

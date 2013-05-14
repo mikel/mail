@@ -695,6 +695,12 @@ describe Mail::Encodings do
       Mail::Encodings.encode_non_usascii(raw, 'utf-8').should eq encoded
     end
 
+    it "should encode a single token that contains non usascii" do
+      raw     = '<mikelああ@test.lindsaar.net>'
+      encoded = Mail::Encodings.encode_non_usascii(raw, 'utf-8')
+      Mail::Encodings.value_decode(encoded).should eq raw
+    end
+
     it "should encode a display that contains non usascii with quotes as no quotes" do
       raw     = '"Lindsああr" <mikel@test.lindsaar.net>'
       encoded = '=?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>'
