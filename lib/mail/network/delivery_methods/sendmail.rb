@@ -50,7 +50,7 @@ module Mail
       smtp_from, smtp_to, message = check_delivery_params(mail)
 
       from = "-f #{self.class.shellquote(smtp_from)}"
-      to = smtp_to.map { |to| self.class.shellquote(to) }.join(' ')
+      to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
 
       arguments = "#{settings[:arguments]} #{from} --"
       self.class.call(settings[:location], arguments, to, message)
