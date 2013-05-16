@@ -27,10 +27,11 @@ describe "sendmail delivery agent" do
       subject 'invalid RFC2822'
     end
     
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
-                                              '-i -f "roger@test.lindsaar.net" --',
-                                              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
-                                              mail.encoded)
+    io = mock
+    Mail::Sendmail.should_receive(:popen).with('/usr/sbin/sendmail -i -f "roger@test.lindsaar.net" -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net"').and_yield(io)
+    io.should_receive(:puts).with(mail.encoded.to_lf)
+    io.should_receive(:flush)
+
     mail.deliver!
   end
 
