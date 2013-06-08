@@ -137,11 +137,13 @@ module Mail
         Encoding::GB18030
 
       else
+        # if nothing found return the plain string but only if Encoding can handle it.
+        # If not, fall back to ASCII.
         begin 
           Encoding.find(charset)
           charset
         rescue ArgumentError
-          Encoding::ASCII_8BIT
+          Encoding::ASCII
         end
       end
     end
