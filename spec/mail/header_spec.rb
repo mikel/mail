@@ -573,10 +573,10 @@ TRACEHEADER
     end
 
     if '1.9'.respond_to?(:force_encoding)
-      it "should blow up on encoding mismatches" do
-        junk = "Subject: \xAF".dup.force_encoding(::Encoding::ASCII_8BIT)
+      it "should not blow up on encoding mismatches" do
+        junk = "Subject: \xAF".dup.force_encoding(Encoding::ASCII_8BIT)
         header = Mail::Header.new(junk, 'utf-8')
-        expect { header.encoded }.to raise_error(Encoding::UndefinedConversionError)
+        expect(header.encoded).to eq("Subject: =?UTF-8?Q?=EF=BF=BD?=\r\n")
       end
     end
   end

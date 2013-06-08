@@ -249,6 +249,7 @@ module Mail
         if encoding.is_a?(Encoding)
           encoding
         else
+          # Fall back to ASCII for charsets that Ruby doesn't recognize
           begin
             Encoding.find(encoding)
           rescue ArgumentError

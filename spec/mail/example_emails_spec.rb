@@ -338,4 +338,25 @@ describe "Test emails" do
       expect(@message[:to].addresses.first.to_s).to eq 'märy@exämple.net'
     end
   end
+
+  describe "invalid charsets in headers" do
+    it "falls back to ASCII-8BIT for unrecognized charsets" do
+      mail = Mail.read(fixture('emails', 'error_emails', 'invalid_subject_characters.eml'))
+      expect(mail[:from].display_names).to eq(["Formação Frenetikpolis"])
+
+      subject = "Forma\xE7\xE3o FrenetikPolis: Mega Campanha Final Ver\xE3o | Cursos de Setembro"
+      if mail.subject.respond_to?(:encoding)
+        expect(mail.subject.encoding).to eq(Encoding::ASCII_8BIT)
+        subject = subject.dup.force_encoding(Encoding::ASCII_8BIT)
+      end
+      expect(mail.subject).to eq(subject)
+
+      expect(mail.encoded).to include("From: =?Windows-1252?B?Rm9ybWHn428gRnJlbmV0aWtwb2xpcw==?= <info@formacaofrenetik.info>")
+      if subject.respond_to?(:encoding)
+        expect(mail.encoded).to include("Subject: =?UTF-8?Q?Forma=EF=BF=BD=EF=BF=BDo_FrenetikPolis:_Mega_Campanha?=\r\n =?UTF-8?Q?_Final_Ver=EF=BF=BDo_|_Cursos_de_Setembro?=")
+      else
+        expect(mail.encoded).to include("Subject: =?UTF-8?Q?Forma=E7=E3o_FrenetikPolis:_Mega_Campanha_Final?=\r\n =?UTF-8?Q?_Ver=E3o_|_Cursos_de_Setembro?=")
+      end
+    end
+  end
 end

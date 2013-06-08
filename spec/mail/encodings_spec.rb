@@ -177,6 +177,12 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode("=?utf-8?B??=")).to eq ""
     end
 
+    it "should decode a string, even with an invalid encoding name" do
+      string = "=?BAD-ENCODING?B?VEVTVA==?="
+      result = 'TEST'
+      expect(Mail::Encodings.value_decode(string)).to eq(result)
+    end
+
     if '1.9'.respond_to?(:force_encoding)
       it "should decode 8bit encoded string" do
         string = "=?8bit?Q?ALPH=C3=89E?="

@@ -145,7 +145,14 @@ module Mail
       when 'KS_C_5601-1987'
         'CP949'
       else
-        encoding
+        # Fall back to ASCII for charsets that Iconv doesn't recognize
+        begin
+          Iconv.new('UTF-8', encoding)
+        rescue Iconv::InvalidEncoding => e
+          'ASCII'
+        else
+          encoding
+        end
       end
     end
   end

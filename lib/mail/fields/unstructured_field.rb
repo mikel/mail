@@ -158,7 +158,14 @@ module Mail
         first_word = true
         while !words.empty?
           break unless word = words.first.dup
-          word.encode!(charset) if charset && word.respond_to?(:encode!)
+
+          # Convert on 1.9+ only since we aren't sure of the current
+          # charset encoding on 1.8. We'd need to track internal/external
+          # charset on each field.
+          if charset && word.respond_to?(:encoding)
+            word = Encodings.transcode_charset(word, word.encoding, charset)
+          end
+
           word = encode(word) if should_encode
           word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit
