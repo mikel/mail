@@ -137,7 +137,12 @@ module Mail
         Encoding::GB18030
 
       else
-        charset
+        begin 
+          Encoding.find(charset)
+          charset
+        rescue ArgumentError
+          Encoding::ASCII_8BIT
+        end
       end
     end
   end
