@@ -116,7 +116,10 @@ module Mail
       # Optimization: If there's no encoded-words in the string, just return it
       return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
 
-      lines = collapse_adjacent_encodings(str)
+      # Collapsing adjacent encoding is SO WRONG! See https://github.com/mikel/mail/issues/560
+      # So, just remove the spaces and newlines between the blocks, and decode as a single line.
+      #lines = collapse_adjacent_encodings(str)
+      lines = str.gsub(/(\?=)\s*(=\?)/, '\\1\\2').split(/\s+/)
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
       lines.map do |line|
