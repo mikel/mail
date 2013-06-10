@@ -175,7 +175,7 @@ module Mail
       if dasherize(fn) == "content-type"
         # Update charset if specified in Content-Type
         params = self[:content_type].parameters rescue nil
-        @charset = params && params[:charset]
+        @charset = params[:charset] if params && params[:charset]
       end
     end
     
