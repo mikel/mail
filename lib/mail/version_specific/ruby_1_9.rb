@@ -114,7 +114,7 @@ module Mail
         "ISO-#{$1}-#{$2}-#{$3}"
 
       # UTF-8, UTF-32BE and alike
-      when /utf-?(\d{1,2})?(\w{1,2})/i
+      when /utf[\-_]?(\d{1,2})?(\w{1,2})/i
         "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
 
       # Windows-1252 and alike
