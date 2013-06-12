@@ -589,7 +589,11 @@ module Mail
     end
 
     def date( val = nil )
-      default :date, val
+      if val
+        default :date, val
+      else
+        nil
+      end
     end
 
     def date=( val )
