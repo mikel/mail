@@ -357,6 +357,22 @@ describe "MIME Emails" do
       end
 
     end
+    
+    describe "when multipart messages have whitespace in the headers" do
+      before :each do
+        name = 'raw_email_with_nested_attachment_and_whitespace_in_headers.eml'
+        @mail = Mail.read(fixture('emails', 'mime_emails', name))
+      end
+      it "should have two attachments" do
+        @mail.attachments.length.should eq 2
+      end
+      it "should have byo-ror-cover.png fir first attachment" do
+        @mail.attachments[0].filename.should eq 'byo-ror-cover.png'
+      end
+      it "should have smime.p7s for second attachment" do
+        @mail.attachments[1].filename.should eq 'smime.p7s'
+      end
+    end
 
     describe "finding attachments" do
 
