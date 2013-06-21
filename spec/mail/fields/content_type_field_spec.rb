@@ -610,6 +610,20 @@ describe Mail::ContentTypeField do
       c.parameters.should eql('charset' => 'iso-8859-1', 'name' => 'IMSTP19.gif')
     end
 
+    it %{should handle 'multipart/related; boundary="foo" ; type="text/html"'} do
+      string = "multipart/related; boundary=\"============_-840345472==_mr============\" ; type=\"text/html\""
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should eq 'multipart/related'
+      c.parameters.should eq({"type" => "text/html", "boundary" => "============_-840345472==_mr============"})
+    end
+
+    it %{should handle 'multipart/related; boundary=foo ; type=text/html'} do
+      string = "multipart/related; boundary=foo ; type=text/html"
+      c = Mail::ContentTypeField.new(string)
+      c.content_type.should eq 'multipart/related'
+      c.parameters.should eq({"type" => "text/html", "boundary" => "foo"})
+    end
+
   end
 
   describe "finding a filename" do

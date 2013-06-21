@@ -36,11 +36,10 @@
   comment = "(" @comment_begin %comment_e;
   CFWS = ((FWS? comment)+ FWS?) | FWS;
 
-  quoted_string = CFWS?
-                  (DQUOTE
-                    (((FWS? qcontent)* FWS?) >qstr_s %qstr_e)
-                  DQUOTE)
-                  CFWS?;
+  strict_quoted_string = (DQUOTE
+                            (((FWS? qcontent)* FWS?) >qstr_s %qstr_e)
+                          DQUOTE);
+  quoted_string = CFWS? strict_quoted_string CFWS?;
 
   atom = CFWS? atext+ CFWS?;
   word = atom | quoted_string;
@@ -147,7 +146,7 @@
 
   token = 0x21..0x27 | 0x2a..0x2b | 0x2c..0x2e |
           0x30..0x39 | 0x41..0x5a | 0x5e..0x7e;
-  value = (quoted_string | (token -- '"' | 0x3d)+) >param_val_s %param_val_e;
+  value = (strict_quoted_string | (token -- '"' | 0x3d)+) >param_val_s %param_val_e;
   attribute = (token+) >param_attr_s %param_attr_e;
   parameter = CFWS? attribute "=" value CFWS?;
 
