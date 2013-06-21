@@ -593,6 +593,32 @@ describe Mail::Address do
                                          :raw          => 'groupname+domain.com@example.com'})
       end
 
+      it "should handle |françois@example.com|" do
+        address = Mail::Address.new("françois@example.com")
+        address.should break_down_to({
+                                         :name         => nil,
+                                         :display_name => nil,
+                                         :address      => "françois@example.com",
+                                         :comments     => nil,
+                                         :domain       => 'example.com',
+                                         :local        => "françois",
+                                         :format       => "françois@example.com",
+                                         :raw          => "françois@example.com"})
+      end
+
+      it "should handle |fran\\xe7ois@example.com|" do
+        address = Mail::Address.new("fran\xe7ois@example.com")
+        address.should break_down_to({
+                                         :name         => nil,
+                                         :display_name => nil,
+                                         :address      => "fran\xe7ois@example.com",
+                                         :comments     => nil,
+                                         :domain       => 'example.com',
+                                         :local        => "fran\xe7ois",
+                                         :format       => "fran\xe7ois@example.com",
+                                         :raw          => "fran\xe7ois@example.com"})
+      end
+
     end
 
   end

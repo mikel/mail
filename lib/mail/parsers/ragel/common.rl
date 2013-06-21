@@ -13,20 +13,31 @@
   CRLF = "\r\n";
   WSP = 0x09 | 0x20;
   obs_ctext = obs_NO_WS_CTL;
-  VCHAR = 0x21..0x7e;
+  UTF8_TAIL = 0x80..0xBF;
+  UTF8_1 = 0x00..0x7F;
+  UTF8_2 = 0xC2..0xDF UTF8_TAIL;
+  UTF8_3 = 0xE0 0xA0..0xBF UTF8_TAIL | 0xE1..0xEC UTF8_TAIL UTF8_TAIL | 
+           0xED 0x80..0x9F UTF8_TAIL | 0xEE..0xEF UTF8_TAIL UTF8_TAIL;
+  UTF8_4 = 0xF0 0x90..0xBF UTF8_TAIL UTF8_TAIL | 0xF1..0xF3 UTF8_TAIL UTF8_TAIL UTF8_TAIL |
+           0xF4 0x80..0x8F UTF8_TAIL UTF8_TAIL;
+  UTF8_char = UTF8_1 | UTF8_2 | UTF8_3 | UTF8_4;
+  UTF8_octets = UTF8_char*;
+  UTF8_non_ascii = UTF8_2 | UTF8_3 | UTF8_4;
+
+  VCHAR = 0x21..0x7e | 0xa0..0xff | UTF8_non_ascii;
   obs_qp = "\\" (0x00 | obs_NO_WS_CTL | LF | CR);
   obs_FWS = (CRLF? WSP)+;
-  ctext = 0x21..0x27 | 0x2a..0x5b | 0x5d..0x7e | obs_ctext;
+  ctext = 0x21..0x27 | 0x2a..0x5b | 0x5d..0x7e | obs_ctext | UTF8_non_ascii;
   quoted_pair = ("\\" (VCHAR | WSP)) | obs_qp;
   FWS = (WSP* CRLF WSP+) | (CRLF WSP+) | obs_FWS;
-  ALPHA = [a-zA-Z];
+  ALPHA = [a-zA-Z] | 0xc0..0xd6 | 0xd8 .. 0xf6 | 0xf8 .. 0xff;
   DIGIT = [0-9];
   DQUOTE = '"';
   obs_qtext = obs_NO_WS_CTL;
   atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" |
           "'" | "*" | "+" | "-" | "/" | "=" | "?" | "^" |
-          "_" | "`" | "{" | "|" | "}" | "~";
-  qtext = 0x21 | 0x23..0x5b | 0x5d..0x7e | obs_qtext;
+          "_" | "`" | "{" | "|" | "}" | "~" | 0xa0..0xff | UTF8_non_ascii;
+  qtext = 0x21 | 0x23..0x5b | 0x5d..0x7e | obs_qtext | UTF8_non_ascii;
   obs_dtext = obs_NO_WS_CTL | quoted_pair;
   qcontent = qtext | quoted_pair;
 
@@ -69,7 +80,7 @@
 
   # domain:
   dot_atom_text = "."* domain_text ("."* domain_text)*;
-  dtext = 0x21..0x5a | 0x5e..0x7e | obs_dtext;
+  dtext = 0x21..0x5a | 0x5e..0x7e | obs_dtext | UTF8_non_ascii;
   dot_atom = CFWS? dot_atom_text (CFWS? >(comment_after_address,1));
   domain_literal = CFWS? "[" (FWS? dtext)* FWS? "]" CFWS?;
   obs_domain = atom ("." atom)*;
