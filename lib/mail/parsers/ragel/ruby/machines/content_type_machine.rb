@@ -1,7 +1,7 @@
 
-# line 1 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 1 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
 
-# line 10 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 10 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
 
 
 module Mail
@@ -9,7 +9,7 @@ module Mail
     module Ragel
       module ContentTypeMachine
         
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+# line 13 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 class << self
 	attr_accessor :_content_type_trans_keys
 	private :_content_type_trans_keys, :_content_type_trans_keys=
@@ -18,18 +18,15 @@ self._content_type_trans_keys = [
 	0, 0, 33, 126, 33, 126, 
 	33, 126, 9, 126, 10, 
 	10, 9, 32, 33, 126, 
-	9, 126, 9, 40, 10, 10, 
-	9, 32, 1, 127, 1, 
-	127, 10, 10, 9, 32, 
-	10, 10, 9, 32, 9, 126, 
-	9, 126, 10, 10, 9, 
-	32, 9, 126, 0, 127, 
-	9, 40, 10, 10, 9, 32, 
-	9, 126, 1, 127, 1, 
-	127, 10, 10, 9, 32, 
-	0, 127, 9, 126, 9, 59, 
+	33, 126, 10, 10, 9, 32, 
+	9, 126, 9, 126, 10, 
+	10, 9, 32, 9, 126, 
+	1, 127, 1, 127, 10, 10, 
+	9, 32, 0, 127, 9, 
+	126, 1, 127, 1, 127, 
+	10, 10, 9, 32, -128, -1, 
 	9, 126, 9, 126, 9, 
-	126, 9, 126, 9, 126, 
+	126, 9, 126, 9, 59, 
 	0, 0, 0
 ]
 
@@ -39,10 +36,9 @@ class << self
 end
 self._content_type_key_spans = [
 	0, 94, 94, 94, 118, 1, 24, 94, 
-	118, 32, 1, 24, 127, 127, 1, 24, 
-	1, 24, 118, 118, 1, 24, 118, 128, 
-	32, 1, 24, 118, 127, 127, 1, 24, 
-	128, 118, 51, 118, 118, 118, 118, 118, 
+	94, 1, 24, 118, 118, 1, 24, 118, 
+	127, 127, 1, 24, 128, 118, 127, 127, 
+	1, 24, 128, 118, 118, 118, 118, 51, 
 	0
 ]
 
@@ -52,11 +48,10 @@ class << self
 end
 self._content_type_index_offsets = [
 	0, 0, 95, 190, 285, 404, 406, 431, 
-	526, 645, 678, 680, 705, 833, 961, 963, 
-	988, 990, 1015, 1134, 1253, 1255, 1280, 1399, 
-	1528, 1561, 1563, 1588, 1707, 1835, 1963, 1965, 
-	1990, 2119, 2238, 2290, 2409, 2528, 2647, 2766, 
-	2885
+	526, 621, 623, 648, 767, 886, 888, 913, 
+	1032, 1160, 1288, 1290, 1315, 1444, 1563, 1691, 
+	1819, 1821, 1846, 1975, 2094, 2213, 2332, 2451, 
+	2503
 ]
 
 class << self
@@ -129,75 +124,44 @@ self._content_type_indicies = [
 	11, 11, 11, 11, 11, 11, 11, 11, 
 	11, 11, 11, 11, 11, 11, 11, 11, 
 	11, 11, 11, 11, 11, 11, 11, 11, 
-	11, 11, 11, 11, 11, 1, 13, 1, 
-	1, 1, 14, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 13, 15, 16, 
-	15, 15, 15, 15, 15, 17, 1, 15, 
-	15, 15, 15, 15, 1, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 1, 
-	1, 1, 15, 1, 1, 1, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	1, 1, 1, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 15, 15, 15, 15, 
-	15, 15, 15, 15, 1, 18, 1, 1, 
-	1, 19, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 18, 1, 20, 1, 
-	1, 1, 1, 1, 21, 1, 22, 1, 
-	18, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 18, 
-	1, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 1, 23, 23, 24, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 25, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 26, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	1, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 1, 27, 27, 28, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 29, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 30, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	1, 31, 1, 27, 1, 1, 1, 1, 
+	11, 11, 11, 11, 11, 1, 13, 14, 
+	13, 13, 13, 13, 13, 1, 1, 13, 
+	13, 13, 13, 13, 1, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 1, 
+	1, 1, 13, 1, 1, 1, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	1, 1, 1, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 13, 13, 13, 13, 
+	13, 13, 13, 13, 1, 15, 1, 16, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 27, 1, 32, 1, 33, 1, 
+	1, 1, 1, 1, 1, 1, 16, 1, 
+	17, 1, 1, 1, 18, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 17, 
+	7, 7, 7, 7, 7, 7, 7, 19, 
+	1, 7, 7, 7, 7, 7, 1, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 1, 9, 1, 1, 1, 1, 1, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 1, 1, 1, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 1, 17, 
+	1, 1, 1, 18, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 33, 1, 34, 
-	1, 1, 1, 35, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 34, 7, 
-	7, 7, 7, 7, 7, 7, 36, 1, 
+	1, 1, 1, 1, 1, 1, 17, 7, 
+	7, 7, 7, 7, 7, 7, 19, 1, 
 	7, 7, 7, 7, 7, 1, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
-	1, 9, 1, 1, 1, 1, 1, 7, 
+	1, 1, 1, 1, 1, 1, 1, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
@@ -205,226 +169,210 @@ self._content_type_indicies = [
 	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 1, 34, 1, 
-	1, 1, 35, 1, 1, 1, 1, 1, 
+	7, 7, 7, 7, 7, 1, 20, 1, 
+	17, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 34, 7, 7, 
-	7, 7, 7, 7, 7, 36, 1, 7, 
-	7, 7, 7, 7, 1, 7, 7, 7, 
+	1, 1, 1, 1, 1, 1, 1, 17, 
+	1, 21, 1, 1, 1, 22, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	21, 23, 23, 23, 23, 23, 23, 23, 
+	24, 1, 23, 23, 23, 23, 23, 1, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 1, 1, 1, 1, 1, 1, 
+	1, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 1, 1, 1, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 1, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 1, 25, 25, 26, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 27, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 28, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 25, 
+	25, 25, 25, 25, 25, 25, 25, 1, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 1, 29, 29, 30, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 31, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 32, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 1, 
+	33, 1, 29, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 29, 1, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 29, 29, 29, 29, 29, 
+	29, 29, 29, 1, 34, 1, 1, 1, 
+	35, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 34, 23, 23, 23, 23, 
+	23, 23, 23, 36, 1, 23, 23, 23, 
+	23, 23, 1, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 1, 37, 1, 
+	1, 1, 1, 1, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 1, 1, 
+	1, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 1, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 1, 38, 38, 39, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 40, 41, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 42, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 38, 38, 38, 38, 38, 38, 
+	38, 38, 1, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 1, 43, 43, 44, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 45, 46, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 47, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 43, 43, 43, 43, 43, 43, 
+	43, 43, 1, 48, 1, 43, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 43, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 43, 49, 
+	1, 1, 1, 50, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 49, 51, 
+	51, 51, 51, 51, 51, 51, 52, 1, 
+	51, 51, 51, 51, 51, 1, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	1, 53, 1, 1, 1, 1, 1, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 1, 1, 1, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 51, 51, 51, 
+	51, 51, 51, 51, 51, 1, 54, 1, 
+	1, 1, 55, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 54, 56, 1, 
+	56, 56, 56, 56, 56, 57, 1, 56, 
+	56, 56, 56, 56, 1, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 1, 
+	58, 1, 56, 1, 1, 1, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	1, 1, 1, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 56, 56, 56, 56, 
+	56, 56, 56, 56, 1, 16, 1, 1, 
+	1, 59, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 16, 7, 7, 7, 
+	7, 7, 7, 7, 60, 1, 7, 7, 
+	7, 7, 7, 1, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 1, 9, 
+	1, 1, 1, 1, 1, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
+	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 1, 
-	1, 1, 1, 1, 1, 1, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	1, 1, 1, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 1, 37, 1, 34, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 34, 1, 
-	38, 1, 1, 1, 39, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 38, 
-	40, 40, 40, 40, 40, 40, 40, 41, 
-	1, 40, 40, 40, 40, 40, 1, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 1, 1, 1, 1, 1, 1, 1, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 1, 1, 1, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 1, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 27, 
-	27, 27, 27, 27, 27, 27, 27, 1, 
-	42, 1, 1, 1, 43, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 42, 
-	1, 44, 1, 1, 1, 1, 1, 45, 
-	1, 46, 1, 47, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 47, 1, 48, 1, 1, 1, 
-	49, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 48, 40, 40, 40, 40, 
-	40, 40, 40, 50, 1, 40, 40, 40, 
-	40, 40, 1, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 1, 51, 1, 
-	1, 1, 1, 1, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 1, 1, 
-	1, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 1, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 1, 52, 52, 53, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 54, 55, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 56, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 52, 52, 52, 52, 52, 52, 
-	52, 52, 1, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 1, 57, 57, 58, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 59, 60, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 61, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 1, 62, 1, 57, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 57, 1, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 1, 63, 
-	1, 1, 1, 64, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 63, 65, 
-	65, 65, 65, 65, 65, 65, 66, 1, 
-	65, 65, 65, 65, 65, 1, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	1, 67, 1, 1, 1, 1, 1, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 1, 1, 1, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 65, 65, 65, 
-	65, 65, 65, 65, 65, 1, 68, 1, 
-	1, 1, 69, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 68, 1, 1, 
-	1, 1, 1, 1, 1, 70, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	71, 1, 68, 1, 1, 1, 69, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 68, 7, 7, 7, 7, 7, 7, 
-	7, 70, 1, 7, 7, 7, 7, 7, 
-	1, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 1, 71, 1, 1, 1, 
 	1, 1, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 1, 1, 1, 7, 
 	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	1, 72, 1, 1, 1, 73, 1, 1, 
+	7, 7, 7, 1, 61, 1, 1, 1, 
+	62, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 61, 23, 23, 23, 23, 
+	23, 23, 23, 63, 1, 23, 23, 23, 
+	23, 23, 1, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 1, 37, 1, 
+	1, 1, 1, 1, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 1, 1, 
+	1, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 23, 23, 23, 23, 23, 23, 
+	23, 23, 1, 54, 1, 1, 1, 55, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	72, 40, 40, 40, 40, 40, 40, 40, 
-	74, 1, 40, 40, 40, 40, 40, 1, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 1, 75, 1, 1, 1, 1, 
-	1, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 1, 1, 1, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 1, 
-	76, 1, 1, 1, 77, 1, 1, 1, 
+	1, 1, 54, 1, 1, 1, 1, 1, 
+	1, 1, 57, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 76, 
-	78, 1, 78, 78, 78, 78, 78, 79, 
-	1, 78, 78, 78, 78, 78, 1, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 1, 71, 1, 78, 1, 1, 1, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 1, 1, 1, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 78, 78, 
-	78, 78, 78, 78, 78, 78, 1, 47, 
-	1, 1, 1, 80, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 47, 7, 
-	7, 7, 7, 7, 7, 7, 81, 1, 
-	7, 7, 7, 7, 7, 1, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	1, 9, 1, 1, 1, 1, 1, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 1, 1, 1, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 7, 7, 7, 
-	7, 7, 7, 7, 7, 1, 82, 1, 
-	1, 1, 83, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 82, 40, 40, 
-	40, 40, 40, 40, 40, 84, 1, 40, 
-	40, 40, 40, 40, 1, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 1, 
-	51, 1, 1, 1, 1, 1, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	1, 1, 1, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 1, 1, 0
+	1, 1, 1, 1, 1, 58, 1, 1, 
+	0
 ]
 
 class << self
@@ -432,17 +380,14 @@ class << self
 	private :_content_type_trans_targs, :_content_type_trans_targs=
 end
 self._content_type_trans_targs = [
-	2, 0, 2, 3, 33, 4, 5, 7, 
-	27, 18, 6, 7, 8, 9, 10, 37, 
-	12, 24, 9, 10, 12, 24, 11, 13, 
-	14, 34, 23, 13, 14, 34, 23, 15, 
-	17, 35, 19, 20, 22, 21, 19, 20, 
-	7, 22, 9, 10, 12, 24, 26, 38, 
-	4, 5, 27, 18, 29, 30, 29, 40, 
-	32, 29, 30, 29, 40, 32, 31, 4, 
-	5, 33, 27, 18, 35, 16, 36, 18, 
-	35, 16, 36, 18, 38, 25, 37, 39, 
-	25, 39, 38, 25, 39
+	2, 0, 2, 3, 27, 4, 5, 7, 
+	21, 11, 6, 7, 8, 28, 16, 10, 
+	29, 12, 13, 15, 14, 12, 13, 7, 
+	15, 17, 18, 31, 20, 17, 18, 31, 
+	20, 19, 4, 5, 21, 11, 23, 24, 
+	23, 32, 26, 23, 24, 23, 32, 26, 
+	25, 4, 5, 27, 21, 11, 29, 9, 
+	28, 30, 11, 9, 30, 29, 9, 30
 ]
 
 class << self
@@ -451,16 +396,13 @@ class << self
 end
 self._content_type_trans_actions = [
 	1, 0, 0, 2, 3, 0, 0, 4, 
-	5, 0, 0, 0, 6, 7, 7, 7, 
-	7, 8, 0, 0, 0, 5, 0, 9, 
-	9, 10, 9, 0, 0, 11, 0, 0, 
-	0, 0, 0, 0, 5, 0, 12, 12, 
-	13, 14, 12, 12, 12, 14, 0, 0, 
-	12, 12, 14, 12, 15, 15, 16, 17, 
-	15, 0, 0, 5, 18, 0, 0, 19, 
-	19, 0, 20, 19, 21, 21, 22, 21, 
-	23, 23, 24, 23, 21, 21, 0, 25, 
-	0, 5, 12, 12, 14
+	5, 0, 0, 0, 6, 7, 7, 0, 
+	0, 0, 0, 5, 0, 8, 8, 9, 
+	10, 11, 11, 12, 11, 0, 0, 13, 
+	0, 0, 8, 8, 10, 8, 14, 14, 
+	15, 16, 14, 0, 0, 5, 17, 0, 
+	0, 18, 18, 0, 19, 18, 20, 20, 
+	0, 21, 20, 0, 5, 8, 8, 10
 ]
 
 class << self
@@ -471,8 +413,7 @@ self._content_type_eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 19, 21, 21, 23, 21, 0, 12, 
+	0, 0, 0, 18, 20, 0, 8, 20, 
 	0
 ]
 
@@ -483,7 +424,7 @@ self.content_type_start = 1;
 class << self
 	attr_accessor :content_type_first_final
 end
-self.content_type_first_final = 33;
+self.content_type_first_final = 27;
 class << self
 	attr_accessor :content_type_error
 end
@@ -492,14 +433,14 @@ self.content_type_error = 0;
 class << self
 	attr_accessor :content_type_en_comment_tail
 end
-self.content_type_en_comment_tail = 28;
+self.content_type_en_comment_tail = 22;
 class << self
 	attr_accessor :content_type_en_main
 end
 self.content_type_en_main = 1;
 
 
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 17 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
 
         def self.parse(data)
           p = 0
@@ -509,7 +450,7 @@ self.content_type_en_main = 1;
           actions = []
           data_unpacked = data.bytes.to_a
           
-# line 513 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+# line 454 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -517,9 +458,9 @@ begin
 	top = 0
 end
 
-# line 26 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 26 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
           
-# line 523 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+# line 464 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -555,122 +496,67 @@ begin
 	cs = _content_type_trans_targs[_trans]
 	if _content_type_trans_actions[_trans] != 0
 	case _content_type_trans_actions[_trans]
-	when 12 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 8 then
+# line 7 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-	when 15 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 14 then
+# line 8 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
 	when 2 then
-# line 25 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 25 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(22, p) 		end
 	when 1 then
-# line 26 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 26 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(23, p) 		end
 	when 6 then
-# line 35 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 35 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(32, p) 		end
 	when 4 then
-# line 36 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 36 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(33, p) 		end
-	when 21 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 20 then
+# line 37 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 7 then
-# line 38 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 38 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(35, p) 		end
-	when 11 then
-# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 13 then
+# line 41 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
-	when 9 then
-# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 11 then
+# line 42 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
-	when 19 then
-# line 45 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 18 then
+# line 45 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(42, p) 		end
 	when 3 then
-# line 46 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 46 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(43, p) 		end
 	when 5 then
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
 		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-	when 18 then
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		top -= 1
-		cs = stack[top]
-		_goto_level = _again
-		next
-	end
- 		end
-	when 13 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(4, p) 		end
-# line 36 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(33, p) 		end
-	when 23 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(4, p) 		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(34, p) 		end
-	when 14 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(4, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-	when 16 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(5, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
+		cs = 22
 		_goto_level = _again
 		next
 	end
  		end
 	when 17 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(5, p) 		end
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 6 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		top -= 1
@@ -679,87 +565,90 @@ begin
 		next
 	end
  		end
-	when 25 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(34, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-	when 8 then
-# line 38 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(35, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-	when 10 then
-# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(39, p) 		end
-# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(38, p) 		end
-	when 20 then
-# line 45 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(42, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-	when 22 then
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
-		begin
- 	begin
-		stack[top] = cs
-		top+= 1
-		cs = 28
-		_goto_level = _again
-		next
-	end
- 		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(34, p) 		end
-	when 24 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 9 then
+# line 7 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 36 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(33, p) 		end
+	when 10 then
+# line 7 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(4, p) 		end
+# line 5 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
 		top+= 1
-		cs = 28
+		cs = 22
 		_goto_level = _again
 		next
 	end
  		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 15 then
+# line 8 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(5, p) 		end
+# line 5 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+		begin
+ 	begin
+		stack[top] = cs
+		top+= 1
+		cs = 22
+		_goto_level = _again
+		next
+	end
+ 		end
+	when 16 then
+# line 8 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(5, p) 		end
+# line 6 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+		begin
+ 	begin
+		top -= 1
+		cs = stack[top]
+		_goto_level = _again
+		next
+	end
+ 		end
+	when 21 then
+# line 37 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
-# line 763 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+# line 5 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+		begin
+ 	begin
+		stack[top] = cs
+		top+= 1
+		cs = 22
+		_goto_level = _again
+		next
+	end
+ 		end
+	when 12 then
+# line 42 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(39, p) 		end
+# line 41 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(38, p) 		end
+	when 19 then
+# line 45 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+		begin
+ actions.push(42, p) 		end
+# line 5 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+		begin
+ 	begin
+		stack[top] = cs
+		top+= 1
+		cs = 22
+		_goto_level = _again
+		next
+	end
+ 		end
+# line 652 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 	end
 	end
 	end
@@ -777,26 +666,19 @@ begin
 	if _goto_level <= _test_eof
 	if p == eof
 	  case _content_type_eof_actions[cs]
-	when 12 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 8 then
+# line 7 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-	when 21 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 20 then
+# line 37 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
-	when 19 then
-# line 45 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+	when 18 then
+# line 45 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(42, p) 		end
-	when 23 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(4, p) 		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
-		begin
- actions.push(34, p) 		end
-# line 800 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+# line 682 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 	  end
 	end
 
@@ -807,12 +689,12 @@ begin
 end
 	end
 
-# line 27 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 27 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
 
           if p == eof && cs >= 
-# line 814 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
-33
-# line 28 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
+# line 696 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
+27
+# line 28 "/0/ruby/mail/lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb.rl"
 
             return actions, nil
           else
