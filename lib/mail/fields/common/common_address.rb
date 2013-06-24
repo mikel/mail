@@ -1,17 +1,12 @@
 # encoding: utf-8
 require 'mail/fields/common/address_container'
+require 'mail/register_charset_codecs'
 
 module Mail
   module CommonAddress # :nodoc:
 
     def initialize(value = nil, charset = 'utf-8')
-      if charset.to_s.downcase == 'iso-2022-jp'
-        if value.kind_of?(Array)
-          value = value.map { |e| encode_with_iso_2022_jp(e) }
-        else
-          value = encode_with_iso_2022_jp(value)
-        end
-      end
+      value = CharsetCodec.find(charset).encode_address(value)
       self.charset = charset
       super(self.class.const_get('CAPITALIZED_FIELD'), strip_field(self.class.const_get('FIELD_NAME'), value), charset)
       self.parse
@@ -84,17 +79,7 @@ module Mail
 
     # Returns the addresses that are part of groups
     def group_addresses
-      decoded_group_addresses
-    end
-
-    # Returns a list of decoded group addresses
-    def decoded_group_addresses
-      groups.map { |k,v| v.map { |a| a.decoded } }.flatten
-    end
-
-    # Returns a list of encoded group addresses
-    def encoded_group_addresses
-      groups.map { |k,v| v.map { |a| a.encoded } }.flatten
+      codec.decoded_group_addresses
     end
 
     # Returns the name of all the groups in a string
@@ -126,23 +111,16 @@ module Mail
 
     def do_encode(field_name)
       return '' if value.blank?
-      address_array = tree.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
-      address_text  = address_array.join(", \r\n\s")
-      group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
-      group_text  = group_array.join(" \r\n\s")
-      return_array = [address_text, group_text].reject { |a| a.blank? }
-      "#{field_name}: #{return_array.join(", \r\n\s")}\r\n"
+      CharsetCodec.find(charset).encode_common_address(codec, value, field_name)
     end
 
     def do_decode
       return nil if value.blank?
-      return value if charset.to_s.downcase == 'iso-2022-jp'
-      address_array = tree.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
-      address_text  = address_array.join(", ")
-      group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
-      group_text  = group_array.join(" ")
-      return_array = [address_text, group_text].reject { |a| a.blank? }
-      return_array.join(", ")
+      CharsetCodec.find(charset).decode_common_address(codec, value)
+    end
+
+    def codec
+      Codec.new(tree, groups)
     end
 
     # Returns the syntax tree of the Addresses
@@ -160,11 +138,38 @@ module Mail
       end
     end
 
-    def encode_with_iso_2022_jp(string)
-      if md = string.match(/ <[\x00-\x7f]*>\z/)
-        RubyVer.encode_with_iso_2022_jp(md.pre_match) + md[0]
-      else
-        string
+    class Codec
+      def initialize(tree, groups)
+        @tree = tree
+        @groups = groups
+      end
+
+      # Returns a list of decoded group addresses
+      def decoded_group_addresses
+        @groups.map { |k,v| v.map { |a| a.decoded } }.flatten
+      end
+
+      # Returns a list of encoded group addresses
+      def encoded_group_addresses
+        @groups.map { |k,v| v.map { |a| a.encoded } }.flatten
+      end
+
+      def decode(value)
+        address_array = @tree.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
+        address_text  = address_array.join(", ")
+        group_array = @groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
+        group_text  = group_array.join(" ")
+        return_array = [address_text, group_text].reject { |a| a.blank? }
+        return_array.join(", ")
+      end
+
+      def encode(value, field_name)
+        address_array = @tree.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
+        address_text  = address_array.join(", \r\n\s")
+        group_array = @groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
+        group_text  = group_array.join(" \r\n\s")
+        return_array = [address_text, group_text].reject { |a| a.blank? }
+        "#{field_name}: #{return_array.join(", \r\n\s")}\r\n"
       end
     end
   end
