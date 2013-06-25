@@ -129,7 +129,7 @@
   # id_right modifications to support multiple '@' in msg_id.
   msg_id_atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" | "'" | "*" |
                  "+" | "-" | "/" | "=" | "?" | "^" | "_" | "`" | "{" | "|" |
-                 "}" | "~" | "@";
+                 "}" | "~" | "@" | 0xa0..0xff | UTF8_non_ascii;
   msg_id_dot_atom_text = (msg_id_atext+ "."?)+;
   obs_id_right = domain;
   no_fold_literal = "[" (dtext)* "]";

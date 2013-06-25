@@ -607,16 +607,24 @@ describe Mail::Address do
       end
 
       it "should handle |fran\\xe7ois@example.com|" do
-        address = Mail::Address.new("fran\xe7ois@example.com")
+        if "".respond_to? :force_encoding
+          email_address = "fran\xe7ois@example.com".force_encoding( 'ISO-8859-1')
+          local_part = "fran\xe7ois".force_encoding( 'ISO-8859-1' )
+        else
+          email_address = "fran\xe7ois@example.com"
+          local_part = "fran\xe7ois"
+        end
+
+        address = Mail::Address.new( email_address )
         address.should break_down_to({
                                          :name         => nil,
                                          :display_name => nil,
-                                         :address      => "fran\xe7ois@example.com",
+                                         :address      => email_address,
                                          :comments     => nil,
                                          :domain       => 'example.com',
-                                         :local        => "fran\xe7ois",
-                                         :format       => "fran\xe7ois@example.com",
-                                         :raw          => "fran\xe7ois@example.com"})
+                                         :local        => local_part,
+                                         :format       => email_address,
+                                         :raw          => email_address})
       end
 
     end
