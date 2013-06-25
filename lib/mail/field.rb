@@ -157,6 +157,12 @@ module Mail
       field.to_s
     end
 
+    def inspect
+      "#<#{self.class.name} 0x#{(object_id * 2).to_s(16)} #{instance_variables.map do |ivar|
+        "#{ivar}=#{instance_variable_get(ivar).inspect}"
+      end.join(" ")}>"
+    end
+
     def update(name, value)
       @field = create_field(name, value, @charset)
     end
