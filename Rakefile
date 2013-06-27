@@ -18,4 +18,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 # load custom rake tasks
-Dir["#{File.dirname(__FILE__)}/lib/tasks/**/*.rake"].sort.each { |ext| load ext }
+Dir["#{File.dirname(__FILE__)}/tasks/**/*.rake"].sort.each { |ext| load ext }

@@ -1,6 +1,6 @@
 require 'erb'
 
-MAIL_ROOT = File.expand_path("../../..", __FILE__)
+MAIL_ROOT = File.expand_path("../..", __FILE__)
 require "#{MAIL_ROOT}/lib/mail/parsers/ragel/parser_info"
 
 namespace :ragel do
