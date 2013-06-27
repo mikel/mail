@@ -663,6 +663,12 @@ describe Mail::Encodings do
         b.should eq "Der Kunde ist König"
       end
 
+      it "should handle utf_8" do
+        a = 'Der Kunde ist K=?utf_8?B?w7Y=?=nig'
+        b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
+        b.should eq "Der Kunde ist König"
+      end
+
     end
   end
 

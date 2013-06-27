@@ -105,7 +105,7 @@ module Mail
 
     def Ruby18.fix_encoding(encoding)
       case encoding.upcase
-      when 'UTF8'
+      when 'UTF8', 'UTF_8'
         'UTF-8'
       when 'UTF16', 'UTF-16'
         'UTF-16BE'
