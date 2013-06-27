@@ -3,7 +3,7 @@ module Mail
   module VERSION
     
     version = {}
-    File.read(File.join(File.dirname(__FILE__), '../', 'VERSION')).each_line do |line|
+    File.read(File.join(File.dirname(__FILE__), '../', '../', 'VERSION')).each_line do |line|
       type, value = line.chomp.split(":")
       next if type =~ /^\s+$/  || value =~ /^\s+$/
       version[type] = value
