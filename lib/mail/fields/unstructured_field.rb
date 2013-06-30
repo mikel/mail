@@ -146,7 +146,7 @@ module Mail
         line = ""
         while !words.empty?
           break unless word = words.first.dup
-          word.encode!(charset) if charset && word.respond_to?(:encode!)
+          word.encode!(charset, :invalid => :replace, :undef => :replace) if charset && word.respond_to?(:encode!)
           word = encode(word) if should_encode
           word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit

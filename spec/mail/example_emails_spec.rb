@@ -323,5 +323,12 @@ describe "Test emails" do
     end
 
   end
-
+  
+  describe "invalid encodings in subject" do
+    it "Mail::Message.encoded  should not raise anything on bad headers" do
+      mail = Mail.read(fixture('emails', 'error_emails', 'invalid_subject_characters.eml'))
+      x = mail.encoded rescue false
+    end
+  end      
+ 
 end
