@@ -93,7 +93,7 @@ module Mail
     #  a.display_name = 'Mikel Lindsaar'
     #  a.format #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     def display_name=( str )
-      @display_name = str
+      @display_name = str.dup
     end
 
     # Returns the local part (the left hand side of the @ sign in the email address) of
