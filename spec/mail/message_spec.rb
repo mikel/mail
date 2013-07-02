@@ -1128,6 +1128,20 @@ describe Mail::Message do
           mail.to_s =~ %r{Content-Type: text/plain;\r\n}
         end
 
+        it "should set the body charset with the message charset" do
+          mail = Mail.new
+          mail.body = "This is plain text"
+          mail.charset = "iso-2022-jp"
+          mail.body.charset.should eq "iso-2022-jp"
+        end
+
+        it "should set the body charset with the message charset even if the body is not specified" do
+          mail = Mail.new
+          mail.body = nil
+          mail.charset = "iso-2022-jp"
+          mail.body.charset.should eq "iso-2022-jp"
+        end
+
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
@@ -1293,6 +1307,14 @@ describe Mail::Message do
 
       it 'should not strip the raw mail source in case the trailing \r\n is meaningful' do
         Mail.new("Content-Transfer-Encoding: quoted-printable;\r\n\r\nfoo=\r\nbar=\r\nbaz=\r\n").decoded.should eq 'foobarbaz'
+      end
+
+      it 'should change a body on encode if given a charset' do
+        mail = Mail.new
+        mail.charset = 'iso-2022-jp'
+        mail.body = "あいうえお\n"
+        expect = (RUBY_VERSION < '1.9') ? "あいうえお\r\n" : "\e$B$\"$$$&$($*\e(B\r\n"
+        mail.body.encoded.should eq expect
       end
 
     end

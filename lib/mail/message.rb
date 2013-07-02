@@ -1512,6 +1512,7 @@ module Mail
       @defaulted_charset = false
       @charset = value
       @header.charset = value
+      @body.charset = value
     end
 
     # Returns the main content type
@@ -2008,7 +2009,7 @@ module Mail
       raw_string = raw_source.to_s
       if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = raw_string.sub(match_data[0], "") 
+        self.raw_source = raw_string.sub(match_data[0], "")
       end
     end
 
@@ -2017,6 +2018,7 @@ module Mail
     end
 
     def add_encoding_to_body
+      @body.charset = charset
       if has_content_transfer_encoding?
         @body.encoding = content_transfer_encoding
       end
