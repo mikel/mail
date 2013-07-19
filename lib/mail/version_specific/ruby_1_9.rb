@@ -108,6 +108,10 @@ module Mail
     def Ruby19.pick_encoding(charset)
       case charset
 
+      # ISO-8859-8-I etc. http://en.wikipedia.org/wiki/ISO-8859-8-I
+      when /^iso-?8859-(\d+)(-i)?$/i
+        "ISO-8859-#{$1}"
+
       # ISO-8859-15, ISO-2022-JP and alike
       when /iso-?(\d{4})-?(\w{1,2})/i
         "ISO-#{$1}-#{$2}"
@@ -126,6 +130,14 @@ module Mail
 
       when /^8bit$/
         Encoding::ASCII_8BIT
+
+      # alternatives/misspellings of us-ascii seen in the wild
+      when /^iso-?646(-us)?$/i, /us=ascii/i
+        Encoding::ASCII
+
+      # Microsoft-specific alias for MACROMAN
+      when /^macintosh$/i
+        Encoding::MACROMAN
 
       # Microsoft-specific alias for CP949 (Korean)
       when 'ks_c_5601-1987'

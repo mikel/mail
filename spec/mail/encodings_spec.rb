@@ -645,6 +645,11 @@ describe Mail::Encodings do
         b.should eq "simple – dash – "
       end
 
+      it "should recognize iso646-us" do
+        decoded = Mail::Encodings.value_decode "[kj] =?ISO646-US?Q?Re:_[kj]_[KJ]_Money_is_not_our_god_should_?=\r\n =?ISO646-US?Q?be_played_on_US_Tour...+_Elys=3Fe_Montmartre?="
+        decoded.should == "[kj] Re: [kj] [KJ] Money is not our god should be played on US Tour...+ Elys?e Montmartre"
+      end
+
       it "should unquote multiple strings in the middle of the text" do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
