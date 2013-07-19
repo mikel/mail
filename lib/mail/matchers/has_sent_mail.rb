@@ -29,6 +29,17 @@ module Mail
         self
       end
 
+      def cc(recipient_or_list)
+        @copy_recipients ||= []
+
+        if recipient_or_list.kind_of?(Array)
+          @copy_recipients += recipient_or_list
+        else
+          @copy_recipients << recipient_or_list
+        end
+        self
+      end
+
       def with_subject(subject)
         @subject = subject
         self
@@ -73,7 +84,7 @@ module Mail
       def filter_matched_deliveries(deliveries)
         candidate_deliveries = deliveries
 
-        %w(sender recipients subject subject_matcher body body_matcher).each do |modifier_name|
+        %w(sender recipients copy_recipients subject subject_matcher body body_matcher).each do |modifier_name|
           next unless instance_variable_defined?("@#{modifier_name}")
           candidate_deliveries = candidate_deliveries.select{|matching_delivery| self.send("matches_on_#{modifier_name}?", matching_delivery)}
         end
@@ -87,6 +98,10 @@ module Mail
 
       def matches_on_recipients?(delivery)
         @recipients.all? {|recipient| delivery.to.include?(recipient) }
+      end
+
+      def matches_on_copy_recipients?(delivery)
+        @copy_recipients.all? {|recipient| delivery.cc.include?(recipient) }
       end
 
       def matches_on_subject?(delivery)
@@ -109,6 +124,7 @@ module Mail
         result = ''
         result += "from #{@sender} " if instance_variable_defined?('@sender')
         result += "to #{@recipients.inspect} " if instance_variable_defined?('@recipients')
+        result += "cc #{@copy_recipients.inspect} " if instance_variable_defined?('@copy_recipients')
         result += "with subject \"#{@subject}\" " if instance_variable_defined?('@subject')
         result += "with subject matching \"#{@subject_matcher}\" " if instance_variable_defined?('@subject_matcher')
         result += "with body \"#{@body}\" " if instance_variable_defined?('@body')
