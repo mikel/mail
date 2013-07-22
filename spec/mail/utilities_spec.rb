@@ -83,6 +83,30 @@ describe "Utilities Module" do
 
   end
 
+  describe "quoting phrases" do
+    describe "given a non-unsafe string" do
+      it "should not change the encoding" do
+        input_str = "blargh"
+        input_str_encoding = input_str.encoding
+
+        quote_phrase(input_str)
+
+        input_str.encoding.should eq input_str_encoding
+      end
+    end
+
+    describe "given an unsafe string" do
+      it "should not change the encoding" do
+        input_str = "Bjørn"
+        input_str_encoding = input_str.encoding
+
+        quote_phrase(input_str)
+
+        input_str.encoding.should eq input_str_encoding
+      end
+    end
+  end
+
   describe "escaping parenthesies" do
     it "should escape parens" do
       test = 'This is not (escaped)'
