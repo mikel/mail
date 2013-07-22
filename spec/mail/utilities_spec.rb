@@ -83,26 +83,28 @@ describe "Utilities Module" do
 
   end
 
-  describe "quoting phrases" do
-    describe "given a non-unsafe string" do
-      it "should not change the encoding" do
-        input_str = "blargh"
-        input_str_encoding = input_str.encoding
+  if RUBY_VERSION >= '1.9'
+    describe "quoting phrases" do
+      describe "given a non-unsafe string" do
+        it "should not change the encoding" do
+          input_str = "blargh"
+          input_str_encoding = input_str.encoding
 
-        quote_phrase(input_str)
+          quote_phrase(input_str)
 
-        input_str.encoding.should eq input_str_encoding
+          input_str.encoding.should eq input_str_encoding
+        end
       end
-    end
 
-    describe "given an unsafe string" do
-      it "should not change the encoding" do
-        input_str = "Bjørn"
-        input_str_encoding = input_str.encoding
+      describe "given an unsafe string" do
+        it "should not change the encoding" do
+          input_str = "Bjørn"
+          input_str_encoding = input_str.encoding
 
-        quote_phrase(input_str)
+          quote_phrase(input_str)
 
-        input_str.encoding.should eq input_str_encoding
+          input_str.encoding.should eq input_str_encoding
+        end
       end
     end
   end
