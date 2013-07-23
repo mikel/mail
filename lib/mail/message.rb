@@ -1955,6 +1955,24 @@ module Mail
       has_content_type? ? !!(main_type =~ /^text$/i) : false
     end
 
+    # Returns the part of the body as described by the IMAP part specifier in
+    # RFC 3501 section 6.4.5 (in the section about the BODY command). Only the
+    # numeric part specifiers are supported.
+    def body_section(part_specifier)
+      return self if parts.empty? && part_specifier == '1'
+
+      part = self
+      exploded_specifier = part_specifier.split('.')
+
+      exploded_specifier.each do |specifier|
+        break if part.nil?
+
+        part = part.parts[specifier.to_i - 1]
+      end
+
+      part
+    end
+
   private
 
     #  2.1. General Description
