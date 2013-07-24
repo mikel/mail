@@ -1853,6 +1853,7 @@ describe Mail::Message do
 
       it "returns the appropriate part when given a valid part specifier" do
         nested_email.body_section('1.2').content_type.should eq 'text/html'
+        nested_email.body_section('1.2').body.should eq '<p>html</p>'
       end
 
       it "returns nil when given an out-of-bounds part specifier" do
