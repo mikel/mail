@@ -186,6 +186,8 @@ mail['from'] = 'mikel@test.lindsaar.net'
 mail[:to]    = 'you@test.lindsaar.net'
 mail.subject = 'This is a test email'
 
+mail.header['X-Custom-Header'] = 'custom value'
+
 mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 ```
 
