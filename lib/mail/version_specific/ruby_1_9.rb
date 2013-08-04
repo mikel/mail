@@ -56,8 +56,8 @@ module Mail
         str = Ruby19.decode_base64(match[2])
         str.force_encoding(pick_encoding(charset))
       end
-      decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
+      decoded = str.encode("utf-8", :invalid => :replace, :undef => :replace, :replace => "")
+      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :undef => :replace, :replace => "").encode("utf-8")
     rescue Encoding::ConverterNotFoundError => err
       return orig_str.force_encoding(Encoding::ASCII_8BIT)
     end
