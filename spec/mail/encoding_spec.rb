@@ -191,8 +191,16 @@ describe "mail encoding" do
     m['Subject'] = Mail::SubjectField.new("=?utf-8?Q?Hello_=96_World?=")
     if RUBY_VERSION > '1.9'
       lambda { m.subject.should be_valid_encoding }.should_not raise_error
-    else
-      m.subject.should eq "Hello  World"
     end
+    m.subject.should eq "Hello  World"
+  end
+
+  it "shouldn't fail with utf-7 encoding" do
+    m = Mail.new
+    m['Subject'] = Mail::SubjectField.new("=?unicode-1-1-utf-7?B?K2tVMVA0WEsyWVV1UUduZmwtICAoK01LZ3c2VEQ4LSk=?=")
+    if RUBY_VERSION > '1.9'
+      lambda { m.subject.should be_valid_encoding }.should_not raise_error
+    end
+    m.subject.should eq "=?unicode-1-1-utf-7?B?K2tVMVA0WEsyWVV1UUduZmwtICAoK01LZ3c2VEQ4LSk=?="
   end
 end
