@@ -44,7 +44,7 @@ module Mail
     end
     
     def date_time
-      @datetime ||= ::DateTime.parse("#{element.date_time}")
+      @datetime ||= element.date_time
     end
 
     def info
