@@ -53,5 +53,13 @@ describe Mail::ReceivedField do
     expect(t.decoded).to eq ''
     expect(t.encoded).to eq "Received: \r\n"
   end
-  
+
+  it "should handle invalid date" do
+    t = Mail::ReceivedField.new("Received: mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>; Mon, 29 Jul 2013 25:12:46 +0900")
+    t.name.should eq "Received"
+    t.value.should eq "mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>; Mon, 29 Jul 2013 25:12:46 +0900"
+    t.info.should eq "mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>"
+    t.date_time.should eq nil
+  end
+
 end
