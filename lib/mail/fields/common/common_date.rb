@@ -5,6 +5,8 @@ module Mail
     # Returns a date time object of the parsed date
     def date_time
       ::DateTime.parse("#{element.date_string} #{element.time_string}")
+    rescue ArgumentError => e
+      raise e unless e.message == "invalid date"
     end
 
     def default

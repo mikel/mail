@@ -74,7 +74,13 @@ describe Mail::DateField do
       expect(DateTime).to receive(:now).at_least(:once).and_return(now)
       expect(Mail::DateField.new.date_time).to eq ::DateTime.parse(now.to_s)
     end
-    
+
+    it "should handle invalid date" do
+      t = nil
+      doing { t = Mail::DateField.new("12 Aug 2009 30:00:02 GMT") }.should_not raise_error
+      t.date_time.should eq nil
+    end
+
   end
 
 end
