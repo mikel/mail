@@ -14,7 +14,7 @@ module Mail
         @info = nil
       else
         received = Mail::Parsers::ReceivedParser.parse(string)
-        @date_time = ::DateTime.parse("#{received.date} #{received.time}")
+        @date_time = datetime_for(received)
         @info = received.info
       end
     end
@@ -22,5 +22,13 @@ module Mail
     def to_s(*args)
       "#{info}; #{date_time.to_s(*args)}"
     end
+
+    private
+      def datetime_for(received)
+        ::DateTime.parse("#{received.date} #{received.time}")
+      rescue ArgumentError => e
+        raise e unless e.message == 'invalid date'
+        nil
+      end
   end
 end

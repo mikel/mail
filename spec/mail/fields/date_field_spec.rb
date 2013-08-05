@@ -5,9 +5,9 @@ require 'spec_helper'
 describe Mail::DateField do
   #    The origination date field consists of the field name "Date" followed
   #    by a date-time specification.
-  # 
+  #
   # orig-date       =       "Date:" date-time CRLF
-  # 
+  #
   #    The origination date specifies the date and time at which the creator
   #    of the message indicated that the message was complete and ready to
   #    enter the mail delivery system.  For instance, this might be the time
@@ -20,9 +20,7 @@ describe Mail::DateField do
   #    for delivery.  The origination date is intended to contain the date
   #    and time that the user queued the message, not the time when the user
   #    connected to the network to send the message.)
-
   describe "initialization" do
-
     it "should initialize" do
       expect { Mail::DateField.new("12 Aug 2009 00:00:02 GMT") }.not_to raise_error
     end
@@ -37,17 +35,17 @@ describe Mail::DateField do
       expect(t.value).to eq 'Wed, 12 Aug 2009 00:00:02 +0000'
       expect(t.date_time).to eq ::DateTime.parse('12 Aug 2009 00:00:02 GMT')
     end
-    
+
     it "should accept nil as a value" do
       t = Mail::DateField.new(nil)
       expect(t.date_time).not_to be_nil
     end
-    
+
     it "should allow us to encode an date field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
       expect(field.encoded).to eq "Date: Wed, 12 Aug 2009 00:00:02 +0000\r\n"
     end
-    
+
     it "should allow us to decode an address field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
       expect(field.decoded).to eq "Wed, 12 Aug 2009 00:00:02 +0000"
@@ -63,7 +61,10 @@ describe Mail::DateField do
       expect(DateTime).to receive(:now).at_least(:once).and_return(now)
       expect(Mail::DateField.new.date_time).to eq ::DateTime.parse(now.to_s)
     end
-    
-  end
 
+    it "should handle invalid date" do
+      field = Mail::DateField.new("12 Aug 2009 30:00:02 GMT")
+      expect(field.date_time).to be_nil
+    end
+  end
 end

@@ -20,7 +20,11 @@ module Mail
         end
       end
 
-      datetime.strftime('%a, %d %b %Y %H:%M:%S %z') if datetime
+      if datetime
+        datetime.strftime('%a, %d %b %Y %H:%M:%S %z')
+      else
+        string
+      end
     end
 
     def initialize(value = nil, charset = nil)
@@ -30,6 +34,8 @@ module Mail
     # Returns a date time object of the parsed date
     def date_time
       ::DateTime.parse("#{element.date_string} #{element.time_string}")
+    rescue ArgumentError => e
+      raise e unless e.message == 'invalid date'
     end
 
     def default

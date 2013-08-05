@@ -9,6 +9,7 @@ Breaking changes:
 Compatibility:
 * Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
 * Restore LF=>CRLF conversions for properly encoded non-binary emails. (rubys)
+* Gracefully parse invalid dates in Date and Received headers. (okkez)
 
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
