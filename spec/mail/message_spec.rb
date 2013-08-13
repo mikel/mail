@@ -1340,44 +1340,34 @@ describe Mail::Message do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should eq m2
+        # confirm there are no side-effects in the comparison
+        m1.message_id.should be_nil
+        m2.message_id.should be_nil
       end
 
       it "should ignore the message id value if self has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should eq m2
+        # confirm there are no side-effects in the comparison
+        m1.message_id.should be_nil
+        m2.message_id.should eq '1234@test.lindsaar.net'
       end
 
       it "should ignore the message id value if other has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should eq m2
+        # confirm there are no side-effects in the comparison
+        m1.message_id.should eq '1234@test.lindsaar.net'
+        m2.message_id.should be_nil
       end
 
       it "should not be == if both emails have different Message IDs" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m1.should_not eq m2
-      end
-
-      it "should preserve the message id of self if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_true # confirm the side-effects of the comparison
-        m1.message_id.should eq '1234@test.lindsaar.net'
-      end
-
-      it "should preserve the message id of other if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_true # confirm the side-effects of the comparison
-        m2.message_id.should eq '1234@test.lindsaar.net'
-      end
-
-      it "should preserve the message id of both if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_false # confirm the side-effects of the comparison
+        # confirm there are no side-effects in the comparison
         m1.message_id.should eq '4321@test.lindsaar.net'
         m2.message_id.should eq '1234@test.lindsaar.net'
       end
