@@ -357,9 +357,12 @@ module Mail
       else
         self_message_id, other_message_id = self.message_id, other.message_id
         self.message_id, other.message_id = '<temp@test>', '<temp@test>'
-        result = self.encoded == other.encoded
-        self.message_id = "<#{self_message_id}>" if self_message_id
-        other.message_id = "<#{other_message_id}>" if other_message_id
+        begin
+          result = self.encoded == other.encoded
+        ensure
+          self.message_id = self_message_id
+          other.message_id = other_message_id
+        end
         result
       end
     end
