@@ -168,4 +168,8 @@ ENDPART
     part.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
   end
 
+  it "should not fail on invalid byte sequence in content-disposition header" do
+    part = Mail::Part.new("Content-Disposition: inline; filename=a\xB8z\r\n\r\nThis is the body text.")
+    doing { part.inline? }.should_not raise_error
+  end
 end
