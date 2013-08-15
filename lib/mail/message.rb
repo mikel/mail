@@ -353,17 +353,15 @@ module Mail
       return false unless other.respond_to?(:encoded)
 
       if self.message_id && other.message_id
-        result = (self.encoded == other.encoded)
+        self.encoded == other.encoded
       else
         self_message_id, other_message_id = self.message_id, other.message_id
-        self.message_id, other.message_id = '<temp@test>', '<temp@test>'
         begin
-          result = self.encoded == other.encoded
+          self.message_id, other.message_id = '<temp@test>', '<temp@test>'
+          self.encoded == other.encoded
         ensure
-          self.message_id = self_message_id
-          other.message_id = other_message_id
+          self.message_id, other.message_id = self_message_id, other_message_id
         end
-        result
       end
     end
 
