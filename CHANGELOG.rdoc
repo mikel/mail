@@ -13,6 +13,7 @@ Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
 
 Bugs:
+* #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
 * #978 - Fix for invalid chars being left in a string for invalid b_value from encoding. (kjg)
 * #996 - Fix that multipart/mixed emails with a delivery-status part could be interpreted as bounces. (kjg)
 * #998 - Fix header parameter parsing (such as attachment names) for values encoded with a blank charset or language code. (kjg)
