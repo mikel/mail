@@ -81,7 +81,6 @@ describe Mail::AddressList do
       a = Mail::AddressList.new(parse_text)
       a.addresses.first.comments.should eq result
     end
-
   end
   
   describe "functionality" do

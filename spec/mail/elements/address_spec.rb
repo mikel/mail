@@ -593,6 +593,40 @@ describe Mail::Address do
                                          :raw          => 'groupname+domain.com@example.com'})
       end
 
+      it "should handle |françois@example.com|" do
+        address = Mail::Address.new("françois@example.com")
+        address.should break_down_to({
+                                         :name         => nil,
+                                         :display_name => nil,
+                                         :address      => "françois@example.com",
+                                         :comments     => nil,
+                                         :domain       => 'example.com',
+                                         :local        => "françois",
+                                         :format       => "françois@example.com",
+                                         :raw          => "françois@example.com"})
+      end
+
+      it "should handle |fran\\xe7ois@example.com|" do
+        if "".respond_to? :force_encoding
+          email_address = "fran\xe7ois@example.com".force_encoding( 'ISO-8859-1')
+          local_part = "fran\xe7ois".force_encoding( 'ISO-8859-1' )
+        else
+          email_address = "fran\xe7ois@example.com"
+          local_part = "fran\xe7ois"
+        end
+
+        address = Mail::Address.new( email_address )
+        address.should break_down_to({
+                                         :name         => nil,
+                                         :display_name => nil,
+                                         :address      => email_address,
+                                         :comments     => nil,
+                                         :domain       => 'example.com',
+                                         :local        => local_part,
+                                         :format       => email_address,
+                                         :raw          => email_address})
+      end
+
     end
 
   end
