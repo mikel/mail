@@ -58,4 +58,23 @@ describe Mail::ReferencesField do
     lines.each { |line| line.length.should < 998 }
   end
 
+  it "should handle comma-separated values" do
+    t = Mail::ReferencesField.new('<1234@test.lindsaar.net>, <5678@test.lindsaar.net>')
+    t.name.should eq 'References'
+    t.value.should eq '<1234@test.lindsaar.net>, <5678@test.lindsaar.net>'
+    t.message_id.should eq '1234@test.lindsaar.net'
+    t.message_ids.should eq ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+    t.to_s.should eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+  end
+
+  it 'should be able to parse |2a26f8f146e27159@domain.com@domain.com, 2a26f8f146e27159@domain.com@domain.com|' do
+    m = Mail::ReferencesField.new( '2a26f8f146e27159@domain.com@domain.com, 4769770500E92399@n064.sc1.he.tucows.com' )
+    m.message_ids.should eq [ '2a26f8f146e27159@domain.com@domain.com', '4769770500E92399@n064.sc1.he.tucows.com' ]
+  end
+
+  it 'should be able to parse |2a26f8f146e27159@domain.com@domain.com 2a26f8f146e27159@domain.com@domain.com|' do
+    m = Mail::ReferencesField.new( '2a26f8f146e27159@domain.com@domain.com 4769770500E92399@n064.sc1.he.tucows.com' )
+    m.message_ids.should eq [ '2a26f8f146e27159@domain.com@domain.com', '4769770500E92399@n064.sc1.he.tucows.com' ]
+  end
+
 end

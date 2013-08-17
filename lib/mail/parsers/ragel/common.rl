@@ -114,19 +114,36 @@
 
   # message_ids
   obs_id_left = local_part;
-  id_left = dot_atom_text | obs_id_left;
-  # id_right modifications to support multiple '@' in msg_id.
   msg_id_atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" | "'" | "*" |
                  "+" | "-" | "/" | "=" | "?" | "^" | "_" | "`" | "{" | "|" |
-                 "}" | "~" | "@";
-  msg_id_dot_atom_text = (msg_id_atext+ "."?)+;
+                 "}" | "~" |  ":" | "," | "." | " ";
   obs_id_right = domain;
   no_fold_literal = "[" (dtext)* "]";
-  id_right = msg_id_dot_atom_text | no_fold_literal | obs_id_right;
+
+  id_left = msg_id_atext+ | obs_id_left;
+  id_left_ns = ( msg_id_atext - ( " " | "," ) )+;
+
+  # id_right modifications to support multiple '@' in msg_id.
+  id_right = ( msg_id_atext | "@" )+ | no_fold_literal | obs_id_right;
+  id_right_ns = ( msg_id_atext - ( " " | "," ) | "@" )+ | no_fold_literal;
+
+  # Handle various message-id formats:
+  #  <id_left@id_right>
+  #  <id_left@id_right...
+  #  <id_left@>
+  #  <id_left>
+  #  <id_left...
+  #  id_left@id_right
+  #  id_left
+  # Handle comma-separated message_ids.
   msg_id = (CFWS)?
-           (("<" id_left "@" id_right ">") >msg_id_s %msg_id_e)
-           (CFWS)?;
-  message_ids = msg_id (CFWS? msg_id)*;
+           ( (("<" id_left "@" id_right? ">") >msg_id_s %msg_id_e) | 
+             (("<" id_left "@" id_right? :>> "...") >msg_id_s %msg_id_e) | 
+             (("<" id_left ">") >msg_id_s %msg_id_e) | 
+             (("<" id_left :>> "..." ) >msg_id_s %msg_id_e) | 
+             ((id_left_ns ("@" id_right_ns)? ) >msg_id_s %msg_id_e ) )
+           (CFWS)? <: ","? ;
+  message_ids = msg_id**;
 
   include date_time "date_time.rl";
   date_time = (day_of_week ",")?

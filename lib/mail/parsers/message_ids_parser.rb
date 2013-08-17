@@ -25,7 +25,10 @@ module Mail::Parsers
         when :domain_e, :domain_s, :local_dot_atom_e,
           :local_dot_atom_pre_comment_e,
           :local_dot_atom_pre_comment_s,
-          :local_dot_atom_s
+	  :local_dot_atom_s,
+	  :qstr_s, :qstr_e,
+	  :local_quoted_string_e,
+	  :comment_s, :comment_e
 
           # ignored actions
 
