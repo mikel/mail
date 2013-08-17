@@ -40,7 +40,9 @@
   msg_id = (CFWS)?
            (("<" id_left "@" id_right ">") >msg_id_s %msg_id_e)
            (CFWS)?;
-  message_ids = msg_id (CFWS? msg_id)*;
+  # Nonstandard. Allow comma-separated ids rather than CFWS only.
+  msg_id_separator = CFWS? ( "," CFWS? )?;
+  message_ids = msg_id (msg_id_separator msg_id)*;
 
 
   # 3.6.7 Trace Fields
