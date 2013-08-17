@@ -5,7 +5,7 @@ Breaking changes:
 * Removed long-deprecated features: Message#register_for_delivery_notification, #has_transfer_encoding?, #add_transfer_encoding, #transfer_encoding, #message_content_type, #mime_parameters, #encode!, and Part#inline_content_id. (jeremy)
 
 Compatibility:
-* Support nonstandard comma-separated lists of message IDs in the References field. (peterkovacs)
+* Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
 
 
 == Version 2.7.0 (2017-10-31)

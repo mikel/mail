@@ -12,8 +12,12 @@ begin
   alphtype int;
 
   # Message Ids
-  action msg_id_s { msg_id_s = p+1 }
-  action msg_id_e { message_ids.message_ids << chars(data, msg_id_s, p-2) }
+  action msg_id_s { msg_id_s = p }
+  action msg_id_e {
+    id = chars(data, msg_id_s, p-1)
+    id = $1 if id =~ /.*<(.*)>.*/
+    message_ids.message_ids << id
+  }
 
   # No-op actions
   action angle_addr_s {}
