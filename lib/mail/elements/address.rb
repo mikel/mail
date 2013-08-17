@@ -123,7 +123,8 @@ module Mail
     #  a.comments #=> ['My email address']
     def comments
       parse unless @parsed
-      if get_comments.empty?
+      comments = get_comments
+      if comments.nil? || comments.empty?
         nil
       else
         get_comments.map { |c| c.squeeze(" ") }
@@ -210,7 +211,9 @@ module Mail
     end
     
     def get_display_name
-      if @data.display_name
+      if @data.nil?
+        nil
+      elsif @data.display_name
         str = strip_all_comments(@data.display_name.to_s)
       elsif @data.comments
         if @data.domain

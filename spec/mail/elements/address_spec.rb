@@ -37,6 +37,12 @@ describe Mail::Address do
       end
     end
 
+    it "should allow us to instantiate an empty address object and call name" do
+      [nil, '', ' '].each do |input|
+        Mail::Address.new(input).name.should eq nil
+      end
+    end
+
     ['"-Earnings...Notification-" <vodacom.co.rs>', '<56253817>'].each do |spammy_address|
       it "should ignore funky local-only spammy addresses in angle brackets #{spammy_address}" do
         Mail::Address.new(spammy_address).address.should eq nil
