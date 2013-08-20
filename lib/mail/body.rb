@@ -257,7 +257,9 @@ module Mail
 
     def split!(boundary)
       self.boundary = boundary
-      parts = raw_source.split(/(?:\A|\r\n)--#{Regexp.escape(boundary || "")}(?=(?:--)?\s*$)/)
+      # TODO. Using CRLF_REGEX is necessary when content encoding is binary, because we don't standardize CR/LF
+      #       Needs spec, needs better way to standardize CR/LF
+      parts = raw_source.split(/(?:\A|#{String::CRLF_REGEX})--#{Regexp.escape(boundary || "")}(?=(?:--)?\s*$)/)
       # Make the preamble equal to the preamble (if any)
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)
