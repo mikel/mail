@@ -222,6 +222,23 @@ mail.to_s =~ /Message\-ID: <ThisIsMyMessageId@some.domain.com>/ #=> 27
 Mail will take the message_id you assign to it trusting that you know
 what you are doing.
 
+### Parsing an email:
+
+Sometimes, instead of creating wonderful email messages, you would like
+to parse old ones. That's cool too!
+
+```ruby
+message = <<MESSAGE_END
+From: Private Person <me@fromdomain.com>
+To: A Test User <test@todomain.com>
+Subject: SMTP e-mail test
+
+This is a test e-mail message.
+MESSAGE_END
+
+mail = Mail.new(string_message)
+```
+
 ### Sending an email:
 
 Mail defaults to sending via SMTP to local host port 25.  If you have a
