@@ -339,9 +339,12 @@ describe Mail::Message do
     end
 
     it "should parse non-UTF8 sources" do
-      mail = Mail.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
+      raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
+      original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
+      mail = Mail.new(raw_message)
       mail.to.should eq ["raasdnil@gmail.com"]
       mail.decoded.should eq "すみません。\n\n"
+      raw_message.encoding.should eq original_encoding if raw_message.respond_to?(:encoding)
     end
   end
 
