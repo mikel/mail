@@ -548,7 +548,7 @@ Using Mail with Testing or Spec'ing Libraries
 If mail is part of your system, you'll need a way to test it without actually
 sending emails, the TestMailer can do this for you.
 
-```
+```ruby
 require 'mail'
 => true
 Mail.defaults do
@@ -574,7 +574,7 @@ Mail::TestMailer.deliveries.clear
 
 There is also a set of RSpec matchers stolen fr^H^H^H^H^H^H^H^H inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
 
-```
+```ruby
 Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end
