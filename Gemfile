@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org/'
 
 gem "activesupport", ">= 2.3.6"
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
