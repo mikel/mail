@@ -137,6 +137,13 @@ describe Mail::Encodings do
       Mail::Encodings.value_decode(string).should eq result
     end
 
+    it "should decode a encoded string in multiple parts" do
+      string = '=?UTF-8?B?5LuK5pel44GvQQ==?= =?UTF-8?B?44GV44KI44GG44Gq44KJQg==?='
+      result = "今日はAさようならB"
+      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      Mail::Encodings.value_decode(string).should eq result
+    end
+
     it "should decode UTF-16 encoded string" do
       string = "=?UTF-16?B?MEIwRDBGMEgwSg==?="
       result = "あいうえお"

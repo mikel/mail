@@ -279,9 +279,9 @@ module Mail
     end
 
     # When the encoded string consists of multiple lines, lines with the same
-    # encoding (Q or B) can be joined together.
+    # Q encoding can be joined together.
     #
-    # String has to be of the format =?<encoding>?[QB]?<string>?=
+    # String has to be of the format =?<encoding>?Q?<string>?=
     def Encodings.collapse_adjacent_encodings(str)
       lines = str.split(/(\?=)\s*(=\?)/).each_slice(2).map(&:join)
       results = []
@@ -292,7 +292,7 @@ module Mail
 
         if encoding == previous_encoding
           line = results.pop + line
-          line.gsub!(/\?\=\=\?.+?\?[QqBb]\?/m, '')
+          line.gsub!(/\?\=\=\?.+?\?Q\?/mi, '')
         end
 
         previous_encoding = encoding
