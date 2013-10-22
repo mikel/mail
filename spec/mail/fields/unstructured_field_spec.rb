@@ -178,6 +178,12 @@ describe Mail::UnstructuredField do
       $KCODE = @original if RUBY_VERSION < '1.9'
     end
 
+    it "should fold properly with continuous spaces around the linebreak" do
+      @field = Mail::UnstructuredField.new("Subject", "This is a header that has continuous spaces around line break point,     which should be folded properly")
+      result = "Subject: This is a header that has continuous spaces around line break point,\s\r\n\s\s\s\swhich should be folded properly\r\n"
+      @field.encoded.should eq result
+    end
+
   end
 
   describe "encoding non QP safe chars" do
