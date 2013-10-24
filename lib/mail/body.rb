@@ -127,9 +127,9 @@ module Mail
     def sort_parts!
       @parts.each do |p|
         p.body.set_sort_order(@part_sort_order)
-        @parts.sort!(@part_sort_order)
         p.body.sort_parts!
       end
+      @parts.sort!(@part_sort_order)
     end
     
     # Returns the raw source that the body was initialized with, without
