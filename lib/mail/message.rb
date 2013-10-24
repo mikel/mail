@@ -2129,7 +2129,7 @@ module Mail
         if perform_deliveries
           delivery_method.deliver!(self)
         end
-      rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+      rescue => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
     end
