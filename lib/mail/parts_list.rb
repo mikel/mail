@@ -44,7 +44,7 @@ module Mail
   private
 
     def get_order_value(part, order)
-      if part.respond_to?(:content_type)
+      if part.respond_to?(:content_type) && !part[:content_type].nil?
         order.index(part[:content_type].string.downcase) || 10000
       else
         10000
