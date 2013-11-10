@@ -336,6 +336,28 @@ describe Mail::Body do
       body.parts[0].parts[2].content_type.should eq "text/html"
     end
 
+    it "should maintain the relative order of the parts with the same content-type as they are added" do
+      body = Mail::Body.new('');
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML_1")
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG_1\r\n\r\nsdkjskjdksjdkjsd")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text_1")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched_1")
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML_2")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text_2")
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG_2\r\n\r\nsdkjskjdksjdkjsd")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched_2")
+      body.parts.length.should eq 8
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].subject.should eq "Plain Text_1"
+      body.parts[1].subject.should eq "Plain Text_2"
+      body.parts[2].subject.should eq "Enriched_1"
+      body.parts[3].subject.should eq "Enriched_2"
+      body.parts[4].subject.should eq "HTML_1"
+      body.parts[5].subject.should eq "HTML_2"
+      body.parts[6].subject.should eq "JPGEG_1"
+      body.parts[7].subject.should eq "JPGEG_2"
+    end
   end
 
   describe "matching" do
