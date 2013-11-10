@@ -8,6 +8,7 @@ describe "have_sent_email" do
       from    'phil@example.com'
       to      ['bob@example.com', 'fred@example.com']
       cc      ['dad@example.com', 'mom@example.com']
+      bcc     ['alice@example.com', 'sue@example.com']
       subject 'The facts you requested'
       body    'Here are the facts you requested. One-onethousand, two-onethousand.'
     end
@@ -82,6 +83,19 @@ describe "have_sent_email" do
 
     context "and a non-matching recipient" do
       it { should_not have_sent_email.cc('granny@example.com') }
+    end
+  end
+
+  context "with #bcc" do
+    context "and a matching recipient" do
+      it { should have_sent_email.bcc('alice@example.com') }
+      it { should have_sent_email.bcc('sue@example.com') }
+      it { should have_sent_email.bcc('alice@example.com').bcc('sue@example.com') }
+      it { should have_sent_email.bcc(['alice@example.com', 'sue@example.com']) }
+    end
+
+    context "and a non-matching recipient" do
+      it { should_not have_sent_email.bcc('mario@example.com') }
     end
   end
 
