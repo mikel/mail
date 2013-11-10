@@ -144,6 +144,7 @@ module Mail
         limit = 78 - prepend
         limit = limit - 7 - encoding.length if should_encode
         line = ""
+        first_word = true
         while !words.empty?
           break unless word = words.first.dup
           word.encode!(charset) if charset && word.respond_to?(:encode!)
@@ -158,7 +159,12 @@ module Mail
           # Remove the word from the queue ...
           words.shift
           # Add word separator
-          line << " " unless (line.empty? || should_encode)
+          if first_word
+            first_word = false
+          else
+            line << " " if !should_encode
+          end
+
           # ... add it in encoded form to the current line
           line << word
         end
