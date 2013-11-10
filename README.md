@@ -268,6 +268,20 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
+Sending via smtp (you can preview it with https://github.com/sj26/mailcatcher)
+```ruby
+
+options = { 
+  :address              => "localhost",
+  :port                 => 1025 
+}
+
+Mail.defaults do
+  delivery_method :smtp, options
+end
+```
+
+
 Exim requires its own delivery manager, and can be used like so:
 
 ```ruby
