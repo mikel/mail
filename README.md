@@ -268,16 +268,11 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
-Sending via smtp (you can preview it with https://github.com/sj26/mailcatcher)
+Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher))
 ```ruby
 
-options = { 
-  :address              => "localhost",
-  :port                 => 1025 
-}
-
 Mail.defaults do
-  delivery_method :smtp, options
+  delivery_method :smtp, address: "localhost", port: 1025
 end
 ```
 
