@@ -230,10 +230,10 @@ easy as:
 
 ```ruby
 Mail.deliver do
-   from    'me@test.lindsaar.net'
-   to      'you@test.lindsaar.net'
-   subject 'Here is the image you wanted'
-   body    File.read('body.txt')
+  from     'me@test.lindsaar.net'
+  to       'you@test.lindsaar.net'
+  subject  'Here is the image you wanted'
+  body     File.read('body.txt')
   add_file '/full/path/to/somefile.png'
 end
 ```
