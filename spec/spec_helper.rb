@@ -232,16 +232,22 @@ class MockIMAP
   @@connection = false
   @@mailbox = nil
   @@marked_for_deletion = []
+  @@default_examples = {
+    :default => (0..19).map do |i|
+      MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i, "DummyFlag#{i}")
+    end
+  }
+  @@default_examples['UTF-8'] = @@default_examples[:default].slice(0, 1)
 
-  def self.examples
-    @@examples
+  def self.examples(charset = nil)
+    @@examples.fetch(charset || :default)
   end
 
   def initialize
-    @@examples = []
-    (0..19).each do |i|
-      @@examples << MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i, "DummyFlag#{i}")
-    end
+    @@examples = {
+      :default => @@default_examples[:default].dup,
+      'UTF-8' => @@default_examples['UTF-8'].dup
+    }
   end
 
   def login(user, password)
@@ -260,12 +266,12 @@ class MockIMAP
     select(mailbox)
   end
 
-  def uid_search(keys, charset=nil)
-    [*(0..@@examples.size - 1)]
+  def uid_search(keys, charset = nil)
+    [*(0..self.class.examples(charset).size - 1)]
   end
 
   def uid_fetch(set, attr)
-    [@@examples[set]]
+    [self.class.examples[set]]
   end
 
   def uid_store(set, attr, flags)
@@ -276,7 +282,7 @@ class MockIMAP
 
   def expunge
     @@marked_for_deletion.reverse.each do |i|    # start with highest index first
-      @@examples.delete_at(i)
+      self.class.examples.delete_at(i)
     end
     @@marked_for_deletion = []
   end

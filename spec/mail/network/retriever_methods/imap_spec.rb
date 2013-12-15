@@ -136,6 +136,13 @@ describe "IMAP Retriever" do
       expect(MockIMAP.examples.size).to eq 5
     end
 
+    it "should pass :search_charset to IMAP uid_search" do
+      messages = Mail.find(:search_charset => 'UTF-8')
+      expect(messages.size).to eq(1)
+
+      message = messages.first
+      expect(message.raw_source).to eq MockIMAP.examples[0].attr['RFC822']
+    end
   end
 
   describe "last" do
