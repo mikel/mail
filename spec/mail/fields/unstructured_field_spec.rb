@@ -104,6 +104,12 @@ describe Mail::UnstructuredField do
       expect(@field.decoded).to eq string
     end
 
+    it "should decode a utf-7(B) encoded unstructured field" do
+      string = "=?UTF-7?B?JkFPUS0mLSZBT1EtJi0mQU9RLQ==?="
+      @field = Mail::UnstructuredField.new("References", string)
+      @field.decoded.should eq 'ä&ä&ä'
+    end
+
     if !'1.9'.respond_to?(:force_encoding)
       it "shouldn't get fooled into encoding on 1.8 due to an unrelated Encoding constant" do
         begin

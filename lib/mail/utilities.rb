@@ -277,6 +277,5 @@ module Mail
         value.respond_to?(:empty?) ? value.empty? : !value
       end
     end
-
   end
 end

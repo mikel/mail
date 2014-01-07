@@ -2,6 +2,7 @@
 
 Features:
 * #853 - `Mail::Message#set_sort_order` overrides the default message part sort order. (rafbm)
+* #650 - UTF-7 charset support. (johngrimes)
 
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)

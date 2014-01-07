@@ -5,13 +5,23 @@ module Mail
   class Ruby19
     class StrictCharsetEncoder
       def encode(string, charset)
-        string.force_encoding(Mail::Ruby19.pick_encoding(charset))
+        case charset
+        when /utf-?7/i
+          Mail::Ruby19.decode_utf7(string)
+        else
+          string.force_encoding(Mail::Ruby19.pick_encoding(charset))
+        end
       end
     end
 
     class BestEffortCharsetEncoder
       def encode(string, charset)
-        string.force_encoding(pick_encoding(charset))
+        case charset
+        when /utf-?7/i
+          Mail::Ruby19.decode_utf7(string)
+        else
+          string.force_encoding(pick_encoding(charset))
+        end
       end
 
       private
@@ -79,6 +89,28 @@ module Mail
 
     def Ruby19.transcode_charset(str, from_encoding, to_encoding = Encoding::UTF_8)
       charset_encoder.encode(str.dup, from_encoding).encode(to_encoding, :undef => :replace, :invalid => :replace, :replace => '')
+    end
+
+    # From Ruby stdlib Net::IMAP
+    def Ruby19.encode_utf7(string)
+      string.gsub(/(&)|[^\x20-\x7e]+/) do
+        if $1
+          "&-"
+        else
+          base64 = [$&.encode(Encoding::UTF_16BE)].pack("m0")
+          "&" + base64.delete("=").tr("/", ",") + "-"
+        end
+      end.force_encoding(Encoding::ASCII_8BIT)
+    end
+
+    def Ruby19.decode_utf7(utf7)
+      utf7.gsub(/&([^-]+)?-/n) do
+        if $1
+          ($1.tr(",", "/") + "===").unpack("m")[0].encode(Encoding::UTF_8, Encoding::UTF_16BE)
+        else
+          "&"
+        end
+      end
     end
 
     def Ruby19.b_value_encode(str, encoding = nil)

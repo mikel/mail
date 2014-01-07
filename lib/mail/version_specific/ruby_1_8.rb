@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'net/imap' # for decode_utf7
 
 module Mail
   class Ruby18
@@ -56,18 +57,27 @@ module Mail
     end
 
     def Ruby18.transcode_charset(str, from_encoding, to_encoding = 'UTF-8')
-      retried = false
-      begin
-        Iconv.conv("#{normalize_iconv_charset_encoding(to_encoding)}//IGNORE", normalize_iconv_charset_encoding(from_encoding), str)
-      rescue Iconv::InvalidEncoding
-        if retried
-          raise
-        else
-          from_encoding = 'ASCII'
-          retried = true
-          retry
+      case from_encoding
+      when /utf-?7/i
+        decode_utf7(str)
+      else
+        retried = false
+        begin
+          Iconv.conv("#{normalize_iconv_charset_encoding(to_encoding)}//IGNORE", normalize_iconv_charset_encoding(from_encoding), str)
+        rescue Iconv::InvalidEncoding
+          if retried
+            raise
+          else
+            from_encoding = 'ASCII'
+            retried = true
+            retry
+          end
         end
       end
+    end
+
+    def Ruby18.decode_utf7(str)
+      Net::IMAP.decode_utf7(str)
     end
 
     def Ruby18.b_value_encode(str, encoding)
