@@ -330,7 +330,7 @@ emails.length #=> LOTS!
 ```ruby
 mail = Mail.read('/path/to/message.eml')
 
-mail.envelope.from   #=> 'mikel@test.lindsaar.net'
+mail.envelope_from   #=> 'mikel@test.lindsaar.net'
 mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 mail.sender.address  #=> 'mikel@test.lindsaar.net'
 mail.to              #=> 'bob@test.lindsaar.net'
