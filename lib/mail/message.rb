@@ -240,7 +240,7 @@ module Mail
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
     # so use with caution.
     #
-    # It still however fires off the intercepters and calls the observers callbacks if they are defined.
+    # It still however fires off the interceptors and calls the observers callbacks if they are defined.
     #
     # Returns self
     def deliver!
