@@ -361,7 +361,7 @@ mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
 Mail generates a tree of parts.  Each message has many or no parts.  Each part
 is another message which can have many or no parts.
 
-A message will only have parts if it is a multipart/mixed or related/mixed
+A message will only have parts if it is a multipart/mixed or multipart/related
 content type and has a boundary defined.
 
 ### Testing and extracting attachments
