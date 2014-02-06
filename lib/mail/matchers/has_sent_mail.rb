@@ -72,6 +72,16 @@ module Mail
         self
       end
 
+      def with_html_part_body(body)
+        @html_part_body = body
+        self
+      end
+
+      def with_text_part_body(body)
+        @text_part_body = body
+        self
+      end
+
       def description
         result = "send a matching email"
         result
@@ -96,7 +106,7 @@ module Mail
       def filter_matched_deliveries(deliveries)
         candidate_deliveries = deliveries
 
-        %w(sender recipients copy_recipients blind_copy_recipients subject subject_matcher body body_matcher).each do |modifier_name|
+        %w(sender recipients copy_recipients blind_copy_recipients subject subject_matcher body body_matcher html_part_body text_part_body).each do |modifier_name|
           next unless instance_variable_defined?("@#{modifier_name}")
           candidate_deliveries = candidate_deliveries.select{|matching_delivery| self.send("matches_on_#{modifier_name}?", matching_delivery)}
         end
@@ -134,6 +144,14 @@ module Mail
 
       def matches_on_body_matcher?(delivery)
         @body_matcher.match delivery.body.raw_source
+      end
+
+      def matches_on_html_part_body?(delivery)
+        delivery.html_part.body == @html_part_body
+      end
+
+      def matches_on_text_part_body?(delivery)
+        delivery.text_part.body == @text_part_body
       end
 
       def explain_expectations
