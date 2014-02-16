@@ -37,6 +37,8 @@ module Mail
   #
   #   mail.deliver!
   class Sendmail
+    require 'shellwords'
+
     include Mail::CheckDeliveryParams
 
     def initialize(values)
@@ -49,8 +51,8 @@ module Mail
     def deliver!(mail)
       smtp_from, smtp_to, message = check_delivery_params(mail)
 
-      from = "-f #{self.class.shellquote(smtp_from)}"
-      to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
+      from = "-f #{smtp_from.shellescape}"
+      to = smtp_to.map(&:shellescape).join(' ')
 
       arguments = "#{settings[:arguments]} #{from} --"
       self.class.call(settings[:location], arguments, to, message)
@@ -71,19 +73,6 @@ module Mail
       def self.popen(command, &block)
         IO.popen command, 'w+', :err => :out, &block
       end
-    end
-
-    # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
-    # it is modified to include '+' in the allowed list to allow for
-    # sendmail to accept email addresses as the sender with a + in them.
-    def self.shellquote(address)
-      # Process as a single byte sequence because not all shell
-      # implementations are multibyte aware.
-      #
-      # A LF cannot be escaped with a backslash because a backslash + LF
-      # combo is regarded as line continuation and simply ignored. Strip it.
-      escaped = address.gsub(/([^A-Za-z0-9_\s\+\-.,:\/@])/n, "\\\\\\1").gsub("\n", '')
-      %("#{escaped}")
     end
   end
 end

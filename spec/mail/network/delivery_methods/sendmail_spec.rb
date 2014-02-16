@@ -54,7 +54,7 @@ describe Mail::Sendmail do
     it 'explicitly passes an envelope From address to sendmail' do
       mail.smtp_envelope_from 'smtp_from@test.lindsaar.net'
       described_class.should_receive :call do |_, arguments|
-        arguments.should include('-f "smtp_from@test.lindsaar.net"')
+        arguments.should include('-f smtp_from@test.lindsaar.net')
       end
       mail.deliver
     end
@@ -62,7 +62,7 @@ describe Mail::Sendmail do
     it 'escapes the From address' do
       mail.from '"from+suffix test"@test.lindsaar.net'
       described_class.should_receive :call do |_, arguments|
-        arguments.should eq '-i -f "\"from+suffix test\"@test.lindsaar.net" --'
+        arguments.should eq  '-i -f \"from\+suffix\ test\"@test.lindsaar.net --'
       end
       mail.deliver
     end
@@ -73,7 +73,7 @@ describe Mail::Sendmail do
     it 'explicitly passes envelope To addresses to sendmail' do
       mail.smtp_envelope_to 'smtp_to@test.lindsaar.net'
       described_class.should_receive :call do |_, _, destinations|
-        destinations.should eq '"smtp_to@test.lindsaar.net"'
+        destinations.should eq 'smtp_to@test.lindsaar.net'
       end
       mail.deliver
     end
@@ -81,15 +81,7 @@ describe Mail::Sendmail do
     it 'escapes the To address' do
       mail.to '"to+suffix test"@test.lindsaar.net'
       described_class.should_receive :call do |_, _, destinations|
-        destinations.should eq '"\"to+suffix test\"@test.lindsaar.net"'
-      end
-      mail.deliver
-    end
-
-    it 'quotes the destinations to ensure leading -hyphen doesn\'t confuse sendmail' do
-      mail.to '-hyphen@test.lindsaar.net'
-      described_class.should_receive :call do |_, _, destinations|
-        destinations.should eq '"-hyphen@test.lindsaar.net"'
+        destinations.should eq '\"to\+suffix\ test\"@test.lindsaar.net'
       end
       mail.deliver
     end
@@ -109,8 +101,8 @@ describe Mail::Sendmail do
     mail.to '"foo\";touch /tmp/PWNED;\""@blah.com'
 
     described_class.should_receive :call do |_, arguments, destinations|
-      arguments.should eq "-i -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --"
-      destinations.should eq %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com")
+      arguments.should eq '-i -f \"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com --'
+      destinations.should eq '\"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com'
     end
     mail.deliver!
   end
