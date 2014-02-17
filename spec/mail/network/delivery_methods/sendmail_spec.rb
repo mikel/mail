@@ -24,17 +24,14 @@ describe Mail::Sendmail do
   end
 
   it 'sends an email using sendmail' do
-    described_class.should_receive(:call)
-      .with('/usr/sbin/sendmail',
-            '-i -f "roger@test.lindsaar.net" --',
-            '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"',
-            mail.encoded)
+    described_class.should_receive :call do |path|
+      path.should eq '/usr/sbin/sendmail'
+    end
     mail.deliver!
   end
 
   it 'spawns a sendmail process' do
-    described_class.should_receive(:popen)
-      .with('/usr/sbin/sendmail -i -f "roger@test.lindsaar.net" -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net"')
+    described_class.should_receive(:popen).with /\A\/usr\/sbin\/sendmail/
     mail.deliver!
   end
 
@@ -42,21 +39,17 @@ describe Mail::Sendmail do
 
     it 'explicitly passes an envelope From address to sendmail' do
       mail.smtp_envelope_from 'smtp_from@test.lindsaar.net'
-      described_class.should_receive(:call)
-        .with('/usr/sbin/sendmail',
-              '-i -f "smtp_from@test.lindsaar.net" --',
-              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"',
-              mail.encoded)
+      described_class.should_receive :call do |_, arguments|
+        arguments.should include('-f "smtp_from@test.lindsaar.net"')
+      end
       mail.deliver
     end
 
     it 'escapes the From address' do
       mail.from '"from+suffix test"@test.lindsaar.net'
-      described_class.should_receive(:call)
-        .with('/usr/sbin/sendmail',
-              '-i -f "\"from+suffix test\"@test.lindsaar.net" --',
-              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"',
-              mail.encoded)
+      described_class.should_receive :call do |_, arguments|
+        arguments.should eq '-i -f "\"from+suffix test\"@test.lindsaar.net" --'
+      end
       mail.deliver
     end
   end
@@ -65,31 +58,25 @@ describe Mail::Sendmail do
 
     it 'explicitly passes envelope To addresses to sendmail' do
       mail.smtp_envelope_to 'smtp_to@test.lindsaar.net'
-      described_class.should_receive(:call)
-        .with('/usr/sbin/sendmail',
-              '-i -f "roger@test.lindsaar.net" --',
-              '"smtp_to@test.lindsaar.net"',
-              mail.encoded)
+      described_class.should_receive :call do |_, _, destinations|
+        destinations.should eq '"smtp_to@test.lindsaar.net"'
+      end
       mail.deliver
     end
 
     it 'escapes the To address' do
       mail.to '"to+suffix test"@test.lindsaar.net'
-      described_class.should_receive(:call)
-        .with('/usr/sbin/sendmail',
-              '-i -f "roger@test.lindsaar.net" --',
-              '"\"to+suffix test\"@test.lindsaar.net"',
-              mail.encoded)
+      described_class.should_receive :call do |_, _, destinations|
+        destinations.should eq '"\"to+suffix test\"@test.lindsaar.net"'
+      end
       mail.deliver
     end
 
     it 'quotes the destinations to ensure leading -hyphen doesn\'t confuse sendmail' do
       mail.to '-hyphen@test.lindsaar.net'
-      described_class.should_receive(:call)
-        .with('/usr/sbin/sendmail',
-              '-i -f "roger@test.lindsaar.net" --',
-              '"-hyphen@test.lindsaar.net"',
-              mail.encoded)
+      described_class.should_receive :call do |_, _, destinations|
+        destinations.should eq '"-hyphen@test.lindsaar.net"'
+      end
       mail.deliver
     end
   end
@@ -99,11 +86,7 @@ describe Mail::Sendmail do
       delivery_method :sendmail, :arguments => nil
     end
 
-    described_class.should_receive(:call)
-      .with('/usr/sbin/sendmail',
-            ' -f "roger@test.lindsaar.net" --',
-            '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"',
-            mail.encoded)
+    described_class.should_receive :call
     mail.deliver!
   end
 
@@ -111,11 +94,10 @@ describe Mail::Sendmail do
     mail.from '"foo\";touch /tmp/PWNED;\""@blah.com'
     mail.to '"foo\";touch /tmp/PWNED;\""@blah.com'
 
-    described_class.should_receive(:call)
-      .with('/usr/sbin/sendmail',
-            "-i -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
-            %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com"),
-            mail.encoded)
+    described_class.should_receive :call do |_, arguments, destinations|
+      arguments.should eq "-i -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --"
+      destinations.should eq %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com")
+    end
     mail.deliver!
   end
 
