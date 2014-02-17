@@ -108,16 +108,12 @@ describe Mail::Sendmail do
   end
 
   it 'escapes evil haxxor attempts' do
-    Mail.defaults do
-      delivery_method :sendmail, :arguments => nil
-    end
-
     mail.from '"foo\";touch /tmp/PWNED;\""@blah.com'
     mail.to '"foo\";touch /tmp/PWNED;\""@blah.com'
 
     described_class.should_receive(:call)
       .with('/usr/sbin/sendmail',
-            " -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
+            "-i -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
             %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com"),
             mail.encoded)
     mail.deliver!
