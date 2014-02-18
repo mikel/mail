@@ -35,6 +35,13 @@ describe Mail::Sendmail do
     mail.deliver!
   end
 
+  it 'uses the "arguments" setting as option flags for sendmail' do
+    described_class.should_receive :call do |_, arguments|
+      arguments.should include(described_class.new({}).settings[:arguments])
+    end
+    mail.deliver!
+  end
+
   context 'SMTP From' do
 
     it 'explicitly passes an envelope From address to sendmail' do
