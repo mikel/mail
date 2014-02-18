@@ -42,6 +42,13 @@ describe Mail::Sendmail do
     mail.deliver!
   end
 
+  it 'asks sendmail to stop processing flags' do
+    described_class.should_receive :call do |_, arguments|
+      arguments.should match /\ --\z/
+    end
+    mail.deliver!
+  end
+
   context 'SMTP From' do
 
     it 'explicitly passes an envelope From address to sendmail' do
