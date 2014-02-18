@@ -37,12 +37,6 @@ describe Mail::Configuration do
       Mail.delivery_method.settings[:location].should eq "/usr/bin/sendmail"
     end
 
-    it "should configure exim" do
-      Mail.defaults { delivery_method :exim, :location => "/usr/bin/exim" }
-      Mail.delivery_method.class.should eq Mail::Exim
-      Mail.delivery_method.settings[:location].should eq "/usr/bin/exim"
-    end
-
     it "should configure an open SMTP connection" do
       smtp = Net::SMTP.start('127.0.0.1', 25)
       Mail.defaults { delivery_method :smtp_connection, {:connection => smtp} }
