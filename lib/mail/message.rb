@@ -1595,7 +1595,7 @@ module Mail
     end
 
     # Returns an AttachmentsList object, which holds all of the attachments in
-    # the receiver object (either the entier email or a part within) and all
+    # the receiver object (either the entire email or a part within) and all
     # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
