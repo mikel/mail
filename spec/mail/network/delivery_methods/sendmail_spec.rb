@@ -1,222 +1,136 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "sendmail delivery agent" do
-  
-  before(:each) do
+describe Mail::Sendmail do
+
+  let(:from)    { 'roger@test.lindsaar.net' }
+  let(:to)      { 'marcel@test.lindsaar.net, bob@test.lindsaar.net' }
+  let(:subject) { 'some subject' }
+  let(:mail)    { Mail.new({:from => from, :to => to, :subject => subject}) }
+
+  before do
     # Reset all defaults back to original state
     Mail.defaults do
-      delivery_method :smtp, { :address              => "localhost",
+      delivery_method :smtp, { :address              => 'localhost',
                                :port                 => 25,
                                :domain               => 'localhost.localdomain',
                                :user_name            => nil,
                                :password             => nil,
                                :authentication       => nil,
-                               :enable_starttls_auto => true  }
+                               :enable_starttls_auto => true }
+
+      delivery_method :sendmail
     end
   end
 
-  it "should send an email using sendmail" do
-    Mail.defaults do
-      delivery_method :sendmail
+  it 'sends an email using sendmail' do
+    described_class.should_receive :call do |path, _|
+      path.should eq '/usr/sbin/sendmail'
     end
-    
-    mail = Mail.new do
-      from    'roger@test.lindsaar.net'
-      to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
-      subject 'invalid RFC2822'
-    end
-    
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
-                                              '-i -f "roger@test.lindsaar.net" --',
-                                              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
-                                              mail.encoded)
     mail.deliver!
   end
 
-  it "should spawn a sendmail process" do
-    Mail.defaults do
-      delivery_method :sendmail
-    end
-
-    mail = Mail.new do
-      from    'roger@test.lindsaar.net'
-      to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
-      subject 'invalid RFC2822'
-    end
-
-    Mail::Sendmail.should_receive(:popen).with('/usr/sbin/sendmail -i -f "roger@test.lindsaar.net" -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net"')
-
+  it 'spawns a sendmail process' do
+    described_class.should_receive(:popen).with /\A\/usr\/sbin\/sendmail/
     mail.deliver!
   end
 
-  describe 'SMTP From' do
+  it 'uses the "arguments" setting as option flags for sendmail' do
+    described_class.should_receive :call do |_, arguments, _|
+      arguments.should include(described_class.new({}).settings[:arguments])
+    end
+    mail.deliver!
+  end
 
-    it 'should explicitly pass an envelope From address to sendmail' do
-      Mail.defaults do
-        delivery_method :sendmail
+  it 'asks sendmail to stop processing flags' do
+    described_class.should_receive :call do |_, arguments, _|
+      arguments.should match /\ --\z/
+    end
+    mail.deliver!
+  end
+
+  context 'SMTP From' do
+
+    it 'explicitly passes an envelope From address to sendmail' do
+      mail.smtp_envelope_from 'smtp_from@test.lindsaar.net'
+      described_class.should_receive :call do |_, arguments, _|
+        arguments.should include('-f smtp_from@test.lindsaar.net')
       end
-
-      mail = Mail.new do
-        to "to@test.lindsaar.net"
-        from "from@test.lindsaar.net"
-        subject 'Can\'t set the return-path'
-        message_id "<1234@test.lindsaar.net>"
-        body "body"
-
-        smtp_envelope_from 'smtp_from@test.lindsaar.net'
-      end
-
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
-                                                '-i -f "smtp_from@test.lindsaar.net" --',
-                                                '"to@test.lindsaar.net"', 
-                                                mail.encoded)
-
       mail.deliver
-
     end
 
-    it "should escape the From address" do
-      Mail.defaults do
-        delivery_method :sendmail
+    it 'escapes the From address' do
+      mail.from '"from+suffix test"@test.lindsaar.net'
+      described_class.should_receive :call do |_, arguments, _|
+        arguments.should eq  '-i -f \"from\+suffix\ test\"@test.lindsaar.net --'
       end
-
-      mail = Mail.new do
-        to 'to@test.lindsaar.net'
-        from '"from+suffix test"@test.lindsaar.net'
-        subject 'Can\'t set the return-path'
-        message_id '<1234@test.lindsaar.net>'
-        body 'body'
-      end
-
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
-                                                '-i -f "\"from+suffix test\"@test.lindsaar.net" --',
-                                                '"to@test.lindsaar.net"',
-                                                mail.encoded)
       mail.deliver
     end
   end
 
-  describe 'SMTP To' do
+  context 'SMTP To' do
 
-    it 'should explicitly pass envelope To addresses to sendmail' do
-      Mail.defaults do
-        delivery_method :sendmail
+    it 'explicitly passes envelope To addresses to sendmail' do
+      mail.smtp_envelope_to 'smtp_to@test.lindsaar.net'
+      described_class.should_receive :call do |_, _, destinations, _|
+        destinations.should eq 'smtp_to@test.lindsaar.net'
       end
-
-      mail = Mail.new do
-        to "to@test.lindsaar.net"
-        from "from@test.lindsaar.net"
-        subject 'Can\'t set the return-path'
-        message_id "<1234@test.lindsaar.net>"
-        body "body"
-
-        smtp_envelope_to 'smtp_to@test.lindsaar.net'
-      end
-
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
-                                                '-i -f "from@test.lindsaar.net" --',
-                                                '"smtp_to@test.lindsaar.net"',
-                                                mail.encoded)
       mail.deliver
     end
 
-    it "should escape the To address" do
-      Mail.defaults do
-        delivery_method :sendmail
+    it 'escapes the To address' do
+      mail.to '"to+suffix test"@test.lindsaar.net'
+      described_class.should_receive :call do |_, _, destinations, _|
+        destinations.should eq '\"to\+suffix\ test\"@test.lindsaar.net'
       end
-
-      mail = Mail.new do
-        to '"to+suffix test"@test.lindsaar.net'
-        from 'from@test.lindsaar.net'
-        subject 'Can\'t set the return-path'
-        message_id '<1234@test.lindsaar.net>'
-        body 'body'
-      end
-
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
-                                                '-i -f "from@test.lindsaar.net" --',
-                                                '"\"to+suffix test\"@test.lindsaar.net"',
-                                                mail.encoded)
-      mail.deliver
-    end
-
-    it "should quote the destinations to ensure leading -hyphen doesn't confuse sendmail" do
-      Mail.defaults do
-        delivery_method :sendmail
-      end
-
-      mail = Mail.new do
-        to '-hyphen@test.lindsaar.net'
-        from 'from@test.lindsaar.net'
-      end
-
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
-                                                '-i -f "from@test.lindsaar.net" --',
-                                                '"-hyphen@test.lindsaar.net"',
-                                                mail.encoded)
       mail.deliver
     end
   end
 
-  it "should still send an email if the settings have been set to nil" do
+  it 'still sends an email if the arguments setting have been set to nil' do
     Mail.defaults do
       delivery_method :sendmail, :arguments => nil
     end
-    
-    mail = Mail.new do
-      from    'from@test.lindsaar.net'
-      to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
-      subject 'invalid RFC2822'
-    end
-    
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
-                                              ' -f "from@test.lindsaar.net" --',
-                                              '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
-                                              mail.encoded)
+
+    described_class.should_receive :call
     mail.deliver!
   end
 
-  it "should escape evil haxxor attemptes" do
-    Mail.defaults do
-      delivery_method :sendmail, :arguments => nil
+  it 'escapes evil haxxor attempts' do
+    mail.from '"foo\";touch /tmp/PWNED;\""@blah.com'
+    mail.to '"foo\";touch /tmp/PWNED;\""@blah.com'
+
+    described_class.should_receive :call do |_, arguments, destinations, _|
+      arguments.should eq '-i -f \"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com --'
+      destinations.should eq '\"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com'
     end
-    
-    mail = Mail.new do
-      from    '"foo\";touch /tmp/PWNED;\""@blah.com'
-      to      '"foo\";touch /tmp/PWNED;\""@blah.com'
-      subject 'invalid RFC2822'
-    end
-    
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
-                                              " -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
-                                              %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com"), 
-                                              mail.encoded)
     mail.deliver!
   end
 
-  it "should raise an error if no sender is defined" do
+  it 'raises an error if no sender is defined' do
     Mail.defaults do
       delivery_method :test
     end
+
     lambda do
       Mail.deliver do
-        to "to@somemail.com"
-        subject "Email with no sender"
-        body "body"
+        to 'to@somemail.com'
+        subject 'Email with no sender'
+        body 'body'
       end
     end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
   end
 
-  it "should raise an error if no recipient if defined" do
+  it 'raises an error if no recipient is defined' do
     Mail.defaults do
       delivery_method :test
     end
+
     lambda do
       Mail.deliver do
-        from "from@somemail.com"
-        subject "Email with no recipient"
-        body "body"
+        from 'from@somemail.com'
+        subject 'Email with no recipient'
+        body 'body'
       end
     end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
   end

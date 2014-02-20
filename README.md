@@ -276,15 +276,6 @@ Mail.defaults do
 end
 ```
 
-
-Exim requires its own delivery manager, and can be used like so:
-
-```ruby
-mail.delivery_method :exim, :location => "/usr/bin/exim"
-
-mail.deliver
-```
-
 ### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>

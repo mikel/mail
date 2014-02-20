@@ -4,7 +4,6 @@ module Mail
   register_autoload :SMTP, 'mail/network/delivery_methods/smtp'
   register_autoload :FileDelivery, 'mail/network/delivery_methods/file_delivery'
   register_autoload :Sendmail, 'mail/network/delivery_methods/sendmail'
-  register_autoload :Exim, 'mail/network/delivery_methods/exim'
   register_autoload :SMTPConnection, 'mail/network/delivery_methods/smtp_connection'
   register_autoload :TestMailer, 'mail/network/delivery_methods/test_mailer'
 
