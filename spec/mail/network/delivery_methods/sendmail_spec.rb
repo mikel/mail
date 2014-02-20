@@ -24,7 +24,7 @@ describe Mail::Sendmail do
   end
 
   it 'sends an email using sendmail' do
-    described_class.should_receive :call do |path|
+    described_class.should_receive :call do |path, _|
       path.should eq '/usr/sbin/sendmail'
     end
     mail.deliver!
@@ -36,14 +36,14 @@ describe Mail::Sendmail do
   end
 
   it 'uses the "arguments" setting as option flags for sendmail' do
-    described_class.should_receive :call do |_, arguments|
+    described_class.should_receive :call do |_, arguments, _|
       arguments.should include(described_class.new({}).settings[:arguments])
     end
     mail.deliver!
   end
 
   it 'asks sendmail to stop processing flags' do
-    described_class.should_receive :call do |_, arguments|
+    described_class.should_receive :call do |_, arguments, _|
       arguments.should match /\ --\z/
     end
     mail.deliver!
@@ -53,7 +53,7 @@ describe Mail::Sendmail do
 
     it 'explicitly passes an envelope From address to sendmail' do
       mail.smtp_envelope_from 'smtp_from@test.lindsaar.net'
-      described_class.should_receive :call do |_, arguments|
+      described_class.should_receive :call do |_, arguments, _|
         arguments.should include('-f smtp_from@test.lindsaar.net')
       end
       mail.deliver
@@ -61,7 +61,7 @@ describe Mail::Sendmail do
 
     it 'escapes the From address' do
       mail.from '"from+suffix test"@test.lindsaar.net'
-      described_class.should_receive :call do |_, arguments|
+      described_class.should_receive :call do |_, arguments, _|
         arguments.should eq  '-i -f \"from\+suffix\ test\"@test.lindsaar.net --'
       end
       mail.deliver
@@ -72,7 +72,7 @@ describe Mail::Sendmail do
 
     it 'explicitly passes envelope To addresses to sendmail' do
       mail.smtp_envelope_to 'smtp_to@test.lindsaar.net'
-      described_class.should_receive :call do |_, _, destinations|
+      described_class.should_receive :call do |_, _, destinations, _|
         destinations.should eq 'smtp_to@test.lindsaar.net'
       end
       mail.deliver
@@ -80,7 +80,7 @@ describe Mail::Sendmail do
 
     it 'escapes the To address' do
       mail.to '"to+suffix test"@test.lindsaar.net'
-      described_class.should_receive :call do |_, _, destinations|
+      described_class.should_receive :call do |_, _, destinations, _|
         destinations.should eq '\"to\+suffix\ test\"@test.lindsaar.net'
       end
       mail.deliver
@@ -100,7 +100,7 @@ describe Mail::Sendmail do
     mail.from '"foo\";touch /tmp/PWNED;\""@blah.com'
     mail.to '"foo\";touch /tmp/PWNED;\""@blah.com'
 
-    described_class.should_receive :call do |_, arguments, destinations|
+    described_class.should_receive :call do |_, arguments, destinations, _|
       arguments.should eq '-i -f \"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com --'
       destinations.should eq '\"foo\\\\\"\;touch\ /tmp/PWNED\;\\\\\"\"@blah.com'
     end
