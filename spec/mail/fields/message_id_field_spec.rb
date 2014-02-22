@@ -57,27 +57,27 @@ describe Mail::MessageIdField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::MessageIdField.new("<1234@test.lindsaar.net>") }.should_not raise_error
+      expect(doing { Mail::MessageIdField.new("<1234@test.lindsaar.net>") }).not_to raise_error
     end
 
     it "should accept a string with the field name" do
       m = Mail::MessageIdField.new('Message-ID: <1234@test.lindsaar.net>')
-      m.name.should eq 'Message-ID'
-      m.value.should eq '<1234@test.lindsaar.net>'
-      m.message_id.should eq '1234@test.lindsaar.net'
+      expect(m.name).to eq 'Message-ID'
+      expect(m.value).to eq '<1234@test.lindsaar.net>'
+      expect(m.message_id).to eq '1234@test.lindsaar.net'
     end
 
     it "should accept a string without the field name" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.name.should eq 'Message-ID'
-      m.value.should eq '<1234@test.lindsaar.net>'
-      m.message_id.should eq '1234@test.lindsaar.net'
+      expect(m.name).to eq 'Message-ID'
+      expect(m.value).to eq '<1234@test.lindsaar.net>'
+      expect(m.message_id).to eq '1234@test.lindsaar.net'
     end
 
     it "should accept a nil value and generate a message_id" do
       m = Mail::MessageIdField.new(nil)
-      m.name.should eq 'Message-ID'
-      m.value.should_not be_nil
+      expect(m.name).to eq 'Message-ID'
+      expect(m.value).not_to be_nil
     end
 
   end
@@ -86,17 +86,17 @@ describe Mail::MessageIdField do
 
     it "should not accept a string with multiple message IDs but only return the first" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
-      m.name.should eq 'Message-ID'
-      m.to_s.should eq '<1234@test.lindsaar.net>'
-      m.message_id.should eq '1234@test.lindsaar.net'
-      m.message_ids.should eq ['1234@test.lindsaar.net']
+      expect(m.name).to eq 'Message-ID'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
+      expect(m.message_id).to eq '1234@test.lindsaar.net'
+      expect(m.message_ids).to eq ['1234@test.lindsaar.net']
     end
 
     it "should change the message id if given a new message id" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should eq '<1234@test.lindsaar.net>'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
       m.value = '<4567@test.lindsaar.net>'
-      m.to_s.should eq '<4567@test.lindsaar.net>'
+      expect(m.to_s).to eq '<4567@test.lindsaar.net>'
     end
 
   end
@@ -104,36 +104,36 @@ describe Mail::MessageIdField do
   describe "instance methods" do
     it "should provide to_s" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should eq '<1234@test.lindsaar.net>'
-      m.message_id.to_s.should eq '1234@test.lindsaar.net'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
+      expect(m.message_id.to_s).to eq '1234@test.lindsaar.net'
     end
 
     it "should provide encoded" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.encoded.should eq "Message-ID: <1234@test.lindsaar.net>\r\n"
+      expect(m.encoded).to eq "Message-ID: <1234@test.lindsaar.net>\r\n"
     end
 
     it "should provide decoded" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.decoded.should eq "<1234@test.lindsaar.net>"
+      expect(m.decoded).to eq "<1234@test.lindsaar.net>"
     end
     
     it "should respond to :responsible_for?" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
-      m.should respond_to(:responsible_for?)
+      expect(m).to respond_to(:responsible_for?)
     end
   end
 
   describe "generating a message id" do
     it "should generate a message ID if it has no value" do
       m = Mail::MessageIdField.new
-      m.message_id.should_not be_blank
+      expect(m.message_id).not_to be_blank
     end
     
     it "should generate a random message ID" do
       m = Mail::MessageIdField.new
       1.upto(100) do
-        m.message_id.should_not == Mail::MessageIdField.new.message_id
+        expect(m.message_id).not_to eq(Mail::MessageIdField.new.message_id)
       end
     end
   end
@@ -141,7 +141,7 @@ describe Mail::MessageIdField do
   describe "weird message IDs" do
     it "should be able to parse <000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>" do
       m = Mail::MessageIdField.new('<000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>')
-      m.message_id.should eq '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
+      expect(m.message_id).to eq '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
     end
   end
 end

@@ -40,29 +40,29 @@ describe Mail::ContentTransferEncodingField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ContentTransferEncodingField.new("Content-Transfer-Encoding: 7bit") }.should_not raise_error
+      expect(doing { Mail::ContentTransferEncodingField.new("Content-Transfer-Encoding: 7bit") }).not_to raise_error
     end
 
     it "should accept a string with the field name" do
       t = Mail::ContentTransferEncodingField.new('Content-Transfer-Encoding: 7bit')
-      t.name.should eq 'Content-Transfer-Encoding'
-      t.value.should eq '7bit'
+      expect(t.name).to eq 'Content-Transfer-Encoding'
+      expect(t.value).to eq '7bit'
     end
 
     it "should accept a string without the field name" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.name.should eq 'Content-Transfer-Encoding'
-      t.value.should eq '7bit'
+      expect(t.name).to eq 'Content-Transfer-Encoding'
+      expect(t.value).to eq '7bit'
     end
 
     it "should render an encoded field" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.encoded.should eq "Content-Transfer-Encoding: 7bit\r\n"
+      expect(t.encoded).to eq "Content-Transfer-Encoding: 7bit\r\n"
     end
 
     it "should render a decoded field" do
       t = Mail::ContentTransferEncodingField.new('7bit')
-      t.decoded.should eq '7bit'
+      expect(t.decoded).to eq '7bit'
     end
 
   end
@@ -72,55 +72,55 @@ describe Mail::ContentTransferEncodingField do
     it "should return an encoding string" do
       ["7bit", "8bit", "binary", 'quoted-printable', "base64"].each do |encoding|
         t = Mail::ContentTransferEncodingField.new(encoding)
-        t.encoding.should eq encoding
+        expect(t.encoding).to eq encoding
       end
     end
 
     it "should treat 7bits/7-bit and 8bits/8-bit as 7bit and 8bit" do
       %w(7bits 7-bit).each do |mechanism|
-        Mail::ContentTransferEncodingField.new(mechanism).encoding.should eq '7bit'
+        expect(Mail::ContentTransferEncodingField.new(mechanism).encoding).to eq '7bit'
       end
 
       %w(8bits 8-bit).each do |mechanism|
-        Mail::ContentTransferEncodingField.new(mechanism).encoding.should eq '8bit'
+        expect(Mail::ContentTransferEncodingField.new(mechanism).encoding).to eq '8bit'
       end
     end
     
     it "should handle any valid 'x-token' value" do
       t = Mail::ContentTransferEncodingField.new('X-This-is_MY-encoding')
-      t.encoding.should eq 'x-this-is_my-encoding'
+      expect(t.encoding).to eq 'x-this-is_my-encoding'
     end
     
     it "should handle an x-encoding" do
       t = Mail::ContentTransferEncodingField.new("x-uuencode")
-      t.encoding.should eq "x-uuencode"
+      expect(t.encoding).to eq "x-uuencode"
     end
 
     it "should handle an ietf encoding (practically, any token)" do
       t = Mail::ContentTransferEncodingField.new("ietf-token")
-      t.encoding.should eq "ietf-token"
+      expect(t.encoding).to eq "ietf-token"
     end
 
     it "should replace the existing value" do
       t = Mail::ContentTransferEncodingField.new("7bit")
       t.parse("quoted-printable")
-      t.encoding.should eq 'quoted-printable'
+      expect(t.encoding).to eq 'quoted-printable'
     end
 
     it "should raise an error on bogus values" do
-      doing { Mail::ContentTransferEncodingField.new("broken@foo") }.should raise_error
+      expect(doing { Mail::ContentTransferEncodingField.new("broken@foo") }).to raise_error
     end 
     
     it "should handle an empty content transfer encoding" do
       t = Mail::ContentTransferEncodingField.new("")
-      t.encoding.should eq ""
+      expect(t.encoding).to eq ""
     end
 
     it "should handle a hyphen" do
       t = Mail::ContentTransferEncodingField.new('7-bit')
-      t.decoded.should eq '7bit'
+      expect(t.decoded).to eq '7bit'
       t = Mail::ContentTransferEncodingField.new('8-bit')
-      t.decoded.should eq '8bit'
+      expect(t.decoded).to eq '8bit'
     end
 
   end

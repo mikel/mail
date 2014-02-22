@@ -8,23 +8,23 @@ describe Mail::ResentSenderField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ResentSenderField.new("Resent-Sender: Mikel") }.should_not raise_error
+      expect(doing { Mail::ResentSenderField.new("Resent-Sender: Mikel") }).not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::ResentSenderField.included_modules.should include(Mail::CommonAddress) 
+      expect(Mail::ResentSenderField.included_modules).to include(Mail::CommonAddress) 
     end
 
     it "should accept a string with the field name" do
       t = Mail::ResentSenderField.new('Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should eq 'Resent-Sender'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      expect(t.name).to eq 'Resent-Sender'
+      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should eq 'Resent-Sender'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      expect(t.name).to eq 'Resent-Sender'
+      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
   end
@@ -34,22 +34,22 @@ describe Mail::ResentSenderField do
   describe "instance methods" do
     it "should return an address" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.formatted.should eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
+      expect(t.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
     end
 
     it "should return two addresses" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.address.to_s.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      expect(t.address.to_s).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the formatted line on to_s" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
     
     it "should return the encoded line" do
       t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.encoded.should eq "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
+      expect(t.encoded).to eq "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
     end
     
   end
