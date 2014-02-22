@@ -37,7 +37,7 @@ module Mail
         # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
         # single email message... please show me a use case and I'll put more work into this method,
         # in the meantime, it works :)
-        [get_order_value(a, order), i += 1]
+        get_order_value(a, order) << (i += 1)
       end
       self.clear
       sorted.each { |p| self << p }
@@ -46,11 +46,10 @@ module Mail
   private
 
     def get_order_value(part, order)
-      if part.respond_to?(:content_type) && !part[:content_type].nil?
-        order.index(part[:content_type].string.downcase) || 10000
-      else
-        10000
-      end
+      is_attachment    = part.respond_to?(:attachment?)  && part.attachment?
+      has_content_type = part.respond_to?(:content_type) && !part[:content_type].nil?
+
+      [is_attachment ? 1 : 0, (has_content_type ? order.index(part[:content_type].string.downcase) : nil) || 10000]
     end
 
   end
