@@ -34,7 +34,7 @@ describe "have_sent_email" do
     context "when no e-mail has been sent" do
       before(:each) do
         Mail::TestMailer.deliveries.clear
-        Mail::TestMailer.deliveries.should be_empty
+        expect(Mail::TestMailer.deliveries).to be_empty
       end
 
       it { should_not have_sent_email }
@@ -43,7 +43,7 @@ describe "have_sent_email" do
     context "when e-mail has been sent" do
       before(:each) do
         send_test_email
-        Mail::TestMailer.deliveries.should_not be_empty
+        expect(Mail::TestMailer.deliveries).not_to be_empty
       end
 
       it { should have_sent_email }

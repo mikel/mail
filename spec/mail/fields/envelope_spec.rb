@@ -25,18 +25,18 @@ describe Mail::Envelope do
   #        an end-of-line marker.
 
   it "should initialize" do
-    doing { Mail::Envelope.new('mikel@test.lindsaar.net Mon May  2 16:07:05 2005') }.should_not raise_error
+    expect(doing { Mail::Envelope.new('mikel@test.lindsaar.net Mon May  2 16:07:05 2005') }).not_to raise_error
   end
 
   describe "accessor methods" do
     it "should return the address" do
       envelope = Mail::Envelope.new("mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009")
-      envelope.from.should eq "mikel@test.lindsaar.net"
+      expect(envelope.from).to eq "mikel@test.lindsaar.net"
     end
 
     it "should return the date_time" do
       envelope = Mail::Envelope.new("mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009")
-      envelope.date.should eq ::DateTime.parse("Mon Aug 17 00:39:21 2009")
+      expect(envelope.date).to eq ::DateTime.parse("Mon Aug 17 00:39:21 2009")
     end
   end
 

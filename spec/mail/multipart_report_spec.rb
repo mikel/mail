@@ -5,39 +5,39 @@ describe "multipart/report emails" do
   
   it "should know if it is a multipart report type" do
     mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-    mail.should be_multipart_report
+    expect(mail).to be_multipart_report
   end
   
   describe "delivery-status reports" do
     
     it "should know if it is a deliver-status report" do
       mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-      mail.should be_delivery_status_report
+      expect(mail).to be_delivery_status_report
     end
 
     it "should find its message/delivery-status part" do
       mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
-      mail.delivery_status_part.should_not be_nil
+      expect(mail.delivery_status_part).not_to be_nil
     end
     
     it "should handle a report that has a human readable message/delivery-status" do
       mail = Mail.read(fixture('emails', 'multipart_report_emails', 'multipart_report_multiple_status.eml'))
-      mail.should be_bounced
+      expect(mail).to be_bounced
     end
 
     describe "multipart reports with more than one address" do
       it "should not crash" do
         mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
         mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
-        doing { mail1.bounced? }.should_not raise_error
-        doing { mail2.bounced? }.should_not raise_error
+        expect(doing { mail1.bounced? }).not_to raise_error
+        expect(doing { mail2.bounced? }).not_to raise_error
       end
 
       it "should not know that a multi address email was bounced" do
         mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
         mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
-        mail1.should be_bounced
-        mail2.should be_bounced
+        expect(mail1).to be_bounced
+        expect(mail2).to be_bounced
       end
     end
 
@@ -48,31 +48,31 @@ describe "multipart/report emails" do
       end
       
       it "should be bounced" do
-        @mail.should_not be_bounced
+        expect(@mail).not_to be_bounced
       end
       
       it "should say action 'delayed'" do
-        @mail.action.should eq 'delayed'
+        expect(@mail.action).to eq 'delayed'
       end
       
       it "should give a final recipient" do
-        @mail.final_recipient.should eq 'RFC822; fraser@oooooooo.com.au'
+        expect(@mail.final_recipient).to eq 'RFC822; fraser@oooooooo.com.au'
       end
       
       it "should give an error code" do
-        @mail.error_status.should eq '4.2.2'
+        expect(@mail.error_status).to eq '4.2.2'
       end
       
       it "should give a diagostic code" do
-        @mail.diagnostic_code.should eq 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
+        expect(@mail.diagnostic_code).to eq 'SMTP; 452 4.2.2 <fraser@oooooooo.com.au>... Mailbox full'
       end
       
       it "should give a remote-mta" do
-        @mail.remote_mta.should eq 'DNS; mail.oooooooo.com.au'
+        expect(@mail.remote_mta).to eq 'DNS; mail.oooooooo.com.au'
       end
       
       it "should be retryable" do
-        @mail.should be_retryable
+        expect(@mail).to be_retryable
       end
     end
 
@@ -83,31 +83,31 @@ describe "multipart/report emails" do
       end
       
       it "should be bounced" do
-        @mail.should be_bounced
+        expect(@mail).to be_bounced
       end
       
       it "should say action 'failed'" do
-        @mail.action.should eq 'failed'
+        expect(@mail.action).to eq 'failed'
       end
       
       it "should give a final recipient" do
-        @mail.final_recipient.should eq 'RFC822; edwin@zzzzzzz.com'
+        expect(@mail.final_recipient).to eq 'RFC822; edwin@zzzzzzz.com'
       end
       
       it "should give an error code" do
-        @mail.error_status.should eq '5.3.0'
+        expect(@mail.error_status).to eq '5.3.0'
       end
       
       it "should give a diagostic code" do
-        @mail.diagnostic_code.should eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
+        expect(@mail.diagnostic_code).to eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
       end
       
       it "should give a remote-mta" do
-        @mail.remote_mta.should eq 'DNS; mail.zzzzzz.com'
+        expect(@mail.remote_mta).to eq 'DNS; mail.zzzzzz.com'
       end
       
       it "should be retryable" do
-        @mail.should_not be_retryable
+        expect(@mail).not_to be_retryable
       end
     end
 

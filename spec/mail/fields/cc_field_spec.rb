@@ -11,23 +11,23 @@ describe Mail::CcField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::CcField.new("Cc: Mikel") }.should_not raise_error
+      expect(doing { Mail::CcField.new("Cc: Mikel") }).not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
-      Mail::CcField.included_modules.should include(Mail::CommonAddress) 
+      expect(Mail::CcField.included_modules).to include(Mail::CommonAddress) 
     end
 
     it "should accept a string with the field name" do
       t = Mail::CcField.new('Cc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should eq 'Cc'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      expect(t.name).to eq 'Cc'
+      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      t.name.should eq 'Cc'
-      t.value.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
+      expect(t.name).to eq 'Cc'
+      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
   end
@@ -37,40 +37,40 @@ describe Mail::CcField do
   describe "instance methods" do
     it "should return an address" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      t.formatted.should eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
+      expect(t.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
     end
 
     it "should return two addresses" do
       t = Mail::CcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, Ada Lindsaar <ada@test.lindsaar.net>')
-      t.formatted.first.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-      t.addresses.last.should eq 'ada@test.lindsaar.net'
+      expect(t.formatted.first).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+      expect(t.addresses.last).to eq 'ada@test.lindsaar.net'
     end
 
     it "should return one address and a group" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.addresses[0].should eq 'sam@me.com'
-      t.addresses[1].should eq 'mikel@me.com'
-      t.addresses[2].should eq 'bob@you.com'
+      expect(t.addresses[0]).to eq 'sam@me.com'
+      expect(t.addresses[1]).to eq 'mikel@me.com'
+      expect(t.addresses[2]).to eq 'bob@you.com'
     end
     
     it "should return the formatted line on to_s" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.value.should eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
+      expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
     it "should return the encoded line for one address" do
       t = Mail::CcField.new('sam@me.com')
-      t.encoded.should eq "Cc: sam@me.com\r\n"
+      expect(t.encoded).to eq "Cc: sam@me.com\r\n"
     end
     
     it "should return the encoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.encoded.should eq "Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
+      expect(t.encoded).to eq "Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
     
     it "should return the decoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
-      t.decoded.should eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
+      expect(t.decoded).to eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
     
   end

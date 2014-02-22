@@ -7,7 +7,7 @@ describe "PartsList" do
     p = Mail::PartsList.new
     p << 2
     p << 1
-    p.sort.class.should eq Mail::PartsList
+    expect(p.sort.class).to eq Mail::PartsList
   end
 
   it "should not fail if we do not have a content_type" do
@@ -32,6 +32,6 @@ describe "PartsList" do
     p << no_content_type_part
     p << plain_text_part
     p << html_text_part
-    p.sort!(order).should eq [plain_text_part, html_text_part, no_content_type_part]
+    expect(p.sort!(order)).to eq [plain_text_part, html_text_part, no_content_type_part]
   end
 end

@@ -30,37 +30,37 @@ describe Mail::ContentIdField do
   describe "initialization" do
 
     it "should initialize" do
-      doing { Mail::ContentIdField.new("<1234@test.lindsaar.net>") }.should_not raise_error
+      expect(doing { Mail::ContentIdField.new("<1234@test.lindsaar.net>") }).not_to raise_error
     end
 
     it "should accept a string with the field name" do
       c = Mail::ContentIdField.new('Content-ID: <1234@test.lindsaar.net>')
-      c.name.should eq 'Content-ID'
-      c.value.should eq '<1234@test.lindsaar.net>'
-      c.content_id.should eq '1234@test.lindsaar.net'
+      expect(c.name).to eq 'Content-ID'
+      expect(c.value).to eq '<1234@test.lindsaar.net>'
+      expect(c.content_id).to eq '1234@test.lindsaar.net'
     end
 
     it "should accept a string without the field name" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.name.should eq 'Content-ID'
-      m.value.should eq '<1234@test.lindsaar.net>'
-      m.content_id.should eq '1234@test.lindsaar.net'
+      expect(m.name).to eq 'Content-ID'
+      expect(m.value).to eq '<1234@test.lindsaar.net>'
+      expect(m.content_id).to eq '1234@test.lindsaar.net'
     end
 
     it "should accept a nil value and generate a content_id" do
       m = Mail::ContentIdField.new(nil)
-      m.name.should eq 'Content-ID'
-      m.value.should_not be_nil
+      expect(m.name).to eq 'Content-ID'
+      expect(m.value).not_to be_nil
     end
 
     it "should allow it to be encoded" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.encoded.should eq "Content-ID: <1234@test.lindsaar.net>\r\n"
+      expect(m.encoded).to eq "Content-ID: <1234@test.lindsaar.net>\r\n"
     end
 
     it "should allow it to be decoded" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.decoded.should eq "<1234@test.lindsaar.net>"
+      expect(m.decoded).to eq "<1234@test.lindsaar.net>"
     end
 
   end
@@ -69,16 +69,16 @@ describe Mail::ContentIdField do
 
     it "should not accept a string with multiple message IDs but only return the first" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
-      m.name.should eq 'Content-ID'
-      m.to_s.should eq '<1234@test.lindsaar.net>'
-      m.content_id.should eq '1234@test.lindsaar.net'
+      expect(m.name).to eq 'Content-ID'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
+      expect(m.content_id).to eq '1234@test.lindsaar.net'
     end
 
     it "should change the message id if given a new message id" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should eq '<1234@test.lindsaar.net>'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
       m.value = '<4567@test.lindsaar.net>'
-      m.to_s.should eq '<4567@test.lindsaar.net>'
+      expect(m.to_s).to eq '<4567@test.lindsaar.net>'
     end
 
   end
@@ -86,31 +86,31 @@ describe Mail::ContentIdField do
   describe "instance methods" do
     it "should provide to_s" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.to_s.should eq '<1234@test.lindsaar.net>'
-      m.content_id.to_s.should eq '1234@test.lindsaar.net'
+      expect(m.to_s).to eq '<1234@test.lindsaar.net>'
+      expect(m.content_id.to_s).to eq '1234@test.lindsaar.net'
     end
 
     it "should provide encoded" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.encoded.should eq "Content-ID: <1234@test.lindsaar.net>\r\n"
+      expect(m.encoded).to eq "Content-ID: <1234@test.lindsaar.net>\r\n"
     end
     
     it "should respond to :responsible_for?" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
-      m.should respond_to(:responsible_for?)
+      expect(m).to respond_to(:responsible_for?)
     end
   end
 
   describe "generating a message id" do
     it "should generate a message ID if it has no value" do
       m = Mail::ContentIdField.new
-      m.content_id.should_not be_blank
+      expect(m.content_id).not_to be_blank
     end
     
     it "should generate a random message ID" do
       m = Mail::ContentIdField.new
       1.upto(100) do
-        m.content_id.should_not == Mail::ContentIdField.new.content_id
+        expect(m.content_id).not_to eq(Mail::ContentIdField.new.content_id)
       end
     end
   end
