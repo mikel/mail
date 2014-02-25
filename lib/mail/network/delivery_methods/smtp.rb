@@ -77,17 +77,17 @@ module Mail
     include Mail::CheckDeliveryParams
 
     def initialize(values)
-      self.settings = {:address => "localhost",
-                       :port => 25,
-                       :domain => 'localhost.localdomain',
-                       :user_name => nil,
-                       :password => nil,
-                       :authentication => nil,
+      self.settings = {:address              => "localhost",
+                       :port                 => 25,
+                       :domain               => 'localhost.localdomain',
+                       :user_name            => nil,
+                       :password             => nil,
+                       :authentication       => nil,
                        :enable_starttls_auto => true,
-                       :openssl_verify_mode => nil,
-                       :ssl => nil,
-                       :tls => nil
-      }.merge!(values)
+                       :openssl_verify_mode  => nil,
+                       :ssl                  => nil,
+                       :tls                  => nil
+                      }.merge!(values)
     end
 
     attr_accessor :settings
