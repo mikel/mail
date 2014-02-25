@@ -122,16 +122,6 @@ module Mail
 
       @mark_for_delete = false
 
-      options = args.pop if args.length > 1 && args.last.respond_to?(:each_pair)
-      if options
-        @folder = options[:folder]
-        @validity = options[:validity]
-        @uid = options[:uid]
-        @flags = options[:flags]
-        @message_size = options[:message_size]
-        @message_date = options[:message_date]
-      end
-
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -216,9 +206,6 @@ module Mail
     # This setting is ignored by mail (though still available as a flag) if you
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
-
-    # Message mailbox properties for sync
-    attr_reader :folder, :validity, :uid, :flags, :message_size, :message_date
 
     def register_for_delivery_notification(observer)
       STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
@@ -466,22 +453,6 @@ module Mail
     # invalid emails to try and get email parsers to give up parsing them.
     def errors
       header.errors
-    end
-
-    # Returns a sha that can be used to identify the message
-    #
-    def message_sha
-      Digest::SHA2.hexdigest "#{message_size}#{message_date}#{message_id}"
-    end
-
-    # Returns a sha that can be used to identify the message body
-    #
-    def body_sha
-      if raw_source
-        Digest::SHA2.hexdigest(raw_source)
-      else
-        Digest::SHA2.hexdigest(body.encoded)
-      end
     end
 
     # Returns the Bcc value of the mail object as an array of strings of
