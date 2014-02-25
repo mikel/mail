@@ -122,6 +122,16 @@ module Mail
 
       @mark_for_delete = false
 
+      options = args.pop if args.length > 1 && args.last.respond_to?(:each_pair)
+      if options
+        @folder = options[:folder]
+        @validity = options[:validity]
+        @uid = options[:uid]
+        @flags = options[:flags]
+        @message_size = options[:message_size]
+        @message_date = options[:message_date]
+      end
+
       if args.flatten.first.respond_to?(:each_pair)
         init_with_hash(args.flatten.first)
       else
@@ -207,6 +217,9 @@ module Mail
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
 
+    # Message mailbox properties for sync
+    attr_reader :folder, :validity, :uid, :flags, :message_size, :message_date
+
     def register_for_delivery_notification(observer)
       STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
       Mail.register_observer(observer)
@@ -226,21 +239,25 @@ module Mail
     #
     #  mail = Mail.read('file.eml')
     #  mail.deliver
-    def deliver
-      inform_interceptors
-      if delivery_handler
-        delivery_handler.deliver_mail(self) { do_delivery }
+    def deliver(freight = false)
+      if freight
+        add_to_freight_container
       else
-        do_delivery
+        inform_interceptors
+        if delivery_handler
+          delivery_handler.deliver_mail(self) { do_delivery }
+        else
+          do_delivery
+        end
+        inform_observers
       end
-      inform_observers
       self
     end
 
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
     # so use with caution.
     #
-    # It still however fires off the interceptors and calls the observers callbacks if they are defined.
+    # It still however fires off the intercepters and calls the observers callbacks if they are defined.
     #
     # Returns self
     def deliver!
@@ -449,6 +466,22 @@ module Mail
     # invalid emails to try and get email parsers to give up parsing them.
     def errors
       header.errors
+    end
+
+    # Returns a sha that can be used to identify the message
+    #
+    def message_sha
+      Digest::SHA2.hexdigest "#{message_size}#{message_date}#{message_id}"
+    end
+
+    # Returns a sha that can be used to identify the message body
+    #
+    def body_sha
+      if raw_source
+        Digest::SHA2.hexdigest(raw_source)
+      else
+        Digest::SHA2.hexdigest(body.encoded)
+      end
     end
 
     # Returns the Bcc value of the mail object as an array of strings of
@@ -1389,7 +1422,7 @@ module Mail
       header.has_date?
     end
 
-    # Returns true if the message has a Mime-Version field, the field may or may
+    # Returns true if the message has a Date field, the field may or may
     # not have a value, but the field exists or not.
     def has_mime_version?
       header.has_mime_version?
@@ -1595,7 +1628,7 @@ module Mail
     end
 
     # Returns an AttachmentsList object, which holds all of the attachments in
-    # the receiver object (either the entire email or a part within) and all
+    # the receiver object (either the entier email or a part within) and all
     # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
@@ -2010,7 +2043,7 @@ module Mail
       raw_string = raw_source.to_s
       if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = raw_string.sub(match_data[0], "") 
+        self.raw_source = raw_string.sub(match_data[0], "")
       end
     end
 
@@ -2123,6 +2156,14 @@ module Mail
       end
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    # Add mail messages to SMTP temp class var
+    # TODO refactor to not use memory
+    def add_to_freight_container
+      if perform_deliveries
+        Mail::SMTP.freight_container << self
+      end
     end
 
     def do_delivery

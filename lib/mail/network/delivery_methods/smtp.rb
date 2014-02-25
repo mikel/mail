@@ -77,20 +77,58 @@ module Mail
     include Mail::CheckDeliveryParams
 
     def initialize(values)
-      self.settings = { :address              => "localhost",
-                        :port                 => 25,
-                        :domain               => 'localhost.localdomain',
-                        :user_name            => nil,
-                        :password             => nil,
-                        :authentication       => nil,
-                        :enable_starttls_auto => true,
-                        :openssl_verify_mode  => nil,
-                        :ssl                  => nil,
-                        :tls                  => nil
-                      }.merge!(values)
+      self.settings = {:address => "localhost",
+                       :port => 25,
+                       :domain => 'localhost.localdomain',
+                       :user_name => nil,
+                       :password => nil,
+                       :authentication => nil,
+                       :enable_starttls_auto => true,
+                       :openssl_verify_mode => nil,
+                       :ssl => nil,
+                       :tls => nil
+      }.merge!(values)
     end
 
     attr_accessor :settings
+
+    @@freight_container = []  # obviously temporary, we need storage somewhere of serialized Mail::Message objects. MongoDB?
+
+    # temporary
+    def self.freight_container
+      @@freight_container
+    end
+
+    # Setup all mail objects for delivery
+    def prepare_mail
+      self.class.freight_container.map do |mail|
+        smtp_from, smtp_to, message = check_delivery_params(mail)
+        {from: smtp_from, to: smtp_to, message: message}
+      end
+    end
+
+    def deliver_freight
+      smtp = Net::SMTP.new(settings[:address], settings[:port])
+      if settings[:tls] || settings[:ssl]
+        if smtp.respond_to?(:enable_tls)
+          smtp.enable_tls(ssl_context)
+        end
+      elsif settings[:enable_starttls_auto]
+        if smtp.respond_to?(:enable_starttls_auto)
+          smtp.enable_starttls_auto(ssl_context)
+        end
+      end
+
+      deliveries = prepare_mail
+
+      responses = []
+      smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp_obj|
+        responses = deliveries.map do |mail|
+          smtp_obj.sendmail(mail[:message], mail[:from], mail[:to])
+        end
+      end
+      puts responses
+    end
 
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
@@ -119,7 +157,7 @@ module Mail
         self
       end
     end
-    
+
 
     private
 
