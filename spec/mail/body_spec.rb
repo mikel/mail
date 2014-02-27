@@ -118,7 +118,6 @@ describe Mail::Body do
   end
 
   describe "splitting up a multipart document" do
-
     it "should store the boundary passed in" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
@@ -199,6 +198,12 @@ describe Mail::Body do
       new_body.split!('------=_MIMEPART')
       new_body.parts.length.should eq 2
       new_body.preamble.should eq "this is some text"
+    end
+
+    it "should split if boundary is not set" do
+      multipart_body = "\n\n--\nDate: Thu, 01 Aug 2013 15:14:20 +0100\nMime-Version: 1.0\nContent-Type: text/plain\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment;\n filename=\"\"\nContent-ID: <51fa6d3cac796_d84e3fe5a58349e025683@local.mail>\n\n\n\n----"
+      body = Mail::Body.new(multipart_body)
+      doing { body.split!(nil) }.should_not raise_error
     end
 
   end
@@ -331,6 +336,28 @@ describe Mail::Body do
       body.parts[0].parts[2].content_type.should eq "text/html"
     end
 
+    it "should maintain the relative order of the parts with the same content-type as they are added" do
+      body = Mail::Body.new('');
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML_1")
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG_1\r\n\r\nsdkjskjdksjdkjsd")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text_1")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched_1")
+      body << Mail::Part.new("content-type: text/html\r\nsubject: HTML_2")
+      body << Mail::Part.new("content-type: text/plain\r\nsubject: Plain Text_2")
+      body << Mail::Part.new("content-type: image/jpeg\r\nsubject: JPGEG_2\r\n\r\nsdkjskjdksjdkjsd")
+      body << Mail::Part.new("content-type: text/enriched\r\nsubject: Enriched_2")
+      body.parts.length.should eq 8
+      body.should be_multipart
+      body.sort_parts!
+      body.parts[0].subject.should eq "Plain Text_1"
+      body.parts[1].subject.should eq "Plain Text_2"
+      body.parts[2].subject.should eq "Enriched_1"
+      body.parts[3].subject.should eq "Enriched_2"
+      body.parts[4].subject.should eq "HTML_1"
+      body.parts[5].subject.should eq "HTML_2"
+      body.parts[6].subject.should eq "JPGEG_1"
+      body.parts[7].subject.should eq "JPGEG_2"
+    end
   end
 
   describe "matching" do

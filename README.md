@@ -186,6 +186,8 @@ mail['from'] = 'mikel@test.lindsaar.net'
 mail[:to]    = 'you@test.lindsaar.net'
 mail.subject = 'This is a test email'
 
+mail.header['X-Custom-Header'] = 'custom value'
+
 mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
 ```
 
@@ -228,10 +230,10 @@ easy as:
 
 ```ruby
 Mail.deliver do
-   from    'me@test.lindsaar.net'
-   to      'you@test.lindsaar.net'
-   subject 'Here is the image you wanted'
-   body    File.read('body.txt')
+  from     'me@test.lindsaar.net'
+  to       'you@test.lindsaar.net'
+  subject  'Here is the image you wanted'
+  body     File.read('body.txt')
   add_file '/full/path/to/somefile.png'
 end
 ```
@@ -265,6 +267,15 @@ mail.delivery_method :sendmail
 
 mail.deliver
 ```
+
+Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher))
+```ruby
+
+Mail.defaults do
+  delivery_method :smtp, address: "localhost", port: 1025
+end
+```
+
 
 Exim requires its own delivery manager, and can be used like so:
 
@@ -319,7 +330,7 @@ emails.length #=> LOTS!
 ```ruby
 mail = Mail.read('/path/to/message.eml')
 
-mail.envelope.from   #=> 'mikel@test.lindsaar.net'
+mail.envelope_from   #=> 'mikel@test.lindsaar.net'
 mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 mail.sender.address  #=> 'mikel@test.lindsaar.net'
 mail.to              #=> 'bob@test.lindsaar.net'
@@ -350,7 +361,7 @@ mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
 Mail generates a tree of parts.  Each message has many or no parts.  Each part
 is another message which can have many or no parts.
 
-A message will only have parts if it is a multipart/mixed or related/mixed
+A message will only have parts if it is a multipart/mixed or multipart/related
 content type and has a boundary defined.
 
 ### Testing and extracting attachments
@@ -363,7 +374,7 @@ mail.attachments.each do | attachment |
     filename = attachment.filename
     begin
       File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
-    rescue Exception => e
+    rescue => e
       puts "Unable to save data for #{filename} because #{e.message}"
     end
   end
@@ -546,7 +557,7 @@ Using Mail with Testing or Spec'ing Libraries
 If mail is part of your system, you'll need a way to test it without actually
 sending emails, the TestMailer can do this for you.
 
-```
+```ruby
 require 'mail'
 => true
 Mail.defaults do
@@ -572,7 +583,7 @@ Mail::TestMailer.deliveries.clear
 
 There is also a set of RSpec matchers stolen fr^H^H^H^H^H^H^H^H inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
 
-```
+```ruby
 Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end

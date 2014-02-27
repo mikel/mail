@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.md", "CONTRIBUTING.md", "CHANGELOG.rdoc", "TODO.rdoc"]
+  s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
   s.add_dependency('mime-types', "~> 1.16")
   s.add_dependency('jruby-openssl') if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'

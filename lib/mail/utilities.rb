@@ -21,7 +21,9 @@ module Mail
         original_encoding = str.encoding
         str.force_encoding('ASCII-8BIT')
         if (PHRASE_UNSAFE === str)
-          dquote(str).force_encoding(original_encoding)
+          quoted_str = dquote(str).force_encoding(original_encoding)
+          str.force_encoding(original_encoding)
+          quoted_str
         else
           str.force_encoding(original_encoding)
         end

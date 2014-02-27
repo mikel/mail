@@ -240,7 +240,7 @@ module Mail
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
     # so use with caution.
     #
-    # It still however fires off the intercepters and calls the observers callbacks if they are defined.
+    # It still however fires off the interceptors and calls the observers callbacks if they are defined.
     #
     # Returns self
     def deliver!
@@ -353,14 +353,15 @@ module Mail
       return false unless other.respond_to?(:encoded)
 
       if self.message_id && other.message_id
-        result = (self.encoded == other.encoded)
+        self.encoded == other.encoded
       else
         self_message_id, other_message_id = self.message_id, other.message_id
-        self.message_id, other.message_id = '<temp@test>', '<temp@test>'
-        result = self.encoded == other.encoded
-        self.message_id = "<#{self_message_id}>" if self_message_id
-        other.message_id = "<#{other_message_id}>" if other_message_id
-        result
+        begin
+          self.message_id, other.message_id = '<temp@test>', '<temp@test>'
+          self.encoded == other.encoded
+        ensure
+          self.message_id, other.message_id = self_message_id, other_message_id
+        end
       end
     end
 
@@ -1388,7 +1389,7 @@ module Mail
       header.has_date?
     end
 
-    # Returns true if the message has a Date field, the field may or may
+    # Returns true if the message has a Mime-Version field, the field may or may
     # not have a value, but the field exists or not.
     def has_mime_version?
       header.has_mime_version?
@@ -1594,7 +1595,7 @@ module Mail
     end
 
     # Returns an AttachmentsList object, which holds all of the attachments in
-    # the receiver object (either the entier email or a part within) and all
+    # the receiver object (either the entire email or a part within) and all
     # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
@@ -1974,8 +1975,9 @@ module Mail
     end
 
     def raw_source=(value)
-      value.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
       @raw_source = value.to_crlf
+      @raw_source.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
+      @raw_source
     end
 
     # see comments to body=. We take data and process it lazily
@@ -2128,7 +2130,7 @@ module Mail
         if perform_deliveries
           delivery_method.deliver!(self)
         end
-      rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+      rescue => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
     end
