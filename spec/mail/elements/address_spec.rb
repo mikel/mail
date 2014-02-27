@@ -171,6 +171,16 @@ describe Mail::Address do
       a.display_name = 'Mikel Lindsaar'
       a.format.should eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
+
+    it "should not modify the display name source during format" do
+      name           = "Zoé"
+      name_copy      = name.dup
+      email          = "zoe@example.com"
+      a              = Mail::Address.new(email)
+      a.display_name = name
+      a.format
+      name.should eq name_copy
+    end
   end
 
   describe "parsing" do
