@@ -1958,6 +1958,8 @@ module Mail
 
   private
 
+    CRLFx2 = "#{CRLF}#{CRLF}"
+    CRLFs_WITH_WSP = "#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})"
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
     #   of the message") followed, optionally, by a body.  The header is a
@@ -1969,7 +1971,7 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(/#{CRLFx2}|#{CRLFs_WITH_WSP}/m, 2)
       self.header = header_part
       self.body   = body_part
     end

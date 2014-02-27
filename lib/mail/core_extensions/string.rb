@@ -11,11 +11,11 @@ class String #:nodoc:
   end
 
   def to_crlf
-    to_str.gsub(CRLF_REGEX, "\r\n")
+    to_str.gsub(CRLF_REGEX, "\r\n".freeze)
   end
 
   def to_lf
-    to_str.gsub(/\r\n|\r/, "\n")
+    to_str.gsub(/\r\n|\r/, "\n".freeze)
   end
 
   unless String.instance_methods(false).map {|m| m.to_sym}.include?(:blank?)

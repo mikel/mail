@@ -125,7 +125,8 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      name = dasherize(name).downcase
+      name = dasherize(name)
+      name.downcase!
       selected = select_field_for(name)
       case
       when selected.length > 1

@@ -14,19 +14,23 @@ module Mail::Parsers
 
       main_type_s = sub_type_s = param_attr_s = param_attr = nil
       qstr_s = qstr = param_val_s = nil
-      actions.each_slice(2) do |action_id, p|
+      until actions.empty?
+        action_id = actions.shift
+        p = actions.shift
         action = Mail::Parsers::Ragel::ACTIONS[action_id]
         case action
 
         # Main Type
         when :main_type_s then main_type_s = p
         when :main_type_e then
-          content_type.main_type = s[main_type_s..(p-1)].downcase
+          content_type.main_type = s[main_type_s..(p-1)]
+          content_type.main_type.downcase!
 
         # Sub Type
         when :sub_type_s then sub_type_s = p
         when :sub_type_e
-          content_type.sub_type = s[sub_type_s..(p-1)].downcase
+          content_type.sub_type = s[sub_type_s..(p-1)]
+          content_type.sub_type.downcase!
 
         # Parameter Attribute
         when :param_attr_s then param_attr_s = p

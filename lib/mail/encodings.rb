@@ -47,7 +47,7 @@ module Mail
     end
 
     def Encodings.get_name(enc)
-      enc = enc.to_s.gsub("-", "_").downcase
+      enc = underscoreize(enc).downcase
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can

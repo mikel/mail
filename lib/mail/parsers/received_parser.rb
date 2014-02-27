@@ -10,7 +10,9 @@ module Mail::Parsers
       received = ReceivedStruct.new
 
       received_tokens_s = date_s = time_s = nil
-      actions.each_slice(2) do |action_id, p|
+      until actions.empty?
+        action_id = actions.shift
+        p = actions.shift
         action = Mail::Parsers::Ragel::ACTIONS[action_id]
         case action
 
