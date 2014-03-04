@@ -29,6 +29,7 @@ Compatibility:
 Bugs:
 * #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)
 * #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
+* #684 - Fix recursively fetching attachments from an embedded message/rfc822 part whose Content-Type header has additional parameters. (vongruenigen)
 * #876 - Strip valid RFC-1342 separator characters between non-matching encoded-words (Caleb W. Corliss)
 * #876 - Fix that Mail::Message#add_file was adding a stray filename header (kirikak2)
 * #923 – Fix decoding nested quotes around non-US-ASCII addresses. (averell23)
