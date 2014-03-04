@@ -5,7 +5,7 @@ module Mail
       @parts_list = parts_list
       @content_disposition_type = 'attachment'
       parts_list.map { |p|
-        if p.content_type == "message/rfc822"
+        if p.content_type =~ %r/message\/rfc822/
           Mail.new(p.body).attachments
         elsif p.parts.empty?
           p if p.attachment?
