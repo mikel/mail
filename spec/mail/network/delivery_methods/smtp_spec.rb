@@ -26,6 +26,17 @@ describe "SMTP Delivery Method" do
   end
 
   describe "general usage" do
+    it "dot-stuff unterminated last line of the message" do
+      mail = Mail.deliver do
+        from 'from@example.com'
+        to 'to@example.com'
+        subject 'dot-stuff last line'
+        body "this is a test\n.\nonly a test\n."
+      end
+
+      message, from, to = MockSMTP.deliveries.first
+      expect(Mail.new(message).decoded).to eq("this is a test\n..\nonly a test\n..")
+    end
 
     it "should send emails from given settings" do
 

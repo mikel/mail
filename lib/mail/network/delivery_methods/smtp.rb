@@ -117,7 +117,7 @@ module Mail
 
       response = nil
       smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp_obj|
-        response = smtp_obj.sendmail(message, smtp_from, smtp_to)
+        response = smtp_obj.sendmail(dot_stuff(message), smtp_from, smtp_to)
       end
 
       if settings[:return_response]
@@ -128,6 +128,12 @@ module Mail
     end
 
     private
+
+    # This is Net::SMTP's job, but before Ruby 2.x it does not dot-stuff
+    # an unterminated last line: https://bugs.ruby-lang.org/issues/9627
+    def dot_stuff(message)
+      message.gsub(/(\r\n\.)(\r\n|$)/, '\1.\2')
+    end
 
     # Allow SSL context to be configured via settings, for Ruby >= 1.9
     # Just returns openssl verify mode for Ruby 1.8.x

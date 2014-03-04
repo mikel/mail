@@ -23,6 +23,7 @@ Compatibility:
 * #464 - Improve attachment filename detection by preferring Content-Disposition filename. (lawrencepit)
 * #535 - IMAP: fetch messages WITH IMAP FLAGS by passing a block with four args. (lawrencepit)
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
+* #683 - SMTP: Work around Net::SMTP dot-stuffing bug with unterminated newlines on Ruby 1.8 and 1.9. (yyyc514)
 * #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 * #1103 – Support parsing UTF-8 headers. Implements RFC 6532. (jeremy)
 
