@@ -324,6 +324,31 @@ emails = Mail.all
 emails.length #=> LOTS!
 ```
 
+### Setting up application settings:
+Mail configuration can be done through a YAML file that specifies your environments and their delivery and retrival options. The simplest configuration is as follows, which sets both delivery and retriver for testing:
+```ruby
+test:
+  delivery:
+    method: test
+  retriever:
+    method: test
+```
+The YAML file can be loaded as follows:
+```ruby
+Mail.load!("path/to/your/mail.yml")
+```
+
+#### Environments
+When Mail loads its configuration, it chooses the environment to used based on the following order:
+* Rails.env if using Rails.
+* Sinatra::Base.environment if using Sinatra.
+* RACK_ENV environment variable.
+* MAIL_ENV environment variable.
+
+You can also pass a second paramter to load! and Mail will use that:
+```ruby
+Mail.load!("path/to/your/mail.yml", :development)
+```
 
 ### Reading an Email
 

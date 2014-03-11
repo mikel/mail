@@ -4,8 +4,9 @@
 #
 require 'singleton'
 
-module Mail
+require 'yaml'
 
+module Mail
   # The Configuration class is a Singleton used to hold the default
   # configuration for all Mail objects.
   #
@@ -23,6 +24,19 @@ module Mail
     def delivery_method(method = nil, settings = {})
       return @delivery_method if @delivery_method && method.nil?
       @delivery_method = lookup_delivery_method(method).new(settings)
+    end
+    
+    def load!(path, environment = nil)
+      environment = environment || env_name
+      settings = symbolize_keys(YAML.load_file(path))[environment.to_sym]
+      delivery_method = settings[:delivery][:method].to_sym
+      retriever_method = settings[:retriever][:method].to_sym
+      authentication = settings[:delivery][:authentication]
+      if authentication != nil
+        authentication = authentication.to_sym
+      end
+      delivery_method delivery_method, settings[:delivery]
+      retriever_method retriever_method, settings[:retriever]
     end
 
     def lookup_delivery_method(method)
@@ -68,6 +82,25 @@ module Mail
 
     def param_encode_language(value = nil)
       value ? @encode_language = value : @encode_language ||= 'en'
+    end
+
+    private
+
+    def symbolize_keys(hash)
+      s2s = lambda do |h|
+        if h.is_a? Hash
+          Hash[h.map{ |k, v| [k.to_sym, s2s[v]] }]
+        else
+          h
+        end
+      end
+      s2s[hash]
+    end
+
+    def env_name
+      return Rails.env if defined?(Rails)
+      return Sinatra::Base.environment.to_s if defined?(Sinatra)
+      ENV['RACK_ENV'] || ENV['MAIL_ENV']
     end
 
   end

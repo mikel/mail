@@ -106,6 +106,18 @@ module Mail
     Configuration.instance.instance_eval(&block)
   end
 
+  # Load the settings from a compliant YAML file. This can be used for easy setup wuth
+  # frameworks other than Rails
+  #
+  # @example Configure mail.
+  #   Mail.load!("/path/to/mail.yml")
+  #
+  # @param [ String ] path The path to the file.
+  # @param [ String, Symbol ] environment The environment to load
+  def self.load!(path, environment = nil)
+    Configuration.instance.load!(path, environment)
+  end
+
   # Returns the delivery method selected, defaults to an instance of Mail::SMTP
   def self.delivery_method
     Configuration.instance.delivery_method
