@@ -5,6 +5,7 @@ Security:
 
 Bugs:
 * #633 – Cope with message parts that have an empty Content-Type (ThomasKoppensteiner, zeepeeare)
+* #689 - Fix Exim delivery method broken by #477 in 2.5.4. (jethrogb)
 
 == Version 2.5.4 - Tue May 14 14:45:00 +1100 2013 Mikel Lindsaar <mikel@lindsaar.net>
 

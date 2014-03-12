@@ -36,17 +36,13 @@ module Mail
   #
   #   mail.deliver!
   class Exim < Sendmail
-    def initialize(values)
-      self.settings = { :location       => '/usr/sbin/exim',
-                        :arguments      => '-i -t' }.merge(values)
-    end
+    DEFAULTS = {
+      :location   => '/usr/sbin/exim',
+      :arguments  => '-i -t'
+    }
 
-    def self.call(path, arguments, destinations, mail)
-      popen "#{path} #{arguments}" do |io|
-        io.puts mail.encoded.to_lf
-        io.flush
-      end
+    def self.call(path, arguments, destinations, encoded_message)
+      super path, arguments, nil, encoded_message
     end
-
   end
 end
