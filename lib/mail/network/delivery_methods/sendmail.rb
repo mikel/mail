@@ -38,11 +38,15 @@ module Mail
   #
   #   mail.deliver!
   class Sendmail
+    DEFAULTS = {
+      :location   => '/usr/sbin/sendmail',
+      :arguments  => '-i'
+    }
+
     attr_accessor :settings
 
     def initialize(values)
-      self.settings = { :location       => '/usr/sbin/sendmail',
-                        :arguments      => '-i' }.merge(values)
+      self.settings = self.class::DEFAULTS.merge(values)
     end
 
     def deliver!(mail)

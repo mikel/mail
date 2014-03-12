@@ -3,6 +3,9 @@
 Security:
 * #1097 – SMTP security: prevent command injection via To/From addresses. (jeremy)
 
+Bugs:
+* #689 - Fix Exim delivery method broken by #477 in 2.5.4. (jethrogb)
+
 == Version 2.6.5 - 2017-04-26 Jeremy Daer <jeremydaer@gmail.com>
 
 Features:
