@@ -84,12 +84,14 @@ module Mail
         result
       end
 
-      def negative_failure_message
+      def failure_message_when_negated
         result = "Expected no email to be sent "
         result += explain_expectations
         result += dump_deliveries
         result
       end
+
+      alias_method :negative_failure_message, :failure_message_when_negated
 
       protected
       
