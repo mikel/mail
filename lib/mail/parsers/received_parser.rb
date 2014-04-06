@@ -11,8 +11,7 @@ module Mail::Parsers
 
       received_tokens_s = date_s = time_s = nil
       until actions.empty?
-        action_id = actions.shift
-        p = actions.shift
+        action_id, p = actions.shift(2)
         action = Mail::Parsers::Ragel::ACTIONS[action_id]
         case action
 

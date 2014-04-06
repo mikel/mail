@@ -15,7 +15,7 @@ module Mail
       control = control.force_encoding(Encoding::BINARY)
     end
     
-    CRLF          = /\r\n/
+    CRLF          = "\r\n"
     WSP           = /[#{white_space}]/
     FWS           = /#{CRLF}#{WSP}*/
     TEXT          = /[#{text}]/ # + obs-text
@@ -33,5 +33,20 @@ module Mail
     ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{sp}]/n
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
     TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{sp}]/n
+
+    EMPTY          = ''
+    SPACE          = ' '
+    UNDERSCORE     = '_'
+    HYPHEN         = '-'
+    COLON          = ':'
+    ASTERISK       = '*'
+    CR             = "\r"
+    LF             = "\n"
+    CR_ENCODED     = "=0D"
+    LF_ENCODED     = "=0A"
+    CAPITAL_M      = 'M'
+    EQUAL_LF       = "=\n"
+    CRLFx2         = "#{CRLF}#{CRLF}"
+    CRLFs_WITH_WSP = "#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})"
   end
 end

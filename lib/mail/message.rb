@@ -1958,8 +1958,6 @@ module Mail
 
   private
 
-    CRLFx2 = "#{CRLF}#{CRLF}"
-    CRLFs_WITH_WSP = "#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})"
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
     #   of the message") followed, optionally, by a body.  The header is a

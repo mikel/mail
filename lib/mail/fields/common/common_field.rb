@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module CommonField # :nodoc:
-    BLANK = ''
+    include Patterns
 
     def name=(value)
       @name = value
@@ -44,7 +44,7 @@ module Mail
       if value.is_a?(Array)
         value
       else
-        value.to_s.gsub(/#{field_name}:\s+/i, BLANK)
+        value.to_s.gsub(/#{field_name}:\s+/i, EMPTY)
       end
     end
 

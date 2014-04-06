@@ -18,7 +18,7 @@ module Mail
       exact = nil
       each do |k,v|
         if k =~ /^#{key_pattern}(\*|$)/i
-          if $1 == '*'.freeze
+          if $1 == ASTERISK
             pairs << [k, v]
           else
             exact = k
