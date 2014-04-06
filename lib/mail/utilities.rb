@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module Utilities
-    include Patterns
+    include Constants
 
     # Returns true if the string supplied is free from characters not allowed as an ATOM
     def atom_safe?( str )

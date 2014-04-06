@@ -17,7 +17,7 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
-    include Patterns
+    include Constants
     include Utilities
     include Enumerable
     

@@ -1,6 +1,6 @@
 # encoding: us-ascii
 module Mail
-  module Patterns
+  module Constants
     white_space = %Q|\x9\x20|
     text        = %Q|\x1-\x8\xB\xC\xE-\x7f|
     field_name  = %Q|\x21-\x39\x3b-\x7e|

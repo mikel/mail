@@ -41,7 +41,7 @@ module Mail # :doc:
     require 'mail/multibyte'
   end
 
-  require 'mail/patterns'
+  require 'mail/constants'
   require 'mail/utilities'
   require 'mail/configuration'
 

@@ -7,7 +7,7 @@ module Mail
 
   module Encodings
 
-    include Mail::Patterns
+    include Mail::Constants
     extend  Mail::Utilities
 
     @transfer_encodings = {}

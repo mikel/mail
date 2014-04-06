@@ -46,7 +46,7 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
 
-    include Patterns
+    include Constants
     include Utilities
 
     # ==Making an email

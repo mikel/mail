@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Mail
   module CommonField # :nodoc:
-    include Patterns
+    include Mail::Constants
 
     def name=(value)
       @name = value
