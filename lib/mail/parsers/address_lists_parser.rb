@@ -23,8 +23,7 @@ module Mail::Parsers
 
       address_s = 0
       address = AddressStruct.new(nil, nil, [], nil, nil, nil, nil)
-      until actions.empty?
-        action_id, p = actions.shift(2)
+      actions.each_slice(2) do |action_id, p|
         action = Mail::Parsers::Ragel::ACTIONS[action_id]
         case action
 

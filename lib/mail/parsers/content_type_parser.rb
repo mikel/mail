@@ -14,8 +14,7 @@ module Mail::Parsers
 
       main_type_s = sub_type_s = param_attr_s = param_attr = nil
       qstr_s = qstr = param_val_s = nil
-      until actions.empty?
-        action_id, p = actions.shift(2)
+      actions.each_slice(2) do |action_id, p|
         action = Mail::Parsers::Ragel::ACTIONS[action_id]
         case action
 
