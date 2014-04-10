@@ -233,9 +233,11 @@ module Mail
 
   protected
 
+  RANDOM_TAG='%x%x_%x%x%d%x'
+
   def self.random_tag
     t = Time.now
-    sprintf('%x%x_%x%x%d%x'.freeze,
+    sprintf(RANDOM_TAG,
             t.to_i, t.tv_usec,
             $$, Thread.current.object_id.abs, self.uniq, rand(255))
   end
