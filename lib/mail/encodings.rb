@@ -115,29 +115,25 @@ module Mail
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
       return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
-
-      lines = collapse_adjacent_encodings(str)
-
+ 
       # Split on white-space boundaries with capture, so we capture the white-space as well
-      lines.map do |line|
-        line.split(/([ \t])/).map do |text|
-          if text.index('=?').nil?
-            text
-          else
-            # Search for occurences of quoted strings or plain strings
-            text.scan(/(                                 # Group around entire regex to include it in matches
+      str.gsub(/\s*$/, '').gsub(/\?=\s*=\?/, '?==?').split(/([ \t])/).map do |text|
+        if text.index('=?').nil?
+          text
+        else
+          # Search for occurences of quoted strings or plain strings
+          text.scan(/(                                 # Group around entire regex to include it in matches
                         \=\?[^?]+\?([QB])\?[^?]+?\?\=    # Quoted String with subgroup for encoding method
                         |                                # or
                         .+?(?=\=\?|$)                    # Plain String
                       )/xmi).map do |matches|
-              string, method = *matches
-              if    method == 'b' || method == 'B'
-                b_value_decode(string)
-              elsif method == 'q' || method == 'Q'
-                q_value_decode(string)
-              else
-                string
-              end
+            string, method = *matches
+            if    method == 'b' || method == 'B'
+              b_value_decode(string)
+            elsif method == 'q' || method == 'Q'
+              q_value_decode(string)
+            else
+              string
             end
           end
         end
@@ -276,29 +272,6 @@ module Mail
       else
         nil
       end
-    end
-
-    # When the encoded string consists of multiple lines, lines with the same
-    # encoding (Q or B) can be joined together.
-    #
-    # String has to be of the format =?<encoding>?[QB]?<string>?=
-    def Encodings.collapse_adjacent_encodings(str)
-      lines = str.split(/(\?=)\s*(=\?)/).each_slice(2).map(&:join)
-      results = []
-      previous_encoding = nil
-
-      lines.each do |line|
-        encoding = split_value_encoding_from_string(line)
-
-        if encoding == previous_encoding
-          line = results.pop + line
-        end
-
-        previous_encoding = encoding
-        results << line
-      end
-
-      results
     end
   end
 end
