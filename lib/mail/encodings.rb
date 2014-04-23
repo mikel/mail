@@ -117,7 +117,7 @@ module Mail
       return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
  
       # Split on white-space boundaries with capture, so we capture the white-space as well
-      str.gsub(/\s*$/, '').gsub(/\?=\s*=\?/, '?==?').split(/([ \t])/).map do |text|
+      str.gsub(/\?=\s*=\?/, '?==?').split(/([ \t])/).map do |text|
         if text.index('=?').nil?
           text
         else
