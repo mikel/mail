@@ -153,6 +153,12 @@ describe Mail::Encodings do
       string = "1+1=?"
       Mail::Encodings.value_decode(string).should == string
     end
+    
+    it "should decode a string, even with an invalid encoding name" do
+      string = "=?BAD-ENCODING?B?VEVTVA==?="
+      result = 'TEST'
+      Mail::Encodings.value_decode(string).should == result
+    end
 
     it "should collapse adjacent words" do
       string = "=?utf-8?B?0L3QvtCy0YvQuSDRgdC+0YLRgNGD0LTQvdC40Log4oCUINC00L7RgNC+0YQ=?=\n =?utf-8?B?0LXQtdCy?="

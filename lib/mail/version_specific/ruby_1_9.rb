@@ -152,7 +152,14 @@ module Mail
         Encoding::GB18030
 
       else
-        charset
+        # if nothing found return the plain string but only if Encoding can handle it.
+        # If not, fall back to ASCII.
+        begin 
+          Encoding.find(charset)
+          charset
+        rescue ArgumentError
+          Encoding::ASCII
+        end
       end
     end
   end

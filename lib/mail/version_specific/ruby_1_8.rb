@@ -112,7 +112,14 @@ module Mail
       when 'UTF32', 'UTF-32'
         'UTF-32BE'
       else
-        encoding
+        # If no encoding matches, return plain string, but only if encoding is known to Iconv, 
+        # else fallback to ASCII
+        begin
+          Iconv.new('UTF-8', encoding)
+          encoding
+        rescue Iconv::InvalidEncoding => e
+          'ASCII'
+        end
       end
     end
   end
