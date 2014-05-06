@@ -1520,6 +1520,15 @@ describe Mail::Message do
       mail.deliver
     end
 
+    it "should allow observers to be unregistered" do
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
+      mail.delivery_method :test
+      Mail.register_observer(ObserverAgent)
+      Mail.unregister_observer(ObserverAgent)
+      ObserverAgent.should_not_receive(:delivered_email).with(mail)
+      mail.deliver
+    end
+
     it "should inform observers that the mail was sent, even if a delivery agent is used" do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
@@ -1559,6 +1568,18 @@ describe Mail::Message do
       mail.deliver
       InterceptorAgent.intercept = false
       mail.to.should eq ['bob@example.com']
+    end
+
+    it "should allow interceptors to be unregistered" do
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
+      mail.to = 'fred@example.com'
+      mail.delivery_method :test
+      Mail.register_interceptor(InterceptorAgent)
+      InterceptorAgent.intercept = true
+      Mail.unregister_interceptor(InterceptorAgent)
+      mail.deliver
+      InterceptorAgent.intercept = false
+      mail.to.should eq ['fred@example.com']
     end
 
   end
