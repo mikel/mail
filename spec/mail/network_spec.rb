@@ -299,6 +299,13 @@ describe "Mail" do
         @message.deliver
       end
 
+      it "should not tell the observers once they are unregistered" do
+        Mail.register_observer(MyObserver)
+        Mail.unregister_observer(MyObserver)
+        MyObserver.should_not_receive(:delivered_email)
+        @message.deliver
+      end
+
     end
 
     describe "raise_delivery_errors" do
