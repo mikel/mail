@@ -1561,6 +1561,15 @@ describe Mail::Message do
       mail.to.should eq ['bob@example.com']
     end
 
+    it "should not pass the email to any unregistered intereceptor" do
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
+      mail.delivery_method :test
+      Mail.register_interceptor(InterceptorAgent)
+      Mail.unregister_interceptor(InterceptorAgent)
+      InterceptorAgent.should_not_receive(:delivering_email)
+      mail.deliver
+    end
+
   end
 
   describe "error handling" do
