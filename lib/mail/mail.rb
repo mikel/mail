@@ -206,6 +206,12 @@ module Mail
     end
   end
 
+  # Unregister the given observer, allowing mail to resume operations
+  # without it.
+  def self.unregister_observer(observer)
+    @@delivery_notification_observers.delete(observer)
+  end
+
   # You can register an object to be given every mail object that will be sent,
   # before it is sent.  So if you want to add special headers or modify any
   # email that gets sent through the Mail library, you can do so.
@@ -217,6 +223,12 @@ module Mail
     unless @@delivery_interceptors.include?(interceptor)
       @@delivery_interceptors << interceptor
     end
+  end
+
+  # Unregister the given interceptor, allowing mail to resume operations
+  # without it.
+  def self.unregister_interceptor(interceptor)
+    @@delivery_interceptors.delete(interceptor)
   end
 
   def self.inform_observers(mail)
