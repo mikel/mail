@@ -365,6 +365,11 @@ module Mail
       end
     end
 
+    def initialize_copy(original)
+      super
+      @header = Mail::Header.new()
+    end
+
     # Provides access to the raw source of the message as it was when it
     # was instantiated. This is set at initialization and so is untouched
     # by the parsers or decoder / encoders

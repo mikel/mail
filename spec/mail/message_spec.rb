@@ -907,6 +907,77 @@ describe Mail::Message do
 
   end
 
+  describe "making a copy of a message with dup" do
+    def message_should_have_default_values(message)
+      message.bcc.should           eq nil
+      message.cc.should            eq nil
+      message.comments.should      eq nil
+      message.date.should          eq nil
+      message.from.should          eq nil
+      message.in_reply_to.should   eq nil
+      message.keywords.should      eq nil
+      message.message_id.should    eq nil
+      message.received.should      eq nil
+      message.references.should    eq nil
+      message.reply_to.should      eq nil
+      message.resent_bcc.should    eq nil
+      message.resent_cc.should     eq nil
+      message.resent_date.should   eq nil
+      message.resent_from.should   eq nil
+      message.resent_message_id.should eq nil
+      message.resent_sender.should eq nil
+      message.resent_to.should     eq nil
+      message.sender.should        eq nil
+      message.subject.should       eq nil
+      message.to.should            eq nil
+      message.content_type.should              eq nil
+      message.content_transfer_encoding.should eq nil
+      message.content_description.should       eq nil
+      message.content_disposition.should       eq nil
+      message.content_id.should                eq nil
+      message.mime_version.should              eq nil
+      message.body.to_s.should          eq ''
+    end
+
+    it "its headers should not be changed when you change the headers of the original" do
+      message = Mail.new
+      message_copy = message.dup
+      message_should_have_default_values message
+      message_should_have_default_values message_copy
+
+      message[:bcc] =           'mikel@bcc.lindsaar.net'
+      message[:cc] =            'mikel@cc.lindsaar.net'
+      message[:comments] =      'this is a comment'
+      message[:date] =          '12 Aug 2009 00:00:01 GMT'
+      message[:from] =          'mikel@from.lindsaar.net'
+      message[:in_reply_to] =   '<1234@in_reply_to.lindsaar.net>'
+      message[:keywords] =      'test, "of the new mail", system'
+      message[:message_id] =    '<1234@message_id.lindsaar.net>'
+      message[:received] =      'from machine.example by x.y.test; 12 Aug 2009 00:00:02 GMT'
+      message[:references] =    '<1234@references.lindsaar.net>'
+      message[:reply_to] =      'mikel@reply-to.lindsaar.net'
+      message[:resent_bcc] =    'mikel@resent-bcc.lindsaar.net'
+      message[:resent_cc] =     'mikel@resent-cc.lindsaar.net'
+      message[:resent_date] =   '12 Aug 2009 00:00:03 GMT'
+      message[:resent_from] =   'mikel@resent-from.lindsaar.net'
+      message[:resent_message_id] = '<1234@resent_message_id.lindsaar.net>'
+      message[:resent_sender] = 'mikel@resent-sender.lindsaar.net'
+      message[:resent_to] =     'mikel@resent-to.lindsaar.net'
+      message[:sender] =        'mikel@sender.lindsaar.net'
+      message[:subject] =       'Hello there Mikel'
+      message[:to] =            'mikel@to.lindsaar.net'
+      message[:content_type] =  'text/plain; charset=UTF-8'
+      message[:content_transfer_encoding] = '7bit'
+      message[:content_description] =       'This is a test'
+      message[:content_disposition] =       'attachment; filename=File'
+      message[:content_id] =                '<1234@message_id.lindsaar.net>'
+      message[:mime_version]=  '1.0'
+      message[:body] =          'This is a body of text'
+
+      message_should_have_default_values message_copy
+    end
+  end
+
   describe "handling missing required fields:" do
 
     describe "every email" do
