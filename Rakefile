@@ -1,4 +1,6 @@
-ENV['BUNDLE_GEMFILE'] = File.expand_path('../Gemfile', __FILE__)
+if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
+  ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
+end
 require 'rubygems'
 require 'bundler/setup'
 
