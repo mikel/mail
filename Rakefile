@@ -19,5 +19,11 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = %w(--backtrace --color)
 end
 
+begin
+  require "appraisal"
+rescue LoadError
+  warn "Appraisal is only available in test/development"
+end
+
 # load custom rake tasks
 Dir["#{File.dirname(__FILE__)}/tasks/**/*.rake"].sort.each { |ext| load ext }
