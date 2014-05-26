@@ -367,7 +367,7 @@ module Mail
 
     def initialize_copy(original)
       super
-      @header = Mail::Header.new()
+      @header = @header.dup
     end
 
     # Provides access to the raw source of the message as it was when it

@@ -976,6 +976,72 @@ describe Mail::Message do
 
       message_should_have_default_values message_copy
     end
+
+    def message_headers_should_match(message, other)
+      message.bcc.should           eq other.bcc
+      message.cc.should            eq other.cc
+      message.comments.should      eq other.comments
+      message.date.should          eq other.date
+      message.from.should          eq other.from
+      message.in_reply_to.should   eq other.in_reply_to
+      message.keywords.should      eq other.keywords
+      message.message_id.should    eq other.message_id
+      message.received.should      eq other.received
+      message.references.should    eq other.references
+      message.reply_to.should      eq other.reply_to
+      message.resent_bcc.should    eq other.resent_bcc
+      message.resent_cc.should     eq other.resent_cc
+      message.resent_date.should   eq other.resent_date
+      message.resent_from.should   eq other.resent_from
+      message.resent_message_id.should eq other.resent_message_id
+      message.resent_sender.should eq other.resent_sender
+      message.resent_to.should     eq other.resent_to
+      message.sender.should        eq other.sender
+      message.subject.should       eq other.subject
+      message.to.should            eq other.to
+      message.content_type.should              eq other.content_type
+      message.content_transfer_encoding.should eq other.content_transfer_encoding
+      message.content_description.should       eq other.content_description
+      message.content_disposition.should       eq other.content_disposition
+      message.content_id.should                eq other.content_id
+      message.mime_version.should              eq other.mime_version
+      message.body.to_s.should          eq other.body.to_s
+    end
+
+    it "its headers should be copies of the headers of the original" do
+      message = Mail.new
+      message[:bcc] =           'mikel@bcc.lindsaar.net'
+      message[:cc] =            'mikel@cc.lindsaar.net'
+      message[:comments] =      'this is a comment'
+      message[:date] =          '12 Aug 2009 00:00:01 GMT'
+      message[:from] =          'mikel@from.lindsaar.net'
+      message[:in_reply_to] =   '<1234@in_reply_to.lindsaar.net>'
+      message[:keywords] =      'test, "of the new mail", system'
+      message[:message_id] =    '<1234@message_id.lindsaar.net>'
+      message[:received] =      'from machine.example by x.y.test; 12 Aug 2009 00:00:02 GMT'
+      message[:references] =    '<1234@references.lindsaar.net>'
+      message[:reply_to] =      'mikel@reply-to.lindsaar.net'
+      message[:resent_bcc] =    'mikel@resent-bcc.lindsaar.net'
+      message[:resent_cc] =     'mikel@resent-cc.lindsaar.net'
+      message[:resent_date] =   '12 Aug 2009 00:00:03 GMT'
+      message[:resent_from] =   'mikel@resent-from.lindsaar.net'
+      message[:resent_message_id] = '<1234@resent_message_id.lindsaar.net>'
+      message[:resent_sender] = 'mikel@resent-sender.lindsaar.net'
+      message[:resent_to] =     'mikel@resent-to.lindsaar.net'
+      message[:sender] =        'mikel@sender.lindsaar.net'
+      message[:subject] =       'Hello there Mikel'
+      message[:to] =            'mikel@to.lindsaar.net'
+      message[:content_type] =  'text/plain; charset=UTF-8'
+      message[:content_transfer_encoding] = '7bit'
+      message[:content_description] =       'This is a test'
+      message[:content_disposition] =       'attachment; filename=File'
+      message[:content_id] =                '<1234@message_id.lindsaar.net>'
+      message[:mime_version]=  '1.0'
+      message[:body] =          'This is a body of text'
+
+      message_copy = message.dup
+      message_headers_should_match message_copy, message
+    end
   end
 
   describe "handling missing required fields:" do

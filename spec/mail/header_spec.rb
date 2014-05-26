@@ -15,6 +15,17 @@ describe Mail::Header do
 
   end
 
+  describe "copying" do
+
+    it "should instantiate with a string passed in" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n")
+      copy = header.dup
+      copy.to_a.should == header.to_a
+      copy[:to].should == header[:to]
+    end
+
+  end
+
   describe "instance methods" do
     
     it "should save away the raw source of the header that it is passed" do
