@@ -10,14 +10,12 @@ rvm:
   - 1.9.3
   - 2.0.0
   - ruby-head
-  - jruby-18mode
-  - jruby-19mode
+  - jruby
   - jruby-head
-  - rbx-18mode
-  - rbx-19mode
+  - rbx-2
 matrix:
   allow_failures:
     - rvm: ruby-head    # green, but unstable
     - rvm: jruby-head   # green, but unstable
-    - rvm: rbx-18mode   # seems to be running 1.9 mode instead!?
-    - rvm: rbx-19mode   # segfaulting in String#ascii_only?
+    - rvm: rbx-2        # segfaulting in String#ascii_only?
+  fast_finish: true
