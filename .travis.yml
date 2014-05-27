@@ -3,6 +3,7 @@ bundler_args: --path vendor/bundle
 script: bundle exec rake
 before_install:
   - gem install bundler
+  - bundle config --local without local_development
 rvm:
   - 1.8.7
   - 1.9.2
