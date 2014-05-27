@@ -5,7 +5,7 @@ before_install:
   - gem install bundler
   - bundle config --local without local_development
 gemfile:
-  - gemfiles/mime_types_1.1.6.gemfile
+  - gemfiles/mime_types_1.16.gemfile
   - gemfiles/mime_types_2.0.gemfile
   - gemfiles/mime_types_2.1.gemfile
   - gemfiles/mime_types_2.2.gemfile
