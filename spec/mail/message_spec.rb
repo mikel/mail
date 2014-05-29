@@ -1117,18 +1117,20 @@ describe Mail::Message do
         end
 
         it "should set the content type to text/plain; charset=us-ascii" do
+          pending
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
+          mail.to_s.should =~ %r{Content-Type: text/plain;\s+charset=US-ASCII}
         end
 
         it "should not set the charset if the file is an attachment" do
+          pending
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
           mail.content_disposition = 'attachment; filename="foo.jpg"'
-          mail.to_s =~ %r{Content-Type: text/plain;\r\n}
+          mail.to_s.should =~ %r{Content-Type: text/plain\r\n}
         end
 
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1137,7 +1139,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+          mail.to_s.should =~ %r{Content-Type: text/plain;\s+charset=UTF-8}
         end
 
         it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1147,7 +1149,7 @@ describe Mail::Message do
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
           STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+          mail.to_s.should =~ %r{Content-Type: text/plain;\s+charset=UTF-8}
         end
 
         it "should not raise a warning if there is a charset defined and there is non ascii chars" do
