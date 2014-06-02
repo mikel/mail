@@ -54,6 +54,14 @@ Every Mail commit is tested by Travis on the [following platforms](https://githu
 * jruby-head [ x86_64 ]
 * rbx-2 [ x86_64 ]
 
+Testing a specific mime type (needed for 1.8.7 for example) can be done manually with:
+
+  $ BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile bundle check
+  $ BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile bundle
+  $ BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile rake
+
+
+
 Discussion
 ----------
 
