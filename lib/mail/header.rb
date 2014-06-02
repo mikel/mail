@@ -52,6 +52,11 @@ module Mail
       self.raw_source = header_text.to_crlf.lstrip
       split_header if header_text
     end
+
+    def initialize_copy(original)
+      super
+      @fields = @fields.dup
+    end
     
     # The preserved raw source of the header as you passed it in, untouched
     # for your Regexing glory.
