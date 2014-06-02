@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Allow interceptors and observers to be unregistered (zuhao)
 * Added feature to find the mail in uid (taketin)
 * Save settings passed to TestMailer#new (svanderbleek)
 * Allow the setting of envelope from directly (jeremy)
