@@ -43,3 +43,16 @@ Syntax:
 * Follow the conventions you see used in the source already.
 
 And in case we didn't emphasize it enough: we love specs!
+
+### Testing against mime-types versions:
+
+Use [appraisal](https://github.com/thoughtbot/appraisal) to run against all supported versions of mime-types.
+
+1. Run `(bundle check || bundle) && appraisal` so that all the 'appraised' gemfiles are bundled.
+2. Run either `appraisal rake` or `rake appraisal` to run all the tests.
+
+To run only one 'appraised' gemfile, run. e.g. `BUNDLE_GEMFILE=gemfiles/mime_types_edge.gemfile (bundle check || bundle) && rake`
+
+To change the appraisals, modify the `Appraisals` file, run `appraisal`, commit the generated gemfiles, and modify the .travis.yml matrix.
+
+To run on all rubies / gemfiles, just like TravisCI, see [WWTD](https://github.com/grosser/wwtd).

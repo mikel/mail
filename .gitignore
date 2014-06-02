@@ -18,3 +18,4 @@
 /.idea
 /.rbenv-vars
 /.ruby-version
+gemfiles/*.lock
