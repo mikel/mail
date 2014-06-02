@@ -69,4 +69,8 @@ describe Mail::CommonField do
     
   end
 
+  it "does not strip out content that looks identitcal to the field name" do
+    field = Mail::SubjectField.new("Subject: Subject: for your approval")
+    field.decoded.should == "Subject: for your approval"
+  end
 end
