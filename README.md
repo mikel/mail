@@ -15,11 +15,11 @@ Built from my experience with TMail, it is designed to be a pure ruby
 implementation that makes generating, sending and parsing emails a no
 brainer.
 
-It is also designed form the ground up to work with Ruby 1.9.  This is because
-Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
-these features have been taken full advantage of in this library allowing
-Mail to handle a lot more messages more cleanly than TMail.  Mail does run on
-Ruby 1.8.x... it's just not as fun to code.
+It is also designed form the ground up to work with the more modern versions
+of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
+than Ruby 1.8.x and so these features have been taken full advantage of in this
+library allowing Mail to handle a lot more messages more cleanly than TMail.
+Mail does run on Ruby 1.8.x... it's just not as fun to code.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
@@ -44,14 +44,15 @@ Compatibility
 
 Every Mail commit is tested by Travis on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
-* ruby-1.8.7-p370 [ i686 ]
-* ruby-1.9.2-p290 [ x86_64 ]
+* ruby-1.8.7-p374 [ i686 ]
+* ruby-1.9.2-p320 [ x86_64 ]
 * ruby-1.9.3-p327 [ x86_64 ]
-* ruby-2.0.0-rc1 [ x86_64 ]
-* jruby-1.6.8 [ x86_64 ]
-* jruby-1.7.0 [ x86_64 ]
-* rbx-d18 [ x86_64 ]
-* rbx-d19 [ x86_64 ]
+* ruby-2.0.0-p451 [ x86_64 ]
+* ruby-2.1.2 [ x86_64 ]
+* ruby-head [ x86_64 ]
+* jruby [ x86_64 ]
+* jruby-head [ x86_64 ]
+* rbx-2 [ x86_64 ]
 
 Discussion
 ----------

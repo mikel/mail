@@ -13,10 +13,11 @@ gemfile:
   - gemfiles/mime_types_2.latest.gemfile
   - gemfiles/mime_types_edge.gemfile
 rvm:
-  - 1.8.7
-  - 1.9.2
-  - 1.9.3
-  - 2.0.0
+  - 1.8.7-p374
+  - 1.9.2-p320
+  - 1.9.3-p327
+  - 2.0.0-p451
+  - 2.1.2
   - ruby-head
   - jruby
   - jruby-head
