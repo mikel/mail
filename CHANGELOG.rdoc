@@ -23,6 +23,7 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Fix for when content looks like field name (kjg)
 * Don't change original when you change a copy (TylerRick)
 * Don't include separating semicolon in paramter value when sanitizing (bpot)
 * Fix fencepost encoding problem with binhex strings and only one token (drasch)
