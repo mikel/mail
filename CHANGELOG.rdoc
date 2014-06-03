@@ -1,5 +1,11 @@
 == HEAD
 
+Features:
+
+Performance:
+
+Bugs:
+
 == Version 2.6.0 - Mon Jun 2 22:49 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
 Features:
