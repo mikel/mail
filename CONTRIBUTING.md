@@ -16,7 +16,8 @@ pull request merged quickly:
 7. Update the README if needed to reflect your change / addition
 8. Update the CHANGELOG and give yourself credit
 9. With all specs passing push your changes back to your fork
-10. Send me a pull request
+10. Send me a pull request.
+  - If it needs any changes, please push or force push to the same branch you made the pull request from.  GitHub will just update the pull request with your changes.
 
 Note, specs that break MRI 1.8.7 or 1.9.3 will not be accepted.
 
