@@ -24,17 +24,17 @@ rvm:
   - rbx-2
 matrix:
   exclude:
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_2.0.gemfile
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_2.1.gemfile
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_2.2.gemfile
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_2.3.gemfile
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_2.latest.gemfile
-    - rvm: 1.8.7
+    - rvm: 1.8.7-p374
       gemfile: gemfiles/mime_types_edge.gemfile
   allow_failures:
     - rvm: ruby-head    # green, but unstable
