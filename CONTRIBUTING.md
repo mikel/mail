@@ -14,8 +14,9 @@ pull request merged quickly:
    a spec!
 6. Test the spec _at_ _least_ against MRI-1.9.3 and MRI-1.8.7
 7. Update the README if needed to reflect your change / addition
-8. With all specs passing push your changes back to your fork
-9. Send me a pull request
+8. Update the CHANGELOG and give yourself credit
+9. With all specs passing push your changes back to your fork
+10. Send me a pull request
 
 Note, specs that break MRI 1.8.7 or 1.9.3 will not be accepted.
 
