@@ -123,6 +123,11 @@ describe Mail::Field do
       field = Mail::Field.new('Subject: こんにちは', charset)
       expect(field.charset).to eq charset
     end
+
+    it "should not strip out content that looks like the field name" do
+      field = Mail::Field.new('Subject: subject: for your approval')
+      field.value.should == 'subject: for your approval'
+    end
   end
 
   describe "error handling" do
