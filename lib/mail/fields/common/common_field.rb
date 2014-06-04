@@ -44,7 +44,7 @@ module Mail
       if value.is_a?(Array)
         value
       else
-        value.to_s.sub(/#{field_name}:\s+/i, EMPTY)
+        value.to_s.sub(/\A#{field_name}:\s+/i, EMPTY)
       end
     end
 
