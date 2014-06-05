@@ -2,6 +2,8 @@
 
 Features:
 
+* Add starttls support for imap retriever (doits)
+
 Performance:
 
 Bugs:
