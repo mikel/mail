@@ -10,7 +10,8 @@ describe "IMAP Retriever" do
                                 :port       => 993,
                                 :user_name  => nil,
                                 :password   => nil,
-                                :enable_ssl => true }
+                                :enable_ssl => true,
+                                :enable_starttls => false }
     end
   end
 
@@ -260,6 +261,32 @@ describe "IMAP Retriever" do
       expect { Mail.all { |m| raise ArgumentError.new } }.to raise_error(ArgumentError)
 
       expect(MockIMAP).to be_disconnected
+    end
+  end
+
+  describe "STARTTLS" do
+    before do
+      @imap = MockIMAP.new
+      allow(MockIMAP).to receive(:new).and_return(@imap)
+    end
+
+    it "calls starttls to upgrade" do
+      Mail.defaults do
+        retriever_method :imap, :enable_starttls => true
+      end
+
+      expect(@imap).to receive(:starttls)
+      Mail.find
+    end
+
+    it "conflicts with enable_ssl" do
+      Mail.defaults do
+        retriever_method :imap, :enable_starttls => true, :enable_ssl => true
+      end
+
+      expect {
+        Mail.find
+      }.to raise_error(ArgumentError)
     end
   end
 
