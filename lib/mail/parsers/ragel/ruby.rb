@@ -2,8 +2,18 @@ module Mail
   module Parsers
     module Ragel
       module Ruby
-        Mail::Parsers::Ragel::FIELD_PARSERS.each do |field_parser|
-          require "mail/parsers/ragel/ruby/machines/#{field_parser}_machine"
+        def self.silence_warnings
+          original_verbose = $VERBOSE
+          $VERBOSE = nil
+          yield
+          $VERBOSE = original_verbose
+        end
+        # Ragel-generated parsers give a lot of warnings
+        # and may cause logs to balloon in size
+        silence_warnings do
+          Mail::Parsers::Ragel::FIELD_PARSERS.each do |field_parser|
+            require "mail/parsers/ragel/ruby/machines/#{field_parser}_machine"
+          end
         end
 
         MACHINE_LIST = {
