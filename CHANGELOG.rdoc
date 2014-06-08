@@ -6,6 +6,11 @@ Performance:
 
 Bugs:
 
+== Version 2.6.1 - Sun Jun 8 15:34 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
+
+Features:
+* Silence warnings on loading ragel-generated parsers (bf4)
+
 == Version 2.6.0 - Mon Jun 2 22:49 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
 Features:
