@@ -7,105 +7,105 @@ describe "MIME Emails" do
 
       it "should read a mime version from an email" do
         mail = Mail.new("Mime-Version: 1.0")
-        mail.mime_version.should eq '1.0'
+        expect(mail.mime_version).to eq '1.0'
       end
 
       it "should return nil if the email has no mime version" do
         mail = Mail.new("To: bob")
-        mail.mime_version.should eq nil
+        expect(mail.mime_version).to eq nil
       end
 
       it "should read the content-transfer-encoding" do
         mail = Mail.new("Content-Transfer-Encoding: quoted-printable")
-        mail.content_transfer_encoding.should eq 'quoted-printable'
+        expect(mail.content_transfer_encoding).to eq 'quoted-printable'
       end
 
       it "should read the content-description" do
         mail = Mail.new("Content-Description: This is a description")
-        mail.content_description.should eq 'This is a description'
+        expect(mail.content_description).to eq 'This is a description'
       end
 
       it "should return the content-type" do
         mail = Mail.new("Content-Type: text/plain")
-        mail.mime_type.should eq 'text/plain'
+        expect(mail.mime_type).to eq 'text/plain'
       end
 
       it "should return the charset" do
         mail = Mail.new("Content-Type: text/plain; charset=utf-8")
-        mail.charset.should eq 'utf-8'
+        expect(mail.charset).to eq 'utf-8'
       end
 
       it "should allow you to set the charset" do
         mail = Mail.new
         mail.charset = 'utf-8'
-        mail.charset.should eq 'utf-8'
+        expect(mail.charset).to eq 'utf-8'
       end
 
       it "should return the main content-type" do
         mail = Mail.new("Content-Type: text/plain")
-        mail.main_type.should eq 'text'
+        expect(mail.main_type).to eq 'text'
       end
 
       it "should return the sub content-type" do
         mail = Mail.new("Content-Type: text/plain")
-        mail.sub_type.should eq 'plain'
+        expect(mail.sub_type).to eq 'plain'
       end
 
       it "should return the content-type parameters" do
         mail = Mail.new("Content-Type: text/plain; charset=US-ASCII; format=flowed")
-        mail.content_type_parameters.should eql({"charset" => 'US-ASCII', "format" => 'flowed'})
+        expect(mail.content_type_parameters).to eql({"charset" => 'US-ASCII', "format" => 'flowed'})
       end
 
       it "should recognize a multipart email" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
-        mail.should be_multipart
+        expect(mail).to be_multipart
       end
 
       it "should recognize a non multipart email" do
         mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
-        mail.should_not be_multipart
+        expect(mail).not_to be_multipart
       end
 
       it "should not report the email as :attachment?" do
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
-        mail.attachment?.should eq false
+        expect(mail.attachment?).to eq false
       end
 
       it "should report the email as :attachment?" do
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_only_email.eml')))
-        mail.attachment?.should eq true
+        expect(mail.attachment?).to eq true
       end
 
       it "should recognize an attachment part" do
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
-        mail.should_not be_attachment
-        mail.parts[0].attachment?.should eq false
-        mail.parts[1].attachment?.should eq true
+        expect(mail).not_to be_attachment
+        expect(mail.parts[0].attachment?).to eq false
+        expect(mail.parts[1].attachment?).to eq true
       end
 
       it "should give how may (top level) parts there are" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
-        mail.parts.length.should eq 2
+        expect(mail.parts.length).to eq 2
       end
 
       it "should give the content_type of each part" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email11.eml'))
-        mail.mime_type.should eq 'multipart/alternative'
-        mail.parts[0].mime_type.should eq 'text/plain'
-        mail.parts[1].mime_type.should eq 'text/enriched'
+        expect(mail.mime_type).to eq 'multipart/alternative'
+        expect(mail.parts[0].mime_type).to eq 'text/plain'
+        expect(mail.parts[1].mime_type).to eq 'text/enriched'
       end
 
       it "should report the mail :has_attachments?" do
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
-        mail.should be_has_attachments
+        expect(mail).to be_has_attachments
       end
 
       it "should only split on exact boundary matches" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'email_with_similar_boundaries.eml'))
-        mail.parts.size.should eq 2
-        mail.parts.first.parts.size.should eq 2
-        mail.boundary.should eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
-        mail.parts.first.boundary.should eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt"
+        expect(mail.parts.size).to eq 2
+        expect(mail.parts.first.parts.size).to eq 2
+        expect(mail.boundary).to eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
+        expect(mail.parts.first.boundary).to eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73_alt"
       end
     end
 
@@ -115,13 +115,13 @@ describe "MIME Emails" do
           part('This is a part')
           part('This is another part')
         end
-        mail.boundary.should_not be_nil
+        expect(mail.boundary).not_to be_nil
       end
 
       it "should not add a boundary for a message that is only an attachment" do
         mail = Mail.new
         mail.attachments['test.png'] = "2938492384923849"
-        mail.boundary.should be_nil
+        expect(mail.boundary).to be_nil
       end
     end
 
@@ -129,62 +129,62 @@ describe "MIME Emails" do
 
       it "should know what its boundary is if it is a multipart document" do
         mail = Mail.new('Content-Type: multipart/mixed; boundary="--==Boundary"')
-        mail.boundary.should eq "--==Boundary"
+        expect(mail.boundary).to eq "--==Boundary"
       end
 
       it "should return nil if there is no content-type defined" do
         mail = Mail.new
-        mail.boundary.should eq nil
+        expect(mail.boundary).to eq nil
       end
 
       it "should assign the text part and allow you to reference" do
         mail = Mail.new
         text_mail = Mail.new("This is Text")
         mail.text_part = text_mail
-        mail.text_part.should eq text_mail
+        expect(mail.text_part).to eq text_mail
       end
 
       it "should not assign a nil text part" do
         mail = Mail.new
         mail.text_part = nil
-        mail.text_part.should be_nil
+        expect(mail.text_part).to be_nil
       end
 
       it "should assign the html part and allow you to reference" do
         mail = Mail.new
         html_mail = Mail.new("<b>This is HTML</b>")
         mail.html_part = html_mail
-        mail.html_part.should eq html_mail
+        expect(mail.html_part).to eq html_mail
       end
 
       it "should not assign a nil html part" do
         mail = Mail.new
         mail.html_part = nil
-        mail.html_part.should be_nil
+        expect(mail.html_part).to be_nil
       end
 
       it "should set default content type on assigned text and html parts" do
         mail = Mail.new
         mail.text_part = Mail.new
-        mail.text_part.content_type.should eq 'text/plain'
+        expect(mail.text_part.content_type).to eq 'text/plain'
         mail.html_part = Mail.new
-        mail.html_part.content_type.should eq 'text/html'
+        expect(mail.html_part.content_type).to eq 'text/html'
       end
 
       it "should set default content type on declared text and html parts" do
         mail = Mail.new
         mail.text_part { }
-        mail.text_part.content_type.should eq 'text/plain'
+        expect(mail.text_part.content_type).to eq 'text/plain'
         mail.html_part { }
-        mail.html_part.content_type.should eq 'text/html'
+        expect(mail.html_part.content_type).to eq 'text/html'
       end
 
       it "should not override content type" do
         mail = Mail.new
         mail.text_part { content_type 'text/plain+foo' }
-        mail.text_part.content_type.should eq 'text/plain+foo'
+        expect(mail.text_part.content_type).to eq 'text/plain+foo'
         mail.html_part { content_type 'text/html+foo' }
-        mail.html_part.content_type.should eq 'text/html+foo'
+        expect(mail.html_part.content_type).to eq 'text/html+foo'
       end
 
       it "should add the html part and text part" do
@@ -196,33 +196,33 @@ describe "MIME Emails" do
           content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
-        mail.parts.length.should eq 2
-        mail.parts.first.class.should eq Mail::Part
-        mail.parts.last.class.should eq Mail::Part
+        expect(mail.parts.length).to eq 2
+        expect(mail.parts.first.class).to eq Mail::Part
+        expect(mail.parts.last.class).to eq Mail::Part
       end
 
       it "should remove the html part and back out of multipart/alternative if set to nil" do
         mail = Mail.new
         mail.text_part = Mail::Part.new
         mail.html_part = Mail::Part.new
-        mail.parts.length.should eq 2
+        expect(mail.parts.length).to eq 2
 
         mail.html_part = nil
-        mail.parts.length.should eq 1
-        mail.boundary.should be_nil
-        mail.content_type.should be_nil
+        expect(mail.parts.length).to eq 1
+        expect(mail.boundary).to be_nil
+        expect(mail.content_type).to be_nil
       end
 
       it "should remove the text part and back out of multipart/alternative if set to nil" do
         mail = Mail.new
         mail.text_part = Mail::Part.new
         mail.html_part = Mail::Part.new
-        mail.parts.length.should eq 2
+        expect(mail.parts.length).to eq 2
 
         mail.text_part = nil
-        mail.parts.length.should eq 1
-        mail.boundary.should be_nil
-        mail.content_type.should be_nil
+        expect(mail.parts.length).to eq 1
+        expect(mail.boundary).to be_nil
+        expect(mail.content_type).to be_nil
       end
 
       it "should set the content type to multipart/alternative if you assign html and text parts" do
@@ -234,26 +234,26 @@ describe "MIME Emails" do
           content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
-        mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
       end
 
       it "should set the content type to multipart/alternative if you declare html and text parts" do
         mail = Mail.new
         mail.text_part { }
         mail.html_part { }
-        mail.to_s.should =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
       end
 
       it "should not set the content type to multipart/alternative if you declare an html part but not a text part" do
         mail = Mail.new
         mail.html_part { }
-        mail.to_s.should_not =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+        expect(mail.to_s).not_to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
       end
 
       it "should not set the content type to multipart/alternative if you declare a text part but not an html part" do
         mail = Mail.new
         mail.text_part { }
-        mail.to_s.should_not =~ %r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|
+        expect(mail.to_s).not_to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
       end
 
       it "should add the end boundary tag" do
@@ -265,7 +265,7 @@ describe "MIME Emails" do
           content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
-        mail.to_s.should =~ %r|#{mail.boundary}--|
+        expect(mail.to_s).to match(%r|#{mail.boundary}--|)
       end
 
       it "should not put message-ids into parts" do
@@ -278,8 +278,8 @@ describe "MIME Emails" do
           body "<b>This is HTML</b>"
         end
         mail.to_s
-        mail.parts.first.message_id.should be_nil
-        mail.parts.last.message_id.should be_nil
+        expect(mail.parts.first.message_id).to be_nil
+        expect(mail.parts.last.message_id).to be_nil
       end
 
       it "should create a multipart/alternative email through a block" do
@@ -295,20 +295,20 @@ describe "MIME Emails" do
             body '<h1>This is HTML</h1>'
           end
         end
-        mail.should be_multipart
-        mail.parts.length.should eq 2
-        mail.text_part.class.should eq Mail::Part
-        mail.text_part.body.to_s.should eq 'This is plain text'
-        mail.html_part.class.should eq Mail::Part
-        mail.html_part.body.to_s.should eq '<h1>This is HTML</h1>'
+        expect(mail).to be_multipart
+        expect(mail.parts.length).to eq 2
+        expect(mail.text_part.class).to eq Mail::Part
+        expect(mail.text_part.body.to_s).to eq 'This is plain text'
+        expect(mail.html_part.class).to eq Mail::Part
+        expect(mail.html_part.body.to_s).to eq '<h1>This is HTML</h1>'
       end
 
       it "should detect an html_part in an existing email" do
         m = Mail.new(:content_type => 'multipart/alternative')
         m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
-        m.text_part.body.decoded.should eq 'PLAIN TEXT'
-        m.html_part.body.decoded.should eq 'HTML TEXT'
+        expect(m.text_part.body.decoded).to eq 'PLAIN TEXT'
+        expect(m.html_part.body.decoded).to eq 'HTML TEXT'
       end
 
       it "should detect a text_part in an existing email with plain text attachment" do
@@ -316,8 +316,8 @@ describe "MIME Emails" do
         m.add_file(fixture('attachments', 'てすと.txt'))
         m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
-        m.text_part.body.decoded.should eq 'PLAIN TEXT'
-        m.html_part.body.decoded.should eq 'HTML TEXT'
+        expect(m.text_part.body.decoded).to eq 'PLAIN TEXT'
+        expect(m.html_part.body.decoded).to eq 'HTML TEXT'
       end
 
       it "should detect an html_part in a multi level mime email" do
@@ -328,8 +328,8 @@ describe "MIME Emails" do
         p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
         m.add_part(p)
         m.add_part(a)
-        m.text_part.body.decoded.should eq 'PLAIN TEXT'
-        m.html_part.body.decoded.should eq 'HTML TEXT'
+        expect(m.text_part.body.decoded).to eq 'PLAIN TEXT'
+        expect(m.html_part.body.decoded).to eq 'HTML TEXT'
       end
 
       it "should only the first part on a stupidly overly complex email" do
@@ -352,8 +352,8 @@ describe "MIME Emails" do
         d.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN 3 TEXT'))
         b.add_part(d)
 
-        m.text_part.body.decoded.should eq 'PLAIN TEXT'
-        m.html_part.body.decoded.should eq 'HTML TEXT'
+        expect(m.text_part.body.decoded).to eq 'PLAIN TEXT'
+        expect(m.html_part.body.decoded).to eq 'HTML TEXT'
       end
 
     end
@@ -362,15 +362,15 @@ describe "MIME Emails" do
 
       it "should return an array of attachments" do
         mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
-        mail.attachments.length.should eq 1
-        mail.attachments.first.filename.should eq 'hello.rb'
+        expect(mail.attachments.length).to eq 1
+        expect(mail.attachments.first.filename).to eq 'hello.rb'
       end
 
       it "should return an array of attachments" do
         mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml'))
-        mail.attachments.length.should eq 2
-        mail.attachments[0].filename.should eq 'byo-ror-cover.png'
-        mail.attachments[1].filename.should eq 'smime.p7s'
+        expect(mail.attachments.length).to eq 2
+        expect(mail.attachments[0].filename).to eq 'byo-ror-cover.png'
+        expect(mail.attachments[1].filename).to eq 'smime.p7s'
       end
 
     end
@@ -381,32 +381,32 @@ describe "MIME Emails" do
         mail = Mail::Message.new
         mail.text_part { body("log message goes here") }
         mail.add_file(fixture('attachments', 'test.png'))
-        mail.mime_type.should eq 'multipart/mixed'
+        expect(mail.mime_type).to eq 'multipart/mixed'
       end
 
       it "should set to multipart/mixed if you add an attachment and then a text part" do
         mail = Mail::Message.new
         mail.add_file(fixture('attachments', 'test.png'))
         mail.text_part { body("log message goes here") }
-        mail.mime_type.should eq 'multipart/mixed'
+        expect(mail.mime_type).to eq 'multipart/mixed'
       end
 
       it "should add a part given a filename" do
         mail = Mail::Message.new
         mail.add_file(fixture('attachments', 'test.png'))
-        mail.parts.length.should eq 1 # First part is an empty text body
+        expect(mail.parts.length).to eq 1 # First part is an empty text body
       end
 
       it "should give the part the right content type" do
         mail = Mail::Message.new
         mail.add_file(fixture('attachments', 'test.png'))
-        mail.parts.first[:content_type].content_type.should eq 'image/png'
+        expect(mail.parts.first[:content_type].content_type).to eq 'image/png'
       end
 
       it "should return attachment objects" do
         mail = Mail::Message.new
         mail.add_file(fixture('attachments', 'test.png'))
-        mail.attachments.first.class.should eq Mail::Part
+        expect(mail.attachments.first.class).to eq Mail::Part
       end
 
       it "should be return an aray of attachments" do
@@ -419,8 +419,8 @@ describe "MIME Emails" do
           add_file fixture('attachments', 'test.pdf')
           add_file fixture('attachments', 'test.zip')
         end
-        mail.attachments.length.should eq 4
-        mail.attachments.each { |a| a.class.should eq Mail::Part }
+        expect(mail.attachments.length).to eq 4
+        mail.attachments.each { |a| expect(a.class).to eq Mail::Part }
       end
 
       it "should return the filename of each attachment" do
@@ -433,10 +433,10 @@ describe "MIME Emails" do
           add_file fixture('attachments', 'test.pdf')
           add_file fixture('attachments', 'test.zip')
         end
-        mail.attachments[0].filename.should eq 'test.png'
-        mail.attachments[1].filename.should eq 'test.jpg'
-        mail.attachments[2].filename.should eq 'test.pdf'
-        mail.attachments[3].filename.should eq 'test.zip'
+        expect(mail.attachments[0].filename).to eq 'test.png'
+        expect(mail.attachments[1].filename).to eq 'test.jpg'
+        expect(mail.attachments[2].filename).to eq 'test.pdf'
+        expect(mail.attachments[3].filename).to eq 'test.zip'
       end
 
       it "should return the type/subtype of each attachment" do
@@ -449,10 +449,10 @@ describe "MIME Emails" do
           add_file fixture('attachments', 'test.pdf')
           add_file fixture('attachments', 'test.zip')
         end
-        mail.attachments[0].mime_type.should eq 'image/png'
-        mail.attachments[1].mime_type.should eq 'image/jpeg'
-        mail.attachments[2].mime_type.should eq 'application/pdf'
-        mail.attachments[3].mime_type.should eq 'application/zip'
+        expect(mail.attachments[0].mime_type).to eq 'image/png'
+        expect(mail.attachments[1].mime_type).to eq 'image/jpeg'
+        expect(mail.attachments[2].mime_type).to eq 'application/pdf'
+        expect(mail.attachments[3].mime_type).to eq 'application/zip'
       end
 
       it "should return the content of each attachment" do
@@ -468,21 +468,21 @@ describe "MIME Emails" do
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
           original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
-          tripped.should eq original
+          expect(tripped).to eq original
           tripped = mail.attachments[1].decoded
           original = File.open(fixture('attachments', 'test.jpg'), 'rb', &:read)
-          tripped.should eq original
+          expect(tripped).to eq original
           tripped = mail.attachments[2].decoded
           original = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
-          tripped.should eq original
+          expect(tripped).to eq original
           tripped = mail.attachments[3].decoded
           original = File.open(fixture('attachments', 'test.zip'), 'rb', &:read)
-          tripped.should eq original
+          expect(tripped).to eq original
         else
-          mail.attachments[0].decoded.should eq File.read(fixture('attachments', 'test.png'))
-          mail.attachments[1].decoded.should eq File.read(fixture('attachments', 'test.jpg'))
-          mail.attachments[2].decoded.should eq File.read(fixture('attachments', 'test.pdf'))
-          mail.attachments[3].decoded.should eq File.read(fixture('attachments', 'test.zip'))
+          expect(mail.attachments[0].decoded).to eq File.read(fixture('attachments', 'test.png'))
+          expect(mail.attachments[1].decoded).to eq File.read(fixture('attachments', 'test.jpg'))
+          expect(mail.attachments[2].decoded).to eq File.read(fixture('attachments', 'test.pdf'))
+          expect(mail.attachments[3].decoded).to eq File.read(fixture('attachments', 'test.zip'))
         end
       end
 
@@ -497,9 +497,9 @@ describe "MIME Emails" do
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
           original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
-          tripped.should eq original
+          expect(tripped).to eq original
         else
-          mail.attachments[0].decoded.should eq File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+          expect(mail.attachments[0].decoded).to eq File.open(fixture('attachments', 'test.png'), 'rb', &:read)
         end
       end
 
@@ -511,10 +511,10 @@ describe "MIME Emails" do
           body    "Attached"
           add_file fixture('attachments', 'test.png')
         end
-        m.attachments.length.should eq 1
-        m.parts.length.should eq 2
-        m.parts[0].body.should eq "Attached"
-        m.parts[1].filename.should eq "test.png"
+        expect(m.attachments.length).to eq 1
+        expect(m.parts.length).to eq 2
+        expect(m.parts[0].body).to eq "Attached"
+        expect(m.parts[1].filename).to eq "test.png"
       end
 
       it "should allow you to add a body as text part if you have added a file" do
@@ -525,9 +525,9 @@ describe "MIME Emails" do
           add_file fixture('attachments', 'test.png')
           body    "Attached"
         end
-        m.parts.length.should eq 2
-        m.parts.first[:content_type].content_type.should eq 'image/png'
-        m.parts.last[:content_type].content_type.should eq 'text/plain'
+        expect(m.parts.length).to eq 2
+        expect(m.parts.first[:content_type].content_type).to eq 'image/png'
+        expect(m.parts.last[:content_type].content_type).to eq 'text/plain'
       end
 
       it "should allow you to add a body as text part if you have added a file and not truncate after newlines - issue 208" do
@@ -539,10 +539,10 @@ describe "MIME Emails" do
           body    "First Line\n\nSecond Line\n\nThird Line\n\n"
           #Note: trailing \n\n is stripped off by Mail::Part initialization
         end
-        m.parts.length.should eq 2
-        m.parts.first[:content_type].content_type.should eq 'image/png'
-        m.parts.last[:content_type].content_type.should eq 'text/plain'
-        m.parts.last.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
+        expect(m.parts.length).to eq 2
+        expect(m.parts.first[:content_type].content_type).to eq 'image/png'
+        expect(m.parts.last[:content_type].content_type).to eq 'text/plain'
+        expect(m.parts.last.to_s).to match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
       end
 
       it "should not raise a warning if there is a charset defined and there are non ascii chars in the body" do
@@ -551,7 +551,7 @@ describe "MIME Emails" do
         mail.body = body
         mail.charset = 'UTF-8'
         mail.add_file fixture('attachments', 'test.png')
-        STDERR.should_not_receive(:puts)
+        expect(STDERR).not_to receive(:puts)
         mail.to_s
       end
 

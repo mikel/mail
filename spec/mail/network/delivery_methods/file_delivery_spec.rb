@@ -39,7 +39,7 @@ describe "SMTP Delivery Method" do
       
       delivery = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
       
-      File.read(delivery).should eq mail.encoded
+      expect(File.read(delivery)).to eq mail.encoded
     end
 
     it "should send multiple emails to multiple files" do
@@ -56,8 +56,8 @@ describe "SMTP Delivery Method" do
       delivery_one = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
       delivery_two = File.join(Mail.delivery_method.settings[:location], 'bob@me.com')
       
-      File.read(delivery_one).should eq mail.encoded
-      File.read(delivery_two).should eq mail.encoded
+      expect(File.read(delivery_one)).to eq mail.encoded
+      expect(File.read(delivery_two)).to eq mail.encoded
     end
 
     it "should only create files based on the addr_spec of the destination" do
@@ -71,7 +71,7 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
       delivery = File.join(Mail.delivery_method.settings[:location], 'mikel@test.lindsaar.net')
-      File.exists?(delivery).should be_true
+      expect(File.exists?(delivery)).to be_truthy
     end
 
     it "should use the base name of the file name to prevent file system traversal" do
@@ -86,7 +86,7 @@ describe "SMTP Delivery Method" do
       end
 
       delivery = File.join(Mail.delivery_method.settings[:location], 'pwn')
-      File.exists?(delivery).should be_true
+      expect(File.exists?(delivery)).to be_truthy
     end
 
     it "should raise an error if no sender is defined" do
@@ -94,13 +94,13 @@ describe "SMTP Delivery Method" do
         delivery_method :file, :location => tmpdir
       end
 
-      lambda do
+      expect do
         Mail.deliver do
           to "to@somemail.com"
           subject "Email with no sender"
           body "body"
         end
-      end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+      end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -108,13 +108,13 @@ describe "SMTP Delivery Method" do
         delivery_method :file, :location => tmpdir
       end
 
-      lambda do
+      expect do
         Mail.deliver do
           from "from@somemail.com"
           subject "Email with no recipient"
           body "body"
         end
-      end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
     end
 
   end

@@ -27,7 +27,7 @@ describe "sendmail delivery agent" do
       subject 'invalid RFC2822'
     end
     
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
+    expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail', 
                                               '-i -f "roger@test.lindsaar.net" --',
                                               '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
                                               mail.encoded)
@@ -45,7 +45,7 @@ describe "sendmail delivery agent" do
       subject 'invalid RFC2822'
     end
 
-    Mail::Sendmail.should_receive(:popen).with('/usr/sbin/sendmail -i -f "roger@test.lindsaar.net" -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net"')
+    expect(Mail::Sendmail).to receive(:popen).with('/usr/sbin/sendmail -i -f "roger@test.lindsaar.net" -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net"')
 
     mail.deliver!
   end
@@ -67,7 +67,7 @@ describe "sendmail delivery agent" do
         smtp_envelope_from 'smtp_from@test.lindsaar.net'
       end
 
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -f "smtp_from@test.lindsaar.net" --',
                                                 '"to@test.lindsaar.net"', 
                                                 mail.encoded)
@@ -89,7 +89,7 @@ describe "sendmail delivery agent" do
         body 'body'
       end
 
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -f "\"from+suffix test\"@test.lindsaar.net" --',
                                                 '"to@test.lindsaar.net"',
                                                 mail.encoded)
@@ -114,7 +114,7 @@ describe "sendmail delivery agent" do
         smtp_envelope_to 'smtp_to@test.lindsaar.net'
       end
 
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -f "from@test.lindsaar.net" --',
                                                 '"smtp_to@test.lindsaar.net"',
                                                 mail.encoded)
@@ -134,7 +134,7 @@ describe "sendmail delivery agent" do
         body 'body'
       end
 
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -f "from@test.lindsaar.net" --',
                                                 '"\"to+suffix test\"@test.lindsaar.net"',
                                                 mail.encoded)
@@ -151,7 +151,7 @@ describe "sendmail delivery agent" do
         from 'from@test.lindsaar.net'
       end
 
-      Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail',
+      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail',
                                                 '-i -f "from@test.lindsaar.net" --',
                                                 '"-hyphen@test.lindsaar.net"',
                                                 mail.encoded)
@@ -170,7 +170,7 @@ describe "sendmail delivery agent" do
       subject 'invalid RFC2822'
     end
     
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
+    expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail', 
                                               ' -f "from@test.lindsaar.net" --',
                                               '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"', 
                                               mail.encoded)
@@ -188,7 +188,7 @@ describe "sendmail delivery agent" do
       subject 'invalid RFC2822'
     end
     
-    Mail::Sendmail.should_receive(:call).with('/usr/sbin/sendmail', 
+    expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/sendmail', 
                                               " -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
                                               %("\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com"), 
                                               mail.encoded)
@@ -199,25 +199,25 @@ describe "sendmail delivery agent" do
     Mail.defaults do
       delivery_method :test
     end
-    lambda do
+    expect do
       Mail.deliver do
         to "to@somemail.com"
         subject "Email with no sender"
         body "body"
       end
-    end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+    end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
   end
 
   it "should raise an error if no recipient if defined" do
     Mail.defaults do
       delivery_method :test
     end
-    lambda do
+    expect do
       Mail.deliver do
         from "from@somemail.com"
         subject "Email with no recipient"
         body "body"
       end
-    end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+    end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
   end
 end

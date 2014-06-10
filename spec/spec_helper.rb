@@ -36,7 +36,6 @@ def fixture(*name)
   File.join(SPEC_ROOT, 'fixtures', name)
 end
 
-alias doing lambda
 
 # Produces an array or printable ascii by default.
 #
