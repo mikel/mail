@@ -5,27 +5,27 @@ describe Mail::Part do
   it "should not add a default Content-ID" do
     part = Mail::Part.new
     part.to_s
-    part.content_id.should be_nil
+    expect(part.content_id).to be_nil
   end
 
   it "should not add a default Content-ID to non-inline attachments" do
     part = Mail::Part.new(:content_disposition => 'attachment')
     part.to_s
-    part.content_id.should be_nil
+    expect(part.content_id).to be_nil
   end
 
   it "should add a default Content-ID to inline attachments" do
     part = Mail::Part.new(:content_disposition => 'inline')
     part.to_s
-    part.content_id.should_not be_nil
+    expect(part.content_id).not_to be_nil
   end
 
   it "should not add a Date, MIME-Version, or Message-ID" do
     part = Mail::Part.new
     part.to_s
-    part.date.should be_nil
-    part.mime_version.should be_nil
-    part.message_id.should be_nil
+    expect(part.date).to be_nil
+    expect(part.mime_version).to be_nil
+    expect(part.message_id).to be_nil
   end
 
   it "should preserve any content id that you put into it" do
@@ -33,7 +33,7 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
-    part.content_id.should eq "<thisis@acontentid>"
+    expect(part.content_id).to eq "<thisis@acontentid>"
   end
   
   it "should return an inline content_id" do
@@ -41,9 +41,9 @@ describe Mail::Part do
       content_id "<thisis@acontentid>"
       body "This is Text"
     end
-    part.cid.should eq "thisis@acontentid"
-    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
-    part.inline_content_id.should eq "thisis@acontentid"
+    expect(part.cid).to eq "thisis@acontentid"
+    expect(STDERR).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
+    expect(part.inline_content_id).to eq "thisis@acontentid"
   end
   
   
@@ -52,24 +52,24 @@ describe Mail::Part do
       content_id "<thi%%sis@acontentid>"
       body "This is Text"
     end
-    part.cid.should eq "thi%25%25sis@acontentid"
-    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
-    part.inline_content_id.should eq "thi%25%25sis@acontentid"
+    expect(part.cid).to eq "thi%25%25sis@acontentid"
+    expect(STDERR).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
+    expect(part.inline_content_id).to eq "thi%25%25sis@acontentid"
   end
   
   it "should add a content_id if there is none and is asked for an inline_content_id" do
     part = Mail::Part.new
-    part.cid.should_not be_nil
-    STDERR.should_receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
-    part.inline_content_id.should_not be_nil
+    expect(part.cid).not_to be_nil
+    expect(STDERR).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
+    expect(part.inline_content_id).not_to be_nil
   end
   
   it "should respond correctly to inline?" do
     part = Mail::Part.new(:content_disposition => 'attachment')
-    part.should_not be_inline
+    expect(part).not_to be_inline
 
     part = Mail::Part.new(:content_disposition => 'inline')
-    part.should be_inline
+    expect(part).to be_inline
   end
   
   
@@ -98,7 +98,7 @@ This message has been scanned for viruses and
 dangerous content by MailScanner, and is
 believed to be clean.
 PARTEND
-      STDERR.should_not_receive(:puts)
+      expect(STDERR).not_to receive(:puts)
       Mail::Part.new(part)
     end
   end
@@ -123,39 +123,39 @@ ENDPART
     end
 
     it "should know if it is a delivery-status report" do
-      @delivery_report.should be_delivery_status_report_part
+      expect(@delivery_report).to be_delivery_status_report_part
     end
     
     it "should create a delivery_status_data header object" do
-      @delivery_report.delivery_status_data.should_not be_nil
+      expect(@delivery_report.delivery_status_data).not_to be_nil
     end
 
     it "should be bounced" do
-      @delivery_report.should be_bounced
+      expect(@delivery_report).to be_bounced
     end
     
     it "should say action 'delayed'" do
-      @delivery_report.action.should eq 'failed'
+      expect(@delivery_report.action).to eq 'failed'
     end
     
     it "should give a final recipient" do
-      @delivery_report.final_recipient.should eq 'RFC822; edwin@zzzzzzz.com'
+      expect(@delivery_report.final_recipient).to eq 'RFC822; edwin@zzzzzzz.com'
     end
     
     it "should give an error code" do
-      @delivery_report.error_status.should eq '5.3.0'
+      expect(@delivery_report.error_status).to eq '5.3.0'
     end
     
     it "should give a diagostic code" do
-      @delivery_report.diagnostic_code.should eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
+      expect(@delivery_report.diagnostic_code).to eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
     end
     
     it "should give a remote-mta" do
-      @delivery_report.remote_mta.should eq 'DNS; mail.zzzzzz.com'
+      expect(@delivery_report.remote_mta).to eq 'DNS; mail.zzzzzz.com'
     end
     
     it "should be retryable" do
-      @delivery_report.should_not be_retryable
+      expect(@delivery_report).not_to be_retryable
     end
 
   end
@@ -164,8 +164,8 @@ ENDPART
     plain_text = "First Line\n\nSecond Line\n\nThird Line\n\n"
     #Note: trailing \n\n is stripped off by Mail::Part initialization
     part = Mail::Part.new(plain_text)
-    part[:content_type].content_type.should eq 'text/plain'
-    part.to_s.should match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
+    expect(part[:content_type].content_type).to eq 'text/plain'
+    expect(part.to_s).to match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
   end
 
 end

@@ -6,8 +6,8 @@ describe "ContentTransferEncodingParser" do
   it "should work" do
     text = "quoted-printable"
     a = Mail::Parsers::ContentTransferEncodingParser.new
-    a.parse(text).error.should be_nil
-    a.parse(text).encoding.should eq 'quoted-printable'
+    expect(a.parse(text).error).to be_nil
+    expect(a.parse(text).encoding).to eq 'quoted-printable'
   end
 
   describe "trailing semi colons" do
@@ -15,29 +15,29 @@ describe "ContentTransferEncodingParser" do
     it "should parse" do
       text = "quoted-printable;"
       a = Mail::Parsers::ContentTransferEncodingParser.new
-      a.parse(text).error.should be_nil
-      a.parse(text).encoding.should eq 'quoted-printable'
+      expect(a.parse(text).error).to be_nil
+      expect(a.parse(text).encoding).to eq 'quoted-printable'
     end
 
     it "should parse with pre white space" do
       text = 'quoted-printable  ;'
       a = Mail::Parsers::ContentTransferEncodingParser.new
-      a.parse(text).error.should be_nil
-      a.parse(text).encoding.should eq 'quoted-printable'
+      expect(a.parse(text).error).to be_nil
+      expect(a.parse(text).encoding).to eq 'quoted-printable'
     end
 
     it "should parse with trailing white space" do
       text = 'quoted-printable; '
       a = Mail::Parsers::ContentTransferEncodingParser.new
-      a.parse(text).error.should be_nil
-      a.parse(text).encoding.should eq 'quoted-printable'
+      expect(a.parse(text).error).to be_nil
+      expect(a.parse(text).encoding).to eq 'quoted-printable'
     end
 
     it "should parse with pre and trailing white space" do
       text = 'quoted-printable  ;  '
       a = Mail::Parsers::ContentTransferEncodingParser.new
-      a.parse(text).error.should be_nil
-      a.parse(text).encoding.should eq 'quoted-printable'
+      expect(a.parse(text).error).to be_nil
+      expect(a.parse(text).encoding).to eq 'quoted-printable'
     end
   end
 
@@ -45,8 +45,8 @@ describe "ContentTransferEncodingParser" do
     it "should work" do
       text = 'x-my-token'
       a = Mail::Parsers::ContentTransferEncodingParser.new
-      a.parse(text).error.should be_nil
-      a.parse(text).encoding.should eq 'x-my-token'
+      expect(a.parse(text).error).to be_nil
+      expect(a.parse(text).encoding).to eq 'x-my-token'
     end
   end
 
@@ -54,8 +54,8 @@ describe "ContentTransferEncodingParser" do
     %w(7bits 8bits 7-bit 8-bit).each do |mechanism|
       it "should parse #{mechanism} variant" do
         a = Mail::Parsers::ContentTransferEncodingParser.new
-        a.parse(mechanism).error.should be_nil
-        a.parse(mechanism).encoding.should eq mechanism
+        expect(a.parse(mechanism).error).to be_nil
+        expect(a.parse(mechanism).encoding).to eq mechanism
       end
     end
   end
