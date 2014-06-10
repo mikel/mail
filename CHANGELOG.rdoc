@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* Update rspec to 3.0.0 (mootpointer)
 
 Performance:
 
