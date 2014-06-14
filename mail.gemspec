@@ -4,7 +4,7 @@ require 'mail/version'
 
 Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = Mail::VERSION::STRING
+  s.version     = Mail::VERSION
   s.author      = "Mikel Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "http://github.com/mikel/mail"
@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
 
   s.require_path = 'lib'
-  s.files = %w(README.md VERSION MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w(README.md MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
 end
