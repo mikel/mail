@@ -111,7 +111,7 @@ describe "IMAP Retriever" do
       Mail.find_and_delete(:count => 15)
       expect(MockIMAP.examples.size).to eq 5
     end
-    
+
   end
 
   describe "last" do
@@ -160,7 +160,7 @@ describe "IMAP Retriever" do
 
       expect(MockIMAP.examples.size).to eq 0
     end
-  end 
+  end
 
   describe "connection" do
     it "should raise an Error if no block is given" do
@@ -214,7 +214,7 @@ describe "IMAP Retriever" do
     it "should ensure utf7 conversion for mailbox names" do
       retrievable = Mail::IMAP.new({})
 
-      Net::IMAP.stub(:encode_utf7 => 'UTF7_STRING')
+      expect(Net::IMAP).to receive(:encode_utf7) { 'UTF7_STRING' }
       options = retrievable.send(:validate_options, {
         :mailbox => 'UTF8_STRING'
       })
@@ -223,7 +223,7 @@ describe "IMAP Retriever" do
   end
 
   describe "error handling" do
-    it "should finish the IMAP connection if an exception is raised" do 
+    it "should finish the IMAP connection if an exception is raised" do
       expect(MockIMAP).to be_disconnected
 
       expect { Mail.all { |m| raise ArgumentError.new } }.to raise_error
@@ -231,7 +231,7 @@ describe "IMAP Retriever" do
       expect(MockIMAP).to be_disconnected
     end
   end
-  
+
   describe "authentication mechanism" do
     before(:each) do
       @imap = MockIMAP.new
