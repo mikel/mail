@@ -84,7 +84,7 @@ module Mail
         result
       end
 
-      def negative_failure_message
+      def failure_message_when_negated
         result = "Expected no email to be sent "
         result += explain_expectations
         result += dump_deliveries
@@ -92,7 +92,7 @@ module Mail
       end
 
       protected
-      
+
       def filter_matched_deliveries(deliveries)
         candidate_deliveries = deliveries
 
