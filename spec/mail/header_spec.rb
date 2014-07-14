@@ -565,15 +565,15 @@ TRACEHEADER
       encoded = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\s \t \t \t    badly formatted             \r\n       \t\t  \t       field").encoded
       result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long badly formatted field\r\n"
       if result.respond_to?(:encode!)
-        result.encode!(Encoding::US_ASCII)
-        expect(encoded.encoding).to eq Encoding::US_ASCII if encoded.respond_to?(:encoding)
+        result.encode!(::Encoding::US_ASCII)
+        expect(encoded.encoding).to eq ::Encoding::US_ASCII if encoded.respond_to?(:encoding)
       end
       expect(encoded).to eq result
     end
 
     if '1.9'.respond_to?(:force_encoding)
       it "should blow up on encoding mismatches" do
-        junk = "Subject: \xAF".force_encoding(Encoding::ASCII_8BIT)
+        junk = "Subject: \xAF".force_encoding(::Encoding::ASCII_8BIT)
         header = Mail::Header.new(junk, 'utf-8')
         expect { header.encoded }.to raise_error
       end
