@@ -341,9 +341,11 @@ describe Mail::Message do
 
     it "should parse non-UTF8 sources" do
       raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
+      original_body = "すみません。\n\n"
+      original_body = original_body.encode("ISO-2022-JP") if original_body.respond_to?(:encode)
       mail = Mail.new(raw_message)
       expect(mail.to).to eq ["raasdnil@gmail.com"]
-      expect(mail.decoded).to eq "すみません。\n\n".encode("ISO-2022-JP")
+      expect(mail.decoded).to eq original_body
       expect(mail.decoded.encoding.name).to eq "ISO-2022-JP" if mail.decoded.respond_to?(:encoding)
     end
   end
