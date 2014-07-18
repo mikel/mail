@@ -1456,7 +1456,9 @@ describe Mail::Message do
     end
 
     it "should be decoded using content type charset" do
-      expect(@message.decoded).to eq "América".encode("ISO-8859-1")
+      expected_string = "América"
+      expected_string = expected_string.encode("ISO-8859-1") if expected_string.respond_to?(:encode)
+      expect(@message.decoded).to eq expected_string
     end
 
     it "should respond true to text?" do
