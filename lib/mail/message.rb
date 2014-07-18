@@ -2149,7 +2149,6 @@ module Mail
         else
           if encoding = Encoding.find(charset) rescue nil
             body_text.force_encoding(encoding)
-            return body_text.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
           end
         end
       end

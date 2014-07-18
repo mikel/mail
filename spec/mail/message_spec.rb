@@ -341,11 +341,10 @@ describe Mail::Message do
 
     it "should parse non-UTF8 sources" do
       raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
-      original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
       mail = Mail.new(raw_message)
       expect(mail.to).to eq ["raasdnil@gmail.com"]
-      expect(mail.decoded).to eq "すみません。\n\n"
-      expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
+      expect(mail.decoded).to eq "すみません。\n\n".encode("ISO-2022-JP")
+      expect(mail.decoded.encoding.name).to eq "ISO-2022-JP" if mail.decoded.respond_to?(:encoding)
     end
   end
 
@@ -1455,7 +1454,7 @@ describe Mail::Message do
     end
 
     it "should be decoded using content type charset" do
-      expect(@message.decoded).to eq "América"
+      expect(@message.decoded).to eq "América".encode("ISO-8859-1")
     end
 
     it "should respond true to text?" do

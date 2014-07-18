@@ -195,4 +195,36 @@ describe "mail encoding" do
       expect(m.subject).to eq "Hello  World"
     end
   end
+
+  context "decoded Ruby string encoding" do
+    context "non multipart" do
+      it "should set Ruby string encoding from charset" do
+        original_body = "hey"
+        encoding = 'ISO-8859-1'
+        original_body.force_encoding(encoding) if original_body.respond_to?(:force_encoding)
+        mail = Mail.new
+        mail.content_type = "text/plain"
+        mail.charset = encoding
+        mail.body = original_body
+        expect(mail.decoded).to eq(original_body)
+        expect(mail.decoded.encoding).to eq(original_body.encoding) if original_body.respond_to?(:encoding)
+      end
+    end
+
+    context "multipart" do
+      it "should set Ruby string encoding from charset" do
+        original_body = "hey"
+        encoding = 'ISO-8859-1'
+        original_body.force_encoding(encoding) if original_body.respond_to?(:force_encoding)
+        mail = Mail.new
+        part = Mail::Part.new
+        part.content_type = "text/plain"
+        part.charset = encoding
+        part.body = original_body
+        mail.add_part(part)
+        expect(mail.text_part.decoded).to eq(original_body)
+        expect(mail.text_part.decoded.encoding).to eq(original_body.encoding) if original_body.respond_to?(:encoding)
+      end
+    end
+  end
 end
