@@ -15,14 +15,14 @@ describe "SMTP Delivery Method" do
                                :enable_starttls_auto => true  }
     end
   end
-  
+
   after(:each) do
     files = Dir.glob(File.join(Mail.delivery_method.settings[:location], '*'))
     files.each do |file|
       File.delete(file)
     end
   end
-  
+
   describe "general usage" do
     tmpdir = File.expand_path('../../../../tmp/mail', __FILE__)
 
@@ -30,15 +30,15 @@ describe "SMTP Delivery Method" do
       Mail.defaults do
         delivery_method :file, :location => tmpdir
       end
-      
+
       mail = Mail.deliver do
         from    'roger@moore.com'
         to      'marcel@amont.com'
         subject 'invalid RFC2822'
       end
-      
+
       delivery = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
-      
+
       expect(File.read(delivery)).to eq mail.encoded
     end
 
@@ -46,16 +46,16 @@ describe "SMTP Delivery Method" do
       Mail.defaults do
         delivery_method :file, :location => tmpdir
       end
-      
+
       mail = Mail.deliver do
         from    'roger@moore.com'
         to      'marcel@amont.com, bob@me.com'
         subject 'invalid RFC2822'
       end
-      
+
       delivery_one = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
       delivery_two = File.join(Mail.delivery_method.settings[:location], 'bob@me.com')
-      
+
       expect(File.read(delivery_one)).to eq mail.encoded
       expect(File.read(delivery_two)).to eq mail.encoded
     end
@@ -64,21 +64,21 @@ describe "SMTP Delivery Method" do
       Mail.defaults do
         delivery_method :file, :location => tmpdir
       end
-      
+
       Mail.deliver do
         from    'roger@moore.com'
         to      '"Long, stupid email address" <mikel@test.lindsaar.net>'
         subject 'invalid RFC2822'
       end
       delivery = File.join(Mail.delivery_method.settings[:location], 'mikel@test.lindsaar.net')
-      expect(File.exists?(delivery)).to be_truthy
+      expect(File.exist?(delivery)).to be_truthy
     end
 
     it "should use the base name of the file name to prevent file system traversal" do
       Mail.defaults do
         delivery_method :file, :location => tmpdir
       end
-      
+
       Mail.deliver do
         from    'roger@moore.com'
         to      '../../../../../../../../../../../tmp/pwn'
@@ -86,7 +86,7 @@ describe "SMTP Delivery Method" do
       end
 
       delivery = File.join(Mail.delivery_method.settings[:location], 'pwn')
-      expect(File.exists?(delivery)).to be_truthy
+      expect(File.exist?(delivery)).to be_truthy
     end
 
     it "should raise an error if no sender is defined" do
@@ -118,5 +118,5 @@ describe "SMTP Delivery Method" do
     end
 
   end
-  
+
 end
