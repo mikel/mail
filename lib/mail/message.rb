@@ -1634,6 +1634,11 @@ module Mail
     #  mail.attachments[0]                #=> Mail::Part (first attachment)
     #
     def attachments
+      parts = parts()
+      if attachment?
+        parts = parts.dup
+        parts.unshift self
+      end
       parts.attachments
     end
 
@@ -2015,7 +2020,7 @@ module Mail
       raw_string = raw_source.to_s
       if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = raw_string.sub(match_data[0], "") 
+        self.raw_source = raw_string.sub(match_data[0], "")
       end
     end
 
