@@ -646,7 +646,7 @@ describe Mail::ContentTypeField do
       end
       c = Mail::ContentTypeField.new('application/octet-stream')
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
-      case 
+      case
       when RUBY_VERSION >= '1.9.3'
         string.force_encoding('SJIS')
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=windows-31j'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
@@ -738,7 +738,6 @@ describe Mail::ContentTypeField do
     end
 
     it "should just ignore illegal params like audio/x-midi;\r\n\sname=Part .exe" do
-      skip "fixed in pr #481"
       c = Mail::ContentTypeField.new("audio/x-midi;\r\n\sname=Part .exe")
       expect(c.string).to eq 'audio/x-midi'
       expect(c.parameters['name']).to eq nil

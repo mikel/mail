@@ -96,7 +96,6 @@ describe "mail encoding" do
 
     describe "quoting token unsafe chars" do
       it "should quote the display name" do
-        skip
         mail = Mail.new
         mail.charset = 'utf-8'
         mail.to = "Mikel @ me Lindsaar <mikel@test.lindsaar.net>"
