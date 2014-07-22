@@ -166,6 +166,10 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq(result)
     end
 
+    it "should decode a blank string" do
+      expect(Mail::Encodings.value_decode("=?utf-8?B??=")).to eq ""
+    end
+
     if '1.9'.respond_to?(:force_encoding)
       it "should decode 8bit encoded string" do
         string = "=?8bit?Q?ALPH=C3=89E?="
@@ -296,6 +300,10 @@ describe Mail::Encodings do
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
       expect(unwrapped.gsub("Subject: ", "")).to eq original
+    end
+
+    it "should decode a blank string" do
+      expect(Mail::Encodings.value_decode("=?utf-8?Q??=")).to eq ""
     end
   end
 
