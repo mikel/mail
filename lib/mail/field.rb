@@ -113,12 +113,12 @@ module Mail
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     def initialize(name, value = nil, charset = 'utf-8')
       case
-      when name =~ /:/                  # Field.new("field-name: field data")
+      when name.index(COLON)            # Field.new("field-name: field data")
         @charset = value.blank? ? charset : value
         @name = name[FIELD_PREFIX]
         @raw_value = name
         @value = nil
-      when name !~ /:/ && value.blank?  # Field.new("field-name")
+      when value.blank?                 # Field.new("field-name")
         @name = name
         @value = nil
         @raw_value = nil

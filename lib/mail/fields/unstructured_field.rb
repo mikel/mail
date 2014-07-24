@@ -178,7 +178,7 @@ module Mail
     end
 
     def encode(value)
-      value = [value].pack("M").gsub("=\n", '')
+      value = [value].pack(CAPITAL_M).gsub(EQUAL_LF, EMPTY)
       value.gsub!(/"/,  '=22')
       value.gsub!(/\(/, '=28')
       value.gsub!(/\)/, '=29')
@@ -189,8 +189,8 @@ module Mail
     end
 
     def encode_crlf(value)
-      value.gsub!("\r", '=0D')
-      value.gsub!("\n", '=0A')
+      value.gsub!(CR, CR_ENCODED)
+      value.gsub!(LF, LF_ENCODED)
       value
     end
 

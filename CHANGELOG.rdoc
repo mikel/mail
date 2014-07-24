@@ -2,6 +2,7 @@
 
 Features:
 * Update rspec to 3.0.0 (mootpointer)
+* #681 - Performance: fewer hotspot object allocations (srawlins)
 
 Performance:
 
