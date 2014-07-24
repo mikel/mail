@@ -46,7 +46,7 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
 
-    include Patterns
+    include Constants
     include Utilities
 
     # ==Making an email
@@ -1963,6 +1963,8 @@ module Mail
 
   private
 
+    HEADER_SEPARATOR = /#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m
+
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
     #   of the message") followed, optionally, by a body.  The header is a
@@ -1974,7 +1976,7 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(HEADER_SEPARATOR, 2)
       self.header = header_part
       self.body   = body_part
     end

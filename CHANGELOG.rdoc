@@ -1,6 +1,7 @@
 == HEAD
 
 Features:
+* #681 - Performance: fewer hotspot object allocations (srawlins)
 
 Performance:
 

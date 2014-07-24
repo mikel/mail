@@ -21,12 +21,14 @@ module Mail::Parsers
         # Main Type
         when :main_type_s then main_type_s = p
         when :main_type_e then
-          content_type.main_type = s[main_type_s..(p-1)].downcase
+          content_type.main_type = s[main_type_s..(p-1)]
+          content_type.main_type.downcase!
 
         # Sub Type
         when :sub_type_s then sub_type_s = p
         when :sub_type_e
-          content_type.sub_type = s[sub_type_s..(p-1)].downcase
+          content_type.sub_type = s[sub_type_s..(p-1)]
+          content_type.sub_type.downcase!
 
         # Parameter Attribute
         when :param_attr_s then param_attr_s = p
