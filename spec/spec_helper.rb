@@ -20,7 +20,7 @@ require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
 
-STDERR.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
+STDERR.puts("Running Specs for Mail Version #{Mail::VERSION}")
 
 RSpec.configure do |c|
   c.mock_with :rspec
