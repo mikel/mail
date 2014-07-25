@@ -131,6 +131,15 @@ describe Mail::Body do
       expect(body.split!('----=_Part_2192_32400445').parts.length).to eq 2
     end
 
+    it "should split when only 1 boundary is present" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+      expect(body.parts.size).to eq 1
+      expect(body.preamble).to eq "this is some text"
+      expect(body.epilogue).to eq ""
+    end
+
     it "should keep the preamble text as its own preamble" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
