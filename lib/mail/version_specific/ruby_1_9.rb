@@ -49,7 +49,7 @@ module Mail
     end
 
     def Ruby19.b_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
+      match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
       if match
         charset = match[1]
         str = Ruby19.decode_base64(match[2])
@@ -65,7 +65,7 @@ module Mail
     end
 
     def Ruby19.q_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
+      match = str.match(/\=\?(.+)?\?[Qq]\?(.*)\?\=/m)
       if match
         charset = match[1]
         string = match[2].gsub(/_/, '=20')

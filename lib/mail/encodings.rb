@@ -114,7 +114,7 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
-      return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
+      return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]*?\?\=/xmi
 
       lines = collapse_adjacent_encodings(str)
 
@@ -126,7 +126,7 @@ module Mail
           else
             # Search for occurences of quoted strings or plain strings
             text.scan(/(                                 # Group around entire regex to include it in matches
-                        \=\?[^?]+\?([QB])\?[^?]+?\?\=    # Quoted String with subgroup for encoding method
+                        \=\?[^?]+\?([QB])\?[^?]*?\?\=    # Quoted String with subgroup for encoding method
                         |                                # or
                         .+?(?=\=\?|$)                    # Plain String
                       )/xmi).map do |matches|
@@ -256,7 +256,7 @@ module Mail
     end
 
     def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
+      match = str.match(/\=\?([^?]+)?\?[QB]\?(.*)\?\=/mi)
       if match
         match[1]
       else
@@ -270,7 +270,7 @@ module Mail
 
     # Gets the encoding type (Q or B) from the string.
     def Encodings.split_value_encoding_from_string(str)
-      match = str.match(/\=\?[^?]+?\?([QB])\?(.+)?\?\=/mi)
+      match = str.match(/\=\?[^?]+?\?([QB])\?(.*)\?\=/mi)
       if match
         match[1]
       else
