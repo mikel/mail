@@ -567,7 +567,7 @@ describe Mail::Address do
       end
 
       it "should handle |jdoe@test   . example|" do
-        skip
+        pending
         address = Mail::Address.new('jdoe@test   . example')
         expect(address).to break_down_to({
                                          :name         => 'jdoe@test.example',

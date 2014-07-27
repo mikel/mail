@@ -13,7 +13,7 @@ describe Mail::AddressList do
       parse_text = '@@@@@@'
       expect { Mail::AddressList.new(parse_text) }.to raise_error
     end
-    
+
     it "should not raise an error if the input is just blank" do
       parse_text = nil
       expect { Mail::AddressList.new(parse_text) }.not_to raise_error
@@ -68,7 +68,7 @@ describe Mail::AddressList do
     end
 
     it "should handle malformed folding whitespace" do
-      skip
+      pending
       parse_text = "leads@sg.dc.com,\n\t sag@leads.gs.ry.com,\n\t sn@example-hotmail.com,\n\t e-s-a-g-8718@app.ar.com,\n\t jp@t-exmaple.com,\n\t\n\t cc@c-l-example.com"
       result = %w(leads@sg.dc.com sag@leads.gs.ry.com sn@example-hotmail.com e-s-a-g-8718@app.ar.com jp@t-exmaple.com cc@c-l-example.com)
       a = Mail::AddressList.new(parse_text)
@@ -81,9 +81,8 @@ describe Mail::AddressList do
       a = Mail::AddressList.new(parse_text)
       expect(a.addresses.first.comments).to eq result
     end
-
   end
-  
+
   describe "functionality" do
     it "should give all the groups when asked" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
@@ -99,14 +98,13 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(list.addresses.length).to eq 3
     end
-    
+
     it "should handle a really nasty obsolete address list" do
-      skip
       psycho_obsolete = "Mary Smith <@machine.tld:mary@example.net>, , jdoe@test   . example"
       list = Mail::AddressList.new(psycho_obsolete)
       expect(list.addresses.length).to eq 2
     end
-    
+
 
     it "should create an address instance for each address returned" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
@@ -119,7 +117,7 @@ describe Mail::AddressList do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(list.group_names).to eq ["my_group"]
     end
-    
+
   end
-  
+
 end

@@ -204,7 +204,7 @@ describe "Test emails" do
     # that appear in the "To:" field, and the spaces that appear around the
     # "." in the jdoe address.
     it "should handle the rfc obsolete addressing" do
-      skip
+      pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example11.eml'))
       expect(mail[:from].addresses).to eq ['john.q.public@example.com']
       expect(mail.from).to eq '"Joe Q. Public" <john.q.public@example.com>'
@@ -220,7 +220,7 @@ describe "Test emails" do
     # day-of-week is missing, that is not specific to the obsolete syntax;
     # it is optional in the current syntax as well.
     it "should handle the rfc obsolete dates" do
-      skip
+      pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example12.eml'))
       expect(mail.from).to eq 'jdoe@machine.example'
       expect(mail.to).to eq 'mary@example.net'
@@ -241,7 +241,7 @@ describe "Test emails" do
     # addresses, dates, and message identifiers are all part of the
     # obsolete syntax.
     it "should handle the rfc obsolete whitespace email" do
-      skip
+      pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example13.eml'))
       expect(mail.from).to eq 'John Doe <jdoe@machine(comment).example>'
       expect(mail.to).to eq 'Mary Smith <mary@example.net>'

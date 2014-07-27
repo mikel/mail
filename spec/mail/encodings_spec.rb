@@ -511,7 +511,6 @@ describe Mail::Encodings do
     end
 
     it "should handle Base64 encoded ISO-2022-JP string" do
-      skip
       string = "ISO-2022-JP =?iso-2022-jp?B?GyRCJCQkPSRLITwkXiRrJEskSyE8JDgkJyQkJFQhPBsoQg==?="
       result = "ISO-2022-JP いそにーまるににーじぇいぴー"
       expect(Mail::Encodings.value_decode(string)).to eq result
