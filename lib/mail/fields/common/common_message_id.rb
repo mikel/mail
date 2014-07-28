@@ -12,15 +12,15 @@ module Mail
         nil
       end
     end
-    
+
     def message_id
       element.message_id if element
     end
-    
+
     def message_ids
       element.message_ids if element
     end
-    
+
     def default
       return nil unless message_ids
       if message_ids.length == 1

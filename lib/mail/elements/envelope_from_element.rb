@@ -1,23 +1,23 @@
 # encoding: utf-8
 module Mail
   class EnvelopeFromElement
-    
+
     include Mail::Utilities
-    
+
     def initialize( string )
       @envelope_from = Mail::Parsers::EnvelopeFromParser.new.parse(string)
       @address = @envelope_from.address
       @date_time = ::DateTime.parse(@envelope_from.ctime_date)
     end
-    
+
     def date_time
       @date_time
     end
-    
+
     def address
       @address
     end
-    
+
     # RFC 4155:
     #   a timestamp indicating the UTC date and time when the message
     #   was originally received, conformant with the syntax of the
@@ -34,6 +34,6 @@ module Mail
     def to_s
       "#{@address} #{formatted_date_time}"
     end
-    
+
   end
 end

@@ -7,10 +7,10 @@ module Mail
     BUILD = 'edge'
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
-    
+
     def self.version
       STRING
     end
-    
+
   end
 end

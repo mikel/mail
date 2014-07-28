@@ -1,16 +1,16 @@
-# encoding: utf-8 
+# encoding: utf-8
 require 'spec_helper'
 
 describe "mail" do
-  
+
   it "should be able to be instantiated" do
     expect { Mail }.not_to raise_error
   end
-  
+
   it "should be able to make a new email" do
     expect(Mail.new.class).to eq Mail::Message
   end
-  
+
   it "should accept headers and body" do
     # Full tests in Message Spec
     message = Mail.new do
