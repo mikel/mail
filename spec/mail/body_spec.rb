@@ -118,6 +118,14 @@ describe Mail::Body do
   end
 
   describe "splitting up a multipart document" do
+    def assert_split_into(body, pre, epi, parts)
+      body = Mail::Body.new(body)
+      body.split!('----=_Part_2192_32400445')
+      expect(body.parts.size).to eq parts
+      expect(body.preamble).to eq pre
+      expect(body.epilogue).to eq epi
+    end
+
     it "should store the boundary passed in" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
@@ -131,13 +139,24 @@ describe Mail::Body do
       expect(body.split!('----=_Part_2192_32400445').parts.length).to eq 2
     end
 
-    it "should split when only 1 boundary is present" do
-      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n"
-      body = Mail::Body.new(multipart_body)
-      body.split!('----=_Part_2192_32400445')
-      expect(body.parts.size).to eq 1
-      expect(body.preamble).to eq "this is some text"
-      expect(body.epilogue).to eq ""
+    it "should split with missing closing boundary" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain\r\n\r\nWhere is the closing boundary...\r\n"
+      assert_split_into(multipart_body, "this is some text", "", 1)
+    end
+
+    it "should not split with empty space after missing closing boundary" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain\r\n\r\nWhere is the closing boundary...\r\n------=_Part_2192_32400445\r\n\r\n\r\n\r\n"
+      assert_split_into(multipart_body, "this is some text", "", 1)
+    end
+
+    it "should split with multiple parts and missing closing boundary" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain\r\n\r\nExtra part 1\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain\r\n\r\nWhere is the closing boundary...\r\n"
+      assert_split_into(multipart_body, "this is some text", "", 2)
+    end
+
+    it "should ignore blank parts" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\n\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain\r\n\r\nWhere is the closing boundary...\r\n"
+      assert_split_into(multipart_body, "this is some text", "", 1)
     end
 
     it "should keep the preamble text as its own preamble" do
