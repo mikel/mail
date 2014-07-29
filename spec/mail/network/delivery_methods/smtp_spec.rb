@@ -169,6 +169,20 @@ describe "SMTP Delivery Method" do
       expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
     end
 
+    it "supports the null sender in the envelope from address" do
+      Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+        message_id "<1234@someemail.com>"
+        body "body"
+
+        smtp_envelope_to "smtp_to@someemail.com"
+        smtp_envelope_from Mail::Constants::NULL_SENDER
+      end
+      expect(MockSMTP.deliveries[0][1]).to eq '<>'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
+    end
+
     it "should raise if there is no envelope From address" do
       expect do
         Mail.deliver do

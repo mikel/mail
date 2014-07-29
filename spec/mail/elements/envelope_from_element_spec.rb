@@ -14,6 +14,14 @@ describe Mail::EnvelopeFromElement do
     it "should parse a full field with a single space day" do
       expect { Mail::EnvelopeFromElement.new("mikel@test.lindsaar.net Mon Aug 17 00:39:21 2009") }.not_to raise_error
     end
+
+    it "should parse a null sender, when specified as <>" do
+      expect { Mail::EnvelopeFromElement.new("<>  Mon Aug 17 00:39:21 2009") }.not_to raise_error
+    end
+
+    it "should parse a null sender, with a single space day" do
+      expect { Mail::EnvelopeFromElement.new("<> Mon Aug 17 00:39:21 2009") }.not_to raise_error
+    end
   end
 
   describe "accessor methods" do
