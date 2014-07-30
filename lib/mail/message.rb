@@ -105,7 +105,7 @@ module Mail
       @html_part = nil
       @errors = nil
       @header = nil
-      @charset = 'UTF-8'
+      @charset = self.class.default_charset
       @defaulted_charset = true
 
       @smtp_envelope_from = nil
@@ -206,6 +206,10 @@ module Mail
     # This setting is ignored by mail (though still available as a flag) if you
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
+
+    def self.default_charset; @@default_charset; end
+    def self.default_charset=(charset); @@default_charset = charset; end
+    self.default_charset = 'UTF-8'
 
     def register_for_delivery_notification(observer)
       STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
