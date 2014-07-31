@@ -8,7 +8,7 @@ describe Mail::ResentMessageIdField do
   end
 
   it "should accept a string with the field name" do
-    t = Mail::ResentMessageIdField.new('Resent-Message-ID: <1234@test.lindsaar.net>')
+    t = Mail::ResentMessageIdField.new('<1234@test.lindsaar.net>')
     expect(t.name).to eq 'Resent-Message-ID'
     expect(t.value).to eq '<1234@test.lindsaar.net>'
     expect(t.message_id).to eq '1234@test.lindsaar.net'

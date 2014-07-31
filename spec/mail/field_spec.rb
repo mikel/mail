@@ -126,7 +126,7 @@ describe Mail::Field do
 
     it "should not strip out content that looks like the field name" do
       pending "pr#766"
-      field = Mail::Field.new('Subject: subject: for your approval')
+      field = Mail::Field.new('subject: for your approval')
       expect(field.value).to eq 'subject: for your approval'
     end
   end
@@ -224,7 +224,7 @@ describe Mail::Field do
     end
 
     it "should allow you to send in multiple unencoded strings to address fields and encode them" do
-      to = Mail::ToField.new(["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"], 'utf-8')
+      to = Mail::ToField.new(["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"],  'utf-8')
       expect(to.encoded).to eq "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 

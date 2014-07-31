@@ -19,11 +19,11 @@ describe Mail::ContentDescriptionField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ContentDescriptionField.new("Content-Description: This is a description") }.not_to raise_error
+      expect { Mail::ContentDescriptionField.new("This is a description") }.not_to raise_error
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ContentDescriptionField.new('Content-Description: This is a description')
+      t = Mail::ContentDescriptionField.new('This is a description')
       expect(t.name).to eq 'Content-Description'
       expect(t.value).to eq 'This is a description'
     end

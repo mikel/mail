@@ -17,7 +17,7 @@ module Mail
         @main_type = nil
         @sub_type = nil
         @parameters = nil
-        value = strip_field(FIELD_NAME, value)
+        value = value.to_s
       end
       ensure_filename_quoted(value)
       super(CAPITALIZED_FIELD, value, charset)

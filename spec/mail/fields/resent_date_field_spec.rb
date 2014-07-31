@@ -15,7 +15,7 @@ describe Mail::ResentDateField do
   end
 
   it "should accept a string with the field name" do
-    t = Mail::ResentDateField.new('Resent-Date: 12 Aug 2009 00:00:02 GMT')
+    t = Mail::ResentDateField.new('12 Aug 2009 00:00:02 GMT')
     expect(t.name).to eq 'Resent-Date'
     expect(t.value).to eq 'Wed, 12 Aug 2009 00:00:02 +0000'
     expect(t.date_time).to eq ::DateTime.parse('12 Aug 2009 00:00:02 GMT')

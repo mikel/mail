@@ -8,7 +8,7 @@ describe Mail::ResentCcField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ResentCcField.new("Resent-Cc: Mikel") }.not_to raise_error
+      expect { Mail::ResentCcField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
@@ -16,7 +16,7 @@ describe Mail::ResentCcField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ResentCcField.new('Resent-Cc: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::ResentCcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Resent-Cc'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end

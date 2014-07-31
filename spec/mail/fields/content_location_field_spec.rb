@@ -11,7 +11,7 @@ describe Mail::ContentLocationField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ContentLocationField.new('Content-Location: photo.jpg')
+      t = Mail::ContentLocationField.new('photo.jpg')
       expect(t.name).to eq 'Content-Location'
       expect(t.value).to eq 'photo.jpg'
     end

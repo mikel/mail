@@ -9,7 +9,7 @@ describe Mail::ReplyToField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ReplyToField.new("Reply-To: Mikel") }.not_to raise_error
+      expect { Mail::ReplyToField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
@@ -17,7 +17,7 @@ describe Mail::ReplyToField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ReplyToField.new('Reply-To: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::ReplyToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Reply-To'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end

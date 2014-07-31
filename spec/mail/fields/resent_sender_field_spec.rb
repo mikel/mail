@@ -8,7 +8,7 @@ describe Mail::ResentSenderField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ResentSenderField.new("Resent-Sender: Mikel") }.not_to raise_error
+      expect { Mail::ResentSenderField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
@@ -16,7 +16,7 @@ describe Mail::ResentSenderField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ResentSenderField.new('Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Resent-Sender'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
