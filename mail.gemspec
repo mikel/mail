@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec', '~> 3.0.0')
   s.add_development_dependency('rdoc')
 
-  s.files = %w(README.md VERSION MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w(README.md MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
 end
