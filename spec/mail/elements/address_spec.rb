@@ -593,6 +593,16 @@ describe Mail::Address do
                                          :raw          => 'groupname+domain.com@example.com'})
       end
 
+      it "should expose group" do
+        struct = Mail::Parsers::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
+        address = Mail::Address.new(struct)
+        expect(address.group).to eq("GROUP")
+      end
+
+      it "should have no group by default" do
+        expect(Mail::Address.new(nil).group).to eq(nil)
+      end
+
     end
 
   end
