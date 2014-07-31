@@ -24,7 +24,7 @@ module Mail
     
     # Returns a list of address objects from the parsed line
     def addresses
-      @addresses ||= @address_list.addresses.map do |address_data|
+      @addresses ||= valid_addresses.map do |address_data|
         Mail::Address.new(address_data)
       end
     end
@@ -34,7 +34,7 @@ module Mail
 
       @addresses_grouped_by_group = {}
 
-      @address_list.addresses.each do |address_data|
+      valid_addresses.each do |address_data|
         if group = address_data.group
           @addresses_grouped_by_group[group] ||= []
           @addresses_grouped_by_group[group] << Mail::Address.new(address_data)
@@ -46,6 +46,12 @@ module Mail
     # Returns the names as an array of strings of all groups
     def group_names # :nodoc:
       @address_list.group_names
+    end
+
+    private
+
+    def valid_addresses
+      @address_list.addresses.select { |a| a.raw.include?("@") }
     end
   end
 end

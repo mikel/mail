@@ -328,9 +328,9 @@ describe Mail::Message do
     end
 
     it "should allow for whitespace at the start of the email" do
-      mail = Mail.new("\r\n\r\nFrom: mikel\r\n\r\nThis is the body")
+      mail = Mail.new("\r\n\r\nFrom: mikel@foo.com\r\n\r\nThis is the body")
       expect(mail.body.to_s).to eq 'This is the body'
-      expect(mail.from).to eq ['mikel']
+      expect(mail.from).to eq ['mikel@foo.com']
     end
 
     it "should read in an email message with the word 'From' in it multiple times and parse it" do
@@ -384,13 +384,13 @@ describe Mail::Message do
       end
 
       it "should return the to field" do
-        @mail.to = "mikel"
-        expect(@mail.to).to eq ["mikel"]
+        @mail.to = "mikel@foo.com"
+        expect(@mail.to).to eq ["mikel@foo.com"]
       end
 
       it "should return the from field" do
-        @mail.from = "bob"
-        expect(@mail.from).to eq ["bob"]
+        @mail.from = "bob@foo.com"
+        expect(@mail.from).to eq ["bob@foo.com"]
       end
 
       it "should return the subject" do
@@ -421,13 +421,13 @@ describe Mail::Message do
       end
 
       it "should return the to field" do
-        @mail.to "mikel"
-        expect(@mail.to).to eq ["mikel"]
+        @mail.to "mikel@foo.com"
+        expect(@mail.to).to eq ["mikel@foo.com"]
       end
 
       it "should return the from field" do
-        @mail.from "bob"
-        expect(@mail.from).to eq ["bob"]
+        @mail.from "bob@foo.com"
+        expect(@mail.from).to eq ["bob@foo.com"]
       end
 
       it "should return the subject" do
@@ -1928,21 +1928,21 @@ describe Mail::Message do
 
     it 'should default to return_path, sender, or first from address' do
       message = Mail::Message.new do
-        return_path 'return'
-        sender 'sender'
-        from 'from'
+        return_path 'return@foo.com'
+        sender 'sender@foo.com'
+        from 'from@foo.com'
       end
-      expect(message.smtp_envelope_from).to eq 'return'
+      expect(message.smtp_envelope_from).to eq 'return@foo.com'
 
       message.return_path = nil
-      expect(message.smtp_envelope_from).to eq 'sender'
+      expect(message.smtp_envelope_from).to eq 'sender@foo.com'
 
       message.sender = nil
-      expect(message.smtp_envelope_from).to eq 'from'
+      expect(message.smtp_envelope_from).to eq 'from@foo.com'
     end
 
     it 'can be overridden' do
-      message = Mail::Message.new { return_path 'return' }
+      message = Mail::Message.new { return_path 'return@foo.com' }
 
       message.smtp_envelope_from = 'envelope_from'
       expect(message.smtp_envelope_from).to eq 'envelope_from'
@@ -1951,7 +1951,7 @@ describe Mail::Message do
       expect(message.smtp_envelope_from).to eq 'declared_from'
 
       message.smtp_envelope_from = nil
-      expect(message.smtp_envelope_from).to eq 'return'
+      expect(message.smtp_envelope_from).to eq 'return@foo.com'
     end
   end
 
@@ -1970,7 +1970,7 @@ describe Mail::Message do
     end
 
     it 'can be overridden' do
-      message = Mail::Message.new { to 'to' }
+      message = Mail::Message.new { to 'to@foo.com' }
 
       message.smtp_envelope_to = 'envelope_to'
       expect(message.smtp_envelope_to).to eq %w(envelope_to)
@@ -1979,7 +1979,7 @@ describe Mail::Message do
       expect(message.smtp_envelope_to).to eq %w(declared_to)
 
       message.smtp_envelope_to = nil
-      expect(message.smtp_envelope_to).to eq %w(to)
+      expect(message.smtp_envelope_to).to eq %w(to@foo.com)
     end
   end
 
