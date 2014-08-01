@@ -260,6 +260,11 @@ describe Mail::Field do
       expect(subject.decoded).to eq "It’s a test?"
     end
 
+    it "should decode Windows-1258" do
+      subject = Mail::SubjectField.new("=?windows-1258?Q?C=E9drine?=", 'utf-8')
+      expect(subject.decoded).to eq "Cédrine"
+    end
+
     it "should support ascii encoded utf-8 subjects" do
       s = "=?utf-8?Q?simp?= =?utf-8?Q?le_=E2=80=93_dash_=E2=80=93_?="
 
