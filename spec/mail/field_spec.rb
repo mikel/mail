@@ -125,8 +125,9 @@ describe Mail::Field do
     end
 
     it "should not strip out content that looks like the field name" do
+      pending "pr#766"
       field = Mail::Field.new('Subject: subject: for your approval')
-      field.value.should == 'subject: for your approval'
+      expect(field.value).to eq 'subject: for your approval'
     end
   end
 
