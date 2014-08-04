@@ -81,6 +81,11 @@ describe Mail::AddressList do
       a = Mail::AddressList.new(parse_text)
       expect(a.addresses.first.comments).to eq result
     end
+
+    it "should ignore invalid things" do
+      a = Mail::AddressList.new('"undisclosed Terra recipient"')
+      expect(a.addresses.size).to eq 0
+    end
   end
 
   describe "functionality" do
