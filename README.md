@@ -44,10 +44,10 @@ Compatibility
 
 Every Mail commit is tested by Travis on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
-* ruby-1.8.7-p374 [ i686 ]
-* ruby-1.9.2-p320 [ x86_64 ]
-* ruby-1.9.3-p327 [ x86_64 ]
-* ruby-2.0.0-p451 [ x86_64 ]
+* ruby-1.8.7 [ i686 ]
+* ruby-1.9.2 [ x86_64 ]
+* ruby-1.9.3 [ x86_64 ]
+* ruby-2.0.0 [ x86_64 ]
 * ruby-2.1.2 [ x86_64 ]
 * ruby-head [ x86_64 ]
 * jruby [ x86_64 ]
