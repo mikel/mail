@@ -55,11 +55,11 @@ module Mail
         str = Ruby19.decode_base64(match[2])
         str.force_encoding(pick_encoding(charset))
       end
-      decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
+      decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
+      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding("utf-8")
+      str.dup.force_encoding(Encoding::UTF_8)
     end
 
     def Ruby19.q_value_encode(str, encoding = nil)
@@ -78,13 +78,13 @@ module Mail
         str.force_encoding(pick_encoding(charset))
         # We assume that binary strings hold utf-8 directly to work around
         # jruby/jruby#829 which subtly changes String#encode semantics.
-        str.force_encoding('utf-8') if str.encoding == Encoding::ASCII_8BIT
+        str.force_encoding(Encoding::UTF_8) if str.encoding == Encoding::ASCII_8BIT
       end
-      decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
+      decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
+      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding("utf-8")
+      str.dup.force_encoding(Encoding::UTF_8)
     end
 
     def Ruby19.param_decode(str, encoding)
