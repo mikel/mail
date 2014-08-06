@@ -40,7 +40,7 @@ module Mail
     end
 
     def encoded
-      map.sort { |a,b| a.first.to_s <=> b.first.to_s }.map! do |key_name, value|
+      map.sort_by { |a| a.first.to_s }.map! do |key_name, value|
         unless value.ascii_only?
           value = Mail::Encodings.param_encode(value)
           key_name = "#{key_name}*"
@@ -50,7 +50,7 @@ module Mail
     end
 
     def decoded
-      map.sort { |a,b| a.first.to_s <=> b.first.to_s }.map! do |key_name, value|
+      map.sort_by { |a| a.first.to_s }.map! do |key_name, value|
         %Q{#{key_name}=#{quote_token(value)}}
       end.join("; ")
     end
