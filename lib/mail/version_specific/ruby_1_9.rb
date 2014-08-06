@@ -140,37 +140,37 @@ module Mail
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def Ruby19.pick_encoding(charset)
-      encoding = case charset
+      encoding = case charset.downcase
 
       # ISO-8859-8-I etc. http://en.wikipedia.org/wiki/ISO-8859-8-I
-      when /^iso[-_]?8859-(\d+)(-i)?$/i
+      when /^iso[-_]?8859-(\d+)(-i)?$/
         "ISO-8859-#{$1}"
 
       # ISO-8859-15, ISO-2022-JP and alike
-      when /iso[-_]?(\d{4})-?(\w{1,2})/i
+      when /^iso[-_]?(\d{4})-?(\w{1,2})$/
         "ISO-#{$1}-#{$2}"
 
       # "ISO-2022-JP-KDDI"  and alike
-      when /iso[-_]?(\d{4})-?(\w{1,2})-?(\w*)/i
+      when /^iso[-_]?(\d{4})-?(\w{1,2})-?(\w*)$/
         "ISO-#{$1}-#{$2}-#{$3}"
 
       # UTF-8, UTF-32BE and alike
-      when /utf[\-_]?(\d{1,2})?(\w{1,2})/i
+      when /^utf[\-_]?(\d{1,2})?(\w{1,2})$/
         "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
 
       # Windows-1252 and alike
-      when /Windows-?(.*)/i
+      when /^windows-?(.*)$/
         "Windows-#{$1}"
 
-      when /^8bit$/
+      when '8bit'
         Encoding::ASCII_8BIT
 
       # alternatives/misspellings of us-ascii seen in the wild
-      when /^iso[-_]?646(-us)?$/i, /us=ascii/i
+      when /^iso[-_]?646(-us)?$/, 'us=ascii'
         Encoding::ASCII
 
       # Microsoft-specific alias for MACROMAN
-      when /^macintosh$/i
+      when 'macintosh'
         Encoding::MACROMAN
 
       # Microsoft-specific alias for CP949 (Korean)
@@ -182,7 +182,7 @@ module Mail
         Encoding::Shift_JIS
 
       # GB2312 (Chinese charset) is a subset of GB18030 (its replacement)
-      when /gb2312/i
+      when 'gb2312'
         Encoding::GB18030
 
       when 'cp-850'

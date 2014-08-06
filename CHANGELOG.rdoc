@@ -1,5 +1,6 @@
 == HEAD
 
+* #772 - normalize encoding matchers (grosser)
 * #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
 * #775 - avoid failed encodings / stop bad charsets early (grosser)
 
