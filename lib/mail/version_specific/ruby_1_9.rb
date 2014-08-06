@@ -140,7 +140,7 @@ module Mail
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def Ruby19.pick_encoding(charset)
-      case charset
+      encoding = case charset
 
       # ISO-8859-8-I etc. http://en.wikipedia.org/wiki/ISO-8859-8-I
       when /^iso-?8859-(\d+)(-i)?$/i
@@ -187,6 +187,24 @@ module Mail
 
       else
         charset
+      end
+
+      convert_to_encoding(encoding)
+    end
+
+    class << self
+      private
+
+      def convert_to_encoding(encoding)
+        if encoding.is_a?(Encoding)
+          encoding
+        else
+          begin
+            Encoding.find(encoding)
+          rescue ArgumentError
+            Encoding::BINARY
+          end
+        end
       end
     end
   end
