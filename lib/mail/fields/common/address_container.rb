@@ -1,7 +1,7 @@
 module Mail
-  
+
   class AddressContainer < Array
-    
+
     def initialize(field, list = [])
       @field = field
       super(list)
@@ -12,5 +12,5 @@ module Mail
     end
 
   end
-  
+
 end

@@ -5,9 +5,9 @@ module Mail
   # Each email retrieved (RFC2822) is given as an instance of +Message+.
   #
   # While being retrieved, emails can be yielded if a block is given.
-  # 
+  #
   # === Example of retrieving Emails from GMail:
-  # 
+  #
   #   Mail.defaults do
   #     retriever_method :pop3, { :address             => "pop.gmail.com",
   #                               :port                => 995,
@@ -15,22 +15,22 @@ module Mail
   #                               :password            => '<password>',
   #                               :enable_ssl          => true }
   #   end
-  # 
+  #
   #   Mail.all    #=> Returns an array of all emails
   #   Mail.first  #=> Returns the first unread email
   #   Mail.last   #=> Returns the last unread email
-  # 
+  #
   # You can also pass options into Mail.find to locate an email in your pop mailbox
   # with the following options:
-  # 
+  #
   #   what:  last or first emails. The default is :first.
   #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
   #          instance of Message, not an array of Message instances.
-  # 
+  #
   #   Mail.find(:what => :first, :count => 10, :order => :asc)
   #   #=> Returns the first 10 emails in ascending order
-  # 
+  #
   class POP3 < Retriever
     require 'net/pop' unless defined?(Net::POP)
 
@@ -42,9 +42,9 @@ module Mail
                         :authentication       => nil,
                         :enable_ssl           => false }.merge!(values)
     end
-    
+
     attr_accessor :settings
-    
+
     # Find emails in a POP3 mailbox. Without any options, the 5 last received emails are returned.
     #
     # Possible options:
@@ -57,18 +57,18 @@ module Mail
     #
     def find(options = {}, &block)
       options = validate_options(options)
-      
+
       start do |pop3|
         mails = pop3.mails
         pop3.reset # Clears all "deleted" marks. This prevents non-explicit/accidental deletions due to server settings.
         mails.sort! { |m1, m2| m2.number <=> m1.number } if options[:what] == :last
         mails = mails.first(options[:count]) if options[:count].is_a? Integer
-        
+
         if options[:what].to_sym == :last && options[:order].to_sym == :desc ||
            options[:what].to_sym == :first && options[:order].to_sym == :asc ||
           mails.reverse!
         end
-        
+
         if block_given?
           mails.each do |mail|
             new_message = Mail.new(mail.pop)
@@ -84,11 +84,11 @@ module Mail
           end
           emails.size == 1 && options[:count] == 1 ? emails.first : emails
         end
-        
+
       end
     end
-    
-    # Delete all emails from a POP3 server   
+
+    # Delete all emails from a POP3 server
     def delete_all
       start do |pop3|
         unless pop3.mails.empty?
@@ -106,9 +106,9 @@ module Mail
         yield pop3
       end
     end
-    
+
   private
-  
+
     # Set default options
     def validate_options(options)
       options ||= {}
@@ -118,17 +118,17 @@ module Mail
       options[:delete_after_find] ||= false
       options
     end
-  
+
     # Start a POP3 session and ensure that it will be closed in any case. Any messages
     # marked for deletion via #find_and_delete or with the :delete_after_find option
     # will be deleted when the session is closed.
     def start(config = Configuration.instance, &block)
       raise ArgumentError.new("Mail::Retrievable#pop3_start takes a block") unless block_given?
-    
+
       pop3 = Net::POP3.new(settings[:address], settings[:port], false)
       pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if settings[:enable_ssl]
       pop3.start(settings[:user_name], settings[:password])
-    
+
       yield pop3
     ensure
       if defined?(pop3) && pop3 && pop3.started?

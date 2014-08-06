@@ -6,7 +6,7 @@ describe "Utilities Module" do
   include Mail::Utilities
 
   describe "token safe" do
-    
+
     describe "checking" do
       it "should return true if a string is token safe" do
         expect(token_safe?('.abc')).to be_truthy
@@ -40,7 +40,7 @@ describe "Utilities Module" do
   end
 
   describe "atom safe" do
-    
+
     describe "checking" do
       it "should return true if a string is token safe" do
         expect(atom_safe?('?=abc')).to be_truthy
@@ -74,7 +74,7 @@ describe "Utilities Module" do
         expect(quote_atom('?=abc'.mb_chars)).to eq '?=abc'
         expect(quote_atom('.abc'.mb_chars)).to eq '".abc"'
       end
-      
+
       it "should quote white space" do
         expect(quote_atom('ab abc'.mb_chars)).to eq '"ab abc"'
         expect(quote_atom("a\sb\ta\r\nbc".mb_chars)).to eq %{"a\sb\ta\r\nbc"}
@@ -127,9 +127,9 @@ describe "Utilities Module" do
       result = 'This is not \(\)escaped\(\)'
       expect(escape_paren(test)).to eq result
     end
-    
+
   end
-  
+
   describe "unescaping parenthesis" do
 
     it "should work" do
@@ -157,7 +157,7 @@ describe "Utilities Module" do
     end
 
   end
-  
+
   describe "unescaping brackets" do
 
     it "should work" do
@@ -185,7 +185,7 @@ describe "Utilities Module" do
     end
 
   end
-  
+
   describe "quoting phrases" do
     it "should quote a phrase if it is unsafe" do
       test = 'this.needs quoting'
@@ -198,13 +198,13 @@ describe "Utilities Module" do
       result = '"this needs \"escaping"'
       expect(dquote(test)).to eq result
     end
-    
+
     it "should quote correctly a phrase with an escaped quote in it" do
       test = 'this needs \"quoting'
       result = '"this needs \\\\\\"quoting"'
       expect(dquote(test)).to eq result
     end
-    
+
     it "should quote correctly a phrase with an escaped backslash followed by an escaped quote in it" do
       test = 'this needs \\\"quoting'
       result = '"this needs \\\\\\\\\\"quoting"'
@@ -237,8 +237,8 @@ describe "Utilities Module" do
       expect(unquote('"This is "quoted"')).to eq 'This is "quoted'
     end
   end
-  
-  
+
+
   describe "parenthesizing phrases" do
     it "should parenthesize a phrase" do
       test = 'this.needs parenthesizing'
@@ -269,25 +269,25 @@ describe "Utilities Module" do
       result = '(this needs \)escaping)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped parentheses in it" do
       test = 'this needs \(parenthesizing'
       result = '(this needs \(parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped parentheses in it (other way)" do
       test = 'this needs \)parenthesizing'
       result = '(this needs \)parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it" do
       test = 'this needs \\\(parenthesizing'
       result = '(this needs \\\(parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it (other way)" do
       test = 'this needs \\\)parenthesizing'
       result = '(this needs \\\)parenthesizing)'
@@ -299,10 +299,10 @@ describe "Utilities Module" do
       result = '(this \(needs\) parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
   end
-  
-  
+
+
   describe "bracketizing phrases" do
     it "should bracketize a phrase" do
       test = 'this.needs bracketizing'
@@ -333,25 +333,25 @@ describe "Utilities Module" do
       result = '<this needs \>escaping>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped brackets in it" do
       test = 'this needs \<bracketizing'
       result = '<this needs \<bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped brackets in it (other way)" do
       test = 'this needs \>bracketizing'
       result = '<this needs \>bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it" do
       test = 'this needs \\\<bracketizing'
       result = '<this needs \\\<bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it (other way)" do
       test = 'this needs \\\>bracketizing'
       result = '<this needs \\\>bracketizing>'
@@ -363,7 +363,7 @@ describe "Utilities Module" do
       result = '<this \<needs\> bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
   end
 
   describe "url escaping" do
@@ -377,5 +377,5 @@ describe "Utilities Module" do
       expect(uri_unescape("@?@!")).to eq uri_parser.unescape("@?@!")
     end
   end
-  
+
 end

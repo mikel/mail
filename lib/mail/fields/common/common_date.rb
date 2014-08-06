@@ -9,7 +9,7 @@ module Mail
     def default
       date_time
     end
-    
+
     def parse(val = value)
       unless val.blank?
         @element = Mail::DateTimeElement.new(val)
@@ -19,11 +19,11 @@ module Mail
     end
 
     private
-    
+
     def do_encode(field_name)
       "#{field_name}: #{value}\r\n"
     end
-    
+
     def do_decode
       "#{value}"
     end

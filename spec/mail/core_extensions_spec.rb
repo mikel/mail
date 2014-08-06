@@ -37,11 +37,11 @@ describe Object do
     it "should say a number is not blank" do
       expect(1).not_to be_blank
     end
-    
+
     it "should say a valueless hash is not blank" do
       expect({:one => nil, :two => nil}).not_to be_blank
     end
-    
+
     it "should say a hash containing an empty hash is not blank" do
       expect({:key => {}}).not_to be_blank
     end
@@ -59,7 +59,7 @@ describe Object do
     it "should leave crlf as lf" do
       expect("\r\n".to_lf).to eq "\n"
     end
-    
+
     it "should handle japanese characters" do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
       expect(string.to_lf).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\n\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\n\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\n\n"
@@ -83,7 +83,7 @@ describe Object do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
       expect(string.to_crlf).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
     end
-    
+
   end
 
   describe "methods on NilClass" do

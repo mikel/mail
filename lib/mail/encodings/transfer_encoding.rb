@@ -16,7 +16,7 @@ module Mail
       end
 
       def self.can_encode?(enc)
-        can_transport? enc 
+        can_transport? enc
       end
 
       def self.cost(str)
@@ -29,20 +29,20 @@ module Mail
 
       def self.get_best_compatible(source_encoding, str)
         if self.can_transport? source_encoding then
-            source_encoding 
+            source_encoding
         else
             choices = []
             Encodings.get_all.each do |enc|
                 choices << enc if self.can_transport? enc and enc.can_encode? source_encoding
             end
-            best = nil 
+            best = nil
             best_cost = 100
             choices.each do |enc|
                 this_cost = enc.cost str
                 if this_cost < best_cost then
                     best_cost = this_cost
                     best = enc
-                elsif this_cost == best_cost then 
+                elsif this_cost == best_cost then
                     best = enc if enc::PRIORITY < best::PRIORITY
                 end
             end

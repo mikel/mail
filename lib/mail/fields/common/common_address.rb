@@ -3,7 +3,7 @@ require 'mail/fields/common/address_container'
 
 module Mail
   module CommonAddress # :nodoc:
-      
+
     def parse(val = value)
       unless val.blank?
         @address_list = AddressList.new(encode_if_needed(val))
@@ -11,15 +11,15 @@ module Mail
         nil
       end
     end
-    
+
     def charset
       @charset
     end
-    
+
     def encode_if_needed(val)
       Encodings.address_encode(val, charset)
     end
-    
+
     # Allows you to iterate through each address object in the address_list
     def each
       address_list.addresses.each do |address|
@@ -38,24 +38,24 @@ module Mail
       list = address_list.addresses.map { |a| a.format }
       Mail::AddressContainer.new(self, list)
     end
-  
+
     # Returns the display name of all the addresses in the address list
     def display_names
       list = address_list.addresses.map { |a| a.display_name }
       Mail::AddressContainer.new(self, list)
     end
-  
+
     # Returns the actual address objects in the address list
     def addrs
       list = address_list.addresses
       Mail::AddressContainer.new(self, list)
     end
-  
+
     # Returns a hash of group name => address strings for the address list
     def groups
       address_list.addresses_grouped_by_group
     end
-  
+
     # Returns the addresses that are part of groups
     def group_addresses
       decoded_group_addresses
@@ -75,7 +75,7 @@ module Mail
     def group_names # :nodoc:
       address_list.group_names
     end
-  
+
     def default
       addresses
     end
@@ -95,9 +95,9 @@ module Mail
       super
       parse(self.value)
     end
-  
+
     private
-  
+
     def do_encode(field_name)
       return '' if value.blank?
       address_array = address_list.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
@@ -121,7 +121,7 @@ module Mail
     def address_list # :nodoc:
       @address_list ||= AddressList.new(value)
     end
-  
+
     def get_group_addresses(group_list)
       if group_list.respond_to?(:addresses)
         group_list.addresses.map do |address|
