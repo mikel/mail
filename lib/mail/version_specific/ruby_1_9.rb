@@ -143,15 +143,15 @@ module Mail
       encoding = case charset
 
       # ISO-8859-8-I etc. http://en.wikipedia.org/wiki/ISO-8859-8-I
-      when /^iso-?8859-(\d+)(-i)?$/i
+      when /^iso[-_]?8859-(\d+)(-i)?$/i
         "ISO-8859-#{$1}"
 
       # ISO-8859-15, ISO-2022-JP and alike
-      when /iso-?(\d{4})-?(\w{1,2})/i
+      when /iso[-_]?(\d{4})-?(\w{1,2})/i
         "ISO-#{$1}-#{$2}"
 
       # "ISO-2022-JP-KDDI"  and alike
-      when /iso-?(\d{4})-?(\w{1,2})-?(\w*)/i
+      when /iso[-_]?(\d{4})-?(\w{1,2})-?(\w*)/i
         "ISO-#{$1}-#{$2}-#{$3}"
 
       # UTF-8, UTF-32BE and alike
@@ -166,7 +166,7 @@ module Mail
         Encoding::ASCII_8BIT
 
       # alternatives/misspellings of us-ascii seen in the wild
-      when /^iso-?646(-us)?$/i, /us=ascii/i
+      when /^iso[-_]?646(-us)?$/i, /us=ascii/i
         Encoding::ASCII
 
       # Microsoft-specific alias for MACROMAN
@@ -184,6 +184,12 @@ module Mail
       # GB2312 (Chinese charset) is a subset of GB18030 (its replacement)
       when /gb2312/i
         Encoding::GB18030
+
+      when 'cp-850'
+        Encoding::CP850
+
+      when 'latin2'
+        Encoding::ISO_8859_2
 
       else
         charset
