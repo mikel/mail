@@ -96,7 +96,15 @@ module Mail
     end
 
     def filename
-      parameters['filename'] || parameters['name'] || value[/name="(.*?)"/, 1]
+      case
+      when parameters['filename']
+        @filename = parameters['filename']
+      when parameters['name']
+        @filename = parameters['name']
+      else
+        @filename = nil
+      end
+      @filename
     end
 
     # TODO: Fix this up

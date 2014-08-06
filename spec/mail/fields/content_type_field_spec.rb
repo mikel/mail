@@ -620,12 +620,6 @@ describe Mail::ContentTypeField do
       expect(c.filename).to eq 'mikel.jpg'
     end
 
-    it "should locate non-ascii filename" do
-      string = 'application/msword; name="Êëèêîâàÿ_ðåêëàìà.doc"'
-      c = Mail::ContentTypeField.new(string)
-      expect(c.filename).to eq 'Êëèêîâàÿ_ðåêëàìà.doc'
-    end
-
     it "should locate a name if there is no filename" do
       string = %q{application/octet-stream; name=mikel.jpg}
       c = Mail::ContentTypeField.new(string)
