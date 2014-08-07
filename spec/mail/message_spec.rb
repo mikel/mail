@@ -339,12 +339,21 @@ describe Mail::Message do
     end
 
     it "should parse non-UTF8 sources" do
-      raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
+      raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_iso_2022.eml'))
       original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
       mail = Mail.new(raw_message)
       mail.to.should eq ["raasdnil@gmail.com"]
       mail.decoded.should eq "すみません。\n\n"
       raw_message.encoding.should eq original_encoding if raw_message.respond_to?(:encoding)
+    end
+
+    if '1.9+'.respond_to?(:encoding)
+      it "should be able to normalize CRLFs on non-UTF8 encodings" do
+        File.open(fixture('emails', 'multi_charset', 'japanese_shift_jis.eml')) do |io|
+          mail = Mail.new(io.read)
+          expect(mail.raw_source.encoding).to eq Encoding::BINARY
+        end
+      end
     end
   end
 
