@@ -1,8 +1,11 @@
 # encoding: utf-8
 require 'mail/fields/common/parameter_hash'
+require 'mail/fields/common/common_content'
 
 module Mail
   class ContentTypeField < StructuredField
+
+    include Mail::CommonContent
 
     FIELD_NAME = 'content-type'
     CAPITALIZED_FIELD = 'Content-Type'
@@ -67,14 +70,6 @@ module Mail
 
     alias :content_type :string
 
-    def parameters
-      unless @parameters
-        @parameters = ParameterHash.new
-        element.parameters.each { |p| @parameters.merge!(p) }
-      end
-      @parameters
-    end
-
     def ContentTypeField.with_boundary(type)
       new("#{type}; boundary=#{generate_boundary}")
     end
@@ -95,37 +90,6 @@ module Mail
       params.map { |k,v| "#{k}=#{Encodings.param_encode(v)}" }.join("; ")
     end
 
-    def filename
-      case
-      when parameters['filename']
-        @filename = parameters['filename']
-      when parameters['name']
-        @filename = parameters['name']
-      else
-        @filename = nil
-      end
-      @filename
-    end
-
-    # TODO: Fix this up
-    def encoded
-      if parameters.length > 0
-        p = ";\r\n\s#{parameters.encoded}"
-      else
-        p = ""
-      end
-      "#{CAPITALIZED_FIELD}: #{content_type}#{p}\r\n"
-    end
-
-    def decoded
-      if parameters.length > 0
-        p = "; #{parameters.decoded}"
-      else
-        p = ""
-      end
-      "#{content_type}" + p
-    end
-
     private
 
     def method_missing(name, *args, &block)
@@ -135,6 +99,10 @@ module Mail
       else
         super
       end
+    end
+
+    def decode_encode_field
+      content_type
     end
 
     # Various special cases from random emails found that I am not going to change

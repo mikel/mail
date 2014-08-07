@@ -1,8 +1,11 @@
 # encoding: utf-8
 require 'mail/fields/common/parameter_hash'
+require 'mail/fields/common/common_content'
 
 module Mail
   class ContentDispositionField < StructuredField
+
+    include Mail::CommonContent
     
     FIELD_NAME = 'content-disposition'
     CAPITALIZED_FIELD = 'Content-Disposition'
@@ -28,43 +31,12 @@ module Mail
     def disposition_type
       element.disposition_type
     end
-    
-    def parameters
-      @parameters = ParameterHash.new
-      element.parameters.each { |p| @parameters.merge!(p) }
-      @parameters
-    end
 
-    def filename
-      case
-      when !parameters['filename'].blank?
-        @filename = parameters['filename']
-      when !parameters['name'].blank?
-        @filename = parameters['name']
-      else 
-        @filename = nil
-      end
-      @filename
-    end
+    private
 
-    # TODO: Fix this up
-    def encoded
-      if parameters.length > 0
-        p = ";\r\n\s#{parameters.encoded}\r\n"
-      else
-        p = "\r\n"
-      end
-      "#{CAPITALIZED_FIELD}: #{disposition_type}" + p
+    def decode_encode_field
+      disposition_type
     end
     
-    def decoded
-      if parameters.length > 0
-        p = "; #{parameters.decoded}"
-      else
-        p = ""
-      end
-      "#{disposition_type}" + p
-    end
-
   end
 end
