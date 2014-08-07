@@ -70,6 +70,14 @@ describe Mail::Message do
       Mail.read(fixture('emails', 'error_emails', 'bad_subject.eml')).subject
     end
 
+    it 'should use default charset' do
+      begin
+        Mail::Message.default_charset, old = 'iso-8859-1', Mail::Message.default_charset
+        expect(Mail::Message.new.charset).to eq 'iso-8859-1'
+      ensure
+        Mail::Message.default_charset = old
+      end
+    end
 
     it 'should be able to parse an email missing an encoding' do
       Mail.read(fixture('emails', 'error_emails', 'must_supply_encoding.eml'))
