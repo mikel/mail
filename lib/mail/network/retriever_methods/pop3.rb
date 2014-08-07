@@ -61,7 +61,7 @@ module Mail
       start do |pop3|
         mails = pop3.mails
         pop3.reset # Clears all "deleted" marks. This prevents non-explicit/accidental deletions due to server settings.
-        mails.sort_by! { |m| -1 * m.number } if options[:what] == :last
+        mails.sort! { |m1, m2| m2.number <=> m1.number } if options[:what] == :last
         mails = mails.first(options[:count]) if options[:count].is_a? Integer
         
         if options[:what].to_sym == :last && options[:order].to_sym == :desc ||
