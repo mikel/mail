@@ -305,6 +305,10 @@ describe Mail::Encodings do
     it "should decode a blank string" do
       expect(Mail::Encodings.value_decode("=?utf-8?Q??=")).to eq ""
     end
+
+    it "should decode a string with spaces" do
+      expect(Mail::Encodings.value_decode("=?utf-8?Q?a a?=")).to eq "a a"
+    end
   end
 
   describe "mixed Q and B encodings" do
