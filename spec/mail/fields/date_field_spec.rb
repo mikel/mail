@@ -69,8 +69,8 @@ describe Mail::DateField do
     end
 
     it "should give today's date if no date is specified" do
-      now = Time.now
-      allow(Time).to receive(:now).and_return(now)
+      now = DateTime.now
+      expect(DateTime).to receive(:now).at_least(:once).and_return(now)
       expect(Mail::DateField.new.date_time).to eq ::DateTime.parse(now.to_s)
     end
     
