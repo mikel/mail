@@ -1486,8 +1486,8 @@ describe Mail::Message do
     describe "==" do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
-        time = Time.now
-        allow(Time).to receive(:now).and_return(time)
+        time = DateTime.now
+        expect(DateTime).to receive(:now).at_least(:once).and_return(time)
       end
 
       it "should be implemented" do

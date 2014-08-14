@@ -29,8 +29,8 @@ describe Mail::ResentDateField do
   end
   
   it "should give today's date if no date is specified" do
-    now = Time.now
-    allow(Time).to receive(:now).and_return(now)
+    now = DateTime.now
+    expect(DateTime).to receive(:now).at_least(:once).and_return(now)
     t = Mail::ResentDateField.new
     expect(t.name).to eq 'Resent-Date'
     expect(t.date_time).to eq ::DateTime.parse(now.to_s)
