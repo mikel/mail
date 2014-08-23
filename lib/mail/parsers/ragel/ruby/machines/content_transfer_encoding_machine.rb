@@ -1,7 +1,7 @@
 
-# line 1 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 1 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
 
-# line 10 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 10 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
 
 
 module Mail
@@ -9,7 +9,7 @@ module Mail
     module Ragel
       module ContentTransferEncodingMachine
         
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 13 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 class << self
 	attr_accessor :_content_transfer_encoding_trans_keys
 	private :_content_transfer_encoding_trans_keys, :_content_transfer_encoding_trans_keys=
@@ -19,8 +19,8 @@ self._content_transfer_encoding_trans_keys = [
 	9, 32, 10, 10, 9, 
 	32, 10, 10, 9, 32, 
 	9, 126, 1, 127, 1, 127, 
-	10, 10, 9, 32, -128, 
-	-1, 9, 126, 9, 59, 
+	10, 10, 9, 32, 0, 
+	127, 9, 126, 9, 59, 
 	9, 59, 9, 40, 9, 40, 
 	0, 0, 0
 ]
@@ -125,23 +125,23 @@ self._content_transfer_encoding_indicies = [
 	1, 19, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	19, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 19, 25, 1, 1, 1, 26, 
+	19, 1, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 19, 19, 19, 19, 19, 19, 
+	19, 19, 1, 25, 1, 1, 1, 26, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 25, 27, 27, 27, 27, 27, 
@@ -237,7 +237,7 @@ end
 self.content_transfer_encoding_en_main = 1;
 
 
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 17 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
 
         def self.parse(data)
           p = 0
@@ -247,7 +247,7 @@ self.content_transfer_encoding_en_main = 1;
           actions = []
           data_unpacked = data.bytes.to_a
           
-# line 251 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 251 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -255,9 +255,9 @@ begin
 	top = 0
 end
 
-# line 26 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 26 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
           
-# line 261 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 261 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -294,23 +294,23 @@ begin
 	if _content_transfer_encoding_trans_actions[_trans] != 0
 	case _content_transfer_encoding_trans_actions[_trans]
 	when 3 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 6 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
 	when 10 then
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 17 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(14, p) 		end
 	when 1 then
-# line 18 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 18 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(15, p) 		end
 	when 2 then
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -321,7 +321,7 @@ begin
 	end
  		end
 	when 9 then
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 6 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		top -= 1
@@ -331,17 +331,17 @@ begin
 	end
  		end
 	when 4 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 18 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 18 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(15, p) 		end
 	when 5 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -352,10 +352,10 @@ begin
 	end
  		end
 	when 7 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -366,10 +366,10 @@ begin
 	end
  		end
 	when 8 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 6 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		top -= 1
@@ -379,10 +379,10 @@ begin
 	end
  		end
 	when 11 then
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 17 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(14, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 5 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -392,7 +392,7 @@ begin
 		next
 	end
  		end
-# line 396 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 396 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 	end
 	end
 	end
@@ -411,14 +411,14 @@ begin
 	if p == eof
 	  case _content_transfer_encoding_eof_actions[cs]
 	when 3 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 10 then
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 17 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(14, p) 		end
-# line 422 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 422 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 	  end
 	end
 
@@ -429,12 +429,12 @@ begin
 end
 	end
 
-# line 27 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 27 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
 
           if p == eof && cs >= 
-# line 436 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
+# line 436 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 14
-# line 28 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
+# line 28 "/Users/peter/src/mail/lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb.rl"
 
             return actions, nil
           else

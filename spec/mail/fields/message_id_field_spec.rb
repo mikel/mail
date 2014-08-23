@@ -143,5 +143,46 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new('<000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>')
       expect(m.message_id).to eq '000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com'
     end
+
+    it "should be able to parse <.AAA-default-12226,16.1089643496@us-bdb-1201.vdc.amazon.com>" do
+      m = Mail::MessageIdField.new('<.AAA-default-12226,16.1089643496@us-bdb-1201.vdc.amazon.com>')
+      m.message_id.should eq '.AAA-default-12226,16.1089643496@us-bdb-1201.vdc.amazon.com'
+   end
+
+    it "should be able to parse <091720041340.19561.414AE9430005E91000004C6922007589429B0702040790040A0E08 0C0703@comcast.net>" do
+      m = Mail::MessageIdField.new( '<091720041340.19561.414AE9430005E91000004C6922007589429B0702040790040A0E08 0C0703@comcast.net>')
+      m.message_id.should eq '091720041340.19561.414AE9430005E91000004C6922007589429B0702040790040A0E08 0C0703@comcast.net'
+    end
+
+    it "should be able to parse <3851.1096568577MSOSI1188307:1OSIMS@gamefly.com>" do
+      m = Mail::MessageIdField.new( '<3851.1096568577MSOSI1188307:1OSIMS@gamefly.com>')
+      m.message_id.should eq '3851.1096568577MSOSI1188307:1OSIMS@gamefly.com'
+    end
+
+    it "should be able to parse <3851.1096568577MSOSI1188307:1OSIMS@gamefly.com >" do
+      m = Mail::MessageIdField.new( '<3851.1096568577MSOSI1188307:1OSIMS@gamefly.com >')
+      m.message_id.should eq '3851.1096568577MSOSI1188307:1OSIMS@gamefly.com '
+    end
+
+    it "should be able to parse <000301caf03a$77d922ae$82dba8c0@.pool.ukrtel.net>" do
+      m = Mail::MessageIdField.new( '<000301caf03a$77d922ae$82dba8c0@.pool.ukrtel.net>')
+      m.message_id.should eq '000301caf03a$77d922ae$82dba8c0@.pool.ukrtel.net'
+    end
+  
+    it 'should be able to parse <"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com>' do
+      m = Mail::MessageIdField.new( '<"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com>' )
+      m.message_id.should eq '"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com'
+    end
+
+    it 'should be able to parse <7467BC5DC7CCEB429E2D3F05E49B3067375E6DC038@EXVMBX020-10.exch020.server...' do
+      m = Mail::MessageIdField.new( '<7467BC5DC7CCEB429E2D3F05E49B3067375E6DC038@EXVMBX020-10.exch020.server...' )
+      m.message_id.should eq '<7467BC5DC7CCEB429E2D3F05E49B3067375E6DC038@EXVMBX020-10.exch020.server...'
+    end
+
+    it 'should be able to parse |2a26f8f146e27159|' do
+      m = Mail::MessageIdField.new( '2a26f8f146e27159' )
+      m.message_id.should eq '2a26f8f146e27159'
+    end
+
   end
 end

@@ -17,7 +17,7 @@ module Mail
     end
     
     def clean_msg_id( val )
-      val =~ /.*<(.*)>.*/ ; $1
+      val =~ /.*<(.*)>.*/ ; $1 || val
     end
 
   end
