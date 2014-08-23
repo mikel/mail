@@ -126,7 +126,8 @@
   msg_id = (CFWS)?
            (("<" id_left "@" id_right ">") >msg_id_s %msg_id_e)
            (CFWS)?;
-  message_ids = msg_id (CFWS? msg_id)*;
+  msg_id_separator = CFWS? ( "," CFWS? )?;
+  message_ids = msg_id (msg_id_separator msg_id)*;
 
   include date_time "date_time.rl";
   date_time = (day_of_week ",")?
