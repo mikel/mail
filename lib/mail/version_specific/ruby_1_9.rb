@@ -128,10 +128,6 @@ module Mail
       when /utf[\-_]?(\d{1,2})?(\w{1,2})/i
         "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
 
-      # Windows-1258 is similar to 1252
-      when /Windows-?1258/i
-        "Windows-1252"
-
       # Windows-1252 and alike
       when /Windows-?(.*)/i
         "Windows-#{$1}"
