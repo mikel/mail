@@ -8,6 +8,26 @@ module Mail
       end
     end
 
+    class BestEffortCharsetEncoder
+      def encode(string, charset)
+        string.force_encoding(pick_encoding(charset))
+      end
+
+      private
+
+      def pick_encoding(charset)
+        charset = case charset
+        when /ansi_x3.110-1983/
+          'ISO-8859-1'
+        when /Windows-?1258/i # Windows-1258 is similar to 1252
+          "Windows-1252"
+        else
+          charset
+        end
+        Mail::Ruby19.pick_encoding(charset)
+      end
+    end
+
     class << self
       attr_accessor :charset_encoder
     end

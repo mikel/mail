@@ -840,5 +840,13 @@ describe Mail::Encodings do
         end
       end
     end
+
+    it "can convert ansi with best effort" do
+      if RUBY_VERSION > "1.9"
+        with_encoder Mail::Ruby19::BestEffortCharsetEncoder.new do
+          expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
+        end
+      end
+    end
   end
 end
