@@ -9,6 +9,17 @@ module Mail
       super @parts
     end
 
+    # The #encode_with and #to_yaml methods are just implemented
+    # for the sake of backward compatibility ; the delegator does
+    # not correctly delegate these calls to the delegated object
+    def encode_with(coder) # :nodoc:
+      coder.represent_object(nil, @parts)
+    end
+
+    def to_yaml(options = {}) # :nodoc:
+      @parts.to_yaml(options)
+    end
+
     def attachments
       Mail::AttachmentsList.new(@parts)
     end

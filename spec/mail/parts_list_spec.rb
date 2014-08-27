@@ -66,4 +66,9 @@ describe "PartsList" do
     p = Mail::PartsList.new
     expect(p).to respond_to(:reduce)
   end
+
+  it "should have a round-tripping YAML serialization" do
+    p = Mail::PartsList.new([1, 2])
+    expect(YAML.load(YAML.dump(p))).to eq(p)
+  end
 end
