@@ -819,4 +819,26 @@ describe Mail::Encodings do
     end
   end
 
+  describe ".charset_encoder" do
+    class CustomEncoder
+      def encode(str, charset)
+        "#{str}-#{charset}"
+      end
+    end
+
+    def with_encoder(encoder)
+      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      yield
+    ensure
+      Mail::Ruby19.charset_encoder = old
+    end
+
+    it "can use a custom encoder" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          expect(Mail::Encodings.value_decode("=?utf-123?Q?xxx?=")).to eq "xxx-utf-123"
+        end
+      end
+    end
+  end
 end
