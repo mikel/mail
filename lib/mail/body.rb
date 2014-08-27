@@ -254,18 +254,19 @@ module Mail
         @parts = Mail::PartsList.new[val]
       end
     end
-    
+
     def split!(boundary)
       self.boundary = boundary
-      parts = raw_source.split(/(?:\A|\r\n)--#{Regexp.escape(boundary || "")}(?=(?:--)?\s*$)/)
+      parts = extract_parts
+
       # Make the preamble equal to the preamble (if any)
       self.preamble = parts[0].to_s.strip
       # Make the epilogue equal to the epilogue (if any)
-      self.epilogue = parts[-1].to_s.sub('--', '').strip
+      self.epilogue = parts[-1].to_s.strip
       parts[1...-1].to_a.each { |part| @parts << Mail::Part.new(part) }
       self
     end
-    
+
     def only_us_ascii?
       !(raw_source =~ /[^\x01-\x7f]/)
     end
@@ -275,6 +276,29 @@ module Mail
     end
     
     private
+
+    # split parts by boundary, ignore first part if empty, append final part when closing boundary was missing
+    def extract_parts
+      parts_regex = /
+        (?:                    # non-capturing group
+          \A                |  # start of string OR
+          \r\n                 # line break
+         )
+        (
+          --#{Regexp.escape(boundary || "")}  # boundary delimiter
+          (?:--)?                             # with non-capturing optional closing
+        )
+        (?=\s*$)                              # lookahead matching zero or more spaces followed by line-ending
+      /x
+      parts = raw_source.split(parts_regex).each_slice(2).to_a
+      parts.each_with_index { |(part, _), index| parts.delete_at(index) if index > 0 && part.blank? }
+
+      if parts.size > 1
+        final_separator = parts[-2][1]
+        parts << [""] if final_separator != "--#{boundary}--"
+      end
+      parts.map(&:first)
+    end
     
     def crlf_boundary
       "\r\n--#{boundary}\r\n"
