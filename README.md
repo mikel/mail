@@ -15,7 +15,7 @@ Built from my experience with TMail, it is designed to be a pure ruby
 implementation that makes generating, sending and parsing emails a no
 brainer.
 
-It is also designed form the ground up to work with the more modern versions
+It is also designed from the ground up to work with the more modern versions
 of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
 than Ruby 1.8.x and so these features have been taken full advantage of in this
 library allowing Mail to handle a lot more messages more cleanly than TMail.
