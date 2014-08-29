@@ -2,6 +2,36 @@
 
 module Mail
   class Ruby19
+    class StrictCharsetEncoder
+      def encode(string, charset)
+        string.force_encoding(Mail::Ruby19.pick_encoding(charset))
+      end
+    end
+
+    class BestEffortCharsetEncoder
+      def encode(string, charset)
+        string.force_encoding(pick_encoding(charset))
+      end
+
+      private
+
+      def pick_encoding(charset)
+        charset = case charset
+        when /ansi_x3.110-1983/
+          'ISO-8859-1'
+        when /Windows-?1258/i # Windows-1258 is similar to 1252
+          "Windows-1252"
+        else
+          charset
+        end
+        Mail::Ruby19.pick_encoding(charset)
+      end
+    end
+
+    class << self
+      attr_accessor :charset_encoder
+    end
+    self.charset_encoder = StrictCharsetEncoder.new
 
     # Escapes any parenthesis in a string that are unescaped this uses
     # a Ruby 1.9.1 regexp feature of negative look behind
@@ -53,7 +83,7 @@ module Mail
       if match
         charset = match[1]
         str = Ruby19.decode_base64(match[2])
-        str.force_encoding(pick_encoding(charset))
+        str = charset_encoder.encode(str, charset)
       end
       decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
@@ -75,7 +105,7 @@ module Mail
         # Remove trailing = if it exists in a Q encoding
         string = string.sub(/\=$/, '')
         str = Encodings::QuotedPrintable.decode(string)
-        str.force_encoding(pick_encoding(charset))
+        str = charset_encoder.encode(str, charset)
         # We assume that binary strings hold utf-8 directly to work around
         # jruby/jruby#829 which subtly changes String#encode semantics.
         str.force_encoding(Encoding::UTF_8) if str.encoding == Encoding::ASCII_8BIT

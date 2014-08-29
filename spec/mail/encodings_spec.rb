@@ -823,4 +823,34 @@ describe Mail::Encodings do
     end
   end
 
+  describe ".charset_encoder" do
+    class CustomEncoder
+      def encode(str, charset)
+        "#{str}-#{charset}"
+      end
+    end
+
+    def with_encoder(encoder)
+      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      yield
+    ensure
+      Mail::Ruby19.charset_encoder = old
+    end
+
+    it "can use a custom encoder" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          expect(Mail::Encodings.value_decode("=?utf-123?Q?xxx?=")).to eq "xxx-utf-123"
+        end
+      end
+    end
+
+    it "can convert ansi with best effort" do
+      if RUBY_VERSION > "1.9"
+        with_encoder Mail::Ruby19::BestEffortCharsetEncoder.new do
+          expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
+        end
+      end
+    end
+  end
 end
