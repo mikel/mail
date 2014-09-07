@@ -156,6 +156,18 @@ describe Mail::Field do
       list = [Mail::Field.new("To: mikel"), Mail::Field.new("Return-Path: bob")]
       expect(list.sort[0].name).to eq "Return-Path"
     end
+
+    it "should claim to respond_to? delegated methods" do
+      field = Mail::Field.new("References: <deadbeef@test.lindsaar.net>")
+      expect(field.respond_to?(:charset)).to be_truthy
+      expect(field.respond_to?(:decoded)).to be_truthy
+      expect(field.respond_to?(:message_id)).to be_truthy
+    end
+
+    it "should not claim to respond_to? all possible field methods" do
+      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      expect(field.respond_to?(:message_id)).to be_falsey
+    end
   end
 
   describe 'user defined fields' do

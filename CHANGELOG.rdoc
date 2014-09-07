@@ -9,6 +9,7 @@ Performance:
 
 Bugs:
 * #736 - Mail.new copes with non-UTF8 messages marked as UTF8 (jeremy)
+* Mail::Field responds_to? delegated methods properly (owenr)
 
 == Version 2.6.1 - Sun Jun 8 15:34 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
