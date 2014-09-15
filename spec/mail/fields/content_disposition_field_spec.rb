@@ -85,4 +85,34 @@ describe Mail::ContentDispositionField do
       expect(c.parameters).to be_empty
     end
   end
+
+  describe "finding a filename" do
+    it "should locate a filename if there is a filename" do
+      string = %q{Content-Disposition: attachment; filename=mikel.jpg}
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq 'mikel.jpg'
+    end
+
+    it "should locate a name if there is no filename" do
+      string = %q{Content-Disposition: attachment; name=mikel.jpg}
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq 'mikel.jpg'
+    end
+
+    it "should return an empty string when filename or name is empty" do
+      string = %q{Content-Disposition: attachment; filename=""}
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq ''
+
+      string = %q{Content-Disposition: attachment; name=""}
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq ''
+    end
+
+    it "should locate an encoded name as a filename" do
+      string = %q(Content-Disposition: attachment; name*=ISO-8859-1''Eelanal%FC%FCsi%20p%E4ring.jpg)
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq "Eelanalüüsi päring.jpg"
+    end
+  end
 end

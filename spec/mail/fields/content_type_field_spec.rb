@@ -627,6 +627,16 @@ describe Mail::ContentTypeField do
       expect(c.filename).to eq 'mikel.jpg'
     end
 
+    it "should return an empty string when filename or name is empty" do
+      string = %q{application/octet-stream; filename=""}
+      c = Mail::ContentTypeField.new(string)
+      expect(c.filename).to eq ''
+
+      string = %q{application/octet-stream; name=""}
+      c = Mail::ContentTypeField.new(string)
+      expect(c.filename).to eq ''
+    end
+
     it "should locate an encoded name as a filename" do
       string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dijo%20feat.%20Pitbull.mp3}
       c = Mail::ContentTypeField.new(string)

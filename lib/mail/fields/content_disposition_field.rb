@@ -38,9 +38,9 @@ module Mail
 
     def filename
       case
-      when !Utilities.blank?(parameters['filename'])
+      when parameters['filename']
         @filename = parameters['filename']
-      when !Utilities.blank?(parameters['name'])
+      when parameters['name']
         @filename = parameters['name']
       else
         @filename = nil
