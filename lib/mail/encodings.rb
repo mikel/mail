@@ -7,7 +7,7 @@ module Mail
 
   module Encodings
 
-    include Mail::Patterns
+    include Mail::Constants
     extend  Mail::Utilities
 
     @transfer_encodings = {}
@@ -47,7 +47,7 @@ module Mail
     end
 
     def Encodings.get_name(enc)
-      enc = enc.to_s.gsub("-", "_").downcase
+      enc = underscoreize(enc).downcase
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
@@ -114,34 +114,19 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
-      return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
+      return str unless str =~ ENCODED_VALUE
 
       lines = collapse_adjacent_encodings(str)
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
-      lines.map do |line|
-        line.split(/([ \t])/).map do |text|
-          if text.index('=?').nil?
-            text
-          else
-            # Search for occurences of quoted strings or plain strings
-            text.scan(/(                                 # Group around entire regex to include it in matches
-                        \=\?[^?]+\?([QB])\?[^?]+?\?\=    # Quoted String with subgroup for encoding method
-                        |                                # or
-                        .+?(?=\=\?|$)                    # Plain String
-                      )/xmi).map do |matches|
-              string, method = *matches
-              if    method == 'b' || method == 'B'
-                b_value_decode(string)
-              elsif method == 'q' || method == 'Q'
-                q_value_decode(string)
-              else
-                string
-              end
-            end
+      lines.each do |line|
+        line.gsub!(ENCODED_VALUE) do |string|
+          case $1
+          when *B_VALUES then b_value_decode(string)
+          when *Q_VALUES then q_value_decode(string)
           end
         end
-      end.flatten.join("")
+      end.join("")
     end
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
@@ -256,7 +241,7 @@ module Mail
     end
 
     def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
+      match = str.match(/\=\?([^?]+)?\?[QB]\?(.*)\?\=/mi)
       if match
         match[1]
       else
@@ -270,7 +255,7 @@ module Mail
 
     # Gets the encoding type (Q or B) from the string.
     def Encodings.split_value_encoding_from_string(str)
-      match = str.match(/\=\?[^?]+?\?([QB])\?(.+)?\?\=/mi)
+      match = str.match(/\=\?[^?]+?\?([QB])\?(.*)\?\=/mi)
       if match
         match[1]
       else

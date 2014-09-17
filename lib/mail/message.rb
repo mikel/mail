@@ -46,7 +46,7 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
 
-    include Patterns
+    include Constants
     include Utilities
 
     # ==Making an email
@@ -105,7 +105,7 @@ module Mail
       @html_part = nil
       @errors = nil
       @header = nil
-      @charset = 'UTF-8'
+      @charset = self.class.default_charset
       @defaulted_charset = true
 
       @smtp_envelope_from = nil
@@ -206,6 +206,10 @@ module Mail
     # This setting is ignored by mail (though still available as a flag) if you
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
+
+    def self.default_charset; @@default_charset; end
+    def self.default_charset=(charset); @@default_charset = charset; end
+    self.default_charset = 'UTF-8'
 
     def register_for_delivery_notification(observer)
       STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
@@ -1963,6 +1967,8 @@ module Mail
 
   private
 
+    HEADER_SEPARATOR = /#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m
+
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
     #   of the message") followed, optionally, by a body.  The header is a
@@ -1974,15 +1980,14 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(HEADER_SEPARATOR, 2)
       self.header = header_part
       self.body   = body_part
     end
 
     def raw_source=(value)
+      value = value.dup.force_encoding(Encoding::BINARY) if RUBY_VERSION >= "1.9.1"
       @raw_source = value.to_crlf
-      @raw_source.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
-      @raw_source
     end
 
     # see comments to body=. We take data and process it lazily

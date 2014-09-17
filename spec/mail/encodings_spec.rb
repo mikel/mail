@@ -166,6 +166,10 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq(result)
     end
 
+    it "should decode a blank string" do
+      expect(Mail::Encodings.value_decode("=?utf-8?B??=")).to eq ""
+    end
+
     if '1.9'.respond_to?(:force_encoding)
       it "should decode 8bit encoded string" do
         string = "=?8bit?Q?ALPH=C3=89E?="
@@ -249,13 +253,6 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
-    it "should detect a q encoded string and decode it" do
-      string = '=?UTF-8?Q?This_is_=E3=81=82_string?='
-      result = "This is あ string"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
-      expect(Mail::Encodings.value_decode(string)).to eq result
-    end
-
     it "should decode q encoded =5F as underscore" do
       string = "=?UTF-8?Q?This_=C2=AD_and=5Fthat?="
       result = "This ­ and_that"
@@ -303,6 +300,14 @@ describe Mail::Encodings do
       wrapped = mail[:subject].wrapped_value
       unwrapped = Mail::Encodings.value_decode(wrapped)
       expect(unwrapped.gsub("Subject: ", "")).to eq original
+    end
+
+    it "should decode a blank string" do
+      expect(Mail::Encodings.value_decode("=?utf-8?Q??=")).to eq ""
+    end
+
+    it "should decode a string with spaces" do
+      expect(Mail::Encodings.value_decode("=?utf-8?Q?a a?=")).to eq "a a"
     end
   end
 
@@ -510,7 +515,6 @@ describe Mail::Encodings do
     end
 
     it "should handle Base64 encoded ISO-2022-JP string" do
-      skip
       string = "ISO-2022-JP =?iso-2022-jp?B?GyRCJCQkPSRLITwkXiRrJEskSyE8JDgkJyQkJFQhPBsoQg==?="
       result = "ISO-2022-JP いそにーまるににーじぇいぴー"
       expect(Mail::Encodings.value_decode(string)).to eq result
@@ -819,4 +823,34 @@ describe Mail::Encodings do
     end
   end
 
+  describe ".charset_encoder" do
+    class CustomEncoder
+      def encode(str, charset)
+        "#{str}-#{charset}"
+      end
+    end
+
+    def with_encoder(encoder)
+      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      yield
+    ensure
+      Mail::Ruby19.charset_encoder = old
+    end
+
+    it "can use a custom encoder" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          expect(Mail::Encodings.value_decode("=?utf-123?Q?xxx?=")).to eq "xxx-utf-123"
+        end
+      end
+    end
+
+    it "can convert ansi with best effort" do
+      if RUBY_VERSION > "1.9"
+        with_encoder Mail::Ruby19::BestEffortCharsetEncoder.new do
+          expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
+        end
+      end
+    end
+  end
 end

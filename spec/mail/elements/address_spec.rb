@@ -567,7 +567,7 @@ describe Mail::Address do
       end
 
       it "should handle |jdoe@test   . example|" do
-        skip
+        pending
         address = Mail::Address.new('jdoe@test   . example')
         expect(address).to break_down_to({
                                          :name         => 'jdoe@test.example',
@@ -591,6 +591,16 @@ describe Mail::Address do
                                          :local        => 'groupname+domain.com',
                                          :format       => 'groupname+domain.com@example.com',
                                          :raw          => 'groupname+domain.com@example.com'})
+      end
+
+      it "should expose group" do
+        struct = Mail::Parsers::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
+        address = Mail::Address.new(struct)
+        expect(address.group).to eq("GROUP")
+      end
+
+      it "should have no group by default" do
+        expect(Mail::Address.new(nil).group).to eq(nil)
       end
 
     end
