@@ -1,4 +1,4 @@
-Mail [![Build Status](https://travis-ci.org/mikel/mail.png?branch=master)](https://travis-ci.org/mikel/mail)
+Mail [![Build Status](https://travis-ci.org/mikel/mail.png?branch=master)](https://travis-ci.org/mikel/mail) [![Inline docs](http://inch-ci.org/github/mikel/mail.svg?branch=master)](http://inch-ci.org/github/mikel/mail)
 ====
 
 Introduction
