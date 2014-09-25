@@ -413,7 +413,6 @@ describe Mail::Encodings do
         Mail::Encodings.param_encode(string).should eq 'fun'
       end
     end
-
   end
 
   describe "decoding a string and detecting the encoding type" do

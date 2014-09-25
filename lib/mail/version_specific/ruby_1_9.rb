@@ -119,9 +119,9 @@ module Mail
     end
 
     def Ruby19.param_decode(str, encoding)
-      string = uri_parser.unescape(str)
-      string.force_encoding(encoding) if encoding
-      string
+      str = uri_parser.unescape(str)
+      str = charset_encoder.encode(str, encoding) if encoding
+      str
     end
 
     def Ruby19.param_encode(str)
