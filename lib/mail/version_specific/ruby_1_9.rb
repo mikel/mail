@@ -79,6 +79,7 @@ module Mail
     end
 
     def Ruby19.b_value_decode(str)
+      orig_str = str
       match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
       if match
         charset = match[1]
@@ -89,7 +90,7 @@ module Mail
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+      orig_str.dup.force_encoding(Encoding::UTF_8)
     end
 
     def Ruby19.q_value_encode(str, encoding = nil)
@@ -98,6 +99,7 @@ module Mail
     end
 
     def Ruby19.q_value_decode(str)
+      orig_str = str
       match = str.match(/\=\?(.+)?\?[Qq]\?(.*)\?\=/m)
       if match
         charset = match[1]
@@ -114,7 +116,7 @@ module Mail
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+      orig_str.dup.force_encoding(Encoding::UTF_8)
     end
 
     def Ruby19.param_decode(str, encoding)
