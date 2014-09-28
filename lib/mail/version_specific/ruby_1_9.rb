@@ -78,6 +78,8 @@ module Mail
       [Ruby19.encode_base64(str), encoding]
     end
 
+    ENCODE_OPTIONS = {:invalid => :replace, :undef => :replace, :replace => ""}
+
     def Ruby19.b_value_decode(str)
       orig_str = str
       match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
@@ -86,8 +88,8 @@ module Mail
         str = Ruby19.decode_base64(match[2])
         str = charset_encoder.encode(str, charset)
       end
-      decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
+      decoded = str.encode(Encoding::UTF_8, ENCODE_OPTIONS)
+      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, ENCODE_OPTIONS).encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
       orig_str.dup.force_encoding(Encoding::UTF_8)
@@ -112,8 +114,8 @@ module Mail
         # jruby/jruby#829 which subtly changes String#encode semantics.
         str.force_encoding(Encoding::UTF_8) if str.encoding == Encoding::ASCII_8BIT
       end
-      decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
+      decoded = str.encode(Encoding::UTF_8, ENCODE_OPTIONS)
+      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, ENCODE_OPTIONS).encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
       orig_str.dup.force_encoding(Encoding::UTF_8)
