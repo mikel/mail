@@ -224,7 +224,7 @@ module Mail
       Mail.inform_interceptors(self)
     end
 
-    # Delivers an mail object.
+    # Delivers a mail object.
     #
     # Examples:
     #
