@@ -408,7 +408,6 @@ describe Mail::Encodings do
         expect(Mail::Encodings.param_encode(string)).to eq 'fun'
       end
     end
-
   end
 
   describe "decoding a string and detecting the encoding type" do
@@ -841,6 +840,15 @@ describe Mail::Encodings do
       if RUBY_VERSION > "1.9"
         with_encoder CustomEncoder.new do
           expect(Mail::Encodings.value_decode("=?utf-123?Q?xxx?=")).to eq "xxx-utf-123"
+        end
+      end
+    end
+
+    it "uses converter for params" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          result = Mail::Encodings.param_decode("'ja'%d0%91%d0%b5%d0%b7%d1%8b%d0%bc%d1%8f%d0%bd%d0%bd%d1%8b%d0%b912.png", 'iso-2022-jp')
+          expect(result).to eq "'ja'Безымянный12.png-iso-2022-jp"
         end
       end
     end
