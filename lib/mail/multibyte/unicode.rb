@@ -390,11 +390,3 @@ module Mail
     end
   end
 end
-
-unless defined?(ActiveSupport)
-  module ActiveSupport
-    unless const_defined?(:Multibyte)
-      Multibyte = Mail::Multibyte
-    end
-  end
-end
