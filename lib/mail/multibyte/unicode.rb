@@ -340,9 +340,26 @@ module Mail
         # Loads the Unicode database and returns all the internal objects of UnicodeDatabase.
         def load
           begin
+            # unicode_tables.dat is a marshalled instance of
+            # ActiveSupport::Multibyte::Unicode::Codepoint.
+            # Temporarily define this class if it doesn't exist.
+            as_defined = defined?(ActiveSupport)
+            as_mb_defined = defined?(ActiveSupport::Multibyte)
+            if !as_defined
+              Object.const_set(:ActiveSupport, ::Mail)
+            elsif !as_mb_defined?
+              ActiveSupport.const_set(:Multibyte, ::Mail::Multibyte)
+            end
+
             @codepoints, @composition_exclusion, @composition_map, @boundary, @cp1252 = File.open(self.class.filename, 'rb') { |f| Marshal.load f.read }
           rescue => e
               raise IOError.new("Couldn't load the Unicode tables for UTF8Handler (#{e.message}), Mail::Multibyte is unusable")
+          ensure
+            if !as_defined
+              Object.send(:remove_const, :ActiveSupport)
+            elsif !as_mb_defined
+              ActiveSupport.send(:remove_const, :Multibyte)
+            end
           end
 
           # Redefine the === method so we can write shorter rules for grapheme cluster breaks
