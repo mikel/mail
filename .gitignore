@@ -19,3 +19,4 @@
 /.rbenv-vars
 /.ruby-version
 gemfiles/*.lock
+corpus/spam
