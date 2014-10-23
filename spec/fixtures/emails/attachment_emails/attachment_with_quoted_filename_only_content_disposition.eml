@@ -1,0 +1,39 @@
+Message-ID: <54090B85.5010207@example.com>
+Date: Fri, 05 Sep 2014 10:01:57 +0900
+From: Joe <joe@example.com>
+MIME-Version: 1.0
+To: alice@example.com
+Subject: =?ISO-2022-JP?B?GyRCJSIlJCVGJWAyQTNKJVUlISUkJWsbKEI=?=
+Content-Type: multipart/mixed;
+ boundary="------------030501080709010200080406"
+
+This is a multi-part message in MIME format.
+--------------030501080709010200080406
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+
+$B%"%$%F%`$NGcCM$HGdCM$r=q$$$?%U%!%$%k$rAw$j$^$9!#(B
+
+-- 
+Joe <joe@example.com>
+
+--------------030501080709010200080406
+Content-Type: text/csv;
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0*=iso-2022-jp''%1B%24%42%25%22%25%24%25%46%25%60%1B%28%42%2E%63;
+ filename*1*=%73%76
+
+ID,名前,買値,売値
+1,ポーション,10000,2000
+2,ハイポーション,50000,10000
+3,グランポーション,100000,20000
+4,SPポーション,10000,2000
+5,SPハイポーション,50000,10000
+6,SPグランポーション,100000,20000
+7,STRポーション,0,10000
+8,VITポーション,0,10000
+9,DEXポーション,0,10000
+10,AGIポーション,0,10000
+
+--------------030501080709010200080406--
