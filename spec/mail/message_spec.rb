@@ -368,6 +368,15 @@ describe Mail::Message do
         end
       end
     end
+
+    if '1.9+'.respond_to?(:encoding)
+      it "should be able to normalize CRLFs on non-UTF8 encodings" do
+        File.open(fixture('emails', 'multi_charset', 'japanese_shift_jis.eml')) do |io|
+          mail = Mail.new(io.read)
+          expect(mail.raw_source.encoding).to eq Encoding::BINARY
+        end
+      end
+    end
   end
 
   describe "directly setting values of a message" do

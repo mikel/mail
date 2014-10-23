@@ -10,6 +10,15 @@ Performance:
 Bugs:
 * #736 - Mail.new copes with non-UTF8 messages marked as UTF8 (jeremy)
 
+== Version 2.6.2 - Wed 13:42 -0500 2014 Benjamin Fleischer <github@benjaminfleischer.com>
+
+Performance:
+* #681 - fewer hotspot object allocations (srawlins)
+* #815 - autoload parsers for load-time speed and memory usage (grosser)
+
+Bugs:
+* #736 - Mail.new copes with non-UTF8 messages marked as UTF8 (jeremy)
+
 == Version 2.6.1 - Sun Jun 8 15:34 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
 Features:
