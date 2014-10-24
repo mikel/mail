@@ -275,7 +275,7 @@ module Mail
       lines.each do |line|
         encoding = split_value_encoding_from_string(line)
 
-        if encoding == previous_encoding
+        if encoding && encoding == previous_encoding
           line = results.pop + line
         end
 
