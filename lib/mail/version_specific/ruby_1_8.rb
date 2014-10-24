@@ -93,7 +93,8 @@ module Mail
 
     def Ruby18.param_decode(str, encoding)
       str = URI.unescape(str)
-      Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str)
+      str = Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str) if encoding
+      str
     end
 
     def Ruby18.param_encode(str)
