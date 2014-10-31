@@ -37,11 +37,9 @@ if defined?(Encoding) && Encoding.respond_to?(:default_external=)
   end
 end
 
-
 def fixture(*name)
   File.join(SPEC_ROOT, 'fixtures', name)
 end
-
 
 # Produces an array or printable ascii by default.
 #
@@ -54,6 +52,12 @@ def ascii(from = 33, to = 126)
     ('p'..'y').to_a + ('B'..'L').to_a + ('N'..'O').to_a +
     ('P'..'Y').to_a + ('1'..'4').to_a + ('6'..'8').to_a
   chars - boring
+end
+
+# https://github.com/rails/rails/blob/master/activesupport/lib/active_support/core_ext/string/strip.rb#L22
+def strip_heredoc(string)
+  indent = string.scan(/^[ \t]*(?=\S)/).min.size
+  string.gsub(/^[ \t]{#{indent}}/, '')
 end
 
 # Original mockup from ActionMailer

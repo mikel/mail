@@ -83,6 +83,7 @@ module Mail # :doc:
   require 'mail/encodings'
   require 'mail/encodings/base64'
   require 'mail/encodings/quoted_printable'
+  require 'mail/encodings/unix_to_unix'
 
   require 'mail/matchers/has_sent_mail'
 
