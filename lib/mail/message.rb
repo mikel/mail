@@ -2118,21 +2118,28 @@ module Mail
 
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
-      content_type_name = header[:content_type].filename rescue nil
-      content_disp_name = header[:content_disposition].filename rescue nil
-      content_loc_name  = header[:content_location].location rescue nil
-      case
-      when content_type && content_type_name
-        filename = content_type_name
-      when content_disposition && content_disp_name
-        filename = content_disp_name
-      when content_location && content_loc_name
-        filename = content_loc_name
-      else
-        filename = nil
-      end
+      filename = find_attachment_filename
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    def find_attachment_filename
+      content_type_header = header[:content_type]
+      if content_type_header && (filename = content_type_header.filename)
+        return filename
+      end
+
+      content_disposition_header = header[:content_disposition]
+      if content_disposition_header && (filename = content_disposition_header.filename)
+        return filename
+      end
+
+      content_location_header = header[:content_location]
+      if content_location_header && (filename = content_location_header.location)
+        return filename
+      end
+
+      return nil
     end
 
     def do_delivery
