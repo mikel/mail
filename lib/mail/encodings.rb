@@ -47,7 +47,7 @@ module Mail
     end
 
     def Encodings.get_name(enc)
-      enc = underscoreize(enc).downcase
+      underscoreize(enc).downcase
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
@@ -121,7 +121,7 @@ module Mail
       # Split on white-space boundaries with capture, so we capture the white-space as well
       lines.each do |line|
         line.gsub!(ENCODED_VALUE) do |string|
-          case $1
+          case $2
           when *B_VALUES then b_value_decode(string)
           when *Q_VALUES then q_value_decode(string)
           end
@@ -240,27 +240,13 @@ module Mail
       RubyVer.q_value_decode(str)
     end
 
-    def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?([^?]+)?\?[QB]\?(.*)\?\=/mi)
-      if match
-        match[1]
-      else
-        nil
-      end
-    end
-
     def Encodings.find_encoding(str)
       RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
     end
 
     # Gets the encoding type (Q or B) from the string.
-    def Encodings.split_value_encoding_from_string(str)
-      match = str.match(/\=\?[^?]+?\?([QB])\?(.*)\?\=/mi)
-      if match
-        match[1]
-      else
-        nil
-      end
+    def Encodings.value_encoding_from_string(str)
+      str[ENCODED_VALUE, 1]
     end
 
     # When the encoded string consists of multiple lines, lines with the same
@@ -268,19 +254,22 @@ module Mail
     #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.collapse_adjacent_encodings(str)
-      lines = str.split(/(\?=)\s*(=\?)/).each_slice(2).map(&:join)
       results = []
       previous_encoding = nil
-
-      lines.each do |line|
-        encoding = split_value_encoding_from_string(line)
-
-        if encoding == previous_encoding
-          line = results.pop + line
+      lines = str.split(FULL_ENCODED_VALUE)
+      lines.each_slice(2) do |unencoded, encoded|
+        if encoded
+          encoding = value_encoding_from_string(encoded)
+          if encoding == previous_encoding && unencoded.blank?
+            results.last << encoded
+          else
+            results << unencoded unless unencoded == EMPTY
+            results << encoded
+          end
+          previous_encoding = encoding
+        else
+          results << unencoded
         end
-
-        previous_encoding = encoding
-        results << line
       end
 
       results

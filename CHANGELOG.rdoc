@@ -1,5 +1,7 @@
 == HEAD
 
+* #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
+
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
 * #796 support uu encoding (grosser)
