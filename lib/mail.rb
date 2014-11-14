@@ -6,7 +6,6 @@ module Mail # :doc:
 
   require 'uri'
   require 'net/smtp'
-  require 'mime/types'
 
   if RUBY_VERSION <= '1.8.6'
     begin
@@ -69,6 +68,7 @@ module Mail # :doc:
   require 'mail/part'
   require 'mail/header'
   require 'mail/parts_list'
+  require 'mail/mime_type'
   require 'mail/attachments_list'
   require 'mail/body'
   require 'mail/field'
