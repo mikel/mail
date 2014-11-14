@@ -14,8 +14,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md", "CONTRIBUTING.md", "CHANGELOG.rdoc", "TODO.rdoc"]
   s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
-  s.add_dependency('mime-types', [">= 1.16", "< 3"])
-
   s.add_development_dependency('bundler', '>= 1.0.3')
   s.add_development_dependency('rake', '> 0.8.7')
   s.add_development_dependency('rspec', '~> 3.0.0')
