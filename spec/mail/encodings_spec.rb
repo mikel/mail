@@ -315,6 +315,12 @@ describe Mail::Encodings do
     it "should decode a string with spaces" do
       expect(Mail::Encodings.value_decode("=?utf-8?Q?a a?=")).to eq "a a"
     end
+
+    it "should treat unrecognized charsets as binary" do
+      if RUBY_VERSION >= "1.9"
+        expect(Mail::Encodings.value_decode("=?ISO-FOOO?Q?Morten_R=F8verdatt=E9r?=")).to eq "Morten Rverdattr"
+      end
+    end
   end
 
   describe "mixed Q and B encodings" do
@@ -903,6 +909,20 @@ describe Mail::Encodings do
 
     it "does not join different encodings" do
       convert "A=?iso-2022-jp?B?X=?==?utf-8?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?utf-8?B?Y=?=", "B"]
+    end
+  end
+
+  describe ".pick_encoding" do
+    it "finds encoding" do
+      if RUBY_VERSION >= "1.9"
+        expect(Mail::Ruby19.pick_encoding("Windows-1252")).to eq Encoding::Windows_1252
+      end
+    end
+
+    it "uses binary for unfound" do
+      if RUBY_VERSION >= "1.9"
+        expect(Mail::Ruby19.pick_encoding("ISO-Foo")).to eq Encoding::BINARY
+      end
     end
   end
 end
