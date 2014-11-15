@@ -194,4 +194,19 @@ describe "mail encoding" do
       expect(m.subject).to eq "Hello  World"
     end
   end
+
+  if RUBY_VERSION > '1.9'
+    describe "#pick_encoding" do
+      {
+        "latin2" => Encoding::ISO_8859_2,
+        "ISO_8859-1" => Encoding::ISO_8859_1,
+        "cp-850" => Encoding::CP850
+      }.each do |from, to|
+        it "should support #{from}" do
+          expect { ::Encoding.find(from) }.to raise_error(ArgumentError)
+          expect(Mail::Ruby19.pick_encoding(from)).to eq(to)
+        end
+      end
+    end
+  end
 end
