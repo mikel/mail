@@ -140,6 +140,7 @@ module Mail
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def Ruby19.pick_encoding(charset)
+      charset = charset.to_s
       encoding = case charset.downcase
 
       # ISO-8859-8-I etc. http://en.wikipedia.org/wiki/ISO-8859-8-I

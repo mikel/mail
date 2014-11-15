@@ -197,10 +197,16 @@ describe "mail encoding" do
 
   if RUBY_VERSION > '1.9'
     describe "#pick_encoding" do
+      it "picks binary for nil" do
+        expect { ::Encoding.find(nil) }.to raise_error(TypeError)
+        expect(Mail::Ruby19.pick_encoding(nil)).to eq(Encoding::BINARY)
+      end
+
       {
         "latin2" => Encoding::ISO_8859_2,
         "ISO_8859-1" => Encoding::ISO_8859_1,
-        "cp-850" => Encoding::CP850
+        "cp-850" => Encoding::CP850,
+        "" => Encoding::BINARY
       }.each do |from, to|
         it "should support #{from}" do
           expect { ::Encoding.find(from) }.to raise_error(ArgumentError)
