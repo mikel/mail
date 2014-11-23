@@ -189,6 +189,12 @@ module Mail
       field.send(name, *args, &block)
     end
 
+    # TODO: change to respond_to_missing? once ruby 1.9.2 is the minimum required ruby
+    # see also http://blog.marc-andre.ca/2010/11/15/methodmissing-politely/
+    def respond_to?(method_name, include_private = false)
+      field.respond_to?(method_name, include_private) || super
+    end
+
     FIELD_ORDER = %w[ return-path received
                       resent-date resent-from resent-sender resent-to
                       resent-cc resent-bcc resent-message-id
