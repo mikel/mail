@@ -305,7 +305,7 @@ limitMAIL
       expect(mail.attachments[0].filename).to eq "Foto0009.jpg"
     end
 
-    it "issue 467" do
+    it "Content-Disposition header has encoded filename without language tag (issue 467)" do
       mail = Mail.read(fixture(File.join("emails",
                                          "attachment_emails",
                                          "attachment_with_quoted_filename_only_content_disposition.eml")))
