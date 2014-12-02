@@ -99,6 +99,13 @@ describe Mail::Field do
       field.addresses
     end
 
+    it "should respond_to? its own methods and the same methods as its instantiated field class" do
+      field = Mail::Field.new('To: Bob')
+      expect(field.respond_to?(:field)).to be_truthy
+      expect(field.field).to receive(:"respond_to?").once
+      field.respond_to?(:addresses)
+    end
+
     it "should change its type if you change the name" do
       field = Mail::Field.new("To: mikel@me.com")
       expect(field.field.class).to eq Mail::ToField
