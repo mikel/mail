@@ -2124,22 +2124,22 @@ module Mail
     end
 
     def find_attachment_filename
-      content_type_header = header[:content_type]
-      if content_type_header && (filename = content_type_header.filename)
-        return filename
-      end
+      filename_from_field(header[:content_type]) ||
+        filename_from_field(header[:content_disposition]) ||
+        filename_from_field(header[:content_location])
+    end
 
-      content_disposition_header = header[:content_disposition]
-      if content_disposition_header && (filename = content_disposition_header.filename)
-        return filename
-      end
+    def filename_from_field(field)
+      return if field.nil?
 
-      content_location_header = header[:content_location]
-      if content_location_header && (filename = content_location_header.location)
-        return filename
+      case field.field
+      when ContentLocationField
+        field.location
+      when ContentTypeField, ContentDispositionField
+        field.filename
+      else
+        nil
       end
-
-      return nil
     end
 
     def do_delivery
