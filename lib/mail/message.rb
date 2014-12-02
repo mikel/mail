@@ -2137,8 +2137,10 @@ module Mail
         field.location
       when ContentTypeField, ContentDispositionField
         field.filename
-      else
+      when NilClass, UnstructuredField
         nil
+      else
+        raise ArgumentError, "Don't know how to extract filename from #{field}"
       end
     end
 
