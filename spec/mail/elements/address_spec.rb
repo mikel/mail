@@ -82,6 +82,14 @@ describe Mail::Address do
       expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krütisch'
     end
 
+    it "should decode Q-encoded display name containing double quotes" do
+      encoded = '=?ISO-8859-1?Q?"Jan_Kr=FCtisch"?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq '"Jan Krütisch"'
+
+      encoded = '=?ISO-8859-1?Q?Jan_Kr=FCti"s"ch?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krüti"s"ch'
+    end
+
     it "should give back the local part" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'test'

@@ -90,11 +90,14 @@ module Mail::Parsers
         # exists and always use the 'full' phrase
         # version.
         when :angle_addr_s
-          if qstr
-            address.display_name = qstr
-            qstr = nil
-          elsif phrase_e
-            address.display_name = s[phrase_s..phrase_e].strip
+          if phrase_e
+            phrase = s[phrase_s..phrase_e].strip
+            if qstr && %("#{qstr}") == phrase
+              address.display_name = qstr
+              qstr = nil
+            else
+              address.display_name = phrase
+            end
             phrase_e = phrase_s = nil
           end
 
