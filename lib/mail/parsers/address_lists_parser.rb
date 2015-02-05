@@ -86,18 +86,15 @@ module Mail::Parsers
 
         # Don't set the display name until the
         # address has actually started. This allows
-        # us to choose quoted_s version if it
-        # exists and always use the 'full' phrase
+        # us to always use the 'full' phrase
         # version.
         when :angle_addr_s
           if phrase_e
             phrase = s[phrase_s..phrase_e].strip
-            if qstr && %("#{qstr}") == phrase
-              address.display_name = qstr
-              qstr = nil
-            else
-              address.display_name = phrase
+            if phrase[0] == '"' && phrase[-1] == '"'
+              phrase = phrase[1..-2]
             end
+            address.display_name = phrase
             phrase_e = phrase_s = nil
           end
 
