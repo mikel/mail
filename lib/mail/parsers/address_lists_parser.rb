@@ -91,7 +91,7 @@ module Mail::Parsers
         when :angle_addr_s
           if phrase_e
             phrase = s[phrase_s..phrase_e].strip
-            if phrase[0] == '"' && phrase[-1] == '"'
+            if phrase[0] == DOUBLE_QUOTE && phrase[-1] == DOUBLE_QUOTE
               phrase = phrase[1..-2]
             end
             address.display_name = phrase
@@ -110,7 +110,7 @@ module Mail::Parsers
         when :local_dot_atom_pre_comment_e
           local_dot_atom_pre_comment_e = p-1
         when :local_quoted_string_e
-          address.local = '"' + qstr + '"' if address
+          address.local = DOUBLE_QUOTE + qstr + DOUBLE_QUOTE if address
 
         # obs_domain_list
         when :obs_domain_list_s then obs_domain_list_s = p
