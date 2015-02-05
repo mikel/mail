@@ -91,7 +91,7 @@ module Mail::Parsers
         when :angle_addr_s
           if phrase_e
             phrase = s[phrase_s..phrase_e].strip
-            if phrase[0] == DOUBLE_QUOTE && phrase[-1] == DOUBLE_QUOTE
+            if phrase[0, 1] == DOUBLE_QUOTE && phrase[-1, 1] == DOUBLE_QUOTE
               phrase = phrase[1..-2]
             end
             address.display_name = phrase
