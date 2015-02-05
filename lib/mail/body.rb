@@ -32,7 +32,7 @@ module Mail
       @preamble = nil
       @epilogue = nil
       @charset  = nil
-      @part_sort_order = [ "text/plain", "text/enriched", "text/html" ]
+      @part_sort_order = [ "text/plain", "text/enriched", "text/html", "multipart/alternative" ]
       @parts = Mail::PartsList.new
       if Utilities.blank?(string)
         @raw_source = ''
@@ -115,8 +115,8 @@ module Mail
     end
 
     # Allows you to set the sort order of the parts, overriding the default sort order.
-    # Defaults to 'text/plain', then 'text/enriched', then 'text/html' with any other content
-    # type coming after.
+    # Defaults to 'text/plain', then 'text/enriched', then 'text/html', then 'multipart/alternative'
+    # with any other content type coming after.
     def set_sort_order(order)
       @part_sort_order = order
     end

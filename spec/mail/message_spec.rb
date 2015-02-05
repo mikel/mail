@@ -1833,7 +1833,6 @@ describe Mail::Message do
 
   describe "ordering messages" do
     it "should put all attachments as the last item" do
-      # XXX: AFAICT, this is not actually working. The code does not appear to implement this. -- singpolyma
       mail = Mail.new
       mail.attachments['image.png'] = "\302\302\302\302"
       p = Mail::Part.new(:content_type => 'multipart/alternative')
@@ -1845,6 +1844,21 @@ describe Mail::Message do
       expect(mail.parts[0].parts[0].mime_type).to eq "text/plain"
       expect(mail.parts[0].parts[1].mime_type).to eq "text/html"
       expect(mail.parts[1].mime_type).to eq "image/png"
+    end
+
+    it "should allow overwriting sort order" do
+      mail = Mail.new
+      mail.body.set_sort_order([])
+      mail.attachments['image.png'] = "\302\302\302\302"
+      p = Mail::Part.new(:content_type => 'multipart/alternative')
+      p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
+      p.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
+      mail.add_part(p)
+      mail.encoded
+      expect(mail.parts[0].mime_type).to eq "image/png"
+      expect(mail.parts[1].mime_type).to eq "multipart/alternative"
+      expect(mail.parts[1].parts[0].mime_type).to eq "text/plain"
+      expect(mail.parts[1].parts[1].mime_type).to eq "text/html"
     end
   end
 
