@@ -689,7 +689,7 @@ describe Mail::Address do
       expect(address.encoded).to eq '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
     end
 
-    it "should provide an encoded output for non us-ascii" do
+    it "should provide a decoded output for non us-ascii" do
       address              = Mail::Address.new
       address.display_name = "まける"
       address.address      = "mikel@test.lindsaar.net"
