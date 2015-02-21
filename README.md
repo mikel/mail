@@ -294,6 +294,23 @@ mail.delivery_method :exim, :location => "/usr/bin/exim"
 mail.deliver
 ```
 
+Sending to console can be done like so:
+
+```ruby
+mail.delivery_method :stdout
+
+mail.deliver
+```
+
+The STDOUT delivery method can also be configured with a custom logger and severity like so:
+
+```ruby
+mail.delivery_method :stdout, { :logger => Logger.new(STDOUT), :severity => :debug }
+
+mail.deliver
+```
+
+
 ### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
