@@ -42,6 +42,8 @@ module Mail
         Mail::SMTPConnection
       when :test
         Mail::TestMailer
+      when :logger
+        Mail::LoggerDelivery
       else
         method
       end

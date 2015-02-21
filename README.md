@@ -279,6 +279,16 @@ mail.delivery_method :exim, :location => "/usr/bin/exim"
 mail.deliver
 ```
 
+Mail may be "delivered" to a logfile, too, for development and testing:
+
+```ruby
+# Delivers by logging the encoded message to $stdout
+mail.delivery_method :logger
+
+# Delivers to an existing logger at :debug severity
+mail.delivery_method :logger, logger: other_logger, severity: :debug
+```
+
 ### Getting emails from a pop server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
