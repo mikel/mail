@@ -1,8 +1,27 @@
+require 'delegate'
+
 module Mail
-  class PartsList < Array
+  class PartsList < DelegateClass(Array)
+    attr_reader :parts
+
+    def initialize(*args)
+      @parts = Array.new(*args)
+      super @parts
+    end
+
+    # The #encode_with and #to_yaml methods are just implemented
+    # for the sake of backward compatibility ; the delegator does
+    # not correctly delegate these calls to the delegated object
+    def encode_with(coder) # :nodoc:
+      coder.represent_object(nil, @parts)
+    end
+
+    def to_yaml(options = {}) # :nodoc:
+      @parts.to_yaml(options)
+    end
 
     def attachments
-      Mail::AttachmentsList.new(self)
+      Mail::AttachmentsList.new(@parts)
     end
 
     def collect
@@ -14,8 +33,6 @@ module Mail
         to_a
       end
     end
-
-    undef :map
     alias_method :map, :collect
 
     def map!
@@ -27,20 +44,20 @@ module Mail
     end
 
     def sort
-      self.class.new(super)
+      self.class.new(@parts.sort)
     end
 
     def sort!(order)
       # stable sort should be used to maintain the relative order as the parts are added
       i = 0;
-      sorted = self.sort_by do |a|
+      sorted = @parts.sort_by do |a|
         # OK, 10000 is arbitrary... if anyone actually wants to explicitly sort 10000 parts of a
         # single email message... please show me a use case and I'll put more work into this method,
         # in the meantime, it works :)
         [get_order_value(a, order), i += 1]
       end
-      self.clear
-      sorted.each { |p| self << p }
+      @parts.clear
+      sorted.each { |p| @parts << p }
     end
 
   private

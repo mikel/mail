@@ -34,4 +34,41 @@ describe "PartsList" do
     p << html_text_part
     expect(p.sort!(order)).to eq [plain_text_part, html_text_part, no_content_type_part]
   end
+
+  it "should have a parts reader" do
+    p = Mail::PartsList.new([1, 2])
+    expect(p.parts).to eq([1, 2])
+  end
+
+  it "should behave like an array" do
+    p = Mail::PartsList.new([1, 2])
+    expect(p.first).to eq(1)
+  end
+
+  it "is equal to itself" do
+    p = Mail::PartsList.new([1, 2])
+    expect(p).to eq(p)
+  end
+
+  it "is equal to its parts array" do
+    p = Mail::PartsList.new
+    p << "foo"
+    p << "bar"
+    expect(p).to eq(["foo", "bar"])
+  end
+
+  it "can be mixed with an array" do
+    p = Mail::PartsList.new([3, 4])
+    expect([1, 2] + p).to eq [1, 2, 3, 4]
+  end
+
+  it "should respond to Array methods" do
+    p = Mail::PartsList.new
+    expect(p).to respond_to(:reduce)
+  end
+
+  it "should have a round-tripping YAML serialization" do
+    p = Mail::PartsList.new([1, 2])
+    expect(YAML.load(YAML.dump(p))).to eq(p)
+  end
 end

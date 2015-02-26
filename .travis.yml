@@ -41,5 +41,4 @@ matrix:
   allow_failures:
     - rvm: ruby-head    # green, but unstable
     - rvm: jruby-head   # green, but unstable
-    - rvm: rbx-2        # see https://github.com/rubinius/rubinius/issues/3050
   fast_finish: true
