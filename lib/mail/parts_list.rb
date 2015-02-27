@@ -44,6 +44,22 @@ module Mail
       raise NoMethodError, "#collect! is not defined, please call #collect and create a new PartsList"
     end
 
+    def inspect_structure(parent_id = '')
+      enum_for(:map).with_index { |part, i|
+        i = i + 1 # Use 1-based indexes since this is for humans to read
+        id = parent_id.empty? ? "#{i}" : "#{parent_id}.#{i}"
+        if part.content_type == "message/rfc822"
+          sub_list = Mail.new(part.body).parts
+        else
+          sub_list = part.parts
+        end
+        id + '. ' + part.inspect +
+          if sub_list.any?
+            "\n" + sub_list.inspect_structure(id)
+          end.to_s
+      }.join("\n")
+    end
+
     def sort
       self.class.new(@parts.sort)
     end
