@@ -1,6 +1,7 @@
 == Version 2.8.0 (unreleased)
 
 Breaking changes:
+* Message#without_attachments! now deletes nested attachments. (TylerRick)
 * Sendmail and exim delivery now raise DeliveryError when the command exits with a nonzero exitstatus. (benmmurphy, CoolElvis)
 * Sendmail and exim delivery :arguments option must be an array of string args. (benmmurphy)
 * Passing unparsed headers to Mail::Field.new is no longer supported. Use Mail::Field.parse. (jeremy)
