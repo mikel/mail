@@ -57,9 +57,23 @@ describe "MIME Emails" do
         expect(mail.content_type_parameters).to eql({"charset" => 'US-ASCII', "format" => 'flowed'})
       end
 
-      it "should recognize a multipart email" do
-        mail = read_fixture('emails', 'mime_emails', 'raw_email7.eml')
-        expect(mail).to be_multipart
+      describe 'a multipart email (raw_email7.eml)' do
+        let(:mail) { read_fixture('emails', 'mime_emails', 'raw_email7.eml') }
+        it "should recognize a multipart email" do
+          expect(mail).to be_multipart
+        end
+
+        it "inspect_structure should return what is expected" do
+          expect(mail.inspect_structure).to eq <<-End.chomp
+#{mail.inspect}
+1. #{mail.parts[0].inspect}
+1.1. #{mail.parts[0].parts[0].inspect}
+1.2. #{mail.parts[0].parts[1].inspect}
+1.3. #{mail.parts[0].parts[2].inspect}
+1.4. #{mail.parts[0].parts[3].inspect}
+2. #{mail.parts[1].inspect}
+          End
+        end
       end
 
       it "should recognize a non multipart email" do
@@ -72,9 +86,14 @@ describe "MIME Emails" do
         expect(mail.attachment?).to eq false
       end
 
-      it "should report the email as :attachment?" do
-        mail = read_fixture('emails', 'attachment_emails', 'attachment_only_email.eml')
-        expect(mail.attachment?).to eq true
+      describe 'attachment_only_email.eml' do
+        let(:mail) { read_fixture('emails', 'attachment_emails', 'attachment_only_email.eml') }
+        it "should report the email as :attachment?" do
+          expect(mail.attachment?).to eq true
+        end
+        it "inspect_structure should return what is expected" do
+          expect(mail.inspect_structure).to eq mail.inspect
+        end
       end
 
       it "should recognize an attachment part" do
@@ -89,11 +108,20 @@ describe "MIME Emails" do
         expect(mail.parts.length).to eq 2
       end
 
-      it "should give the content_type of each part" do
-        mail = read_fixture('emails', 'mime_emails', 'raw_email11.eml')
-        expect(mail.mime_type).to eq 'multipart/alternative'
-        expect(mail.parts[0].mime_type).to eq 'text/plain'
-        expect(mail.parts[1].mime_type).to eq 'text/enriched'
+      describe 'a multipart/alternative mail (raw_email11.eml)' do
+        let(:mail) { read_fixture('emails', 'mime_emails', 'raw_email11.eml') }
+        it "should give the content_type of each part" do
+          expect(mail.mime_type).to eq 'multipart/alternative'
+          expect(mail.parts[0].mime_type).to eq 'text/plain'
+          expect(mail.parts[1].mime_type).to eq 'text/enriched'
+        end
+        it "inspect_structure should return what is expected" do
+          expect(mail.inspect_structure).to eq <<-End.chomp
+#{mail.inspect}
+1. #{mail.parts[0].inspect}
+2. #{mail.parts[1].inspect}
+          End
+        end
       end
 
       it "should report the mail :has_attachments?" do

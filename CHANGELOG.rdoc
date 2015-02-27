@@ -15,6 +15,9 @@ Compatibility:
 * Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
 * Gracefully parse certain invalid Content-Type headers. (rafbm)
 
+Features:
+* Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
+
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
 

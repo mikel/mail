@@ -1584,6 +1584,10 @@ describe Mail::Message do
       expect(message.text?).to eq true
     end
 
+    it "inspect_structure should return the same as inspect (no attachments)" do
+      expect(message.inspect_structure).to eq message.inspect
+    end
+
     if RUBY_VERSION > "1.9"
       it "uses the Ruby19 charset encoder" do
         with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
