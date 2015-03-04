@@ -1872,6 +1872,15 @@ module Mail
       "#<#{self.class}:#{self.object_id}, Multipart: #{multipart?}, Headers: #{header.field_summary}>"
     end
 
+    def inspect_structure
+      inspect +
+      if self.multipart?
+        "\n" + parts.inspect_structure
+      else
+        ''
+      end
+    end
+
     def decoded
       case
       when self.text?
