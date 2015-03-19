@@ -34,7 +34,7 @@ module Mail
     end
     
     def inline?
-      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition]
+      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition].respond_to?(:disposition_type)
     end
     
     def add_required_fields

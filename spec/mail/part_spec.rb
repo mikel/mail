@@ -71,8 +71,15 @@ describe Mail::Part do
     part = Mail::Part.new(:content_disposition => 'inline')
     expect(part).to be_inline
   end
-  
-  
+
+  it "handles un-parsable content_disposition headers" do
+    part = Mail::Part.new
+    field = Mail::Field.new('content-disposition')
+    field.field = Mail::UnstructuredField.new('content-disposition', 'failed to parse')
+    part.header.fields << field
+    expect(part).not_to be_inline
+  end
+
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do
       part =<<PARTEND

@@ -5,6 +5,7 @@
 * #772 - normalize encoding matchers (grosser)
 * #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
 * #775 - avoid failed encodings / stop bad charsets early (grosser)
+* #849 - Handle calling Part#inline? when the Content-Disposition field couldn't be parsed (kjg)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
