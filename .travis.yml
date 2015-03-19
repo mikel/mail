@@ -1,19 +1,5 @@
 language: ruby
-bundler_args: --path vendor/bundle
-script: bundle exec rake
-env:
-  - RUBYOPT=-w
-before_install:
-  - gem install bundler
-  - bundle config --local without local_development
-gemfile:
-  - gemfiles/mime_types_1.16.gemfile
-  - gemfiles/mime_types_2.0.gemfile
-  - gemfiles/mime_types_2.1.gemfile
-  - gemfiles/mime_types_2.2.gemfile
-  - gemfiles/mime_types_2.3.gemfile
-  - gemfiles/mime_types_2.latest.gemfile
-  - gemfiles/mime_types_edge.gemfile
+
 rvm:
   - 1.8.7
   - 1.9.2
@@ -24,6 +10,28 @@ rvm:
   - jruby
   - jruby-head
   - rbx-2
+
+gemfile:
+  - gemfiles/mime_types_1.16.gemfile
+  - gemfiles/mime_types_2.0.gemfile
+  - gemfiles/mime_types_2.1.gemfile
+  - gemfiles/mime_types_2.2.gemfile
+  - gemfiles/mime_types_2.3.gemfile
+  - gemfiles/mime_types_2.latest.gemfile
+  - gemfiles/mime_types_edge.gemfile
+
+sudo: false
+
+bundler_args: --path vendor/bundle
+
+script: bundle exec rake
+
+env:
+  - RUBYOPT=-w
+
+before_install:
+  - bundle config --local without local_development
+
 matrix:
   exclude:
     - rvm: 1.8.7
