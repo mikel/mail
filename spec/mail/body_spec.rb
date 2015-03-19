@@ -448,4 +448,12 @@ describe Mail::Body do
       expect(body.encoded).to eq expect
     end
   end
+
+  describe "invalid encoding" do
+    it "should round trip" do
+      body = Mail::Body.new('The Body')
+      body.encoding = 'invalid'
+      expect(body.encoded).to eq 'The Body'
+    end
+  end
 end
