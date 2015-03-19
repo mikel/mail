@@ -503,6 +503,12 @@ describe "MIME Emails" do
         end
       end
 
+      it "should support :mime_type option" do
+        mail = Mail::Message.new
+        mail.add_file(:filename => 'test.png', :content => 'a', :mime_type=>'text/plain')
+        expect(mail.attachments.first.content_type).to eq 'text/plain'
+      end
+
       it "should be able to add a body before adding a file" do
         m = Mail.new do
           from    'mikel@from.lindsaar.net'

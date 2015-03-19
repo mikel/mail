@@ -1772,7 +1772,10 @@ module Mail
         filedata = File.open(values, 'rb') { |f| f.read }
       else
         basename = values[:filename]
-        filedata = values[:content] || File.open(values[:filename], 'rb') { |f| f.read }
+        filedata = values
+        unless filedata[:content]
+          filedata = values.merge(:content=>File.open(values[:filename], 'rb') { |f| f.read })
+        end
       end
       self.attachments[basename] = filedata
     end
