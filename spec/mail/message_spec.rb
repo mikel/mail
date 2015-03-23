@@ -360,6 +360,14 @@ describe Mail::Message do
       expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
     end
 
+    it "should parse sources with charsets that we know but Ruby doesn't" do
+      raw_message = File.read(fixture('emails', 'multi_charset', 'ks_c_5601-1987.eml'))
+      original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
+      mail = Mail.new(raw_message)
+      expect(mail.decoded).to eq "스티해\n"
+      expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
+    end
+
     if '1.9+'.respond_to?(:encoding)
       it "should be able to normalize CRLFs on non-UTF8 encodings" do
         File.open(fixture('emails', 'multi_charset', 'japanese_shift_jis.eml')) do |io|
