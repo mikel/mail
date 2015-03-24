@@ -5,11 +5,8 @@ source "https://rubygems.org"
 gem "jruby-openssl", :platforms => :jruby
 gem "mime-types", :github => "halostatue/mime-types"
 
-group :development, :test do
-  gem "appraisal", "~> 1.0", :platforms => [:ruby_19, :ruby_20, :ruby_21, :ruby_22]
-end
-
 group :local_development, :test do
+  gem "appraisal", "~> 1.0"
   gem "ruby-debug", :platforms => :mri_18
 end
 
