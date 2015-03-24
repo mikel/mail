@@ -21,8 +21,8 @@ end
 
 begin
   require "appraisal"
-rescue LoadError
-  warn "Appraisal is only available in test/development"
+rescue LoadError, SyntaxError
+  warn "Appraisal is only available in test/development on Ruby 1.9+"
 end
 
 # load custom rake tasks
