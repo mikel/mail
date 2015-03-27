@@ -20,7 +20,7 @@ module Mail
     #  a.group_names  #=> ["My Group"]
     def initialize(string)
       @addresses_grouped_by_group = nil
-      @address_list = Parsers::AddressListsParser.new.parse(string)
+      @address_list = Mail::Parsers::AddressListsParser.new.parse(string)
     end
     
     # Returns a list of address objects from the parsed line
