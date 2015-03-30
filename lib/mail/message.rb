@@ -2155,10 +2155,8 @@ module Mail
           require 'iconv'
           return Iconv.conv("UTF-8//TRANSLIT//IGNORE", charset, body_text)
         else
-          if encoding = Encoding.find(charset) rescue nil
-            body_text.force_encoding(encoding)
-            return body_text.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
-          end
+          Mail::Ruby19.charset_encoder.encode(body_text, charset)
+          return body_text.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => '')
         end
       end
       body_text

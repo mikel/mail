@@ -1480,18 +1480,33 @@ describe Mail::Message do
       "Am=E9rica"
     end
 
-    before(:each) do
-      @message = Mail.new(message_with_iso_8859_1_charset)
+    def with_encoder(encoder)
+      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      yield
+    ensure
+      Mail::Ruby19.charset_encoder = old
     end
 
+    let(:message){
+      Mail.new(message_with_iso_8859_1_charset)
+    }
+
     it "should be decoded using content type charset" do
-      expect(@message.decoded).to eq "América"
+      expect(message.decoded).to eq "América"
     end
 
     it "should respond true to text?" do
-      expect(@message.text?).to eq true
+      expect(message.text?).to eq true
     end
 
+    if RUBY_VERSION > "1.9"
+      it "uses the Ruby19 charset encoder" do
+        with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
+          message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
+          expect(message.decoded).to eq("Hi –")
+        end
+      end
+    end
   end
 
   describe "helper methods" do
