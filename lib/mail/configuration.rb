@@ -41,8 +41,8 @@ module Mail
         Mail::SMTPConnection
       when :test
         Mail::TestMailer
-      when :stdout
-        Mail::Stdout
+      when :logger
+        Mail::Logger
       else
         method
       end

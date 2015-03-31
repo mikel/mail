@@ -2,24 +2,32 @@ require 'mail/check_delivery_params'
 require 'logger'
 
 module Mail
-  class Stdout
+  class Logger
     include Mail::CheckDeliveryParams
 
     def initialize(values)
-      self.settings = default_settings.merge!(values)
+      self.settings = values
     end
 
     attr_accessor :settings
 
     def deliver!(mail)
       check_delivery_params(mail)
-      settings[:logger].send(settings[:severity], mail.encoded)
+      logger.send(severity, mail.encoded)
+    end
+
+    def logger
+      settings[:logger] ||= default_logger
+    end
+
+    def severity
+      settings[:severity] ||= :info
     end
 
     private
 
-    def default_settings
-      { :logger => ::Logger.new(STDOUT), :severity => :info }
+    def default_logger
+      ::Logger.new($stdout)
     end
 
   end

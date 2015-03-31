@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "Stdout Delivery Method" do
+describe "Logger Delivery Method" do
 
   before(:each) do
     # Reset all defaults back to original state
@@ -26,10 +26,10 @@ describe "Stdout Delivery Method" do
 
   it "sends an email to STDOUT with 'info' severity by default" do
     Mail.defaults do
-      delivery_method :stdout
+      delivery_method :logger
     end
 
-    logger = mail.delivery_method.settings.fetch(:logger)
+    logger = mail.delivery_method.logger
 
     expect(logger).to receive(:info).with(mail.encoded)
 
@@ -40,7 +40,7 @@ describe "Stdout Delivery Method" do
     custom_logger = double("custom_logger")
 
     Mail.defaults do
-      delivery_method :stdout, { :logger => custom_logger }
+      delivery_method :logger, { :logger => custom_logger }
     end
 
     expect(custom_logger).to receive(:info).with(mail.encoded)
@@ -52,7 +52,7 @@ describe "Stdout Delivery Method" do
     custom_logger = double("custom_logger")
 
     Mail.defaults do
-      delivery_method :stdout, { :logger => custom_logger, :severity => :debug }
+      delivery_method :logger, { :logger => custom_logger, :severity => :debug }
     end
 
     expect(custom_logger).to receive(:debug).with(mail.encoded)
