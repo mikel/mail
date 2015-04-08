@@ -32,12 +32,12 @@ describe "Mail" do
       Mail.defaults do
         delivery_method :smtp
       end
-      Mail.delivery_method.class.should eq Mail::SMTP
+      expect(Mail.delivery_method.class).to eq Mail::SMTP
     end
 
     it "should default to settings for smtp" do
-      Mail.delivery_method.class.should eq Mail::SMTP
-      Mail.delivery_method.settings.should eql({:address              => "localhost",
+      expect(Mail.delivery_method.class).to eq Mail::SMTP
+      expect(Mail.delivery_method.settings).to eql({:address              => "localhost",
                                                 :port                 => 25,
                                                 :domain               => 'localhost.localdomain',
                                                 :user_name            => nil,
@@ -53,12 +53,12 @@ describe "Mail" do
       Mail.defaults do
         retriever_method :pop3
       end
-      Mail.retriever_method.class.should eq Mail::POP3
+      expect(Mail.retriever_method.class).to eq Mail::POP3
     end
 
     it "should default to settings for pop3" do
-      Mail.retriever_method.class.should eq Mail::POP3
-      Mail.retriever_method.settings.should eql({:address              => "localhost",
+      expect(Mail.retriever_method.class).to eq Mail::POP3
+      expect(Mail.retriever_method.settings).to eql({:address              => "localhost",
                                                  :port                 => 110,
                                                  :user_name            => nil,
                                                  :password             => nil,
@@ -70,50 +70,50 @@ describe "Mail" do
       Mail.defaults do
         delivery_method :smtp, :port => 999
       end
-      Mail.delivery_method.settings[:address].should eq 'localhost'
-      Mail.delivery_method.settings[:port].should eq 999
+      expect(Mail.delivery_method.settings[:address]).to eq 'localhost'
+      expect(Mail.delivery_method.settings[:port]).to eq 999
     end
 
     it "should allow us to overwrite anything we need on POP3" do
       Mail.defaults do
         retriever_method :pop3, :address => 'foo.bar.com'
       end
-      Mail.retriever_method.settings[:address].should eq 'foo.bar.com'
-      Mail.retriever_method.settings[:port].should eq 110
+      expect(Mail.retriever_method.settings[:address]).to eq 'foo.bar.com'
+      expect(Mail.retriever_method.settings[:port]).to eq 110
     end
 
     it "should allow you to pass in your own delivery method" do
       Mail.defaults do
         delivery_method MyDelivery
       end
-      Mail.delivery_method.class.should eq MyDelivery
+      expect(Mail.delivery_method.class).to eq MyDelivery
     end
 
     it "should ask the custom delivery agent for its settings" do
-      mock_my_delivery = mock(MyDelivery)
-      mock_my_delivery.should_receive(:settings).and_return({:these_are => :settings})
-      MyDelivery.should_receive(:new).and_return(mock_my_delivery)
+      mock_my_delivery = double(MyDelivery)
+      expect(mock_my_delivery).to receive(:settings).and_return({:these_are => :settings})
+      expect(MyDelivery).to receive(:new).and_return(mock_my_delivery)
       Mail.defaults do
         delivery_method MyDelivery
       end
-      Mail.delivery_method.settings.should eql({:these_are => :settings})
+      expect(Mail.delivery_method.settings).to eql({:these_are => :settings})
     end
 
     it "should allow you to pass in your own retriever method" do
       Mail.defaults do
         retriever_method MyRetriever
       end
-      Mail.retriever_method.class.should eq MyRetriever
+      expect(Mail.retriever_method.class).to eq MyRetriever
     end
 
     it "should ask the custom retriever agent for its settings" do
-      mock_my_retriever = mock(MyRetriever)
-      mock_my_retriever.should_receive(:settings).and_return({:these_are => :settings})
-      MyRetriever.should_receive(:new).and_return(mock_my_retriever)
+      mock_my_retriever = double(MyRetriever)
+      expect(mock_my_retriever).to receive(:settings).and_return({:these_are => :settings})
+      expect(MyRetriever).to receive(:new).and_return(mock_my_retriever)
       Mail.defaults do
         retriever_method MyRetriever
       end
-      Mail.retriever_method.settings.should eql({:these_are => :settings})
+      expect(Mail.retriever_method.settings).to eql({:these_are => :settings})
     end
 
   end
@@ -122,39 +122,39 @@ describe "Mail" do
 
     it "should copy the defaults defined by Mail.defaults" do
       mail = Mail.new
-      mail.delivery_method.class.should eq Mail::SMTP
+      expect(mail.delivery_method.class).to eq Mail::SMTP
     end
 
     it "should be able to change the delivery_method" do
       mail = Mail.new
       mail.delivery_method :file
-      mail.delivery_method.class.should eq Mail::FileDelivery
+      expect(mail.delivery_method.class).to eq Mail::FileDelivery
     end
 
     it "should be able to change the delivery_method and pass in settings" do
       mail = Mail.new
       tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
       mail.delivery_method :file, :location => tmpdir
-      mail.delivery_method.class.should eq Mail::FileDelivery
-      mail.delivery_method.settings.should eql({:location => tmpdir})
+      expect(mail.delivery_method.class).to eq Mail::FileDelivery
+      expect(mail.delivery_method.settings).to eql({:location => tmpdir})
     end
 
     it "should not change the default when it changes the delivery_method" do
       mail1 = Mail.new
       mail2 = Mail.new
       mail1.delivery_method :file
-      Mail.delivery_method.class.should eq Mail::SMTP
-      mail1.delivery_method.class.should eq Mail::FileDelivery
-      mail2.delivery_method.class.should eq Mail::SMTP
+      expect(Mail.delivery_method.class).to eq Mail::SMTP
+      expect(mail1.delivery_method.class).to eq Mail::FileDelivery
+      expect(mail2.delivery_method.class).to eq Mail::SMTP
     end
 
     it "should not change the default settings when it changes the delivery_method settings" do
       mail1 = Mail.new
       mail2 = Mail.new
       mail1.delivery_method :smtp, :address => 'my.own.address'
-      Mail.delivery_method.settings[:address].should eq 'localhost'
-      mail1.delivery_method.settings[:address].should eq 'my.own.address'
-      mail2.delivery_method.settings[:address].should eq 'localhost'
+      expect(Mail.delivery_method.settings[:address]).to eq 'localhost'
+      expect(mail1.delivery_method.settings[:address]).to eq 'my.own.address'
+      expect(mail2.delivery_method.settings[:address]).to eq 'localhost'
     end
 
   end
@@ -163,9 +163,9 @@ describe "Mail" do
     it "should retrieve all emails via POP3" do
       messages = Mail.all
 
-      messages.should_not be_empty
+      expect(messages).not_to be_empty
       for message in messages
-        message.should be_instance_of(Mail::Message)
+        expect(message).to be_instance_of(Mail::Message)
       end
     end
   end
@@ -186,9 +186,9 @@ describe "Mail" do
         # add_file 'New Header Image', '/somefile.png'
       end
 
-      MockSMTP.deliveries[0][0].should eq message.encoded
-      MockSMTP.deliveries[0][1].should eq "mikel@test.lindsaar.net"
-      MockSMTP.deliveries[0][2].should eq ["ada@test.lindsaar.net"]
+      expect(MockSMTP.deliveries[0][0]).to eq message.encoded
+      expect(MockSMTP.deliveries[0][1]).to eq "mikel@test.lindsaar.net"
+      expect(MockSMTP.deliveries[0][2]).to eq ["ada@test.lindsaar.net"]
     end
 
     it "should deliver itself" do
@@ -202,9 +202,9 @@ describe "Mail" do
 
       message.deliver!
 
-      MockSMTP.deliveries[0][0].should eq message.encoded
-      MockSMTP.deliveries[0][1].should eq "mikel@test.lindsaar.net"
-      MockSMTP.deliveries[0][2].should eq ["ada@test.lindsaar.net"]
+      expect(MockSMTP.deliveries[0][0]).to eq message.encoded
+      expect(MockSMTP.deliveries[0][1]).to eq "mikel@test.lindsaar.net"
+      expect(MockSMTP.deliveries[0][2]).to eq ["ada@test.lindsaar.net"]
     end
 
   end
@@ -246,48 +246,48 @@ describe "Mail" do
 
     describe "adding to Mail.deliveries" do
       it "should add itself to the deliveries collection on mail on delivery" do
-        doing { @message.deliver }.should change(Mail::TestMailer.deliveries, :size).by(1)
+        expect { @message.deliver }.to change(Mail::TestMailer.deliveries, :size).by(1)
       end
     end
 
     describe "perform_deliveries" do
       it "should call deliver! on the delivery method by default" do
         delivery_agent = MyDeliveryMethod.new
-        @message.should_receive(:delivery_method).and_return(delivery_agent)
-        delivery_agent.should_receive(:deliver!).with(@message)
+        expect(@message).to receive(:delivery_method).and_return(delivery_agent)
+        expect(delivery_agent).to receive(:deliver!).with(@message)
         @message.deliver
       end
 
       it "should not call deliver if perform deliveries is set to false" do
         @message.perform_deliveries = false
         delivery_agent = MyDeliveryMethod.new
-        @message.should_not_receive(:delivery_method)
-        delivery_agent.should_not_receive(:deliver!)
+        expect(@message).not_to receive(:delivery_method)
+        expect(delivery_agent).not_to receive(:deliver!)
         @message.deliver
       end
 
       it "should add to the deliveries array if perform_deliveries is true" do
         @message.perform_deliveries = true
-        doing { @message.deliver }.should change(Mail::TestMailer.deliveries, :size).by(1)
+        expect { @message.deliver }.to change(Mail::TestMailer.deliveries, :size).by(1)
       end
 
       it "should not add to the deliveries array if perform_deliveries is false" do
         @message.perform_deliveries = false
-        doing { @message.deliver }.should_not change(Mail::TestMailer.deliveries, :size)
+        expect { @message.deliver }.not_to change(Mail::TestMailer.deliveries, :size)
       end
     end
 
     describe "observers" do
       it "should tell its observers that it was told to deliver an email" do
         Mail.register_observer(MyObserver)
-        MyObserver.should_receive(:delivered_email).with(@message).once
+        expect(MyObserver).to receive(:delivered_email).with(@message).once
         @message.deliver
       end
 
       it "should tell its observers that it was told to deliver an email even if perform_deliveries is false" do
         Mail.register_observer(MyObserver)
         @message.perform_deliveries = false
-        MyObserver.should_receive(:delivered_email).with(@message).once
+        expect(MyObserver).to receive(:delivered_email).with(@message).once
         @message.deliver
       end
 
@@ -295,7 +295,7 @@ describe "Mail" do
         Mail.register_observer(MyObserver)
         @message.delivery_handler = MyYieldingDeliveryHandler.new
         @message.perform_deliveries = false
-        MyObserver.should_receive(:delivered_email).with(@message).once
+        expect(MyObserver).to receive(:delivered_email).with(@message).once
         @message.deliver
       end
 
@@ -304,17 +304,25 @@ describe "Mail" do
     describe "raise_delivery_errors" do
       it "should pass on delivery errors if raised" do
         delivery_agent = MyDeliveryMethod.new
-        @message.stub!(:delivery_method).and_return(delivery_agent)
-        delivery_agent.stub!(:deliver!).and_raise(Exception)
-        doing { @message.deliver }.should raise_error(Exception)
+        allow(@message).to receive(:delivery_method).and_return(delivery_agent)
+        allow(delivery_agent).to receive(:deliver!).and_raise(StandardError)
+        expect { @message.deliver }.to raise_error(StandardError)
       end
 
       it "should not pass on delivery errors if raised raise_delivery_errors is set to false" do
         delivery_agent = MyDeliveryMethod.new
-        @message.stub!(:delivery_method).and_return(delivery_agent)
+        allow(@message).to receive(:delivery_method).and_return(delivery_agent)
         @message.raise_delivery_errors = false
-        delivery_agent.stub!(:deliver!).and_raise(Exception)
-        doing { @message.deliver }.should_not raise_error(Exception)
+        allow(delivery_agent).to receive(:deliver!).and_raise(StandardError)
+        expect { @message.deliver }.not_to raise_error
+      end
+
+      it "should pass through Exceptions even when raise_delivery_errors is set to false" do
+        delivery_agent = MyDeliveryMethod.new
+        allow(@message).to receive(:delivery_method).and_return(delivery_agent)
+        @message.raise_delivery_errors = false
+        allow(delivery_agent).to receive(:deliver!).and_raise(Exception)
+        expect { @message.deliver }.to raise_error(Exception)
       end
     end
 
@@ -322,37 +330,37 @@ describe "Mail" do
 
       it "should allow you to hand off performing the actual delivery to another object" do
         delivery_handler = MyYieldingDeliveryHandler.new
-        delivery_handler.should_receive(:deliver_mail).with(@message).exactly(:once)
+        expect(delivery_handler).to receive(:deliver_mail).with(@message).exactly(:once)
         @message.delivery_handler = delivery_handler
         @message.deliver
       end
 
       it "mail should be told to :deliver once and then :deliver! once by the delivery handler" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
-        @message.should_receive(:do_delivery).exactly(:once)
+        expect(@message).to receive(:do_delivery).exactly(:once)
         @message.deliver
       end
 
       it "mail only call its delivery_method once" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
-        @message.should_receive(:delivery_method).exactly(:once).and_return(Mail::TestMailer.new({}))
+        expect(@message).to receive(:delivery_method).exactly(:once).and_return(Mail::TestMailer.new({}))
         @message.deliver
       end
 
       it "mail should not catch any exceptions when using a delivery_handler" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
-        @message.should_receive(:delivery_method).and_raise(Exception)
-        doing { @message.deliver }.should raise_error(Exception)
+        expect(@message).to receive(:delivery_method).and_raise(Exception)
+        expect { @message.deliver }.to raise_error(Exception)
       end
 
       it "mail should not modify the Mail.deliveries object if using a delivery_handler that does not append to deliveries" do
         @message.delivery_handler = MyDeliveryHandler.new
-        doing { @message.deliver }.should_not change(Mail::TestMailer, :deliveries)
+        expect { @message.deliver }.not_to change(Mail::TestMailer, :deliveries)
       end
 
       it "should be able to just yield and let mail do its thing" do
         @message.delivery_handler = MyYieldingDeliveryHandler.new
-        @message.should_receive(:do_delivery).exactly(:once)
+        expect(@message).to receive(:do_delivery).exactly(:once)
         @message.deliver
       end
 

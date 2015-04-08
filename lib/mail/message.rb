@@ -46,7 +46,7 @@ module Mail
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
 
-    include Patterns
+    include Constants
     include Utilities
 
     # ==Making an email
@@ -105,7 +105,7 @@ module Mail
       @html_part = nil
       @errors = nil
       @header = nil
-      @charset = 'UTF-8'
+      @charset = self.class.default_charset
       @defaulted_charset = true
 
       @smtp_envelope_from = nil
@@ -207,6 +207,10 @@ module Mail
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
 
+    def self.default_charset; @@default_charset; end
+    def self.default_charset=(charset); @@default_charset = charset; end
+    self.default_charset = 'UTF-8'
+
     def register_for_delivery_notification(observer)
       STDERR.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
       Mail.register_observer(observer)
@@ -240,7 +244,7 @@ module Mail
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
     # so use with caution.
     #
-    # It still however fires off the intercepters and calls the observers callbacks if they are defined.
+    # It still however fires off the interceptors and calls the observers callbacks if they are defined.
     #
     # Returns self
     def deliver!
@@ -353,15 +357,21 @@ module Mail
       return false unless other.respond_to?(:encoded)
 
       if self.message_id && other.message_id
-        result = (self.encoded == other.encoded)
+        self.encoded == other.encoded
       else
         self_message_id, other_message_id = self.message_id, other.message_id
-        self.message_id, other.message_id = '<temp@test>', '<temp@test>'
-        result = self.encoded == other.encoded
-        self.message_id = "<#{self_message_id}>" if self_message_id
-        other.message_id = "<#{other_message_id}>" if other_message_id
-        result
+        begin
+          self.message_id, other.message_id = '<temp@test>', '<temp@test>'
+          self.encoded == other.encoded
+        ensure
+          self.message_id, other.message_id = self_message_id, other_message_id
+        end
       end
+    end
+
+    def initialize_copy(original)
+      super
+      @header = @header.dup
     end
 
     # Provides access to the raw source of the message as it was when it
@@ -1388,7 +1398,7 @@ module Mail
       header.has_date?
     end
 
-    # Returns true if the message has a Date field, the field may or may
+    # Returns true if the message has a Mime-Version field, the field may or may
     # not have a value, but the field exists or not.
     def has_mime_version?
       header.has_mime_version?
@@ -1594,7 +1604,7 @@ module Mail
     end
 
     # Returns an AttachmentsList object, which holds all of the attachments in
-    # the receiver object (either the entier email or a part within) and all
+    # the receiver object (either the entire email or a part within) and all
     # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
@@ -1762,7 +1772,10 @@ module Mail
         filedata = File.open(values, 'rb') { |f| f.read }
       else
         basename = values[:filename]
-        filedata = values[:content] || File.open(values[:filename], 'rb') { |f| f.read }
+        filedata = values
+        unless filedata[:content]
+          filedata = values.merge(:content=>File.open(values[:filename], 'rb') { |f| f.read })
+        end
       end
       self.attachments[basename] = filedata
     end
@@ -1957,6 +1970,8 @@ module Mail
 
   private
 
+    HEADER_SEPARATOR = /#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m
+
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
     #   of the message") followed, optionally, by a body.  The header is a
@@ -1968,14 +1983,15 @@ module Mail
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = raw_source.lstrip.split(HEADER_SEPARATOR, 2)
       self.header = header_part
       self.body   = body_part
     end
 
     def raw_source=(value)
-      value.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
+      value = value.dup.force_encoding(Encoding::BINARY) if RUBY_VERSION >= "1.9.1"
       if value.include?("Content-Transfer-Encoding: binary")
+        # Do not alter the content of binary files, which may contain \r or \n
         @raw_source = value
       else
         @raw_source = value.to_crlf
@@ -2012,7 +2028,7 @@ module Mail
       raw_string = raw_source.to_s
       if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = raw_string.sub(match_data[0], "") 
+        self.raw_source = raw_string.sub(match_data[0], "")
       end
     end
 
@@ -2132,7 +2148,7 @@ module Mail
         if perform_deliveries
           delivery_method.deliver!(self)
         end
-      rescue Exception => e # Net::SMTP errors or sendmail pipe errors
+      rescue => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
       end
     end

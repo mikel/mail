@@ -15,11 +15,11 @@ Built from my experience with TMail, it is designed to be a pure ruby
 implementation that makes generating, sending and parsing emails a no
 brainer.
 
-It is also designed form the ground up to work with Ruby 1.9.  This is because
-Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
-these features have been taken full advantage of in this library allowing
-Mail to handle a lot more messages more cleanly than TMail.  Mail does run on
-Ruby 1.8.x... it's just not as fun to code.
+It is also designed from the ground up to work with the more modern versions
+of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
+than Ruby 1.8.x and so these features have been taken full advantage of in this
+library allowing Mail to handle a lot more messages more cleanly than TMail.
+Mail does run on Ruby 1.8.x... it's just not as fun to code.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
@@ -44,14 +44,21 @@ Compatibility
 
 Every Mail commit is tested by Travis on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
-* ruby-1.8.7-p370 [ i686 ]
-* ruby-1.9.2-p290 [ x86_64 ]
-* ruby-1.9.3-p327 [ x86_64 ]
-* ruby-2.0.0-rc1 [ x86_64 ]
-* jruby-1.6.8 [ x86_64 ]
-* jruby-1.7.0 [ x86_64 ]
-* rbx-d18 [ x86_64 ]
-* rbx-d19 [ x86_64 ]
+* ruby-1.8.7 [ i686 ]
+* ruby-1.9.2 [ x86_64 ]
+* ruby-1.9.3 [ x86_64 ]
+* ruby-2.0.0 [ x86_64 ]
+* ruby-2.1.2 [ x86_64 ]
+* ruby-head [ x86_64 ]
+* jruby [ x86_64 ]
+* jruby-head [ x86_64 ]
+* rbx-2 [ x86_64 ]
+
+Testing a specific mime type (needed for 1.8.7 for example) can be done manually with:
+
+```sh
+BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile (bundle check || bundle) && rake
+```
 
 Discussion
 ----------
@@ -230,10 +237,10 @@ easy as:
 
 ```ruby
 Mail.deliver do
-   from    'me@test.lindsaar.net'
-   to      'you@test.lindsaar.net'
-   subject 'Here is the image you wanted'
-   body    File.read('body.txt')
+  from     'me@test.lindsaar.net'
+  to       'you@test.lindsaar.net'
+  subject  'Here is the image you wanted'
+  body     File.read('body.txt')
   add_file '/full/path/to/somefile.png'
 end
 ```
@@ -267,6 +274,15 @@ mail.delivery_method :sendmail
 
 mail.deliver
 ```
+
+Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher))
+```ruby
+
+Mail.defaults do
+  delivery_method :smtp, address: "localhost", port: 1025
+end
+```
+
 
 Exim requires its own delivery manager, and can be used like so:
 
@@ -321,7 +337,7 @@ emails.length #=> LOTS!
 ```ruby
 mail = Mail.read('/path/to/message.eml')
 
-mail.envelope.from   #=> 'mikel@test.lindsaar.net'
+mail.envelope_from   #=> 'mikel@test.lindsaar.net'
 mail.from.addresses  #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 mail.sender.address  #=> 'mikel@test.lindsaar.net'
 mail.to              #=> 'bob@test.lindsaar.net'
@@ -352,7 +368,7 @@ mail.parts[1].content_type_parameters  #=> {'name' => 'my.pdf'}
 Mail generates a tree of parts.  Each message has many or no parts.  Each part
 is another message which can have many or no parts.
 
-A message will only have parts if it is a multipart/mixed or related/mixed
+A message will only have parts if it is a multipart/mixed or multipart/related
 content type and has a boundary defined.
 
 ### Testing and extracting attachments
@@ -365,7 +381,7 @@ mail.attachments.each do | attachment |
     filename = attachment.filename
     begin
       File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
-    rescue Exception => e
+    rescue => e
       puts "Unable to save data for #{filename} because #{e.message}"
     end
   end
@@ -548,7 +564,7 @@ Using Mail with Testing or Spec'ing Libraries
 If mail is part of your system, you'll need a way to test it without actually
 sending emails, the TestMailer can do this for you.
 
-```
+```ruby
 require 'mail'
 => true
 Mail.defaults do
@@ -574,7 +590,7 @@ Mail::TestMailer.deliveries.clear
 
 There is also a set of RSpec matchers stolen fr^H^H^H^H^H^H^H^H inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
 
-```
+```ruby
 Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end

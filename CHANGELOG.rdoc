@@ -1,6 +1,34 @@
 == HEAD
 
+* Make the gem compatible with Rubinius (Robin Dupret)
+* #808 - Mail::Field correctly responds_to? the methods of its instantiated field (thegcat)
+* #772 - normalize encoding matchers (grosser)
+* #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
+* #775 - avoid failed encodings / stop bad charsets early (grosser)
+* #849 - Handle calling Part#inline? when the Content-Disposition field couldn't be parsed (kjg)
+
+== Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
+
+* #796 support uu encoding (grosser)
+
+== Version 2.6.2 (Unreleased) - Wed Oct 22 13:42 -0500 2014 Benjamin Fleischer <github@benjaminfleischer.com>
+
+Performance:
+* #681 - fewer hotspot object allocations (srawlins)
+* #815 - autoload parsers for load-time speed and memory usage (grosser)
+
+Bugs:
+* #736 - Mail.new copes with non-UTF8 messages marked as UTF8 (jeremy)
+
+== Version 2.6.1 - Sun Jun 8 15:34 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
+
 Features:
+* Silence warnings on loading ragel-generated parsers (bf4)
+
+== Version 2.6.0 - Mon Jun 2 22:49 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
+
+Features:
+* Allow interceptors and observers to be unregistered (zuhao)
 * Added feature to find the mail in uid (taketin)
 * Save settings passed to TestMailer#new (svanderbleek)
 * Allow the setting of envelope from directly (jeremy)
@@ -22,6 +50,8 @@ Performance:
 * Close pull request 488 - Speed up field construction & comparison (bpot)
 
 Bugs:
+* Fix for when content looks like field name (kjg)
+* Don't change original when you change a copy (TylerRick)
 * Don't include separating semicolon in paramter value when sanitizing (bpot)
 * Fix fencepost encoding problem with binhex strings and only one token (drasch)
 * Fix sendmail delivery to addresses with a leading hyphen (lifo, jeremy)

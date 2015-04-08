@@ -17,7 +17,7 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
-    include Patterns
+    include Constants
     include Utilities
     include Enumerable
     
@@ -51,6 +51,11 @@ module Mail
       @charset = charset
       self.raw_source = header_text.to_crlf.lstrip
       split_header if header_text
+    end
+
+    def initialize_copy(original)
+      super
+      @fields = @fields.dup
     end
     
     # The preserved raw source of the header as you passed it in, untouched
@@ -125,7 +130,8 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      name = dasherize(name).downcase
+      name = dasherize(name)
+      name.downcase!
       selected = select_field_for(name)
       case
       when selected.length > 1

@@ -113,12 +113,12 @@ module Mail
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     def initialize(name, value = nil, charset = 'utf-8')
       case
-      when name =~ /:/                  # Field.new("field-name: field data")
+      when name.index(COLON)            # Field.new("field-name: field data")
         @charset = value.blank? ? charset : value
         @name = name[FIELD_PREFIX]
         @raw_value = name
         @value = nil
-      when name !~ /:/ && value.blank?  # Field.new("field-name")
+      when value.blank?                 # Field.new("field-name")
         @name = name
         @value = nil
         @raw_value = nil
@@ -187,6 +187,16 @@ module Mail
 
     def method_missing(name, *args, &block)
       field.send(name, *args, &block)
+    end
+
+    if RUBY_VERSION >= '1.9.2'
+      def respond_to_missing?(method_name, include_private)
+        field.respond_to?(method_name, include_private) || super
+      end
+    else
+      def respond_to?(method_name, include_private = false)
+        field.respond_to?(method_name, include_private) || super
+      end
     end
 
     FIELD_ORDER = %w[ return-path received

@@ -14,8 +14,10 @@ pull request merged quickly:
    a spec!
 6. Test the spec _at_ _least_ against MRI-1.9.3 and MRI-1.8.7
 7. Update the README if needed to reflect your change / addition
-8. With all specs passing push your changes back to your fork
-9. Send me a pull request
+8. Update the CHANGELOG and give yourself credit
+9. With all specs passing push your changes back to your fork
+10. Send me a pull request.
+  - If it needs any changes, please push or force push to the same branch you made the pull request from.  GitHub will just update the pull request with your changes.
 
 Note, specs that break MRI 1.8.7 or 1.9.3 will not be accepted.
 
@@ -43,3 +45,16 @@ Syntax:
 * Follow the conventions you see used in the source already.
 
 And in case we didn't emphasize it enough: we love specs!
+
+### Testing against mime-types versions:
+
+Use [appraisal](https://github.com/thoughtbot/appraisal) to run against all supported versions of mime-types.
+
+1. Run `(bundle check || bundle) && appraisal` so that all the 'appraised' gemfiles are bundled.
+2. Run either `appraisal rake` or `rake appraisal` to run all the tests.
+
+To run only one 'appraised' gemfile, run. e.g. `BUNDLE_GEMFILE=gemfiles/mime_types_edge.gemfile (bundle check || bundle) && rake`
+
+To change the appraisals, modify the `Appraisals` file, run `appraisal`, commit the generated gemfiles, and modify the .travis.yml matrix.
+
+To run on all rubies / gemfiles, just like TravisCI, see [WWTD](https://github.com/grosser/wwtd).

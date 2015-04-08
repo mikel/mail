@@ -15,3 +15,7 @@
 *.swp
 .idea
 .rbx
+/.idea
+/.rbenv-vars
+/.ruby-version
+gemfiles/*.lock

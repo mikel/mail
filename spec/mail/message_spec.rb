@@ -10,23 +10,23 @@ describe Mail::Message do
   describe "initialization" do
 
     it "should instantiate empty" do
-      Mail::Message.new.class.should eq Mail::Message
+      expect(Mail::Message.new.class).to eq Mail::Message
     end
 
     it "should return a basic email" do
       mail = Mail.new
       mail = Mail.new(mail.to_s)
-      mail.date.should_not be_blank
-      mail.message_id.should_not be_blank
-      mail.mime_version.should eq "1.0"
-      mail.content_type.should eq "text/plain"
-      mail.content_transfer_encoding.should eq "7bit"
-      mail.subject.should be_blank
-      mail.body.should be_blank
+      expect(mail.date).not_to be_blank
+      expect(mail.message_id).not_to be_blank
+      expect(mail.mime_version).to eq "1.0"
+      expect(mail.content_type).to eq "text/plain"
+      expect(mail.content_transfer_encoding).to eq "7bit"
+      expect(mail.subject).to be_blank
+      expect(mail.body).to be_blank
     end
 
     it "should instantiate with a string" do
-      Mail::Message.new(basic_email).class.should eq Mail::Message
+      expect(Mail::Message.new(basic_email).class).to eq Mail::Message
     end
 
     it "should allow us to pass it a block" do
@@ -34,41 +34,50 @@ describe Mail::Message do
         from 'mikel@me.com'
         to 'lindsaar@you.com'
       end
-      mail.from.should eq ['mikel@me.com']
-      mail.to.should eq ['lindsaar@you.com']
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
     end
 
     it "should initialize a body and header class even if called with nothing to begin with" do
       mail = Mail::Message.new
-      mail.header.class.should eq Mail::Header
-      mail.body.class.should eq Mail::Body
+      expect(mail.header.class).to eq Mail::Header
+      expect(mail.body.class).to eq Mail::Body
     end
 
     it "should not report basic emails as bounced" do
-      Mail::Message.new.should_not be_bounced
+      expect(Mail::Message.new).not_to be_bounced
     end
 
     it "should be able to parse a basic email" do
-      doing { Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml')) }.should_not raise_error
+      expect { Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml')) }.not_to raise_error
     end
 
     it "should be able to parse an email with @ in display name" do
       message = Mail.read(fixture('emails', 'plain_emails', 'raw_email_with_at_display_name.eml'))
-      message.to.should eq ["smith@gmail.com", "raasdnil@gmail.com", "tom@gmail.com"]
+      expect(message.to).to eq ["smith@gmail.com", "raasdnil@gmail.com", "tom@gmail.com"]
     end
 
     it "should be able to parse an email with only blank lines as body" do
-      doing { Mail.read(fixture('emails', 'error_emails', 'missing_body.eml')) }.should_not raise_error
+      expect { Mail.read(fixture('emails', 'error_emails', 'missing_body.eml')) }.not_to raise_error
     end
 
     it "should be able to parse an email with a funky date header" do
-      doing { Mail.read(fixture('emails', 'error_emails', 'bad_date_header2.eml')) }
+      # TODO: This spec should actually do something
+       expect { Mail.read(fixture('emails', 'error_emails', 'bad_date_header2.eml')) }
     end
 
     it 'should be able to invoke subject on a funky subject header' do
       Mail.read(fixture('emails', 'error_emails', 'bad_subject.eml')).subject
     end
 
+    it 'should use default charset' do
+      begin
+        Mail::Message.default_charset, old = 'iso-8859-1', Mail::Message.default_charset
+        expect(Mail::Message.new.charset).to eq 'iso-8859-1'
+      ensure
+        Mail::Message.default_charset = old
+      end
+    end
 
     it 'should be able to parse an email missing an encoding' do
       Mail.read(fixture('emails', 'error_emails', 'must_supply_encoding.eml'))
@@ -77,7 +86,7 @@ describe Mail::Message do
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
 
-      STDERR.stub!(:puts) # Don't want to get noisy about any warnings
+      allow(STDERR).to receive(:puts) # Don't want to get noisy about any warnings
       errors = false
       expected_failures = []
       emails.each do |email|
@@ -91,7 +100,7 @@ describe Mail::Message do
           end
         end
       end
-      errors.should be_false
+      expect(errors).to be_falsey
     end
 
     it "should be able to parse a large email without raising an exception" do
@@ -99,38 +108,42 @@ describe Mail::Message do
       m.add_file(:filename => "attachment.data", :content => "a" * (8 * 1024 * 1024))
       raw_email = "From jamis_buck@byu.edu Mon May  2 16:07:05 2005\r\n#{m.to_s}"
 
-      doing { Mail::Message.new(raw_email) }.should_not raise_error
+      expect { Mail::Message.new(raw_email) }.not_to raise_error
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
-      STDERR.should_not_receive(:puts)
+      expect(STDERR).not_to receive(:puts)
       Mail.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml'))
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-      STDERR.should_receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
+      expect(STDERR).to receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
       Mail.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')).to_s
     end
 
     it "should read in an email message and basically parse it" do
       mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
-      mail.to.should eq ["raasdnil@gmail.com"]
+      expect(mail.to).to eq ["raasdnil@gmail.com"]
     end
 
     it "should not fail parsing message with caps in content_type" do
       mail = Mail.read(fixture('emails', 'plain_emails', 'mix_caps_content_type.eml'))
-      mail.content_type.should eq 'text/plain; charset=iso-8859-1'
-      mail.main_type.should eq 'text'
-      mail.sub_type.should eq 'plain'
+      expect(mail.content_type).to eq 'text/plain; charset=iso-8859-1'
+      expect(mail.main_type).to eq 'text'
+      expect(mail.sub_type).to eq 'plain'
     end
 
     it "should be able to pass an empty reply-to header" do
       mail = Mail.read(fixture('emails', 'error_emails', 'empty_in_reply_to.eml'))
-      mail.in_reply_to.should be_blank
+      expect(mail.in_reply_to).to be_blank
     end
 
     describe "YAML serialization" do
       before(:each) do
+        # Ensure specs don't randomly fail due to messages being generated 1 second apart
+        time = DateTime.now
+        allow(DateTime).to receive(:now).and_return(time)
+
         @yaml_mail = Mail::Message.new(:to => 'someone@somewhere.com',
                                   :cc => 'someoneelse@somewhere.com',
                                   :bcc => 'someonesecret@somewhere.com',
@@ -146,31 +159,31 @@ describe Mail::Message do
       it "should serialize the basic information to YAML" do
         yaml = @yaml_mail.to_yaml
         yaml_output = YAML.load(yaml)
-        yaml_output['headers']['To'].should       eq "someone@somewhere.com"
-        yaml_output['headers']['Cc'].should       eq "someoneelse@somewhere.com"
-        yaml_output['headers']['Subject'].should  eq "subject"
-        yaml_output['headers']['Bcc'].should      eq "someonesecret@somewhere.com"
-        yaml_output['@body_raw'].should           eq "body"
-        yaml_output['@delivery_method'].should_not be_blank
+        expect(yaml_output['headers']['To']).to       eq "someone@somewhere.com"
+        expect(yaml_output['headers']['Cc']).to       eq "someoneelse@somewhere.com"
+        expect(yaml_output['headers']['Subject']).to  eq "subject"
+        expect(yaml_output['headers']['Bcc']).to      eq "someonesecret@somewhere.com"
+        expect(yaml_output['@body_raw']).to           eq "body"
+        expect(yaml_output['@delivery_method']).not_to be_blank
       end
 
       it "should deserialize after serializing" do
         deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
-        deserialized.should eq @yaml_mail
-        deserialized.delivery_method.settings.should eq @smtp_settings
+        expect(deserialized).to eq @yaml_mail
+        expect(deserialized.delivery_method.settings).to eq @smtp_settings
       end
 
       it "should serialize a Message with a custom delivery_handler" do
         @yaml_mail.delivery_handler = DeliveryAgent
         yaml = @yaml_mail.to_yaml
         yaml_output = YAML.load(yaml)
-        yaml_output['delivery_handler'].should eq "DeliveryAgent"
+        expect(yaml_output['delivery_handler']).to eq "DeliveryAgent"
       end
 
       it "should load a serialized delivery handler" do
         @yaml_mail.delivery_handler = DeliveryAgent
         deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
-        deserialized.delivery_handler.should eq DeliveryAgent
+        expect(deserialized.delivery_handler).to eq DeliveryAgent
       end
 
       it "should not deserialize a delivery_handler that does not exist" do
@@ -178,90 +191,90 @@ describe Mail::Message do
         yaml_hash = YAML.load(yaml)
         yaml_hash['delivery_handler'] = "NotARealClass"
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
-        deserialized.delivery_handler.should be_nil
+        expect(deserialized.delivery_handler).to be_nil
       end
 
       it "should handle multipart mail" do
         @yaml_mail.add_part Mail::Part.new(:content_type => 'text/html', :body => '<b>body</b>')
         deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
-        deserialized.should be_multipart
-        deserialized.parts.each {|part| part.should be_a(Mail::Part)}
-        deserialized.parts.map(&:body).should == ['body', '<b>body</b>']
+        expect(deserialized).to be_multipart
+        deserialized.parts.each {|part| expect(part).to be_a(Mail::Part)}
+        expect(deserialized.parts.map(&:body)).to eq(['body', '<b>body</b>'])
       end
     end
 
     describe "splitting" do
       it "should split the body from the header" do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\nHello there\r\n")
-        message.decoded.should == "Hello there\n"
+        expect(message.decoded).to eq("Hello there\n")
       end
 
       it "should split when the body starts with a space" do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n Hello there\r\n")
-        message.decoded.should == " Hello there\n"
+        expect(message.decoded).to eq(" Hello there\n")
       end
 
       it "should split if the body starts with an empty line" do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n\r\nHello there\r\n")
-        message.decoded.should == "\nHello there\n"
+        expect(message.decoded).to eq("\nHello there\n")
       end
 
       it "should split if the body starts with a blank line" do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\n\t\r\nHello there\r\n")
-        message.decoded.should == "\t\nHello there\n"
+        expect(message.decoded).to eq("\t\nHello there\n")
       end
 
       it 'should split after headers that contain "\r\n "' do
         message = Mail::Message.new("To: Example\r\n <example@cirw.in>\r\n\r\n Hello there\r\n")
-        message.decoded.should == " Hello there\n"
+        expect(message.decoded).to eq(" Hello there\n")
       end
 
       it 'should split only once if there are "\r\n\r\n"s in the body' do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n\r\nHello\r\n\r\nthere\r\n")
-        message.decoded.should == "Hello\n\nthere\n"
+        expect(message.decoded).to eq("Hello\n\nthere\n")
       end
 
       # N.B. this is not in any RFCs
       it "should split on a line with whitespace on it" do
         message = Mail::Message.new("To: Example <example@cirw.in>\r\n \r\nHello there\r\n")
-        message.decoded.should == "Hello there\n"
+        expect(message.decoded).to eq("Hello there\n")
       end
     end
   end
 
   describe "envelope line handling" do
     it "should respond to 'envelope from'" do
-      Mail::Message.new.should respond_to(:envelope_from)
+      expect(Mail::Message.new).to respond_to(:envelope_from)
     end
 
     it "should strip off the envelope from field if present" do
       message = Mail.read(fixture('emails', 'plain_emails', 'raw_email.eml'))
-      message.envelope_from.should eq "jamis_buck@byu.edu"
-      message.envelope_date.should eq ::DateTime.parse("Mon May  2 16:07:05 2005")
+      expect(message.envelope_from).to eq "jamis_buck@byu.edu"
+      expect(message.envelope_date).to eq ::DateTime.parse("Mon May  2 16:07:05 2005")
     end
 
     it "should strip off the envelope from field if present" do
       message = Mail.read(fixture('emails', 'plain_emails', 'raw_email.eml'))
-      message.raw_envelope.should eq "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
-      message.from.should eq ["jamis@37signals.com"]
+      expect(message.raw_envelope).to eq "jamis_buck@byu.edu Mon May  2 16:07:05 2005"
+      expect(message.from).to eq ["jamis@37signals.com"]
     end
 
     it "should not cause any problems if there is no envelope from present" do
       message = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
-      message.from.should eq ["test@lindsaar.net"]
+      expect(message.from).to eq ["test@lindsaar.net"]
     end
 
     it "should ignore a plain text body that starts with ^From" do
       m = Mail::Message.new("From: mikel@test.lindsaar.net\r\n\r\nThis is a way to break mail by putting\r\nFrom at the start of a body\r\nor elsewhere.")
-      m.from.should_not be_nil
-      m.from.should eq ['mikel@test.lindsaar.net']
+      expect(m.from).not_to be_nil
+      expect(m.from).to eq ['mikel@test.lindsaar.net']
     end
 
     it "should handle a multipart message that has ^From in it" do
       m = Mail.read(fixture('emails', 'error_emails', 'cant_parse_from.eml'))
-      m.from.should_not be_nil
-      m.from.should eq ["News@InsideApple.Apple.com"]
-      m.should be_multipart
+      expect(m.from).not_to be_nil
+      expect(m.from).to eq ["News@InsideApple.Apple.com"]
+      expect(m).to be_multipart
     end
 
   end
@@ -270,49 +283,49 @@ describe Mail::Message do
 
     it "should accept some email text to parse and return an email" do
       mail = Mail::Message.new(basic_email)
-      mail.class.should eq Mail::Message
+      expect(mail.class).to eq Mail::Message
     end
 
     it "should set a raw source instance variable to equal the passed in message" do
       mail = Mail::Message.new(basic_email)
-      mail.raw_source.should eq basic_email
+      expect(mail.raw_source).to eq basic_email
     end
 
     it "should set the raw source instance variable to '' if no message is passed in" do
       mail = Mail::Message.new
-      mail.raw_source.should eq ""
+      expect(mail.raw_source).to eq ""
     end
 
     it "should give the header class the header to parse" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
+      expect(Mail::Header).to receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
       Mail::Message.new(basic_email)
     end
 
     it "should give the header class the header to parse even if there is no body" do
       header = Mail::Header.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
-      Mail::Header.should_receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
+      expect(Mail::Header).to receive(:new).with("To: mikel\r\nFrom: bob\r\nSubject: Hello!", 'UTF-8').and_return(header)
       Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
 
     it "should give the body class the body to parse" do
       body = Mail::Body.new("email message")
-      Mail::Body.should_receive(:new).with("email message\r\n").and_return(body)
+      expect(Mail::Body).to receive(:new).with("email message\r\n").and_return(body)
       mail = Mail::Message.new(basic_email)
       mail.body #body calculates now lazy so need to ask for it
     end
 
     it "should still ask the body for a new instance even though these is nothing to parse, yet" do
       body = Mail::Body.new('')
-      Mail::Body.should_receive(:new).and_return(body)
+      expect(Mail::Body).to receive(:new).and_return(body)
       Mail::Message.new("To: mikel\r\nFrom: bob\r\nSubject: Hello!")
     end
 
     it "should give the header the part before the line without spaces and the body the part without" do
       header = Mail::Header.new("To: mikel")
       body = Mail::Body.new("G'Day!")
-      Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
-      Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
+      expect(Mail::Header).to receive(:new).with("To: mikel", 'UTF-8').and_return(header)
+      expect(Mail::Body).to receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n\r\nG'Day!")
       mail.body #body calculates now lazy so need to ask for it
     end
@@ -320,28 +333,49 @@ describe Mail::Message do
     it "should give allow for whitespace on the gap line between header and body" do
       header = Mail::Header.new("To: mikel")
       body = Mail::Body.new("G'Day!")
-      Mail::Header.should_receive(:new).with("To: mikel", 'UTF-8').and_return(header)
-      Mail::Body.should_receive(:new).with("G'Day!").and_return(body)
+      expect(Mail::Header).to receive(:new).with("To: mikel", 'UTF-8').and_return(header)
+      expect(Mail::Body).to receive(:new).with("G'Day!").and_return(body)
       mail = Mail::Message.new("To: mikel\r\n   		  \r\nG'Day!")
       mail.body #body calculates now lazy so need to ask for it
     end
 
     it "should allow for whitespace at the start of the email" do
       mail = Mail.new("\r\n\r\nFrom: mikel\r\n\r\nThis is the body")
-      mail.body.to_s.should eq 'This is the body'
-      mail.from.should eq ['mikel']
+      expect(mail.body.to_s).to eq 'This is the body'
+      expect(mail.from).to eq ['mikel']
     end
 
     it "should read in an email message with the word 'From' in it multiple times and parse it" do
       mail = Mail.read(fixture('emails', 'mime_emails', 'two_from_in_message.eml'))
-      mail.to.should_not be_nil
-      mail.to.should eq ["tester2@test.com"]
+      expect(mail.to).not_to be_nil
+      expect(mail.to).to eq ["tester2@test.com"]
     end
 
     it "should parse non-UTF8 sources" do
-      mail = Mail.read(fixture('emails', 'multi_charset', 'japanese_shiftjis.eml'))
-      mail.to.should eq ["raasdnil@gmail.com"]
-      mail.decoded.should eq "すみません。\n\n"
+      raw_message = File.read(fixture('emails', 'multi_charset', 'japanese_iso_2022.eml'))
+      original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
+      mail = Mail.new(raw_message)
+      expect(mail.to).to eq ["raasdnil@gmail.com"]
+      expect(mail.decoded).to eq "すみません。\n\n"
+      expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
+    end
+
+    if '1.9+'.respond_to?(:encoding)
+      it "should be able to normalize CRLFs on non-UTF8 encodings" do
+        File.open(fixture('emails', 'multi_charset', 'japanese_shift_jis.eml')) do |io|
+          mail = Mail.new(io.read)
+          expect(mail.raw_source.encoding).to eq Encoding::BINARY
+        end
+      end
+    end
+
+    if '1.9+'.respond_to?(:encoding)
+      it "should be able to normalize CRLFs on non-UTF8 encodings" do
+        File.open(fixture('emails', 'multi_charset', 'japanese_shift_jis.eml')) do |io|
+          mail = Mail.new(io.read)
+          expect(mail.raw_source.encoding).to eq Encoding::BINARY
+        end
+      end
     end
   end
 
@@ -354,21 +388,21 @@ describe Mail::Message do
       end
 
       it "should allow you to grab field objects if you really want to" do
-        @mail.header_fields.class.should eq Mail::FieldList
+        expect(@mail.header_fields.class).to eq Mail::FieldList
       end
 
       it "should give you back the fields in the header" do
         @mail['bar'] = 'abcd'
-        @mail.header_fields.length.should eq 1
+        expect(@mail.header_fields.length).to eq 1
         @mail['foo'] = '4321'
-        @mail.header_fields.length.should eq 2
+        expect(@mail.header_fields.length).to eq 2
       end
 
       it "should delete a field if it is set to nil" do
         @mail['foo'] = '4321'
-        @mail.header_fields.length.should eq 1
+        expect(@mail.header_fields.length).to eq 1
         @mail['foo'] = nil
-        @mail.header_fields.length.should eq 0
+        expect(@mail.header_fields.length).to eq 0
       end
 
     end
@@ -381,32 +415,32 @@ describe Mail::Message do
 
       it "should return the to field" do
         @mail.to = "mikel"
-        @mail.to.should eq ["mikel"]
+        expect(@mail.to).to eq ["mikel"]
       end
 
       it "should return the from field" do
         @mail.from = "bob"
-        @mail.from.should eq ["bob"]
+        expect(@mail.from).to eq ["bob"]
       end
 
       it "should return the subject" do
         @mail.subject = "Hello!"
-        @mail.subject.should eq "Hello!"
+        expect(@mail.subject).to eq "Hello!"
       end
 
       it "should return the body decoded with to_s" do
         @mail.body "email message\r\n"
-        @mail.body.to_s.should eq "email message\n"
+        expect(@mail.body.to_s).to eq "email message\n"
       end
 
       it "should return the body encoded if asked for" do
         @mail.body "email message\r\n"
-        @mail.body.encoded.should eq "email message\r\n"
+        expect(@mail.body.encoded).to eq "email message\r\n"
       end
 
       it "should return the body decoded if asked for" do
         @mail.body "email message\r\n"
-        @mail.body.decoded.should eq "email message\n"
+        expect(@mail.body.decoded).to eq "email message\n"
       end
     end
 
@@ -418,32 +452,32 @@ describe Mail::Message do
 
       it "should return the to field" do
         @mail.to "mikel"
-        @mail.to.should eq ["mikel"]
+        expect(@mail.to).to eq ["mikel"]
       end
 
       it "should return the from field" do
         @mail.from "bob"
-        @mail.from.should eq ["bob"]
+        expect(@mail.from).to eq ["bob"]
       end
 
       it "should return the subject" do
         @mail.subject "Hello!"
-        @mail.subject.should eq "Hello!"
+        expect(@mail.subject).to eq "Hello!"
       end
 
       it "should return the body decoded with to_s" do
         @mail.body "email message\r\n"
-        @mail.body.to_s.should eq "email message\n"
+        expect(@mail.body.to_s).to eq "email message\n"
       end
 
       it "should return the body encoded if asked for" do
         @mail.body "email message\r\n"
-        @mail.body.encoded.should eq "email message\r\n"
+        expect(@mail.body.encoded).to eq "email message\r\n"
       end
 
       it "should return the body decoded if asked for" do
         @mail.body "email message\r\n"
-        @mail.body.decoded.should eq "email message\n"
+        expect(@mail.body.decoded).to eq "email message\n"
       end
     end
 
@@ -454,17 +488,17 @@ describe Mail::Message do
       end
 
       it "should allow you to set them" do
-        doing {@mail['foo'] = 1234}.should_not raise_error
+        expect {@mail['foo'] = 1234}.not_to raise_error
       end
 
       it "should allow you to read arbitrary headers" do
         @mail['foo'] = 1234
-        @mail['foo'].value.to_s.should eq '1234'
+        expect(@mail['foo'].value.to_s).to eq '1234'
       end
 
       it "should instantiate a new Header" do
         @mail['foo'] = 1234
-        @mail.header_fields.first.class.should eq Mail::Field
+        expect(@mail.header_fields.first.class).to eq Mail::Field
       end
     end
 
@@ -472,19 +506,19 @@ describe Mail::Message do
 
       it "should allow you to replace a from field" do
         mail = Mail.new
-        mail.from.should eq nil
+        expect(mail.from).to eq nil
         mail.from = 'mikel@test.lindsaar.net'
-        mail.from.should eq ['mikel@test.lindsaar.net']
+        expect(mail.from).to eq ['mikel@test.lindsaar.net']
         mail.from = 'bob@test.lindsaar.net'
-        mail.from.should eq ['bob@test.lindsaar.net']
+        expect(mail.from).to eq ['bob@test.lindsaar.net']
       end
 
       it "should maintain the class of the field" do
         mail = Mail.new
         mail.from = 'mikel@test.lindsaar.net'
-        mail[:from].field.class.should eq Mail::FromField
+        expect(mail[:from].field.class).to eq Mail::FromField
         mail.from = 'bob@test.lindsaar.net'
-        mail[:from].field.class.should eq Mail::FromField
+        expect(mail[:from].field.class).to eq Mail::FromField
       end
     end
 
@@ -522,34 +556,34 @@ describe Mail::Message do
           body          'This is a body of text'
         end
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should accept them in assignment form" do
@@ -583,34 +617,34 @@ describe Mail::Message do
         message.mime_version =  '1.0'
         message.body =          'This is a body of text'
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should accept them in key, value form as symbols" do
@@ -644,34 +678,34 @@ describe Mail::Message do
         message[:mime_version]=  '1.0'
         message[:body] =          'This is a body of text'
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should accept them in key, value form as strings" do
@@ -705,34 +739,34 @@ describe Mail::Message do
         message['mime_version'] =  '1.0'
         message['body'] =          'This is a body of text'
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should accept them as a hash with symbols" do
@@ -767,34 +801,34 @@ describe Mail::Message do
           :body =>          'This is a body of text'
         })
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should accept them as a hash with strings" do
@@ -829,46 +863,46 @@ describe Mail::Message do
           'body' =>          'This is a body of text'
         })
 
-        message.bcc.should           eq ['mikel@bcc.lindsaar.net']
-        message.cc.should            eq ['mikel@cc.lindsaar.net']
-        message.comments.should      eq 'this is a comment'
-        message.date.should          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
-        message.from.should          eq ['mikel@from.lindsaar.net']
-        message.in_reply_to.should   eq '1234@in_reply_to.lindsaar.net'
-        message.keywords.should      eq ["test", "of the new mail", "system"]
-        message.message_id.should    eq '1234@message_id.lindsaar.net'
-        message.received.date_time.should      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
-        message.references.should    eq '1234@references.lindsaar.net'
-        message.reply_to.should      eq ['mikel@reply-to.lindsaar.net']
-        message.resent_bcc.should    eq ['mikel@resent-bcc.lindsaar.net']
-        message.resent_cc.should     eq ['mikel@resent-cc.lindsaar.net']
-        message.resent_date.should   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
-        message.resent_from.should   eq ['mikel@resent-from.lindsaar.net']
-        message.resent_message_id.should eq '1234@resent_message_id.lindsaar.net'
-        message.resent_sender.should eq ['mikel@resent-sender.lindsaar.net']
-        message.resent_to.should     eq ['mikel@resent-to.lindsaar.net']
-        message.sender.should        eq 'mikel@sender.lindsaar.net'
-        message.subject.should       eq 'Hello there Mikel'
-        message.to.should            eq ['mikel@to.lindsaar.net']
-        message.content_type.should              eq 'text/plain; charset=UTF-8'
-        message.content_transfer_encoding.should eq '7bit'
-        message.content_description.should       eq 'This is a test'
-        message.content_disposition.should       eq 'attachment; filename=File'
-        message.content_id.should                eq '<1234@message_id.lindsaar.net>'
-        message.mime_version.should              eq '1.0'
-        message.body.to_s.should          eq 'This is a body of text'
+        expect(message.bcc).to           eq ['mikel@bcc.lindsaar.net']
+        expect(message.cc).to            eq ['mikel@cc.lindsaar.net']
+        expect(message.comments).to      eq 'this is a comment'
+        expect(message.date).to          eq DateTime.parse('12 Aug 2009 00:00:01 GMT')
+        expect(message.from).to          eq ['mikel@from.lindsaar.net']
+        expect(message.in_reply_to).to   eq '1234@in_reply_to.lindsaar.net'
+        expect(message.keywords).to      eq ["test", "of the new mail", "system"]
+        expect(message.message_id).to    eq '1234@message_id.lindsaar.net'
+        expect(message.received.date_time).to      eq DateTime.parse('12 Aug 2009 00:00:02 GMT')
+        expect(message.references).to    eq '1234@references.lindsaar.net'
+        expect(message.reply_to).to      eq ['mikel@reply-to.lindsaar.net']
+        expect(message.resent_bcc).to    eq ['mikel@resent-bcc.lindsaar.net']
+        expect(message.resent_cc).to     eq ['mikel@resent-cc.lindsaar.net']
+        expect(message.resent_date).to   eq DateTime.parse('12 Aug 2009 00:00:03 GMT')
+        expect(message.resent_from).to   eq ['mikel@resent-from.lindsaar.net']
+        expect(message.resent_message_id).to eq '1234@resent_message_id.lindsaar.net'
+        expect(message.resent_sender).to eq ['mikel@resent-sender.lindsaar.net']
+        expect(message.resent_to).to     eq ['mikel@resent-to.lindsaar.net']
+        expect(message.sender).to        eq 'mikel@sender.lindsaar.net'
+        expect(message.subject).to       eq 'Hello there Mikel'
+        expect(message.to).to            eq ['mikel@to.lindsaar.net']
+        expect(message.content_type).to              eq 'text/plain; charset=UTF-8'
+        expect(message.content_transfer_encoding).to eq '7bit'
+        expect(message.content_description).to       eq 'This is a test'
+        expect(message.content_disposition).to       eq 'attachment; filename=File'
+        expect(message.content_id).to                eq '<1234@message_id.lindsaar.net>'
+        expect(message.mime_version).to              eq '1.0'
+        expect(message.body.to_s).to          eq 'This is a body of text'
       end
 
       it "should let you set custom headers with a :headers => {hash}" do
         message = Mail.new(:headers => {'custom-header' => 'mikel'})
-        message['custom-header'].decoded.should eq 'mikel'
+        expect(message['custom-header'].decoded).to eq 'mikel'
       end
 
       it "should assign the body to a part on creation" do
         message = Mail.new do
           part({:content_type=>"multipart/alternative", :content_disposition=>"inline", :body=>"Nothing to see here."})
         end
-        message.parts.first.body.decoded.should eq "Nothing to see here."
+        expect(message.parts.first.body.decoded).to eq "Nothing to see here."
       end
 
       it "should not overwrite bodies on creation" do
@@ -877,31 +911,168 @@ describe Mail::Message do
             p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>"
           end
         end
-        message.parts.first.parts[0].body.decoded.should eq "Nothing to see here."
-        message.parts.first.parts[1].body.decoded.should eq "<b>test</b> HTML<br/>"
-        message.encoded.should match %r{Nothing to see here\.}
-        message.encoded.should match %r{<b>test</b> HTML<br/>}
+        expect(message.parts.first.parts[0].body.decoded).to eq "Nothing to see here."
+        expect(message.parts.first.parts[1].body.decoded).to eq "<b>test</b> HTML<br/>"
+        expect(message.encoded).to match %r{Nothing to see here\.}
+        expect(message.encoded).to match %r{<b>test</b> HTML<br/>}
       end
 
       it "should allow you to init on an array of addresses from a hash" do
         mail = Mail.new(:to => ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
-        mail.to.should eq ['test1@lindsaar.net', 'test2@lindsaar.net']
+        expect(mail.to).to eq ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
 
       it "should allow you to init on an array of addresses directly" do
         mail = Mail.new
         mail.to = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
-        mail.to.should eq ['test1@lindsaar.net', 'test2@lindsaar.net']
+        expect(mail.to).to eq ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
 
       it "should allow you to init on an array of addresses directly" do
         mail = Mail.new
         mail[:to] = ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>']
-        mail.to.should eq ['test1@lindsaar.net', 'test2@lindsaar.net']
+        expect(mail.to).to eq ['test1@lindsaar.net', 'test2@lindsaar.net']
       end
 
     end
 
+  end
+
+  describe "making a copy of a message with dup" do
+    def message_should_have_default_values(message)
+      expect(message.bcc).to           eq nil
+      expect(message.cc).to            eq nil
+      expect(message.comments).to      eq nil
+      expect(message.date).to          eq nil
+      expect(message.from).to          eq nil
+      expect(message.in_reply_to).to   eq nil
+      expect(message.keywords).to      eq nil
+      expect(message.message_id).to    eq nil
+      expect(message.received).to      eq nil
+      expect(message.references).to    eq nil
+      expect(message.reply_to).to      eq nil
+      expect(message.resent_bcc).to    eq nil
+      expect(message.resent_cc).to     eq nil
+      expect(message.resent_date).to   eq nil
+      expect(message.resent_from).to   eq nil
+      expect(message.resent_message_id).to eq nil
+      expect(message.resent_sender).to eq nil
+      expect(message.resent_to).to     eq nil
+      expect(message.sender).to        eq nil
+      expect(message.subject).to       eq nil
+      expect(message.to).to            eq nil
+      expect(message.content_type).to              eq nil
+      expect(message.content_transfer_encoding).to eq nil
+      expect(message.content_description).to       eq nil
+      expect(message.content_disposition).to       eq nil
+      expect(message.content_id).to                eq nil
+      expect(message.mime_version).to              eq nil
+      expect(message.body.to_s).to          eq ''
+    end
+
+    it "its headers should not be changed when you change the headers of the original" do
+      message = Mail.new
+      message_copy = message.dup
+      message_should_have_default_values message
+      message_should_have_default_values message_copy
+
+      message[:bcc] =           'mikel@bcc.lindsaar.net'
+      message[:cc] =            'mikel@cc.lindsaar.net'
+      message[:comments] =      'this is a comment'
+      message[:date] =          '12 Aug 2009 00:00:01 GMT'
+      message[:from] =          'mikel@from.lindsaar.net'
+      message[:in_reply_to] =   '<1234@in_reply_to.lindsaar.net>'
+      message[:keywords] =      'test, "of the new mail", system'
+      message[:message_id] =    '<1234@message_id.lindsaar.net>'
+      message[:received] =      'from machine.example by x.y.test; 12 Aug 2009 00:00:02 GMT'
+      message[:references] =    '<1234@references.lindsaar.net>'
+      message[:reply_to] =      'mikel@reply-to.lindsaar.net'
+      message[:resent_bcc] =    'mikel@resent-bcc.lindsaar.net'
+      message[:resent_cc] =     'mikel@resent-cc.lindsaar.net'
+      message[:resent_date] =   '12 Aug 2009 00:00:03 GMT'
+      message[:resent_from] =   'mikel@resent-from.lindsaar.net'
+      message[:resent_message_id] = '<1234@resent_message_id.lindsaar.net>'
+      message[:resent_sender] = 'mikel@resent-sender.lindsaar.net'
+      message[:resent_to] =     'mikel@resent-to.lindsaar.net'
+      message[:sender] =        'mikel@sender.lindsaar.net'
+      message[:subject] =       'Hello there Mikel'
+      message[:to] =            'mikel@to.lindsaar.net'
+      message[:content_type] =  'text/plain; charset=UTF-8'
+      message[:content_transfer_encoding] = '7bit'
+      message[:content_description] =       'This is a test'
+      message[:content_disposition] =       'attachment; filename=File'
+      message[:content_id] =                '<1234@message_id.lindsaar.net>'
+      message[:mime_version]=  '1.0'
+      message[:body] =          'This is a body of text'
+
+      message_should_have_default_values message_copy
+    end
+
+    def message_headers_should_match(message, other)
+      expect(message.bcc).to           eq other.bcc
+      expect(message.cc).to            eq other.cc
+      expect(message.comments).to      eq other.comments
+      expect(message.date).to          eq other.date
+      expect(message.from).to          eq other.from
+      expect(message.in_reply_to).to   eq other.in_reply_to
+      expect(message.keywords).to      eq other.keywords
+      expect(message.message_id).to    eq other.message_id
+      expect(message.received).to      eq other.received
+      expect(message.references).to    eq other.references
+      expect(message.reply_to).to      eq other.reply_to
+      expect(message.resent_bcc).to    eq other.resent_bcc
+      expect(message.resent_cc).to     eq other.resent_cc
+      expect(message.resent_date).to   eq other.resent_date
+      expect(message.resent_from).to   eq other.resent_from
+      expect(message.resent_message_id).to eq other.resent_message_id
+      expect(message.resent_sender).to eq other.resent_sender
+      expect(message.resent_to).to     eq other.resent_to
+      expect(message.sender).to        eq other.sender
+      expect(message.subject).to       eq other.subject
+      expect(message.to).to            eq other.to
+      expect(message.content_type).to              eq other.content_type
+      expect(message.content_transfer_encoding).to eq other.content_transfer_encoding
+      expect(message.content_description).to       eq other.content_description
+      expect(message.content_disposition).to       eq other.content_disposition
+      expect(message.content_id).to                eq other.content_id
+      expect(message.mime_version).to              eq other.mime_version
+      expect(message.body.to_s).to          eq other.body.to_s
+    end
+
+    it "its headers should be copies of the headers of the original" do
+      message = Mail.new
+      message[:bcc] =           'mikel@bcc.lindsaar.net'
+      message[:cc] =            'mikel@cc.lindsaar.net'
+      message[:comments] =      'this is a comment'
+      message[:date] =          '12 Aug 2009 00:00:01 GMT'
+      message[:from] =          'mikel@from.lindsaar.net'
+      message[:in_reply_to] =   '<1234@in_reply_to.lindsaar.net>'
+      message[:keywords] =      'test, "of the new mail", system'
+      message[:message_id] =    '<1234@message_id.lindsaar.net>'
+      message[:received] =      'from machine.example by x.y.test; 12 Aug 2009 00:00:02 GMT'
+      message[:references] =    '<1234@references.lindsaar.net>'
+      message[:reply_to] =      'mikel@reply-to.lindsaar.net'
+      message[:resent_bcc] =    'mikel@resent-bcc.lindsaar.net'
+      message[:resent_cc] =     'mikel@resent-cc.lindsaar.net'
+      message[:resent_date] =   '12 Aug 2009 00:00:03 GMT'
+      message[:resent_from] =   'mikel@resent-from.lindsaar.net'
+      message[:resent_message_id] = '<1234@resent_message_id.lindsaar.net>'
+      message[:resent_sender] = 'mikel@resent-sender.lindsaar.net'
+      message[:resent_to] =     'mikel@resent-to.lindsaar.net'
+      message[:sender] =        'mikel@sender.lindsaar.net'
+      message[:subject] =       'Hello there Mikel'
+      message[:to] =            'mikel@to.lindsaar.net'
+      message[:content_type] =  'text/plain; charset=UTF-8'
+      message[:content_transfer_encoding] = '7bit'
+      message[:content_description] =       'This is a test'
+      message[:content_disposition] =       'attachment; filename=File'
+      message[:content_id] =                '<1234@message_id.lindsaar.net>'
+      message[:mime_version]=  '1.0'
+      message[:body] =          'This is a body of text'
+
+      message_copy = message.dup
+      message_headers_should_match message_copy, message
+    end
   end
 
   describe "handling missing required fields:" do
@@ -916,7 +1087,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.should_not be_has_message_id
+          expect(mail).not_to be_has_message_id
         end
 
         it "should preserve any message id that you pass it if add_message_id is called explicitly" do
@@ -927,7 +1098,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_message_id("<ThisIsANonUniqueMessageId@me.com>")
-          mail.to_s.should =~ /Message-ID: <ThisIsANonUniqueMessageId@me.com>\r\n/
+          expect(mail.to_s).to match(/Message-ID: <ThisIsANonUniqueMessageId@me.com>\r\n/)
         end
 
         it "should generate a random message ID if nothing is passed to add_message_id" do
@@ -938,7 +1109,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_message_id
-          mail.to_s.should =~ /Message-ID: <[\w]+@#{::Socket.gethostname}.mail>\r\n/
+          expect(mail.to_s).to match(/Message-ID: <[\w]+@#{::Socket.gethostname}.mail>\r\n/)
         end
 
         it "should make an email and inject a message ID if none was set if told to_s" do
@@ -948,7 +1119,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          (mail.to_s =~ /Message-ID: <.+@.+.mail>/i).should_not be_nil
+          expect(mail.to_s =~ /Message-ID: <.+@.+.mail>/i).not_to be_nil
         end
 
         it "should add the message id to the message permanently once sent to_s" do
@@ -959,13 +1130,13 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.to_s
-          mail.should be_has_message_id
+          expect(mail).to be_has_message_id
         end
 
         it "should add a body part if it is missing" do
           mail = Mail.new
           mail.to_s
-          mail.body.class.should eq Mail::Body
+          expect(mail.body.class).to eq Mail::Body
         end
       end
 
@@ -977,7 +1148,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.should_not be_has_date
+          expect(mail).not_to be_has_date
         end
 
         it "should preserve any date that you pass it if add_date is called explicitly" do
@@ -988,7 +1159,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_date("Mon, 24 Nov 1997 14:22:01 -0800")
-          mail.to_s.should =~ /Date: Mon, 24 Nov 1997 14:22:01 -0800/
+          expect(mail.to_s).to match(/Date: Mon, 24 Nov 1997 14:22:01 -0800/)
         end
 
         it "should generate a current date if nothing is passed to add_date" do
@@ -999,7 +1170,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_date
-          mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
+          expect(mail.to_s).to match(/Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/)
         end
 
         it "should make an email and inject a date if none was set if told to_s" do
@@ -1009,7 +1180,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.to_s.should =~ /Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/
+          expect(mail.to_s).to match(/Date: \w{3}, [\s\d]\d \w{3} \d{4} \d{2}:\d{2}:\d{2} [-+]?\d{4}\r\n/)
         end
 
         it "should add the date to the message permanently once sent to_s" do
@@ -1020,7 +1191,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.to_s
-          mail.should be_has_date
+          expect(mail).to be_has_date
         end
       end
 
@@ -1036,7 +1207,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.should_not be_has_mime_version
+          expect(mail).not_to be_has_mime_version
         end
 
         it "should preserve any mime version that you pass it if add_mime_version is called explicitly" do
@@ -1047,7 +1218,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          mail.to_s.should =~ /Mime-Version: 3.0\r\n/
+          expect(mail.to_s).to match(/Mime-Version: 3.0\r\n/)
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -1058,7 +1229,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version
-          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
         end
 
         it "should make an email and inject a mime_version if none was set if told to_s" do
@@ -1068,7 +1239,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          mail.to_s.should =~ /Mime-Version: 1.0\r\n/
+          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
         end
 
         it "should add the mime version to the message permanently once sent to_s" do
@@ -1079,7 +1250,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.to_s
-          mail.should be_has_mime_version
+          expect(mail).to be_has_mime_version
         end
       end
 
@@ -1087,29 +1258,29 @@ describe Mail::Message do
 
         it "should say if it has a content type" do
           mail = Mail.new('Content-Type: text/plain')
-          mail.should be_has_content_type
+          expect(mail).to be_has_content_type
         end
 
         it "should say if it does not have a content type" do
           mail = Mail.new
-          mail.should_not be_has_content_type
+          expect(mail).not_to be_has_content_type
         end
 
         it "should say if it has a charset" do
           mail = Mail.new('Content-Type: text/plain; charset=US-ASCII')
-          mail.should be_has_charset
+          expect(mail).to be_has_charset
         end
 
         it "should say if it has a charset" do
           mail = Mail.new('Content-Type: text/plain')
-          mail.should_not be_has_charset
+          expect(mail).not_to be_has_charset
         end
 
         it "should not raise a warning if there is no charset defined and only US-ASCII chars" do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          STDERR.should_not_receive(:puts)
+          expect(STDERR).not_to receive(:puts)
           mail.to_s
         end
 
@@ -1133,7 +1304,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
+          expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
         end
 
@@ -1143,7 +1314,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
+          expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
         end
 
@@ -1153,27 +1324,27 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           mail.content_type = "text/plain; charset=UTF-8"
-          STDERR.should_not_receive(:puts)
+          expect(STDERR).not_to receive(:puts)
           mail.to_s
         end
 
         it "should be able to set a content type with an array and hash" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { :charset => 'US-ASCII' }]
-          mail[:content_type].encoded.should eq %Q[Content-Type: text/plain;\r\n\scharset=US-ASCII\r\n]
-          mail.content_type_parameters.should eql({"charset" => "US-ASCII"})
+          expect(mail[:content_type].encoded).to eq %Q[Content-Type: text/plain;\r\n\scharset=US-ASCII\r\n]
+          expect(mail.content_type_parameters).to eql({"charset" => "US-ASCII"})
         end
 
         it "should be able to set a content type with an array and hash with a non-usascii field" do
           mail = Mail.new
           mail.content_type = ["text", "plain", { :charset => 'UTF-8' }]
-          mail[:content_type].encoded.should eq %Q[Content-Type: text/plain;\r\n\scharset=UTF-8\r\n]
-          mail.content_type_parameters.should eql({"charset" => "UTF-8"})
+          expect(mail[:content_type].encoded).to eq %Q[Content-Type: text/plain;\r\n\scharset=UTF-8\r\n]
+          expect(mail.content_type_parameters).to eql({"charset" => "UTF-8"})
         end
 
         it "should allow us to specify a content type in a block" do
           mail = Mail.new { content_type ["text", "plain", { "charset" => "UTF-8" }] }
-          mail.content_type_parameters.should eql({"charset" => "UTF-8"})
+          expect(mail.content_type_parameters).to eql({"charset" => "UTF-8"})
         end
 
       end
@@ -1184,7 +1355,7 @@ describe Mail::Message do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          mail.to_s.should =~ %r{Content-Transfer-Encoding: 7bit}
+          expect(mail.to_s).to match(%r{Content-Transfer-Encoding: 7bit})
         end
 
         it "should use QP transfer encoding for 8bit text with only a few 8bit characters" do
@@ -1192,7 +1363,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.charset = "UTF-8"
           mail.body = body
-          mail.to_s.should =~ %r{Content-Transfer-Encoding: quoted-printable}
+          expect(mail.to_s).to match(%r{Content-Transfer-Encoding: quoted-printable})
         end
 
         it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
@@ -1201,9 +1372,9 @@ describe Mail::Message do
           mail.charset = "UTF-8"
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
-          mail.should be_has_content_type
-          mail.should be_has_charset
-          mail.to_s.should =~  %r{Content-Transfer-Encoding: base64}
+          expect(mail).to be_has_content_type
+          expect(mail).to be_has_charset
+          expect(mail.to_s).to match(%r{Content-Transfer-Encoding: base64})
         end
 
         it "should not use 8bit transfer encoding when 8bit is allowed" do
@@ -1213,7 +1384,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain; charset=utf-8"
           mail.transport_encoding = "8bit"
-          mail.to_s.should =~ %r{Content-Transfer-Encoding: 8bit}
+          expect(mail.to_s).to match(%r{Content-Transfer-Encoding: 8bit})
         end
 
       end
@@ -1232,10 +1403,10 @@ describe Mail::Message do
            body 'This is a body of the email'
       end
 
-      mail.to_s.should =~ /From: mikel@test.lindsaar.net\r\n/
-      mail.to_s.should =~ /To: you@test.lindsaar.net\r\n/
-      mail.to_s.should =~ /Subject: This is a test email\r\n/
-      mail.to_s.should =~ /This is a body of the email/
+      expect(mail.to_s).to match(/From: mikel@test.lindsaar.net\r\n/)
+      expect(mail.to_s).to match(/To: you@test.lindsaar.net\r\n/)
+      expect(mail.to_s).to match(/Subject: This is a test email\r\n/)
+      expect(mail.to_s).to match(/This is a body of the email/)
 
     end
 
@@ -1252,7 +1423,7 @@ describe Mail::Message do
           body '<h1>This is HTML</h1>'
         end
       end
-      doing { mail.decoded }.should raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
+      expect { mail.decoded }.to raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
 
     it "should return the decoded body if you call decode and the message is not multipart" do
@@ -1260,7 +1431,7 @@ describe Mail::Message do
         content_transfer_encoding 'base64'
         body "VGhlIGJvZHk=\n"
       end
-      mail.decoded.should eq "The body"
+      expect(mail.decoded).to eq "The body"
     end
 
     describe "decoding bodies" do
@@ -1269,8 +1440,8 @@ describe Mail::Message do
         mail = Mail.new do
           body "The=3Dbody"
         end
-        mail.body.decoded.should eq "The=3Dbody"
-        mail.body.encoded.should eq "The=3Dbody"
+        expect(mail.body.decoded).to eq "The=3Dbody"
+        expect(mail.body.encoded).to eq "The=3Dbody"
       end
 
       it "should change a body on decode if given an encoding type to decode" do
@@ -1278,8 +1449,8 @@ describe Mail::Message do
           content_transfer_encoding 'quoted-printable'
           body "The=3Dbody"
         end
-        mail.body.decoded.should eq "The=body"
-        mail.body.encoded.should eq "The=3Dbody=\r\n"
+        expect(mail.body.decoded).to eq "The=body"
+        expect(mail.body.encoded).to eq "The=3Dbody=\r\n"
       end
 
       it "should change a body on decode if given an encoding type to decode" do
@@ -1287,12 +1458,12 @@ describe Mail::Message do
           content_transfer_encoding 'base64'
           body "VGhlIGJvZHk=\n"
         end
-        mail.body.decoded.should eq "The body"
-        mail.body.encoded.should eq "VGhlIGJvZHk=\r\n"
+        expect(mail.body.decoded).to eq "The body"
+        expect(mail.body.encoded).to eq "VGhlIGJvZHk=\r\n"
       end
 
       it 'should not strip the raw mail source in case the trailing \r\n is meaningful' do
-        Mail.new("Content-Transfer-Encoding: quoted-printable;\r\n\r\nfoo=\r\nbar=\r\nbaz=\r\n").decoded.should eq 'foobarbaz'
+        expect(Mail.new("Content-Transfer-Encoding: quoted-printable;\r\n\r\nfoo=\r\nbar=\r\nbaz=\r\n").decoded).to eq 'foobarbaz'
       end
 
     end
@@ -1314,11 +1485,11 @@ describe Mail::Message do
     end
 
     it "should be decoded using content type charset" do
-      @message.decoded.should eq "América"
+      expect(@message.decoded).to eq "América"
     end
 
     it "should respond true to text?" do
-      @message.text?.should eq true
+      expect(@message.text?).to eq true
     end
 
   end
@@ -1328,58 +1499,48 @@ describe Mail::Message do
     describe "==" do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
-        time = Time.now
-        Time.stub!(:now).and_return(time)
+        time = DateTime.now
+        expect(DateTime).to receive(:now).at_least(:once).and_return(time)
       end
 
       it "should be implemented" do
-        doing { Mail.new == Mail.new }.should_not raise_error
+        expect { Mail.new == Mail.new }.not_to raise_error
       end
 
       it "should ignore the message id value if both have a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m1.should eq m2
+        expect(m1).to eq m2
+        # confirm there are no side-effects in the comparison
+        expect(m1.message_id).to be_nil
+        expect(m2.message_id).to be_nil
       end
 
       it "should ignore the message id value if self has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <temp@test>\r\nSubject: Yo!\r\n\r\nHello there")
-        m1.should eq m2
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
+        expect(m1).to eq m2
+        # confirm there are no side-effects in the comparison
+        expect(m1.message_id).to be_nil
+        expect(m2.message_id).to eq '1234@test.lindsaar.net'
       end
 
       it "should ignore the message id value if other has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m1.should eq m2
+        expect(m1).to eq m2
+        # confirm there are no side-effects in the comparison
+        expect(m1.message_id).to eq '1234@test.lindsaar.net'
+        expect(m2.message_id).to be_nil
       end
 
       it "should not be == if both emails have different Message IDs" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        m1.should_not eq m2
-      end
-
-      it "should preserve the message id of self if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_true # confirm the side-effects of the comparison
-        m1.message_id.should eq '1234@test.lindsaar.net'
-      end
-
-      it "should preserve the message id of other if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_true # confirm the side-effects of the comparison
-        m2.message_id.should eq '1234@test.lindsaar.net'
-      end
-
-      it "should preserve the message id of both if set" do
-        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <4321@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        (m1 == m2).should be_false # confirm the side-effects of the comparison
-        m1.message_id.should eq '4321@test.lindsaar.net'
-        m2.message_id.should eq '1234@test.lindsaar.net'
+        expect(m1).not_to eq m2
+        # confirm there are no side-effects in the comparison
+        expect(m1.message_id).to eq '4321@test.lindsaar.net'
+        expect(m2.message_id).to eq '1234@test.lindsaar.net'
       end
     end
 
@@ -1391,7 +1552,7 @@ describe Mail::Message do
       mail2 = Mail.new do
         date(now - 10) # Make mail2 10 seconds 'older'
       end
-      [mail2, mail1].sort.should eq [mail2, mail1]
+      expect([mail2, mail1].sort).to eq [mail2, mail1]
     end
 
     it "should have a destinations method" do
@@ -1400,66 +1561,66 @@ describe Mail::Message do
         cc 'bob@test.lindsaar.net'
         bcc 'sam@test.lindsaar.net'
       end
-      mail.destinations.length.should eq 3
+      expect(mail.destinations.length).to eq 3
     end
 
     it "should have a from_addrs method" do
       mail = Mail.new do
         from 'mikel@test.lindsaar.net'
       end
-      mail.from_addrs.length.should eq 1
+      expect(mail.from_addrs.length).to eq 1
     end
 
     it "should have a from_addrs method that is empty if nil" do
       mail = Mail.new do
       end
-      mail.from_addrs.length.should eq 0
+      expect(mail.from_addrs.length).to eq 0
     end
 
     it "should have a to_addrs method" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'
       end
-      mail.to_addrs.length.should eq 1
+      expect(mail.to_addrs.length).to eq 1
     end
 
     it "should have a to_addrs method that is empty if nil" do
       mail = Mail.new do
       end
-      mail.to_addrs.length.should eq 0
+      expect(mail.to_addrs.length).to eq 0
     end
 
     it "should have a cc_addrs method" do
       mail = Mail.new do
         cc 'bob@test.lindsaar.net'
       end
-      mail.cc_addrs.length.should eq 1
+      expect(mail.cc_addrs.length).to eq 1
     end
 
     it "should have a cc_addrs method that is empty if nil" do
       mail = Mail.new do
       end
-      mail.cc_addrs.length.should eq 0
+      expect(mail.cc_addrs.length).to eq 0
     end
 
     it "should have a bcc_addrs method" do
       mail = Mail.new do
         bcc 'sam@test.lindsaar.net'
       end
-      mail.bcc_addrs.length.should eq 1
+      expect(mail.bcc_addrs.length).to eq 1
     end
 
     it "should have a bcc_addrs method that is empty if nil" do
       mail = Mail.new do
       end
-      mail.bcc_addrs.length.should eq 0
+      expect(mail.bcc_addrs.length).to eq 0
     end
 
     it "should give destinations even if some of the fields are blank" do
       mail = Mail.new do
         to 'mikel@test.lindsaar.net'
       end
-      mail.destinations.length.should eq 1
+      expect(mail.destinations.length).to eq 1
     end
 
     it "should be able to encode with only one destination" do
@@ -1486,12 +1647,12 @@ describe Mail::Message do
 
       end
 
-      mail.parts.first.should be_multipart
-      mail.parts.first.parts.length.should eq 2
-      mail.parts.first.parts[0][:content_type].string.should eq "text/plain"
-      mail.parts.first.parts[0].body.decoded.should eq "test text\nline #2"
-      mail.parts.first.parts[1][:content_type].string.should eq "text/html"
-      mail.parts.first.parts[1].body.decoded.should eq "<b>test</b> HTML<br/>\nline #2"
+      expect(mail.parts.first).to be_multipart
+      expect(mail.parts.first.parts.length).to eq 2
+      expect(mail.parts.first.parts[0][:content_type].string).to eq "text/plain"
+      expect(mail.parts.first.parts[0].body.decoded).to eq "test text\nline #2"
+      expect(mail.parts.first.parts[1][:content_type].string).to eq "text/html"
+      expect(mail.parts.first.parts[1].body.decoded).to eq "<b>test</b> HTML<br/>\nline #2"
     end
   end
 
@@ -1499,7 +1660,7 @@ describe Mail::Message do
     it "should return self after delivery" do
       mail = Mail.new
       mail.perform_deliveries = false
-      mail.deliver.should eq mail
+      expect(mail.deliver).to eq mail
     end
 
     class DeliveryAgent
@@ -1510,7 +1671,7 @@ describe Mail::Message do
     it "should pass self to a delivery agent" do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
-      DeliveryAgent.should_receive(:deliver_mail).with(mail)
+      expect(DeliveryAgent).to receive(:deliver_mail).with(mail)
       mail.deliver
     end
 
@@ -1523,7 +1684,16 @@ describe Mail::Message do
       mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_observer(ObserverAgent)
-      ObserverAgent.should_receive(:delivered_email).with(mail)
+      expect(ObserverAgent).to receive(:delivered_email).with(mail)
+      mail.deliver
+    end
+
+    it "should allow observers to be unregistered" do
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
+      mail.delivery_method :test
+      Mail.register_observer(ObserverAgent)
+      Mail.unregister_observer(ObserverAgent)
+      expect(ObserverAgent).not_to receive(:delivered_email).with(mail)
       mail.deliver
     end
 
@@ -1531,7 +1701,7 @@ describe Mail::Message do
       mail = Mail.new
       mail.delivery_handler = DeliveryAgent
       Mail.register_observer(ObserverAgent)
-      ObserverAgent.should_receive(:delivered_email).with(mail)
+      expect(ObserverAgent).to receive(:delivered_email).with(mail)
       mail.deliver
     end
 
@@ -1551,7 +1721,7 @@ describe Mail::Message do
       mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
       mail.delivery_method :test
       Mail.register_interceptor(InterceptorAgent)
-      InterceptorAgent.should_receive(:delivering_email).with(mail)
+      expect(InterceptorAgent).to receive(:delivering_email).with(mail)
       InterceptorAgent.intercept = true
       mail.deliver
       InterceptorAgent.intercept = false
@@ -1565,7 +1735,19 @@ describe Mail::Message do
       InterceptorAgent.intercept = true
       mail.deliver
       InterceptorAgent.intercept = false
-      mail.to.should eq ['bob@example.com']
+      expect(mail.to).to eq ['bob@example.com']
+    end
+
+    it "should allow interceptors to be unregistered" do
+      mail = Mail.new(:from => 'bob@example.com', :to => 'bobette@example.com')
+      mail.to = 'fred@example.com'
+      mail.delivery_method :test
+      Mail.register_interceptor(InterceptorAgent)
+      InterceptorAgent.intercept = true
+      Mail.unregister_interceptor(InterceptorAgent)
+      mail.deliver
+      InterceptorAgent.intercept = false
+      expect(mail.to).to eq ['fred@example.com']
     end
 
   end
@@ -1573,12 +1755,12 @@ describe Mail::Message do
   describe "error handling" do
     it "should collect up any of its fields' errors" do
       mail = Mail.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b\r\n")
-      mail.errors.should_not be_blank
-      mail.errors.size.should eq 2
-      mail.errors[0][0].should eq 'Reply-To'
-      mail.errors[0][1].should eq 'a b b'
-      mail.errors[1][0].should eq 'Content-Transfer-Encoding'
-      mail.errors[1][1].should eq 'vl@d'
+      expect(mail.errors).not_to be_blank
+      expect(mail.errors.size).to eq 2
+      expect(mail.errors[0][0]).to eq 'Reply-To'
+      expect(mail.errors[0][1]).to eq 'a b b'
+      expect(mail.errors[1][0]).to eq 'Content-Transfer-Encoding'
+      expect(mail.errors[1][1]).to eq 'vl@d'
     end
   end
 
@@ -1586,16 +1768,16 @@ describe Mail::Message do
     it "should handle mail[] and keep the header case" do
       mail = Mail.new
       mail['X-Foo-Bar'] = "Some custom text"
-      mail.to_s.should match(/X-Foo-Bar: Some custom text/)
+      expect(mail.to_s).to match(/X-Foo-Bar: Some custom text/)
     end
   end
 
   describe "parsing emails with non usascii in the header" do
     it "should work" do
       mail = Mail.new('From: "Foo áëô îü" <extended@example.net>')
-      mail.from.should eq ['extended@example.net']
-      mail[:from].decoded.should eq '"Foo áëô îü" <extended@example.net>'
-      mail[:from].encoded.should eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
+      expect(mail.from).to eq ['extended@example.net']
+      expect(mail[:from].decoded).to eq '"Foo áëô îü" <extended@example.net>'
+      expect(mail[:from].encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
     end
   end
 
@@ -1609,23 +1791,23 @@ describe Mail::Message do
       p.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
       mail.add_part(p)
       mail.encoded
-      mail.parts[0].mime_type.should eq "multipart/alternative"
-      mail.parts[0].parts[0].mime_type.should eq "text/plain"
-      mail.parts[0].parts[1].mime_type.should eq "text/html"
-      mail.parts[1].mime_type.should eq "image/png"
+      expect(mail.parts[0].mime_type).to eq "multipart/alternative"
+      expect(mail.parts[0].parts[0].mime_type).to eq "text/plain"
+      expect(mail.parts[0].parts[1].mime_type).to eq "text/html"
+      expect(mail.parts[1].mime_type).to eq "image/png"
     end
   end
 
   describe "attachment query methods" do
     it "shouldn't die with an invalid Content-Disposition header" do
       mail = Mail.new('Content-Disposition: invalid')
-      doing { mail.attachment? }.should_not raise_error
+      expect { mail.attachment? }.not_to raise_error
     end
 
     it "shouldn't die with an invalid Content-Type header" do
       mail = Mail.new('Content-Type: invalid/invalid; charset="iso-8859-1"')
       mail.attachment?
-      doing { mail.attachment? }.should_not raise_error
+      expect { mail.attachment? }.not_to raise_error
     end
 
   end
@@ -1638,12 +1820,12 @@ describe Mail::Message do
       emails_with_attachments.each { |email|
         mail = Mail.read(fixture(File.join('emails', 'attachment_emails', "attachment_#{email}.eml")))
         mail_length_with_attachments = mail.to_s.length
-        mail.has_attachments?.should be_true
+        expect(mail.has_attachments?).to be_truthy
         mail.without_attachments!
 
         mail_length_without_attachments = mail.to_s.length
-        mail_length_without_attachments.should be < mail_length_with_attachments
-        mail.has_attachments?.should be_false
+        expect(mail_length_without_attachments).to be < mail_length_with_attachments
+        expect(mail.has_attachments?).to be_falsey
       }
     end
   end
@@ -1657,37 +1839,37 @@ describe Mail::Message do
       end
 
       it "should create a new message" do
-        @mail.reply.should be_a_kind_of(Mail::Message)
+        expect(@mail.reply).to be_a_kind_of(Mail::Message)
       end
 
       it "should be in-reply-to the original message" do
-        @mail.reply.in_reply_to.should eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+        expect(@mail.reply.in_reply_to).to eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
 
       it "should reference the original message" do
-        @mail.reply.references.should eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
+        expect(@mail.reply.references).to eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
 
       it "should RE: the original subject" do
-        @mail.reply.subject.should eq 'RE: Testing 123'
+        expect(@mail.reply.subject).to eq 'RE: Testing 123'
       end
 
       it "should be sent to the original sender" do
-        @mail.reply.to.should eq ['test@lindsaar.net']
-        @mail.reply[:to].to_s.should eq 'Mikel Lindsaar <test@lindsaar.net>'
+        expect(@mail.reply.to).to eq ['test@lindsaar.net']
+        expect(@mail.reply[:to].to_s).to eq 'Mikel Lindsaar <test@lindsaar.net>'
       end
 
       it "should be sent from the original recipient" do
-        @mail.reply.from.should eq ['raasdnil@gmail.com']
-        @mail.reply[:from].to_s.should eq 'Mikel Lindsaar <raasdnil@gmail.com>'
+        expect(@mail.reply.from).to eq ['raasdnil@gmail.com']
+        expect(@mail.reply[:from].to_s).to eq 'Mikel Lindsaar <raasdnil@gmail.com>'
       end
 
       it "should accept args" do
-        @mail.reply(:from => 'Donald Ball <donald.ball@gmail.com>').from.should eq ['donald.ball@gmail.com']
+        expect(@mail.reply(:from => 'Donald Ball <donald.ball@gmail.com>').from).to eq ['donald.ball@gmail.com']
       end
 
       it "should accept a block" do
-        @mail.reply { from('Donald Ball <donald.ball@gmail.com>') }.from.should eq ['donald.ball@gmail.com']
+        expect(@mail.reply { from('Donald Ball <donald.ball@gmail.com>') }.from).to eq ['donald.ball@gmail.com']
       end
 
     end
@@ -1699,7 +1881,7 @@ describe Mail::Message do
       end
 
       it "should be sent to the reply-to address" do
-        @mail.reply[:to].to_s.should eq '"Mary Smith: Personal Account" <smith@home.example>'
+        expect(@mail.reply[:to].to_s).to eq '"Mary Smith: Personal Account" <smith@home.example>'
       end
 
     end
@@ -1711,7 +1893,7 @@ describe Mail::Message do
       end
 
       it "should be sent from the first to address" do
-        @mail.reply[:from].to_s.should eq 'Mary Smith <mary@x.test>'
+        expect(@mail.reply[:from].to_s).to eq 'Mary Smith <mary@x.test>'
       end
 
     end
@@ -1723,15 +1905,15 @@ describe Mail::Message do
       end
 
       it "should be in-reply-to the original message" do
-        @mail.reply.in_reply_to.should eq '473FFE27.20003@xxx.org'
+        expect(@mail.reply.in_reply_to).to eq '473FFE27.20003@xxx.org'
       end
 
       it "should append to the original's references list" do
-        @mail.reply[:references].message_ids.should eq ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
+        expect(@mail.reply[:references].message_ids).to eq ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
       end
 
       it "should not append another RE:" do
-        @mail.reply.subject.should eq "Re: Test reply email"
+        expect(@mail.reply.subject).to eq "Re: Test reply email"
       end
 
     end
@@ -1746,7 +1928,7 @@ describe Mail::Message do
       end
 
       it "should have a references consisting of the in-reply-to and message_id fields" do
-        @mail.reply[:references].message_ids.should eq ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+        expect(@mail.reply[:references].message_ids).to eq ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
       end
 
     end
@@ -1762,7 +1944,7 @@ describe Mail::Message do
 
       # Behavior is actually not defined in RFC2822, so we'll just leave it empty
       it "should have no references header" do
-        @mail.references.should be_nil
+        expect(@mail.references).to be_nil
       end
 
     end
@@ -1771,7 +1953,7 @@ describe Mail::Message do
 
   describe 'SMTP envelope From' do
     it 'should respond' do
-      Mail::Message.new.should respond_to(:smtp_envelope_from)
+      expect(Mail::Message.new).to respond_to(:smtp_envelope_from)
     end
 
     it 'should default to return_path, sender, or first from address' do
@@ -1780,32 +1962,32 @@ describe Mail::Message do
         sender 'sender'
         from 'from'
       end
-      message.smtp_envelope_from.should eq 'return'
+      expect(message.smtp_envelope_from).to eq 'return'
 
       message.return_path = nil
-      message.smtp_envelope_from.should eq 'sender'
+      expect(message.smtp_envelope_from).to eq 'sender'
 
       message.sender = nil
-      message.smtp_envelope_from.should eq 'from'
+      expect(message.smtp_envelope_from).to eq 'from'
     end
 
     it 'can be overridden' do
       message = Mail::Message.new { return_path 'return' }
 
       message.smtp_envelope_from = 'envelope_from'
-      message.smtp_envelope_from.should eq 'envelope_from'
+      expect(message.smtp_envelope_from).to eq 'envelope_from'
 
       message.smtp_envelope_from = 'declared_from'
-      message.smtp_envelope_from.should eq 'declared_from'
+      expect(message.smtp_envelope_from).to eq 'declared_from'
 
       message.smtp_envelope_from = nil
-      message.smtp_envelope_from.should eq 'return'
+      expect(message.smtp_envelope_from).to eq 'return'
     end
   end
 
   describe 'SMTP envelope To' do
     it 'should respond' do
-      Mail::Message.new.should respond_to(:smtp_envelope_to)
+      expect(Mail::Message.new).to respond_to(:smtp_envelope_to)
     end
 
     it 'should default to destinations' do
@@ -1814,20 +1996,20 @@ describe Mail::Message do
         cc 'cc'
         bcc 'bcc'
       end
-      message.smtp_envelope_to.should eq message.destinations
+      expect(message.smtp_envelope_to).to eq message.destinations
     end
 
     it 'can be overridden' do
       message = Mail::Message.new { to 'to' }
 
       message.smtp_envelope_to = 'envelope_to'
-      message.smtp_envelope_to.should eq %w(envelope_to)
+      expect(message.smtp_envelope_to).to eq %w(envelope_to)
 
       message.smtp_envelope_to = 'declared_to'
-      message.smtp_envelope_to.should eq %w(declared_to)
+      expect(message.smtp_envelope_to).to eq %w(declared_to)
 
       message.smtp_envelope_to = nil
-      message.smtp_envelope_to.should eq %w(to)
+      expect(message.smtp_envelope_to).to eq %w(to)
     end
   end
 

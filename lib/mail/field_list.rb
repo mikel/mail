@@ -19,7 +19,7 @@ module Mail
       hi = size
 
       while lo < hi
-        mid = (lo + hi) / 2
+        mid = (lo + hi).div(2)
         if new_field < self[mid]
           hi = mid
         else
