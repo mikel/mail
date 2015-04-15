@@ -43,9 +43,21 @@ module Mail
       self
     end
     
-    # Bcc field should never be :encoded
+    def self.suppress_encoding=(suppress_encoding)
+      @suppress_encoding = suppress_encoding
+    end
+
+    def self.suppress_encoding
+      defined?(@suppress_encoding) ? @suppress_encoding : self.suppress_encoding = true
+    end
+
+    # Bcc field should not be :encoded by default
     def encoded
-      ''
+      if self.class.suppress_encoding
+        ''
+      else
+        do_encode(CAPITALIZED_FIELD)
+      end
     end
     
     def decoded
