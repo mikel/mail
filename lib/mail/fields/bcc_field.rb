@@ -43,20 +43,20 @@ module Mail
       self
     end
     
-    def self.suppress_encoding=(suppress_encoding)
-      @suppress_encoding = suppress_encoding
+    def include_in_headers=(include_in_headers)
+      @include_in_headers = include_in_headers
     end
 
-    def self.suppress_encoding
-      defined?(@suppress_encoding) ? @suppress_encoding : self.suppress_encoding = true
+    def include_in_headers
+      defined?(@include_in_headers) ? @include_in_headers : self.include_in_headers = false
     end
 
     # Bcc field should not be :encoded by default
     def encoded
-      if self.class.suppress_encoding
-        ''
-      else
+      if include_in_headers
         do_encode(CAPITALIZED_FIELD)
+      else
+        ''
       end
     end
     

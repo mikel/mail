@@ -78,15 +78,15 @@ describe Mail::BccField do
       expect(t.encoded).to eq ""
     end
 
-    it "should return the encoded line for one address when no longer suppressing" do
-      Mail::BccField.suppress_encoding = false
+    it "should return the encoded line for one address when requested to include in headers" do
       t = Mail::BccField.new('sam@me.com')
+      t.include_in_headers = true
       expect(t.encoded).to eq "Bcc: sam@me.com\r\n"
     end
     
-    it "should return the encoded line when no longer suppressing" do
-      Mail::BccField.suppress_encoding = false
+    it "should return the encoded line when requested to include in headers" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.include_in_headers = true
       expect(t.encoded).to eq "Bcc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
     
