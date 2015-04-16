@@ -18,7 +18,7 @@
 * #918 - Account for possibility of absent delivery-status headers (kjg)
 * #874 – Stay under 1000-char SMTP line length limits (pushrax)
 * #924 - Matcher for having attachments (schepedw)
-* #856 - Added STDOUT delivery method (zacholauson)
+* #856 - Added Logger delivery method (zacholauson)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
