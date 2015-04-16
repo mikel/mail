@@ -294,18 +294,18 @@ mail.delivery_method :exim, :location => "/usr/bin/exim"
 mail.deliver
 ```
 
-Sending to console can be done like so:
+Sending to a logger can be done like so:
 
 ```ruby
-mail.delivery_method :stdout
+mail.delivery_method :logger
 
 mail.deliver
 ```
 
-The STDOUT delivery method can also be configured with a custom logger and severity like so:
+The Logger delivery method can also be configured with a custom logger and severity like so:
 
 ```ruby
-mail.delivery_method :stdout, { :logger => Logger.new(STDOUT), :severity => :debug }
+mail.delivery_method :logger, { :logger => Logger.new(STDOUT), :severity => :debug }
 
 mail.deliver
 ```
