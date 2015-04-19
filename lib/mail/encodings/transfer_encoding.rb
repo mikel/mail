@@ -32,30 +32,30 @@ module Mail
       end
 
       def self.get_best_compatible(source_encoding, str)
-        if self.can_transport?(source_encoding) && self.should_transport?(str) then
-            source_encoding
+        if self.can_transport?(source_encoding) && self.should_transport?(str)
+          source_encoding
         else
-            choices = []
-            Encodings.get_all.each do |enc|
-                choices << enc if self.can_transport? enc and enc.can_encode? source_encoding
+          choices = Encodings.get_all.select do |enc|
+            self.can_transport?(enc) && enc.can_encode?(source_encoding)
+          end
+
+          best = nil
+          best_cost = 100
+
+          choices.each do |enc|
+            # If the current choice cannot be transported safely,
+            # give priority to other choices but allow it to be used as a fallback.
+            this_cost = enc.should_transport?(str) ? enc.cost(str) : 99
+
+            if this_cost < best_cost
+              best_cost = this_cost
+              best = enc
+            elsif this_cost == best_cost
+              best = enc if enc::PRIORITY < best::PRIORITY
             end
+          end
 
-            best = nil
-            best_cost = 100
-
-            choices.each do |enc|
-                # If the current choice cannot be transported safely,
-                # give priority to other choices but allow it to be used as a fallback.
-                this_cost = enc.should_transport?(str) ? enc.cost(str) : 99
-
-                if this_cost < best_cost then
-                    best_cost = this_cost
-                    best = enc
-                elsif this_cost == best_cost then 
-                    best = enc if enc::PRIORITY < best::PRIORITY
-                end
-            end
-            best
+          best
         end
       end
 
