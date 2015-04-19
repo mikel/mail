@@ -30,7 +30,12 @@ module Mail
         total = (str.bytesize - c)*3 + c
         total.to_f/str.bytesize
       end
-        
+
+      # QP inserts newlines automatically and cannot violate the SMTP spec.
+      def self.should_transport?(str)
+        true
+      end
+
       private
 
       Encodings.register(NAME, self)
