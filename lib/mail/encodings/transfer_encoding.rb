@@ -40,14 +40,14 @@ module Mail
           end
 
           best = nil
-          best_cost = 100
+          best_cost = nil
 
           choices.each do |enc|
             # If the current choice cannot be transported safely,
             # give priority to other choices but allow it to be used as a fallback.
-            this_cost = enc.should_transport?(str) ? enc.cost(str) : 99
+            this_cost = enc.cost(str) if enc.should_transport?(str)
 
-            if this_cost < best_cost
+            if !best_cost || (this_cost && this_cost < best_cost)
               best_cost = this_cost
               best = enc
             elsif this_cost == best_cost
