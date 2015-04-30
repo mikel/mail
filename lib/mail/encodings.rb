@@ -262,7 +262,7 @@ module Mail
     #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.collapse_adjacent_encodings(str)
-      [ str.split(FULL_ENCODED_VALUE).join ]
+      [ str.split(/(\?=)\s*(=\?)/).join ]
     end
   end
 end
