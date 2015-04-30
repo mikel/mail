@@ -257,24 +257,23 @@ module Mail
       str[ENCODED_VALUE, 1]
     end
 
-    # When the encoded string consists of multiple lines, lines with the same
-    # encoding (Q or B) can be joined together.
+    # Split header line into proper encoded and unencoded parts.
     #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
+    #
+    # Omit unencoded space after an encoded-word.
     def Encodings.collapse_adjacent_encodings(str)
       results = []
-      previous_encoding = nil
+      last_encoded = nil  # Track whether to preserve or drop whitespace
+
       lines = str.split(FULL_ENCODED_VALUE)
       lines.each_slice(2) do |unencoded, encoded|
-        if encoded
-          encoding = value_encoding_from_string(encoded)
-          if encoding == previous_encoding && Utilities.blank?(unencoded)
-            results.last << encoded
-          else
-            results << unencoded unless unencoded == EMPTY
-            results << encoded
+        if last_encoded = encoded
+          if !Utilities.blank?(unencoded) || (!last_encoded && unencoded != EMPTY)
+            results << unencoded
           end
-          previous_encoding = encoding
+
+          results << encoded
         else
           results << unencoded
         end
