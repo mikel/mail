@@ -154,7 +154,7 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq(string)
     end
 
-    it "should collapse adjacent words" do
+    it "should parse adjacent encoded-words separated by linear white-space" do
       string = "=?utf-8?B?0L3QvtCy0YvQuSDRgdC+0YLRgNGD0LTQvdC40Log4oCUINC00L7RgNC+0YQ=?=\n =?utf-8?B?0LXQtdCy?="
       result = "новый сотрудник — дорофеев"
       expect(Mail::Encodings.value_decode(string)).to eq(result)
