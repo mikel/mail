@@ -910,6 +910,10 @@ describe Mail::Encodings do
     it "does not join different encodings" do
       convert "A=?iso-2022-jp?B?X=?==?utf-8?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?utf-8?B?Y=?=", "B"]
     end
+    
+    it "does not keep the separator character between two different encodings" do
+      convert "=?iso-2022-jp?B?X=?=\n=?utf-8?Q?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?utf-8?Q?Y=?="]
+    end
   end
 
   describe ".pick_encoding" do
