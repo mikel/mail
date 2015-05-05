@@ -34,7 +34,7 @@ module Mail
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
     TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{sp}]/n
     ENCODED_VALUE = /\=\?([^?]+)\?([QB])\?[^?]*?\?\=/mi
-    FULL_ENCODED_VALUE = /(\=\?[^?]+\?[QB]\?[^?]*?\?\=)/mi
+    FULL_ENCODED_VALUE = /(=\?[A-Za-z0-9\-]+\?[QB]\?[\x21-\x7E&&[^\?]]*?\?=)/mi
 
     EMPTY          = ''
     SPACE          = ' '
