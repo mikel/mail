@@ -268,7 +268,7 @@ module Mail
       lines.each_slice(2) do |unencoded, encoded|
         if encoded
           if previous_encoding && unencoded.blank?
-            results.last << encoded
+            results << encoded
           else
             results << unencoded unless unencoded == EMPTY
             results << encoded
