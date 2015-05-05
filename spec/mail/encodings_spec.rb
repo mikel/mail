@@ -895,12 +895,12 @@ describe Mail::Encodings do
       convert "A=?iso-2022-jp?B?X=?=B", ["A", "=?iso-2022-jp?B?X=?=", "B"]
     end
 
-    it "joins adjacent encodings" do
-      convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", "B"]
+    it "splits adjacent encodings into separate parts" do
+      convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?=", "B"]
     end
-
-    it "joins adjacent encodings without unencoded" do
-      convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?="]
+    
+    it "splits adjacent encodings  without unencoded into separate parts" do
+      convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?="]
     end
 
     it "does not join encodings when separated by unencoded" do
