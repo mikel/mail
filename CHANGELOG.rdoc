@@ -1,5 +1,6 @@
 == HEAD
 
+* Strip valid RFC-1342 separator characters between non-matching encoded-words (Caleb W. Corliss)
 * Make the gem compatible with Rubinius (Robin Dupret)
 * #808 - Mail::Field correctly responds_to? the methods of its instantiated field (thegcat)
 * #772 - normalize encoding matchers (grosser)
