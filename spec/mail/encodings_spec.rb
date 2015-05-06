@@ -899,7 +899,7 @@ describe Mail::Encodings do
       convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?=", "B"]
     end
     
-    it "splits adjacent encodings  without unencoded into separate parts" do
+    it "splits adjacent encodings without unencoded into separate parts" do
       convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?="]
     end
 
@@ -912,7 +912,11 @@ describe Mail::Encodings do
     end
     
     it "does not keep the separator character between two different encodings" do
-      convert "=?iso-2022-jp?B?X=?=\n=?utf-8?Q?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?utf-8?Q?Y=?="]
+      rfc_1342_newline_separators = ["\x0A", "\x20"]
+      
+      rfc_1342_newline_separators.each do |rfc_1342_separator|
+        convert "=?iso-2022-jp?B?X=?=#{rfc_1342_separator}=?utf-8?Q?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?utf-8?Q?Y=?="]
+      end
     end
   end
 
