@@ -10,6 +10,7 @@
 * #868 - Use the Ruby19.charset_encoder when decoding message bodies (kjg)
 * #866 - Support decoding message bodies with non-Ruby-standard charsets (jeremy)
 * #907 - Mail::ContentDispositionField should work with nil value (kjg)
+* #877 - File Mail::Field == other take the field value into account (kjg)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 

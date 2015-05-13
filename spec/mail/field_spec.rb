@@ -151,12 +151,16 @@ describe Mail::Field do
       expect(field.responsible_for?(:to)).to be_truthy
     end
 
-    it "should say it is == to another if their field names match" do
+    it "should say it is == to another if their field and names match" do
       expect(Mail::Field.new("To: mikel").same(Mail::Field.new("To: bob"))).to be_truthy
     end
 
     it "should say it is not == to another if their field names do not match" do
       expect(Mail::Field.new("From: mikel")).not_to eq(Mail::Field.new("To: bob"))
+    end
+
+    it "should say it is not == to another if their field names match, but not their values" do
+      expect(Mail::Field.new("To: mikel")).not_to eq(Mail::Field.new("To: bob"))
     end
 
     it "should sort according to the field order" do
