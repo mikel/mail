@@ -23,7 +23,7 @@ module Mail
         raise "Unimplemented"
       end
 
-      def self.should_transport?(str)
+      def self.compatible_input?(str)
         true
       end
 
@@ -32,7 +32,7 @@ module Mail
       end
 
       def self.get_best_compatible(source_encoding, str)
-        if self.can_transport?(source_encoding) && self.should_transport?(str)
+        if self.can_transport?(source_encoding) && self.compatible_input?(str)
           source_encoding
         else
           choices = Encodings.get_all.select do |enc|
@@ -45,7 +45,7 @@ module Mail
           choices.each do |enc|
             # If the current choice cannot be transported safely,
             # give priority to other choices but allow it to be used as a fallback.
-            this_cost = enc.cost(str) if enc.should_transport?(str)
+            this_cost = enc.cost(str) if enc.compatible_input?(str)
 
             if !best_cost || (this_cost && this_cost < best_cost)
               best_cost = this_cost
