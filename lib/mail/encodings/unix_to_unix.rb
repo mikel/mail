@@ -1,7 +1,7 @@
 module Mail
   module Encodings
     module UnixToUnix
-      NAME = "x-uuencode"
+      NAMES = ["uuencode", "x-uuencode"]
 
       def self.decode(str)
         str.sub(/\Abegin \d+ [^\n]*\n/, '').unpack('u').first
@@ -11,7 +11,9 @@ module Mail
         [str].pack("u")
       end
 
-      Encodings.register(NAME, self)
+      NAMES.each do |used_name|
+        Encodings.register(used_name, self)
+      end
     end
   end
 end
