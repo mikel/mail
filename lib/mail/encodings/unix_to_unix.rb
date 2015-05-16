@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Mail
   module Encodings
-    module UnixToUnix
+    class UnixToUnix < TransferEncoding
       NAME = "x-uuencode"
 
       def self.decode(str)
@@ -13,6 +13,7 @@ module Mail
       end
 
       Encodings.register(NAME, self)
+      Encodings.register("uuencode", self)
     end
   end
 end
