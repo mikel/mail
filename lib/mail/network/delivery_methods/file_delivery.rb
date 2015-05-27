@@ -37,7 +37,8 @@ module Mail
       end
 
       mail.destinations.uniq.each do |to|
-        ::File.open(::File.join(settings[:location], File.basename(to.to_s)), 'a') { |f| "#{f.write(mail.encoded)}\r\n\r\n" }
+        filename = (settings[:filename] || to).to_s
+        ::File.open(::File.join(settings[:location], File.basename(filename)), 'a') { |f| "#{f.write(mail.encoded)}\r\n\r\n" }
       end
     end
     
