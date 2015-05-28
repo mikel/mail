@@ -6,7 +6,13 @@ module Mail # :doc:
 
   require 'uri'
   require 'net/smtp'
-  require 'mime/types'
+
+  begin
+    # Use mime/types/columnar if available, for reduced memory usage
+    require 'mime/types/columnar'
+  rescue LoadError
+    require 'mime/types'
+  end
 
   if RUBY_VERSION <= '1.8.6'
     begin
