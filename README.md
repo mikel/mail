@@ -588,7 +588,7 @@ Mail::TestMailer.deliveries.clear
 => []
 ```
 
-There is also a set of RSpec matchers stolen fr^H^H^H^H^H^H^H^H inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
+There is also a set of RSpec matchers stolen/inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
 
 ```ruby
 Mail.defaults do
