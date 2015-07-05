@@ -1,6 +1,6 @@
 module Mail
   module Encodings
-    module UnixToUnix
+    class UnixToUnix
       NAMES = ["uuencode", "x-uuencode"]
 
       def self.decode(str)
