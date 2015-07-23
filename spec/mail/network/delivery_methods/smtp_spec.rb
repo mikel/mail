@@ -184,6 +184,7 @@ describe "SMTP Delivery Method" do
     end
 
     it "should raise if there is no envelope From address" do
+      pending "wait for issue response"
       expect do
         Mail.deliver do
           to "to@somemail.com"

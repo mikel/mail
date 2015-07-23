@@ -48,6 +48,7 @@ describe "SMTP Delivery Method" do
 
 
   it "should raise an error if no sender is defined" do
+    pending "wait for issue response."
     Mail.defaults do
       smtp = Net::SMTP.start('127.0.0.1', 25)
       delivery_method :smtp_connection, :connection => smtp, :port => 587, :return_response => true

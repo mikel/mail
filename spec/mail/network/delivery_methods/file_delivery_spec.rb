@@ -90,6 +90,7 @@ describe "SMTP Delivery Method" do
     end
 
     it "should raise an error if no sender is defined" do
+      pending "wait for issue response."
       Mail.defaults do
         delivery_method :file, :location => tmpdir
       end
