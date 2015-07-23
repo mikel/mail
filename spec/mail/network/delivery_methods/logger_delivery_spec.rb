@@ -1,5 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'logger'
+require 'stringio'
 
 describe "Logger Delivery Method" do
   before(:each) do
@@ -46,5 +48,43 @@ describe "Logger Delivery Method" do
     expect(custom_logger).to receive(:log).with(Logger::DEBUG) { mail.encoded }
 
     mail.deliver!
+  end
+
+  describe "sender and recipient validation" do
+    it "should not raise errors if no sender is defined" do
+      Mail.defaults do
+        delivery_method :logger, logger: Logger.new(StringIO.new)
+      end
+
+      mail = Mail.new do
+        to "to@somemail.com"
+        subject "Email with no sender"
+        body "body"
+      end
+
+      expect(mail.smtp_envelope_from).to be_nil
+
+      expect do
+        mail.deliver
+      end.to raise_error('SMTP From address may not be blank: nil')
+    end
+
+    it "should raise an error if no recipient if defined" do
+      Mail.defaults do
+        delivery_method :logger, logger: Logger.new(StringIO.new)
+      end
+
+      mail = Mail.new do
+        from "from@somemail.com"
+        subject "Email with no recipient"
+        body "body"
+      end
+
+      expect(mail.smtp_envelope_to).to eq([])
+
+      expect do
+        mail.deliver
+      end.to raise_error('SMTP To address may not be blank: []')
+    end
   end
 end

@@ -33,12 +33,14 @@ module Mail
       end
 
       def validate_smtp_addr(addr)
-        if addr.bytesize > 2048
-          yield 'may not exceed 2kB'
-        end
+        if addr
+          if addr.bytesize > 2048
+            yield 'may not exceed 2kB'
+          end
 
-        if /[\r\n]/ =~ addr
-          yield 'may not contain CR or LF line breaks'
+          if /[\r\n]/ =~ addr
+            yield 'may not contain CR or LF line breaks'
+          end
         end
 
         addr

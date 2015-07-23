@@ -48,7 +48,7 @@ module Mail
     def deliver!(mail)
       smtp_from, smtp_to, message = Mail::CheckDeliveryParams.check(mail)
 
-      from = "-f #{self.class.shellquote(smtp_from)}"
+      from = "-f #{self.class.shellquote(smtp_from)}" if smtp_from
       to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
 
       arguments = "#{settings[:arguments]} #{from} --"

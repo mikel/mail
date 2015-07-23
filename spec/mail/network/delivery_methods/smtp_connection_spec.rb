@@ -48,18 +48,22 @@ describe "SMTP Delivery Method" do
   end
 
 
-  it "should raise an error if no sender is defined" do
+  it "should not raise errors if no sender is defined" do
     Mail.defaults do
       smtp = Net::SMTP.start('127.0.0.1', 25)
       delivery_method :smtp_connection, :connection => smtp, :port => 587, :return_response => true
     end
 
+    mail = Mail.new do
+      to "to@somemail.com"
+      subject "Email with no sender"
+      body "body"
+    end
+
+    expect(mail.smtp_envelope_from).to be_nil
+
     expect do
-      Mail.deliver do
-        to "to@somemail.com"
-        subject "Email with no sender"
-        body "body"
-      end
+      mail.deliver
     end.to raise_error('SMTP From address may not be blank: nil')
   end
 
@@ -69,12 +73,16 @@ describe "SMTP Delivery Method" do
       delivery_method :smtp_connection, :connection => smtp, :port => 587, :return_response => true
     end
 
+    mail = Mail.new do
+      from "from@somemail.com"
+      subject "Email with no recipient"
+      body "body"
+    end
+
+    expect(mail.smtp_envelope_to).to eq([])
+
     expect do
-      Mail.deliver do
-        from "from@somemail.com"
-        subject "Email with no recipient"
-        body "body"
-      end
+      mail.deliver
     end.to raise_error('SMTP To address may not be blank: []')
   end
 end
