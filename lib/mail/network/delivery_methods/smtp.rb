@@ -86,7 +86,9 @@ module Mail
                         :enable_starttls_auto => true,
                         :openssl_verify_mode  => nil,
                         :ssl                  => nil,
-                        :tls                  => nil
+                        :tls                  => nil,
+                        :open_timeout         => nil,
+                        :read_timeout         => nil
                       }.merge!(values)
     end
 
@@ -107,6 +109,8 @@ module Mail
           smtp.enable_starttls_auto(ssl_context)
         end
       end
+      smtp.open_timeout = settings[:open_timeout] if settings[:open_timeout]
+      smtp.read_timeout = settings[:read_timeout] if settings[:read_timeout]
 
       response = nil
       smtp.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication]) do |smtp_obj|
