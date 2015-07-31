@@ -17,7 +17,9 @@ describe "SMTP Delivery Method" do
                                :enable_starttls_auto => true,
                                :openssl_verify_mode  => nil,
                                :tls                  => nil,
-                               :ssl                  => nil
+                               :ssl                  => nil,
+                               :open_timeout         => nil,
+                               :read_timeout         => nil
                                 }
     end
     MockSMTP.clear_deliveries
