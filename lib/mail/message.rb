@@ -1771,7 +1771,7 @@ module Mail
         basename = File.basename(values)
         filedata = File.open(values, 'rb') { |f| f.read }
       else
-        basename = values[:filename]
+        basename = values.delete(:filename)
         filedata = values
         unless filedata[:content]
           filedata = values.merge(:content=>File.open(values[:filename], 'rb') { |f| f.read })

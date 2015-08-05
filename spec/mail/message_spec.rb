@@ -109,6 +109,7 @@ describe Mail::Message do
       raw_email = "From jamis_buck@byu.edu Mon May  2 16:07:05 2005\r\n#{m.to_s}"
 
       expect { Mail::Message.new(raw_email) }.not_to raise_error
+      expect(Mail::Message.new(raw_email).part[0].header[:filename]).to be_nil
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
