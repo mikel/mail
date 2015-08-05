@@ -44,6 +44,9 @@ module Mail
                          :content_disposition => "#{@content_disposition_type}; filename=\"#{encoded_name}\"" }
 
       if value.is_a?(Hash)
+        if path = value.delete(:filename)
+          value[:content] ||= File.open(path, 'rb') { |f| f.read }
+        end
 
         default_values[:body] = value.delete(:content) if value[:content]
 
