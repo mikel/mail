@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module Mail
 
+module Mail
   # A delivery method implementation which sends via exim.
   #
   # To use this, first find out where the exim binary is on your computer,
@@ -39,11 +39,12 @@ module Mail
   class Exim < Sendmail
     DEFAULTS = {
       :location   => '/usr/sbin/exim',
-      :arguments  => '-i -t'
+      :arguments  => %w[ -i -t ]
     }
 
-    def self.call(path, arguments, destinations, message)
-      super path, arguments, nil, message
+    # Uses -t option to extract recipients from the message.
+    def destinations_for(envelope)
+      nil
     end
   end
 end

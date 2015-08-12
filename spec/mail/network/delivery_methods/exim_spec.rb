@@ -10,7 +10,7 @@ describe "exim delivery agent" do
       subject 'some subject'
     end
   end
-  
+
   before do
     Mail.defaults do
       delivery_method :exim
@@ -18,78 +18,64 @@ describe "exim delivery agent" do
   end
 
   it "should send an email using exim" do
-    expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "roger@test.lindsaar.net" --', nil, mail.encoded)
+    expect(mail.delivery_method).to receive(:popen).with(%w[ /usr/sbin/exim -i -t -f roger@test.lindsaar.net ])
 
     mail.deliver!
   end
 
   describe "return path" do
-
     it "should send an email with a return-path using exim" do
+      expect(mail.delivery_method).to receive(:popen).with(%w[ /usr/sbin/exim -i -t -f return@test.lindsaar.net ])
+
       mail.return_path = "return@test.lindsaar.net"
       mail.sender = "sender@test.lindsaar.net"
-
-      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "return@test.lindsaar.net" --', nil, mail.encoded)
-
       mail.deliver
     end
 
     it "should use the sender address is no return path is specified" do
+      expect(mail.delivery_method).to receive(:popen).with(%w[ /usr/sbin/exim -i -t -f sender@test.lindsaar.net ])
+
       mail.sender = "sender@test.lindsaar.net"
-
-      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "sender@test.lindsaar.net" --', nil, mail.encoded)
-
       mail.deliver
     end
 
     it "should use the from address is no return path or sender are specified" do
+      expect(mail.delivery_method).to receive(:popen).with(%w[ /usr/sbin/exim -i -t -f from@test.lindsaar.net ])
+
       mail.from = "from@test.lindsaar.net"
-
-      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "from@test.lindsaar.net" --', nil, mail.encoded)
-
       mail.deliver
     end
 
     it "should escape the return path address" do
+      expect(mail.delivery_method).to receive(:popen).with([ '/usr/sbin/exim', '-i', '-t', '-f', '"from+suffix test"@test.lindsaar.net' ])
+
       mail.from = '"from+suffix test"@test.lindsaar.net'
-
-      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "\"from+suffix test\"@test.lindsaar.net" --', nil, mail.encoded)
-
       mail.deliver
     end
 
     it 'should not escape ~ in return path address' do
+      expect(mail.delivery_method).to receive(:popen).
+        with(%w[ /usr/sbin/exim -i -t -f tilde~@test.lindsaar.net ])
+
       mail.from = 'tilde~@test.lindsaar.net'
-
-      expect(Mail::Sendmail).to receive(:call).
-        with('/usr/sbin/exim',
-             '-i -t -f "tilde~@test.lindsaar.net" --',
-             nil,
-             mail.encoded)
-
       mail.deliver
     end
   end
 
   it "should still send an email if the settings have been set to nil" do
-    Mail.defaults do
-      delivery_method :exim, :arguments => nil
-    end
-    
-    expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', ' -f "roger@test.lindsaar.net" --', nil, mail.encoded)
+    expect(mail.delivery_method).to receive(:popen).with(%w[ /usr/sbin/exim -f roger@test.lindsaar.net ])
 
+    mail.delivery_method.settings[:arguments] = nil
     mail.deliver!
   end
 
   it "should escape evil haxxor attemptes" do
-    mail.from = '"foo\";touch /tmp/PWNED;\""@blah.com'
+    evil = '"foo\";touch /tmp/PWNED;\""@blah.com'
 
-    expect(Mail::Sendmail).to receive(:call).with(
-      '/usr/sbin/exim',
-      "-i -t -f \"\\\"foo\\\\\\\"\\;touch /tmp/PWNED\\;\\\\\\\"\\\"@blah.com\" --",
-      nil,
-      mail.encoded)
+    expect(mail.delivery_method).to receive(:popen).with(
+      [ '/usr/sbin/exim', '-i', '-t', '-f', evil ])
 
+    mail.from = evil
     mail.deliver!
   end
 

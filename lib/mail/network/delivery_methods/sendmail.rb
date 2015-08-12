@@ -40,56 +40,58 @@ module Mail
   class Sendmail
     DEFAULTS = {
       :location   => '/usr/sbin/sendmail',
-      :arguments  => '-i'
+      :arguments  => %w[ -i ]
     }
 
     attr_accessor :settings
 
+    class DeliveryError < StandardError
+    end
+
     def initialize(values)
       self.settings = self.class::DEFAULTS.merge(values)
+      raise ArgumentError, ":arguments expected to be an Array of individual string args" if settings[:arguments].is_a?(String)
+    end
+
+    def destinations_for(envelope)
+      envelope.to
     end
 
     def deliver!(mail)
       envelope = Mail::SmtpEnvelope.new(mail)
 
-      from = "-f #{self.class.shellquote(envelope.from)}" if envelope.from
-      to = envelope.to.map { |_to| self.class.shellquote(_to) }.join(' ')
+      command = [settings[:location]]
+      command.concat Array(settings[:arguments])
+      command.concat [ '-f', envelope.from ] if envelope.from
 
-      arguments = "#{settings[:arguments]} #{from} --"
-      self.class.call(settings[:location], arguments, to, envelope.message)
-    end
+      if destinations = destinations_for(envelope)
+        command.push '--'
+        command.concat destinations
+      end
 
-    def self.call(path, arguments, destinations, message)
-      popen "#{path} #{arguments} #{destinations}" do |io|
-        io.puts ::Mail::Utilities.binary_unsafe_to_lf(message)
+      popen(command) do |io|
+        io.puts ::Mail::Utilities.binary_unsafe_to_lf(envelope.message)
         io.flush
       end
     end
 
-    if RUBY_VERSION < '1.9.0'
-      def self.popen(command, &block)
-        IO.popen "#{command} 2>&1", 'w+', &block
+    private
+      if RUBY_VERSION < '1.9.0'
+        def popen(command, &block)
+          IO.popen(command, 'w+', &block).tap do
+            if $?.exitstatus != 0
+              raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
+            end
+          end
+        end
+      else
+        def popen(command, &block)
+          IO.popen(command, 'w+', :err => :out, &block).tap do
+            if $?.exitstatus != 0
+              raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
+            end
+          end
+        end
       end
-    else
-      def self.popen(command, &block)
-        IO.popen command, 'w+', :err => :out, &block
-      end
-    end
-
-    # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
-    # with the following modifications:
-    #
-    # - Wraps in double quotes
-    # - Allows '+' to accept email addresses with them
-    # - Allows '~' as it is not unescaped in double quotes
-    def self.shellquote(address)
-      # Process as a single byte sequence because not all shell
-      # implementations are multibyte aware.
-      #
-      # A LF cannot be escaped with a backslash because a backslash + LF
-      # combo is regarded as line continuation and simply ignored. Strip it.
-      escaped = address.gsub(/([^A-Za-z0-9_\s\+\-.,:\/@~])/n, "\\\\\\1").gsub("\n", '')
-      %("#{escaped}")
-    end
   end
 end
