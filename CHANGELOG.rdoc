@@ -8,6 +8,7 @@ Features:
 * #804 - Configurable SMTP open_timeout and read_timeout. (ankane)
 * #853 - `Mail::Message#set_sort_order` overrides the default message part sort order. (rafbm)
 * #856 - Added :logger delivery method. (zacholauson)
+* #900 - Support non-instance_eval builder API. Yield self to Mail.new if the provided block takes any arguments. (taavo)
 * #1065 - Require STARTTLS using :enable_starttls. (bk2204)
 * #1002 - Transcoding replaces invalid chars with "�" instead of discarding them. (kjg)
 * #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)

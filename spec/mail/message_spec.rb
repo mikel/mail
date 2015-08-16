@@ -39,6 +39,38 @@ describe Mail::Message do
       expect(mail.to).to eq ['lindsaar@you.com']
     end
 
+    it "should yield self if the given block takes any args" do
+      class ClassThatCreatesMail
+        def initialize(from, to)
+          @from = from
+          @to = to
+        end
+
+        def create_mail_with_one_arg
+          Mail::Message.new do |m|
+            m.from @from
+            m.to @to
+          end
+        end
+
+        def create_mail_with_splat_args
+          Mail::Message.new do |*args|
+            m = args.first
+            m.from @from
+            m.to @to
+          end
+        end
+      end
+
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_one_arg
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
+
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
+    end
+
     it "should initialize a body and header class even if called with nothing to begin with" do
       mail = Mail::Message.new
       expect(mail.header.class).to eq Mail::Header

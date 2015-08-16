@@ -56,14 +56,22 @@ module Mail
     #
     # ===Making an email via a block
     #
-    #  mail = Mail.new do
-    #       from 'mikel@test.lindsaar.net'
-    #         to 'you@test.lindsaar.net'
-    #    subject 'This is a test email'
-    #       body File.read('body.txt')
+    #  mail = Mail.new do |m|
+    #    m.from 'mikel@test.lindsaar.net'
+    #    m.to 'you@test.lindsaar.net'
+    #    m.subject 'This is a test email'
+    #    m.body File.read('body.txt')
     #  end
     #
     #  mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+    #
+    # If may also pass a block with no arguments, in which case it will
+    # be evaluated in the scope of the new message instance:
+    #
+    #  mail = Mail.new do
+    #    from 'mikel@test.lindsaar.net'
+    #    # …
+    #  end
     #
     # ===Making an email via passing a string
     #
@@ -129,8 +137,23 @@ module Mail
         init_with_string(args.flatten[0].to_s)
       end
 
+      # Support both builder styles:
+      #
+      #   Mail.new do
+      #     to 'recipient@example.com'
+      #   end
+      #
+      # and
+      #
+      #   Mail.new do |m|
+      #     m.to 'recipient@example.com'
+      #   end
       if block_given?
-        instance_eval(&block)
+        if block.arity.zero?
+          instance_eval(&block)
+        else
+          yield self
+        end
       end
 
       self
