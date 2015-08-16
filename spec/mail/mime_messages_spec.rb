@@ -144,6 +144,13 @@ describe "MIME Emails" do
         expect(mail.text_part).to eq text_mail
       end
 
+      it "should convert strings assigned to the text part into Mail::Part objects with sensible defaults" do
+        mail = Mail.new
+        mail.text_part = 'This is text'
+        expect(mail.text_part.body).to eq 'This is text'
+        expect(mail.text_part.content_type).to eq 'text/plain'
+      end
+
       it "should not assign a nil text part" do
         mail = Mail.new
         mail.text_part = nil
@@ -155,6 +162,13 @@ describe "MIME Emails" do
         html_mail = Mail.new("<b>This is HTML</b>")
         mail.html_part = html_mail
         expect(mail.html_part).to eq html_mail
+      end
+
+      it "should convert strings assigned to the html part into Mail::Part objects with sensible defaults" do
+        mail = Mail.new
+        mail.html_part = "<b>This is HTML</b>"
+        expect(mail.html_part.body).to eq "<b>This is HTML</b>"
+        expect(mail.html_part.content_type).to eq "text/html"
       end
 
       it "should not assign a nil html part" do
