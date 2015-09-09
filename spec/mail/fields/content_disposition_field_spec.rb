@@ -77,6 +77,11 @@ describe Mail::ContentDispositionField do
       c = Mail::ContentDispositionField.new('Content-Disposition: ')
       expect(c.disposition_type).not_to be_nil
     end
-  end
 
+    it "handles nil value" do
+      c = Mail::ContentDispositionField.new(nil, 'utf-8')
+      expect(c.parameters).to be_a( Mail::ParameterHash )
+      expect(c.parameters).to be_empty
+    end
+  end
 end
