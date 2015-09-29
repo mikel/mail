@@ -151,8 +151,20 @@ describe Mail::Field do
       expect(field.responsible_for?(:to)).to be_truthy
     end
 
-    it "should say it is == to another if their field and names match" do
+    it "should say it is the \"same\" as another if their field types match" do
       expect(Mail::Field.new("To: mikel").same(Mail::Field.new("To: bob"))).to be_truthy
+    end
+
+    it "should say it is not the \"same\" as another if their field types don't match" do
+      expect(Mail::Field.new("To: mikel").same(Mail::Field.new("From: mikel"))).to be_falsey
+    end
+
+    it "should say it is not the \"same\" as nil" do
+      expect(Mail::Field.new("To: mikel").same(nil)).to be_falsey
+    end
+
+    it "should say it is == to another if their field and names match" do
+      expect(Mail::Field.new("To: mikel")).to eq(Mail::Field.new("To: mikel"))
     end
 
     it "should say it is not == to another if their field names do not match" do
@@ -163,6 +175,10 @@ describe Mail::Field do
       expect(Mail::Field.new("To: mikel")).not_to eq(Mail::Field.new("To: bob"))
     end
 
+    it "should say it is not == to nil" do
+      expect(Mail::Field.new("From: mikel")).not_to eq(nil)
+    end
+
     it "should sort according to the field order" do
       list = [Mail::Field.new("To: mikel"), Mail::Field.new("Return-Path: bob")]
       expect(list.sort[0].name).to eq "Return-Path"
@@ -170,7 +186,7 @@ describe Mail::Field do
   end
 
   describe 'user defined fields' do
-    it "should say it is == to another if their field names match" do
+    it "should say it is the \"same\" as another if their field names match" do
       expect(Mail::Field.new("X-Foo: mikel").same(Mail::Field.new("X-Foo: bob"))).to be_truthy
     end
 

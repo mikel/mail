@@ -168,10 +168,12 @@ module Mail
     end
 
     def same( other )
+      return false unless other.kind_of?(self.class)
       match_to_s(other.name, self.name)
     end
 
     def ==( other )
+      return false unless other.kind_of?(self.class)
       match_to_s(other.name, self.name) && match_to_s(other.value, self.value)
     end
 
