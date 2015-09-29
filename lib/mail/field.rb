@@ -168,14 +168,18 @@ module Mail
     end
 
     def same( other )
+      return false unless other.kind_of?(self.class)
       match_to_s(other.name, self.name)
+    end
+
+    def ==( other )
+      return false unless other.kind_of?(self.class)
+      match_to_s(other.name, self.name) && match_to_s(other.value, self.value)
     end
 
     def responsible_for?( val )
       name.to_s.casecmp(val.to_s) == 0
     end
-
-    alias_method :==, :same
 
     def <=>( other )
       self.field_order_id <=> other.field_order_id
