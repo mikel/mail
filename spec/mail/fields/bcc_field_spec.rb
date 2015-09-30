@@ -73,9 +73,21 @@ describe Mail::BccField do
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
     
-    it "should return nothing on encoded as Bcc should not be in the mail" do
+    it "should return nothing by default on encoded as Bcc should not be in the mail" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq ""
+    end
+
+    it "should return the encoded line for one address when requested to include in headers" do
+      t = Mail::BccField.new('sam@me.com')
+      t.include_in_headers = true
+      expect(t.encoded).to eq "Bcc: sam@me.com\r\n"
+    end
+    
+    it "should return the encoded line when requested to include in headers" do
+      t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
+      t.include_in_headers = true
+      expect(t.encoded).to eq "Bcc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
     
     it "should return the decoded line" do

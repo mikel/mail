@@ -14,6 +14,7 @@
 * #910 - Mail::Address should handle b_value_encoded local and domain parts (kjg)
 * #719 - Fix to not extract header content that looks like its field name (kjg)
 * #901 - Allow mail.text_part = '…' and mail.html_part = '<p>…</p>' (taavo)
+* #872 - Low-level option to include BCC field in the encoded message (grossadamm)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 

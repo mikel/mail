@@ -42,9 +42,21 @@ module Mail
       self
     end
     
-    # Bcc field should never be :encoded
+    def include_in_headers=(include_in_headers)
+      @include_in_headers = include_in_headers
+    end
+
+    def include_in_headers
+      defined?(@include_in_headers) ? @include_in_headers : self.include_in_headers = false
+    end
+
+    # Bcc field should not be :encoded by default
     def encoded
-      ''
+      if include_in_headers
+        do_encode(CAPITALIZED_FIELD)
+      else
+        ''
+      end
     end
     
     def decoded
