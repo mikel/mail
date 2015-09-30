@@ -1669,6 +1669,8 @@ module Mail
     def html_part=(msg)
       # Assign the html part and set multipart/alternative if there's a text part.
       if msg
+        msg = Mail::Part.new(:body => msg) unless msg.kind_of?(Mail::Message)
+
         @html_part = msg
         @html_part.content_type = 'text/html' unless @html_part.has_content_type?
         add_multipart_alternate_header if text_part
@@ -1691,6 +1693,8 @@ module Mail
     def text_part=(msg)
       # Assign the text part and set multipart/alternative if there's an html part.
       if msg
+        msg = Mail::Part.new(:body => msg) unless msg.kind_of?(Mail::Message)
+
         @text_part = msg
         @text_part.content_type = 'text/plain' unless @text_part.has_content_type?
         add_multipart_alternate_header if html_part
@@ -2023,7 +2027,7 @@ module Mail
       raw_string = raw_source.to_s
       if match_data = raw_source.to_s.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
         set_envelope(match_data[1])
-        self.raw_source = raw_string.sub(match_data[0], "") 
+        self.raw_source = raw_string.sub(match_data[0], "")
       end
     end
 
