@@ -593,6 +593,19 @@ describe Mail::Address do
                                          :raw          => 'groupname+domain.com@example.com'})
       end
 
+      it "should handle |=?UTF-8?B?8J+RjQ==?= <=?UTF-8?B?8J+RjQ==?=@=?UTF-8?B?8J+RjQ==?=.emoji>|" do
+        address = Mail::Address.new('=?UTF-8?B?8J+RjQ==?= <=?UTF-8?B?8J+RjQ==?=@=?UTF-8?B?8J+RjQ==?=.emoji>')
+        expect(address).to break_down_to({
+                                         :name         => '👍',
+                                         :display_name => '👍',
+                                         :address      => '👍@👍.emoji',
+                                         :comments     => nil,
+                                         :domain       => '👍.emoji',
+                                         :local        => '👍',
+                                         :format       => '"👍" <👍@👍.emoji>',
+                                         :raw          => '=?UTF-8?B?8J+RjQ==?= <=?UTF-8?B?8J+RjQ==?=@=?UTF-8?B?8J+RjQ==?=.emoji>'})
+      end
+
       it "should expose group" do
         struct = Mail::Parsers::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
         address = Mail::Address.new(struct)

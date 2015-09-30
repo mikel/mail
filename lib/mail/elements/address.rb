@@ -102,7 +102,7 @@ module Mail
     #  a.local #=> 'mikel'
     def local
       parse unless @parsed
-      "#{@data.obs_domain_list}#{get_local.strip}" if get_local
+      Encodings.decode_encode("#{@data.obs_domain_list}#{get_local.strip}", @output_type) if get_local
     end
 
     # Returns the domain part (the right hand side of the @ sign in the email address) of
@@ -112,7 +112,7 @@ module Mail
     #  a.domain #=> 'test.lindsaar.net'
     def domain
       parse unless @parsed
-      strip_all_comments(get_domain) if get_domain
+      Encodings.decode_encode(strip_all_comments(get_domain), @output_type) if get_domain
     end
 
     # Returns an array of comments that are in the email, or an empty array if there
