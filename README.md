@@ -110,6 +110,8 @@ the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
 
+Note: If you care about core extensions (aka "monkey-patching"), please read the Core Extensions section near the end of this README.
+
 API Policy
 ----------
 
@@ -636,6 +638,22 @@ describe "sending an email" do
   it { should have_sent_email.from('you@you.com').to('mike1@me.com').matching_body(/hell/)
 end
 ```
+
+Core Extensions
+---------------
+
+The mail gem adds several constants and methods to Ruby's core objects (similar to the activesupport gem from the Rails project).  For example:
+
+    NilClass::blank?
+    NilClass::to_crlf
+    NilClass::to_lf
+    Object::blank?
+    String::to_crlf
+    String::to_lf
+    String::blank?
+    ...etc...
+
+For all the details, check out lib/mail/core_extensions/.
 
 Excerpts from TREC Spam Corpus 2005
 -----------------------------------
