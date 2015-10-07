@@ -89,8 +89,15 @@ module Mail
       decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+      #warn "Encoding conversion failed #{$!}"
+      #str.dup.force_encoding(Encoding::UTF_8)
+      if charset.downcase == 'utf-7'
+        str.force_encoding('utf-8')
+        str = Net::IMAP.decode_utf7(str)
+        str.force_encoding('utf-8')
+      else
+        str.force_encoding(pick_encoding(charset))
+      end
     end
 
     def Ruby19.q_value_encode(str, encoding = nil)
