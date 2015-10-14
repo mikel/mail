@@ -165,6 +165,28 @@ ENDPART
       expect(@delivery_report).not_to be_retryable
     end
 
+    context "on a part without a certain field" do
+      before(:each) do
+        part =<<ENDPART
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail12.rrrr.com.au
+Received-From-MTA: DNS; 60-0-0-146.static.tttttt.com.au
+Arrival-Date: Mon, 24 Dec 2007 10:03:47 +1100
+
+Final-Recipient: RFC822; edwin@zzzzzzz.com
+Action: failed
+Status: 5.3.0
+Remote-MTA: DNS; mail.zzzzzz.com
+Last-Attempt-Date: Mon, 24 Dec 2007 10:03:53 +1100
+ENDPART
+        @delivery_report = Mail::Part.new(part)
+      end
+
+      it "returns nil" do
+        expect(@delivery_report.diagnostic_code).to be_nil
+      end
+    end
   end
   
   it "should correctly parse plain text raw source and not truncate after newlines - issue 208" do

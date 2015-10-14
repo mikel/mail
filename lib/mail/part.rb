@@ -94,8 +94,10 @@ module Mail
     def get_return_values(key)
       if delivery_status_data[key].is_a?(Array)
         delivery_status_data[key].map { |a| a.value }
-      else
+      elsif !delivery_status_data[key].nil?
         delivery_status_data[key].value
+      else
+        nil
       end
     end
     
