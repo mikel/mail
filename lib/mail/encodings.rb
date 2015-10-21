@@ -317,6 +317,7 @@ module Mail
           # emit the substring before the beginMarker (if any)
           if beginMarker != 0
             substr = s[0..beginMarker-1]
+            # only emit if not a blank string.
             yielder << substr if !substr.blank?
           end
 
