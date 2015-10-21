@@ -316,17 +316,16 @@ module Mail
 
           # emit the substring before the beginMarker (if any)
           if beginMarker != 0
-            yielder << s[0..beginMarker-1]
+            yielder << s[0..beginMarker-1].rstrip
           end
 
           # emit the encoded characters section
           yielder << s[beginMarker..offset]
 
           # take the tail end of the string for further processing
-          s = s[offset..-1].strip
+          s = s[offset..-1]
         end
       end
-      # binding.pry if str == "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
       e.to_a
     end
   end
