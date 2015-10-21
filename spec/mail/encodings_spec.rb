@@ -568,6 +568,7 @@ describe Mail::Encodings do
     end
 
     describe "encoding" do
+
       it "should encode a string into Base64" do
         string = "This is あ string"
         if RUBY_VERSION >= '1.9'
@@ -590,6 +591,7 @@ describe Mail::Encodings do
         end
         expect(Mail::Encodings.decode_encode(string, :encode)).to eq result
       end
+
     end
 
     describe "unquote and convert to" do
