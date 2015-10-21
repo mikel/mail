@@ -523,6 +523,7 @@ describe Mail::Encodings do
   describe "altering an encoded text to decoded and visa versa" do
 
     describe "decoding" do
+
       before(:each) do
         @original = $KCODE if RUBY_VERSION < '1.9'
       end
@@ -563,6 +564,7 @@ describe Mail::Encodings do
         end
         expect(Mail::Encodings.decode_encode(string, :decode)).to eq result
       end
+
     end
 
     describe "encoding" do
