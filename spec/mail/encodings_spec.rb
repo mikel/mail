@@ -179,7 +179,7 @@ describe Mail::Encodings do
 
       it "should decode ks_c_5601-1987 encoded string" do
         string = '=?ks_c_5601-1987?B?seggx/bB+A==?= <a@b.org>'.force_encoding('us-ascii')
-        expect(Mail::Encodings.value_decode(string)).to eq("김 현진<a@b.org>")
+        expect(Mail::Encodings.value_decode(string)).to eq("김 현진 <a@b.org>")
       end
 
       it "should decode shift-jis encoded string" do
@@ -442,14 +442,14 @@ describe Mail::Encodings do
 
     it "should decode B and Q encodings together if needed" do
       string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
-      result = "This is あ stringThis is あ stringSome non encoded stuff This is あ stringMore non encoded stuff"
+      result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
     it "should detect a encoded and unencoded Base64 string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
-      result = "Some non encoded stuff This is あ stringMore non encoded stuff"
+      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
@@ -496,7 +496,7 @@ describe Mail::Encodings do
 
     it "should detect a encoded and unencoded QP string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\sMore non encoded stuff"
-      result = "Some non encoded stuff This is あ stringMore non encoded stuff"
+      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
