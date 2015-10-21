@@ -75,7 +75,7 @@ describe Mail::Encodings do
     # the encoded-word would contain an exact multiple of 3 encoded
     # octets), except that the second 'encoded-word' uses a different
     # 'charset' than the first one.
-    #
+
     it "should just return the string if us-ascii and asked to B encoded string" do
       string = "This is a string"
       result = "This is a string"
@@ -133,7 +133,7 @@ describe Mail::Encodings do
     it "should decode a long encoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       result = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
-      result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      result.encode('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
@@ -179,7 +179,7 @@ describe Mail::Encodings do
 
       it "should decode ks_c_5601-1987 encoded string" do
         string = '=?ks_c_5601-1987?B?seggx/bB+A==?= <a@b.org>'.force_encoding('us-ascii')
-        expect(Mail::Encodings.value_decode(string)).to eq("김 현진 <a@b.org>")
+        expect(Mail::Encodings.value_decode(string)).to eq("김 현진<a@b.org>")
       end
 
       it "should decode shift-jis encoded string" do
@@ -442,14 +442,14 @@ describe Mail::Encodings do
 
     it "should decode B and Q encodings together if needed" do
       string = "=?UTF-8?Q?This_is_=E3=81=82_string?==?UTF-8?Q?This_is_=E3=81=82_string?= Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
-      result = "This is あ stringThis is あ string Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
+      result = "This is あ stringThis is あ stringSome non encoded stuff This is あ stringMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
     it "should detect a encoded and unencoded Base64 string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?= \r\n\sMore non encoded stuff"
-      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
+      result = "Some non encoded stuff This is あ stringMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
@@ -496,7 +496,7 @@ describe Mail::Encodings do
 
     it "should detect a encoded and unencoded QP string to the decoded string" do
       string = "Some non encoded stuff =?UTF-8?Q?This_is_=E3=81=82_string?= \r\n\sMore non encoded stuff"
-      result = "Some non encoded stuff This is あ string \r\n\sMore non encoded stuff"
+      result = "Some non encoded stuff This is あ stringMore non encoded stuff"
       result.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
@@ -523,7 +523,6 @@ describe Mail::Encodings do
   describe "altering an encoded text to decoded and visa versa" do
 
     describe "decoding" do
-
       before(:each) do
         @original = $KCODE if RUBY_VERSION < '1.9'
       end
@@ -564,11 +563,9 @@ describe Mail::Encodings do
         end
         expect(Mail::Encodings.decode_encode(string, :decode)).to eq result
       end
-
     end
 
     describe "encoding" do
-
       it "should encode a string into Base64" do
         string = "This is あ string"
         if RUBY_VERSION >= '1.9'
@@ -591,7 +588,6 @@ describe Mail::Encodings do
         end
         expect(Mail::Encodings.decode_encode(string, :encode)).to eq result
       end
-
     end
 
     describe "unquote and convert to" do
@@ -656,7 +652,7 @@ describe Mail::Encodings do
       it "should unquote multiple strings in the middle of the text" do
         a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
-        expect(b).to eq "日本語 <a@example.com>, 日本語 <b@example.com>"
+        expect(b).to eq "日本語<a@example.com>, 日本語<b@example.com>"
       end
 
       it "should handle multiline quoted headers with mixed content" do
@@ -706,7 +702,6 @@ describe Mail::Encodings do
       encoded = "=?ISO-8859-1?Q?\nRe=3A_ol=E1?="
       expect(Mail::Encodings.value_decode(encoded)).to eq expected
     end
-
   end
 
   describe "pre encoding non usascii text" do
