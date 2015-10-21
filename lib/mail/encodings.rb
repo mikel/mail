@@ -316,11 +316,12 @@ module Mail
 
           # emit the substring before the beginMarker (if any)
           if beginMarker != 0
-            yielder << s[0..beginMarker-1].rstrip
+            substr = s[0..beginMarker-1]
+            yielder << substr if !substr.blank?
           end
 
           # emit the encoded characters section
-          yielder << s[beginMarker..offset]
+          yielder << s[beginMarker..offset-1]
 
           # take the tail end of the string for further processing
           s = s[offset..-1]
