@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'pry'
+
 module Mail
   # Raised when attempting to decode an unknown encoding type
   class UnknownEncodingType < StandardError #:nodoc:
