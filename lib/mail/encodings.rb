@@ -268,7 +268,7 @@ module Mail
     #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.collapse_adjacent_encodings(str)
-      Enumerator.new do |yielder|
+      e = Enumerator.new do |yielder|
         s = str
         loop do
           break if s.empty?
@@ -322,19 +322,12 @@ module Mail
           # emit the encoded characters section
           yielder << s[beginMarker..offset]
 
-          # consume any trailing whitespace.
-          loop do
-            if s[offset] =~ /\s/
-              offset += 1
-            else
-              break
-            end
-          end
-
           # take the tail end of the string for further processing
-          s = s[offset..-1]
+          s = s[offset..-1].strip
         end
-      end.to_a
+      end
+      # binding.pry if str == "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
+      e.to_a
     end
   end
 end
