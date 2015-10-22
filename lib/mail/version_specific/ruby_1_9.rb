@@ -88,7 +88,6 @@ module Mail
       decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "Encoding conversion failed #{$!}"
       str.dup
     end
 
