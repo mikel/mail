@@ -180,7 +180,7 @@ module Mail
       # With KCODE=u we can't use regexps on other encodings. Go ASCII.
       with_ascii_kcode do
         # Encode all strings embedded inside of quotes
-        address = address.gsub(/("[^"]*")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+        address = address.gsub(/("[^"]*[^\/]")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
 
         # Then loop through all remaining items and encode as needed
         tokens = address.split(/\s/)
