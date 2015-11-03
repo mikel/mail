@@ -1,11 +1,11 @@
 # encoding: utf-8
 require 'spec_helper'
 
-# 
+#
 # from            =       "From:" mailbox-list CRLF
 
 describe Mail::FromField do
-  
+
   describe "initialization" do
 
     it "should initialize" do
@@ -13,7 +13,7 @@ describe Mail::FromField do
     end
 
     it "should mix in the CommonAddress module" do
-      expect(Mail::FromField.included_modules).to include(Mail::CommonAddress) 
+      expect(Mail::FromField.included_modules).to include(Mail::CommonAddress)
     end
 
     it "should accept a string with the field name" do
@@ -29,7 +29,7 @@ describe Mail::FromField do
     end
 
   end
-  
+
   # Actual testing of CommonAddress methods oFromurs in the address field spec file
 
   describe "instance methods" do
@@ -50,40 +50,46 @@ describe Mail::FromField do
       expect(t.addresses[1]).to eq 'mikel@me.com'
       expect(t.addresses[2]).to eq 'bob@you.com'
     end
-    
+
     it "should return the formatted line on to_s" do
       t = Mail::FromField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
-    
+
     it "should return the encoded line" do
       t = Mail::FromField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq "From: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
-    
+
     it "should return the encoded line" do
       t = Mail::FromField.new("bob@me.com")
       expect(t.encoded).to eq "From: bob@me.com\r\n"
     end
-    
+
     it "should return the decoded line" do
       t = Mail::FromField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.decoded).to eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
-    
+
   end
-  
+
   it "should handle non ascii" do
     t = Mail::FromField.new('"Foo áëô îü" <extended@example.net>')
     expect(t.decoded).to eq '"Foo áëô îü" <extended@example.net>'
     expect(t.encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
   end
-  
-  
+
+
   it "should work without quotes" do
     t = Mail::FromField.new('Foo áëô îü <extended@example.net>')
     expect(t.encoded).to eq "From: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
     expect(t.decoded).to eq '"Foo áëô îü" <extended@example.net>'
+  end
+
+  it "should work with combinations of quotes and non ascii" do
+    t = Mail::FromField.new('" „Floć Žama“ Rain Shelter \"Floć Žama-Rain Shelter\"" <no-reply@example.com>')
+    expect(t.encoded).to eq ("From: =?UTF-8?B?IOKAnkZsb8SHIMW9YW1h4oCcIFJhaW4gU2hlbHRlciAiRmxvxIcgxb1hbWEt?= =?UTF-8?B?UmFpbiBTaGVsdGVyIg==?= <no-reply@example.com>\r\n")
+    expect(t.decoded).to eq '" „Floć Žama“ Rain Shelter \"Floć Žama-Rain Shelter\"" <no-reply@example.com>'
   end
 
 end
