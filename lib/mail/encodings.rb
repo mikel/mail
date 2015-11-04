@@ -179,7 +179,7 @@ module Mail
       return address if address.ascii_only? or charset.nil?
       us_ascii = %Q{\x00-\x7f}
       # Encode any non usascii strings embedded inside of quotes
-      address = address.gsub(/(?<![\\])(".*?[^#{us_ascii}](.*?[^\\]|[^\\]*?)")(?=\s)/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+      address = address.gsub(/([^\\]|^)(".*?[^#{us_ascii}](.*?[^\\]|[^\\]*?)")(\s)/) { "#{$1}#{Encodings.b_value_encode(unquote($2), charset)}#{$4}" }
       # Then loop through all remaining items and encode as needed
       tokens = address.split(/\s/)
       map_with_index(tokens) do |word, i|
