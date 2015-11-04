@@ -25,6 +25,11 @@ module Mail
         1.0
       end
 
+      # Per RFC 2821 4.5.3.1, SMTP lines may not be longer than 1000 octets including the <CRLF>.
+      def self.compatible_input?(str)
+        !str.lines.find { |line| line.length > 998 }
+      end
+
       Encodings.register(NAME, self) 
     end
   end

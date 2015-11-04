@@ -16,6 +16,7 @@
 * #901 - Allow mail.text_part = '…' and mail.html_part = '<p>…</p>' (taavo)
 * #872 - Low-level option to include BCC field in the encoded message (grossadamm)
 * #918 - Account for possibility of absent delivery-status headers (kjg)
+* #874 – Stay under 1000-char SMTP line length limits (pushrax)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 

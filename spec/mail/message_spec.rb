@@ -1384,6 +1384,14 @@ describe Mail::Message do
           expect(mail.to_s).to match(%r{Content-Transfer-Encoding: 7bit})
         end
 
+        it "should use QP transfer encoding for 7bit text with lines longer than 998 octets" do
+          body = "a" * 999
+          mail = Mail.new
+          mail.charset = "UTF-8"
+          mail.body = body
+          expect(mail.to_s).to match(%r{Content-Transfer-Encoding: quoted-printable})
+        end
+
         it "should use QP transfer encoding for 8bit text with only a few 8bit characters" do
           body = "Maxfeldstraße 5, 90409 Nürnberg"
           mail = Mail.new
