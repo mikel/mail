@@ -81,6 +81,16 @@ module Mail
       @parts_list << attachment
     end
 
+    # Append an already created Mail::Part object to list
+    # useful when copying attachments from other mails
+    def add(attachment)
+      if attachment.kind_of?(Mail::Part)
+        @parts_list << attachment
+      else
+        raise "Only instances of Mail::Part can be directly added to attachments"
+      end
+    end
+
     # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we
     # set it to binary, otherwise as set to plain text
     def guess_encoding
