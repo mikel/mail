@@ -786,6 +786,12 @@ describe Mail::Encodings do
       encoded = '=?UTF-8?B?RmVsaXggQmFhcsOf?= <test@example.com>'
       expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
     end
+
+    it "should encode multiple combo of ascii then non-ascii correctly" do
+      raw     = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, "あdあ" <ada@test.lindsaar.net>'
+      encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
+      expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
+    end
   end
 
   describe "address encoding" do
