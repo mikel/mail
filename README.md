@@ -636,6 +636,24 @@ describe "sending an email" do
   # Note that apart from recipients, repeating a modifier overwrites old value.
 
   it { should have_sent_email.from('you@you.com').to('mike1@me.com').matching_body(/hell/)
+
+  # test for attachments
+
+  # ... by specific attachment
+  it { should_have_sent_email.with_attachments(my_attachment) }
+
+  # ... or any attachment
+  it { should_have_sent_email.with_attachments(any_attachment) }
+
+  # ... by array of attachments
+  it { should_have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important
+
+  #... by presence
+  it { should_have_sent_email.with_any_attachments }
+
+  #... or by absence
+  it { should_have_sent_email.with_no_attachments }
+
 end
 ```
 
