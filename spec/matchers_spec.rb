@@ -3,16 +3,25 @@ require 'spec_helper'
 describe "have_sent_email" do
   include Mail::Matchers
 
-  def send_test_email
-    Mail.deliver do
-      from    'phil@example.com'
-      to      ['bob@example.com', 'fred@example.com']
-      cc      ['dad@example.com', 'mom@example.com']
-      bcc     ['alice@example.com', 'sue@example.com']
-      subject 'The facts you requested'
-      body    'Here are the facts you requested. One-onethousand, two-onethousand.'
+  let(:test_mail) do
+    mail = Mail.new(
+      :from    =>  'phil@example.com',
+      :to      =>  ['bob@example.com', 'fred@example.com'],
+      :cc      =>  ['dad@example.com', 'mom@example.com'],
+      :bcc     =>  ['alice@example.com', 'sue@example.com'],
+      :subject => 'The facts you requested',
+      :body    => 'Here are the facts you requested. One-onethousand, two-onethousand.'
+    )
+    if include_attachments
+      mail.attachments['myfile.pdf'] =   { :mime_type => 'application/x-pdf',
+                                          :content   => 'test content' }
+      mail.attachments['yourfile.csv'] = { :mime_type => 'application/csv',
+                                           :content   => '1,2,3' }
     end
+    mail
   end
+
+  let(:include_attachments) { true }
 
   before(:all) do
     $old_delivery_method = Mail.delivery_method
@@ -24,7 +33,7 @@ describe "have_sent_email" do
 
   before(:each) do
     Mail::TestMailer.deliveries.clear
-    send_test_email
+    test_mail.deliver
   end
 
   after(:all) do
@@ -137,6 +146,57 @@ describe "have_sent_email" do
     end
   end
 
+  context 'with #with_attachments' do
+    let(:first_attachment) { test_mail.attachments.first }
+    let(:last_attachment) { test_mail.attachments.last }
+
+    context 'and matching attachments' do
+
+      context 'matching by filename' do
+        it { is_expected.to have_sent_email.with_attachments(an_attachment_with_filename(first_attachment.filename)) }
+      end
+
+      context 'single attachment passed' do
+        it { is_expected.to have_sent_email.with_attachments(first_attachment) }
+      end
+
+      context 'array of attachments passed' do
+        it {is_expected.to have_sent_email.with_attachments([first_attachment, last_attachment]) }
+      end
+
+      context 'any_attachment passed' do
+        it {is_expected.to have_sent_email.with_attachments([any_attachment]) }
+      end
+
+      context 'chaining attachment matching' do
+        it { is_expected.to have_sent_email.with_attachments(first_attachment).with_attachments([last_attachment]) }
+      end
+
+      context 'ce matching' do
+        it { is_expected.to have_sent_email.with_attachments(first_attachment).with_attachments([last_attachment]) }
+      end
+
+      context 'attachment order is important' do
+        it {is_expected.to have_sent_email.with_attachments([first_attachment, last_attachment]) }
+        it {is_expected.to_not have_sent_email.with_attachments([last_attachment, first_attachment]) }
+      end
+    end
+
+    context 'and non-matching attachments' do
+      it { is_expected.not_to have_sent_email.with_attachments('no_match') }
+      it { is_expected.not_to have_sent_email.with_attachments(an_attachment_with_filename('no_match')) }
+    end
+
+    context 'and any attachments' do
+      it { is_expected.to have_sent_email.with_any_attachments }
+    end
+
+    context 'and no attachments' do
+      let(:include_attachments) { false }
+      it { is_expected.to have_sent_email.with_no_attachments }
+    end
+  end
+
   context "with #matching_body" do
     context "and a matching body" do
       it { is_expected.to have_sent_email.matching_body(/one-?one(hundred|thousand)/i) }
@@ -154,9 +214,11 @@ describe "have_sent_email" do
              to('bob@example.com').
              to('fred@example.com').
              with_subject('The facts you requested').
+             with_attachments(test_mail.attachments.first).
              matching_subject(/facts (I|you)/).
              with_body('Here are the facts you requested. One-onethousand, two-onethousand.').
-             matching_body(/(I|you) request/)
+             matching_body(/(I|you) request/).
+             with_any_attachments
     end
   end
 end
