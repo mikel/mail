@@ -6,6 +6,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.2
+  - 2.2.3
   - ruby-head
   - jruby
   - jruby-head
@@ -17,7 +18,12 @@ gemfile:
   - gemfiles/mime_types_2.1.gemfile
   - gemfiles/mime_types_2.2.gemfile
   - gemfiles/mime_types_2.3.gemfile
-  - gemfiles/mime_types_2.latest.gemfile
+  - gemfiles/mime_types_2.4.gemfile
+  - gemfiles/mime_types_2.5.gemfile
+  - gemfiles/mime_types_2.6.gemfile
+  - gemfiles/mime_types_2.6_columnar.gemfile
+  - gemfiles/mime_types_2.99.latest.gemfile
+  - gemfiles/mime_types_3.0.gemfile
   - gemfiles/mime_types_edge.gemfile
 
 sudo: false
@@ -43,8 +49,26 @@ matrix:
     - rvm: 1.8.7
       gemfile: gemfiles/mime_types_2.3.gemfile
     - rvm: 1.8.7
-      gemfile: gemfiles/mime_types_2.latest.gemfile
+      gemfile: gemfiles/mime_types_2.4.gemfile
     - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.5.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.6.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.6_columnar.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.99.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_3.0.gemfile
+    - rvm: 1.9.2
+      gemfile: gemfiles/mime_types_3.0.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/mime_types_3.0.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_edge.gemfile
+    - rvm: 1.9.2
+      gemfile: gemfiles/mime_types_edge.gemfile
+    - rvm: 1.9.3
       gemfile: gemfiles/mime_types_edge.gemfile
   allow_failures:
     - rvm: ruby-head    # green, but unstable
