@@ -342,7 +342,7 @@ module Mail
           begin
             @codepoints, @composition_exclusion, @composition_map, @boundary, @cp1252 = File.open(self.class.filename, 'rb') { |f| Marshal.load f.read }
           rescue => e
-              raise IOError.new("Couldn't load the Unicode tables for UTF8Handler (#{e.message}), Mail::Multibyte is unusable")
+            raise IOError.new("Couldn't load the Unicode tables for UTF8Handler (#{e.message}), Mail::Multibyte is unusable")
           end
 
           # Redefine the === method so we can write shorter rules for grapheme cluster breaks
@@ -387,14 +387,6 @@ module Mail
         @database ||= UnicodeDatabase.new
       end
 
-    end
-  end
-end
-
-unless defined?(ActiveSupport)
-  module ActiveSupport
-    unless const_defined?(:Multibyte)
-      Multibyte = Mail::Multibyte
     end
   end
 end
