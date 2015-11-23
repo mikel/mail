@@ -224,6 +224,10 @@ module Mail
       Mail.inform_interceptors(self)
     end
 
+    def inform_failure_handlers(error)
+      Mail.inform_failure_handlers(self, error)
+    end
+
     # Delivers an mail object.
     #
     # Examples:
@@ -2148,6 +2152,7 @@ module Mail
           delivery_method.deliver!(self)
         end
       rescue => e # Net::SMTP errors or sendmail pipe errors
+        inform_failure_handlers e
         raise e if raise_delivery_errors
       end
     end

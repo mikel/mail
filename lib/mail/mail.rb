@@ -194,6 +194,7 @@ module Mail
   # Initialize the observers and interceptors arrays
   @@delivery_notification_observers = []
   @@delivery_interceptors = []
+  @@failure_handlers = []
 
   # You can register an object to be informed of every email that is sent through
   # this method.
@@ -240,6 +241,24 @@ module Mail
   def self.inform_interceptors(mail)
     @@delivery_interceptors.each do |interceptor|
       interceptor.delivering_email(mail)
+    end
+  end
+
+  # Manage failure handlers that will be triggered whenever an email delivery
+  # raises an exception.
+  def self.register_failure_handler(handler)
+    unless @@failure_handlers.include?(handler)
+      @@failure_handlers << handler
+    end
+  end
+
+  def self.unregister_failure_handler(handler)
+    @@failure_handlers.delete(handler)
+  end
+
+  def self.inform_failure_handlers(mail, error)
+    @@failure_handlers.each do |handler|
+      handler.failed_mail(mail, error)
     end
   end
 
