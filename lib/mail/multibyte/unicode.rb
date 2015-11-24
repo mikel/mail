@@ -1,15 +1,32 @@
 module Mail
   module Multibyte
     module Unicode
+      # Adapted from https://github.com/rails/rails/blob/master/activesupport/lib/active_support/multibyte/unicode.rb
+      # under the MIT license
+      # The Unicode version that is supported by the implementation
+      UNICODE_VERSION = '7.0.0'
+
+      # Holds data about a codepoint in the Unicode database.
+      class Codepoint
+        attr_accessor :code, :combining_class, :decomp_type, :decomp_mapping, :uppercase_mapping, :lowercase_mapping
+
+        # Initializing Codepoint object with default values
+        def initialize
+          @combining_class = 0
+          @uppercase_mapping = 0
+          @lowercase_mapping = 0
+        end
+
+        def swapcase_mapping
+          uppercase_mapping > 0 ? uppercase_mapping : lowercase_mapping
+        end
+      end
 
       extend self
 
       # A list of all available normalization forms. See http://www.unicode.org/reports/tr15/tr15-29.html for more
       # information about normalization.
       NORMALIZATION_FORMS = [:c, :kc, :d, :kd]
-
-      # The Unicode version that is supported by the implementation
-      UNICODE_VERSION = '5.2.0'
 
       # The default normalization used for operations that require normalization. It can be set to any of the
       # normalizations in NORMALIZATION_FORMS.
@@ -308,11 +325,6 @@ module Mail
         end.pack('U*')
       end
 
-      # Holds data about a codepoint in the Unicode database
-      class Codepoint
-        attr_accessor :code, :combining_class, :decomp_type, :decomp_mapping, :uppercase_mapping, :lowercase_mapping
-      end
-
       # Holds static data from the Unicode database
       class UnicodeDatabase
         ATTRIBUTES = :codepoints, :composition_exclusion, :composition_map, :boundary, :cp1252
@@ -387,14 +399,6 @@ module Mail
         @database ||= UnicodeDatabase.new
       end
 
-    end
-  end
-end
-
-unless defined?(ActiveSupport)
-  module ActiveSupport
-    unless const_defined?(:Multibyte)
-      Multibyte = Mail::Multibyte
     end
   end
 end
