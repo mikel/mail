@@ -197,13 +197,118 @@ describe "have_sent_email" do
     end
   end
 
-  context "with #matching_body" do
-    context "and a matching body" do
-      it { is_expected.to have_sent_email.matching_body(/one-?one(hundred|thousand)/i) }
+  context 'with #matching_body' do
+    context 'and without specifying a multipart matcher' do
+      context 'having a matching body' do
+        it { is_expected.to have_sent_email.matching_body(/one-?one(hundred|thousand)/i) }
+      end
+
+      context 'having a non-matching body' do
+        it { is_expected.not_to have_sent_email.matching_body(/\d+-onethousand/) }
+      end
     end
 
-    context "and a non-matching body" do
-      it { is_expected.not_to have_sent_email.matching_body(/\d+-onethousand/) }
+    context 'and with specifying the multipart matcher' do
+      let(:test_mail) do
+        Mail.new do
+          from('phil@example.com')
+          to(['bob@example.com', 'fred@example.com'])
+          subject('The facts you requested')
+          text_part do
+            body('This is plain text')
+          end
+          html_part do
+            content_type('text/html; charset=UTF-8')
+            body('<h1>This is HTML</h1>')
+          end
+        end
+      end
+
+      context ':on_both_parts' do
+        context 'and a matching multipart body' do
+          context 'only on the text part' do
+            it { is_expected.not_to have_sent_email.matching_body(/plain|non-existing/i, :on_both_parts) }
+          end
+
+          context 'only on the HTML part' do
+            it { is_expected.not_to have_sent_email.matching_body(/h1|body/i, :on_both_parts) }
+          end
+
+          context 'on HTML and text part' do
+            it { is_expected.to have_sent_email.matching_body(/This is.*(text|HTML)/i, :on_both_parts) }
+          end
+        end
+
+        context 'and a non-matching multipart body' do
+          it { is_expected.not_to have_sent_email.matching_body(/42/, :on_both_parts) }
+        end
+      end
+
+      context ':on_either_part' do
+        context 'and a matching multipart body' do
+          context 'only on the text part' do
+            it { is_expected.to have_sent_email.matching_body(/plain|non-existing/i, :on_either_part) }
+          end
+
+          context 'only on the HTML part' do
+            it { is_expected.to have_sent_email.matching_body(/h1|body/i, :on_either_part) }
+          end
+
+          context 'on HTML and text part' do
+            it { is_expected.to have_sent_email.matching_body(/This is.*(text|HTML)/i, :on_either_part) }
+          end
+        end
+
+        context 'and a non-matching multipart body' do
+          it { is_expected.not_to have_sent_email.matching_body(/42/, :on_either_part) }
+        end
+      end
+
+      context ':on_text_part' do
+        context 'and a matching multipart body' do
+          context 'only on the text part' do
+            it { is_expected.to have_sent_email.matching_body(/plain|non-existing/i, :on_text_part) }
+          end
+
+          context 'only on the HTML part' do
+            it { is_expected.not_to have_sent_email.matching_body(/h1|body/i, :on_text_part) }
+          end
+
+          context 'on HTML and text part' do
+            it { is_expected.to have_sent_email.matching_body(/This is.*(text|HTML)/i, :on_text_part) }
+          end
+        end
+
+        context 'and a non-matching multipart body' do
+          it { is_expected.not_to have_sent_email.matching_body(/42/, :on_text_part) }
+        end
+      end
+
+      context ':on_html_part' do
+        context 'and a matching multipart body' do
+          context 'only on the text part' do
+            it { is_expected.not_to have_sent_email.matching_body(/plain|non-existing/i, :on_html_part) }
+          end
+
+          context 'only on the HTML part' do
+            it { is_expected.to have_sent_email.matching_body(/h1|body/i, :on_html_part) }
+          end
+
+          context 'on HTML and text part' do
+            it { is_expected.to have_sent_email.matching_body(/This is.*(text|HTML)/i, :on_html_part) }
+          end
+        end
+
+        context 'and a non-matching multipart body' do
+          it { is_expected.not_to have_sent_email.matching_body(/42/, :on_html_part) }
+        end
+      end
+
+      context 'and passing invalid second argument' do
+        it 'should raise an error' do
+          expect { have_sent_email.matching_body(/abc/, :on_nothing) }.to raise_exception(ArgumentError)
+        end
+      end
     end
   end
 

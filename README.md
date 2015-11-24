@@ -631,6 +631,28 @@ describe "sending an email" do
 
   it { should have_sent_email.matching_subject(/test(ing)?/) }
   it { should have_sent_email.matching_body(/h(a|e)llo/) }
+  
+  # Or if you use multipart emails...
+  
+  # ...can check if text matches on both parts, text and HTML
+  
+  it { is_expected.not_to have_sent_email.matching_body(/text|HTML/i) }
+  
+  # or same, but more explicit
+  
+  it { is_expected.not_to have_sent_email.matching_body(/text|HTML/i, :on_both_parts) }
+  
+  # ...can check if either of the two parts match by using `:on_either_part`
+   
+  it { is_expected.to have_sent_email.matching_body(/plain/i, :on_either_part) }
+  
+  # ...can only check if a match is on the text part of a multipart email by using `:on_text_part`
+  
+  it { is_expected.to have_sent_email.matching_body(/plain|non-existing/i, :on_text_part) }
+  
+  # ...and can only check if a match is on the HTML part by using `:on_html_part`
+  
+  it { is_expected.to have_sent_email.matching_body(/h1|body/i, :on_html_part) }
 
   # Can chain together modifiers
   # Note that apart from recipients, repeating a modifier overwrites old value.
