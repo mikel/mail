@@ -339,6 +339,12 @@ module Mail
 
         # Loads the Unicode database and returns all the internal objects of UnicodeDatabase.
         def load
+          # The Marshal.load of unicode_tables.dat expects
+          # ActiveSupport::Multibyte::Unicode::Codepoint to exists.
+          # If ActiveSupport isn't loaded we'll insert expected class name while loading
+          # and ensure to remove it after #load has completed
+          require 'mail/multibyte/active_support_shim' unless defined? ActiveSupport
+
           begin
             @codepoints, @composition_exclusion, @composition_map, @boundary, @cp1252 = File.open(self.class.filename, 'rb') { |f| Marshal.load f.read }
           rescue => e
@@ -357,6 +363,11 @@ module Mail
           # define attr_reader methods for the instance variables
           class << self
             attr_reader(*ATTRIBUTES)
+          end
+
+        ensure
+          if defined?(ActiveSupport::ShimInsertedByMail)
+            Object.send :remove_const, :ActiveSupport
           end
         end
 
@@ -387,14 +398,6 @@ module Mail
         @database ||= UnicodeDatabase.new
       end
 
-    end
-  end
-end
-
-unless defined?(ActiveSupport)
-  module ActiveSupport
-    unless const_defined?(:Multibyte)
-      Multibyte = Mail::Multibyte
     end
   end
 end
