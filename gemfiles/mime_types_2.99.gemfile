@@ -7,7 +7,6 @@ gem "mime-types", "~> 2.99.0"
 
 group :local_development, :test do
   gem "appraisal", "~> 1.0"
-  gem "ruby-debug", :platforms => :mri_18
 end
 
 gemspec :path => "../"

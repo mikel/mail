@@ -8,5 +8,4 @@ gem "jruby-openssl", :platforms => :jruby
 # For gems not required to run tests
 group :local_development, :test do
   gem "appraisal", "~> 1.0" unless RUBY_VERSION <= "1.8.7"
-  gem "ruby-debug", :platforms => :mri_18
 end

@@ -7,7 +7,6 @@ gem "mime-types", :github => "halostatue/mime-types"
 
 group :local_development, :test do
   gem "appraisal", "~> 1.0"
-  gem "ruby-debug", :platforms => :mri_18
 end
 
 gemspec :path => "../"
