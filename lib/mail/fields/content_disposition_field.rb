@@ -16,7 +16,7 @@ module Mail
     end
 
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::ContentDispositionElement.new(val)
       end
     end
@@ -37,9 +37,9 @@ module Mail
 
     def filename
       case
-      when !parameters['filename'].blank?
+      when !Utilities.blank?(parameters['filename'])
         @filename = parameters['filename']
-      when !parameters['name'].blank?
+      when !Utilities.blank?(parameters['name'])
         @filename = parameters['name']
       else
         @filename = nil

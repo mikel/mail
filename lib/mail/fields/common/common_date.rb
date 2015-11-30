@@ -11,7 +11,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::DateTimeElement.new(val)
       else
         nil

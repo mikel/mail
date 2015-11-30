@@ -14,7 +14,7 @@ module Mail
     end
 
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @phrase_list ||= PhraseList.new(value)
       end
     end

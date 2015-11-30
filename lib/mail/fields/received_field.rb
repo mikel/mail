@@ -34,7 +34,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::ReceivedElement.new(val)
       end
     end
@@ -56,7 +56,7 @@ module Mail
     end
  
     def encoded
-      if value.blank?
+      if Utilities.blank?(value)
         "#{CAPITALIZED_FIELD}: \r\n"
       else
         "#{CAPITALIZED_FIELD}: #{info}; #{formatted_date}\r\n"
@@ -64,7 +64,7 @@ module Mail
     end
     
     def decoded
-      if value.blank?
+      if Utilities.blank?(value)
         ""
       else
         "#{info}; #{formatted_date}" 

@@ -136,7 +136,7 @@ module Mail
       case
       when selected.length > 1
         selected.map { |f| f }
-      when !selected.blank?
+      when !Utilities.blank?(selected)
         selected.first
       else
         nil
@@ -166,11 +166,11 @@ module Mail
       
       case
       # User wants to delete the field
-      when !selected.blank? && value == nil
+      when !Utilities.blank?(selected) && value == nil
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && limited_field?(fn)
+      when !Utilities.blank?(selected) && limited_field?(fn)
         selected.first.update(fn, value)
         
       # User wants to create the field
