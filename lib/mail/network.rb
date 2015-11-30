@@ -7,6 +7,7 @@ module Mail
   register_autoload :Exim, 'mail/network/delivery_methods/exim'
   register_autoload :SMTPConnection, 'mail/network/delivery_methods/smtp_connection'
   register_autoload :TestMailer, 'mail/network/delivery_methods/test_mailer'
+  register_autoload :Logger, 'mail/network/delivery_methods/logger'
 
   register_autoload :POP3, 'mail/network/retriever_methods/pop3'
   register_autoload :IMAP, 'mail/network/retriever_methods/imap'
