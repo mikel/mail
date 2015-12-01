@@ -154,7 +154,7 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq(string)
     end
 
-    it "should collapse adjacent words" do
+    it "should parse adjacent encoded-words separated by linear white-space" do
       string = "=?utf-8?B?0L3QvtCy0YvQuSDRgdC+0YLRgNGD0LTQvdC40Log4oCUINC00L7RgNC+0YQ=?=\n =?utf-8?B?0LXQtdCy?="
       result = "новый сотрудник — дорофеев"
       expect(Mail::Encodings.value_decode(string)).to eq(result)
@@ -895,12 +895,12 @@ describe Mail::Encodings do
       convert "A=?iso-2022-jp?B?X=?=B", ["A", "=?iso-2022-jp?B?X=?=", "B"]
     end
 
-    it "joins adjacent encodings" do
-      convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", "B"]
+    it "splits adjacent encodings into separate parts" do
+      convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?=", "B"]
     end
-
-    it "joins adjacent encodings without unencoded" do
-      convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?="]
+    
+    it "splits adjacent encodings without unencoded into separate parts" do
+      convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?="]
     end
 
     it "does not join encodings when separated by unencoded" do
@@ -909,6 +909,14 @@ describe Mail::Encodings do
 
     it "does not join different encodings" do
       convert "A=?iso-2022-jp?B?X=?==?utf-8?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?utf-8?B?Y=?=", "B"]
+    end
+    
+    it "does not keep the separator character between two different encodings" do
+      rfc_1342_newline_separators = ["\x0A", "\x20"]
+      
+      rfc_1342_newline_separators.each do |rfc_1342_separator|
+        convert "=?iso-2022-jp?B?X=?=#{rfc_1342_separator}=?utf-8?Q?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?utf-8?Q?Y=?="]
+      end
     end
   end
 
