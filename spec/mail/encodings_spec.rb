@@ -133,7 +133,7 @@ describe Mail::Encodings do
     it "should decode a long encoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       result = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
-      result.encode('UTF-8') if RUBY_VERSION >= '1.9'
+      result.encode!('UTF-8') if RUBY_VERSION >= '1.9'
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
