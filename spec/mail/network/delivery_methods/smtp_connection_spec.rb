@@ -47,7 +47,7 @@ describe "SMTP Delivery Method" do
   end
 
 
-  it "should raise an error if no sender is defined" do
+  it "should not raise errors if no sender is defined" do
     Mail.defaults do
       smtp = Net::SMTP.start('127.0.0.1', 25)
       delivery_method :smtp_connection, :connection => smtp, :port => 587, :return_response => true
@@ -59,7 +59,7 @@ describe "SMTP Delivery Method" do
         subject "Email with no sender"
         body "body"
       end
-    end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+    end.not_to raise_error
   end
 
   it "should raise an error if no recipient if defined" do

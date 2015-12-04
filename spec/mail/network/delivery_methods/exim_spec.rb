@@ -176,7 +176,7 @@ describe "exim delivery agent" do
     mail.deliver!
   end
 
-  it "should raise an error if no sender is defined" do
+  it "should not raise errors if no sender is defined" do
     Mail.defaults do
       delivery_method :test
     end
@@ -186,7 +186,7 @@ describe "exim delivery agent" do
         subject "Email with no sender"
         body "body"
       end
-    end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+    end.not_to raise_error
   end
 
   it "should raise an error if no recipient if defined" do
