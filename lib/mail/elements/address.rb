@@ -176,7 +176,7 @@ module Mail
       when Mail::Parsers::AddressStruct
         @data = value
       when String
-        unless value.blank?
+        unless Utilities.blank?(value)
           address_list = Mail::Parsers::AddressListsParser.new.parse(value)
           @data = address_list.addresses.first
         end
@@ -184,7 +184,7 @@ module Mail
     end
 
     def strip_all_comments(string)
-      unless comments.blank?
+      unless Utilities.blank?(comments)
         comments.each do |comment|
           string = string.gsub("(#{comment})", EMPTY)
         end
@@ -193,7 +193,7 @@ module Mail
     end
 
     def strip_domain_comments(value)
-      unless comments.blank?
+      unless Utilities.blank?(comments)
         comments.each do |comment|
           if @data.domain && @data.domain.include?("(#{comment})")
             value = value.gsub("(#{comment})", EMPTY)
@@ -210,7 +210,7 @@ module Mail
         str = strip_domain_comments(format_comments)
       end
 
-      str unless str.blank?
+      str unless Utilities.blank?(str)
     end
 
     def get_name
@@ -220,7 +220,7 @@ module Mail
         str = "(#{comments.join(SPACE).squeeze(SPACE)})"
       end
 
-      unparen(str) unless str.blank?
+      unparen(str) unless Utilities.blank?(str)
     end
 
     def format_comments

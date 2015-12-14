@@ -127,7 +127,7 @@ describe Mail::MessageIdField do
   describe "generating a message id" do
     it "should generate a message ID if it has no value" do
       m = Mail::MessageIdField.new
-      expect(m.message_id).not_to be_blank
+      expect(Mail::Utilities.blank?(m.message_id)).not_to be_truthy
     end
     
     it "should generate a random message ID" do

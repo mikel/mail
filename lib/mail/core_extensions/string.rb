@@ -21,12 +21,6 @@ class String #:nodoc:
     to_str.gsub(/\r\n|\r/, LF)
   end
 
-  unless String.instance_methods(false).map {|m| m.to_sym}.include?(:blank?)
-    def blank?
-      self !~ /\S/
-    end
-  end
-
   unless method_defined?(:ascii_only?)
     # Backport from Ruby 1.9 checks for non-us-ascii characters.
     def ascii_only?

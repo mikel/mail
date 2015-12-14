@@ -16,13 +16,13 @@ describe Mail::Message do
     it "should return a basic email" do
       mail = Mail.new
       mail = Mail.new(mail.to_s)
-      expect(mail.date).not_to be_blank
-      expect(mail.message_id).not_to be_blank
+      expect(Mail::Utilities.blank?(mail.date)).not_to be_truthy
+      expect(Mail::Utilities.blank?(mail.message_id)).not_to be_truthy
       expect(mail.mime_version).to eq "1.0"
       expect(mail.content_type).to eq "text/plain"
       expect(mail.content_transfer_encoding).to eq "7bit"
-      expect(mail.subject).to be_blank
-      expect(mail.body).to be_blank
+      expect(Mail::Utilities.blank?(mail.subject)).to be_truthy
+      expect(Mail::Utilities.blank?(mail.body)).to be_truthy
     end
 
     it "should instantiate with a string" do
@@ -135,7 +135,7 @@ describe Mail::Message do
 
     it "should be able to pass an empty reply-to header" do
       mail = Mail.read(fixture('emails', 'error_emails', 'empty_in_reply_to.eml'))
-      expect(mail.in_reply_to).to be_blank
+      expect(Mail::Utilities.blank?(mail.in_reply_to)).to be_truthy
     end
 
     describe "YAML serialization" do
@@ -164,7 +164,7 @@ describe Mail::Message do
         expect(yaml_output['headers']['Subject']).to  eq "subject"
         expect(yaml_output['headers']['Bcc']).to      eq "someonesecret@somewhere.com"
         expect(yaml_output['@body_raw']).to           eq "body"
-        expect(yaml_output['@delivery_method']).not_to be_blank
+        expect(Mail::Utilities.blank?(yaml_output['@delivery_method'])).not_to be_truthy
       end
 
       it "should deserialize after serializing" do
@@ -1804,7 +1804,7 @@ describe Mail::Message do
   describe "error handling" do
     it "should collect up any of its fields' errors" do
       mail = Mail.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b\r\n")
-      expect(mail.errors).not_to be_blank
+      expect(Mail::Utilities.blank?(mail.errors)).not_to be_truthy
       expect(mail.errors.size).to eq 2
       expect(mail.errors[0][0]).to eq 'Reply-To'
       expect(mail.errors[0][1]).to eq 'a b b'

@@ -476,7 +476,7 @@ HERE
   describe "error handling" do
     it "should collect up any of its fields' errors" do
       header = Mail::Header.new("Content-Transfer-Encoding: vl@d\r\nReply-To: a b b")
-      expect(header.errors).not_to be_blank
+      expect(Mail::Utilities.blank?(header.errors)).not_to be_truthy
       expect(header.errors.size).to eq 2
       expect(header.errors[0][0]).to eq 'Reply-To'
       expect(header.errors[0][1]).to eq 'a b b'

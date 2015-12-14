@@ -1415,7 +1415,7 @@ module Mail
     end
 
     def has_content_transfer_encoding?
-      header[:content_transfer_encoding] && header[:content_transfer_encoding].errors.blank?
+      header[:content_transfer_encoding] && Utilities.blank?(header[:content_transfer_encoding].errors)
     end
 
     def has_transfer_encoding? # :nodoc:
@@ -1713,7 +1713,7 @@ module Mail
 
     # Adds a part to the parts list or creates the part list
     def add_part(part)
-      if !body.multipart? && !self.body.decoded.blank?
+      if !body.multipart? && !Utilities.blank?(self.body.decoded)
         @text_part = Mail::Part.new('Content-Type: text/plain;')
         @text_part.body = body.decoded
         self.body << @text_part
@@ -1769,7 +1769,7 @@ module Mail
     #
     # See also #attachments
     def add_file(values)
-      convert_to_multipart unless self.multipart? || self.body.decoded.blank?
+      convert_to_multipart unless self.multipart? || Utilities.blank?(self.body.decoded)
       add_multipart_mixed_header
       if values.is_a?(String)
         basename = File.basename(values)
@@ -1864,7 +1864,7 @@ module Mail
         case
         when k == 'delivery_handler'
           begin
-            m.delivery_handler = Object.const_get(v) unless v.blank?
+            m.delivery_handler = Object.const_get(v) unless Utilities.blank?(v)
           rescue NameError
           end
         when k == 'transport_encoding'
