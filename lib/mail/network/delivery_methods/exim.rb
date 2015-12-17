@@ -41,9 +41,9 @@ module Mail
                         :arguments      => '-i -t' }.merge(values)
     end
 
-    def self.call(path, arguments, destinations, mail)
+    def self.call(path, arguments, destinations, encoded_message)
       popen "#{path} #{arguments}" do |io|
-        io.puts mail.encoded.to_lf
+        io.puts encoded_message.to_lf
         io.flush
       end
     end
