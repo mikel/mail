@@ -697,7 +697,7 @@ License
 
 (The MIT License)
 
-Copyright (c) 2009-2013 Mikel Lindsaar
+Copyright (c) 2009-2015 Mikel Lindsaar
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

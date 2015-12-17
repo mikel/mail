@@ -3,8 +3,8 @@ module Mail
 
     MAJOR = 2
     MINOR = 6
-    PATCH = 3
-    BUILD = 'edge'
+    PATCH = 4
+    BUILD = 'rc1'
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
 

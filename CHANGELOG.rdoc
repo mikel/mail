@@ -1,23 +1,26 @@
 == HEAD
 
-* Make the gem compatible with Rubinius (Robin Dupret)
-* #808 - Mail::Field correctly responds_to? the methods of its instantiated field (thegcat)
-* #772 - normalize encoding matchers (grosser)
-* #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
-* #775 - avoid failed encodings / stop bad charsets early (grosser)
-* #849 - Handle calling Part#inline? when the Content-Disposition field couldn't be parsed (kjg)
+Features:
+* #772 - Normalize encoding matchers (grosser)
+* #775 - Avoid failed encodings / stop bad charsets early (grosser)
+* #782 – Make the gem compatible with Rubinius (robin850)
 * #865 - Allow a body with an invalid encoding to be round tripped (kjg)
-* #868 - Use the Ruby19.charset_encoder when decoding message bodies (kjg)
 * #866 - Support decoding message bodies with non-Ruby-standard charsets (jeremy)
-* #907 - Mail::ContentDispositionField should work with nil value (kjg)
-* #877 - Make Mail::Field == other take the field value into account (kjg)
-* #910 - Mail::Address should handle b_value_encoded local and domain parts (kjg)
-* #719 - Fix to not extract header content that looks like its field name (kjg)
-* #901 - Allow mail.text_part = '…' and mail.html_part = '<p>…</p>' (taavo)
+* #868 - Use the Ruby19.charset_encoder when decoding message bodies (kjg)
 * #872 - Low-level option to include BCC field in the encoded message (grossadamm)
-* #918 - Account for possibility of absent delivery-status headers (kjg)
-* #874 – Stay under 1000-char SMTP line length limits (pushrax)
+* #901 - Allow mail.text_part = '…' and mail.html_part = '<p>…</p>' (taavo)
 * #924 - Matcher for having attachments (schepedw)
+
+Bugs:
+* #719 - Fix to not extract header content that looks like its field name (kjg)
+* #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
+* #808 - Mail::Field correctly responds_to? the methods of its instantiated field (thegcat)
+* #849 - Handle calling Part#inline? when the Content-Disposition field couldn't be parsed (kjg)
+* #874 – Stay under 1000-char SMTP line length limits (pushrax)
+* #877 - Make Mail::Field == other take the field value into account (kjg)
+* #907 - Mail::ContentDispositionField should work with nil value (kjg)
+* #910 - Mail::Address should handle b_value_encoded local and domain parts (kjg)
+* #918 - Account for possibility of absent delivery-status headers (kjg)
 
 == Version 2.6.3 - Mon Nov 3 23:53 +1100 2014 Mikel Lindsaar <mikel@reinteractive.net>
 
