@@ -27,6 +27,11 @@ module Mail
         4.0/3
       end
 
+      # Base64 inserts newlines automatically and cannot violate the SMTP spec.
+      def self.compatible_input?(str)
+        true
+      end
+
       Encodings.register(NAME, self)      
     end
   end

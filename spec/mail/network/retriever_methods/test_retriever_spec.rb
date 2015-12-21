@@ -9,7 +9,7 @@ describe "Test Retriever" do
   end
 
   it "should have no emails initially" do
-    Mail.all.should be_empty
+    expect(Mail.all).to be_empty
   end
 
   describe "all" do
@@ -19,13 +19,13 @@ describe "Test Retriever" do
     end
 
     it "should return all emails without a block" do
-      Mail.all.should eq @emails
+      expect(Mail.all).to eq @emails
     end
 
     it "should return all emails with a block" do
       messages = []
       Mail.all { |message| messages << message }
-      messages.should eq @emails
+      expect(messages).to eq @emails
     end
 
   end
@@ -37,51 +37,51 @@ describe "Test Retriever" do
     end
 
     it "should handle the :count option" do
-      Mail.find(:count => :all).should eq @emails
-      Mail.find(:count => 1).should eq @emails.first
-      Mail.find(:count => 5).should eq @emails[0, 5]
+      expect(Mail.find(:count => :all)).to eq @emails
+      expect(Mail.find(:count => 1)).to eq @emails.first
+      expect(Mail.find(:count => 5)).to eq @emails[0, 5]
     end
 
     it "should handle the :order option" do
-      Mail.find(:order => :asc).should eq @emails
-      Mail.find(:order => :desc).should eq @emails.reverse
+      expect(Mail.find(:order => :asc)).to eq @emails
+      expect(Mail.find(:order => :desc)).to eq @emails.reverse
     end
 
     it "should handle the :what option" do
-      Mail.find(:what => :first).should eq @emails
-      Mail.find(:what => :first, :count => 5).should eq @emails[0, 5]
-      Mail.find(:what => :last).should eq @emails
-      Mail.find(:what => :last, :count => 5).should eq @emails[10, 5]
+      expect(Mail.find(:what => :first)).to eq @emails
+      expect(Mail.find(:what => :first, :count => 5)).to eq @emails[0, 5]
+      expect(Mail.find(:what => :last)).to eq @emails
+      expect(Mail.find(:what => :last, :count => 5)).to eq @emails[10, 5]
     end
 
     it "should handle the both of :what and :order option with :count => 1" do
-      Mail.find(:count => 1, :what => :last, :order => :asc).should eq @emails.last
-      Mail.find(:count => 1, :what => :first, :order => :desc).should eq @emails.first
+      expect(Mail.find(:count => 1, :what => :last, :order => :asc)).to eq @emails.last
+      expect(Mail.find(:count => 1, :what => :first, :order => :desc)).to eq @emails.first
     end
 
     it "should handle the :delete_after_find option" do
-      Mail.find(:delete_after_find => false).should eq @emails
-      Mail.find(:delete_after_find => false).should eq @emails
-      Mail.find(:delete_after_find => true).should eq @emails
-      Mail.find(:delete_after_find => false).should be_empty
+      expect(Mail.find(:delete_after_find => false)).to eq @emails
+      expect(Mail.find(:delete_after_find => false)).to eq @emails
+      expect(Mail.find(:delete_after_find => true)).to eq @emails
+      expect(Mail.find(:delete_after_find => false)).to be_empty
     end
 
     it "should handle the both of :delete_after_find and :count option" do
       expect do
-        Mail.find(:count => 5, :delete_after_find => true).should have(5).items
+        expect(Mail.find(:count => 5, :delete_after_find => true).size).to eq(5)
       end.to change { Mail.all.size }.by(-5)
       expect do
-        Mail.find(:count => 5, :delete_after_find => true).should have(5).items
+        expect(Mail.find(:count => 5, :delete_after_find => true).size).to eq(5)
       end.to change { Mail.all.size }.by(-5)
     end
 
     it "should handle the both of :count and :delete_after_find option" do
       15.times do |idx|
         expect do
-          Mail.find(:count => 1, :delete_after_find => true).should eq @emails[idx]
+          expect(Mail.find(:count => 1, :delete_after_find => true)).to eq @emails[idx]
         end.to change { Mail.all.size }.by(-1)
       end
-      Mail.find(:count => 1, :delete_after_find => true).should be_empty
+      expect(Mail.find(:count => 1, :delete_after_find => true)).to be_empty
     end
 
     it "should handle the :delete_after_find option with messages marked not for delete" do
@@ -94,7 +94,7 @@ describe "Test Retriever" do
         end
         i += 1
       end
-      Mail.all.should eq messages
+      expect(Mail.all).to eq messages
     end
 
   end

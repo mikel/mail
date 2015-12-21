@@ -7,8 +7,8 @@ describe "Round Tripping" do
     mail = Mail.new('Subject: FooBar')
     mail.body "This is Text"
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.subject.to_s.should eq "FooBar"
-    parsed_mail.body.to_s.should eq "This is Text"
+    expect(parsed_mail.subject.to_s).to eq "FooBar"
+    expect(parsed_mail.body.to_s).to eq "This is Text"
   end
 
   it "should round trip a html multipart email" do
@@ -21,11 +21,11 @@ describe "Round Tripping" do
       body "<b>This is HTML</b>"
     end
     parsed_mail = Mail.new(mail.to_s)
-    parsed_mail.mime_type.should eq 'multipart/alternative'
-    parsed_mail.boundary.should eq mail.boundary
-    parsed_mail.parts.length.should eq 2
-    parsed_mail.parts[0].body.to_s.should eq "This is Text"
-    parsed_mail.parts[1].body.to_s.should eq "<b>This is HTML</b>"
+    expect(parsed_mail.mime_type).to eq 'multipart/alternative'
+    expect(parsed_mail.boundary).to eq mail.boundary
+    expect(parsed_mail.parts.length).to eq 2
+    expect(parsed_mail.parts[0].body.to_s).to eq "This is Text"
+    expect(parsed_mail.parts[1].body.to_s).to eq "<b>This is HTML</b>"
   end
 
   it "should round trip an email" do
@@ -39,13 +39,13 @@ describe "Round Tripping" do
       date      Time.local(2009, 11, 6)
       add_file  :filename => "foo.txt", :content => "I have \ntwo lines\n\n"
     end
-    Mail.new(initial.encoded).encoded.should eq initial.encoded
+    expect(Mail.new(initial.encoded).encoded).to eq initial.encoded
   end
 
   it "should round trip attachment newlines" do
     body = "I have \ntwo lines\n\n"
     initial = Mail.new
     initial.add_file :filename => "foo.txt", :content => body
-    Mail.new(initial.encoded).attachments.first.decoded.should eq body
+    expect(Mail.new(initial.encoded).attachments.first.decoded).to eq body
   end
 end

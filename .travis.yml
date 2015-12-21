@@ -1,18 +1,52 @@
 language: ruby
+
 rvm:
   - 1.8.7
   - 1.9.2
   - 1.9.3
   - 2.0.0
+  - 2.1.2
   - ruby-head
-  - jruby-18mode
-  - jruby-19mode
+  - jruby
   - jruby-head
-  - rbx-18mode
-  - rbx-19mode
+  - rbx-2
+
+gemfile:
+  - gemfiles/mime_types_1.16.gemfile
+  - gemfiles/mime_types_2.0.gemfile
+  - gemfiles/mime_types_2.1.gemfile
+  - gemfiles/mime_types_2.2.gemfile
+  - gemfiles/mime_types_2.3.gemfile
+  - gemfiles/mime_types_2.latest.gemfile
+  - gemfiles/mime_types_edge.gemfile
+
+sudo: false
+
+bundler_args: --path vendor/bundle
+
+script: bundle exec rake
+
+env:
+  - RUBYOPT=-w
+
+before_install:
+  - bundle config --local without local_development
+
 matrix:
+  exclude:
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.0.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.1.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.2.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.3.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_2.latest.gemfile
+    - rvm: 1.8.7
+      gemfile: gemfiles/mime_types_edge.gemfile
   allow_failures:
     - rvm: ruby-head    # green, but unstable
     - rvm: jruby-head   # green, but unstable
-    - rvm: rbx-18mode   # seems to be running 1.9 mode instead!?
-    - rvm: rbx-19mode   # segfaulting in String#ascii_only?
+  fast_finish: true

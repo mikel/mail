@@ -7,7 +7,7 @@ module Mail
 
   module Encodings
 
-    include Mail::Patterns
+    include Mail::Constants
     extend  Mail::Utilities
 
     @transfer_encodings = {}
@@ -48,6 +48,14 @@ module Mail
 
     def Encodings.get_name(enc)
       underscoreize(enc).downcase
+    end
+
+    def Encodings.transcode_charset(str, from_charset, to_charset = 'UTF-8')
+      if from_charset
+        RubyVer.transcode_charset str, from_charset, to_charset
+      else
+        str
+      end
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
@@ -122,8 +130,8 @@ module Mail
       lines.each do |line|
         line.gsub!(ENCODED_VALUE) do |string|
           case $2
-            when *B_VALUES then b_value_decode(string)
-            when *Q_VALUES then q_value_decode(string)
+          when *B_VALUES then b_value_decode(string)
+          when *Q_VALUES then q_value_decode(string)
           end
         end
       end.join("")
@@ -260,7 +268,7 @@ module Mail
       lines.each_slice(2) do |unencoded, encoded|
         if encoded
           encoding = value_encoding_from_string(encoded)
-          if encoding == previous_encoding && unencoded.blank?
+          if encoding == previous_encoding && Utilities.blank?(unencoded)
             results.last << encoded
           else
             results << unencoded unless unencoded == EMPTY

@@ -54,19 +54,23 @@ module Mail
       klass.const_get( string )
     end
 
+    def Ruby18.transcode_charset(str, from_encoding, to_encoding = 'UTF-8')
+      Iconv.conv("#{normalize_iconv_charset_encoding(to_encoding)}//IGNORE", normalize_iconv_charset_encoding(from_encoding), str)
+    end
+
     def Ruby18.b_value_encode(str, encoding)
       # Ruby 1.8 requires an encoding to work
       raise ArgumentError, "Must supply an encoding" if encoding.nil?
       encoding = encoding.to_s.upcase.gsub('_', '-')
-      [Encodings::Base64.encode(str), fix_encoding(encoding)]
+      [Encodings::Base64.encode(str), normalize_iconv_charset_encoding(encoding)]
     end
 
     def Ruby18.b_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Bb]\?(.+)?\?\=/m)
+      match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
       if match
         encoding = match[1]
         str = Ruby18.decode_base64(match[2])
-        str = Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str)
+        str = transcode_charset(str, encoding)
       end
       str
     end
@@ -79,14 +83,14 @@ module Mail
     end
 
     def Ruby18.q_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Qq]\?(.+)?\?\=/m)
+      match = str.match(/\=\?(.+)?\?[Qq]\?(.*)\?\=/m)
       if match
         encoding = match[1]
         string = match[2].gsub(/_/, '=20')
         # Remove trailing = if it exists in a Q encoding
         string = string.sub(/\=$/, '')
         str = Encodings::QuotedPrintable.decode(string)
-        str = Iconv.conv('UTF-8//IGNORE', fix_encoding(encoding), str)
+        str = transcode_charset(str, encoding)
       end
       str
     end
@@ -103,7 +107,7 @@ module Mail
 
     private
 
-    def Ruby18.fix_encoding(encoding)
+    def Ruby18.normalize_iconv_charset_encoding(encoding)
       case encoding.upcase
       when 'UTF8', 'UTF_8'
         'UTF-8'
@@ -111,6 +115,8 @@ module Mail
         'UTF-16BE'
       when 'UTF32', 'UTF-32'
         'UTF-32BE'
+      when 'KS_C_5601-1987'
+        'CP949'
       else
         encoding
       end

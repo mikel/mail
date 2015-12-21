@@ -11,11 +11,11 @@ describe "Test emails" do
     # message identifier, and a textual message in the body.
     it "should handle the basic test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example01.eml'))
-      mail.from.should eq ["jdoe@machine.example"]
-      mail.to.should eq ['mary@example.net']
-      mail.message_id.should eq '1234@local.machine.example'
-      mail.date.should eq ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.should eq 'Saying Hello'
+      expect(mail.from).to eq ["jdoe@machine.example"]
+      expect(mail.to).to eq ['mary@example.net']
+      expect(mail.message_id).to eq '1234@local.machine.example'
+      expect(mail.date).to eq ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
+      expect(mail.subject).to eq 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -24,12 +24,12 @@ describe "Test emails" do
     # sender field would be used:
     it "should handle the sender test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example02.eml'))
-      mail.from.should eq ['jdoe@machine.example']
-      mail.sender.should eq 'mjones@machine.example'
-      mail.to.should eq ['mary@example.net']
-      mail.message_id.should eq '1234@local.machine.example'
-      mail.date.should eq ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
-      mail.subject.should eq 'Saying Hello'
+      expect(mail.from).to eq ['jdoe@machine.example']
+      expect(mail.sender).to eq 'mjones@machine.example'
+      expect(mail.to).to eq ['mary@example.net']
+      expect(mail.message_id).to eq '1234@local.machine.example'
+      expect(mail.date).to eq ::DateTime.parse('21 Nov 1997 09:55:06 -0600')
+      expect(mail.subject).to eq 'Saying Hello'
     end
 
     # From RFC 2822:
@@ -49,11 +49,11 @@ describe "Test emails" do
     # "Giant; \"Big\" Box" <sysservices@example.net>
     it "should handle multiple recipients test email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example03.eml'))
-      mail.from.should eq ['john.q.public@example.com']
-      mail.to.should eq ['mary@x.test', 'jdoe@example.org', 'one@y.test']
-      mail.cc.should eq ['boss@nil.test', "sysservices@example.net"]
-      mail.message_id.should eq '5678.21-Nov-1997@example.com'
-      mail.date.should eq ::DateTime.parse('1 Jul 2003 10:52:37 +0200')
+      expect(mail.from).to eq ['john.q.public@example.com']
+      expect(mail.to).to eq ['mary@x.test', 'jdoe@example.org', 'one@y.test']
+      expect(mail.cc).to eq ['boss@nil.test', "sysservices@example.net"]
+      expect(mail.message_id).to eq '5678.21-Nov-1997@example.com'
+      expect(mail.date).to eq ::DateTime.parse('1 Jul 2003 10:52:37 +0200')
     end
 
     # From RFC 2822:
@@ -63,11 +63,11 @@ describe "Test emails" do
     # group recipient named Undisclosed recipients.
     it "should handle group address email test" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example04.eml'))
-      mail.from.should eq ['pete@silly.example']
-      mail.to.should eq ['c@a.test', 'joe@where.test', 'jdoe@one.test']
-      mail[:cc].group_names.should eq ['Undisclosed recipients']
-      mail.message_id.should eq 'testabcd.1234@silly.example'
-      mail.date.should eq ::DateTime.parse('Thu, 13 Feb 1969 23:32:54 -0330')
+      expect(mail.from).to eq ['pete@silly.example']
+      expect(mail.to).to eq ['c@a.test', 'joe@where.test', 'jdoe@one.test']
+      expect(mail[:cc].group_names).to eq ['Undisclosed recipients']
+      expect(mail.message_id).to eq 'testabcd.1234@silly.example'
+      expect(mail.date).to eq ::DateTime.parse('Thu, 13 Feb 1969 23:32:54 -0330')
     end
 
 
@@ -82,11 +82,11 @@ describe "Test emails" do
     # fields in each message.
     it "should handle reply messages" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example05.eml'))
-      mail.from.should eq ["jdoe@machine.example"]
-      mail.to.should eq ['mary@example.net']
-      mail.subject.should eq 'Saying Hello'
-      mail.message_id.should eq '1234@local.machine.example'
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
+      expect(mail.from).to eq ["jdoe@machine.example"]
+      expect(mail.to).to eq ['mary@example.net']
+      expect(mail.subject).to eq 'Saying Hello'
+      expect(mail.message_id).to eq '1234@local.machine.example'
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
     end
 
     # From RFC 2822:
@@ -97,27 +97,27 @@ describe "Test emails" do
     # "Reply-To:" field instead of the address in the "From:" field.
     it "should handle reply message 2" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example06.eml'))
-      mail.from.should eq ['mary@example.net']
-      mail.to.should eq ['jdoe@machine.example']
-      mail.reply_to.should eq ['smith@home.example']
-      mail.subject.should eq 'Re: Saying Hello'
-      mail.message_id.should eq '3456@example.net'
-      mail[:in_reply_to].message_ids.should eq ['1234@local.machine.example']
-      mail[:references].message_ids.should eq ['1234@local.machine.example']
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 10:01:10 -0600')
+      expect(mail.from).to eq ['mary@example.net']
+      expect(mail.to).to eq ['jdoe@machine.example']
+      expect(mail.reply_to).to eq ['smith@home.example']
+      expect(mail.subject).to eq 'Re: Saying Hello'
+      expect(mail.message_id).to eq '3456@example.net'
+      expect(mail[:in_reply_to].message_ids).to eq ['1234@local.machine.example']
+      expect(mail[:references].message_ids).to eq ['1234@local.machine.example']
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 10:01:10 -0600')
     end
 
     # From RFC 2822:
     # Final reply message
     it "should handle the final reply message" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example07.eml'))
-      mail.to.should eq ['smith@home.example']
-      mail.from.should eq ['jdoe@machine.example']
-      mail.subject.should eq 'Re: Saying Hello'
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 11:00:00 -0600')
-      mail.message_id.should eq 'abcd.1234@local.machine.tld'
-      mail.in_reply_to.should eq '3456@example.net'
-      mail[:references].message_ids.should eq ['1234@local.machine.example', '3456@example.net']
+      expect(mail.to).to eq ['smith@home.example']
+      expect(mail.from).to eq ['jdoe@machine.example']
+      expect(mail.subject).to eq 'Re: Saying Hello'
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 11:00:00 -0600')
+      expect(mail.message_id).to eq 'abcd.1234@local.machine.tld'
+      expect(mail.in_reply_to).to eq '3456@example.net'
+      expect(mail[:references].message_ids).to eq ['1234@local.machine.example', '3456@example.net']
     end
 
     # From RFC2822
@@ -135,15 +135,15 @@ describe "Test emails" do
     # and send that.
     it "should handle the rfc resent example email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example08.eml'))
-      mail.resent_from.should eq ['mary@example.net']
-      mail.resent_to.should eq ['j-brown@other.example']
-      mail.resent_date.should eq ::DateTime.parse('Mon, 24 Nov 1997 14:22:01 -0800')
-      mail.resent_message_id.should eq '78910@example.net'
-      mail.from.should eq ['jdoe@machine.example']
-      mail.to.should eq ['mary@example.net']
-      mail.subject.should eq 'Saying Hello'
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.should eq '1234@local.machine.example'
+      expect(mail.resent_from).to eq ['mary@example.net']
+      expect(mail.resent_to).to eq ['j-brown@other.example']
+      expect(mail.resent_date).to eq ::DateTime.parse('Mon, 24 Nov 1997 14:22:01 -0800')
+      expect(mail.resent_message_id).to eq '78910@example.net'
+      expect(mail.from).to eq ['jdoe@machine.example']
+      expect(mail.to).to eq ['mary@example.net']
+      expect(mail.subject).to eq 'Saying Hello'
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
+      expect(mail.message_id).to eq '1234@local.machine.example'
     end
 
     # A.4. Messages with trace fields
@@ -154,15 +154,15 @@ describe "Test emails" do
     # can be long.
     it "should handle the RFC trace example email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example09.eml'))
-      mail.received[0].info.should eq 'from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>'
-      mail.received[0].date_time.should eq ::DateTime.parse('21 Nov 1997 10:05:43 -0600')
-      mail.received[1].info.should eq 'from machine.example by x.y.test'
-      mail.received[1].date_time.should eq ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
-      mail.from.should eq ['jdoe@machine.example']
-      mail.to.should eq ['mary@example.net']
-      mail.subject.should eq 'Saying Hello'
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.should eq '1234@local.machine.example'
+      expect(mail.received[0].info).to eq 'from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>'
+      expect(mail.received[0].date_time).to eq ::DateTime.parse('21 Nov 1997 10:05:43 -0600')
+      expect(mail.received[1].info).to eq 'from machine.example by x.y.test'
+      expect(mail.received[1].date_time).to eq ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
+      expect(mail.from).to eq ['jdoe@machine.example']
+      expect(mail.to).to eq ['mary@example.net']
+      expect(mail.subject).to eq 'Saying Hello'
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
+      expect(mail.message_id).to eq '1234@local.machine.example'
     end
 
     # A.5. White space, comments, and other oddities
@@ -185,13 +185,13 @@ describe "Test emails" do
     # (but not within) the identifier in the "Message-ID:" field.
 
     it "should handle the rfc whitespace test email" do
-      pending "fixed in pr#487"
+      skip "fixed in pr#487"
       mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
-      mail.from.should eq ["pete(his account)@silly.test"]
-      mail.to.should eq  ["c@public.example", "joe@example.org", "jdoe@one.test"]
-      mail[:cc].group_names.should eq ['(Empty list)(start)Undisclosed recipients ']
-      mail.date.should eq ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
-      mail.message_id.should eq 'testabcd.1234@silly.test'
+      expect(mail.from).to eq ["pete(his account)@silly.test"]
+      expect(mail.to).to eq  ["c@public.example", "joe@example.org", "jdoe@one.test"]
+      expect(mail[:cc].group_names).to eq ['(Empty list)(start)Undisclosed recipients ']
+      expect(mail.date).to eq ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
+      expect(mail.message_id).to eq 'testabcd.1234@silly.test'
     end
 
     # A.6. Obsoleted forms
@@ -206,11 +206,11 @@ describe "Test emails" do
     it "should handle the rfc obsolete addressing" do
       pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example11.eml'))
-      mail[:from].addresses.should eq ['john.q.public@example.com']
-      mail.from.should eq '"Joe Q. Public" <john.q.public@example.com>'
-      mail.to.should eq ["@machine.tld:mary@example.net", 'jdoe@test.example']
-      mail.date.should eq ::DateTime.parse('Tue, 1 Jul 2003 10:52:37 +0200')
-      mail.message_id.should eq '5678.21-Nov-1997@example.com'
+      expect(mail[:from].addresses).to eq ['john.q.public@example.com']
+      expect(mail.from).to eq '"Joe Q. Public" <john.q.public@example.com>'
+      expect(mail.to).to eq ["@machine.tld:mary@example.net", 'jdoe@test.example']
+      expect(mail.date).to eq ::DateTime.parse('Tue, 1 Jul 2003 10:52:37 +0200')
+      expect(mail.message_id).to eq '5678.21-Nov-1997@example.com'
     end
 
     # A.6.2. Obsolete dates
@@ -222,10 +222,10 @@ describe "Test emails" do
     it "should handle the rfc obsolete dates" do
       pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example12.eml'))
-      mail.from.should eq 'jdoe@machine.example'
-      mail.to.should eq 'mary@example.net'
-      mail.date.should eq ::DateTime.parse('21 Nov 97 09:55:06 GMT')
-      mail.message_id.should eq '1234@local.machine.example'
+      expect(mail.from).to eq 'jdoe@machine.example'
+      expect(mail.to).to eq 'mary@example.net'
+      expect(mail.date).to eq ::DateTime.parse('21 Nov 97 09:55:06 GMT')
+      expect(mail.message_id).to eq '1234@local.machine.example'
     end
 
     # A.6.3. Obsolete white space and comments
@@ -243,19 +243,19 @@ describe "Test emails" do
     it "should handle the rfc obsolete whitespace email" do
       pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example13.eml'))
-      mail.from.should eq 'John Doe <jdoe@machine(comment).example>'
-      mail.to.should eq 'Mary Smith <mary@example.net>'
-      mail.date.should eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
-      mail.message_id.should eq '1234@local(blah).machine.example'
-      doing { Mail::Message.new(email) }.should_not raise_error
+      expect(mail.from).to eq 'John Doe <jdoe@machine(comment).example>'
+      expect(mail.to).to eq 'Mary Smith <mary@example.net>'
+      expect(mail.date).to eq ::DateTime.parse('Fri, 21 Nov 1997 09:55:06 -0600')
+      expect(mail.message_id).to eq '1234@local(blah).machine.example'
+      expect { Mail::Message.new(email) }.not_to raise_error
     end
 
     it "should handle folding subject" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example14.eml'))
-      mail.from.should eq ["atsushi@example.com"]
-      mail.subject.should eq "Re: TEST テストテスト"
-      mail.message_id.should eq '0CC5E11ED2C1D@example.com'
-      mail.body.decoded.should eq "Hello\n"
+      expect(mail.from).to eq ["atsushi@example.com"]
+      expect(mail.subject).to eq "Re: TEST テストテスト"
+      expect(mail.message_id).to eq '0CC5E11ED2C1D@example.com'
+      expect(mail.body.decoded).to eq "Hello\n"
     end
   end
 
@@ -267,11 +267,11 @@ describe "Test emails" do
       end
 
       it "should return an 'encoded' version without raising a SystemStackError" do
-        doing { @message.encoded }.should_not raise_error
+        expect { @message.encoded }.not_to raise_error
       end
 
       it "should have two parts" do
-        @message.parts.length.should eq 2
+        expect(@message.parts.length).to eq 2
       end
 
     end
@@ -282,12 +282,12 @@ describe "Test emails" do
       end
 
       it "should not error on multiart/signed emails" do
-        doing { @message.encoded }.should_not raise_error
+        expect { @message.encoded }.not_to raise_error
       end
 
       it "should have one attachment called signature.asc" do
-        @message.attachments.length.should eq 1
-        @message.attachments.first.filename.should eq 'signature.asc'
+        expect(@message.attachments.length).to eq 1
+        expect(@message.attachments.first.filename).to eq 'signature.asc'
       end
 
     end
@@ -298,11 +298,11 @@ describe "Test emails" do
       end
 
       it "should parse the email and encode without crashing" do
-        doing { @message.encoded }.should_not raise_error
+        expect { @message.encoded }.not_to raise_error
       end
 
       it "should return an empty groups list" do
-        @message[:to].group_addresses.should eq []
+        expect(@message[:to].group_addresses).to eq []
       end
     end
 
@@ -315,11 +315,11 @@ describe "Test emails" do
     end
 
     it "should parse the email and encode without crashing" do
-      doing { @message.encoded }.should_not raise_error
+      expect { @message.encoded }.not_to raise_error
     end
 
     it "should return an empty groups list" do
-      @message.to.should eq ['user-example@aol.com', 'e-s-a-s-2200@app.ar.com']
+      expect(@message.to).to eq ['user-example@aol.com', 'e-s-a-s-2200@app.ar.com']
     end
 
   end

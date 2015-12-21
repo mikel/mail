@@ -23,30 +23,39 @@ module Mail
         raise "Unimplemented"
       end
 
+      def self.compatible_input?(str)
+        true
+      end
+
       def self.to_s
         self::NAME
       end
 
       def self.get_best_compatible(source_encoding, str)
-        if self.can_transport? source_encoding then
-            source_encoding 
+        if self.can_transport?(source_encoding) && self.compatible_input?(str)
+          source_encoding
         else
-            choices = []
-            Encodings.get_all.each do |enc|
-                choices << enc if self.can_transport? enc and enc.can_encode? source_encoding
+          choices = Encodings.get_all.select do |enc|
+            self.can_transport?(enc) && enc.can_encode?(source_encoding)
+          end
+
+          best = nil
+          best_cost = nil
+
+          choices.each do |enc|
+            # If the current choice cannot be transported safely,
+            # give priority to other choices but allow it to be used as a fallback.
+            this_cost = enc.cost(str) if enc.compatible_input?(str)
+
+            if !best_cost || (this_cost && this_cost < best_cost)
+              best_cost = this_cost
+              best = enc
+            elsif this_cost == best_cost
+              best = enc if enc::PRIORITY < best::PRIORITY
             end
-            best = nil 
-            best_cost = 100
-            choices.each do |enc|
-                this_cost = enc.cost str
-                if this_cost < best_cost then
-                    best_cost = this_cost
-                    best = enc
-                elsif this_cost == best_cost then 
-                    best = enc if enc::PRIORITY < best::PRIORITY
-                end
-            end
-            best
+          end
+
+          best
         end
       end
 

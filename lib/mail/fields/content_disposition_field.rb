@@ -3,10 +3,10 @@ require 'mail/fields/common/parameter_hash'
 
 module Mail
   class ContentDispositionField < StructuredField
-    
+
     FIELD_NAME = 'content-disposition'
     CAPITALIZED_FIELD = 'Content-Disposition'
-    
+
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       ensure_filename_quoted(value)
@@ -14,13 +14,13 @@ module Mail
       self.parse
       self
     end
-    
+
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::ContentDispositionElement.new(val)
       end
     end
-    
+
     def element
       @element ||= Mail::ContentDispositionElement.new(value)
     end
@@ -28,20 +28,20 @@ module Mail
     def disposition_type
       element.disposition_type
     end
-    
+
     def parameters
       @parameters = ParameterHash.new
-      element.parameters.each { |p| @parameters.merge!(p) }
+      element.parameters.each { |p| @parameters.merge!(p) } unless element.parameters.nil?
       @parameters
     end
 
     def filename
       case
-      when !parameters['filename'].blank?
+      when !Utilities.blank?(parameters['filename'])
         @filename = parameters['filename']
-      when !parameters['name'].blank?
+      when !Utilities.blank?(parameters['name'])
         @filename = parameters['name']
-      else 
+      else
         @filename = nil
       end
       @filename
@@ -56,7 +56,7 @@ module Mail
       end
       "#{CAPITALIZED_FIELD}: #{disposition_type}" + p
     end
-    
+
     def decoded
       if parameters.length > 0
         p = "; #{parameters.decoded}"
