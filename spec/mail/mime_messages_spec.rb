@@ -387,6 +387,23 @@ describe "MIME Emails" do
         expect(mail.attachments[1].filename).to eq 'smime.p7s'
       end
 
+      Dir.glob(fixture('attachments', "test.*")).each do |test_attachment|
+        # This spec fails for (most?) jpegs in 1.8.7
+        next if test_attachment.end_with?('test.jpg')
+
+        it "should find binary encoded attachments of type #{File.extname(test_attachment)}" do
+          raw_mail = File.open(fixture('emails', 'mime_emails', 'raw_email_with_binary_encoded.eml'), 'rb').read
+          raw_file = File.open(test_attachment, "rb").read
+          p1, p2   = raw_mail.split('BINARY_CONTENT_GOES_HERE')
+
+          mail_with_file = p1 + raw_file + p2
+
+          mail = Mail.read_from_string(mail_with_file)
+          # mail.attachments.first.decoded.should eq raw_file
+          # Test size, not content. Testing content makes for very ugly spec failures
+          mail.attachments.first.decoded.size.should eq raw_file.size
+        end
+      end
     end
 
     describe "adding a file attachment" do
