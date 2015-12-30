@@ -377,6 +377,7 @@ describe "Utilities Module" do
       expect(uri_unescape("@?@!")).to eq uri_parser.unescape("@?@!")
     end
   end
+  
 
   describe "blank method" do
     it "should say nil is blank" do
@@ -421,6 +422,118 @@ describe "Utilities Module" do
       expect(Mail::Utilities.blank?({:key => {}})).not_to be_truthy
     end
   end
-
   
+  describe "to_lf" do
+    it "should change a single CR to LF" do
+      expect(Mail::Utilities.to_lf("\r")).to eq "\n"
+    end
+
+    it "should change multiple LF to CRLF" do
+      expect(Mail::Utilities.to_lf("\r\r")).to eq "\n\n"
+    end
+
+    it "should change a single CRLF to LF" do
+      expect(Mail::Utilities.to_lf("\r\n")).to eq "\n"
+    end
+
+    it "should change multiple CR to LF" do
+      expect(Mail::Utilities.to_lf("\r\n\r\n")).to eq "\n\n"
+    end
+
+    it "should not change LF" do
+      expect(Mail::Utilities.to_lf("\n")).to eq "\n"
+    end
+
+    it "should not change multiple CRLF" do
+      expect(Mail::Utilities.to_lf("\n\n")).to eq "\n\n"
+    end
+
+    it "should handle a mix" do
+      expect(Mail::Utilities.to_lf("\r \n\r\n")).to eq "\n \n\n"
+    end
+
+    describe "to_lf method on String" do
+      it "should leave lf as lf" do
+        expect(Mail::Utilities.to_lf("\n")).to eq "\n"
+      end
+
+      it "should clean just cr to lf" do
+        expect(Mail::Utilities.to_lf("\r")).to eq "\n"
+      end
+
+      it "should leave crlf as lf" do
+        expect(Mail::Utilities.to_lf("\r\n")).to eq "\n"
+      end
+
+      it "should handle japanese characters" do
+        string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
+        expect(Mail::Utilities.to_lf(string)).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\n\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\n\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\n\n"
+      end
+    end
+
+    describe "methods on NilClass" do
+      it "should return empty string on to_lf" do
+        expect(Mail::Utilities.to_lf(nil)).to eq ''
+      end
+    end
+
+  end
+
+  describe "to_crlf" do
+
+    describe "to_crlf method on String" do
+      it "should clean just lf to crlf" do
+        expect(Mail::Utilities.to_crlf("\n")).to eq "\r\n"
+      end
+
+      it "should clean just cr to crlf" do
+        expect(Mail::Utilities.to_crlf("\r")).to eq "\r\n"
+      end
+
+      it "should leave crlf as crlf" do
+        expect(Mail::Utilities.to_crlf("\r\n")).to eq "\r\n"
+      end
+
+      it "should handle japanese characters" do
+        string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
+        expect(Mail::Utilities.to_crlf(string)).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
+      end
+
+    end
+
+    describe "methods on NilClass" do
+      it "should return empty string on to_crlf" do
+        expect(Mail::Utilities.to_crlf(nil)).to eq ''
+      end
+    end
+
+    describe "to_crlf" do
+
+      it "should change a single LF to CRLF" do
+        expect(Mail::Utilities.to_crlf("\n")).to eq "\r\n"
+      end
+
+      it "should change multiple LF to CRLF" do
+        expect(Mail::Utilities.to_crlf("\n\n")).to eq "\r\n\r\n"
+      end
+
+      it "should change a single CR to CRLF" do
+        expect(Mail::Utilities.to_crlf("\r")).to eq "\r\n"
+      end
+
+      it "should not change CRLF" do
+        expect(Mail::Utilities.to_crlf("\r\n")).to eq "\r\n"
+      end
+
+      it "should not change multiple CRLF" do
+        expect(Mail::Utilities.to_crlf("\r\n\r\n")).to eq "\r\n\r\n"
+      end
+
+      it "should handle a mix" do
+        expect(Mail::Utilities.to_crlf("\r \n\r\n")).to eq "\r\n \r\n\r\n"
+      end
+    end
+
+  end
+
 end

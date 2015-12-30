@@ -49,7 +49,7 @@ module Mail
     # me the example so we can fix it.
     def initialize(header_text = nil, charset = nil)
       @charset = charset
-      self.raw_source = header_text.to_crlf.lstrip
+      self.raw_source = ::Mail::Utilities.to_crlf(header_text).lstrip
       split_header if header_text
     end
 
