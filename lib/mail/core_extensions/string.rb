@@ -4,7 +4,7 @@ class String #:nodoc:
   unless method_defined?(:ascii_only?)
     # Backport from Ruby 1.9 checks for non-us-ascii characters.
     def ascii_only?
-      raise 'not tested'
+      raise "let's see"
       self !~ MATCH_NON_US_ASCII
     end
 
