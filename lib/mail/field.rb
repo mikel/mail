@@ -152,6 +152,8 @@ module Mail
     end
     
     def create_field(name, value, charset)
+      value = value.gsub(/[\r\n \t]+/m, ' ') if value.is_a?(String)
+
       begin
         self.field = new_field(name, value, charset)
       rescue Mail::Field::ParseError => e
