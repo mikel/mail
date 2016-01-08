@@ -12,7 +12,7 @@ module Mail
     control      = %Q|\x00-\x1f\x7f-\xff|
 
     if control.respond_to?(:force_encoding)
-      control = control.force_encoding(Encoding::BINARY)
+      control = control.dup.force_encoding(Encoding::BINARY)
     end
 
     CRLF          = /\r\n/

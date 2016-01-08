@@ -204,7 +204,7 @@ module Mail
                            content-id content-disposition content-location]
 
     def encoded
-      buffer = ''
+      buffer = String.new
       buffer.force_encoding('us-ascii') if buffer.respond_to?(:force_encoding)
       fields.each do |field|
         buffer << field.encoded
