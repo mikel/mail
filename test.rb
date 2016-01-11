@@ -1,10 +1,5 @@
 require 'rubygems'
 require 'mail'
-begin
-  require 'ruby-debug'
-rescue LoadError
-  STDERR.puts "Continuing without ruby-debug"
-end
 
 smtp = { :address => 'mail.fiendz.org', :port => 587, :domain => 'fiendz.org', :user_name => 'test@fiendz.org', :password => 'foobar', :enable_starttls_auto => true, :openssl_verify_mode => 'none' }
 Mail.defaults { delivery_method :smtp, smtp }
