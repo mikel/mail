@@ -29,6 +29,8 @@ gemfile:
 
 sudo: false
 
+bundler_args: --path vendor/bundle
+
 script: bundle exec rake
 
 env:
@@ -73,6 +75,9 @@ matrix:
       gemfile: gemfiles/mime_types_edge.gemfile
     - rvm: 1.8.7
       gemfile: gemfiles/mime_types_edge.gemfile
+    - rvm: jruby
+      gemfile: gemfiles/mime_types_edge.gemfile
+
   allow_failures:
     - rvm: ruby-head    # green, but unstable
     - rvm: jruby-head   # green, but unstable
