@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "jruby-openssl", :platforms => :jruby
-gem "mime-types", :github => "halostatue/mime-types"
+gem "mime-types", :github => "mime-types/ruby-mime-types"
 
 group :local_development, :test do
   gem "appraisal", "~> 1.0"

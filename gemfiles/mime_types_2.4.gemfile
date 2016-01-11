@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "jruby-openssl", :platforms => :jruby
-gem "mime-types", "~> 2.4"
+gem "mime-types", "~> 2.4.0"
 
 group :local_development, :test do
   gem "appraisal", "~> 1.0"
