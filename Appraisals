@@ -18,10 +18,30 @@ appraise "mime-types-2.3" do
   gem "mime-types", "~> 2.3.0"
 end
 
-appraise "mime-types-2.latest" do
-  gem "mime-types", "~> 2.3"
+appraise "mime-types-2.4" do
+  gem "mime-types", "~> 2.4.0"
+end
+
+appraise "mime-types-2.5" do
+  gem "mime-types", "~> 2.5.0"
+end
+
+appraise "mime-types-2.6" do
+  gem "mime-types", "~> 2.6.0"
+end
+
+appraise "mime-types-2.6-columnar" do
+  gem "mime-types", "~> 2.6.0", :require => 'mime/types/columnar'
+end
+
+appraise "mime-types-2.99" do
+  gem "mime-types", "~> 2.99.0"
+end
+
+appraise "mime-types-3.0" do
+  gem "mime-types", "~> 3.0.0"
 end
 
 appraise "mime-types-edge" do
-  gem "mime-types", :github => "halostatue/mime-types"
+  gem "mime-types", :github => "mime-types/ruby-mime-types"
 end
