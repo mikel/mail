@@ -223,7 +223,26 @@ module Mail
         enum.each_with_index.map(&block)
       end
 
-      def self.to_lf input
+    end
+    
+    # Test String#encode works correctly with line endings.
+    # Some versions of Ruby (e.g. MRI <1.9, JRuby, Rubinius) line ending
+    # normalization does not work correctly or did not have #encode.
+    if ("\r".encode(:universal_newline => true) rescue nil) == LF &&
+      (LF.encode(:crlf_newline => true) rescue nil) == CRLF
+      # Using String#encode is better performing than Regexp
+
+      def self.to_lf(input)
+        input.kind_of?(String) ? input.to_str.encode(:universal_newline => true) : ''
+      end
+
+      def self.to_crlf(input)
+        input.kind_of?(String) ? input.to_str.encode(:universal_newline => true).encode!(:crlf_newline => true) : ''
+      end
+
+    else
+
+      def self.to_lf(input)
         input.kind_of?(String) ? input.to_str.gsub(/\r\n|\r/, LF) : ''
       end
 
@@ -236,7 +255,7 @@ module Mail
         CRLF_REGEX = /\n|\r\n|\r/
       end
 
-      def self.to_crlf input
+      def self.to_crlf(input)
         input.kind_of?(String) ? input.to_str.gsub(CRLF_REGEX, CRLF) : ''
       end
 
