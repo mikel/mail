@@ -477,6 +477,14 @@ describe "Utilities Module" do
       end
     end
 
+    describe "methods on subclass" do
+      it "should return String not subclass" do
+        klass = Class.new(String)
+        string = klass.new('')
+        expect(Mail::Utilities.to_lf(string)).to be_an_instance_of(String)
+      end
+    end
+
   end
 
   describe "to_crlf" do
@@ -504,6 +512,14 @@ describe "Utilities Module" do
     describe "methods on NilClass" do
       it "should return empty string on to_crlf" do
         expect(Mail::Utilities.to_crlf(nil)).to eq ''
+      end
+    end
+
+    describe "methods on subclass" do
+      it "should return String not subclass" do
+        klass = Class.new(String)
+        string = klass.new('')
+        expect(Mail::Utilities.to_crlf(string)).to be_an_instance_of(String)
       end
     end
 
