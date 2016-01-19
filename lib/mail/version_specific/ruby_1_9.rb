@@ -73,6 +73,9 @@ module Mail
         string = string.sub(/\=$/, '')
         str = Encodings::QuotedPrintable.decode(string)
         str.force_encoding(pick_encoding(charset))
+        # We assume that binary strings hold utf-8 directly to work around
+        # jruby/jruby#829 which subtly changes String#encode semantics.
+        str.force_encoding('utf-8') if str.encoding == Encoding::ASCII_8BIT
       end
       decoded = str.encode("utf-8", :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode("utf-16le", :invalid => :replace, :replace => "").encode("utf-8")
