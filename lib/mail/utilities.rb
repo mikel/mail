@@ -233,11 +233,11 @@ module Mail
       # Using String#encode is better performing than Regexp
 
       def self.to_lf(input)
-        input.kind_of?(String) ? input.to_str.encode(:universal_newline => true) : ''
+        input.kind_of?(String) ? input.to_str.encode(input.encoding, :universal_newline => true) : ''
       end
 
       def self.to_crlf(input)
-        input.kind_of?(String) ? input.to_str.encode(:universal_newline => true).encode!(:crlf_newline => true) : ''
+        input.kind_of?(String) ? input.to_str.encode(input.encoding, :universal_newline => true).encode!(input.encoding, :crlf_newline => true) : ''
       end
 
     else
