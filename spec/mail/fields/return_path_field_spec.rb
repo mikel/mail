@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Mail::ReturnPathField do
   it "should allow you to specify a field" do
-    rp = Mail::ReturnPathField.new('Return-Path: mikel@test.lindsaar.net')
+    rp = Mail::ReturnPathField.new('mikel@test.lindsaar.net')
     expect(rp.address).to eq 'mikel@test.lindsaar.net'
   end
   
   it "should encode the addr_spec in <>" do
-    rp = Mail::ReturnPathField.new('Return-Path: mikel@test.lindsaar.net')
+    rp = Mail::ReturnPathField.new('mikel@test.lindsaar.net')
     expect(rp.encoded).to eq "Return-Path: <mikel@test.lindsaar.net>\r\n"
   end
 

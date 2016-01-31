@@ -8,7 +8,7 @@ describe Mail::SenderField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::SenderField.new("Sender: Mikel") }.not_to raise_error
+      expect { Mail::SenderField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
@@ -16,7 +16,7 @@ describe Mail::SenderField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>')
+      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
       expect(t.name).to eq 'Sender'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     end
@@ -29,7 +29,7 @@ describe Mail::SenderField do
 
     it "should reject headers with multiple mailboxes" do
       pending 'Sender accepts an address list now, but should only accept a single address'
-      expect { Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.to raise_error
+      expect { Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.to raise_error
     end
   end
 

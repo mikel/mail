@@ -17,7 +17,7 @@ describe Mail::ToField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ToField.new('To: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::ToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'To'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end

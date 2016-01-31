@@ -75,7 +75,7 @@ describe Mail::ContentTypeField do
     end
 
     it "should accept a string with the field name" do
-      c = Mail::ContentTypeField.new('Content-Type: text/plain')
+      c = Mail::ContentTypeField.new('text/plain')
       expect(c.name).to eq 'Content-Type'
       expect(c.value).to eq 'text/plain'
     end
@@ -93,7 +93,7 @@ describe Mail::ContentTypeField do
     end
 
     it "should render encoded" do
-      c = Mail::ContentTypeField.new('Content-Type: text/plain')
+      c = Mail::ContentTypeField.new('text/plain')
       expect(c.encoded).to eq "Content-Type: text/plain\r\n"
     end
 
@@ -668,12 +668,12 @@ describe Mail::ContentTypeField do
   describe "handling badly formated content-type fields" do
 
     it "should handle missing sub-type on a text content type" do
-      c = Mail::ContentTypeField.new('Content-Type: text')
+      c = Mail::ContentTypeField.new('text')
       expect(c.content_type).to eq 'text/plain'
     end
 
     it "should handle missing ; after content-type" do
-      c = Mail::ContentTypeField.new('Content-Type: multipart/mixed boundary="----=_NextPart_000_000F_01C17754.8C3CAF30"')
+      c = Mail::ContentTypeField.new('multipart/mixed boundary="----=_NextPart_000_000F_01C17754.8C3CAF30"')
       expect(c.content_type).to eq 'multipart/mixed'
       expect(c.parameters['boundary']).to eq '----=_NextPart_000_000F_01C17754.8C3CAF30'
     end

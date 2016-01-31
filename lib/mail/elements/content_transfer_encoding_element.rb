@@ -5,7 +5,7 @@ module Mail
     include Mail::Utilities
     
     def initialize(string)
-      content_transfer_encoding = Mail::Parsers::ContentTransferEncodingParser.new.parse(string)
+      content_transfer_encoding = Mail::Parsers::ContentTransferEncodingParser.new.parse(string.to_s)
       @encoding = content_transfer_encoding.encoding
     end
     

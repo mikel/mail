@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Mail::CommonField do
 
   describe "multi-charset support" do
-    
+
     before(:each) do
       @original = $KCODE if RUBY_VERSION < '1.9'
     end
@@ -16,13 +16,13 @@ describe Mail::CommonField do
     it "should return '' on to_s if there is no value" do
       expect(Mail::SubjectField.new(nil).to_s).to eq ''
     end
-    
+
     it "should leave ascii alone" do
       field = Mail::SubjectField.new("This is a test")
       expect(field.encoded).to eq "Subject: This is a test\r\n"
       expect(field.decoded).to eq "This is a test"
     end
-    
+
     it "should encode a utf-8 string as utf-8 quoted printable" do
       value = "かきくけこ"
       if RUBY_VERSION < '1.9'
@@ -52,7 +52,7 @@ describe Mail::CommonField do
       expect(field.decoded).to eq value
       expect(field.value).to eq value
     end
-  
+
     it "should handle charsets in assigned addresses" do
       value = '"かきくけこ" <mikel@test.lindsaar.net>'
       if RUBY_VERSION < '1.9'
@@ -69,17 +69,15 @@ describe Mail::CommonField do
 
   end
 
-  context "when including the field name" do
-    it "does not strip out content that looks identitcal to the field name" do
-      field = Mail::SubjectField.new("Subject: Subject: for your approval")
+  describe "with content that looks like the field name" do
+    it "does not strip from start" do
+      field = Mail::SubjectField.new("Subject: for your approval")
       expect(field.decoded).to eq("Subject: for your approval")
     end
-  end
 
-  context "when not including the field name" do
-    it "does not strip out content that looks identitcal to the field name" do
-      field = Mail::SubjectField.new("This is an important subject: here")
-      expect(field.decoded).to eq("This is an important subject: here")
+    it "does not strip from middle" do
+      field = Mail::SubjectField.new("for your approval subject: xyz")
+      expect(field.decoded).to eq("for your approval subject: xyz")
     end
   end
 end

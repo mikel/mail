@@ -87,7 +87,7 @@ describe Mail::MimeVersionField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::MimeVersionField.new('Mime-Version: 1.0')
+      t = Mail::MimeVersionField.new('1.0')
       expect(t.name).to eq 'Mime-Version'
       expect(t.value).to eq '1.0'
     end

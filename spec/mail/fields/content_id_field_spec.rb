@@ -34,7 +34,7 @@ describe Mail::ContentIdField do
     end
 
     it "should accept a string with the field name" do
-      c = Mail::ContentIdField.new('Content-ID: <1234@test.lindsaar.net>')
+      c = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
       expect(c.name).to eq 'Content-ID'
       expect(c.value).to eq '<1234@test.lindsaar.net>'
       expect(c.content_id).to eq '1234@test.lindsaar.net'

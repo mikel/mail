@@ -40,14 +40,6 @@ module Mail
 
     private
 
-    def strip_field(field_name, value)
-      if value.is_a?(Array)
-        value
-      else
-        value.to_s.sub(/\A#{field_name}:\s+/i, EMPTY)
-      end
-    end
-
     FILENAME_RE = /\b(filename|name)=([^;"\r\n]+\s[^;"\r\n]+)/
     def ensure_filename_quoted(value)
       if value.is_a?(String)

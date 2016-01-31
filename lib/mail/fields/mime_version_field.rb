@@ -1,10 +1,10 @@
 # encoding: utf-8
-# 
-# 
-# 
+#
+#
+#
 module Mail
   class MimeVersionField < StructuredField
-    
+
     FIELD_NAME = 'mime-version'
     CAPITALIZED_FIELD = 'Mime-Version'
 
@@ -13,22 +13,22 @@ module Mail
       if Utilities.blank?(value)
         value = '1.0'
       end
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
+      super(CAPITALIZED_FIELD, value || "", charset)
       self.parse
       self
 
     end
-    
+
     def parse(val = value)
       unless Utilities.blank?(val)
         @element = Mail::MimeVersionElement.new(val)
       end
     end
-    
+
     def element
       @element ||= Mail::MimeVersionElement.new(value)
     end
-    
+
     def version
       "#{element.major}.#{element.minor}"
     end
@@ -40,14 +40,14 @@ module Mail
     def minor
       element.minor.to_i
     end
-    
+
     def encoded
       "#{CAPITALIZED_FIELD}: #{version}\r\n"
     end
-    
+
     def decoded
       version
     end
-    
+
   end
 end

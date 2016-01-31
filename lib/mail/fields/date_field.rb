@@ -36,7 +36,7 @@ module Mail
       if Utilities.blank?(value)
         value = ::DateTime.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else
-        value = strip_field(FIELD_NAME, value)
+        value = value.to_s
         value.to_s.gsub!(/\(.*?\)/, '')
         value = ::DateTime.parse(value.to_s.squeeze(" ")).strftime('%a, %d %b %Y %H:%M:%S %z')
       end

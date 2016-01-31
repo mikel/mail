@@ -8,7 +8,7 @@ describe Mail::ResentToField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ResentToField.new("Resent-To: Mikel") }.not_to raise_error
+      expect { Mail::ResentToField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
@@ -16,7 +16,7 @@ describe Mail::ResentToField do
     end
 
     it "should accept a string with the field name" do
-      t = Mail::ResentToField.new('Resent-To: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      t = Mail::ResentToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Resent-To'
       expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
