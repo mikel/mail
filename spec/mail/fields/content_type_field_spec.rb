@@ -630,10 +630,10 @@ describe Mail::ContentTypeField do
       string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3}
       c = Mail::ContentTypeField.new(string)
       if RUBY_VERSION >= '1.9'
-        expected = "01 Quien Te Dij\221at. Pitbull.mp3".force_encoding(Encoding::BINARY)
+        expected = "01 Quien Te Dijat. Pitbull.mp3".force_encoding(Encoding::BINARY)
         result = c.filename.force_encoding(Encoding::BINARY)
       else
-        expected = "01 Quien Te Dij\221at. Pitbull.mp3"
+        expected = "01 Quien Te Dijat. Pitbull.mp3"
         result = c.filename
       end
       expect(expected).to eq result

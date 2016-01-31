@@ -249,9 +249,9 @@ describe "reading emails with attachments" do
       expect(mail.attachments.length).to eq 1
       result = mail.attachments[0].filename
       if RUBY_VERSION >= '1.9'
-        expected = "01 Quien Te Dij\212at. Pitbull.mp3".force_encoding(result.encoding)
+        expected = "01 Quien Te Dijat. Pitbull.mp3".force_encoding(result.encoding)
       else
-        expected = "01 Quien Te Dij\212at. Pitbull.mp3"
+        expected = "01 Quien Te Dijat. Pitbull.mp3"
       end
       expect(result).to eq expected
     end
@@ -303,6 +303,14 @@ limitMAIL
       mail = Mail.new(data)
       #~ puts Mail::Encodings.decode_encode(mail.attachments[0].filename, :decode)
       expect(mail.attachments[0].filename).to eq "Foto0009.jpg"
+    end
+
+    it "Content-Disposition header has encoded filename without language tag (issue 467)" do
+      mail = Mail.read(fixture(File.join("emails",
+                                         "attachment_emails",
+                                         "attachment_with_quoted_filename_only_content_disposition.eml")))
+      expect(mail.attachments.length).to eq 1
+      expect(mail.attachments[0].filename).to eq "アイテム.csv"
     end
 
   end
