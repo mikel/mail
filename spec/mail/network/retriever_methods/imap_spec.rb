@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe "IMAP Retriever" do
@@ -164,7 +165,7 @@ describe "IMAP Retriever" do
 
   describe "connection" do
     it "should raise an Error if no block is given" do
-      expect { Mail.connection { |m| raise ArgumentError.new } }.to raise_error
+      expect { Mail.connection { |m| raise ArgumentError.new } }.to raise_error(ArgumentError)
     end
     it "should yield the connection object to the given block" do
       Mail.connection do |connection|
@@ -226,7 +227,7 @@ describe "IMAP Retriever" do
     it "should finish the IMAP connection if an exception is raised" do
       expect(MockIMAP).to be_disconnected
 
-      expect { Mail.all { |m| raise ArgumentError.new } }.to raise_error
+      expect { Mail.all { |m| raise ArgumentError.new } }.to raise_error(ArgumentError)
 
       expect(MockIMAP).to be_disconnected
     end

@@ -1,4 +1,5 @@
 # encoding: us-ascii
+# frozen_string_literal: true
 module Mail
   module Constants
     white_space = %Q|\x9\x20|

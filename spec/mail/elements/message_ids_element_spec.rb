@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::MessageIdsElement do
@@ -14,12 +15,12 @@ describe Mail::MessageIdsElement do
 
   it "should raise an error if the input is useless" do
     msg_id_text = nil
-    expect { Mail::MessageIdsElement.new(msg_id_text) }.to raise_error
+    expect { Mail::MessageIdsElement.new(msg_id_text) }.to raise_error(Mail::Field::ParseError)
   end
 
   it "should raise an error if the input is useless" do
     msg_id_text  = '""""""""""""""""'
-    expect { Mail::MessageIdsElement.new(msg_id_text) }.to raise_error
+    expect { Mail::MessageIdsElement.new(msg_id_text) }.to raise_error(Mail::Field::ParseError)
   end
 
   it "should respond to message_ids" do
@@ -33,7 +34,7 @@ describe Mail::MessageIdsElement do
     msg_ids = Mail::MessageIdsElement.new(msg_id_text)
     expect(msg_ids.message_id).to eq '1234@test.lindsaar.net'
   end
-  
+
   it "should not fail to parse a message id with dots in it" do
     text = "<4afb664ca3078_48dc..fdbe32b865532b@ax-desktop.mail>"
     m = Mail::MessageIdsElement.new(text)

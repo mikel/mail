@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::Encodings::UnixToUnix do
@@ -28,7 +29,7 @@ describe Mail::Encodings::UnixToUnix do
   if RUBY_VERSION > "1.9"
     it "encodes / decodes non-ascii" do
       expect(encode("Happy ああr")).to eq "-2&%P<'D@XX&\"XX&\"<@``\n"
-      expected = (RUBY_ENGINE == "jruby" ? "Happy ああr" : "Happy ああr".force_encoding("binary"))
+      expected = (RUBY_ENGINE == "jruby" ? "Happy ああr" : "Happy ああr".dup.force_encoding("binary"))
       expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq expected
     end
   end

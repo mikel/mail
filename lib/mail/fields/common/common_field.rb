@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   module CommonField # :nodoc:
     include Mail::Constants
@@ -51,7 +52,9 @@ module Mail
     FILENAME_RE = /\b(filename|name)=([^;"\r\n]+\s[^;"\r\n]+)/
     def ensure_filename_quoted(value)
       if value.is_a?(String)
-        value.sub! FILENAME_RE, '\1="\2"'
+        value.sub FILENAME_RE, '\1="\2"'
+      else
+        value
       end
     end
   end

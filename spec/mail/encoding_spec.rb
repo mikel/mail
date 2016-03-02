@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe "mail encoding" do
@@ -116,13 +117,13 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
       subject = "This is あ string"
-      subject.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
+      subject = subject.dup.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.subject = subject
       result = mail[:subject].encoded
       string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82_string?=\r\n"
       if RUBY_VERSION > '1.9'
-        string.force_encoding('ISO8859-1')
-        result.force_encoding('ISO8859-1')
+        string = string.dup.force_encoding('ISO8859-1')
+        result = result.dup.force_encoding('ISO8859-1')
       end
       expect(result).to eq string
     end
@@ -131,13 +132,13 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
       string = "Mikel Lindsああr <mikel@test.lindsaar.net>"
-      string.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
+      string = string.dup.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.to = string
       result = mail[:to].encoded
       string = "To: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
       if RUBY_VERSION > '1.9'
-        string.force_encoding('ISO8859-1')
-        result.force_encoding('ISO8859-1')
+        string = string.dup.force_encoding('ISO8859-1')
+        result = result.dup.force_encoding('ISO8859-1')
       end
       expect(result).to eq string
     end
@@ -146,13 +147,13 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
       array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
-      array.map! { |a| a.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
+      array.map! { |a| a.dup.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
       mail.to = array
       result = mail[:to].encoded
       string = "To: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       if RUBY_VERSION > '1.9'
-        string.force_encoding('ISO8859-1')
-        result.force_encoding('ISO8859-1')
+        string = string.dup.force_encoding('ISO8859-1')
+        result = result.dup.force_encoding('ISO8859-1')
       end
       expect(result).to eq string
     end
@@ -160,15 +161,15 @@ describe "mail encoding" do
     it "should allow you to send in multiple unencoded strings to any address field" do
       mail = Mail.new
       array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
-      array.map! { |a| a.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
+      array.map! { |a| a.dup.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
       mail.charset = 'ISO-8859-1'
       ['To', 'From', 'Cc', 'Reply-To'].each do |field|
         mail.send("#{field.downcase.gsub("-", '_')}=", array)
         string = "#{field}: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
         result = mail[field].encoded
         if RUBY_VERSION > '1.9'
-          string.force_encoding('ISO8859-1')
-          result.force_encoding('ISO8859-1')
+          string = string.dup.force_encoding('ISO8859-1')
+          result = result.dup.force_encoding('ISO8859-1')
         end
         expect(result).to eq string
       end

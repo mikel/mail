@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'mail/fields/common/common_field'
 
 module Mail
@@ -127,7 +128,7 @@ module Mail
           if first
             first = !first
           else
-            word = " " << word
+            word = " #{word}"
           end
           if word.not_ascii_only?
             word

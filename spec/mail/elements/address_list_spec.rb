@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::AddressList do
@@ -11,7 +12,7 @@ describe Mail::AddressList do
 
     it "should raise an error if the input is useless" do
       parse_text = '@@@@@@'
-      expect { Mail::AddressList.new(parse_text) }.to raise_error
+      expect { Mail::AddressList.new(parse_text) }.to raise_error(Mail::Field::ParseError)
     end
 
     it "should not raise an error if the input is just blank" do
@@ -21,7 +22,7 @@ describe Mail::AddressList do
 
     it "should raise an error if the input is useless" do
       parse_text = "This ( is an invalid address!"
-      expect { Mail::AddressList.new(parse_text) }.to raise_error
+      expect { Mail::AddressList.new(parse_text) }.to raise_error(Mail::Field::ParseError)
     end
 
     it "should give the address passed in" do

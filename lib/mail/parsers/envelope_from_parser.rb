@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class EnvelopeFromParser
     def parse(s)

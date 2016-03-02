@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class DateTimeParser
     include Mail::Utilities
 
     def parse(s)
+      raise Mail::Field::ParseError.new(Mail::DateTimeElement, s, "nil is an invalid DateTime") if s.nil?
+
       date_time = DateTimeStruct.new([])
 
       actions, error = Ragel.parse(:date_time, s)

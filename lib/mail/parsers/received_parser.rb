@@ -1,7 +1,9 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class ReceivedParser
 
     def parse(s)
+      raise Mail::Field::ParseError.new(Mail::ReceivedElement, s, 'nil is invalid') if s.nil?
       actions, error = Ragel.parse(:received, s)
       if error
         raise Mail::Field::ParseError.new(Mail::ReceivedElement, s, error)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::DateTimeElement do
@@ -9,12 +10,12 @@ describe Mail::DateTimeElement do
 
   it "should raise an error if the input is useless" do
     date_text = nil
-    expect { Mail::DateTimeElement.new(date_text) }.to raise_error
+    expect { Mail::DateTimeElement.new(date_text) }.to raise_error(Mail::Field::ParseError)
   end
 
   it "should raise an error if the input is useless" do
     date_text  = '""""""""""""""""'
-    expect { Mail::DateTimeElement.new(date_text) }.to raise_error
+    expect { Mail::DateTimeElement.new(date_text) }.to raise_error(Mail::Field::ParseError)
   end
-  
+
 end

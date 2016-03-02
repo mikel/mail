@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::SenderField do
@@ -29,7 +30,7 @@ describe Mail::SenderField do
 
     it "should reject headers with multiple mailboxes" do
       pending 'Sender accepts an address list now, but should only accept a single address'
-      expect { Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.to raise_error
+      expect { Mail::SenderField.new('Sender: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.to raise_error(Mail::Field::ParseError)
     end
   end
 

@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # keywords        =       "Keywords:" phrase *("," phrase) CRLF
 module Mail
