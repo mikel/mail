@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   register_autoload :Address, 'mail/elements/address'
   register_autoload :AddressList, 'mail/elements/address_list'

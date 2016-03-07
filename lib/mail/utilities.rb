@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   module Utilities
 
@@ -224,7 +225,7 @@ module Mail
       end
 
     end
-    
+
     # Test String#encode works correctly with line endings.
     # Some versions of Ruby (e.g. MRI <1.9, JRuby, Rubinius) line ending
     # normalization does not work correctly or did not have #encode.
@@ -264,7 +265,7 @@ module Mail
     # Returns true if the object is considered blank.
     # A blank includes things like '', '   ', nil,
     # and arrays and hashes that have nothing in them.
-    # 
+    #
     # This logic is mostly shared with ActiveSupport's blank?
     def self.blank?(value)
       if value.kind_of?(NilClass)

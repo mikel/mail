@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module Mail
   # Raised when attempting to decode an unknown encoding type

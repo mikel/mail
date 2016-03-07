@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::UnstructuredField do
@@ -153,7 +154,7 @@ describe Mail::UnstructuredField do
       string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
       @field = Mail::UnstructuredField.new("Subject", string)
       if string.respond_to?(:force_encoding)
-        string = string.force_encoding('UTF-8')
+        string = string.dup.force_encoding('UTF-8')
       else
         $KCODE = 'u'
       end
@@ -168,7 +169,7 @@ describe Mail::UnstructuredField do
       string = %|{"unique_args": {"mailing_id":147,"account_id":2}, "to": ["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys": {"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}": ["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"], "{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til at stå hvornår folk har skrevet sig op ...)"], "{{unsubscribe_url}}": ["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"], "{{email}}": ["larspind@gmail.com"], "{{link:308}}": ["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"], "{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}|
       @field = Mail::UnstructuredField.new("X-SMTPAPI", string)
       if string.respond_to?(:force_encoding)
-        string = string.force_encoding('UTF-8')
+        string = string.dup.force_encoding('UTF-8')
       else
         $KCODE = 'u'
       end

@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
 
   # ParameterHash is an intelligent Hash that allows you to add

@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe "Utilities Module" do
@@ -6,7 +7,7 @@ describe "Utilities Module" do
   include Mail::Utilities
 
   describe "token safe" do
-    
+
     describe "checking" do
       it "should return true if a string is token safe" do
         expect(token_safe?('.abc')).to be_truthy
@@ -40,7 +41,7 @@ describe "Utilities Module" do
   end
 
   describe "atom safe" do
-    
+
     describe "checking" do
       it "should return true if a string is token safe" do
         expect(atom_safe?('?=abc')).to be_truthy
@@ -74,7 +75,7 @@ describe "Utilities Module" do
         expect(quote_atom('?=abc'.mb_chars)).to eq '?=abc'
         expect(quote_atom('.abc'.mb_chars)).to eq '".abc"'
       end
-      
+
       it "should quote white space" do
         expect(quote_atom('ab abc'.mb_chars)).to eq '"ab abc"'
         expect(quote_atom("a\sb\ta\r\nbc".mb_chars)).to eq %{"a\sb\ta\r\nbc"}
@@ -87,7 +88,7 @@ describe "Utilities Module" do
     describe "quoting phrases" do
       describe "given a non-unsafe string" do
         it "should not change the encoding" do
-          input_str = "blargh"
+          input_str = String.new("blargh")
           input_str_encoding = input_str.encoding
 
           quote_phrase(input_str)
@@ -98,7 +99,7 @@ describe "Utilities Module" do
 
       describe "given an unsafe string" do
         it "should not change the encoding" do
-          input_str = "Bjørn"
+          input_str = String.new("Bjørn")
           input_str_encoding = input_str.encoding
 
           quote_phrase(input_str)
@@ -127,9 +128,9 @@ describe "Utilities Module" do
       result = 'This is not \(\)escaped\(\)'
       expect(escape_paren(test)).to eq result
     end
-    
+
   end
-  
+
   describe "unescaping parenthesis" do
 
     it "should work" do
@@ -157,7 +158,7 @@ describe "Utilities Module" do
     end
 
   end
-  
+
   describe "unescaping brackets" do
 
     it "should work" do
@@ -185,7 +186,7 @@ describe "Utilities Module" do
     end
 
   end
-  
+
   describe "quoting phrases" do
     it "should quote a phrase if it is unsafe" do
       test = 'this.needs quoting'
@@ -198,13 +199,13 @@ describe "Utilities Module" do
       result = '"this needs \"escaping"'
       expect(dquote(test)).to eq result
     end
-    
+
     it "should quote correctly a phrase with an escaped quote in it" do
       test = 'this needs \"quoting'
       result = '"this needs \\\\\\"quoting"'
       expect(dquote(test)).to eq result
     end
-    
+
     it "should quote correctly a phrase with an escaped backslash followed by an escaped quote in it" do
       test = 'this needs \\\"quoting'
       result = '"this needs \\\\\\\\\\"quoting"'
@@ -237,8 +238,8 @@ describe "Utilities Module" do
       expect(unquote('"This is "quoted"')).to eq 'This is "quoted'
     end
   end
-  
-  
+
+
   describe "parenthesizing phrases" do
     it "should parenthesize a phrase" do
       test = 'this.needs parenthesizing'
@@ -269,25 +270,25 @@ describe "Utilities Module" do
       result = '(this needs \)escaping)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped parentheses in it" do
       test = 'this needs \(parenthesizing'
       result = '(this needs \(parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped parentheses in it (other way)" do
       test = 'this needs \)parenthesizing'
       result = '(this needs \)parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it" do
       test = 'this needs \\\(parenthesizing'
       result = '(this needs \\\(parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
     it "should parenthesize correctly a phrase with an escaped backslash followed by an escaped parentheses in it (other way)" do
       test = 'this needs \\\)parenthesizing'
       result = '(this needs \\\)parenthesizing)'
@@ -299,10 +300,10 @@ describe "Utilities Module" do
       result = '(this \(needs\) parenthesizing)'
       expect(paren(test)).to eq result
     end
-    
+
   end
-  
-  
+
+
   describe "bracketizing phrases" do
     it "should bracketize a phrase" do
       test = 'this.needs bracketizing'
@@ -333,25 +334,25 @@ describe "Utilities Module" do
       result = '<this needs \>escaping>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped brackets in it" do
       test = 'this needs \<bracketizing'
       result = '<this needs \<bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped brackets in it (other way)" do
       test = 'this needs \>bracketizing'
       result = '<this needs \>bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it" do
       test = 'this needs \\\<bracketizing'
       result = '<this needs \\\<bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
     it "should bracketize correctly a phrase with an escaped backslash followed by an escaped brackets in it (other way)" do
       test = 'this needs \\\>bracketizing'
       result = '<this needs \\\>bracketizing>'
@@ -363,7 +364,7 @@ describe "Utilities Module" do
       result = '<this \<needs\> bracketizing>'
       expect(bracket(test)).to eq result
     end
-    
+
   end
 
   describe "url escaping" do
@@ -377,7 +378,7 @@ describe "Utilities Module" do
       expect(uri_unescape("@?@!")).to eq uri_parser.unescape("@?@!")
     end
   end
-  
+
 
   describe "blank method" do
     it "should say nil is blank" do
@@ -403,7 +404,7 @@ describe "Utilities Module" do
     it "should say an empty string is blank" do
       expect(Mail::Utilities.blank?('')).to be_truthy
       expect(Mail::Utilities.blank?(" ")).to be_truthy
-      a = ''; 1000.times { a << ' ' }
+      a = ' ' * 1000
       expect(Mail::Utilities.blank?(a)).to be_truthy
       expect(Mail::Utilities.blank?("\t \n\n")).to be_truthy
     end
@@ -413,16 +414,16 @@ describe "Utilities Module" do
     it "should say a number is not blank" do
       expect(Mail::Utilities.blank?(1)).not_to be_truthy
     end
-    
+
     it "should say a valueless hash is not blank" do
       expect(Mail::Utilities.blank?({:one => nil, :two => nil})).not_to be_truthy
     end
-    
+
     it "should say a hash containing an empty hash is not blank" do
       expect(Mail::Utilities.blank?({:key => {}})).not_to be_truthy
     end
   end
-  
+
   describe "to_lf" do
     it "should change a single CR to LF" do
       expect(Mail::Utilities.to_lf("\r")).to eq "\n"
@@ -456,7 +457,7 @@ describe "Utilities Module" do
       it "should not change the encoding of the string" do
         saved_default_internal = Encoding.default_internal
         Encoding.default_internal = "UTF-8"
-        ascii_string = "abcd".force_encoding("ASCII-8BIT")
+        ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
         expect(Mail::Utilities.to_lf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
         Encoding.default_internal = saved_default_internal
       end
@@ -521,7 +522,7 @@ describe "Utilities Module" do
         it "should not change the encoding of the string" do
           saved_default_internal = Encoding.default_internal
           Encoding.default_internal = "UTF-8"
-          ascii_string = "abcd".force_encoding("ASCII-8BIT")
+          ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
           expect(Mail::Utilities.to_crlf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
           Encoding.default_internal = saved_default_internal
         end

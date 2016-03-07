@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Mail::ContentTypeField do
@@ -630,7 +631,7 @@ describe Mail::ContentTypeField do
       string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3}
       c = Mail::ContentTypeField.new(string)
       if RUBY_VERSION >= '1.9'
-        expected = "01 Quien Te Dij\221at. Pitbull.mp3".force_encoding(Encoding::BINARY)
+        expected = "01 Quien Te Dij\221at. Pitbull.mp3".dup.force_encoding(Encoding::BINARY)
         result = c.filename.force_encoding(Encoding::BINARY)
       else
         expected = "01 Quien Te Dij\221at. Pitbull.mp3"
@@ -648,10 +649,10 @@ describe Mail::ContentTypeField do
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
       case
       when RUBY_VERSION >= '1.9.3'
-        string.force_encoding('SJIS')
+        string = string.dup.force_encoding('SJIS')
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=windows-31j'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       when RUBY_VERSION >= '1.9'
-        string.force_encoding('SJIS')
+        string = string.dup.force_encoding('SJIS')
         result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       else
         $KCODE = 'SJIS'

@@ -13,6 +13,7 @@ Features:
 
 Performance:
 * #956 - Use native String#encode for CR/LF conversion (carsonreinke)
+* #970 - Support Ruby 2.3+ frozen string literals (twalpole)
 
 Bugs:
 * #719 - Fix to not extract header content that looks like its field name (kjg)

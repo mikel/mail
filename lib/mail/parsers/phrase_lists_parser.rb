@@ -1,7 +1,10 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class PhraseListsParser
 
     def parse(s)
+      raise Mail::Field::ParseError.new(Mail::PhraseList, s, 'nil is invalid') if s.nil?
+
       actions, error = Ragel.parse(:phrase_lists, s)
       if error
         raise Mail::Field::ParseError.new(Mail::PhraseList, s, error)

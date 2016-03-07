@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Net
   class SMTP
     # This is a backport of r30294 from ruby trunk because of a bug in net/smtp.

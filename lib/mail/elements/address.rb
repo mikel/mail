@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   class Address
 
@@ -92,7 +93,7 @@ module Mail
     #  a.display_name = 'Mikel Lindsaar'
     #  a.format #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>'
     def display_name=( str )
-      @display_name = str
+      @display_name = str.dup # in case frozen
     end
 
     # Returns the local part (the left hand side of the @ sign in the email address) of
@@ -209,7 +210,6 @@ module Mail
       elsif @data.comments && @data.domain
         str = strip_domain_comments(format_comments)
       end
-
       str unless Utilities.blank?(str)
     end
 

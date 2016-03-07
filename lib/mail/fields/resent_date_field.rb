@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # resent-date     =       "Resent-Date:" date-time CRLF
 require 'mail/fields/common/common_date'

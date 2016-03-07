@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   module CheckDeliveryParams
     def check_delivery_params(mail)

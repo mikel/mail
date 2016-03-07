@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 def encode_base64(str)
@@ -8,7 +9,7 @@ end
 def check_decoded(actual, expected)
   if RUBY_VERSION >= '1.9'
     expect(actual.encoding).to eq Encoding::BINARY
-    expect(actual).to eq expected.force_encoding(Encoding::BINARY)
+    expect(actual).to eq expected.dup.force_encoding(Encoding::BINARY)
   else
     expect(actual).to eq expected
   end
@@ -104,7 +105,7 @@ describe "Attachments" do
     it "should not allow you to pass in an encoded attachment with an unknown encoding" do
       base64_encoded_data = encode_base64(@test_png)
       expect {@mail.attachments['test.png'] = { :content => base64_encoded_data,
-                                               :encoding => 'weird_encoding' }}.to raise_error
+                                               :encoding => 'weird_encoding' }}.to raise_error(/Do not know how to handle Content Transfer Encoding weird_encoding/)
     end
 
    it "should be able to call read on the attachment to return the decoded data" do
@@ -249,7 +250,7 @@ describe "reading emails with attachments" do
       expect(mail.attachments.length).to eq 1
       result = mail.attachments[0].filename
       if RUBY_VERSION >= '1.9'
-        expected = "01 Quien Te Dij\212at. Pitbull.mp3".force_encoding(result.encoding)
+        expected = "01 Quien Te Dij\212at. Pitbull.mp3".dup.force_encoding(result.encoding)
       else
         expected = "01 Quien Te Dij\212at. Pitbull.mp3"
       end

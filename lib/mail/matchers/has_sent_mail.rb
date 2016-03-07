@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   module Matchers
     def have_sent_email
