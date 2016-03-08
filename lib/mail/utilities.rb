@@ -24,13 +24,11 @@ module Mail
     def quote_phrase( str )
       if RUBY_VERSION >= '1.9'
         original_encoding = str.encoding
-        str.force_encoding('ASCII-8BIT')
-        if (PHRASE_UNSAFE === str)
-          quoted_str = dquote(str).force_encoding(original_encoding)
-          str.force_encoding(original_encoding)
-          quoted_str
+        ascii_str = str.dup.force_encoding('ASCII-8BIT')
+        if (PHRASE_UNSAFE === ascii_str)
+          dquote(ascii_str).force_encoding(original_encoding)
         else
-          str.force_encoding(original_encoding)
+          str
         end
       else
         (PHRASE_UNSAFE === str) ? dquote(str) : str
