@@ -84,27 +84,32 @@ describe "Utilities Module" do
 
   end
 
-  if RUBY_VERSION >= '1.9'
-    describe "quoting phrases" do
+  describe "quoting phrases" do
+    it "doesn't mutate original string" do
+      input_str = "blargh".freeze
+      expect { quote_phrase(input_str) }.not_to raise_error
+    end
+
+    if RUBY_VERSION >= '1.9'
       describe "given a non-unsafe string" do
         it "should not change the encoding" do
-          input_str = String.new("blargh")
+          input_str = "blargh"
           input_str_encoding = input_str.encoding
 
-          quote_phrase(input_str)
+          result = quote_phrase(input_str)
 
-          expect(input_str.encoding).to eq input_str_encoding
+          expect(result.encoding).to eq input_str_encoding
         end
       end
 
       describe "given an unsafe string" do
         it "should not change the encoding" do
-          input_str = String.new("Bjørn")
+          input_str = "Bjørn"
           input_str_encoding = input_str.encoding
 
-          quote_phrase(input_str)
+          result = quote_phrase(input_str)
 
-          expect(input_str.encoding).to eq input_str_encoding
+          expect(result.encoding).to eq input_str_encoding
         end
       end
     end
