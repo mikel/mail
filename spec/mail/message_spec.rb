@@ -1297,7 +1297,7 @@ describe Mail::Message do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          mail.to_s =~ %r{Content-Type: text/plain; charset=US-ASCII}
+          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=US-ASCII|})
         end
 
         it "should not set the charset if the file is an attachment" do
@@ -1305,7 +1305,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_disposition = 'attachment; filename="foo.jpg"'
-          mail.to_s =~ %r{Content-Type: text/plain;\r\n}
+          expect(mail.to_s).to match("Content-Type: text/plain;\r\n")
         end
 
         it "should not set the charset if the content_type is not text" do
@@ -1313,7 +1313,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_type = "image/png"
-          mail.to_s.should_not =~ %r{Content-Type: image/png;\s+charset=UTF-8}
+          expect(mail.to_s).to_not match("Content-Type: image/png;\\s+charset=UTF-8")
         end
 
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1322,7 +1322,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1332,7 +1332,7 @@ describe Mail::Message do
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
           expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          mail.to_s =~ %r{Content-Type: text/plain; charset=UTF-8}
+          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should not raise a warning if there is no charset parameter and the content-type is not text" do
@@ -1341,7 +1341,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "image/png"
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_not_receive(:puts)
+          expect(STDERR).to_not receive(:puts)
           mail.to_s
         end
 
