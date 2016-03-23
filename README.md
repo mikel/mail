@@ -234,7 +234,7 @@ what you are doing.
 ### Sending an email:
 
 Mail defaults to sending via SMTP to local host port 25.  If you have a
-sendmail or postfix daemon running on on this port, sending email is as
+sendmail or postfix daemon running on this port, sending email is as
 easy as:
 
 ```ruby
