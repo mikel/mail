@@ -178,7 +178,7 @@ module Mail
     # Example:
     #
     #  string = :resent_from_field
-    #  dasherize ( string ) #=> 'resent_from_field'
+    #  dasherize( string ) #=> 'resent-from-field'
     def dasherize( str )
       str.to_s.tr(UNDERSCORE, HYPHEN)
     end
