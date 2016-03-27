@@ -191,8 +191,23 @@ describe "mail encoding" do
     m['Subject'] = Mail::SubjectField.new("=?utf-8?Q?Hello_=96_World?=")
     if RUBY_VERSION > '1.9'
       expect { expect(m.subject).to be_valid_encoding }.not_to raise_error
-    else
-      expect(m.subject).to eq "Hello  World"
+    end
+    expect(m.subject).to eq "Hello  World"
+  end
+
+  if RUBY_VERSION > '1.9'
+    it "shouldn't fail with utf-7 encoding" do
+      m = Mail.new
+      m['Subject'] = Mail::SubjectField.new("=?unicode-1-1-utf-7?B?K2tVMVA0WEsyWVV1UUduZmwtICAoK01LZ3c2VEQ4LSk=?=")
+      expect { expect(m.subject).to be_valid_encoding }.not_to raise_error
+      expect(m.subject).to eq "=?unicode-1-1-utf-7?B?K2tVMVA0WEsyWVV1UUduZmwtICAoK01LZ3c2VEQ4LSk=?="
+    end
+
+    it "shouldn't fail with unconvertable chars" do
+      m = Mail.new
+      m['Subject'] = Mail::SubjectField.new("=?iso-2022-jp?B?GyRCOVY6Qi0iIVshISF6Nls1XjMrOkUheiFWQmdOLjlUGyhC?=")
+      expect { expect(m.subject).to be_valid_encoding }.not_to raise_error
+      expect(m.subject).to eq "講座】　★緊急開催★「大流行"
     end
   end
 
