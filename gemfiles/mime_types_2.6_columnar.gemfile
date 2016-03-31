@@ -3,7 +3,8 @@
 source "https://rubygems.org"
 
 gem "jruby-openssl", :platforms => :jruby
-gem "mime-types", "~> 2.6.0", :require => 'mime/types/columnar'
+gem "rake", "< 11.0", :platforms => :ruby_18
+gem "mime-types", "~> 2.6.0", :require => "mime/types/columnar"
 
 group :local_development, :test do
   gem "appraisal", "~> 1.0"
