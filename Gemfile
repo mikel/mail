@@ -4,6 +4,7 @@ gemspec
 
 gem "tlsmail", "~> 0.0.1" if RUBY_VERSION <= "1.8.6"
 gem "jruby-openssl", :platforms => :jruby
+gem "rake", "< 11.0", :platforms => :ruby_18
 
 # For gems not required to run tests
 group :local_development, :test do
