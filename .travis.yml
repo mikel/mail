@@ -24,7 +24,6 @@ gemfile:
   - gemfiles/mime_types_2.6.gemfile
   - gemfiles/mime_types_2.6_columnar.gemfile
   - gemfiles/mime_types_2.99.gemfile
-  - gemfiles/mime_types_2.latest.gemfile
   - gemfiles/mime_types_3.0.gemfile
   - gemfiles/mime_types_edge.gemfile
 
