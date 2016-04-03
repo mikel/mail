@@ -56,7 +56,18 @@ module Mail
     end
 
     def Ruby18.transcode_charset(str, from_encoding, to_encoding = 'UTF-8')
-      Iconv.conv("#{normalize_iconv_charset_encoding(to_encoding)}//IGNORE", normalize_iconv_charset_encoding(from_encoding), str)
+      retried = false
+      begin
+        Iconv.conv("#{normalize_iconv_charset_encoding(to_encoding)}//IGNORE", normalize_iconv_charset_encoding(from_encoding), str)
+      rescue Iconv::InvalidEncoding
+        if retried
+          raise
+        else
+          from_encoding = 'ASCII'
+          retried = true
+          retry
+        end
+      end
     end
 
     def Ruby18.b_value_encode(str, encoding)

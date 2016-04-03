@@ -196,6 +196,12 @@ describe "mail encoding" do
     end
   end
 
+  it "should skip characters of unknown and invalid encoding" do
+    m = Mail.new
+    m['Subject'] = Mail::SubjectField.new("Hello=?UNKNOWN?B?4g==?=")
+    expect(m.subject).to eq "Hello"
+  end
+
   if RUBY_VERSION > '1.9'
     describe "#pick_encoding" do
       it "picks binary for nil" do
