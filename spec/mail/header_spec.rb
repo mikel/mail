@@ -435,7 +435,18 @@ describe Mail::Header do
       header = Mail::Header.new("To: Mikel,\r\n   Lindsaar,     Bob")
       expect(header['To'].value).to eq 'Mikel, Lindsaar, Bob'
     end
+    
+    it "should not remove multiple spaces from a subject header" do
+      header = Mail::Header.new("Subject: Mikel,   Lindsaar,     Bob")
+      expect(header['Subject'].value).to eq 'Mikel,   Lindsaar,     Bob'
+    end
 
+    it "should remove multiple spaces from a subject header following a new line" do
+      header = Mail::Header.new("subject: Mikel,\r\n   Lindsaar,     Bob")
+      expect(header['Subject'].value).to eq 'Mikel, Lindsaar,     Bob'
+    end
+
+    
     it "should handle a crazy long folded header" do
       header_text =<<HERE
 Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
