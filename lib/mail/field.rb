@@ -232,12 +232,13 @@ module Mail
     #  that is immediately followed by WSP.  Each header field should be
     #  treated in its unfolded form for further syntactic and semantic
     #  evaluation.
-    def unfold(string)
-      string.gsub(/[\r\n \t]+/m, ' ')
+    def unfold(name, value)
+      regex = name == 'Subject' ? /\s*\r\n\s+/m : /[\r\n \t]+/m
+      value.gsub(regex, ' ')
     end
 
     def create_field(name, value, charset)
-      value = unfold(value) if value.is_a?(String)
+      value = unfold(name, value) if value.is_a?(String)
 
       begin
         new_field(name, value, charset)
