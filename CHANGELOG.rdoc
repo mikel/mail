@@ -15,6 +15,7 @@ Performance:
 
 Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
+* #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 
 Bugs:
 * #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)

@@ -236,7 +236,7 @@ module Mail
     #  treated in its unfolded form for further syntactic and semantic
     #  evaluation.
     def unfold(string)
-      string.gsub(/[\r\n \t]+/m, ' ')
+      string.gsub(/#{CRLF}(#{WSP})/m, '\1')
     end
 
     def create_field(name, value, charset)
