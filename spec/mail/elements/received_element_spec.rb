@@ -3,12 +3,7 @@ require 'spec_helper'
 
 describe Mail::ReceivedElement do
 
-  it "should parse a date" do
-    received_text  = 'from localhost (localhost [127.0.0.1]) by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)'
-    expect { Mail::ReceivedElement.new(received_text) }.not_to raise_error
-  end
-
-  it "should raise an error if the input is useless" do
+  it "should raise an error if the input is nil" do
     received_text = nil
     expect { Mail::ReceivedElement.new(received_text) }.to raise_error(Mail::Field::ParseError)
   end

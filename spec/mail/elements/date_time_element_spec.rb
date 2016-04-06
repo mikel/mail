@@ -8,7 +8,7 @@ describe Mail::DateTimeElement do
     expect { Mail::DateTimeElement.new(date_text) }.not_to raise_error
   end
 
-  it "should raise an error if the input is useless" do
+  it "should raise an error if the input is nil" do
     date_text = nil
     expect { Mail::DateTimeElement.new(date_text) }.to raise_error(Mail::Field::ParseError)
   end

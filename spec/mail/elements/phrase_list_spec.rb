@@ -10,12 +10,12 @@ describe Mail::PhraseList do
       expect { Mail::PhraseList.new(parse_text) }.not_to raise_error
     end
 
-    it "should raise an error if the input is useless" do
+    it "should raise an error if the input is nil" do
       parse_text = nil
       expect { Mail::PhraseList.new(parse_text) }.to raise_error(Mail::Field::ParseError)
     end
 
-    it "should not raise an error if the input is empty" do
+    it "should not raise an error if the input is useless" do
       parse_text  = '""""""""""""""""'
       expect(Mail::PhraseList.new(parse_text).phrases).to eq [parse_text[1...-1]]
     end

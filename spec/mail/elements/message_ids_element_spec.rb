@@ -13,7 +13,7 @@ describe Mail::MessageIdsElement do
     expect { Mail::MessageIdsElement.new(msg_id_text) }.not_to raise_error
   end
 
-  it "should raise an error if the input is useless" do
+  it "should raise an error if the input is nil" do
     msg_id_text = nil
     expect { Mail::MessageIdsElement.new(msg_id_text) }.to raise_error(Mail::Field::ParseError)
   end
