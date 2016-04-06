@@ -431,9 +431,9 @@ describe Mail::Header do
       expect(header['To'].value).to eq 'Mikel, Lindsaar, Bob'
     end
 
-    it "should remove multiple spaces during unfolding a header" do
-      header = Mail::Header.new("To: Mikel,\r\n   Lindsaar,     Bob")
-      expect(header['To'].value).to eq 'Mikel, Lindsaar, Bob'
+    it "should preserve whitespace when unfolding a header" do
+      header = Mail::Header.new("To: Mikel,\r\n\t   Lindsaar,     Bob")
+      expect(header['To'].value).to eq "Mikel,\t   Lindsaar,     Bob"
     end
 
     it "should handle a crazy long folded header" do
@@ -445,7 +445,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\r\n"))
-      expect(header['Received'].value).to eq 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
 
     it "should convert all lonesome LFs to CRLF" do
@@ -457,7 +457,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\n"))
-      expect(header['Received'].value).to eq 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
 
     it "should convert all lonesome CRs to CRLF" do
@@ -469,7 +469,7 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
       header = Mail::Header.new(header_text.gsub(/\n/, "\r"))
-      expect(header['Received'].value).to eq 'from [127.0.220.158] (helo=fg-out-1718.google.com) by smtp.totallyrandom.com with esmtp (Exim 4.68) (envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>) id 1K4JeQ-0005Nd-Ij for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700'
+      expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
 
   end
@@ -564,7 +564,7 @@ TRACEHEADER
   describe "encoding" do
     it "should output a parsed version of itself to US-ASCII on encoded and tidy up and sort correctly" do
       encoded = Mail::Header.new("To: Mikel\r\n\sLindsaar <mikel@test.lindsaar.net>\r\nFrom: bob\r\n\s<bob@test.lindsaar.net>\r\nSubject: This is\r\n a long\r\n\s \t \t \t    badly formatted             \r\n       \t\t  \t       field").encoded
-      result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long badly formatted field\r\n"
+      result = "From: bob <bob@test.lindsaar.net>\r\nTo: Mikel Lindsaar <mikel@test.lindsaar.net>\r\nSubject: This is a long           badly formatted                             \r\n   field\r\n"
       if result.respond_to?(:encode!)
         result = result.dup.encode!(::Encoding::US_ASCII)
         expect(encoded.encoding).to eq ::Encoding::US_ASCII if encoded.respond_to?(:encoding)

@@ -155,7 +155,7 @@ describe "Test emails" do
     # can be long.
     it "should handle the RFC trace example email" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example09.eml'))
-      expect(mail.received[0].info).to eq 'from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>'
+      expect(mail.received[0].info).to eq 'from x.y.test   by example.net   via TCP   with ESMTP   id ABC12345   for <mary@example.net>'
       expect(mail.received[0].date_time).to eq ::DateTime.parse('21 Nov 1997 10:05:43 -0600')
       expect(mail.received[1].info).to eq 'from machine.example by x.y.test'
       expect(mail.received[1].date_time).to eq ::DateTime.parse('21 Nov 1997 10:01:22 -0600')
@@ -254,7 +254,7 @@ describe "Test emails" do
     it "should handle folding subject" do
       mail = Mail.read(fixture('emails', 'rfc2822', 'example14.eml'))
       expect(mail.from).to eq ["atsushi@example.com"]
-      expect(mail.subject).to eq "Re: TEST テストテスト"
+      expect(mail.subject).to eq "Re: TEST \tテストテスト"
       expect(mail.message_id).to eq '0CC5E11ED2C1D@example.com'
       expect(mail.body.decoded).to eq "Hello\n"
     end
