@@ -461,10 +461,15 @@ describe "Utilities Module" do
     if defined?(Encoding)
       it "should not change the encoding of the string" do
         saved_default_internal = Encoding.default_internal
-        Encoding.default_internal = "UTF-8"
-        ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
-        expect(Mail::Utilities.to_lf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
-        Encoding.default_internal = saved_default_internal
+        $VERBOSE, saved_verbose = nil, $VERBOSE
+        begin
+          Encoding.default_internal = "UTF-8"
+          ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
+          expect(Mail::Utilities.to_lf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
+        ensure
+          Encoding.default_internal = saved_default_internal
+          $VERBOSE = saved_verbose
+        end
       end
     end
 
