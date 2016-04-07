@@ -82,6 +82,13 @@ describe Mail::Address do
       encoded = '=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>'
       expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krütisch'
     end
+    
+    it "should allow nil display name" do
+      a = Mail::Address.new
+      expect(a.display_name).to be_nil
+      a.display_name = nil
+      expect(a.display_name).to be_nil
+    end
 
     it "should give back the local part" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
