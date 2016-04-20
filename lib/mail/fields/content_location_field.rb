@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # 
 # 
@@ -16,7 +17,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::ContentLocationElement.new(val)
       end
     end

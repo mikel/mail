@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # 
 # 
@@ -10,7 +11,7 @@ module Mail
 
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
-      if value.blank?
+      if Utilities.blank?(value)
         value = '1.0'
       end
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
@@ -20,7 +21,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::MimeVersionElement.new(val)
       end
     end

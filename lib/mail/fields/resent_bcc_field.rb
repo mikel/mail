@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # = Resent-Bcc Field
 # 
@@ -39,7 +40,6 @@ module Mail
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
-      self.parse
       self
     end
     

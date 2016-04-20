@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'mail/check_delivery_params'
 
 module Mail
@@ -58,7 +59,7 @@ module Mail
 
     def self.call(path, arguments, destinations, encoded_message)
       popen "#{path} #{arguments} #{destinations}" do |io|
-        io.puts encoded_message.to_lf
+        io.puts ::Mail::Utilities.to_lf(encoded_message)
         io.flush
       end
     end

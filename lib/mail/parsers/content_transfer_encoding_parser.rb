@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class ContentTransferEncodingParser
 
     def parse(s)
       content_transfer_encoding = ContentTransferEncodingStruct.new("")
-      if s.blank?
+      if Mail::Utilities.blank?(s)
         return content_transfer_encoding
       end
 

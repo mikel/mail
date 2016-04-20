@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   class AttachmentsList < Array
 
@@ -71,6 +72,7 @@ module Mail
 
       if hash[:body].respond_to? :force_encoding and hash[:body].respond_to? :valid_encoding?
         if not hash[:body].valid_encoding? and default_values[:content_transfer_encoding].downcase == "binary"
+          hash[:body] = hash[:body].dup if hash[:body].frozen?
           hash[:body].force_encoding("BINARY")
         end
       end

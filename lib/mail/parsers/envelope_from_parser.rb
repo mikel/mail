@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class EnvelopeFromParser
     def parse(s)
       envelope_from = EnvelopeFromStruct.new
-      if s.blank?
+      if Mail::Utilities.blank?(s)
         return envelope_from
       end
 

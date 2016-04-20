@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'mail/network/retriever_methods/base'
 
 module Mail

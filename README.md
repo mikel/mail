@@ -15,11 +15,11 @@ Built from my experience with TMail, it is designed to be a pure ruby
 implementation that makes generating, sending and parsing emails a no
 brainer.
 
-It is also designed form the ground up to work with Ruby 1.9.  This is because
-Ruby 1.9 handles text encodings much more magically than Ruby 1.8.x and so
-these features have been taken full advantage of in this library allowing
-Mail to handle a lot more messages more cleanly than TMail.  Mail does run on
-Ruby 1.8.x... it's just not as fun to code.
+It is also designed from the ground up to work with the more modern versions
+of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
+than Ruby 1.8.x and so these features have been taken full advantage of in this
+library allowing Mail to handle a lot more messages more cleanly than TMail.
+Mail does run on Ruby 1.8.x... it's just not as fun to code.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
@@ -44,14 +44,21 @@ Compatibility
 
 Every Mail commit is tested by Travis on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
 
-* ruby-1.8.7-p370 [ i686 ]
-* ruby-1.9.2-p290 [ x86_64 ]
-* ruby-1.9.3-p327 [ x86_64 ]
-* ruby-2.0.0-rc1 [ x86_64 ]
-* jruby-1.6.8 [ x86_64 ]
-* jruby-1.7.0 [ x86_64 ]
-* rbx-d18 [ x86_64 ]
-* rbx-d19 [ x86_64 ]
+* ruby-1.8.7 [ i686 ]
+* ruby-1.9.2 [ x86_64 ]
+* ruby-1.9.3 [ x86_64 ]
+* ruby-2.0.0 [ x86_64 ]
+* ruby-2.1.2 [ x86_64 ]
+* ruby-head [ x86_64 ]
+* jruby [ x86_64 ]
+* jruby-head [ x86_64 ]
+* rbx-2 [ x86_64 ]
+
+Testing a specific mime type (needed for 1.8.7 for example) can be done manually with:
+
+```sh
+BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile (bundle check || bundle) && rake
+```
 
 Discussion
 ----------
@@ -102,6 +109,8 @@ good.  Additionally, all functional tests from TMail are to be passing before
 the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
+
+Note: If you care about core extensions (aka "monkey-patching"), please read the Core Extensions section near the end of this README.
 
 API Policy
 ----------
@@ -225,7 +234,7 @@ what you are doing.
 ### Sending an email:
 
 Mail defaults to sending via SMTP to local host port 25.  If you have a
-sendmail or postfix daemon running on on this port, sending email is as
+sendmail or postfix daemon running on this port, sending email is as
 easy as:
 
 ```ruby
@@ -581,7 +590,7 @@ Mail::TestMailer.deliveries.clear
 => []
 ```
 
-There is also a set of RSpec matchers stolen fr^H^H^H^H^H^H^H^H inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
+There is also a set of RSpec matchers stolen/inspired by Shoulda's ActionMailer matchers (you'll want to set <code>delivery_method</code> as above too):
 
 ```ruby
 Mail.defaults do
@@ -627,8 +636,42 @@ describe "sending an email" do
   # Note that apart from recipients, repeating a modifier overwrites old value.
 
   it { should have_sent_email.from('you@you.com').to('mike1@me.com').matching_body(/hell/)
+
+  # test for attachments
+
+  # ... by specific attachment
+  it { should_have_sent_email.with_attachments(my_attachment) }
+
+  # ... or any attachment
+  it { should_have_sent_email.with_attachments(any_attachment) }
+
+  # ... by array of attachments
+  it { should_have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important
+
+  #... by presence
+  it { should_have_sent_email.with_any_attachments }
+
+  #... or by absence
+  it { should_have_sent_email.with_no_attachments }
+
 end
 ```
+
+Core Extensions
+---------------
+
+The mail gem adds several constants and methods to Ruby's core objects (similar to the activesupport gem from the Rails project).  For example:
+
+    NilClass::blank?
+    NilClass::to_crlf
+    NilClass::to_lf
+    Object::blank?
+    String::to_crlf
+    String::to_lf
+    String::blank?
+    ...etc...
+
+For all the details, check out lib/mail/core_extensions/.
 
 Excerpts from TREC Spam Corpus 2005
 -----------------------------------
@@ -654,7 +697,7 @@ License
 
 (The MIT License)
 
-Copyright (c) 2009-2013 Mikel Lindsaar
+Copyright (c) 2009-2016 Mikel Lindsaar
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

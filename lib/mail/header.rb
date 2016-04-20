@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   
   # Provides access to a header object.
@@ -17,7 +18,7 @@ module Mail
   #   2.2.3.  All field bodies MUST conform to the syntax described in
   #   sections 3 and 4 of this standard.
   class Header
-    include Patterns
+    include Constants
     include Utilities
     include Enumerable
     
@@ -49,8 +50,13 @@ module Mail
     # me the example so we can fix it.
     def initialize(header_text = nil, charset = nil)
       @charset = charset
-      self.raw_source = header_text.to_crlf.lstrip
+      self.raw_source = ::Mail::Utilities.to_crlf(header_text).lstrip
       split_header if header_text
+    end
+
+    def initialize_copy(original)
+      super
+      @fields = @fields.dup
     end
     
     # The preserved raw source of the header as you passed it in, untouched
@@ -125,12 +131,13 @@ module Mail
     #  h['To']          #=> 'mikel@me.com'
     #  h['X-Mail-SPAM'] #=> ['15', '20']
     def [](name)
-      name = dasherize(name).downcase
+      name = dasherize(name)
+      name.downcase!
       selected = select_field_for(name)
       case
       when selected.length > 1
         selected.map { |f| f }
-      when !selected.blank?
+      when !Utilities.blank?(selected)
         selected.first
       else
         nil
@@ -160,11 +167,11 @@ module Mail
       
       case
       # User wants to delete the field
-      when !selected.blank? && value == nil
+      when !Utilities.blank?(selected) && value == nil
         fields.delete_if { |f| selected.include?(f) }
         
       # User wants to change the field
-      when !selected.blank? && limited_field?(fn)
+      when !Utilities.blank?(selected) && limited_field?(fn)
         selected.first.update(fn, value)
         
       # User wants to create the field
@@ -198,7 +205,7 @@ module Mail
                            content-id content-disposition content-location]
 
     def encoded
-      buffer = ''
+      buffer = String.new
       buffer.force_encoding('us-ascii') if buffer.respond_to?(:force_encoding)
       fields.each do |field|
         buffer << field.encoded

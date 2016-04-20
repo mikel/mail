@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   class AddressList # :nodoc:
 
@@ -30,17 +31,7 @@ module Mail
     end
 
     def addresses_grouped_by_group
-      return @addresses_grouped_by_group if @addresses_grouped_by_group
-
-      @addresses_grouped_by_group = {}
-
-      @address_list.addresses.each do |address_data|
-        if group = address_data.group
-          @addresses_grouped_by_group[group] ||= []
-          @addresses_grouped_by_group[group] << Mail::Address.new(address_data)
-        end
-      end
-      @addresses_grouped_by_group
+      addresses.select(&:group).group_by(&:group)
     end
     
     # Returns the names as an array of strings of all groups

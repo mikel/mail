@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 #
 # = Date Field
 #
@@ -33,7 +34,7 @@ module Mail
 
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
-      if value.blank?
+      if Utilities.blank?(value)
         value = ::DateTime.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else
         value = strip_field(FIELD_NAME, value)

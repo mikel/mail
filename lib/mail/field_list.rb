@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
 
   # Field List class provides an enhanced array that keeps a list of 
@@ -19,7 +20,7 @@ module Mail
       hi = size
 
       while lo < hi
-        mid = (lo + hi) / 2
+        mid = (lo + hi).div(2)
         if new_field < self[mid]
           hi = mid
         else

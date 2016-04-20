@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'mail/fields/common/parameter_hash'
 
 module Mail
@@ -19,14 +20,14 @@ module Mail
         @parameters = nil
         value = strip_field(FIELD_NAME, value)
       end
-      ensure_filename_quoted(value)
+      value = ensure_filename_quoted(value)
       super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
     end
 
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         self.value = val
         @element = nil
         element

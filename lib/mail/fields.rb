@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   register_autoload :UnstructuredField, 'mail/fields/unstructured_field'
   register_autoload :StructuredField, 'mail/fields/structured_field'

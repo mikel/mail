@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'mail/fields/common/common_field'
 
 module Mail
@@ -70,7 +71,7 @@ module Mail
     end
 
     def do_decode
-      value.blank? ? nil : Encodings.decode_encode(value, :decode)
+      Utilities.blank?(value) ? nil : Encodings.decode_encode(value, :decode)
     end
 
     # 2.2.3. Long Header Fields
@@ -127,7 +128,7 @@ module Mail
           if first
             first = !first
           else
-            word = " " << word
+            word = " #{word}"
           end
           if word.not_ascii_only?
             word
@@ -143,7 +144,7 @@ module Mail
       while !words.empty?
         limit = 78 - prepend
         limit = limit - 7 - encoding.length if should_encode
-        line = ""
+        line = String.new
         first_word = true
         while !words.empty?
           break unless word = words.first.dup
@@ -178,7 +179,7 @@ module Mail
     end
 
     def encode(value)
-      value = [value].pack("M").gsub("=\n", '')
+      value = [value].pack(CAPITAL_M).gsub(EQUAL_LF, EMPTY)
       value.gsub!(/"/,  '=22')
       value.gsub!(/\(/, '=28')
       value.gsub!(/\)/, '=29')
@@ -189,8 +190,8 @@ module Mail
     end
 
     def encode_crlf(value)
-      value.gsub!("\r", '=0D')
-      value.gsub!("\n", '=0A')
+      value.gsub!(CR, CR_ENCODED)
+      value.gsub!(LF, LF_ENCODED)
       value
     end
 

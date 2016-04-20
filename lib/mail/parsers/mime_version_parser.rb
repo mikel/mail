@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Mail::Parsers
   class MimeVersionParser
     include Mail::Utilities
 
     def parse(s)
-      if s.blank?
+      if Mail::Utilities.blank?(s)
         return MimeVersionStruct.new("", nil)
       end
 

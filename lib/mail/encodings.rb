@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module Mail
   # Raised when attempting to decode an unknown encoding type
@@ -7,7 +8,7 @@ module Mail
 
   module Encodings
 
-    include Mail::Patterns
+    include Mail::Constants
     extend  Mail::Utilities
 
     @transfer_encodings = {}
@@ -47,7 +48,15 @@ module Mail
     end
 
     def Encodings.get_name(enc)
-      enc = enc.to_s.gsub("-", "_").downcase
+      underscoreize(enc).downcase
+    end
+
+    def Encodings.transcode_charset(str, from_charset, to_charset = 'UTF-8')
+      if from_charset
+        RubyVer.transcode_charset str, from_charset, to_charset
+      else
+        str
+      end
     end
 
     # Encodes a parameter value using URI Escaping, note the language field 'en' can
@@ -114,34 +123,19 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
-      return str unless str =~ /\=\?[^?]+\?[QB]\?[^?]+?\?\=/xmi
+      return str unless str =~ ENCODED_VALUE
 
       lines = collapse_adjacent_encodings(str)
 
       # Split on white-space boundaries with capture, so we capture the white-space as well
-      lines.map do |line|
-        line.split(/([ \t])/).map do |text|
-          if text.index('=?').nil?
-            text
-          else
-            # Search for occurences of quoted strings or plain strings
-            text.scan(/(                                 # Group around entire regex to include it in matches
-                        \=\?[^?]+\?([QB])\?[^?]+?\?\=    # Quoted String with subgroup for encoding method
-                        |                                # or
-                        .+?(?=\=\?|$)                    # Plain String
-                      )/xmi).map do |matches|
-              string, method = *matches
-              if    method == 'b' || method == 'B'
-                b_value_decode(string)
-              elsif method == 'q' || method == 'Q'
-                q_value_decode(string)
-              else
-                string
-              end
-            end
+      lines.each do |line|
+        line.gsub!(ENCODED_VALUE) do |string|
+          case $2
+          when *B_VALUES then b_value_decode(string)
+          when *Q_VALUES then q_value_decode(string)
           end
         end
-      end.flatten.join("")
+      end.join("")
     end
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
@@ -255,27 +249,13 @@ module Mail
       RubyVer.q_value_decode(str)
     end
 
-    def Encodings.split_encoding_from_string( str )
-      match = str.match(/\=\?([^?]+)?\?[QB]\?(.+)?\?\=/mi)
-      if match
-        match[1]
-      else
-        nil
-      end
-    end
-
     def Encodings.find_encoding(str)
       RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
     end
 
     # Gets the encoding type (Q or B) from the string.
-    def Encodings.split_value_encoding_from_string(str)
-      match = str.match(/\=\?[^?]+?\?([QB])\?(.+)?\?\=/mi)
-      if match
-        match[1]
-      else
-        nil
-      end
+    def Encodings.value_encoding_from_string(str)
+      str[ENCODED_VALUE, 1]
     end
 
     # When the encoded string consists of multiple lines, lines with the same
@@ -283,19 +263,22 @@ module Mail
     #
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.collapse_adjacent_encodings(str)
-      lines = str.split(/(\?=)\s*(=\?)/).each_slice(2).map(&:join)
       results = []
       previous_encoding = nil
-
-      lines.each do |line|
-        encoding = split_value_encoding_from_string(line)
-
-        if encoding == previous_encoding
-          line = results.pop + line
+      lines = str.split(FULL_ENCODED_VALUE)
+      lines.each_slice(2) do |unencoded, encoded|
+        if encoded
+          encoding = value_encoding_from_string(encoded)
+          if encoding == previous_encoding && Utilities.blank?(unencoded)
+            results.last << encoded
+          else
+            results << unencoded unless unencoded == EMPTY
+            results << encoded
+          end
+          previous_encoding = encoding
+        else
+          results << unencoded
         end
-
-        previous_encoding = encoding
-        results << line
       end
 
       results

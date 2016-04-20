@@ -175,7 +175,8 @@
 
   # Envelope From
   ctime_date = day_name " "+ month " "+ day " " time_of_day " " year;
-  envelope_from = (addr_spec_no_angle_brackets) >address_s %address_e " "
+  null_sender = ('<>' ' '{0,1});
+  envelope_from = (addr_spec_no_angle_brackets | null_sender) >address_s %address_e " "
                   (ctime_date >ctime_date_s %ctime_date_e);
 
   # content_location
