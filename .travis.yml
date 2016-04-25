@@ -80,4 +80,5 @@ matrix:
   allow_failures:
     - rvm: ruby-head    # green, but unstable
     - rvm: jruby-head   # green, but unstable
+    - rvm: rbx-2        # green, but unstable
   fast_finish: true
