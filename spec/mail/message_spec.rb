@@ -1855,10 +1855,10 @@ describe Mail::Message do
       p.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
       mail.add_part(p)
       mail.encoded
-      expect(mail.parts[0].mime_type).to eq "image/png"
-      expect(mail.parts[1].mime_type).to eq "multipart/alternative"
-      expect(mail.parts[1].parts[0].mime_type).to eq "text/plain"
-      expect(mail.parts[1].parts[1].mime_type).to eq "text/html"
+      expect(mail.parts[0].mime_type).to eq "multipart/alternative"
+      expect(mail.parts[0].parts[0].mime_type).to eq "text/plain"
+      expect(mail.parts[0].parts[1].mime_type).to eq "text/html"
+      expect(mail.parts[1].mime_type).to eq "image/png"
     end
   end
 
