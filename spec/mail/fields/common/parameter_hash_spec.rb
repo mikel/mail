@@ -51,6 +51,24 @@ describe Mail::ParameterHash do
     expect(hash['value']).to eq "This is even more ***fun*** isn't it"
   end
 
+  it "allows for blank language" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value*' => "us-ascii''Hello%20there"})
+    expect(hash['value']).to eq "Hello there"
+  end
+
+  it "allows for blank charset" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value*' => "'en'Hello%20there"})
+    expect(hash['value']).to eq "Hello there"
+  end
+
+  it "allows for blank charset and language" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value*' => "''Hello%20there"})
+    expect(hash['value']).to eq "Hello there"
+  end
+
   it "should allow us to add a value" do
     hash = Mail::ParameterHash.new
     hash['value'] = 'bob'
