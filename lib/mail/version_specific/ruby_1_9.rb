@@ -160,7 +160,10 @@ module Mail
     def Ruby19.param_decode(str, encoding)
       str = uri_parser.unescape(str)
       str = charset_encoder.encode(str, encoding) if encoding
-      str
+      transcode_to_scrubbed_utf8(str)
+    rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
+      warn "Encoding conversion failed #{$!}"
+      str.dup.force_encoding(Encoding::UTF_8)
     end
 
     def Ruby19.param_encode(str)

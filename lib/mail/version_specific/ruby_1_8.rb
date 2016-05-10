@@ -118,7 +118,12 @@ module Mail
     end
 
     def Ruby18.param_decode(str, encoding)
-      URI.unescape(str)
+      str = URI.unescape(str)
+      if encoding
+        transcode_charset(str, encoding)
+      else
+        str
+      end
     end
 
     def Ruby18.param_encode(str)

@@ -628,15 +628,10 @@ describe Mail::ContentTypeField do
     end
 
     it "should locate an encoded name as a filename" do
-      string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3}
+      string = %q{application/octet-stream; name*=iso-2022-jp'ja'01%20Quien%20Te%20Dijo%20feat.%20Pitbull.mp3}
       c = Mail::ContentTypeField.new(string)
-      if RUBY_VERSION >= '1.9'
-        expected = "01 Quien Te Dij\221at. Pitbull.mp3".dup.force_encoding(Encoding::BINARY)
-        result = c.filename.force_encoding(Encoding::BINARY)
-      else
-        expected = "01 Quien Te Dij\221at. Pitbull.mp3"
-        result = c.filename
-      end
+      expected = "01 Quien Te Dijo feat. Pitbull.mp3"
+      result = c.filename
       expect(expected).to eq result
     end
 
