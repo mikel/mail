@@ -1563,6 +1563,7 @@ module Mail
 
     # returns the part in a multipart/report email that has the content-type delivery-status
     def delivery_status_part
+      return unless delivery_status_report?
       @delivery_stats_part ||= parts.select { |p| p.delivery_status_report_part? }.first
     end
 

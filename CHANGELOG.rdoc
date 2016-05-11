@@ -8,6 +8,7 @@ Compatibility:
 
 Bugs:
 * #978 - Fix for invalid chars being left in a string for invalid b_value from encoding (kjg)
+* #996 - Fix issue where multipart/report helper methods returned values on multipart/mixed emails (kjg)
 * #998 - Fix header parameter parsing (such as attachment names) for values encoded with a blank charset or language code. (kjg)
 
 == Version 2.6.4 - Wed Mar 23 08:16 -0700 2016 Jeremy Daer <jeremydaer@gmail.com>

@@ -26,6 +26,17 @@ describe "multipart/report emails" do
       expect(mail).to be_bounced
     end
 
+    describe "delivery-status part in a non report email" do
+      let(:mail){
+        string = File.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+        Mail.read_from_string(string.sub("multipart/report; report-type=delivery-status;", "multipart/mixed;"))
+      }
+
+      it "does not return a delivery_status_part" do
+        expect(mail.delivery_status_part).to be_nil
+      end
+    end
+
     describe "multipart reports with more than one address" do
       it "should not crash" do
         mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
