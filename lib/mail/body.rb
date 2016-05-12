@@ -35,7 +35,7 @@ module Mail
       @part_sort_order = [ "text/plain", "text/enriched", "text/html", "multipart/alternative" ]
       @parts = Mail::PartsList.new
       if Utilities.blank?(string)
-        @raw_source = ''
+        @raw_source = ''.dup
       else
         # Do join first incase we have been given an Array in Ruby 1.9
         if string.respond_to?(:join)
