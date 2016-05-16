@@ -59,6 +59,9 @@ module Mail
     end
 
     def Ruby19.decode_base64(str)
+      if !str.end_with?("=") && str.length % 4 != 0
+        str = str.ljust((str.length + 3) & ~3, "=")
+      end
       str.unpack( 'm' ).first
     end
 
