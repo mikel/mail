@@ -186,20 +186,18 @@ describe "mail encoding" do
     expect(mail.parts[0].content_type).to eq "text/html; charset=ISO-8859-1"
   end
 
-  it "should skip invalid characters" do
+  it "should replace invalid characters" do
     m = Mail.new
     m['Subject'] = Mail::SubjectField.new("=?utf-8?Q?Hello_=96_World?=")
-    if RUBY_VERSION > '1.9'
-      expect { expect(m.subject).to be_valid_encoding }.not_to raise_error
-    else
-      expect(m.subject).to eq "Hello  World"
-    end
+    replace = '�' if RUBY_VERSION > '1.9'
+    expect(m.subject).to eq "Hello #{replace} World"
   end
 
-  it "should skip characters of unknown and invalid encoding" do
+  it "should replace characters of unknown and invalid encoding" do
     m = Mail.new
     m['Subject'] = Mail::SubjectField.new("Hello=?UNKNOWN?B?4g==?=")
-    expect(m.subject).to eq "Hello"
+    replace = '�' if RUBY_VERSION > '1.9'
+    expect(m.subject).to eq "Hello#{replace}"
   end
 
   if RUBY_VERSION > '1.9'

@@ -88,7 +88,9 @@ module Mail
     end
 
     def Ruby19.transcode_charset(str, from_encoding, to_encoding = Encoding::UTF_8)
-      charset_encoder.encode(str.dup, from_encoding).encode(to_encoding, :undef => :replace, :invalid => :replace, :replace => '')
+      to_encoding = Encoding.find(to_encoding)
+      replacement_char = to_encoding == Encoding::UTF_8 ? '�' : '?'
+      charset_encoder.encode(str.dup, from_encoding).encode(to_encoding, :undef => :replace, :invalid => :replace, :replace => replacement_char)
     end
 
     # From Ruby stdlib Net::IMAP
@@ -125,8 +127,7 @@ module Mail
         str = Ruby19.decode_base64(match[2])
         str = charset_encoder.encode(str, charset)
       end
-      decoded = str.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
+      transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
@@ -150,8 +151,7 @@ module Mail
         # jruby/jruby#829 which subtly changes String#encode semantics.
         str.force_encoding(Encoding::UTF_8) if str.encoding == Encoding::ASCII_8BIT
       end
-      decoded = str.encode(Encoding::UTF_8, :invalid => :replace, :replace => "")
-      decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
+      transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
       warn "Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
@@ -252,6 +252,11 @@ module Mail
             Encoding::BINARY
           end
         end
+      end
+
+      def transcode_to_scrubbed_utf8(str)
+        decoded = str.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => "�")
+        decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "�").encode(Encoding::UTF_8)
       end
     end
   end
