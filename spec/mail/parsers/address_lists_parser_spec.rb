@@ -32,4 +32,23 @@ describe "AddressListsParser" do
       expect(a.parse(text).addresses.first.local).to eq 'ababab'
     end
   end
+
+  # RFC 2822 domain parsing
+  context "parsing an address with an invalid domain" do
+    it "should raise error for domains prefixed with ." do
+      text = 'test@.example.com'
+      a = Mail::Parsers::AddressListsParser.new
+      expect {
+        a.parse(text)
+      }.to raise_error(Mail::Field::ParseError)
+    end
+
+    it "should raise error for domains with consecutive ." do
+      text = 'test@example..com'
+      a = Mail::Parsers::AddressListsParser.new
+      expect {
+        a.parse(text)
+      }.to raise_error(Mail::Field::ParseError)
+    end
+  end
 end
