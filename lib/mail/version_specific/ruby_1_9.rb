@@ -34,6 +34,37 @@ module Mail
     end
     self.charset_encoder = StrictCharsetEncoder.new
 
+    class StrictCharsetEncoder
+      def encode(string, charset)
+        string.force_encoding(Mail::Ruby19.pick_encoding(charset))
+      end
+    end
+
+    class BestEffortCharsetEncoder
+      def encode(string, charset)
+        string.force_encoding(pick_encoding(charset))
+      end
+
+      private
+
+      def pick_encoding(charset)
+        charset = case charset
+                    when /ansi_x3.110-1983/
+                      'ISO-8859-1'
+                    when /Windows-?1258/i # Windows-1258 is similar to 1252
+                      "Windows-1252"
+                    else
+                      charset
+                  end
+        Mail::Ruby19.pick_encoding(charset)
+      end
+    end
+
+    class << self
+      attr_accessor :charset_encoder
+    end
+    self.charset_encoder = StrictCharsetEncoder.new
+
     # Escapes any parenthesis in a string that are unescaped this uses
     # a Ruby 1.9.1 regexp feature of negative look behind
     def Ruby19.escape_paren( str )
@@ -96,8 +127,15 @@ module Mail
       decoded = str.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => "")
       decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "").encode(Encoding::UTF_8)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+      #warn "Encoding conversion failed #{$!}"
+      #str.dup.force_encoding(Encoding::UTF_8)
+      if charset.downcase == 'utf-7'
+        str.force_encoding('utf-8')
+        str = Net::IMAP.decode_utf7(str)
+        str.force_encoding('utf-8')
+      else
+        str.force_encoding(pick_encoding(charset))
+      end
     end
 
     def Ruby19.q_value_encode(str, encoding = nil)

@@ -910,6 +910,84 @@ describe Mail::Encodings do
     end
   end
 
+  describe ".charset_encoder" do
+    class CustomEncoder
+      def encode(str, charset)
+        "#{str}-#{charset}"
+      end
+    end
+
+    def with_encoder(encoder)
+      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      yield
+    ensure
+      Mail::Ruby19.charset_encoder = old
+    end
+
+    it "can use a custom encoder" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          expect(Mail::Encodings.value_decode("=?utf-123?Q?xxx?=")).to eq "xxx-utf-123"
+        end
+      end
+    end
+
+    it "uses converter for params" do
+      if RUBY_VERSION > "1.9"
+        with_encoder CustomEncoder.new do
+          result = Mail::Encodings.param_decode("'ja'%d0%91%d0%b5%d0%b7%d1%8b%d0%bc%d1%8f%d0%bd%d0%bd%d1%8b%d0%b912.png", 'iso-2022-jp')
+          expect(result).to eq "'ja'Безымянный12.png-iso-2022-jp"
+        end
+      end
+    end
+
+    it "can convert ansi with best effort" do
+      if RUBY_VERSION > "1.9"
+        with_encoder Mail::Ruby19::BestEffortCharsetEncoder.new do
+          expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
+        end
+      end
+    end
+  end
+
+  describe ".collapse_adjacent_encodings" do
+    def convert(from, to)
+      expect(Mail::Encodings.collapse_adjacent_encodings(from)).to eq to
+    end
+
+    it "leaves blank intact" do
+      convert "    ", ["    "]
+    end
+
+    it "leaves pure unencoded intact" do
+      convert "AB CD EF ?= =? G", ["AB CD EF ?= =? G"]
+    end
+
+    it "does not modify 1 encoded" do
+      convert "=?iso-2022-jp?B?X=?=", ["=?iso-2022-jp?B?X=?="]
+    end
+
+    it "splits unencoded and encoded into separate parts" do
+      convert "A=?iso-2022-jp?B?X=?=B", ["A", "=?iso-2022-jp?B?X=?=", "B"]
+    end
+
+    it "joins adjacent encodings" do
+      convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", "B"]
+    end
+
+    it "joins adjacent encodings without unencoded" do
+      convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?="]
+    end
+
+    it "does not join encodings when separated by unencoded" do
+      convert "A=?iso-2022-jp?B?X=?=B=?iso-2022-jp?B?Y=?=C", ["A", "=?iso-2022-jp?B?X=?=", "B", "=?iso-2022-jp?B?Y=?=", "C"]
+    end
+
+    it "does not join different encodings" do
+      convert "A=?iso-2022-jp?B?X=?==?utf-8?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?utf-8?B?Y=?=", "B"]
+    end
+  end
+
   describe ".pick_encoding" do
     it "finds encoding" do
       if RUBY_VERSION >= "1.9"

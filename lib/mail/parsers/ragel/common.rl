@@ -48,7 +48,7 @@
   # phrase_lists
   obs_phrase = (word | "." | "@")+;
   phrase = (obs_phrase | word+) >phrase_s %phrase_e;
-  phrase_lists = phrase ("," FWS* phrase)*;
+  phrase_lists = phrase ("," FWS* phrase?)*;
 
   # address_lists
 
