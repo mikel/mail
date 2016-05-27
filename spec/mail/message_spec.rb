@@ -125,7 +125,7 @@ describe Mail::Message do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
         time = DateTime.now
-        allow(DateTime).to receive(:now).and_return(time)
+        DateTime.stub(:now).and_return(time)
 
         @yaml_mail = Mail::Message.new(:to => 'someone@somewhere.com',
                                   :cc => 'someoneelse@somewhere.com',
