@@ -45,9 +45,8 @@ module Mail
   # hostname or update the certificate authorities trusted by your ruby. If
   # that isn't possible, you can control this behavior with
   # an :openssl_verify_mode setting. Its value may be either an OpenSSL
-  # verify mode constant (OpenSSL::SSL::VERIFY_NONE), or a string containing
-  # the name of an OpenSSL verify mode (none, peer, client_once,
-  # fail_if_no_peer_cert).
+  # verify mode constant (OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER), or a string containing
+  # the name of an OpenSSL verify mode (none, peer).
   #
   # === Others 
   # 
