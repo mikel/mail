@@ -588,6 +588,32 @@ describe Mail::Address do
                                          :raw          => 'jdoe@test.example'})
       end
 
+      it "should handle |jlucas. booth@test.example|" do
+        address = Mail::Address.new('jlucas. booth@test.example')
+        expect(address).to break_down_to({
+                                         :name         => 'jlucas.booth@test.example',
+                                         :display_name => 'jlucas.booth@test.example',
+                                         :address      => 'jlucas.booth@test.example',
+                                         :comments     => nil,
+                                         :domain       => 'test.example',
+                                         :local        => 'jlucas.booth',
+                                         :format       => 'jlucas.booth@test.example',
+                                         :raw          => 'jlucas. booth@test.example'})
+      end
+
+      it "should handle |jlucas.  booth@test.example|" do
+        address = Mail::Address.new('jlucas. booth@test.example')
+        expect(address).to break_down_to({
+                                         :name         => 'jlucas.booth@test.example',
+                                         :display_name => 'jlucas.booth@test.example',
+                                         :address      => 'jlucas.booth@test.example',
+                                         :comments     => nil,
+                                         :domain       => 'test.example',
+                                         :local        => 'jlucas.booth',
+                                         :format       => 'jlucas.booth@test.example',
+                                         :raw          => 'jlucas.  booth@test.example'})
+      end
+
       it "should handle |groupname+domain.com@example.com|" do
         address = Mail::Address.new('groupname+domain.com@example.com')
         expect(address).to break_down_to({
