@@ -116,6 +116,11 @@ describe Mail::Field do
       field = Mail::Field.new('Subject: こんにちは', charset)
       field.charset.should eq charset
     end
+
+    it "should escape <CR> and <LF>" do
+      field = Mail::Field.new("To", "mail@\r\nexample.com")
+      field.value.should_not eq "mail@\r\nexample.com"
+    end
   end
 
   describe "error handling" do
