@@ -1265,7 +1265,7 @@ module Mail
       end
     end
 
-    def body_encoding(value)
+    def body_encoding(value = nil)
       if value.nil?
         body.encoding
       else
@@ -1274,7 +1274,7 @@ module Mail
     end
 
     def body_encoding=(value)
-        body.encoding = value
+      body.encoding = value
     end
 
     # Returns the list of addresses this message should be sent to by
