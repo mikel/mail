@@ -1247,7 +1247,7 @@ module Mail
       end
     end
 
-    def body_encoding(value)
+    def body_encoding(value = nil)
       if value.nil?
         body.encoding
       else
