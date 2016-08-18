@@ -21,6 +21,7 @@ Bugs:
 * #998 - Fix header parameter parsing (such as attachment names) for values encoded with a blank charset or language code. (kjg)
 * #1000 - Fix header parameter parsing (such as attachment names) to transcode to UTF-8 (kjg)
 * #1003 - Fix decoding some b encoded headers on specific rubies that don't account for lack of base64 padding (kjg)
+* #1020 - Don't set SMTP verify mode to nil when config was not provided. (jhass)
 * #1023 - Fix double-quoting in display names. (garethrees)
 * #1032 - Fix that comparing messages changed their raw Message-ID to their parsed message_id. (bobjflong)
 * #1074 - Fix that the first address in a list is dropped when a subsequent address has non-US-ASCII characters. (domininik)
