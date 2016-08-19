@@ -530,7 +530,6 @@ than mail (this should be rarely needed)
 
 ```ruby
 @mail = Mail.new
-file_data = File.read('path/to/myfile.pdf')
 @mail.attachments['myfile.pdf'] = { :mime_type => 'application/x-pdf',
                                     :content => File.read('path/to/myfile.pdf') }
 @mail.parts.first.mime_type #=> 'application/x-pdf'
