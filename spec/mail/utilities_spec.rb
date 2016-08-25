@@ -244,6 +244,23 @@ describe "Utilities Module" do
     end
   end
 
+  describe "unescaping phrases" do
+    it "should not modify a string with no backslashes" do
+      expect(unescape('This is a string')).to eq 'This is a string'
+    end
+
+    it "should not modify a quoted string with no backslashes" do
+      expect(unescape('"This is a string"')).to eq '"This is a string"'
+    end
+
+    it "should remove backslash escaping from a string" do
+      expect(unescape('This is \"a string\"')).to eq 'This is "a string"'
+    end
+
+    it "should remove backslash escaping from a quoted string" do
+      expect(unescape('"This is \"a string\""')).to eq '"This is "a string""'
+    end
+  end
 
   describe "parenthesizing phrases" do
     it "should parenthesize a phrase" do
