@@ -68,7 +68,7 @@ require 'mail/utilities'
   # 'full' phrase version.
   action angle_addr_s {
     if qstr
-      address.display_name = qstr
+      address.display_name = Mail::Utilities.unescape(qstr)
       qstr = nil
     elsif phrase_e
       address.display_name = data[phrase_s..phrase_e].strip
