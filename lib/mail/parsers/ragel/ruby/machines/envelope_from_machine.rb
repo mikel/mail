@@ -1,7 +1,7 @@
 
-# line 1 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
+# line 1 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
 
-# line 10 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
+# line 10 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
 
 
 module Mail
@@ -9,7 +9,7 @@ module Mail
     module Ragel
       module EnvelopeFromMachine
         
-# line 13 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 class << self
 	attr_accessor :_envelope_from_trans_keys
 	private :_envelope_from_trans_keys, :_envelope_from_trans_keys=
@@ -82,7 +82,7 @@ self._envelope_from_trans_keys = [
 	9, 126, 9, 126, 9, 
 	126, 9, 126, 1, 127, 
 	1, 127, 10, 10, 9, 32, 
-	9, 126, -128, -1, 1, 
+	9, 126, 0, 127, 1,
 	127, 10, 10, 9, 32, 
 	1, 127, 1, 127, 10, 10, 
 	9, 32, 9, 126, 9, 
@@ -1258,23 +1258,23 @@ self._envelope_from_indicies = [
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
-	244, 244, 244, 244, 244, 244, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 294, 
+	244, 244, 244, 244, 244, 244, 1, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 294,
+	294, 294, 294, 294, 294, 294, 294, 1,
 	294, 294, 294, 294, 294, 294, 294, 294, 
 	299, 1, 294, 294, 300, 294, 294, 294, 
 	294, 294, 294, 294, 294, 294, 294, 294, 
@@ -1707,17 +1707,22 @@ end
 self.envelope_from_en_main = 1;
 
 
-# line 17 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
+# line 17 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
 
         def self.parse(data)
+          # 5.1 Variables Used by Ragel
           p = 0
-          eof = data.length
+          eof = pe = data.length
           stack = []
 
-          actions = []
+          # Used by getkey
           data_unpacked = data.bytes.to_a
+
+          # Accumulates actions for our own parser
+          actions = []
+
           
-# line 1721 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
+# line 1726 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -1725,9 +1730,9 @@ begin
 	top = 0
 end
 
-# line 26 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
+# line 31 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
           
-# line 1731 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
+# line 1736 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -1752,11 +1757,12 @@ begin
 	_keys = cs << 1
 	_inds = _envelope_from_index_offsets[cs]
 	_slen = _envelope_from_key_spans[cs]
+	_wide = ( data_unpacked[p])
 	_trans = if (   _slen > 0 && 
-			_envelope_from_trans_keys[_keys] <= ( data_unpacked[p]) && 
-			( data_unpacked[p]) <= _envelope_from_trans_keys[_keys + 1] 
+			_envelope_from_trans_keys[_keys] <= _wide &&
+			_wide <= _envelope_from_trans_keys[_keys + 1]
 		    ) then
-			_envelope_from_indicies[ _inds + ( data_unpacked[p]) - _envelope_from_trans_keys[_keys] ] 
+			_envelope_from_indicies[ _inds + _wide - _envelope_from_trans_keys[_keys] ]
 		 else 
 			_envelope_from_indicies[ _inds + _slen ]
 		 end
@@ -1764,55 +1770,55 @@ begin
 	if _envelope_from_trans_actions[_trans] != 0
 	case _envelope_from_trans_actions[_trans]
 	when 17 then
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 3 then
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 5 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(2, p) 		end
 	when 13 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 37 then
-# line 8 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
 	when 12 then
-# line 10 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 10 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(7, p) 		end
 	when 19 then
-# line 16 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 16 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(13, p) 		end
 	when 11 then
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
 	when 6 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
 	when 4 then
-# line 23 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(20, p) 		end
 	when 33 then
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
 	when 25 then
-# line 41 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
 	when 23 then
-# line 42 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
 	when 5 then
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1823,7 +1829,7 @@ begin
 	end
  		end
 	when 40 then
-# line 6 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1833,45 +1839,45 @@ begin
 	end
  		end
 	when 1 then
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 5 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(2, p) 		end
-# line 23 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(20, p) 		end
 	when 18 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 16 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
 	when 36 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 23 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(20, p) 		end
 	when 35 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
 	when 15 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1882,10 +1888,10 @@ begin
 	end
  		end
 	when 38 then
-# line 8 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1896,10 +1902,10 @@ begin
 	end
  		end
 	when 39 then
-# line 8 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 6 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1909,17 +1915,17 @@ begin
 	end
  		end
 	when 21 then
-# line 15 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(12, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 20 then
-# line 16 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 16 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(13, p) 		end
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1930,31 +1936,31 @@ begin
 	end
  		end
 	when 10 then
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 29 then
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
 	when 9 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
 	when 8 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1965,27 +1971,27 @@ begin
 	end
  		end
 	when 32 then
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 24 then
-# line 42 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
-# line 41 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
 	when 2 then
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 5 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(2, p) 		end
-# line 23 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(20, p) 		end
-# line 5 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1996,102 +2002,102 @@ begin
 	end
  		end
 	when 22 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 15 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(12, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 14 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 31 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
 	when 34 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 28 then
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 7 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 27 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
 	when 30 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
 	when 26 then
-# line 22 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(19, p) 		end
-# line 21 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 21 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(18, p) 		end
-# line 24 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 24 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(21, p) 		end
-# line 4 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(1, p) 		end
-# line 2095 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
+# line 2101 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 	end
 	end
 	end
@@ -2110,17 +2116,17 @@ begin
 	if p == eof
 	  case _envelope_from_eof_actions[cs]
 	when 41 then
-# line 9 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 9 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(6, p) 		end
 	when 42 then
-# line 7 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 9 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 9 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(6, p) 		end
-# line 2124 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
+# line 2130 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 	  end
 	end
 
@@ -2131,13 +2137,9 @@ begin
 end
 	end
 
-# line 27 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
+# line 32 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
 
-          if p == eof && cs >= 
-# line 2138 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
-214
-# line 28 "/Users/raindrift/workspace/mail/lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb.rl"
-
+          if p == eof && cs >= 214
             return actions, nil
           else
             return [], "Only able to parse up to #{data[0..p]}"

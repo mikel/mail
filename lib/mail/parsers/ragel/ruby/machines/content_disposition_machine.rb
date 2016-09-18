@@ -1,7 +1,7 @@
 
-# line 1 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
+# line 1 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
-# line 10 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
+# line 10 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
 
 module Mail
@@ -9,7 +9,7 @@ module Mail
     module Ragel
       module ContentDispositionMachine
         
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 class << self
 	attr_accessor :_content_disposition_trans_keys
 	private :_content_disposition_trans_keys, :_content_disposition_trans_keys=
@@ -402,17 +402,22 @@ end
 self.content_disposition_en_main = 29;
 
 
-# line 17 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
+# line 17 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
         def self.parse(data)
+          # 5.1 Variables Used by Ragel
           p = 0
-          eof = data.length
+          eof = pe = data.length
           stack = []
 
-          actions = []
+          # Used by getkey
           data_unpacked = data.bytes.to_a
+
+          # Accumulates actions for our own parser
+          actions = []
+
           
-# line 416 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 421 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -420,9 +425,9 @@ begin
 	top = 0
 end
 
-# line 26 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
+# line 31 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
           
-# line 426 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 431 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -447,11 +452,12 @@ begin
 	_keys = cs << 1
 	_inds = _content_disposition_index_offsets[cs]
 	_slen = _content_disposition_key_spans[cs]
+	_wide = ( data_unpacked[p])
 	_trans = if (   _slen > 0 && 
-			_content_disposition_trans_keys[_keys] <= ( data_unpacked[p]) && 
-			( data_unpacked[p]) <= _content_disposition_trans_keys[_keys + 1] 
+			_content_disposition_trans_keys[_keys] <= _wide &&
+			_wide <= _content_disposition_trans_keys[_keys + 1]
 		    ) then
-			_content_disposition_indicies[ _inds + ( data_unpacked[p]) - _content_disposition_trans_keys[_keys] ] 
+			_content_disposition_indicies[ _inds + _wide - _content_disposition_trans_keys[_keys] ]
 		 else 
 			_content_disposition_indicies[ _inds + _slen ]
 		 end
@@ -459,47 +465,47 @@ begin
 	if _content_disposition_trans_actions[_trans] != 0
 	case _content_disposition_trans_actions[_trans]
 	when 2 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 12 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
 	when 24 then
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
 	when 17 then
-# line 14 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 14 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(11, p) 		end
 	when 5 then
-# line 35 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 35 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(32, p) 		end
 	when 4 then
-# line 36 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 36 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(33, p) 		end
 	when 19 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 6 then
-# line 38 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 38 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(35, p) 		end
 	when 10 then
-# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
 	when 8 then
-# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
 	when 1 then
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -510,7 +516,7 @@ begin
 	end
  		end
 	when 15 then
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -520,24 +526,24 @@ begin
 	end
  		end
 	when 11 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 36 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 36 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(33, p) 		end
 	when 21 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 3 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -548,10 +554,10 @@ begin
 	end
  		end
 	when 13 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -562,10 +568,10 @@ begin
 	end
  		end
 	when 14 then
-# line 8 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(5, p) 		end
-# line 6 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 23 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -575,10 +581,10 @@ begin
 	end
  		end
 	when 25 then
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -589,17 +595,17 @@ begin
 	end
  		end
 	when 16 then
-# line 14 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 14 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(11, p) 		end
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
 	when 23 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -610,10 +616,10 @@ begin
 	end
  		end
 	when 7 then
-# line 38 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 38 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(35, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -624,14 +630,14 @@ begin
 	end
  		end
 	when 9 then
-# line 42 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 42 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(39, p) 		end
-# line 41 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 41 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
 	when 20 then
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -641,14 +647,14 @@ begin
 		next
 	end
  		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 22 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -658,17 +664,17 @@ begin
 		next
 	end
  		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 18 then
-# line 14 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 14 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(11, p) 		end
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
-# line 5 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/../../common.rl"
+# line 22 "lib/mail/parsers/ragel/ruby/machines/../../rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -678,7 +684,7 @@ begin
 		next
 	end
  		end
-# line 682 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 688 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 	end
 	end
 	end
@@ -697,32 +703,32 @@ begin
 	if p == eof
 	  case _content_disposition_eof_actions[cs]
 	when 2 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
 	when 24 then
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
 	when 19 then
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 21 then
-# line 7 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(4, p) 		end
-# line 37 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 37 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(34, p) 		end
 	when 16 then
-# line 14 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 14 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(11, p) 		end
-# line 13 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
+# line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
-# line 726 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 732 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 	  end
 	end
 
@@ -733,13 +739,9 @@ begin
 end
 	end
 
-# line 27 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
+# line 32 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
-          if p == eof && cs >= 
-# line 740 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
-29
-# line 28 "/home/bpot/src/gh/bpot/mail/lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb.rl"
-
+          if p == eof && cs >= 29
             return actions, nil
           else
             return [], "Only able to parse up to #{data[0..p]}"

@@ -1,27 +1,32 @@
 %%{
-  machine address_lists;
+  machine phrase_lists;
 
   include rb_actions "rb_actions.rl";
-  include common "../../common.rl";
+  include rfc5322 "../../rfc5322.rl";
 
   getkey data_unpacked[p];
 
-  main := address_lists;
+  main := phrase_lists;
 }%%
 
 module Mail
   module Parsers
     module Ragel
-      module AddressListsMachine
+      module PhraseListsMachine
         %%write data;
 
         def self.parse(data)
+          # 5.1 Variables Used by Ragel
           p = 0
-          eof = data.length
+          eof = pe = data.length
           stack = []
 
-          actions = []
+          # Used by getkey
           data_unpacked = data.bytes.to_a
+
+          # Accumulates actions for our own parser
+          actions = []
+
           %%write init;
           %%write exec;
 

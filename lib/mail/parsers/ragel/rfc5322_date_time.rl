@@ -1,6 +1,8 @@
 %%{
-
-  machine date_time;
+  # RFC 5322 Internet Message Format
+  # Section 3.3. Date and Time Specification
+  # https://tools.ietf.org/html/rfc5322#section-3.3
+  machine rfc5322_date_time;
 
   # day_of_week
   day_name = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
@@ -27,4 +29,6 @@
   zone = FWS ((("+" | "-") DIGIT DIGIT DIGIT DIGIT) | obs_zone);
   time = time_of_day zone;
 
+  date_time = (day_of_week ",")?
+              (date >date_s %date_e) <: (time >time_s %time_e) CFWS?;
 }%%

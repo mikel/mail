@@ -1,27 +1,32 @@
 %%{
-  machine <%= parser_name %>;
+  machine date_time;
 
   include rb_actions "rb_actions.rl";
-  include common "../../common.rl";
+  include rfc5322 "../../rfc5322.rl";
 
   getkey data_unpacked[p];
 
-  main := <%= parser_name %>;
+  main := date_time;
 }%%
 
 module Mail
   module Parsers
     module Ragel
-      module <%= parser_name_cc %>
+      module DateTimeMachine
         %%write data;
 
         def self.parse(data)
+          # 5.1 Variables Used by Ragel
           p = 0
-          eof = data.length
+          eof = pe = data.length
           stack = []
 
-          actions = []
+          # Used by getkey
           data_unpacked = data.bytes.to_a
+
+          # Accumulates actions for our own parser
+          actions = []
+
           %%write init;
           %%write exec;
 
