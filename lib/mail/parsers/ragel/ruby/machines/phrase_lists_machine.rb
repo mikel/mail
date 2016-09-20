@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 class << self
-	attr_accessor :_phrase_lists_trans_keys
-	private :_phrase_lists_trans_keys, :_phrase_lists_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._phrase_lists_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 126, 9, 126, 
 	10, 10, 9, 32, 10, 
 	10, 9, 32, 1, 127, 
@@ -22,16 +22,16 @@ self._phrase_lists_trans_keys = [
 	0, 127, 9, 126, 10, 
 	10, 9, 32, 9, 126, 
 	1, 127, 1, 127, 10, 10, 
-	9, 32, -128, -1, 9, 
+	9, 32, 0, 127, 9, 
 	126, 9, 126, 9, 126, 
 	0, 0, 0
 ]
 
 class << self
-	attr_accessor :_phrase_lists_key_spans
-	private :_phrase_lists_key_spans, :_phrase_lists_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._phrase_lists_key_spans = [
+self._key_spans = [
 	0, 118, 118, 1, 24, 1, 24, 127, 
 	127, 1, 24, 128, 118, 1, 24, 118, 
 	127, 127, 1, 24, 128, 118, 118, 118, 
@@ -39,10 +39,10 @@ self._phrase_lists_key_spans = [
 ]
 
 class << self
-	attr_accessor :_phrase_lists_index_offsets
-	private :_phrase_lists_index_offsets, :_phrase_lists_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._phrase_lists_index_offsets = [
+self._index_offsets = [
 	0, 0, 119, 238, 240, 265, 267, 292, 
 	420, 548, 550, 575, 704, 823, 825, 850, 
 	969, 1097, 1225, 1227, 1252, 1381, 1500, 1619, 
@@ -50,10 +50,10 @@ self._phrase_lists_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_phrase_lists_indicies
-	private :_phrase_lists_indicies, :_phrase_lists_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._phrase_lists_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -210,23 +210,23 @@ self._phrase_lists_indicies = [
 	1, 42, 1, 37, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 37, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 37, 9, 1, 1, 
+	1, 1, 37, 1, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 37, 37, 37, 37, 
+	37, 37, 37, 37, 1, 9, 1, 1, 
 	1, 43, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 9, 9, 10, 9, 
@@ -275,10 +275,10 @@ self._phrase_lists_indicies = [
 ]
 
 class << self
-	attr_accessor :_phrase_lists_trans_targs
-	private :_phrase_lists_trans_targs, :_phrase_lists_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._phrase_lists_trans_targs = [
+self._trans_targs = [
 	2, 0, 3, 21, 7, 15, 23, 2, 
 	3, 21, 7, 15, 4, 6, 8, 9, 
 	21, 11, 8, 9, 21, 11, 10, 12, 
@@ -289,10 +289,10 @@ self._phrase_lists_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_phrase_lists_trans_actions
-	private :_phrase_lists_trans_actions, :_phrase_lists_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._phrase_lists_trans_actions = [
+self._trans_actions = [
 	1, 0, 1, 1, 1, 2, 1, 0, 
 	0, 0, 0, 3, 0, 0, 4, 4, 
 	5, 4, 0, 0, 6, 0, 0, 1, 
@@ -303,10 +303,10 @@ self._phrase_lists_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_phrase_lists_eof_actions
-	private :_phrase_lists_eof_actions, :_phrase_lists_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._phrase_lists_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 13, 14, 13, 
@@ -314,26 +314,26 @@ self._phrase_lists_eof_actions = [
 ]
 
 class << self
-	attr_accessor :phrase_lists_start
+	attr_accessor :start
 end
-self.phrase_lists_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :phrase_lists_first_final
+	attr_accessor :first_final
 end
-self.phrase_lists_first_final = 21;
+self.first_final = 21;
 class << self
-	attr_accessor :phrase_lists_error
+	attr_accessor :error
 end
-self.phrase_lists_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :phrase_lists_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.phrase_lists_en_comment_tail = 16;
+self.en_comment_tail = 16;
 class << self
-	attr_accessor :phrase_lists_en_main
+	attr_accessor :en_main
 end
-self.phrase_lists_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
@@ -352,7 +352,7 @@ self.phrase_lists_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = phrase_lists_start
+	cs = start
 	top = 0
 end
 
@@ -381,20 +381,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _phrase_lists_index_offsets[cs]
-	_slen = _phrase_lists_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_phrase_lists_trans_keys[_keys] <= _wide && 
-			_wide <= _phrase_lists_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_phrase_lists_indicies[ _inds + _wide - _phrase_lists_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_phrase_lists_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _phrase_lists_trans_targs[_trans]
-	if _phrase_lists_trans_actions[_trans] != 0
-	case _phrase_lists_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 7 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -526,7 +526,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _phrase_lists_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 13 then
 # line 39 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

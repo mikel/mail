@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 class << self
-	attr_accessor :_content_disposition_trans_keys
-	private :_content_disposition_trans_keys, :_content_disposition_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._content_disposition_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 59, 10, 10, 
 	9, 32, 9, 59, 9, 
 	126, 10, 10, 9, 32, 
@@ -32,10 +32,10 @@ self._content_disposition_trans_keys = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_key_spans
-	private :_content_disposition_key_spans, :_content_disposition_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._content_disposition_key_spans = [
+self._key_spans = [
 	0, 51, 1, 24, 51, 118, 1, 24, 
 	94, 118, 32, 1, 24, 127, 127, 1, 
 	24, 1, 24, 128, 32, 1, 24, 118, 
@@ -44,10 +44,10 @@ self._content_disposition_key_spans = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_index_offsets
-	private :_content_disposition_index_offsets, :_content_disposition_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._content_disposition_index_offsets = [
+self._index_offsets = [
 	0, 0, 52, 54, 79, 131, 250, 252, 
 	277, 372, 491, 524, 526, 551, 679, 807, 
 	809, 834, 836, 861, 990, 1023, 1025, 1050, 
@@ -56,10 +56,10 @@ self._content_disposition_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_indicies
-	private :_content_disposition_indicies, :_content_disposition_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._content_disposition_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -332,10 +332,10 @@ self._content_disposition_indicies = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_trans_targs
-	private :_content_disposition_trans_targs, :_content_disposition_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._content_disposition_trans_targs = [
+self._trans_targs = [
 	1, 0, 2, 4, 5, 3, 1, 2, 
 	4, 5, 6, 8, 23, 7, 8, 9, 
 	10, 11, 32, 13, 20, 10, 11, 13, 
@@ -350,10 +350,10 @@ self._content_disposition_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_trans_actions
-	private :_content_disposition_trans_actions, :_content_disposition_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._content_disposition_trans_actions = [
+self._trans_actions = [
 	0, 0, 0, 1, 0, 0, 2, 2, 
 	3, 2, 0, 4, 1, 0, 0, 5, 
 	6, 6, 6, 6, 7, 0, 0, 0, 
@@ -368,10 +368,10 @@ self._content_disposition_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_content_disposition_eof_actions
-	private :_content_disposition_eof_actions, :_content_disposition_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._content_disposition_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -380,26 +380,26 @@ self._content_disposition_eof_actions = [
 ]
 
 class << self
-	attr_accessor :content_disposition_start
+	attr_accessor :start
 end
-self.content_disposition_start = 29;
+self.start = 29;
 class << self
-	attr_accessor :content_disposition_first_final
+	attr_accessor :first_final
 end
-self.content_disposition_first_final = 29;
+self.first_final = 29;
 class << self
-	attr_accessor :content_disposition_error
+	attr_accessor :error
 end
-self.content_disposition_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :content_disposition_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.content_disposition_en_comment_tail = 24;
+self.en_comment_tail = 24;
 class << self
-	attr_accessor :content_disposition_en_main
+	attr_accessor :en_main
 end
-self.content_disposition_en_main = 29;
+self.en_main = 29;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
@@ -418,7 +418,7 @@ self.content_disposition_en_main = 29;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = content_disposition_start
+	cs = start
 	top = 0
 end
 
@@ -447,20 +447,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _content_disposition_index_offsets[cs]
-	_slen = _content_disposition_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_content_disposition_trans_keys[_keys] <= _wide && 
-			_wide <= _content_disposition_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_content_disposition_indicies[ _inds + _wide - _content_disposition_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_content_disposition_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _content_disposition_trans_targs[_trans]
-	if _content_disposition_trans_actions[_trans] != 0
-	case _content_disposition_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 2 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -698,7 +698,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _content_disposition_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 2 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

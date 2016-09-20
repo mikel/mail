@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/content_type_machine.rb"
 class << self
-	attr_accessor :_content_type_trans_keys
-	private :_content_type_trans_keys, :_content_type_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._content_type_trans_keys = [
+self._trans_keys = [
 	0, 0, 33, 126, 33, 126, 
 	33, 126, 9, 126, 10, 
 	10, 9, 32, 33, 126, 
@@ -23,21 +23,21 @@ self._content_type_trans_keys = [
 	127, 10, 10, 9, 32, 
 	10, 10, 9, 32, 9, 126, 
 	9, 126, 10, 10, 9, 
-	32, 9, 126, -128, -1, 
+	32, 9, 126, 0, 127, 
 	9, 40, 10, 10, 9, 32, 
 	9, 126, 1, 127, 1, 
 	127, 10, 10, 9, 32, 
-	0, 127, 9, 126, 9, 59, 
+	-128, -1, 9, 126, 9, 59, 
 	9, 126, 9, 126, 9, 
 	126, 9, 126, 9, 126, 
 	0, 0, 0
 ]
 
 class << self
-	attr_accessor :_content_type_key_spans
-	private :_content_type_key_spans, :_content_type_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._content_type_key_spans = [
+self._key_spans = [
 	0, 94, 94, 94, 118, 1, 24, 94, 
 	118, 32, 1, 24, 127, 127, 1, 24, 
 	1, 24, 118, 118, 1, 24, 118, 128, 
@@ -47,10 +47,10 @@ self._content_type_key_spans = [
 ]
 
 class << self
-	attr_accessor :_content_type_index_offsets
-	private :_content_type_index_offsets, :_content_type_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._content_type_index_offsets = [
+self._index_offsets = [
 	0, 0, 95, 190, 285, 404, 406, 431, 
 	526, 645, 678, 680, 705, 833, 961, 963, 
 	988, 990, 1015, 1134, 1253, 1255, 1280, 1399, 
@@ -60,10 +60,10 @@ self._content_type_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_content_type_indicies
-	private :_content_type_indicies, :_content_type_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._content_type_indicies = [
+self._indicies = [
 	0, 0, 0, 0, 0, 0, 0, 1, 
 	1, 0, 0, 0, 0, 0, 1, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -238,23 +238,23 @@ self._content_type_indicies = [
 	40, 40, 40, 40, 40, 40, 40, 40, 
 	40, 40, 40, 40, 40, 40, 40, 40, 
 	40, 40, 40, 40, 40, 40, 40, 40, 
-	40, 40, 40, 40, 40, 40, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 27, 
+	40, 40, 40, 40, 40, 40, 1, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 27, 
+	27, 27, 27, 27, 27, 27, 27, 1, 
 	42, 1, 1, 1, 43, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 42, 
@@ -312,23 +312,23 @@ self._content_type_indicies = [
 	57, 57, 1, 62, 1, 57, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 57, 1, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 1, 63, 
+	1, 1, 1, 1, 57, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 57, 63, 
 	1, 1, 1, 64, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 63, 65, 
@@ -428,10 +428,10 @@ self._content_type_indicies = [
 ]
 
 class << self
-	attr_accessor :_content_type_trans_targs
-	private :_content_type_trans_targs, :_content_type_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._content_type_trans_targs = [
+self._trans_targs = [
 	2, 0, 2, 3, 33, 4, 5, 7, 
 	27, 18, 6, 7, 8, 9, 10, 37, 
 	12, 24, 9, 10, 12, 24, 11, 13, 
@@ -446,10 +446,10 @@ self._content_type_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_content_type_trans_actions
-	private :_content_type_trans_actions, :_content_type_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._content_type_trans_actions = [
+self._trans_actions = [
 	1, 0, 0, 2, 3, 0, 0, 4, 
 	5, 0, 0, 0, 6, 7, 7, 7, 
 	7, 8, 0, 0, 0, 5, 0, 9, 
@@ -464,10 +464,10 @@ self._content_type_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_content_type_eof_actions
-	private :_content_type_eof_actions, :_content_type_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._content_type_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -477,26 +477,26 @@ self._content_type_eof_actions = [
 ]
 
 class << self
-	attr_accessor :content_type_start
+	attr_accessor :start
 end
-self.content_type_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :content_type_first_final
+	attr_accessor :first_final
 end
-self.content_type_first_final = 33;
+self.first_final = 33;
 class << self
-	attr_accessor :content_type_error
+	attr_accessor :error
 end
-self.content_type_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :content_type_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.content_type_en_comment_tail = 28;
+self.en_comment_tail = 28;
 class << self
-	attr_accessor :content_type_en_main
+	attr_accessor :en_main
 end
-self.content_type_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/content_type_machine.rl"
@@ -515,7 +515,7 @@ self.content_type_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = content_type_start
+	cs = start
 	top = 0
 end
 
@@ -544,20 +544,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _content_type_index_offsets[cs]
-	_slen = _content_type_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_content_type_trans_keys[_keys] <= _wide && 
-			_wide <= _content_type_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_content_type_indicies[ _inds + _wide - _content_type_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_content_type_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _content_type_trans_targs[_trans]
-	if _content_type_trans_actions[_trans] != 0
-	case _content_type_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 12 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -779,7 +779,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _content_type_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 12 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

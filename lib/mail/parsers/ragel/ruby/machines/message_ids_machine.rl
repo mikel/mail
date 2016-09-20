@@ -11,7 +11,7 @@ module Mail
   module Parsers
     module Ragel
       module MessageIdsMachine
-        %%write data;
+        %%write data noprefix;
 
         def self.parse(data)
           # 5.1 Variables Used by Ragel

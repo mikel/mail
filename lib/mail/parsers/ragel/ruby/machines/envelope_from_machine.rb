@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rb"
 class << self
-	attr_accessor :_envelope_from_trans_keys
-	private :_envelope_from_trans_keys, :_envelope_from_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._envelope_from_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 126, 9, 126, 
 	10, 10, 9, 32, 9, 
 	126, 9, 64, 10, 10, 
@@ -82,7 +82,7 @@ self._envelope_from_trans_keys = [
 	9, 126, 9, 126, 9, 
 	126, 9, 126, 1, 127, 
 	1, 127, 10, 10, 9, 32, 
-	9, 126, -128, -1, 1, 
+	9, 126, 0, 127, 1, 
 	127, 10, 10, 9, 32, 
 	1, 127, 1, 127, 10, 10, 
 	9, 32, 9, 126, 9, 
@@ -100,10 +100,10 @@ self._envelope_from_trans_keys = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_key_spans
-	private :_envelope_from_key_spans, :_envelope_from_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._envelope_from_key_spans = [
+self._key_spans = [
 	0, 118, 118, 1, 24, 118, 56, 1, 
 	24, 79, 56, 118, 1, 24, 118, 56, 
 	1, 24, 79, 56, 118, 118, 1, 24, 
@@ -135,10 +135,10 @@ self._envelope_from_key_spans = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_index_offsets
-	private :_envelope_from_index_offsets, :_envelope_from_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._envelope_from_index_offsets = [
+self._index_offsets = [
 	0, 0, 119, 238, 240, 265, 384, 441, 
 	443, 468, 548, 605, 724, 726, 751, 870, 
 	927, 929, 954, 1034, 1091, 1210, 1329, 1331, 
@@ -170,10 +170,10 @@ self._envelope_from_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_indicies
-	private :_envelope_from_indicies, :_envelope_from_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._envelope_from_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -1258,23 +1258,23 @@ self._envelope_from_indicies = [
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
-	244, 244, 244, 244, 244, 244, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 294, 
+	244, 244, 244, 244, 244, 244, 1, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 294, 
+	294, 294, 294, 294, 294, 294, 294, 1, 
 	294, 294, 294, 294, 294, 294, 294, 294, 
 	299, 1, 294, 294, 300, 294, 294, 294, 
 	294, 294, 294, 294, 294, 294, 294, 294, 
@@ -1542,10 +1542,10 @@ self._envelope_from_indicies = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_trans_targs
-	private :_envelope_from_trans_targs, :_envelope_from_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._envelope_from_trans_targs = [
+self._trans_targs = [
 	2, 0, 3, 5, 184, 203, 204, 205, 
 	2, 3, 5, 184, 203, 204, 4, 6, 
 	7, 9, 5, 140, 10, 153, 20, 6, 
@@ -1596,10 +1596,10 @@ self._envelope_from_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_trans_actions
-	private :_envelope_from_trans_actions, :_envelope_from_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._envelope_from_trans_actions = [
+self._trans_actions = [
 	1, 0, 1, 1, 1, 2, 1, 3, 
 	0, 0, 4, 4, 5, 4, 0, 6, 
 	6, 7, 0, 0, 8, 0, 9, 0, 
@@ -1650,10 +1650,10 @@ self._envelope_from_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_envelope_from_eof_actions
-	private :_envelope_from_eof_actions, :_envelope_from_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._envelope_from_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -1685,26 +1685,26 @@ self._envelope_from_eof_actions = [
 ]
 
 class << self
-	attr_accessor :envelope_from_start
+	attr_accessor :start
 end
-self.envelope_from_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :envelope_from_first_final
+	attr_accessor :first_final
 end
-self.envelope_from_first_final = 214;
+self.first_final = 214;
 class << self
-	attr_accessor :envelope_from_error
+	attr_accessor :error
 end
-self.envelope_from_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :envelope_from_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.envelope_from_en_comment_tail = 209;
+self.en_comment_tail = 209;
 class << self
-	attr_accessor :envelope_from_en_main
+	attr_accessor :en_main
 end
-self.envelope_from_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/envelope_from_machine.rl"
@@ -1723,7 +1723,7 @@ self.envelope_from_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = envelope_from_start
+	cs = start
 	top = 0
 end
 
@@ -1752,20 +1752,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _envelope_from_index_offsets[cs]
-	_slen = _envelope_from_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_envelope_from_trans_keys[_keys] <= _wide && 
-			_wide <= _envelope_from_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_envelope_from_indicies[ _inds + _wide - _envelope_from_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_envelope_from_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _envelope_from_trans_targs[_trans]
-	if _envelope_from_trans_actions[_trans] != 0
-	case _envelope_from_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 17 then
 # line 4 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -2111,7 +2111,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _envelope_from_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 41 then
 # line 9 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

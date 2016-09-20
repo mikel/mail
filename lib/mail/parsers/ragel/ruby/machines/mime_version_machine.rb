@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
 class << self
-	attr_accessor :_mime_version_trans_keys
-	private :_mime_version_trans_keys, :_mime_version_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._mime_version_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 57, 10, 10, 
 	9, 32, 9, 57, 40, 
 	57, 46, 46, 40, 57, 
@@ -26,30 +26,30 @@ self._mime_version_trans_keys = [
 ]
 
 class << self
-	attr_accessor :_mime_version_key_spans
-	private :_mime_version_key_spans, :_mime_version_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._mime_version_key_spans = [
+self._key_spans = [
 	0, 49, 1, 24, 49, 18, 1, 18, 
 	10, 1, 24, 127, 127, 1, 24, 128, 
 	49, 32, 32, 0
 ]
 
 class << self
-	attr_accessor :_mime_version_index_offsets
-	private :_mime_version_index_offsets, :_mime_version_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._mime_version_index_offsets = [
+self._index_offsets = [
 	0, 0, 50, 52, 77, 127, 146, 148, 
 	167, 178, 180, 205, 333, 461, 463, 488, 
 	617, 667, 700, 733
 ]
 
 class << self
-	attr_accessor :_mime_version_indicies
-	private :_mime_version_indicies, :_mime_version_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._mime_version_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -145,10 +145,10 @@ self._mime_version_indicies = [
 ]
 
 class << self
-	attr_accessor :_mime_version_trans_targs
-	private :_mime_version_trans_targs, :_mime_version_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._mime_version_trans_targs = [
+self._trans_targs = [
 	1, 0, 2, 4, 5, 3, 1, 2, 
 	4, 5, 6, 7, 5, 7, 8, 16, 
 	16, 10, 17, 12, 13, 12, 19, 15, 
@@ -157,10 +157,10 @@ self._mime_version_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_mime_version_trans_actions
-	private :_mime_version_trans_actions, :_mime_version_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._mime_version_trans_actions = [
+self._trans_actions = [
 	0, 0, 0, 1, 2, 0, 3, 3, 
 	4, 5, 6, 7, 0, 3, 1, 8, 
 	9, 0, 0, 10, 10, 11, 12, 10, 
@@ -169,36 +169,36 @@ self._mime_version_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_mime_version_eof_actions
-	private :_mime_version_eof_actions, :_mime_version_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._mime_version_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	14, 0, 3, 0
 ]
 
 class << self
-	attr_accessor :mime_version_start
+	attr_accessor :start
 end
-self.mime_version_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :mime_version_first_final
+	attr_accessor :first_final
 end
-self.mime_version_first_final = 16;
+self.first_final = 16;
 class << self
-	attr_accessor :mime_version_error
+	attr_accessor :error
 end
-self.mime_version_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :mime_version_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.mime_version_en_comment_tail = 11;
+self.en_comment_tail = 11;
 class << self
-	attr_accessor :mime_version_en_main
+	attr_accessor :en_main
 end
-self.mime_version_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
@@ -217,7 +217,7 @@ self.mime_version_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = mime_version_start
+	cs = start
 	top = 0
 end
 
@@ -246,20 +246,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _mime_version_index_offsets[cs]
-	_slen = _mime_version_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_mime_version_trans_keys[_keys] <= _wide && 
-			_wide <= _mime_version_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_mime_version_indicies[ _inds + _wide - _mime_version_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_mime_version_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _mime_version_trans_targs[_trans]
-	if _mime_version_trans_actions[_trans] != 0
-	case _mime_version_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -405,7 +405,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _mime_version_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

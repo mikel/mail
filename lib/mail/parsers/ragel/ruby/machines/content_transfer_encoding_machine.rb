@@ -11,45 +11,45 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rb"
 class << self
-	attr_accessor :_content_transfer_encoding_trans_keys
-	private :_content_transfer_encoding_trans_keys, :_content_transfer_encoding_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._content_transfer_encoding_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 126, 10, 10, 
 	9, 32, 10, 10, 9, 
 	32, 10, 10, 9, 32, 
 	9, 126, 1, 127, 1, 127, 
-	10, 10, 9, 32, 0, 
-	127, 9, 126, 9, 59, 
+	10, 10, 9, 32, -128, 
+	-1, 9, 126, 9, 59, 
 	9, 59, 9, 40, 9, 40, 
 	0, 0, 0
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_key_spans
-	private :_content_transfer_encoding_key_spans, :_content_transfer_encoding_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._content_transfer_encoding_key_spans = [
+self._key_spans = [
 	0, 118, 1, 24, 1, 24, 1, 24, 
 	118, 127, 127, 1, 24, 128, 118, 51, 
 	51, 32, 32, 0
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_index_offsets
-	private :_content_transfer_encoding_index_offsets, :_content_transfer_encoding_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._content_transfer_encoding_index_offsets = [
+self._index_offsets = [
 	0, 0, 119, 121, 146, 148, 173, 175, 
 	200, 319, 447, 575, 577, 602, 731, 850, 
 	902, 954, 987, 1020
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_indicies
-	private :_content_transfer_encoding_indicies, :_content_transfer_encoding_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._content_transfer_encoding_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -125,23 +125,23 @@ self._content_transfer_encoding_indicies = [
 	1, 19, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	19, 1, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 19, 19, 19, 19, 19, 19, 
-	19, 19, 1, 25, 1, 1, 1, 26, 
+	19, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 19, 25, 1, 1, 1, 26, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 25, 27, 27, 27, 27, 27, 
@@ -181,10 +181,10 @@ self._content_transfer_encoding_indicies = [
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_trans_targs
-	private :_content_transfer_encoding_trans_targs, :_content_transfer_encoding_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._content_transfer_encoding_trans_targs = [
+self._trans_targs = [
 	1, 0, 2, 14, 8, 3, 5, 15, 
 	7, 17, 1, 2, 14, 8, 10, 11, 
 	10, 19, 13, 10, 11, 10, 19, 13, 
@@ -193,10 +193,10 @@ self._content_transfer_encoding_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_trans_actions
-	private :_content_transfer_encoding_trans_actions, :_content_transfer_encoding_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._content_transfer_encoding_trans_actions = [
+self._trans_actions = [
 	0, 0, 0, 1, 2, 0, 0, 0, 
 	0, 0, 3, 3, 4, 5, 6, 6, 
 	7, 8, 6, 0, 0, 2, 9, 0, 
@@ -205,36 +205,36 @@ self._content_transfer_encoding_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_content_transfer_encoding_eof_actions
-	private :_content_transfer_encoding_eof_actions, :_content_transfer_encoding_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._content_transfer_encoding_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 10, 0, 
 	3, 0, 3, 0
 ]
 
 class << self
-	attr_accessor :content_transfer_encoding_start
+	attr_accessor :start
 end
-self.content_transfer_encoding_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :content_transfer_encoding_first_final
+	attr_accessor :first_final
 end
-self.content_transfer_encoding_first_final = 14;
+self.first_final = 14;
 class << self
-	attr_accessor :content_transfer_encoding_error
+	attr_accessor :error
 end
-self.content_transfer_encoding_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :content_transfer_encoding_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.content_transfer_encoding_en_comment_tail = 9;
+self.en_comment_tail = 9;
 class << self
-	attr_accessor :content_transfer_encoding_en_main
+	attr_accessor :en_main
 end
-self.content_transfer_encoding_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/content_transfer_encoding_machine.rl"
@@ -253,7 +253,7 @@ self.content_transfer_encoding_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = content_transfer_encoding_start
+	cs = start
 	top = 0
 end
 
@@ -282,20 +282,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _content_transfer_encoding_index_offsets[cs]
-	_slen = _content_transfer_encoding_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_content_transfer_encoding_trans_keys[_keys] <= _wide && 
-			_wide <= _content_transfer_encoding_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_content_transfer_encoding_indicies[ _inds + _wide - _content_transfer_encoding_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_content_transfer_encoding_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _content_transfer_encoding_trans_targs[_trans]
-	if _content_transfer_encoding_trans_actions[_trans] != 0
-	case _content_transfer_encoding_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -412,7 +412,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _content_transfer_encoding_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

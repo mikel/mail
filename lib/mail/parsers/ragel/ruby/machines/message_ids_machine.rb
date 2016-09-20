@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/message_ids_machine.rb"
 class << self
-	attr_accessor :_message_ids_trans_keys
-	private :_message_ids_trans_keys, :_message_ids_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._message_ids_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 60, 10, 10, 
 	9, 32, 9, 60, 9, 
 	126, 9, 126, 10, 10, 
@@ -33,13 +33,13 @@ self._message_ids_trans_keys = [
 	10, 10, 9, 32, 9, 126, 
 	9, 62, 10, 10, 9, 
 	32, 9, 62, 33, 126, 
-	-128, -1, 10, 10, 9, 32, 
+	0, 127, 10, 10, 9, 32, 
 	9, 126, 9, 126, 1, 
 	127, 10, 10, 9, 32, 
 	-128, -1, 9, 126, 9, 126, 
 	33, 126, 33, 126, 1, 
 	127, 1, 127, 10, 10, 
-	9, 32, 0, 127, 9, 126, 
+	9, 32, -128, -1, 9, 126, 
 	1, 127, 1, 127, 10, 
 	10, 9, 32, 9, 126, 
 	9, 64, 10, 10, 9, 32, 
@@ -53,21 +53,21 @@ self._message_ids_trans_keys = [
 	127, 1, 127, 10, 10, 
 	9, 32, 9, 126, 9, 64, 
 	10, 10, 9, 32, 9, 
-	64, 0, 127, 1, 127, 
+	64, -128, -1, 1, 127, 
 	10, 10, 9, 32, 9, 64, 
 	10, 10, 9, 32, 9, 
 	64, 9, 126, 33, 126, 
 	1, 127, 1, 127, 10, 10, 
-	9, 32, 0, 127, 9, 
+	9, 32, -128, -1, 9, 
 	60, 9, 60, 9, 60, 
 	0, 0, 0
 ]
 
 class << self
-	attr_accessor :_message_ids_key_spans
-	private :_message_ids_key_spans, :_message_ids_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._message_ids_key_spans = [
+self._key_spans = [
 	0, 52, 1, 24, 52, 118, 118, 1, 
 	24, 118, 56, 1, 24, 56, 118, 1, 
 	24, 118, 56, 1, 24, 56, 118, 118, 
@@ -87,10 +87,10 @@ self._message_ids_key_spans = [
 ]
 
 class << self
-	attr_accessor :_message_ids_index_offsets
-	private :_message_ids_index_offsets, :_message_ids_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._message_ids_index_offsets = [
+self._index_offsets = [
 	0, 0, 53, 55, 80, 133, 252, 371, 
 	373, 398, 517, 574, 576, 601, 658, 777, 
 	779, 804, 923, 980, 982, 1007, 1064, 1183, 
@@ -110,10 +110,10 @@ self._message_ids_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_message_ids_indicies
-	private :_message_ids_indicies, :_message_ids_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._message_ids_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -442,23 +442,23 @@ self._message_ids_indicies = [
 	93, 93, 93, 93, 93, 93, 93, 93, 
 	93, 93, 93, 93, 93, 93, 93, 93, 
 	93, 93, 93, 93, 93, 93, 93, 93, 
-	93, 93, 93, 93, 93, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 89, 102, 
+	93, 93, 93, 93, 93, 1, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 1, 102, 
 	1, 63, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
@@ -616,23 +616,23 @@ self._message_ids_indicies = [
 	125, 1, 121, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 121, 1, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 121, 121, 121, 121, 121, 
-	121, 121, 121, 1, 36, 1, 1, 1, 
+	1, 121, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 121, 36, 1, 1, 1, 
 	126, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 36, 127, 128, 127, 127, 
@@ -936,23 +936,23 @@ self._message_ids_indicies = [
 	1, 191, 1, 1, 1, 1, 1, 36, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 192, 1, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 175, 175, 175, 175, 175, 
-	175, 175, 175, 1, 175, 175, 175, 175, 
+	1, 192, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 175, 175, 175, 175, 175, 
 	175, 175, 175, 175, 193, 1, 175, 175, 
 	194, 175, 175, 175, 175, 175, 175, 175, 
 	175, 175, 175, 175, 175, 175, 175, 175, 
@@ -1051,23 +1051,23 @@ self._message_ids_indicies = [
 	218, 1, 223, 1, 218, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 218, 1, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 218, 218, 218, 
-	218, 218, 218, 218, 218, 1, 224, 1, 
+	1, 1, 1, 218, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 218, 224, 1, 
 	1, 1, 225, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 224, 1, 1, 
@@ -1091,10 +1091,10 @@ self._message_ids_indicies = [
 ]
 
 class << self
-	attr_accessor :_message_ids_trans_targs
-	private :_message_ids_trans_targs, :_message_ids_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._message_ids_trans_targs = [
+self._trans_targs = [
 	1, 0, 2, 4, 5, 3, 1, 2, 
 	4, 5, 6, 7, 9, 93, 110, 111, 
 	6, 7, 110, 8, 10, 11, 9, 67, 
@@ -1128,10 +1128,10 @@ self._message_ids_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_message_ids_trans_actions
-	private :_message_ids_trans_actions, :_message_ids_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._message_ids_trans_actions = [
+self._trans_actions = [
 	0, 0, 0, 1, 2, 0, 3, 3, 
 	4, 5, 6, 6, 6, 6, 7, 6, 
 	0, 0, 1, 0, 8, 8, 0, 0, 
@@ -1165,10 +1165,10 @@ self._message_ids_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_message_ids_eof_actions
-	private :_message_ids_eof_actions, :_message_ids_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._message_ids_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -1188,26 +1188,26 @@ self._message_ids_eof_actions = [
 ]
 
 class << self
-	attr_accessor :message_ids_start
+	attr_accessor :start
 end
-self.message_ids_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :message_ids_first_final
+	attr_accessor :first_final
 end
-self.message_ids_first_final = 117;
+self.first_final = 117;
 class << self
-	attr_accessor :message_ids_error
+	attr_accessor :error
 end
-self.message_ids_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :message_ids_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.message_ids_en_comment_tail = 112;
+self.en_comment_tail = 112;
 class << self
-	attr_accessor :message_ids_en_main
+	attr_accessor :en_main
 end
-self.message_ids_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/message_ids_machine.rl"
@@ -1226,7 +1226,7 @@ self.message_ids_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = message_ids_start
+	cs = start
 	top = 0
 end
 
@@ -1255,20 +1255,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _message_ids_index_offsets[cs]
-	_slen = _message_ids_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_message_ids_trans_keys[_keys] <= _wide && 
-			_wide <= _message_ids_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_message_ids_indicies[ _inds + _wide - _message_ids_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_message_ids_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _message_ids_trans_targs[_trans]
-	if _message_ids_trans_actions[_trans] != 0
-	case _message_ids_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -1535,7 +1535,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _message_ids_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 3 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin

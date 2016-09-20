@@ -11,10 +11,10 @@ module Mail
         
 # line 13 "lib/mail/parsers/ragel/ruby/machines/date_time_machine.rb"
 class << self
-	attr_accessor :_date_time_trans_keys
-	private :_date_time_trans_keys, :_date_time_trans_keys=
+	attr_accessor :_trans_keys
+	private :_trans_keys, :_trans_keys=
 end
-self._date_time_trans_keys = [
+self._trans_keys = [
 	0, 0, 9, 87, 9, 87, 
 	10, 10, 9, 32, 9, 
 	87, 9, 83, 9, 83, 
@@ -57,10 +57,10 @@ self._date_time_trans_keys = [
 ]
 
 class << self
-	attr_accessor :_date_time_key_spans
-	private :_date_time_key_spans, :_date_time_key_spans=
+	attr_accessor :_key_spans
+	private :_key_spans, :_key_spans=
 end
-self._date_time_key_spans = [
+self._key_spans = [
 	0, 79, 79, 1, 24, 79, 75, 75, 
 	1, 24, 75, 6, 1, 49, 1, 24, 
 	49, 10, 49, 49, 1, 24, 49, 10, 
@@ -77,10 +77,10 @@ self._date_time_key_spans = [
 ]
 
 class << self
-	attr_accessor :_date_time_index_offsets
-	private :_date_time_index_offsets, :_date_time_index_offsets=
+	attr_accessor :_index_offsets
+	private :_index_offsets, :_index_offsets=
 end
-self._date_time_index_offsets = [
+self._index_offsets = [
 	0, 0, 80, 160, 162, 187, 267, 343, 
 	419, 421, 446, 522, 529, 531, 581, 583, 
 	608, 658, 669, 719, 769, 771, 796, 846, 
@@ -97,10 +97,10 @@ self._date_time_index_offsets = [
 ]
 
 class << self
-	attr_accessor :_date_time_indicies
-	private :_date_time_indicies, :_date_time_indicies=
+	attr_accessor :_indicies
+	private :_indicies, :_indicies=
 end
-self._date_time_indicies = [
+self._indicies = [
 	0, 1, 1, 1, 2, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 0, 
@@ -469,10 +469,10 @@ self._date_time_indicies = [
 ]
 
 class << self
-	attr_accessor :_date_time_trans_targs
-	private :_date_time_trans_targs, :_date_time_trans_targs=
+	attr_accessor :_trans_targs
+	private :_trans_targs, :_trans_targs=
 end
-self._date_time_trans_targs = [
+self._trans_targs = [
 	2, 0, 3, 5, 6, 71, 82, 84, 
 	86, 89, 2, 3, 5, 6, 4, 2, 
 	3, 5, 6, 71, 82, 84, 86, 89, 
@@ -498,10 +498,10 @@ self._date_time_trans_targs = [
 ]
 
 class << self
-	attr_accessor :_date_time_trans_actions
-	private :_date_time_trans_actions, :_date_time_trans_actions=
+	attr_accessor :_trans_actions
+	private :_trans_actions, :_trans_actions=
 end
-self._date_time_trans_actions = [
+self._trans_actions = [
 	1, 0, 1, 2, 1, 0, 0, 0, 
 	0, 0, 0, 0, 3, 0, 0, 4, 
 	4, 5, 4, 4, 4, 4, 4, 4, 
@@ -527,10 +527,10 @@ self._date_time_trans_actions = [
 ]
 
 class << self
-	attr_accessor :_date_time_eof_actions
-	private :_date_time_eof_actions, :_date_time_eof_actions=
+	attr_accessor :_eof_actions
+	private :_eof_actions, :_eof_actions=
 end
-self._date_time_eof_actions = [
+self._eof_actions = [
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -547,26 +547,26 @@ self._date_time_eof_actions = [
 ]
 
 class << self
-	attr_accessor :date_time_start
+	attr_accessor :start
 end
-self.date_time_start = 1;
+self.start = 1;
 class << self
-	attr_accessor :date_time_first_final
+	attr_accessor :first_final
 end
-self.date_time_first_final = 96;
+self.first_final = 96;
 class << self
-	attr_accessor :date_time_error
+	attr_accessor :error
 end
-self.date_time_error = 0;
+self.error = 0;
 
 class << self
-	attr_accessor :date_time_en_comment_tail
+	attr_accessor :en_comment_tail
 end
-self.date_time_en_comment_tail = 91;
+self.en_comment_tail = 91;
 class << self
-	attr_accessor :date_time_en_main
+	attr_accessor :en_main
 end
-self.date_time_en_main = 1;
+self.en_main = 1;
 
 
 # line 15 "lib/mail/parsers/ragel/ruby/machines/date_time_machine.rl"
@@ -585,7 +585,7 @@ self.date_time_en_main = 1;
 begin
 	p ||= 0
 	pe ||= data.length
-	cs = date_time_start
+	cs = start
 	top = 0
 end
 
@@ -614,20 +614,20 @@ begin
 	end
 	if _goto_level <= _resume
 	_keys = cs << 1
-	_inds = _date_time_index_offsets[cs]
-	_slen = _date_time_key_spans[cs]
+	_inds = _index_offsets[cs]
+	_slen = _key_spans[cs]
 	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_date_time_trans_keys[_keys] <= _wide && 
-			_wide <= _date_time_trans_keys[_keys + 1] 
+			_trans_keys[_keys] <= _wide && 
+			_wide <= _trans_keys[_keys + 1] 
 		    ) then
-			_date_time_indicies[ _inds + _wide - _date_time_trans_keys[_keys] ] 
+			_indicies[ _inds + _wide - _trans_keys[_keys] ] 
 		 else 
-			_date_time_indicies[ _inds + _slen ]
+			_indicies[ _inds + _slen ]
 		 end
-	cs = _date_time_trans_targs[_trans]
-	if _date_time_trans_actions[_trans] != 0
-	case _date_time_trans_actions[_trans]
+	cs = _trans_targs[_trans]
+	if _trans_actions[_trans] != 0
+	case _trans_actions[_trans]
 	when 4 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
@@ -782,7 +782,7 @@ begin
 	end
 	if _goto_level <= _test_eof
 	if p == eof
-	  case _date_time_eof_actions[cs]
+	  case _eof_actions[cs]
 	when 4 then
 # line 7 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
