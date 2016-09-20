@@ -72,10 +72,23 @@ module Mail
     #  unqoute(string) #=> 'This is "a string"'
     def unquote( str )
       if str =~ /^"(.*?)"$/
-        $1.gsub(/\\(.)/, '\1')
+        unescape($1)
       else
         str
       end
+    end
+
+    # Removes any \-escaping.
+    #
+    # Example:
+    #
+    #  string = 'This is \"a string\"'
+    #  unescape(string) #=> 'This is "a string"'
+    #
+    #  string = '"This is \"a string\""'
+    #  unescape(string) #=> '"This is "a string""'
+    def unescape( str )
+      str.gsub(/\\(.)/, '\1')
     end
 
     # Wraps a string in parenthesis and escapes any that are in the string itself.

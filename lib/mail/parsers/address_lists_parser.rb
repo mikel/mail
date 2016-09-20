@@ -92,7 +92,7 @@ module Mail::Parsers
         # version.
         when :angle_addr_s
           if qstr
-            address.display_name = qstr
+            address.display_name = unescape(qstr)
             qstr = nil
           elsif phrase_e
             address.display_name = s[phrase_s..phrase_e].strip
