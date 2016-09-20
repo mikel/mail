@@ -1,7 +1,7 @@
 
 # line 1 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
 
-# line 10 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
 
 
 module Mail
@@ -18,7 +18,7 @@ self._content_location_trans_keys = [
 	0, 0, 9, 126, 10, 10, 
 	9, 32, 10, 10, 9, 
 	32, 1, 127, 10, 10, 
-	9, 32, -128, -1, 10, 10, 
+	9, 32, 0, 127, 10, 10, 
 	9, 32, 9, 126, 1, 
 	127, 1, 127, 10, 10, 
 	9, 32, 0, 127, 9, 126, 
@@ -96,23 +96,23 @@ self._content_location_indicies = [
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 9, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	9, 14, 1, 15, 1, 1, 1, 1, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	9, 9, 9, 9, 9, 9, 9, 9, 
+	1, 14, 1, 15, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 15, 1, 16, 1, 1, 1, 
@@ -351,7 +351,7 @@ end
 self.content_location_en_main = 1;
 
 
-# line 17 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
 
         def self.parse(data)
           # 5.1 Variables Used by Ragel
@@ -359,14 +359,11 @@ self.content_location_en_main = 1;
           eof = pe = data.length
           stack = []
 
-          # Used by getkey
-          data_unpacked = data.bytes.to_a
-
           # Accumulates actions for our own parser
           actions = []
 
           
-# line 370 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
+# line 367 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -374,9 +371,9 @@ begin
 	top = 0
 end
 
-# line 31 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
+# line 26 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
           
-# line 380 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
+# line 377 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -401,12 +398,12 @@ begin
 	_keys = cs << 1
 	_inds = _content_location_index_offsets[cs]
 	_slen = _content_location_key_spans[cs]
-	_wide = ( data_unpacked[p])
+	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_content_location_trans_keys[_keys] <= _wide &&
-			_wide <= _content_location_trans_keys[_keys + 1]
+			_content_location_trans_keys[_keys] <= _wide && 
+			_wide <= _content_location_trans_keys[_keys + 1] 
 		    ) then
-			_content_location_indicies[ _inds + _wide - _content_location_trans_keys[_keys] ]
+			_content_location_indicies[ _inds + _wide - _content_location_trans_keys[_keys] ] 
 		 else 
 			_content_location_indicies[ _inds + _slen ]
 		 end
@@ -565,7 +562,7 @@ begin
 		next
 	end
  		end
-# line 569 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
+# line 566 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
 	end
 	end
 	end
@@ -591,7 +588,7 @@ begin
 # line 49 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(46, p) 		end
-# line 595 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
+# line 592 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rb"
 	  end
 	end
 
@@ -602,7 +599,7 @@ begin
 end
 	end
 
-# line 32 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
+# line 27 "lib/mail/parsers/ragel/ruby/machines/content_location_machine.rl"
 
           if p == eof && cs >= 18
             return actions, nil

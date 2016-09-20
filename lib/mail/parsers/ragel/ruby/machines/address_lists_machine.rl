@@ -4,8 +4,6 @@
   include rb_actions "rb_actions.rl";
   include rfc5322 "../../rfc5322.rl";
 
-  getkey data_unpacked[p];
-
   main := address_lists;
 }%%
 
@@ -20,9 +18,6 @@ module Mail
           p = 0
           eof = pe = data.length
           stack = []
-
-          # Used by getkey
-          data_unpacked = data.bytes.to_a
 
           # Accumulates actions for our own parser
           actions = []

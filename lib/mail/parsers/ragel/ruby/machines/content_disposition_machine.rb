@@ -1,7 +1,7 @@
 
 # line 1 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
-# line 10 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
 
 module Mail
@@ -402,7 +402,7 @@ end
 self.content_disposition_en_main = 29;
 
 
-# line 17 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
         def self.parse(data)
           # 5.1 Variables Used by Ragel
@@ -410,14 +410,11 @@ self.content_disposition_en_main = 29;
           eof = pe = data.length
           stack = []
 
-          # Used by getkey
-          data_unpacked = data.bytes.to_a
-
           # Accumulates actions for our own parser
           actions = []
 
           
-# line 421 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 418 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -425,9 +422,9 @@ begin
 	top = 0
 end
 
-# line 31 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
+# line 26 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
           
-# line 431 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 428 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -452,12 +449,12 @@ begin
 	_keys = cs << 1
 	_inds = _content_disposition_index_offsets[cs]
 	_slen = _content_disposition_key_spans[cs]
-	_wide = ( data_unpacked[p])
+	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_content_disposition_trans_keys[_keys] <= _wide &&
-			_wide <= _content_disposition_trans_keys[_keys + 1]
+			_content_disposition_trans_keys[_keys] <= _wide && 
+			_wide <= _content_disposition_trans_keys[_keys + 1] 
 		    ) then
-			_content_disposition_indicies[ _inds + _wide - _content_disposition_trans_keys[_keys] ]
+			_content_disposition_indicies[ _inds + _wide - _content_disposition_trans_keys[_keys] ] 
 		 else 
 			_content_disposition_indicies[ _inds + _slen ]
 		 end
@@ -684,7 +681,7 @@ begin
 		next
 	end
  		end
-# line 688 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 685 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 	end
 	end
 	end
@@ -728,7 +725,7 @@ begin
 # line 13 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(10, p) 		end
-# line 732 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
+# line 729 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rb"
 	  end
 	end
 
@@ -739,7 +736,7 @@ begin
 end
 	end
 
-# line 32 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
+# line 27 "lib/mail/parsers/ragel/ruby/machines/content_disposition_machine.rl"
 
           if p == eof && cs >= 29
             return actions, nil

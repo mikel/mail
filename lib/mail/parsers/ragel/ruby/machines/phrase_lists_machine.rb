@@ -1,7 +1,7 @@
 
 # line 1 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
 
-# line 10 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
 
 
 module Mail
@@ -19,10 +19,10 @@ self._phrase_lists_trans_keys = [
 	10, 10, 9, 32, 10, 
 	10, 9, 32, 1, 127, 
 	1, 127, 10, 10, 9, 32, 
-	0, 127, 9, 126, 10,
+	0, 127, 9, 126, 10, 
 	10, 9, 32, 9, 126, 
 	1, 127, 1, 127, 10, 10, 
-	9, 32, 0, 127, 9,
+	9, 32, -128, -1, 9, 
 	126, 9, 126, 9, 126, 
 	0, 0, 0
 ]
@@ -125,23 +125,23 @@ self._phrase_lists_indicies = [
 	18, 18, 18, 1, 22, 1, 18, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 18, 1, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 1,
+	1, 1, 1, 1, 1, 18, 1, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 1, 
 	23, 1, 1, 1, 24, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 23, 
@@ -210,23 +210,23 @@ self._phrase_lists_indicies = [
 	1, 42, 1, 37, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 37, 1, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 37, 37, 37, 37,
-	37, 37, 37, 37, 1, 9, 1, 1,
+	1, 1, 37, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 37, 9, 1, 1, 
 	1, 43, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 9, 9, 10, 9, 
@@ -336,7 +336,7 @@ end
 self.phrase_lists_en_main = 1;
 
 
-# line 17 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
 
         def self.parse(data)
           # 5.1 Variables Used by Ragel
@@ -344,14 +344,11 @@ self.phrase_lists_en_main = 1;
           eof = pe = data.length
           stack = []
 
-          # Used by getkey
-          data_unpacked = data.bytes.to_a
-
           # Accumulates actions for our own parser
           actions = []
 
           
-# line 355 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 352 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -359,9 +356,9 @@ begin
 	top = 0
 end
 
-# line 31 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
+# line 26 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
           
-# line 365 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 362 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -386,12 +383,12 @@ begin
 	_keys = cs << 1
 	_inds = _phrase_lists_index_offsets[cs]
 	_slen = _phrase_lists_key_spans[cs]
-	_wide = ( data_unpacked[p])
+	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_phrase_lists_trans_keys[_keys] <= _wide &&
-			_wide <= _phrase_lists_trans_keys[_keys + 1]
+			_phrase_lists_trans_keys[_keys] <= _wide && 
+			_wide <= _phrase_lists_trans_keys[_keys + 1] 
 		    ) then
-			_phrase_lists_indicies[ _inds + _wide - _phrase_lists_trans_keys[_keys] ]
+			_phrase_lists_indicies[ _inds + _wide - _phrase_lists_trans_keys[_keys] ] 
 		 else 
 			_phrase_lists_indicies[ _inds + _slen ]
 		 end
@@ -512,7 +509,7 @@ begin
 # line 41 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(38, p) 		end
-# line 516 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 513 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 	end
 	end
 	end
@@ -541,7 +538,7 @@ begin
 # line 39 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(36, p) 		end
-# line 545 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
+# line 542 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rb"
 	  end
 	end
 
@@ -552,7 +549,7 @@ begin
 end
 	end
 
-# line 32 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
+# line 27 "lib/mail/parsers/ragel/ruby/machines/phrase_lists_machine.rl"
 
           if p == eof && cs >= 21
             return actions, nil

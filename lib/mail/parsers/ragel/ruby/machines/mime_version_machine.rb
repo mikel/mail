@@ -1,7 +1,7 @@
 
 # line 1 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
 
-# line 10 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
+# line 8 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
 
 
 module Mail
@@ -201,7 +201,7 @@ end
 self.mime_version_en_main = 1;
 
 
-# line 17 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
+# line 15 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
 
         def self.parse(data)
           # 5.1 Variables Used by Ragel
@@ -209,14 +209,11 @@ self.mime_version_en_main = 1;
           eof = pe = data.length
           stack = []
 
-          # Used by getkey
-          data_unpacked = data.bytes.to_a
-
           # Accumulates actions for our own parser
           actions = []
 
           
-# line 220 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
+# line 217 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -224,9 +221,9 @@ begin
 	top = 0
 end
 
-# line 31 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
+# line 26 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
           
-# line 230 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
+# line 227 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -251,12 +248,12 @@ begin
 	_keys = cs << 1
 	_inds = _mime_version_index_offsets[cs]
 	_slen = _mime_version_key_spans[cs]
-	_wide = ( data_unpacked[p])
+	_wide = data[p].ord
 	_trans = if (   _slen > 0 && 
-			_mime_version_trans_keys[_keys] <= _wide &&
-			_wide <= _mime_version_trans_keys[_keys + 1]
+			_mime_version_trans_keys[_keys] <= _wide && 
+			_wide <= _mime_version_trans_keys[_keys + 1] 
 		    ) then
-			_mime_version_indicies[ _inds + _wide - _mime_version_trans_keys[_keys] ]
+			_mime_version_indicies[ _inds + _wide - _mime_version_trans_keys[_keys] ] 
 		 else 
 			_mime_version_indicies[ _inds + _slen ]
 		 end
@@ -391,7 +388,7 @@ begin
 		next
 	end
  		end
-# line 395 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
+# line 392 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
 	end
 	end
 	end
@@ -417,7 +414,7 @@ begin
 # line 29 "lib/mail/parsers/ragel/ruby/machines/rb_actions.rl"
 		begin
  actions.push(26, p) 		end
-# line 421 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
+# line 418 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rb"
 	  end
 	end
 
@@ -428,7 +425,7 @@ begin
 end
 	end
 
-# line 32 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
+# line 27 "lib/mail/parsers/ragel/ruby/machines/mime_version_machine.rl"
 
           if p == eof && cs >= 16
             return actions, nil
