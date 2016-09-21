@@ -4,6 +4,8 @@
   # https://tools.ietf.org/html/rfc5322#section-3.3
   machine rfc5322_date_time;
 
+  include rfc5322_lexical_tokens "rfc5322_lexical_tokens.rl";
+
   # day_of_week
   day_name = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
   obs_day_of_week = CFWS? day_name CFWS?;

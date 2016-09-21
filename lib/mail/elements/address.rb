@@ -1,8 +1,9 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'mail/parsers/address_lists_parser'
+
 module Mail
   class Address
-
     include Mail::Utilities
 
     # Mail::Address handles all email addresses in Mail.  It takes an email address string
@@ -178,7 +179,7 @@ module Mail
         @data = value
       when String
         unless Utilities.blank?(value)
-          address_list = Mail::Parsers::AddressListsParser.new.parse(value)
+          address_list = Mail::Parsers::AddressListsParser.parse(value)
           @data = address_list.addresses.first
         end
       end

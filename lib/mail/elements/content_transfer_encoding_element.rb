@@ -1,18 +1,13 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'mail/parsers/content_transfer_encoding_parser'
+
 module Mail
   class ContentTransferEncodingElement
-    
-    include Mail::Utilities
-    
+    attr_reader :encoding
+
     def initialize(string)
-      content_transfer_encoding = Mail::Parsers::ContentTransferEncodingParser.new.parse(string)
-      @encoding = content_transfer_encoding.encoding
+      @encoding = Mail::Parsers::ContentTransferEncodingParser.parse(string).encoding
     end
-    
-    def encoding
-      @encoding
-    end
-    
   end
 end

@@ -79,6 +79,7 @@ module Mail
         str
       end
     end
+    module_function :unquote
 
     # Wraps a string in parenthesis and escapes any that are in the string itself.
     #
