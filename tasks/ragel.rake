@@ -1,7 +1,7 @@
-load 'lib/mail/parsers/ragel/parser_info.rb'
+load 'lib/mail/parsers/parser_info.rb'
 
 require 'erb'
-rl_template_path = 'lib/mail/parsers/ragel/ruby/machines/template.rl.erb'
+rl_template_path = 'lib/mail/parsers/template.rl.erb'
 PARSER_TEMPLATE = ERB.new(File.read(rl_template_path))
 
 def generate_rb_ragel_file(parser_name)
@@ -10,24 +10,24 @@ end
 
 
 # Ragel action definitions depend on action and field declarations
-file 'lib/mail/parsers/ragel/ruby/machines/rb_actions.rl' => 'lib/mail/parsers/ragel/parser_info.rb' do
+file 'lib/mail/parsers/rb_actions.rl' => 'lib/mail/parsers/parser_info.rb' do
   actions = Mail::Parsers::Ragel::ACTIONS.each_with_index.map do |action, idx|
     "action #{action} { actions.push(#{idx}, p) }"
   end
 
   actions_rl = "%%{\nmachine rb_actions;\n#{actions * "\n"}\n}%%"
 
-  File.write 'lib/mail/parsers/ragel/ruby/machines/rb_actions.rl', actions_rl
+  File.write 'lib/mail/parsers/rb_actions.rl', actions_rl
 end
 
 # All RFC 5322 parsers depend on ABNF core rules
-rule /rfc5322_.+\.rl\z/ => 'lib/mail/parsers/ragel/rfc5234_abnf_core_rules.rl'
+rule /rfc5322_.+\.rl\z/ => 'lib/mail/parsers/rfc5234_abnf_core_rules.rl'
 
 # RFC 5322 parser depends on its submodules
-file 'lib/mail/parsers/ragel/rfc5322.rl' => FileList['lib/mail/parsers/ragel/rfc5322_*.rl']
+file 'lib/mail/parsers/rfc5322.rl' => FileList['lib/mail/parsers/rfc5322_*.rl']
 
 # Ragel parser template depends on Ragel actions and RFC 5322 machine
-file rl_template_path => %w[ lib/mail/parsers/ragel/ruby/machines/rb_actions.rl lib/mail/parsers/ragel/rfc5322.rl ]
+file rl_template_path => %w[ lib/mail/parsers/rb_actions.rl lib/mail/parsers/rfc5322.rl ]
 
 # Ragel parsers depend on the ERb template
 rule /_machine\.rl\z/ => rl_template_path do |t|
@@ -50,11 +50,11 @@ rule /_machine\.svg\z/ => '.dot' do |t|
 end
 
 ruby_parser_paths = Mail::Parsers::Ragel::FIELD_PARSERS.map do |p|
-  "lib/mail/parsers/ragel/ruby/machines/#{p}_machine.rb"
+  "lib/mail/parsers/#{p}_machine.rb"
 end
 
 svg_paths = Mail::Parsers::Ragel::FIELD_PARSERS.map do |p|
-  "lib/mail/parsers/ragel/ruby/machines/#{p}_machine.svg"
+  "lib/mail/parsers/#{p}_machine.svg"
 end
 
 desc "Generate Ruby parsers from Ragel definitions"

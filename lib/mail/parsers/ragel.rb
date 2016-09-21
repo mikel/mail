@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'mail/parsers/ragel/parser_info'
+require 'mail/parsers/parser_info'
 
 module Mail
   module Parsers
@@ -8,7 +8,7 @@ module Mail
       begin
         orig, $VERBOSE = $VERBOSE, nil
         Mail::Parsers::Ragel::FIELD_PARSERS.each do |field_parser|
-          require "mail/parsers/ragel/ruby/machines/#{field_parser}_machine"
+          require "mail/parsers/#{field_parser}_machine"
         end
       ensure
         $VERBOSE = orig

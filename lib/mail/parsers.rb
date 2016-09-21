@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Mail
   module Parsers
-
     # Low-level ragel based parsers
     require 'mail/parsers/ragel'
 
@@ -19,7 +18,7 @@ module Mail
     PhraseListsStruct = Struct.new(:phrases, :error)
     ReceivedStruct = Struct.new(:date, :time, :info, :error)
 
-    require 'mail/parsers/ragel/parser_info'
+    require 'mail/parsers/parser_info'
     Ragel::FIELD_PARSERS.each do |field_parser|
       require "mail/parsers/#{field_parser}_parser"
     end
