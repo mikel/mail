@@ -34,6 +34,7 @@ Bugs:
 * #789 - Fix encoding collapsing not dealing with multiple encodings in 1 line (grosser)
 * #808 - Mail::Field correctly responds_to? the methods of its instantiated field (thegcat)
 * #849 - Handle calling Part#inline? when the Content-Disposition field couldn't be parsed (kjg)
+* #867 - Add module Mail when loading AddressListsParser in AddressList (salrepe)
 * #874 – Stay under 1000-char SMTP line length limits (pushrax)
 * #877 - Make Mail::Field == other take the field value into account (kjg)
 * #907 - Mail::ContentDispositionField should work with nil value (kjg)
