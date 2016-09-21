@@ -33,8 +33,11 @@ end
 $KCODE='UTF8' if RUBY_VERSION < '1.9'
 
 if defined?(Encoding) && Encoding.respond_to?(:default_external=)
-  Mail::Parsers::Ragel::Ruby.silence_warnings do
+  begin
+    orig, $VERBOSE = $VERBOSE, nil
     Encoding.default_external = 'utf-8'
+  ensure
+    $VERBOSE = orig
   end
 end
 
