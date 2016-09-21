@@ -1,10 +1,14 @@
 # frozen_string_literal: true
+require 'mail/parsers/received_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class ReceivedParser
+    ReceivedStruct = Struct.new(:date, :time, :info, :error)
 
     def parse(s)
       raise Mail::Field::ParseError.new(Mail::ReceivedElement, s, 'nil is invalid') if s.nil?
-      actions, error = Ragel.parse(:received, s)
+      actions, error = ReceivedMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::ReceivedElement, s, error)
       end
@@ -13,7 +17,7 @@ module Mail::Parsers
 
       received_tokens_s = date_s = time_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Received Tokens:

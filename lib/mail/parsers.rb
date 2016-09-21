@@ -1,26 +1,80 @@
 # frozen_string_literal: true
+
 module Mail
   module Parsers
-    # Low-level ragel based parsers
-    require 'mail/parsers/ragel'
+    ACTIONS = [
+      :addr_spec,
+      :address_e,
+      :address_s,
+      :angle_addr_s,
+      :comment_e,
+      :comment_s,
+      :ctime_date_e,
+      :ctime_date_s,
+      :date_e,
+      :date_s,
+      :disp_type_e,
+      :disp_type_s,
+      :domain_e,
+      :domain_s,
+      :encoding_e,
+      :encoding_s,
+      :group_name_e,
+      :group_name_s,
+      :local_dot_atom_e,
+      :local_dot_atom_pre_comment_e,
+      :local_dot_atom_s,
+      :local_quoted_string_e,
+      :main_type_e,
+      :main_type_s,
+      :major_digits_e,
+      :major_digits_s,
+      :minor_digits_e,
+      :minor_digits_s,
+      :msg_id_e,
+      :msg_id_s,
+      :obs_domain_list_e,
+      :obs_domain_list_s,
+      :param_attr_e,
+      :param_attr_s,
+      :param_val_e,
+      :param_val_s,
+      :phrase_e,
+      :phrase_s,
+      :qstr_e,
+      :qstr_s,
+      :received_tokens_e,
+      :received_tokens_s,
+      :sub_type_e,
+      :sub_type_s,
+      :time_e,
+      :time_s,
+      :token_string_e,
+      :token_string_s
+    ]
 
-    AddressListStruct = Struct.new(:addresses, :group_names, :error)
-    AddressStruct = Struct.new(:raw, :domain, :comments, :local,
-                             :obs_domain_list, :display_name, :group, :error)
-    ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
-    ContentLocationStruct = Struct.new(:location, :error)
-    ContentTransferEncodingStruct = Struct.new(:encoding, :error)
-    ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
-    DateTimeStruct = Struct.new(:date_string, :time_string, :error)
-    EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
-    MessageIdsStruct = Struct.new(:message_ids, :error)
-    MimeVersionStruct = Struct.new(:major, :minor, :error)
-    PhraseListsStruct = Struct.new(:phrases, :error)
-    ReceivedStruct = Struct.new(:date, :time, :info, :error)
+    FIELD_PARSERS = %w[
+      address_lists
+      phrase_lists
+      date_time
+      received
+      message_ids
+      envelope_from
+      mime_version
+      content_type
+      content_disposition
+      content_transfer_encoding
+      content_location
+    ]
 
-    require 'mail/parsers/parser_info'
-    Ragel::FIELD_PARSERS.each do |field_parser|
-      require "mail/parsers/#{field_parser}_parser"
+    # Ragel-generated parsers are full of known warnings. Suppress them.
+    begin
+      orig, $VERBOSE = $VERBOSE, nil
+      FIELD_PARSERS.each do |field_parser|
+        require "mail/parsers/#{field_parser}_parser"
+      end
+    ensure
+      $VERBOSE = orig
     end
   end
 end

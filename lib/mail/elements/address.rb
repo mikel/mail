@@ -174,7 +174,7 @@ module Mail
       @data = nil
 
       case value
-      when Mail::Parsers::AddressStruct
+      when Mail::Parsers::AddressListsParser::AddressStruct
         @data = value
       when String
         unless Utilities.blank?(value)

@@ -1,10 +1,15 @@
 # frozen_string_literal: true
+require 'mail/parsers/content_type_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class ContentTypeParser
     include Mail::Utilities
 
+    ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
+
     def parse(s)
-      actions, error = Ragel.parse(:content_type, s)
+      actions, error = ContentTypeMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::ContentTypeElement, s, error)
       end
@@ -16,7 +21,7 @@ module Mail::Parsers
       main_type_s = sub_type_s = param_attr_s = param_attr = nil
       qstr_s = qstr = param_val_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Main Type

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
+require 'mail/parsers/content_transfer_encoding_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class ContentTransferEncodingParser
+    ContentTransferEncodingStruct = Struct.new(:encoding, :error)
 
     def parse(s)
       content_transfer_encoding = ContentTransferEncodingStruct.new("")
@@ -8,14 +12,14 @@ module Mail::Parsers
         return content_transfer_encoding
       end
 
-      actions, error = Ragel.parse(:content_transfer_encoding, s)
+      actions, error = ContentTransferEncodingMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::ContentTransferEncodingElement, s, error)
       end
 
       encoding_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Encoding

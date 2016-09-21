@@ -1,6 +1,11 @@
 # frozen_string_literal: true
+require 'mail/parsers/message_ids_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class MessageIdsParser
+    MessageIdsStruct = Struct.new(:message_ids, :error)
+
     def parse(s)
       if Mail::Utilities.blank?(s)
         return MessageIdsStruct.new
@@ -8,14 +13,14 @@ module Mail::Parsers
 
       message_ids = MessageIdsStruct.new([])
 
-      actions, error = Ragel.parse(:message_ids, s)
+      actions, error = MessageIdsMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::MessageIdsElement, s, error)
       end
 
       msg_id_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Message Ids

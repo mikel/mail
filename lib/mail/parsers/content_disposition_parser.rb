@@ -1,7 +1,10 @@
 # frozen_string_literal: true
+require 'mail/parsers/content_disposition_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class ContentDispositionParser
-    include Mail::Utilities
+    ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
 
     def parse(s)
       content_disposition = ContentDispositionStruct.new("", nil)
@@ -9,7 +12,7 @@ module Mail::Parsers
         return content_disposition
       end
 
-      actions, error = Ragel.parse(:content_disposition, s)
+      actions, error = ContentDispositionMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::ContentDispositionElement, s, error)
       end
@@ -18,7 +21,7 @@ module Mail::Parsers
 
       disp_type_s = param_attr_s = param_attr = qstr_s = qstr = param_val_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Disposition Type

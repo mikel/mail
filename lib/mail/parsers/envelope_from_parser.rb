@@ -1,13 +1,18 @@
 # frozen_string_literal: true
+require 'mail/parsers/envelope_from_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class EnvelopeFromParser
+    EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
+
     def parse(s)
       envelope_from = EnvelopeFromStruct.new
       if Mail::Utilities.blank?(s)
         return envelope_from
       end
 
-      actions, error = Ragel.parse(:envelope_from, s)
+      actions, error = EnvelopeFromMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::EnvelopeFromElement, s, error)
       end
@@ -15,7 +20,7 @@ module Mail::Parsers
       address_s = ctime_date_s = nil
       envelope_from = EnvelopeFromStruct.new
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Address

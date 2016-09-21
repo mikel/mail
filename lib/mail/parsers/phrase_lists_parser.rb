@@ -1,11 +1,15 @@
 # frozen_string_literal: true
+require 'mail/parsers/phrase_lists_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class PhraseListsParser
+    PhraseListsStruct = Struct.new(:phrases, :error)
 
     def parse(s)
       raise Mail::Field::ParseError.new(Mail::PhraseList, s, 'nil is invalid') if s.nil?
 
-      actions, error = Ragel.parse(:phrase_lists, s)
+      actions, error = PhraseListsMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::PhraseList, s, error)
       end
@@ -14,7 +18,7 @@ module Mail::Parsers
 
       phrase_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Phrase

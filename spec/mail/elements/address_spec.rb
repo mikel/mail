@@ -615,7 +615,7 @@ describe Mail::Address do
       end
 
       it "should expose group" do
-        struct = Mail::Parsers::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
+        struct = Mail::Parsers::AddressListsParser::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
         address = Mail::Address.new(struct)
         expect(address.group).to eq("GROUP")
       end

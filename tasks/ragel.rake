@@ -1,4 +1,4 @@
-load 'lib/mail/parsers/parser_info.rb'
+load 'lib/mail/parsers.rb'
 
 require 'erb'
 rl_template_path = 'lib/mail/parsers/template.rl.erb'
@@ -10,8 +10,8 @@ end
 
 
 # Ragel action definitions depend on action and field declarations
-file 'lib/mail/parsers/rb_actions.rl' => 'lib/mail/parsers/parser_info.rb' do
-  actions = Mail::Parsers::Ragel::ACTIONS.each_with_index.map do |action, idx|
+file 'lib/mail/parsers/rb_actions.rl' => 'lib/mail/parsers.rb' do
+  actions = Mail::Parsers::ACTIONS.each_with_index.map do |action, idx|
     "action #{action} { actions.push(#{idx}, p) }"
   end
 
@@ -49,11 +49,11 @@ rule /_machine\.svg\z/ => '.dot' do |t|
   sh "dot -v -Tsvg -Goverlap=scale -o #{t.name} #{t.source}"
 end
 
-ruby_parser_paths = Mail::Parsers::Ragel::FIELD_PARSERS.map do |p|
+ruby_parser_paths = Mail::Parsers::FIELD_PARSERS.map do |p|
   "lib/mail/parsers/#{p}_machine.rb"
 end
 
-svg_paths = Mail::Parsers::Ragel::FIELD_PARSERS.map do |p|
+svg_paths = Mail::Parsers::FIELD_PARSERS.map do |p|
   "lib/mail/parsers/#{p}_machine.svg"
 end
 

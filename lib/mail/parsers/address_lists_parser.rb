@@ -1,7 +1,12 @@
 # frozen_string_literal: true
+require 'mail/parsers/address_lists_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class AddressListsParser
-    include Mail::Utilities
+    AddressListStruct = Struct.new(:addresses, :group_names, :error)
+    AddressStruct = Struct.new(:raw, :domain, :comments, :local,
+                             :obs_domain_list, :display_name, :group, :error)
 
     def parse(s)
       address_list = AddressListStruct.new([],[])
@@ -10,7 +15,7 @@ module Mail::Parsers
         return address_list
       end
 
-      actions, error = Ragel.parse(:address_lists, s)
+      actions, error = AddressListsMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::AddressList, s, error)
       end
@@ -25,7 +30,7 @@ module Mail::Parsers
       address_s = 0
       address = AddressStruct.new(nil, nil, [], nil, nil, nil, nil)
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Phrase

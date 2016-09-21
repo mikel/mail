@@ -1,7 +1,10 @@
 # frozen_string_literal: true
+require 'mail/parsers/mime_version_machine'
+require 'mail/utilities'
+
 module Mail::Parsers
   class MimeVersionParser
-    include Mail::Utilities
+    MimeVersionStruct = Struct.new(:major, :minor, :error)
 
     def parse(s)
       if Mail::Utilities.blank?(s)
@@ -10,14 +13,14 @@ module Mail::Parsers
 
       mime_version = MimeVersionStruct.new
 
-      actions, error = Ragel.parse(:mime_version, s)
+      actions, error = MimeVersionMachine.parse(s)
       if error
         raise Mail::Field::ParseError.new(Mail::MimeVersionElement, s, error)
       end
 
       major_digits_s = minor_digits_s = nil
       actions.each_slice(2) do |action_id, p|
-        action = Mail::Parsers::Ragel::ACTIONS[action_id]
+        action = Mail::Parsers::ACTIONS[action_id]
         case action
 
         # Major Digits
