@@ -57,7 +57,7 @@ module Mail
     #  string = 'This is "a string"'
     #  dquote(string #=> '"This is \"a string\"'
     def dquote( str )
-      '"' + unquote(str).gsub(/[\\"]/n) {|s| '\\' + s } + '"'
+      DOUBLE_QUOTE + unquote(str).gsub(/[\\"]/n) {|s| '\\' + s } + DOUBLE_QUOTE
     end
 
     # Unwraps supplied string from inside double quotes and

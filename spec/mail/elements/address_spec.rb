@@ -81,6 +81,26 @@ describe Mail::Address do
     it "should decode the display name without calling #decoded first" do
       encoded = '=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>'
       expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krütisch'
+
+      encoded = '=?ISO-8859-1?Q?Ja(n_Kr=FCt)isch?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq 'Jaisch'
+      expect(Mail::Address.new(encoded).comments).to eq ['n_Kr=FCt']
+
+      encoded = '=?ISO-8859-1?Q?Jan_Kr=FCt(isc)h?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krüth'
+      expect(Mail::Address.new(encoded).comments).to eq ['isc']
+    end
+
+    it "should decode Q-encoded display name containing double quotes" do
+      encoded = '=?ISO-8859-1?Q?"Jan_Kr=FCtisch"?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq '"Jan Krütisch"'
+
+      encoded = '=?ISO-8859-1?Q?Jan_Kr=FCti"s"ch?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krüti"s"ch'
+
+      encoded = '=?ISO-8859-1?Q?J(an)_Kr=FCti"s"ch?= <jan@krutisch.de>'
+      expect(Mail::Address.new(encoded).display_name).to eq 'J Krüti"s"ch'
+      expect(Mail::Address.new(encoded).comments).to eq ['an']
     end
     
     it "should allow nil display name" do
@@ -690,7 +710,7 @@ describe Mail::Address do
       expect(address.encoded).to eq '=?UTF-8?B?44G+44GR44KL?= <mikel@test.lindsaar.net>'
     end
 
-    it "should provide an encoded output for non us-ascii" do
+    it "should provide a decoded output for non us-ascii" do
       address              = Mail::Address.new
       address.display_name = "まける"
       address.address      = "mikel@test.lindsaar.net"

@@ -87,15 +87,15 @@ module Mail::Parsers
 
         # Don't set the display name until the
         # address has actually started. This allows
-        # us to choose quoted_s version if it
-        # exists and always use the 'full' phrase
+        # us to always use the 'full' phrase
         # version.
         when :angle_addr_s
-          if qstr
-            address.display_name = qstr
-            qstr = nil
-          elsif phrase_e
-            address.display_name = s[phrase_s..phrase_e].strip
+          if phrase_e
+            phrase = s[phrase_s..phrase_e].strip
+            if phrase[0, 1] == DOUBLE_QUOTE && phrase[-1, 1] == DOUBLE_QUOTE
+              phrase = phrase[1..-2]
+            end
+            address.display_name = phrase
             phrase_e = phrase_s = nil
           end
 
@@ -111,7 +111,7 @@ module Mail::Parsers
         when :local_dot_atom_pre_comment_e
           local_dot_atom_pre_comment_e = p-1
         when :local_quoted_string_e
-          address.local = '"' + qstr + '"' if address
+          address.local = DOUBLE_QUOTE + qstr + DOUBLE_QUOTE if address
 
         # obs_domain_list
         when :obs_domain_list_s then obs_domain_list_s = p

@@ -43,6 +43,7 @@ module Mail
     HYPHEN         = '-'
     COLON          = ':'
     ASTERISK       = '*'
+    DOUBLE_QUOTE   = '"'
     CR             = "\r"
     LF             = "\n"
     CR_ENCODED     = "=0D"
