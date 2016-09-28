@@ -14051,6 +14051,7 @@ self.en_main = 1334;
     def self.parse(data)
       address_list = AddressListStruct.new([], [])
       return address_list if Mail::Utilities.blank?(data)
+      data = Mail::Encodings.encode_non_usascii(data, 'utf-8')
 
       phrase_s = phrase_e = qstr_s = qstr = comment_s = nil
       group_name_s = domain_s = group_name = nil
