@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/message_ids_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 44 "lib/mail/parsers/message_ids_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     MessageIdsStruct = Struct.new(:message_ids, :error)
 
     
-# line 16 "lib/mail/parsers/message_ids_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -36,7 +33,7 @@ self._trans_keys = [
 	10, 10, 9, 32, 9, 126, 
 	9, 62, 10, 10, 9, 
 	32, 9, 62, 33, 126, 
-	-128, -1, 10, 10, 9, 32, 
+	0, 127, 10, 10, 9, 32, 
 	9, 126, 9, 126, 1, 
 	127, 10, 10, 9, 32, 
 	0, 127, 9, 126, 9, 126, 
@@ -46,12 +43,12 @@ self._trans_keys = [
 	1, 127, 1, 127, 10, 
 	10, 9, 32, 9, 126, 
 	9, 64, 10, 10, 9, 32, 
-	9, 64, 0, 127, 10, 
+	9, 64, -128, -1, 10, 
 	10, 9, 32, 9, 126, 
 	9, 126, 10, 10, 9, 32, 
 	9, 126, 1, 127, 1, 
 	127, 10, 10, 9, 32, 
-	9, 126, 0, 127, 1, 127, 
+	9, 126, -128, -1, 1, 127, 
 	10, 10, 9, 32, 1, 
 	127, 1, 127, 10, 10, 
 	9, 32, 9, 126, 9, 64, 
@@ -445,23 +442,23 @@ self._indicies = [
 	93, 93, 93, 93, 93, 93, 93, 93, 
 	93, 93, 93, 93, 93, 93, 93, 93, 
 	93, 93, 93, 93, 93, 93, 93, 93, 
-	93, 93, 93, 93, 93, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 89, 102, 
+	93, 93, 93, 93, 93, 1, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 89, 89, 
+	89, 89, 89, 89, 89, 89, 1, 102, 
 	1, 63, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
@@ -718,23 +715,23 @@ self._indicies = [
 	145, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	37, 1, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 130, 130, 130, 130, 130, 130, 
-	130, 130, 1, 146, 1, 23, 1, 1, 
+	37, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 130, 146, 1, 23, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 23, 1, 147, 1, 
@@ -836,23 +833,23 @@ self._indicies = [
 	134, 134, 134, 134, 134, 134, 134, 134, 
 	134, 134, 134, 134, 134, 134, 134, 134, 
 	134, 134, 134, 134, 134, 134, 134, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
 	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	162, 162, 162, 162, 162, 162, 162, 162, 
-	1, 162, 162, 162, 162, 162, 162, 162, 
 	162, 167, 1, 162, 162, 168, 162, 162, 
 	162, 162, 162, 162, 162, 162, 162, 162, 
 	162, 162, 162, 162, 162, 162, 162, 162, 
@@ -1213,7 +1210,6 @@ end
 self.en_main = 1;
 
 
-# line 51 "lib/mail/parsers/message_ids_parser.rl"
 
     def self.parse(data)
       raise Mail::Field::ParseError.new(Mail::MessageIdsElement, data, 'nil is invalid') if data.nil?
@@ -1228,7 +1224,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 1232 "lib/mail/parsers/message_ids_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -1236,9 +1231,7 @@ begin
 	top = 0
 end
 
-# line 65 "lib/mail/parsers/message_ids_parser.rl"
       
-# line 1242 "lib/mail/parsers/message_ids_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -1276,55 +1269,42 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 2 then
-# line 8 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  msg_id_s = p 		end
 	when 30 then
-# line 9 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  message_ids.message_ids << data[msg_id_s..(p-1)].rstrip 		end
 	when 3 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 26 then
-# line 16 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 15 then
-# line 17 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 13 then
-# line 18 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 11 then
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 8 then
-# line 20 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 6 then
-# line 22 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 19 then
-# line 25 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 17 then
-# line 26 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 23 then
-# line 34 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 1 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1335,7 +1315,6 @@ begin
 	end
  		end
 	when 29 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1345,17 +1324,13 @@ begin
 	end
  		end
 	when 32 then
-# line 9 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  message_ids.message_ids << data[msg_id_s..(p-1)].rstrip 		end
-# line 8 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  msg_id_s = p 		end
 	when 31 then
-# line 9 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  message_ids.message_ids << data[msg_id_s..(p-1)].rstrip 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1366,45 +1341,33 @@ begin
 	end
  		end
 	when 5 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 8 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  msg_id_s = p 		end
 	when 16 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 17 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 12 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 25 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 24 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 4 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1415,10 +1378,8 @@ begin
 	end
  		end
 	when 27 then
-# line 16 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1429,10 +1390,8 @@ begin
 	end
  		end
 	when 28 then
-# line 16 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1442,10 +1401,8 @@ begin
 	end
  		end
 	when 14 then
-# line 18 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1456,24 +1413,18 @@ begin
 	end
  		end
 	when 21 then
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 10 then
-# line 20 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 9 then
-# line 20 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1484,10 +1435,8 @@ begin
 	end
  		end
 	when 7 then
-# line 22 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1498,33 +1447,24 @@ begin
 	end
  		end
 	when 18 then
-# line 26 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 25 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 22 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
 	when 20 then
-# line 20 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 19 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 1528 "lib/mail/parsers/message_ids_parser.rb"
 	end
 	end
 	end
@@ -1543,14 +1483,11 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 30 then
-# line 9 "lib/mail/parsers/message_ids_parser.rl"
 		begin
  message_ids.message_ids << data[msg_id_s..(p-1)].rstrip 		end
 	when 3 then
-# line 15 "lib/mail/parsers/message_ids_parser.rl"
 		begin
 		end
-# line 1554 "lib/mail/parsers/message_ids_parser.rb"
 	  end
 	end
 
@@ -1561,7 +1498,6 @@ begin
 end
 	end
 
-# line 66 "lib/mail/parsers/message_ids_parser.rl"
 
       if p != eof || cs < 117
         raise Mail::Field::ParseError.new(Mail::MessageIdsElement, data, "Only able to parse up to #{data[0..p]}")

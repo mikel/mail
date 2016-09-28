@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 28 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     ContentTransferEncodingStruct = Struct.new(:encoding, :error)
 
     
-# line 16 "lib/mail/parsers/content_transfer_encoding_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -240,7 +237,6 @@ end
 self.en_main = 1;
 
 
-# line 35 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 
     def self.parse(data)
       content_transfer_encoding = ContentTransferEncodingStruct.new('')
@@ -255,7 +251,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 259 "lib/mail/parsers/content_transfer_encoding_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -263,9 +258,7 @@ begin
 	top = 0
 end
 
-# line 49 "lib/mail/parsers/content_transfer_encoding_parser.rl"
       
-# line 269 "lib/mail/parsers/content_transfer_encoding_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -303,23 +296,18 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 1 then
-# line 7 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  encoding_s = p 		end
 	when 10 then
-# line 8 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  content_transfer_encoding.encoding = data[encoding_s..(p-1)].downcase 		end
 	when 3 then
-# line 11 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
 	when 6 then
-# line 12 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
 	when 2 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -330,7 +318,6 @@ begin
 	end
  		end
 	when 9 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -340,10 +327,8 @@ begin
 	end
  		end
 	when 11 then
-# line 8 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  content_transfer_encoding.encoding = data[encoding_s..(p-1)].downcase 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -354,17 +339,13 @@ begin
 	end
  		end
 	when 4 then
-# line 11 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
-# line 7 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  encoding_s = p 		end
 	when 5 then
-# line 11 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -375,10 +356,8 @@ begin
 	end
  		end
 	when 7 then
-# line 12 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -389,10 +368,8 @@ begin
 	end
  		end
 	when 8 then
-# line 12 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -401,7 +378,6 @@ begin
 		next
 	end
  		end
-# line 405 "lib/mail/parsers/content_transfer_encoding_parser.rb"
 	end
 	end
 	end
@@ -420,14 +396,11 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 10 then
-# line 8 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  content_transfer_encoding.encoding = data[encoding_s..(p-1)].downcase 		end
 	when 3 then
-# line 11 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 		begin
  		end
-# line 431 "lib/mail/parsers/content_transfer_encoding_parser.rb"
 	  end
 	end
 
@@ -438,7 +411,6 @@ begin
 end
 	end
 
-# line 50 "lib/mail/parsers/content_transfer_encoding_parser.rl"
 
       if p != eof || cs < 14
         raise Mail::Field::ParseError.new(Mail::ContentTransferEncodingElement, data, "Only able to parse up to #{data[0..p]}")

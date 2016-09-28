@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/content_disposition_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 46 "lib/mail/parsers/content_disposition_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
 
     
-# line 16 "lib/mail/parsers/content_disposition_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -24,10 +21,10 @@ self._trans_keys = [
 	10, 10, 9, 32, 1, 127, 
 	1, 127, 10, 10, 9, 
 	32, 10, 10, 9, 32, 
-	0, 127, 9, 40, 10, 10, 
+	-128, -1, 9, 40, 10, 10, 
 	9, 32, 9, 126, 1, 
 	127, 1, 127, 10, 10, 
-	9, 32, 0, 127, 33, 126, 
+	9, 32, -128, -1, 33, 126, 
 	9, 59, 9, 59, 9, 
 	126, 9, 59, 9, 59, 
 	0, 0, 0
@@ -165,23 +162,23 @@ self._indicies = [
 	29, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 29, 
-	1, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 23, 23, 23, 23, 23, 23, 23, 
-	23, 1, 30, 1, 1, 1, 31, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 23, 30, 1, 1, 1, 31, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 30, 1, 32, 1, 1, 1, 1, 
@@ -239,23 +236,23 @@ self._indicies = [
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 45, 1, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	45, 45, 45, 45, 45, 45, 45, 45, 
-	1, 51, 51, 51, 51, 51, 51, 51, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	45, 51, 51, 51, 51, 51, 51, 51, 
 	1, 1, 51, 51, 51, 51, 51, 1, 
 	51, 51, 51, 51, 51, 51, 51, 51, 
 	51, 51, 1, 52, 1, 1, 1, 1, 
@@ -378,7 +375,6 @@ end
 self.en_main = 1;
 
 
-# line 53 "lib/mail/parsers/content_disposition_parser.rl"
 
     def self.parse(data)
       content_disposition = ContentDispositionStruct.new('', [])
@@ -393,7 +389,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 397 "lib/mail/parsers/content_disposition_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -401,9 +396,7 @@ begin
 	top = 0
 end
 
-# line 67 "lib/mail/parsers/content_disposition_parser.rl"
       
-# line 407 "lib/mail/parsers/content_disposition_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -441,35 +434,27 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 1 then
-# line 8 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  disp_type_s = p 		end
 	when 17 then
-# line 9 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  content_disposition.disposition_type = data[disp_type_s..(p-1)].downcase 		end
 	when 2 then
-# line 12 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  param_attr_s = p 		end
 	when 4 then
-# line 13 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  param_attr = data[param_attr_s..(p-1)] 		end
 	when 7 then
-# line 16 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  qstr_s = p 		end
 	when 9 then
-# line 17 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  qstr = data[qstr_s..(p-1)] 		end
 	when 5 then
-# line 20 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  param_val_s = p 		end
 	when 18 then
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -484,15 +469,12 @@ begin
     qstr = nil
   		end
 	when 10 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
 	when 13 then
-# line 36 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
 	when 3 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -503,7 +485,6 @@ begin
 	end
  		end
 	when 16 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -513,17 +494,13 @@ begin
 	end
  		end
 	when 8 then
-# line 16 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  qstr_s = p 		end
-# line 17 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  qstr = data[qstr_s..(p-1)] 		end
 	when 6 then
-# line 20 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  param_val_s = p 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -534,7 +511,6 @@ begin
 	end
  		end
 	when 22 then
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -548,7 +524,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -559,17 +534,13 @@ begin
 	end
  		end
 	when 12 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 12 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  param_attr_s = p 		end
 	when 20 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -584,10 +555,8 @@ begin
     qstr = nil
   		end
 	when 11 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -598,10 +567,8 @@ begin
 	end
  		end
 	when 14 then
-# line 36 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -612,10 +579,8 @@ begin
 	end
  		end
 	when 15 then
-# line 36 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -625,7 +590,6 @@ begin
 	end
  		end
 	when 19 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -635,7 +599,6 @@ begin
 		next
 	end
  		end
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -650,10 +613,8 @@ begin
     qstr = nil
   		end
 	when 21 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -663,7 +624,6 @@ begin
 		next
 	end
  		end
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -677,7 +637,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 681 "lib/mail/parsers/content_disposition_parser.rb"
 	end
 	end
 	end
@@ -696,11 +655,9 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 17 then
-# line 9 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  content_disposition.disposition_type = data[disp_type_s..(p-1)].downcase 		end
 	when 18 then
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -715,14 +672,11 @@ begin
     qstr = nil
   		end
 	when 10 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
 	when 20 then
-# line 35 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
  		end
-# line 21 "lib/mail/parsers/content_disposition_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -736,7 +690,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 740 "lib/mail/parsers/content_disposition_parser.rb"
 	  end
 	end
 
@@ -747,7 +700,6 @@ begin
 end
 	end
 
-# line 68 "lib/mail/parsers/content_disposition_parser.rl"
 
       if p != eof || cs < 26
         raise Mail::Field::ParseError.new(Mail::ContentDispositionElement, data, "Only able to parse up to #{data[0..p]}")

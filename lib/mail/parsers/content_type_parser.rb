@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/content_type_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 46 "lib/mail/parsers/content_type_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
 
     
-# line 16 "lib/mail/parsers/content_type_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -30,7 +27,7 @@ self._trans_keys = [
 	9, 40, 10, 10, 9, 32, 
 	9, 126, 1, 127, 1, 
 	127, 10, 10, 9, 32, 
-	0, 127, 9, 126, 9, 59, 
+	-128, -1, 9, 126, 9, 59, 
 	9, 126, 9, 126, 9, 
 	126, 9, 126, 9, 126, 
 	0, 0, 0
@@ -315,23 +312,23 @@ self._indicies = [
 	57, 57, 1, 62, 1, 57, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 57, 1, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 57, 57, 
-	57, 57, 57, 57, 57, 57, 1, 63, 
+	1, 1, 1, 1, 57, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 57, 63, 
 	1, 1, 1, 64, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 63, 65, 
@@ -502,7 +499,6 @@ end
 self.en_main = 1;
 
 
-# line 53 "lib/mail/parsers/content_type_parser.rl"
 
     def self.parse(data)
       return ContentTypeStruct.new('text', 'plain', []) if Mail::Utilities.blank?(data)
@@ -518,7 +514,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 522 "lib/mail/parsers/content_type_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -526,9 +521,7 @@ begin
 	top = 0
 end
 
-# line 68 "lib/mail/parsers/content_type_parser.rl"
       
-# line 532 "lib/mail/parsers/content_type_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -566,43 +559,33 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 1 then
-# line 8 "lib/mail/parsers/content_type_parser.rl"
 		begin
  main_type_s = p 		end
 	when 2 then
-# line 9 "lib/mail/parsers/content_type_parser.rl"
 		begin
  content_type.main_type = data[main_type_s..(p-1)].downcase 		end
 	when 3 then
-# line 12 "lib/mail/parsers/content_type_parser.rl"
 		begin
  sub_type_s = p 		end
 	when 19 then
-# line 13 "lib/mail/parsers/content_type_parser.rl"
 		begin
  content_type.sub_type = data[sub_type_s..(p-1)].downcase 		end
 	when 4 then
-# line 16 "lib/mail/parsers/content_type_parser.rl"
 		begin
  param_attr_s = p 		end
 	when 6 then
-# line 17 "lib/mail/parsers/content_type_parser.rl"
 		begin
  param_attr = data[param_attr_s..(p-1)] 		end
 	when 9 then
-# line 20 "lib/mail/parsers/content_type_parser.rl"
 		begin
  qstr_s = p 		end
 	when 11 then
-# line 21 "lib/mail/parsers/content_type_parser.rl"
 		begin
  qstr = data[qstr_s..(p-1)] 		end
 	when 7 then
-# line 24 "lib/mail/parsers/content_type_parser.rl"
 		begin
  param_val_s = p 		end
 	when 21 then
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -617,15 +600,12 @@ begin
     qstr = nil
   		end
 	when 12 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
 	when 15 then
-# line 40 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
 	when 5 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -636,7 +616,6 @@ begin
 	end
  		end
 	when 18 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -646,10 +625,8 @@ begin
 	end
  		end
 	when 20 then
-# line 13 "lib/mail/parsers/content_type_parser.rl"
 		begin
  content_type.sub_type = data[sub_type_s..(p-1)].downcase 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -660,17 +637,13 @@ begin
 	end
  		end
 	when 10 then
-# line 20 "lib/mail/parsers/content_type_parser.rl"
 		begin
  qstr_s = p 		end
-# line 21 "lib/mail/parsers/content_type_parser.rl"
 		begin
  qstr = data[qstr_s..(p-1)] 		end
 	when 8 then
-# line 24 "lib/mail/parsers/content_type_parser.rl"
 		begin
  param_val_s = p 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -681,7 +654,6 @@ begin
 	end
  		end
 	when 25 then
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -695,7 +667,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -706,17 +677,13 @@ begin
 	end
  		end
 	when 13 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 16 "lib/mail/parsers/content_type_parser.rl"
 		begin
  param_attr_s = p 		end
 	when 23 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -731,10 +698,8 @@ begin
     qstr = nil
   		end
 	when 14 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -745,10 +710,8 @@ begin
 	end
  		end
 	when 16 then
-# line 40 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -759,10 +722,8 @@ begin
 	end
  		end
 	when 17 then
-# line 40 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -772,7 +733,6 @@ begin
 	end
  		end
 	when 22 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -782,7 +742,6 @@ begin
 		next
 	end
  		end
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -797,10 +756,8 @@ begin
     qstr = nil
   		end
 	when 24 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -810,7 +767,6 @@ begin
 		next
 	end
  		end
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -824,7 +780,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 828 "lib/mail/parsers/content_type_parser.rb"
 	end
 	end
 	end
@@ -843,11 +798,9 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 19 then
-# line 13 "lib/mail/parsers/content_type_parser.rl"
 		begin
  content_type.sub_type = data[sub_type_s..(p-1)].downcase 		end
 	when 21 then
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -862,14 +815,11 @@ begin
     qstr = nil
   		end
 	when 12 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
 	when 23 then
-# line 39 "lib/mail/parsers/content_type_parser.rl"
 		begin
  		end
-# line 25 "lib/mail/parsers/content_type_parser.rl"
 		begin
 
     if param_attr.nil?
@@ -883,7 +833,6 @@ begin
     param_attr = nil
     qstr = nil
   		end
-# line 887 "lib/mail/parsers/content_type_parser.rb"
 	  end
 	end
 
@@ -894,7 +843,6 @@ begin
 end
 	end
 
-# line 69 "lib/mail/parsers/content_type_parser.rl"
 
       if p != eof || cs < 33
         raise Mail::Field::ParseError.new(Mail::ContentTypeElement, data, "Only able to parse up to #{data[0..p]}")

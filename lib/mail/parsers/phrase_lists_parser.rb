@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/phrase_lists_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 47 "lib/mail/parsers/phrase_lists_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     PhraseListsStruct = Struct.new(:phrases, :error)
 
     
-# line 16 "lib/mail/parsers/phrase_lists_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -22,7 +19,7 @@ self._trans_keys = [
 	10, 10, 9, 32, 10, 
 	10, 9, 32, 1, 127, 
 	1, 127, 10, 10, 9, 32, 
-	-128, -1, 9, 126, 10, 
+	0, 127, 9, 126, 10, 
 	10, 9, 32, 9, 126, 
 	1, 127, 1, 127, 10, 10, 
 	9, 32, 0, 127, 9, 
@@ -128,23 +125,23 @@ self._indicies = [
 	18, 18, 18, 1, 22, 1, 18, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 18, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 18, 
+	1, 1, 1, 1, 1, 18, 1, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 18, 
+	18, 18, 18, 18, 18, 18, 18, 1, 
 	23, 1, 1, 1, 24, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 23, 
@@ -339,7 +336,6 @@ end
 self.en_main = 1;
 
 
-# line 54 "lib/mail/parsers/phrase_lists_parser.rl"
 
     def self.parse(data)
       raise Mail::Field::ParseError.new(Mail::PhraseList, data, 'nil is invalid') if data.nil?
@@ -354,7 +350,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 358 "lib/mail/parsers/phrase_lists_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -362,9 +357,7 @@ begin
 	top = 0
 end
 
-# line 68 "lib/mail/parsers/phrase_lists_parser.rl"
       
-# line 368 "lib/mail/parsers/phrase_lists_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -402,34 +395,27 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 1 then
-# line 8 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
  phrase_s = p 		end
 	when 13 then
-# line 9 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 
     phrase_lists.phrases << data[phrase_s..(p-1)] if phrase_s
     phrase_s = nil
   		end
 	when 7 then
-# line 20 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
 	when 9 then
-# line 21 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
 	when 6 then
-# line 28 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
 	when 4 then
-# line 29 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
 	when 3 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -440,7 +426,6 @@ begin
 	end
  		end
 	when 12 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -450,10 +435,8 @@ begin
 	end
  		end
 	when 2 then
-# line 8 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
  phrase_s = p 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -464,20 +447,16 @@ begin
 	end
  		end
 	when 14 then
-# line 20 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 
     phrase_lists.phrases << data[phrase_s..(p-1)] if phrase_s
     phrase_s = nil
   		end
 	when 8 then
-# line 20 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -488,10 +467,8 @@ begin
 	end
  		end
 	when 10 then
-# line 21 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -502,10 +479,8 @@ begin
 	end
  		end
 	when 11 then
-# line 21 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -515,13 +490,10 @@ begin
 	end
  		end
 	when 5 then
-# line 29 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 28 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 525 "lib/mail/parsers/phrase_lists_parser.rb"
 	end
 	end
 	end
@@ -540,23 +512,19 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 13 then
-# line 9 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 
     phrase_lists.phrases << data[phrase_s..(p-1)] if phrase_s
     phrase_s = nil
   		end
 	when 14 then
-# line 20 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/phrase_lists_parser.rl"
 		begin
 
     phrase_lists.phrases << data[phrase_s..(p-1)] if phrase_s
     phrase_s = nil
   		end
-# line 560 "lib/mail/parsers/phrase_lists_parser.rb"
 	  end
 	end
 
@@ -567,7 +535,6 @@ begin
 end
 	end
 
-# line 69 "lib/mail/parsers/phrase_lists_parser.rl"
 
       if p != eof || cs < 21
         raise Mail::Field::ParseError.new(Mail::PhraseListsElement, data, "Only able to parse up to #{data[0..p]}")

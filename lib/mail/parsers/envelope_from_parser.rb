@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/envelope_from_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 46 "lib/mail/parsers/envelope_from_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
 
     
-# line 16 "lib/mail/parsers/envelope_from_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -74,7 +71,7 @@ self._trans_keys = [
 	127, 10, 10, 9, 32, 
 	9, 126, 9, 64, 10, 10, 
 	9, 32, 9, 87, 9, 
-	64, -128, -1, 10, 10, 
+	64, 0, 127, 10, 10, 
 	9, 32, 9, 126, 9, 126, 
 	10, 10, 9, 32, 9, 
 	126, 9, 126, 9, 126, 
@@ -85,7 +82,7 @@ self._trans_keys = [
 	9, 126, 9, 126, 9, 
 	126, 9, 126, 1, 127, 
 	1, 127, 10, 10, 9, 32, 
-	9, 126, 0, 127, 1, 
+	9, 126, -128, -1, 1, 
 	127, 10, 10, 9, 32, 
 	1, 127, 1, 127, 10, 10, 
 	9, 32, 9, 126, 9, 
@@ -934,23 +931,23 @@ self._indicies = [
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 40, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 1, 1, 1, 1, 1, 1, 1, 
-	1, 240, 259, 1, 19, 1, 1, 1, 
+	1, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 240, 240, 240, 240, 240, 240, 240, 
+	240, 1, 259, 1, 19, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 19, 1, 260, 1, 1, 
@@ -1261,23 +1258,23 @@ self._indicies = [
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
 	244, 244, 244, 244, 244, 244, 244, 244, 
-	244, 244, 244, 244, 244, 244, 1, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 294, 
-	294, 294, 294, 294, 294, 294, 294, 1, 
+	244, 244, 244, 244, 244, 244, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 294, 
 	294, 294, 294, 294, 294, 294, 294, 294, 
 	299, 1, 294, 294, 300, 294, 294, 294, 
 	294, 294, 294, 294, 294, 294, 294, 294, 
@@ -1710,7 +1707,6 @@ end
 self.en_main = 1;
 
 
-# line 53 "lib/mail/parsers/envelope_from_parser.rl"
 
     def self.parse(data)
       envelope_from = EnvelopeFromStruct.new
@@ -1725,7 +1721,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 1729 "lib/mail/parsers/envelope_from_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -1733,9 +1728,7 @@ begin
 	top = 0
 end
 
-# line 67 "lib/mail/parsers/envelope_from_parser.rl"
       
-# line 1739 "lib/mail/parsers/envelope_from_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -1773,55 +1766,42 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 3 then
-# line 8 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  address_s = p 		end
 	when 17 then
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 12 then
-# line 12 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  ctime_date_s = p 		end
 	when 13 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 37 then
-# line 18 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 19 then
-# line 20 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 11 then
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 6 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 4 then
-# line 24 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 25 then
-# line 27 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 23 then
-# line 28 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 33 then
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 5 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1832,7 +1812,6 @@ begin
 	end
  		end
 	when 40 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1842,45 +1821,33 @@ begin
 	end
  		end
 	when 1 then
-# line 8 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  address_s = p 		end
-# line 24 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 18 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 16 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 36 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 24 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 35 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 15 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1891,10 +1858,8 @@ begin
 	end
  		end
 	when 38 then
-# line 18 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1905,10 +1870,8 @@ begin
 	end
  		end
 	when 39 then
-# line 18 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -1918,17 +1881,13 @@ begin
 	end
  		end
 	when 21 then
-# line 19 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 20 then
-# line 20 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1939,31 +1898,23 @@ begin
 	end
  		end
 	when 10 then
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 29 then
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 9 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 8 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -1974,27 +1925,20 @@ begin
 	end
  		end
 	when 24 then
-# line 28 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 27 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 32 then
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 2 then
-# line 8 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  address_s = p 		end
-# line 24 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -2005,102 +1949,72 @@ begin
 	end
  		end
 	when 22 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 19 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 14 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 31 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 34 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 28 then
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 7 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 27 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
 	when 30 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
 	when 26 then
-# line 22 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 21 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 34 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.address = data[address_s..(p-1)].rstrip 		end
-# line 2104 "lib/mail/parsers/envelope_from_parser.rb"
 	end
 	end
 	end
@@ -2119,17 +2033,13 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 41 then
-# line 13 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.ctime_date = data[ctime_date_s..(p-1)] 		end
 	when 42 then
-# line 17 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
 		end
-# line 13 "lib/mail/parsers/envelope_from_parser.rl"
 		begin
  envelope_from.ctime_date = data[ctime_date_s..(p-1)] 		end
-# line 2133 "lib/mail/parsers/envelope_from_parser.rb"
 	  end
 	end
 
@@ -2140,7 +2050,6 @@ begin
 end
 	end
 
-# line 68 "lib/mail/parsers/envelope_from_parser.rl"
 
       if p != eof || cs < 214
         raise Mail::Field::ParseError.new(Mail::EnvelopeFromElement, data, "Only able to parse up to #{data[0..p]}")

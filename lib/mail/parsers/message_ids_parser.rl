@@ -2,6 +2,8 @@
 require 'mail/utilities'
 
 %%{
+  # RFC 5322 Section 3.6.4: Identification Fields
+  # https://tools.ietf.org/html/rfc5322#section-3.6.4
   machine message_ids;
 
   # Message Ids

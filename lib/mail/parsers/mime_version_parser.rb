@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/mime_version_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 25 "lib/mail/parsers/mime_version_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     MimeVersionStruct = Struct.new(:major, :minor, :error)
 
     
-# line 16 "lib/mail/parsers/mime_version_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -204,7 +201,6 @@ end
 self.en_main = 1;
 
 
-# line 32 "lib/mail/parsers/mime_version_parser.rl"
 
     def self.parse(data)
       return MimeVersionStruct.new('', nil) if Mail::Utilities.blank?(data)
@@ -219,7 +215,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 223 "lib/mail/parsers/mime_version_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -227,9 +222,7 @@ begin
 	top = 0
 end
 
-# line 46 "lib/mail/parsers/mime_version_parser.rl"
       
-# line 233 "lib/mail/parsers/mime_version_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -267,31 +260,24 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 2 then
-# line 8 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  major_digits_s = p 		end
 	when 7 then
-# line 9 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  mime_version.major = data[major_digits_s..(p-1)] 		end
 	when 8 then
-# line 12 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  minor_digits_s = p 		end
 	when 14 then
-# line 13 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  mime_version.minor = data[minor_digits_s..(p-1)] 		end
 	when 10 then
-# line 16 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
 	when 3 then
-# line 17 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
 	when 1 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -302,7 +288,6 @@ begin
 	end
  		end
 	when 13 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -312,10 +297,8 @@ begin
 	end
  		end
 	when 6 then
-# line 9 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  mime_version.major = data[major_digits_s..(p-1)] 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -326,10 +309,8 @@ begin
 	end
  		end
 	when 15 then
-# line 13 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  mime_version.minor = data[minor_digits_s..(p-1)] 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -340,10 +321,8 @@ begin
 	end
  		end
 	when 11 then
-# line 16 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -354,10 +333,8 @@ begin
 	end
  		end
 	when 12 then
-# line 16 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -367,24 +344,18 @@ begin
 	end
  		end
 	when 5 then
-# line 17 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 8 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  major_digits_s = p 		end
 	when 9 then
-# line 17 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 12 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  minor_digits_s = p 		end
 	when 4 then
-# line 17 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -394,7 +365,6 @@ begin
 		next
 	end
  		end
-# line 398 "lib/mail/parsers/mime_version_parser.rb"
 	end
 	end
 	end
@@ -413,14 +383,11 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 14 then
-# line 13 "lib/mail/parsers/mime_version_parser.rl"
 		begin
  mime_version.minor = data[minor_digits_s..(p-1)] 		end
 	when 3 then
-# line 17 "lib/mail/parsers/mime_version_parser.rl"
 		begin
 		end
-# line 424 "lib/mail/parsers/mime_version_parser.rb"
 	  end
 	end
 
@@ -431,7 +398,6 @@ begin
 end
 	end
 
-# line 47 "lib/mail/parsers/mime_version_parser.rl"
 
       if p != eof || cs < 16
         raise Mail::Field::ParseError.new(Mail::MimeVersionElement, data, "Only able to parse up to #{data[0..p]}")

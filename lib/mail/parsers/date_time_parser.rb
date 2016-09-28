@@ -1,10 +1,8 @@
 
-# line 1 "lib/mail/parsers/date_time_parser.rl"
 # frozen_string_literal: true
 require 'mail/utilities'
 
 
-# line 25 "lib/mail/parsers/date_time_parser.rl"
 
 
 module Mail::Parsers
@@ -12,7 +10,6 @@ module Mail::Parsers
     DateTimeStruct = Struct.new(:date_string, :time_string, :error)
 
     
-# line 16 "lib/mail/parsers/date_time_parser.rb"
 class << self
 	attr_accessor :_trans_keys
 	private :_trans_keys, :_trans_keys=
@@ -53,7 +50,7 @@ self._trans_keys = [
 	116, 104, 117, 117, 117, 
 	101, 101, 101, 101, 100, 100, 
 	1, 127, 1, 127, 10, 
-	10, 9, 32, 0, 127, 
+	10, 9, 32, -128, -1, 
 	9, 40, 9, 40, 9, 40, 
 	9, 83, 9, 77, 9, 
 	84, 0, 0, 0
@@ -412,23 +409,23 @@ self._indicies = [
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 157, 1, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	157, 157, 157, 157, 157, 157, 157, 157, 
-	1, 163, 1, 1, 1, 164, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	1, 1, 1, 1, 1, 1, 1, 1, 
+	157, 163, 1, 1, 1, 164, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	163, 1, 1, 1, 1, 1, 1, 1, 
@@ -572,7 +569,6 @@ end
 self.en_main = 1;
 
 
-# line 32 "lib/mail/parsers/date_time_parser.rl"
 
     def self.parse(data)
       raise Mail::Field::ParseError.new(Mail::DateTimeElement, data, "nil is an invalid DateTime") if data.nil?
@@ -588,7 +584,6 @@ self.en_main = 1;
       stack = []
 
       
-# line 592 "lib/mail/parsers/date_time_parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -596,9 +591,7 @@ begin
 	top = 0
 end
 
-# line 47 "lib/mail/parsers/date_time_parser.rl"
       
-# line 602 "lib/mail/parsers/date_time_parser.rb"
 begin
 	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
@@ -636,23 +629,18 @@ begin
 	if _trans_actions[_trans] != 0
 	case _trans_actions[_trans]
 	when 1 then
-# line 8 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_s = p 		end
 	when 13 then
-# line 13 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_time.time_string = data[time_s..(p-1)] 		end
 	when 9 then
-# line 16 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
 	when 4 then
-# line 17 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
 	when 3 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -663,7 +651,6 @@ begin
 	end
  		end
 	when 12 then
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -673,10 +660,8 @@ begin
 	end
  		end
 	when 8 then
-# line 8 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_s = p 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -687,17 +672,13 @@ begin
 	end
  		end
 	when 6 then
-# line 9 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_time.date_string = data[date_s..(p-1)] 		end
-# line 12 "lib/mail/parsers/date_time_parser.rl"
 		begin
  time_s = p 		end
 	when 14 then
-# line 13 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_time.time_string = data[time_s..(p-1)] 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -708,10 +689,8 @@ begin
 	end
  		end
 	when 10 then
-# line 16 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -722,10 +701,8 @@ begin
 	end
  		end
 	when 11 then
-# line 16 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
-# line 23 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		top -= 1
@@ -735,10 +712,8 @@ begin
 	end
  		end
 	when 5 then
-# line 17 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -749,7 +724,6 @@ begin
 	end
  		end
 	when 2 then
-# line 22 "lib/mail/parsers/rfc5322_lexical_tokens.rl"
 		begin
  	begin
 		stack[top] = cs
@@ -759,20 +733,15 @@ begin
 		next
 	end
  		end
-# line 8 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_s = p 		end
 	when 7 then
-# line 17 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
-# line 9 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_time.date_string = data[date_s..(p-1)] 		end
-# line 12 "lib/mail/parsers/date_time_parser.rl"
 		begin
  time_s = p 		end
-# line 776 "lib/mail/parsers/date_time_parser.rb"
 	end
 	end
 	end
@@ -791,14 +760,11 @@ begin
 	if p == eof
 	  case _eof_actions[cs]
 	when 13 then
-# line 13 "lib/mail/parsers/date_time_parser.rl"
 		begin
  date_time.time_string = data[time_s..(p-1)] 		end
 	when 4 then
-# line 17 "lib/mail/parsers/date_time_parser.rl"
 		begin
 		end
-# line 802 "lib/mail/parsers/date_time_parser.rb"
 	  end
 	end
 
@@ -809,7 +775,6 @@ begin
 end
 	end
 
-# line 48 "lib/mail/parsers/date_time_parser.rl"
 
       if p != eof || cs < 96
         raise Mail::Field::ParseError.new(Mail::DateTimeElement, data, "Only able to parse up to #{data[0..p]}")
