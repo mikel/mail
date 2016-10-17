@@ -21,7 +21,7 @@ module Mail
     
     def inline_content_id
       # TODO: Deprecated in 2.2.2 - Remove in 2.3
-      STDERR.puts("Part#inline_content_id is deprecated, please call Part#cid instead")
+      $stderr.puts("Part#inline_content_id is deprecated, please call Part#cid instead")
       cid
     end
     

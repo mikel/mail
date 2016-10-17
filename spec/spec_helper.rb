@@ -3,7 +3,7 @@
 require File.expand_path('../environment', __FILE__)
 
 unless defined?(MAIL_ROOT)
-  STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
+  $stderr.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
   MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
 end
 
@@ -21,7 +21,7 @@ require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
 
-STDERR.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
+$stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 
 RSpec.configure do |c|
   c.mock_with :rspec
