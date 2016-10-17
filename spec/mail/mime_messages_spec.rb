@@ -572,7 +572,7 @@ describe "MIME Emails" do
         mail.body = body
         mail.charset = 'UTF-8'
         mail.add_file fixture('attachments', 'test.png')
-        expect(STDERR).not_to receive(:puts)
+        expect($stderr).not_to receive(:puts)
         mail.to_s
       end
 

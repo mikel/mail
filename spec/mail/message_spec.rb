@@ -87,7 +87,7 @@ describe Mail::Message do
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
 
-      allow(STDERR).to receive(:puts) # Don't want to get noisy about any warnings
+      allow($stderr).to receive(:puts) # Don't want to get noisy about any warnings
       errors = false
       expected_failures = []
       emails.each do |email|
@@ -113,12 +113,12 @@ describe Mail::Message do
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
-      expect(STDERR).not_to receive(:puts)
+      expect($stderr).not_to receive(:puts)
       Mail.read(fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml'))
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-      expect(STDERR).to receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
+      expect($stderr).to receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
       Mail.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')).to_s
     end
 
@@ -1289,7 +1289,7 @@ describe Mail::Message do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          expect(STDERR).not_to receive(:puts)
+          expect($stderr).not_to receive(:puts)
           mail.to_s
         end
 
@@ -1321,7 +1321,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_transfer_encoding = "8bit"
-          expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
+          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
@@ -1331,7 +1331,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
-          expect(STDERR).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
+          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
           expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
@@ -1341,7 +1341,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "image/png"
           mail.content_transfer_encoding = "8bit"
-          expect(STDERR).to_not receive(:puts)
+          expect($stderr).to_not receive(:puts)
           mail.to_s
         end
 
@@ -1351,7 +1351,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           mail.content_type = "text/plain; charset=UTF-8"
-          expect(STDERR).not_to receive(:puts)
+          expect($stderr).not_to receive(:puts)
           mail.to_s
         end
 
