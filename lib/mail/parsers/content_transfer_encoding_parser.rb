@@ -237,7 +237,12 @@ end
 self.en_main = 1;
 
 
-
+    # Parse the given data
+    #
+    # ==== Attributes
+    #
+    # * +data+ - Data to be parsed
+    #
     def self.parse(data)
       content_transfer_encoding = ContentTransferEncodingStruct.new('')
       return content_transfer_encoding if Mail::Utilities.blank?(data)
