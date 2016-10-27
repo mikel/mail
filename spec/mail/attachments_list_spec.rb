@@ -36,7 +36,7 @@ describe "Attachments" do
     end
 
     it "should use the best mime type for an extension" do
-      @mail.attachments['test.csv'] = @test_png
+      @mail.attachments['test.csv'] = @test_csv
       expect(@mail.attachments[0].mime_type).to eq 'text/csv'
     end
 
