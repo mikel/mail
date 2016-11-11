@@ -102,16 +102,15 @@ module Mail
       end
     end
     
-    # A part may not have a header.... so, just init a body if no header
+    # In a multipart mail, a part may not have a content type header.
+    # The suggested behavior is to implicitly set it's type to text/plain.
     def parse_message
-      header_part, body_part = raw_source.split(/#{CRLF}#{WSP}*#{CRLF}/m, 2)
-      if header_part =~ HEADER_LINE
-        self.header = header_part
-        self.body   = body_part
-      else
-        self.header = "Content-Type: text/plain\r\n"
-        self.body   = raw_source
-      end
+      super
+      self.header['Content-Type'] = 'text/plain' if self.header['Content-Type'].nil?
+    end
+
+    def headers_required?
+      false
     end
     
     def parse_delivery_status_report

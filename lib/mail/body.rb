@@ -283,13 +283,13 @@ module Mail
       parts_regex = /
         (?:                    # non-capturing group
           \A                |  # start of string OR
-          \r\n                 # line break
+          \r?\n                # line break
          )
         (
           --#{Regexp.escape(boundary || "")}  # boundary delimiter
           (?:--)?                             # with non-capturing optional closing
         )
-        (?=\s*$)                              # lookahead matching zero or more spaces followed by line-ending
+        (?:\s*\r?\n)                          # non-capturing group matching zero or more spaces followed by line-ending
       /x
       parts = raw_source.split(parts_regex).each_slice(2).to_a
       parts.each_with_index { |(part, _), index| parts.delete_at(index) if index > 0 && Utilities.blank?(part) }
