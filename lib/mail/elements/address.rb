@@ -117,11 +117,15 @@ module Mail
       Encodings.decode_encode(strip_all_comments(get_domain), @output_type) if get_domain
     end
 
-    # Returns an array of comments that are in the email, or an empty array if there
+    # Returns an array of comments that are in the email, or nil if there
     # are no comments
     #
     #  a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
     #  a.comments #=> ['My email address']
+    #
+    #  b = Address.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
+    #  b.comments #=> nil
+
     def comments
       parse unless @parsed
       get_comments.map { |c| c.squeeze(SPACE) } unless get_comments.empty?
