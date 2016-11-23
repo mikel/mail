@@ -1,0 +1,101 @@
+From root@smtp.nntc.net  Thu Feb  2 01:05:21 2006
+Return-Path: <root@smtp.nntc.net>
+X-Original-To: nobody@login.example.com
+Delivered-To: nobody@login.example.com
+Received: from mail2.example.com (mail2.example.com [10.3.4.5])
+	by naughty.example.com (Postfix) with ESMTP id 44F0E5371FD
+	for <nobody@login.example.com>; Thu,  2 Feb 2006 01:05:21 -0500 (EST)
+Received: from smtp.nntc.net (12.186.41.2.nntc.net [12.186.41.2])
+	by mail2.example.com (Postfix) with ESMTP id 080E06FA302
+	for <nobody@example.com>; Thu,  2 Feb 2006 01:05:21 -0500 (EST)
+Received: from smtp.nntc.net (rebuilt.nntc.net [127.0.0.1])
+	by smtp.nntc.net (8.12.11/8.12.8) with ESMTP id k1265FsI017665
+	for <nobody@example.com>; Thu, 2 Feb 2006 00:05:15 -0600
+Received: (from root@localhost)
+	by smtp.nntc.net (8.12.11/8.12.8/Submit) id k1265FTk017662
+	for nobody@example.com; Thu, 2 Feb 2006 00:05:15 -0600
+Date: Thu, 2 Feb 2006 00:05:15 -0600
+Message-Id: <200602020605.k1265FTk017662@smtp.nntc.net>
+From: service@paypal.com
+Reply-To: service@paypal.com
+MIME-Version: 1.0 Content-Type: text/html\r\n
+Content-Type: text/html Content-Transfer-Encoding: 8bit\r\n
+Subject: PayPal Account Suspension Notice - PayPal Account Limited
+To: undisclosed-recipients: ;
+Status: O
+X-Status: 
+X-Keywords:                  
+X-UID: 327
+
+<html>
+<head>
+</head>
+<body>
+<div align="left"><a href="http://www.paypal.com"><img
+src="https://www.paypal.com/en_GB/i/header/t1Hdr_hpGraphic_563x115.jpg"
+border="0"></a>&nbsp;
+</div>
+<table align="center" border="0" cellpadding="0" cellspacing="0"
+width="600">
+<tbody>
+<tr>
+<td colspan="3"><img src="pp.files/pixel.gif" height="2" width="2"></td>
+</tr>
+</tbody>
+</table>
+<a href="http://www.paypal.com/cgi-bin/webscr?cmd=_login-run">
+</a>
+<table border="0" width="50%">
+<tbody>
+<tr>
+<td>
+<p><font size="2"><font face="Verdana">Dear valued&nbsp;<strong><strong><span
+style="font-size: 10pt; color: black; font-family: Verdana;">PayPal<sup>&reg;</sup></span></strong>&nbsp;</strong>member</font>:&nbsp;<br>
+</font><br>
+</p>
+<p><font face="Verdana" size="2">It has come to our attention
+that your&nbsp;<span
+style="font-size: 10pt; color: black; font-family: Verdana;"><strong>PayPal<sup>&reg;</sup></strong></span>
+account information needs to be&nbsp;updated as part of our continuing
+commitment to protect your account and to&nbsp;reduce the instance of
+fraud on our website.&nbsp;</font><font face="Verdana" size="2"><font
+face="Verdana" size="2"> If you could please take 5-10
+minutes&nbsp;out of your </font><font face="Verdana" size="2">online </font><font
+face="Verdana" size="2">experience and update your personal records
+you will not run into&nbsp;any future </font><font face="Verdana"
+size="2">problems with the online service.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></font></p>
+<font face="Verdana" size="2">
+<p><font face="Verdana" size="2">However, failure to update your
+records will result in account suspension.&nbsp;<br>
+&nbsp;<br>
+<br>
+Once you have updated your account records, your&nbsp;<span
+style="font-size: 10pt; color: black; font-family: Verdana;"><strong>PayPal<sup>&reg;</sup></strong></span>
+session will not be&nbsp;interrupted and will continue as normal. </font></p>
+<p><font face="Verdana" size="2">To update your <span
+style="font-size: 10pt; color: black; font-family: Verdana;"><strong>PayPal<sup>&reg;</sup></strong></span>
+records click on the following link:&nbsp;<br>
+</font> <a href="http://3530955320/paypal.com/us/cgi-bin/index.php"><font
+face="Verdana" size="2">http://www.paypal.com/cgi-bin/webscr?cmd=_login-run</font></a></p>
+<p><font face="Verdana" size="2"></font>&nbsp;</p>
+<p><font face="Verdana" size="2">Thank You. &nbsp;<br>
+<span style="font-size: 10pt; color: black; font-family: Verdana;"><strong>PayPal<sup>&reg;
+</sup><span
+style="font-size: 10pt; color: black; font-family: Verdana;">UPDATE </span></strong><span
+style="font-size: 10pt; color: black; font-family: Verdana;"><strong>TEAM</strong></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></p>
+<img src="http://www.paypal.com/en_US/i/logo/paypal_logo.gif"
+border="0"> <font face="Verdana" size="2">
+<p><font face="Verdana" size="2">Accounts Management As outlined
+in our User Agreement, <span
+style="font-size: 10pt; color: black; font-family: Verdana;"><strong>PayPal<sup>&reg;</sup></strong></span>
+will&nbsp;periodically send you information about site changes and
+enhancements. </font></p>
+</font></font></td>
+</tr>
+</tbody>
+</table>
+<a href="http://www.paypal.com/cgi-bin/webscr?cmd=_login-run"> </a>
+</body>
+</html>

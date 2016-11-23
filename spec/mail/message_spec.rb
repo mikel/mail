@@ -139,6 +139,11 @@ describe Mail::Message do
       expect(Mail::Utilities.blank?(mail.in_reply_to)).to be_truthy
     end
 
+    it "should not assume text/plain in botched Content-type" do
+      mail = Mail.read(fixture('emails', 'error_emails', 'content_type_crlf.eml'))
+      expect(mail.content_type).to eql('text/html')
+    end
+
     describe "YAML serialization" do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
