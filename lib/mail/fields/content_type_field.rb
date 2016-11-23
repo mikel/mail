@@ -145,9 +145,7 @@ module Mail
       # TODO: check if there are cases where whitespace is not a separator
       val = val.
         gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
-        tr(' ',';').
-        squeeze(';').
-        gsub(';', '; '). #use '; ' as a separator (or EOL)
+        gsub(/[; ]+/, '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below
 
       if val =~ /(boundary=(\S*))/i
@@ -157,9 +155,6 @@ module Mail
       end
 
       case
-      when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;;+(.*)$/i
-        # Handles 'text/plain;; format="flowed"' (double semi colon)
-        "#{$1}/#{$2}; #{$3}"
       when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;\s?(ISO[\w\-]+)$/i
         # Microsoft helper:
         # Handles 'type/subtype;ISO-8559-1'
@@ -186,7 +181,7 @@ module Mail
       when val =~ /^\s*$/
         'text/plain'
       else
-        ''
+        val
       end
     end
 
