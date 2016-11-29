@@ -2098,6 +2098,7 @@ module Mail
       self.raw_source = ''
 
       @header = Mail::Header.new
+      @header.charset = @charset
       @body = Mail::Body.new
       @body_raw = nil
 
