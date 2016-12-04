@@ -30,7 +30,7 @@ module Mail
     # mail.attachments['test.png'].filename #=> 'test.png'
     # mail.attachments[1].filename          #=> 'test.jpg'
     def [](index_value)
-      if index_value.is_a?(Fixnum)
+      if index_value.is_a?(Integer)
         self.fetch(index_value)
       else
         self.select { |a| a.filename == index_value }.first
