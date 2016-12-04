@@ -48,9 +48,12 @@ Every Mail commit is tested by Travis on the [following platforms](https://githu
 * ruby-1.9.2 [ x86_64 ]
 * ruby-1.9.3 [ x86_64 ]
 * ruby-2.0.0 [ x86_64 ]
-* ruby-2.1.2 [ x86_64 ]
+* ruby-2.1.10 [ x86_64 ]
+* ruby-2.2.6 [ x86_64 ]
+* ruby-2.3.3 [ x86_64 ]
 * ruby-head [ x86_64 ]
 * jruby [ x86_64 ]
+* jruby-9.1.6.0 [ x86_64 ]
 * jruby-head [ x86_64 ]
 * rbx-2 [ x86_64 ]
 
