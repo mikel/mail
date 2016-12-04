@@ -25,7 +25,7 @@ module Mail
       emails_index.reverse! if options[:what] == :last
       emails_index = case count = options[:count]
         when :all then emails_index
-        when Fixnum then emails_index[0, count]
+        when Integer then emails_index[0, count]
         else
           raise 'Invalid count option value: ' + count.inspect
       end
