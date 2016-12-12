@@ -8,7 +8,7 @@ module Mail
       super(list)
     end
 
-    def << (address)
+    def <<(address)
       @field << address
     end
 
