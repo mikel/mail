@@ -20,6 +20,7 @@ describe "Attachments" do
   before(:each) do
     @mail = Mail.new
     @test_png = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+    @test_csv = File.open(fixture('attachments', 'test.csv'), 'rb', &:read)
   end
 
   describe "from direct content" do
@@ -32,6 +33,11 @@ describe "Attachments" do
     it "should work out magically the mime_type" do
       @mail.attachments['test.png'] = @test_png
       expect(@mail.attachments[0].mime_type).to eq 'image/png'
+    end
+
+    it "should use the best mime type for an extension" do
+      @mail.attachments['test.csv'] = @test_csv
+      expect(@mail.attachments[0].mime_type).to eq 'text/csv'
     end
 
     it "should assign the filename" do

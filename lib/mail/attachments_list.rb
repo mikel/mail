@@ -98,8 +98,8 @@ module Mail
       if RUBY_VERSION >= '1.9'
         filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
       end
-
-      @mime_type = MIME::Types.type_for(filename).first
+      mime_types = MIME::Types.type_for(filename)
+      @mime_type = mime_types.select(&:registered?).first || mime_types.first
     end
 
   end
