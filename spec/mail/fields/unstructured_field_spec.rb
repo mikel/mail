@@ -104,6 +104,14 @@ describe Mail::UnstructuredField do
       expect(@field.decoded).to eq string
     end
 
+    if '1.9'.respond_to?(:valid_encoding?)
+      it "should decode a windows-1258(Q) encoded string" do
+        string = "=?windows-1258?Q?Ceni=ECk_20161201=2Exlsx?="
+        @field = Mail::SubjectField.new(string)
+        expect(@field.decoded.valid_encoding?).to eq true
+      end
+    end
+
     if !'1.9'.respond_to?(:force_encoding)
       it "shouldn't get fooled into encoding on 1.8 due to an unrelated Encoding constant" do
         begin
