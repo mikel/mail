@@ -3,6 +3,9 @@
 Features:
 * #853 - `Mail::Message#set_sort_order` overrides the default message part sort order. (rafbm)
 
+Performance:
+* #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
+
 Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
 
