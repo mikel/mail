@@ -60,7 +60,7 @@ module Mail
 
         if value[:mime_type]
           default_values[:content_type] = value.delete(:mime_type)
-          @mime_type = MIME::Types[default_values[:content_type]].first
+          @mime_type = MiniMime.lookup_by_content_type(default_values[:content_type])
           default_values[:content_transfer_encoding] ||= guess_encoding
         end
 
@@ -99,7 +99,8 @@ module Mail
         filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
       end
 
-      @mime_type = MIME::Types.type_for(filename).first
+      @mime_type = MiniMime.lookup_by_filename(filename)
+      @mime_type && @mime_type.content_type
     end
 
   end
