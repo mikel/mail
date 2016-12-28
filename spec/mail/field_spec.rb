@@ -6,9 +6,15 @@ describe Mail::Field do
 
   describe "initialization" do
 
+    let(:invalid_mail_to) { Mail::Field.new('to', ["Released <released <released@wlw.de>"]) }
+
     it "should be instantiated" do
       expect {Mail::Field.new('To: Mikel')}.not_to raise_error
       expect(Mail::Field.new('To: Mikel').field.class).to eq Mail::ToField
+    end
+
+    it "should fail for invalid mail-to field" do
+      invalid_mail_to.field.should_not be_an_instance_of(Mail::UnstructuredField)
     end
 
     it "should allow you to init on an array" do
