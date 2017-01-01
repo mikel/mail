@@ -83,6 +83,7 @@ module Mail
                         :user_name            => nil,
                         :password             => nil,
                         :authentication       => nil,
+                        :enable_starttls      => nil,
                         :enable_starttls_auto => true,
                         :openssl_verify_mode  => nil,
                         :ssl                  => nil,
@@ -101,6 +102,10 @@ module Mail
       if settings[:tls] || settings[:ssl]
         if smtp.respond_to?(:enable_tls)
           smtp.enable_tls(ssl_context)
+        end
+      elsif settings[:enable_starttls]
+        if smtp.respond_to?(:enable_starttls)
+          smtp.enable_starttls(ssl_context)
         end
       elsif settings[:enable_starttls_auto]
         if smtp.respond_to?(:enable_starttls_auto)

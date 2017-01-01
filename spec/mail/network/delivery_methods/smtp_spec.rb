@@ -13,6 +13,7 @@ describe "SMTP Delivery Method" do
                                :user_name            => nil,
                                :password             => nil,
                                :authentication       => nil,
+                               :enable_starttls      => nil,
                                :enable_starttls_auto => true,
                                :openssl_verify_mode  => nil,
                                :tls                  => nil,
@@ -151,6 +152,42 @@ describe "SMTP Delivery Method" do
       end
 
       expect { mail.deliver! }.not_to raise_error
+    end
+  end
+
+  describe "enabling STARTTLS" do
+    it 'should default to automatically detecting STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls_auto
+    end
+
+    it 'should allow forcing STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :address         => "localhost",
+                                 :port            => 25,
+                                 :domain          => 'localhost.localdomain',
+                                 :user_name       => nil,
+                                 :password        => nil,
+                                 :authentication  => nil,
+                                 :enable_starttls => true  }
+
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls
     end
   end
 

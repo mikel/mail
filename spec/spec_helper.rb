@@ -65,13 +65,17 @@ end
 
 # Original mockup from ActionMailer
 class MockSMTP
-
   def self.deliveries
     @@deliveries
   end
 
+  def self.security
+    @@security
+  end
+
   def initialize
     @@deliveries = []
+    @@security = nil
   end
 
   def sendmail(mail, from, to)
@@ -95,21 +99,26 @@ class MockSMTP
     @@deliveries = []
   end
 
-  # in the standard lib: net/smtp.rb line 577
-  #   a TypeError is thrown unless this arg is a
-  #   kind of OpenSSL::SSL::SSLContext
-  def enable_tls(context = nil)
-    if context && context.kind_of?(OpenSSL::SSL::SSLContext)
-      true
-    elsif context
-      raise TypeError,
-        "wrong argument (#{context.class})! "+
-        "(Expected kind of OpenSSL::SSL::SSLContext)"
-    end
+  def self.clear_security
+    @@security = nil
   end
 
-  def enable_starttls_auto(context = :dummy_ssl_context)
-    true
+  def enable_tls(context)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security && @@security != :enable_tls
+    @@security = :enable_tls
+    context
+  end
+
+  def enable_starttls(context = nil)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
+    @@security = :enable_starttls
+    context
+  end
+
+  def enable_starttls_auto(context)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
+    @@security = :enable_starttls_auto
+    context
   end
 
 end
