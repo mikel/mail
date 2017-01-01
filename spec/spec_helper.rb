@@ -117,6 +117,17 @@ class MockSMTP
     end
   end
 
+  def enable_starttls(context = nil)
+    if context && context.kind_of?(OpenSSL::SSL::SSLContext)
+      @@security = :enable_starttls
+      true
+    elsif context
+      raise TypeError,
+        "wrong argument (#{context.class})! "+
+        "(Expected kind of OpenSSL::SSL::SSLContext)"
+    end
+  end
+
   def enable_starttls_auto(context = :dummy_ssl_context)
     @@security = :enable_starttls_auto
     true
