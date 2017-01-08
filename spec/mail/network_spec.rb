@@ -45,6 +45,7 @@ describe "Mail" do
                                                 :password             => nil,
                                                 :authentication       => nil,
                                                 :enable_starttls_auto => true,
+                                                :enable_starttls      => nil,
                                                 :openssl_verify_mode  => nil,
                                                 :ssl                  => nil,
                                                 :tls                  => nil })
@@ -208,6 +209,39 @@ describe "Mail" do
       expect(MockSMTP.deliveries[0][2]).to eq ["ada@test.lindsaar.net"]
     end
 
+    it 'should default to automatically detecting STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls_auto
+    end
+
+    it 'should allow forcing STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :address         => "localhost",
+                                 :port            => 25,
+                                 :domain          => 'localhost.localdomain',
+                                 :user_name       => nil,
+                                 :password        => nil,
+                                 :authentication  => nil,
+                                 :enable_starttls => true  }
+
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls
+    end
   end
 
   describe "deliveries" do
