@@ -208,6 +208,18 @@ describe "Mail" do
       expect(MockSMTP.deliveries[0][2]).to eq ["ada@test.lindsaar.net"]
     end
 
+    it 'should default to automatically detecting STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls_auto
+    end
   end
 
   describe "deliveries" do

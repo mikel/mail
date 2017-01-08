@@ -70,6 +70,10 @@ class MockSMTP
     @@deliveries
   end
 
+  def self.security
+    @@security
+  end
+
   def initialize
     @@deliveries = []
   end
@@ -95,11 +99,16 @@ class MockSMTP
     @@deliveries = []
   end
 
+  def self.clear_security
+    @@security = nil
+  end
+
   # in the standard lib: net/smtp.rb line 577
   #   a TypeError is thrown unless this arg is a
   #   kind of OpenSSL::SSL::SSLContext
   def enable_tls(context = nil)
     if context && context.kind_of?(OpenSSL::SSL::SSLContext)
+      @@security = :enable_tls
       true
     elsif context
       raise TypeError,
@@ -109,6 +118,7 @@ class MockSMTP
   end
 
   def enable_starttls_auto(context = :dummy_ssl_context)
+    @@security = :enable_starttls_auto
     true
   end
 
