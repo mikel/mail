@@ -52,7 +52,7 @@ describe "PartsList" do
     p << attachment_part
     p << html_text_part
     p << plain_text_part
-    p.sort!(order).should eq [plain_text_part, html_text_part, attachment_part]
+    expect(p.sort!(order)).to eq [plain_text_part, html_text_part, attachment_part]
   end
 
   it "should have a parts reader" do
