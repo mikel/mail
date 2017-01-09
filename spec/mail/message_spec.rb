@@ -1313,7 +1313,7 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_type = "image/png"
-          mail.to_s.should_not =~ %r{Content-Type: image/png;\s+charset=UTF-8}
+          expect(mail.to_s).not_to match(%r{Content-Type: image/png;\s+charset=UTF-8})
         end
 
         it "should raise a warning if there is no content type and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1341,7 +1341,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "image/png"
           mail.content_transfer_encoding = "8bit"
-          STDERR.should_not_receive(:puts)
+          expect(STDERR).not_to receive(:puts)
           mail.to_s
         end
 
