@@ -316,7 +316,7 @@ describe Mail::Encodings do
 
     it "should treat unrecognized charsets as binary" do
       if RUBY_VERSION >= "1.9"
-        expect(Mail::Encodings.value_decode("=?ISO-FOOO?Q?Morten_R=F8verdatt=E9r?=")).to eq "Morten Rverdattr"
+        expect(Mail::Encodings.value_decode("=?ISO-FOOO?Q?Morten_R=F8verdatt=E9r?=")).to eq "Morten R�verdatt�r"
       end
     end
   end
