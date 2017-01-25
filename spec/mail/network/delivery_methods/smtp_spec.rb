@@ -24,6 +24,26 @@ describe "SMTP Delivery Method" do
   end
 
   describe "general usage" do
+    
+    it "properly dot-stuff emails" do
+      
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+        body "this is a test\n.\nonly a test\n."
+
+        smtp_envelope_from 'smtp_from'
+        smtp_envelope_to 'smtp_to'
+      end
+
+      MockSMTP.deliveries[0][0].should include "\r\n..\r\n"
+      MockSMTP.deliveries[0][0].should =~ %r{\r\n..$}
+      MockSMTP.deliveries[0][0].should eq Mail::SMTP.new({}).send :dot_stuff, mail.encoded
+      MockSMTP.deliveries[0][1].should eq 'smtp_from'
+      MockSMTP.deliveries[0][2].should eq %w(smtp_to)
+      
+    end
 
     it "should send emails from given settings" do
 
