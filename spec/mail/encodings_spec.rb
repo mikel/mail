@@ -767,9 +767,21 @@ describe Mail::Encodings do
       expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
     end
 
+    it "should encode multiple addresses correctly when noninitial address contains non-usascii chars" do
+      raw     = '"Mikel Lindr" <mikel@test.lindsaar.net>, "あdあ" <ada@test.lindsaar.net>'
+      encoded = 'Mikel Lindr <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
+      expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
+    end
+
     it "should encode multiple unquoted addresses correctly" do
       raw     = 'Mikel Lindsああr <mikel@test.lindsaar.net>, あdあ <ada@test.lindsaar.net>'
       encoded = 'Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
+      expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
+    end
+
+    it "should encode multiple unquoted addresses correctly when noninitial address contains non-usascii chars" do
+      raw     = 'Mikel Lindsar <mikel@test.lindsaar.net>, あdあ <ada@test.lindsaar.net>'
+      encoded = 'Mikel Lindsar <mikel@test.lindsaar.net>, =?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>'
       expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
     end
 
