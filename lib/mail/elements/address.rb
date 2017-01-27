@@ -128,7 +128,12 @@ module Mail
 
     def comments
       parse unless @parsed
-      get_comments.map { |c| c.squeeze(SPACE) } unless get_comments.empty?
+      comments = get_comments
+      if comments.nil? || comments.empty?
+        nil
+      else
+        get_comments.map { |c| c.squeeze(SPACE) }
+      end
     end
 
     # Sometimes an address will not have a display name, but might have the name
