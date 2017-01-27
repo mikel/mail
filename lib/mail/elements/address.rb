@@ -215,6 +215,7 @@ module Mail
     end
 
     def get_display_name
+      if @data && @data.display_name
         str = strip_all_comments(@data.display_name.to_s)
       elsif @data && @data.comments && @data.domain
         str = strip_domain_comments(format_comments)
