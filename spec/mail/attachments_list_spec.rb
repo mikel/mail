@@ -249,7 +249,8 @@ describe "reading emails with attachments" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_with_encoded_name.eml')))
       expect(mail.attachments.length).to eq 1
       result = mail.attachments[0].filename
-      expected = "01 Quien Te Dij�at. Pitbull.mp3"
+      replace = '�' if RUBY_VERSION > '1.9'
+      expected = "01 Quien Te Dij#{replace}at. Pitbull.mp3"
       expect(result).to eq expected
     end
 
