@@ -106,7 +106,7 @@ module Mail
     # The suggested behavior is to implicitly set it's type to text/plain.
     def parse_message
       super
-      self.header['Content-Type'] = 'text/plain' if self.header['Content-Type'].nil?
+      self.header['Content-Type'] ||= 'text/plain'
     end
 
     def headers_required?

@@ -311,7 +311,7 @@ limitMAIL
                                          "attachment_emails",
                                          "attachment_pdf_binary.eml")))
       expect(mail.attachments.length).to eq 1
-      expect(mail.attachments[0].body.raw_source.length).to eq 11464
+      expect(mail.attachments[0].body.raw_source.bytesize).to eq 11464
     end
   end
 end
