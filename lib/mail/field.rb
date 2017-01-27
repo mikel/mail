@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'mail/fields'
 
 # encoding: utf-8
@@ -113,12 +114,12 @@ module Mail
     #  Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     def initialize(name, value = nil, charset = 'utf-8')
       case
-      when name =~ /:/                  # Field.new("field-name: field data")
-        @charset = value.blank? ? charset : value
+      when name.index(COLON)            # Field.new("field-name: field data")
+        @charset = Utilities.blank?(value) ? charset : value
         @name = name[FIELD_PREFIX]
         @raw_value = name
         @value = nil
-      when name !~ /:/ && value.blank?  # Field.new("field-name")
+      when Utilities.blank?(value)   # Field.new("field-name")
         @name = name
         @value = nil
         @raw_value = nil
@@ -157,19 +158,29 @@ module Mail
       field.to_s
     end
 
+    def inspect
+      "#<#{self.class.name} 0x#{(object_id * 2).to_s(16)} #{instance_variables.map do |ivar|
+        "#{ivar}=#{instance_variable_get(ivar).inspect}"
+      end.join(" ")}>"
+    end
+
     def update(name, value)
       @field = create_field(name, value, @charset)
     end
 
     def same( other )
+      return false unless other.kind_of?(self.class)
       match_to_s(other.name, self.name)
+    end
+
+    def ==( other )
+      return false unless other.kind_of?(self.class)
+      match_to_s(other.name, self.name) && match_to_s(other.value, self.value)
     end
 
     def responsible_for?( val )
       name.to_s.casecmp(val.to_s) == 0
     end
-
-    alias_method :==, :same
 
     def <=>( other )
       self.field_order_id <=> other.field_order_id
@@ -181,6 +192,16 @@ module Mail
 
     def method_missing(name, *args, &block)
       field.send(name, *args, &block)
+    end
+
+    if RUBY_VERSION >= '1.9.2'
+      def respond_to_missing?(method_name, include_private)
+        field.respond_to?(method_name, include_private) || super
+      end
+    else
+      def respond_to?(method_name, include_private = false)
+        field.respond_to?(method_name, include_private) || super
+      end
     end
 
     FIELD_ORDER = %w[ return-path received
@@ -200,7 +221,7 @@ module Mail
       match_data = raw_field.mb_chars.match(FIELD_SPLIT)
       [match_data[1].to_s.mb_chars.strip, match_data[2].to_s.mb_chars.strip.to_s]
     rescue
-      STDERR.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
+      $stderr.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
     end
 
     # 2.2.3. Long Header Fields

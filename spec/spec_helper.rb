@@ -1,8 +1,9 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require File.expand_path('../environment', __FILE__)
 
 unless defined?(MAIL_ROOT)
-  STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
+  $stderr.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
   MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
 end
 
@@ -20,7 +21,7 @@ require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
 
-STDERR.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
+$stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 
 RSpec.configure do |c|
   c.mock_with :rspec
@@ -30,36 +31,51 @@ end
 # NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
 #       to default to "NONE" (Why!?).
 $KCODE='UTF8' if RUBY_VERSION < '1.9'
-Encoding.default_external = 'utf-8' if defined?(Encoding) && Encoding.respond_to?(:default_external=)
+
+if defined?(Encoding) && Encoding.respond_to?(:default_external=)
+  begin
+    orig, $VERBOSE = $VERBOSE, nil
+    Encoding.default_external = 'utf-8'
+  ensure
+    $VERBOSE = orig
+  end
+end
 
 def fixture(*name)
   File.join(SPEC_ROOT, 'fixtures', name)
 end
-
-alias doing lambda
 
 # Produces an array or printable ascii by default.
 #
 # We can assume if a, m and z and 1, 5, 0 work, then the rest
 # of the letters and numbers work.
 def ascii(from = 33, to = 126)
-  chars = []
-  from.upto(to) { |c| chars << ('' << c) }
+  chars = (from..to).map(&:chr)
   boring = ('b'..'l').to_a + ('n'..'o').to_a +
     ('p'..'y').to_a + ('B'..'L').to_a + ('N'..'O').to_a +
     ('P'..'Y').to_a + ('1'..'4').to_a + ('6'..'8').to_a
   chars - boring
 end
 
+# https://github.com/rails/rails/blob/master/activesupport/lib/active_support/core_ext/string/strip.rb#L22
+def strip_heredoc(string)
+  indent = string.scan(/^[ \t]*(?=\S)/).min.size
+  string.gsub(/^[ \t]{#{indent}}/, '')
+end
+
 # Original mockup from ActionMailer
 class MockSMTP
-
   def self.deliveries
     @@deliveries
   end
 
+  def self.security
+    @@security
+  end
+
   def initialize
     @@deliveries = []
+    @@security = nil
   end
 
   def sendmail(mail, from, to)
@@ -83,21 +99,26 @@ class MockSMTP
     @@deliveries = []
   end
 
-  # in the standard lib: net/smtp.rb line 577
-  #   a TypeError is thrown unless this arg is a
-  #   kind of OpenSSL::SSL::SSLContext
-  def enable_tls(context = nil)
-    if context && context.kind_of?(OpenSSL::SSL::SSLContext)
-      true
-    elsif context
-      raise TypeError,
-        "wrong argument (#{context.class})! "+
-        "(Expected kind of OpenSSL::SSL::SSLContext)"
-    end
+  def self.clear_security
+    @@security = nil
   end
 
-  def enable_starttls_auto(context = :dummy_ssl_context)
-    true
+  def enable_tls(context)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security && @@security != :enable_tls
+    @@security = :enable_tls
+    context
+  end
+
+  def enable_starttls(context = nil)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
+    @@security = :enable_starttls
+    context
+  end
+
+  def enable_starttls_auto(context)
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
+    @@security = :enable_starttls_auto
+    context
   end
 
 end

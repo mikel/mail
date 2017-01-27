@@ -1,26 +1,19 @@
-module Mail
-  module Parsers
+# frozen_string_literal: true
+# Ragel-generated parsers are full of known warnings. Suppress them.
+begin
+  orig, $VERBOSE = $VERBOSE, nil
 
-    # Low-level ragel based parsers
-    require 'mail/parsers/ragel'
-
-    AddressListStruct = Struct.new(:addresses, :group_names, :error)
-    AddressStruct = Struct.new(:raw, :domain, :comments, :local,
-                             :obs_domain_list, :display_name, :group, :error)
-    ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
-    ContentLocationStruct = Struct.new(:location, :error)
-    ContentTransferEncodingStruct = Struct.new(:encoding, :error)
-    ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
-    DateTimeStruct = Struct.new(:date_string, :time_string, :error)
-    EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
-    MessageIdsStruct = Struct.new(:message_ids, :error)
-    MimeVersionStruct = Struct.new(:major, :minor, :error)
-    PhraseListsStruct = Struct.new(:phrases, :error)
-    ReceivedStruct = Struct.new(:date, :time, :info, :error)
-
-    require 'mail/parsers/ragel/parser_info'
-    Ragel::FIELD_PARSERS.each do |field_parser|
-      require "mail/parsers/#{field_parser}_parser"
-    end
-  end
+  require 'mail/parsers/address_lists_parser'
+  require 'mail/parsers/content_disposition_parser'
+  require 'mail/parsers/content_location_parser'
+  require 'mail/parsers/content_transfer_encoding_parser'
+  require 'mail/parsers/content_type_parser'
+  require 'mail/parsers/date_time_parser'
+  require 'mail/parsers/envelope_from_parser'
+  require 'mail/parsers/message_ids_parser'
+  require 'mail/parsers/mime_version_parser'
+  require 'mail/parsers/phrase_lists_parser'
+  require 'mail/parsers/received_parser'
+ensure
+  $VERBOSE = orig
 end

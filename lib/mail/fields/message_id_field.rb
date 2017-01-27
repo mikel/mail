@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # = Message-ID Field
 # 
@@ -41,7 +42,7 @@ module Mail
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       @uniq = 1
-      if value.blank?
+      if Utilities.blank?(value)
         self.name = CAPITALIZED_FIELD
         self.value = generate_message_id
       else

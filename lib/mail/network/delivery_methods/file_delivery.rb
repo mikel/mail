@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'mail/check_delivery_params'
 
 module Mail

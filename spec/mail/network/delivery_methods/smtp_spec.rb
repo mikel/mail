@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe "SMTP Delivery Method" do
@@ -12,6 +13,7 @@ describe "SMTP Delivery Method" do
                                :user_name            => nil,
                                :password             => nil,
                                :authentication       => nil,
+                               :enable_starttls      => nil,
                                :enable_starttls_auto => true,
                                :openssl_verify_mode  => nil,
                                :tls                  => nil,
@@ -34,9 +36,9 @@ describe "SMTP Delivery Method" do
         smtp_envelope_to 'smtp_to'
       end
 
-      MockSMTP.deliveries[0][0].should eq mail.encoded
-      MockSMTP.deliveries[0][1].should eq 'smtp_from'
-      MockSMTP.deliveries[0][2].should eq %w(smtp_to)
+      expect(MockSMTP.deliveries[0][0]).to eq mail.encoded
+      expect(MockSMTP.deliveries[0][1]).to eq 'smtp_from'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to)
     end
 
     it "should be able to send itself" do
@@ -48,9 +50,9 @@ describe "SMTP Delivery Method" do
 
       mail.deliver!
 
-      MockSMTP.deliveries[0][0].should eq mail.encoded
-      MockSMTP.deliveries[0][1].should eq mail.from[0]
-      MockSMTP.deliveries[0][2].should eq mail.destinations
+      expect(MockSMTP.deliveries[0][0]).to eq mail.encoded
+      expect(MockSMTP.deliveries[0][1]).to eq mail.from[0]
+      expect(MockSMTP.deliveries[0][2]).to eq mail.destinations
     end
     
     it "should be able to return actual SMTP protocol response" do
@@ -65,7 +67,7 @@ describe "SMTP Delivery Method" do
       end
       
       response = mail.deliver!
-      response.should eq 'OK'
+      expect(response).to eq 'OK'
       
     end
   end
@@ -91,7 +93,7 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
 
-      doing { mail.deliver! }.should_not raise_error(TypeError)
+      expect { mail.deliver! }.not_to raise_error
     end
     
     it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
@@ -108,7 +110,7 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
 
-      doing { mail.deliver! }.should_not raise_error(TypeError)
+      expect { mail.deliver! }.not_to raise_error
     end
   end
   
@@ -132,7 +134,7 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
 
-      doing { mail.deliver! }.should_not raise_error(TypeError)
+      expect { mail.deliver! }.not_to raise_error
     end
     
     it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
@@ -149,7 +151,43 @@ describe "SMTP Delivery Method" do
         subject 'invalid RFC2822'
       end
 
-      doing { mail.deliver! }.should_not raise_error(TypeError)
+      expect { mail.deliver! }.not_to raise_error
+    end
+  end
+
+  describe "enabling STARTTLS" do
+    it 'should default to automatically detecting STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls_auto
+    end
+
+    it 'should allow forcing STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :address         => "localhost",
+                                 :port            => 25,
+                                 :domain          => 'localhost.localdomain',
+                                 :user_name       => nil,
+                                 :password        => nil,
+                                 :authentication  => nil,
+                                 :enable_starttls => true  }
+
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.security).to eq :enable_starttls
     end
   end
 
@@ -165,28 +203,42 @@ describe "SMTP Delivery Method" do
         smtp_envelope_to "smtp_to@someemail.com"
         smtp_envelope_from "smtp_from@someemail.com"
       end
-      MockSMTP.deliveries[0][1].should eq 'smtp_from@someemail.com'
-      MockSMTP.deliveries[0][2].should eq %w(smtp_to@someemail.com)
+      expect(MockSMTP.deliveries[0][1]).to eq 'smtp_from@someemail.com'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
+    end
+
+    it "supports the null sender in the envelope from address" do
+      Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+        message_id "<1234@someemail.com>"
+        body "body"
+
+        smtp_envelope_to "smtp_to@someemail.com"
+        smtp_envelope_from Mail::Constants::NULL_SENDER
+      end
+      expect(MockSMTP.deliveries[0][1]).to eq '<>'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
     end
 
     it "should raise if there is no envelope From address" do
-      lambda do
+      expect do
         Mail.deliver do
           to "to@somemail.com"
           subject "Email with no sender"
           body "body"
         end
-      end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+      end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
     end
 
     it "should raise an error if no recipient if defined" do
-      lambda do
+      expect do
         Mail.deliver do
           from "from@somemail.com"
           subject "Email with no recipient"
           body "body"
         end
-      end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
     end
   end
 

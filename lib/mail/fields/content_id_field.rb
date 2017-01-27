@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # 
 # 
@@ -11,7 +12,7 @@ module Mail
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       @uniq = 1
-      if value.blank?
+      if Utilities.blank?(value)
         value = generate_content_id
       else
         value = strip_field(FIELD_NAME, value)
@@ -22,7 +23,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::MessageIdsElement.new(val)
       end
     end

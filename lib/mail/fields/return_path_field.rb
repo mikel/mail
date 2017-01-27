@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # 4.4.3.  REPLY-TO / RESENT-REPLY-TO
 # 
@@ -41,7 +42,6 @@ module Mail
       value = nil if value == '<>'
       self.charset = charset
       super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
-      self.parse
       self
     end
     

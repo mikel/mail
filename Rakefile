@@ -1,4 +1,6 @@
-ENV['BUNDLE_GEMFILE'] = File.expand_path('../Gemfile', __FILE__)
+if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
+  ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
+end
 require 'rubygems'
 require 'bundler/setup'
 
@@ -18,4 +20,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 # load custom rake tasks
-Dir["#{File.dirname(__FILE__)}/lib/tasks/**/*.rake"].sort.each { |ext| load ext }
+Dir["#{File.dirname(__FILE__)}/tasks/**/*.rake"].sort.each { |ext| load ext }

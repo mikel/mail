@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   class Part < Message
     
@@ -20,7 +21,7 @@ module Mail
     
     def inline_content_id
       # TODO: Deprecated in 2.2.2 - Remove in 2.3
-      STDERR.puts("Part#inline_content_id is deprecated, please call Part#cid instead")
+      $stderr.puts("Part#inline_content_id is deprecated, please call Part#cid instead")
       cid
     end
     
@@ -34,7 +35,7 @@ module Mail
     end
     
     def inline?
-      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition]
+      header[:content_disposition].disposition_type == 'inline' if header[:content_disposition].respond_to?(:disposition_type)
     end
     
     def add_required_fields
@@ -94,8 +95,10 @@ module Mail
     def get_return_values(key)
       if delivery_status_data[key].is_a?(Array)
         delivery_status_data[key].map { |a| a.value }
-      else
+      elsif !delivery_status_data[key].nil?
         delivery_status_data[key].value
+      else
+        nil
       end
     end
     

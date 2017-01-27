@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   
   class AddressContainer < Array
@@ -7,7 +8,7 @@ module Mail
       super(list)
     end
 
-    def << (address)
+    def <<(address)
       @field << address
     end
 

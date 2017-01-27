@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 # 
 # resent-msg-id   =       "Resent-Message-ID:" msg-id CRLF
 require 'mail/fields/common/common_message_id'

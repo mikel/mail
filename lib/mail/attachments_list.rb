@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Mail
   class AttachmentsList < Array
 
@@ -29,7 +30,7 @@ module Mail
     # mail.attachments['test.png'].filename #=> 'test.png'
     # mail.attachments[1].filename          #=> 'test.jpg'
     def [](index_value)
-      if index_value.is_a?(Fixnum)
+      if index_value.is_a?(Integer)
         self.fetch(index_value)
       else
         self.select { |a| a.filename == index_value }.first
@@ -59,7 +60,7 @@ module Mail
 
         if value[:mime_type]
           default_values[:content_type] = value.delete(:mime_type)
-          @mime_type = MIME::Types[default_values[:content_type]].first
+          @mime_type = MiniMime.lookup_by_content_type(default_values[:content_type])
           default_values[:content_transfer_encoding] ||= guess_encoding
         end
 
@@ -71,6 +72,7 @@ module Mail
 
       if hash[:body].respond_to? :force_encoding and hash[:body].respond_to? :valid_encoding?
         if not hash[:body].valid_encoding? and default_values[:content_transfer_encoding].downcase == "binary"
+          hash[:body] = hash[:body].dup if hash[:body].frozen?
           hash[:body].force_encoding("BINARY")
         end
       end
@@ -97,7 +99,8 @@ module Mail
         filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
       end
 
-      @mime_type = MIME::Types.type_for(filename).first
+      @mime_type = MiniMime.lookup_by_filename(filename)
+      @mime_type && @mime_type.content_type
     end
 
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'mail/check_delivery_params'
 
 module Mail
@@ -44,9 +45,8 @@ module Mail
   # hostname or update the certificate authorities trusted by your ruby. If
   # that isn't possible, you can control this behavior with
   # an :openssl_verify_mode setting. Its value may be either an OpenSSL
-  # verify mode constant (OpenSSL::SSL::VERIFY_NONE), or a string containing
-  # the name of an OpenSSL verify mode (none, peer, client_once,
-  # fail_if_no_peer_cert).
+  # verify mode constant (OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER),
+  # or a string containing the name of an OpenSSL verify mode (none, peer).
   #
   # === Others 
   # 
@@ -83,6 +83,7 @@ module Mail
                         :user_name            => nil,
                         :password             => nil,
                         :authentication       => nil,
+                        :enable_starttls      => nil,
                         :enable_starttls_auto => true,
                         :openssl_verify_mode  => nil,
                         :ssl                  => nil,
@@ -101,6 +102,10 @@ module Mail
       if settings[:tls] || settings[:ssl]
         if smtp.respond_to?(:enable_tls)
           smtp.enable_tls(ssl_context)
+        end
+      elsif settings[:enable_starttls]
+        if smtp.respond_to?(:enable_starttls)
+          smtp.enable_starttls(ssl_context)
         end
       elsif settings[:enable_starttls_auto]
         if smtp.respond_to?(:enable_starttls_auto)
@@ -132,15 +137,11 @@ module Mail
         openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
       end
 
-      if RUBY_VERSION < '1.9.0'
-        openssl_verify_mode
-      else
-        context = Net::SMTP.default_ssl_context
-        context.verify_mode = openssl_verify_mode
-        context.ca_path = settings[:ca_path] if settings[:ca_path]
-        context.ca_file = settings[:ca_file] if settings[:ca_file]
-        context
-      end
+      context = Net::SMTP.default_ssl_context
+      context.verify_mode = openssl_verify_mode
+      context.ca_path = settings[:ca_path] if settings[:ca_path]
+      context.ca_file = settings[:ca_file] if settings[:ca_file]
+      context
     end
   end
 end

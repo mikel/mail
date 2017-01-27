@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 module Mail
   module CommonDate # :nodoc:
     # Returns a date time object of the parsed date
@@ -11,7 +12,7 @@ module Mail
     end
     
     def parse(val = value)
-      unless val.blank?
+      unless Utilities.blank?(val)
         @element = Mail::DateTimeElement.new(val)
       else
         nil
