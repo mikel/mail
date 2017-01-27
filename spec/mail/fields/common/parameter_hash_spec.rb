@@ -1,3 +1,4 @@
+# encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
 require 'mail/fields/common/parameter_hash'
@@ -67,6 +68,12 @@ describe Mail::ParameterHash do
     hash = Mail::ParameterHash.new
     hash.merge!({'value*' => "''Hello%20there"})
     expect(hash['value']).to eq "Hello there"
+  end
+
+  it "converts from specified encoding to utf-8" do
+    hash = Mail::ParameterHash.new
+    hash.merge!({'value*' => "iso-8859-1'en'H%EBll%F3%20there"})
+    expect(hash['value']).to eq "Hëlló there"
   end
 
   it "should allow us to add a value" do
