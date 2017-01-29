@@ -20,6 +20,7 @@ Bugs:
 * #998 - Fix header parameter parsing (such as attachment names) for values encoded with a blank charset or language code. (kjg)
 * #1000 - Fix header parameter parsing (such as attachment names) to transcode to UTF-8 (kjg)
 * #1003 - Fix decoding some b encoded headers on specific rubies that don't account for lack of base64 padding (kjg)
+* #1031 - Fix silent failures when parsing fields in the Message object
 
 == Version 2.6.4 - Wed Mar 23 08:16 -0700 2016 Jeremy Daer <jeremydaer@gmail.com>
 

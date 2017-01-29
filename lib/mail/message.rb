@@ -356,11 +356,11 @@ module Mail
     #  m1 == m2 #=> false
     def ==(other)
       return false unless other.respond_to?(:encoded)
-
       if self.message_id && other.message_id
         self.encoded == other.encoded
       else
-        self_message_id, other_message_id = self.message_id, other.message_id
+        self_message_id = header[:message_id] ? header[:message_id].value : nil
+        other_message_id = other.header[:message_id] ? other.header[:message_id].value : nil
         begin
           self.message_id, other.message_id = '<temp@test>', '<temp@test>'
           self.encoded == other.encoded
@@ -1194,7 +1194,7 @@ module Mail
       if val
         header[sym] = val
       else
-        header[sym].default if header[sym]
+        check_errors_and_return_default(header[sym])
       end
     end
 
@@ -2161,6 +2161,15 @@ module Mail
 
     def decode_body_as_text
       Encodings.transcode_charset decode_body, charset, 'UTF-8'
+    end
+
+    def check_errors_and_return_default(result_value)
+      return unless result_value
+      if !Utilities.blank?(result_value.errors)
+        error = result_value.errors.first[-1]
+        raise error
+      end
+      result_value.default
     end
   end
 end

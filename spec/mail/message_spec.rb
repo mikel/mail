@@ -30,6 +30,11 @@ describe Mail::Message do
       expect(Mail::Message.new(basic_email).class).to eq Mail::Message
     end
 
+    it "should instantiate with a string and fail loudly on bad fields" do
+      bad_email = "To: user1@example.org, user2@example.org."
+      expect { Mail::Message.new(bad_email).to }.to raise_error(Mail::Field::ParseError)
+    end
+
     it "should allow us to pass it a block" do
       mail = Mail::Message.new do
         from 'mikel@me.com'
@@ -1987,7 +1992,7 @@ describe Mail::Message do
       before do
         @mail = Mail.new do
           in_reply_to '<1234@test.lindsaar.net>'
-          message_id '5678@test.lindsaar.net'
+          message_id '<5678@test.lindsaar.net>'
         end
       end
 
