@@ -1,5 +1,8 @@
 == Version 2.6.5 - Unreleased
 
+Features:
+* #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)
+
 Bugs:
 * #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
 * #1003 - Fix decoding some b encoded headers on specific rubies that don't account for lack of base64 padding (kjg)
