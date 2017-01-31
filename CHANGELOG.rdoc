@@ -6,6 +6,7 @@ Features:
 * #650 - UTF-7 charset support. (johngrimes)
 * #1065 - Require STARTTLS using :enable_starttls. (bk2204)
 * #1002 - Transcoding replaces invalid chars with "�" instead of discarding them. (kjg)
+* #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)
 
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
