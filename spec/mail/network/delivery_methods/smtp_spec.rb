@@ -56,31 +56,31 @@ describe "SMTP Delivery Method" do
       expect(MockSMTP.deliveries[0][1]).to eq mail.from[0]
       expect(MockSMTP.deliveries[0][2]).to eq mail.destinations
     end
-    
+
     it "should be able to return actual SMTP protocol response" do
       Mail.defaults do
         delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :return_response => true
       end
-      
+
       mail = Mail.deliver do
         from    'roger@moore.com'
         to      'marcel@amont.com'
         subject 'invalid RFC2822'
       end
-      
+
       response = mail.deliver!
       expect(response).to eq 'OK'
-      
+
     end
   end
-    
+
   describe "enabling tls" do
-    
+
     def redefine_verify_none(new_value)
       OpenSSL::SSL.send(:remove_const, :VERIFY_NONE)
       OpenSSL::SSL.send(:const_set, :VERIFY_NONE, new_value)
     end
-    
+
     it "should use OpenSSL::SSL::VERIFY_NONE if a context" do
 
       # config can't be setup until redefined
@@ -97,7 +97,7 @@ describe "SMTP Delivery Method" do
 
       expect { mail.deliver! }.not_to raise_error
     end
-    
+
     it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
 
       # config can't be setup until redefined
@@ -115,13 +115,13 @@ describe "SMTP Delivery Method" do
       expect { mail.deliver! }.not_to raise_error
     end
   end
-  
+
   describe "enabling ssl" do
     def redefine_verify_none(new_value)
       OpenSSL::SSL.send(:remove_const, :VERIFY_NONE)
       OpenSSL::SSL.send(:const_set, :VERIFY_NONE, new_value)
     end
-    
+
     it "should use OpenSSL::SSL::VERIFY_NONE if a context" do
 
       # config can't be setup until redefined
@@ -138,13 +138,53 @@ describe "SMTP Delivery Method" do
 
       expect { mail.deliver! }.not_to raise_error
     end
-    
+
     it "should ignore OpenSSL::SSL::VERIFY_NONE if it is 0" do
 
       # config can't be setup until redefined
       redefine_verify_none(0)
       Mail.defaults do
         delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :tls => true
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      expect { mail.deliver! }.not_to raise_error
+    end
+
+    it "should not set verify mode when none is given" do
+      context = OpenSSL::SSL::SSLContext.new
+      allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
+      expect(context).to_not receive(:verify_mode=)
+
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :tls => true
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      expect { mail.deliver! }.not_to raise_error
+    end
+
+    it "should set verify mode if one is given" do
+      context = OpenSSL::SSL::SSLContext.new
+      allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
+      expect(context).to receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER).at_least(1)
+
+      Mail.defaults do
+        delivery_method :smtp,
+                        :address => 'smtp.mockup.com',
+                        :port => 587,
+                        :tls => true,
+                        :openssl_verify_mode => OpenSSL::SSL::VERIFY_PEER
       end
 
       mail = Mail.deliver do
