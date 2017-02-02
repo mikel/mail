@@ -57,6 +57,7 @@ module Mail
     def initialize_copy(original)
       super
       @fields = @fields.dup
+      @fields.map!(&:dup)
     end
     
     # The preserved raw source of the header as you passed it in, untouched

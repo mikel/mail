@@ -1562,8 +1562,8 @@ describe Mail::Message do
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         expect(m1).to eq m2
         # confirm there are no side-effects in the comparison
-        expect(m1.message_id).to be_nil
-        expect(m2.message_id).to be_nil
+        expect(m1[:message_id]).to be_nil
+        expect(m2[:message_id]).to be_nil
       end
 
       it "should ignore the message id value if self has a nil message id" do
@@ -1571,8 +1571,8 @@ describe Mail::Message do
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         expect(m1).to eq m2
         # confirm there are no side-effects in the comparison
-        expect(m1.message_id).to be_nil
-        expect(m2.message_id).to eq '1234@test.lindsaar.net'
+        expect(m1[:message_id]).to be_nil
+        expect(m2[:message_id].value).to eq '<1234@test.lindsaar.net>'
       end
 
       it "should ignore the message id value if other has a nil message id" do
@@ -1580,8 +1580,8 @@ describe Mail::Message do
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         expect(m1).to eq m2
         # confirm there are no side-effects in the comparison
-        expect(m1.message_id).to eq '1234@test.lindsaar.net'
-        expect(m2.message_id).to be_nil
+        expect(m1[:message_id].value).to eq '<1234@test.lindsaar.net>'
+        expect(m2[:message_id]).to be_nil
       end
 
       it "should not be == if both emails have different Message IDs" do

@@ -360,13 +360,8 @@ module Mail
       if self.message_id && other.message_id
         self.encoded == other.encoded
       else
-        self_message_id, other_message_id = self.message_id, other.message_id
-        begin
-          self.message_id, other.message_id = '<temp@test>', '<temp@test>'
-          self.encoded == other.encoded
-        ensure
-          self.message_id, other.message_id = self_message_id, other_message_id
-        end
+        dup.tap { |m| m.message_id = '<temp@test>' }.encoded ==
+          other.dup.tap { |m| m.message_id = '<temp@test>' }.encoded
       end
     end
 
