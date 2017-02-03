@@ -83,6 +83,40 @@ describe Mail::ToField do
     end
     
   end
+
+
+  describe "unicode address" do
+    it "should allow unicode local part jp" do
+      t = Mail::ToField.new('Mikel Lindsár <マイケル@test.lindsaar.net>')
+      expect(t.encoded).to eq "To: Mikel =?UTF-8?B?TGluZHPDoXI=?= <=?UTF-8?B?44Oe44Kk44Kx44Or?=@test.lindsaar.net>\r\n"
+      expect(t.display_names).to eq ['Mikel =?UTF-8?B?TGluZHPDoXI=?=']
+      expect(t.addresses).to eq ['=?UTF-8?B?44Oe44Kk44Kx44Or?=@test.lindsaar.net']
+      expect(t.addrs.first.local).to eq '=?UTF-8?B?44Oe44Kk44Kx44Or?='
+    end
+
+    it "should allow unicode local" do
+      t = Mail::ToField.new('"Mikel Lindsár" <lindsär@test.com>')
+      expect(t.encoded).to eq "To: =?UTF-8?B?TWlrZWwgTGluZHPDoXI=?= <=?UTF-8?B?bGluZHPDpHI=?=@test.com>\r\n"
+      expect(t.display_names).to eq ['=?UTF-8?B?TWlrZWwgTGluZHPDoXI=?=']
+      expect(t.addrs.first.address).to eq '=?UTF-8?B?bGluZHPDpHI=?=@test.com'
+    end
+
+    it "should allow unicode local (simple)" do
+      t = Mail::ToField.new('ölsen@ms.com')
+      expect(t.encoded).to eq "To: =?UTF-8?B?w7Zsc2Vu?=@ms.com\r\n"
+    end
+
+    it "should allow unicode local (complex)" do
+      t = Mail::ToField.new('<"mik@test.<æ>"@ms.com>')
+      expect(t.encoded).to eq "To: =?UTF-8?B?bWlrQHRlc3QuPMOmPg==?=@ms.com\r\n"
+      expect(t.addrs.first.local).to eq '=?UTF-8?B?bWlrQHRlc3QuPMOmPg==?='
+    end
+
+    it "should allow emoji local" do
+      t = Mail::ToField.new(', 😍@me.eu')
+      expect(t.encoded).to eq "To: =?UTF-8?B?8J+YjQ==?=@me.eu\r\n"
+    end
+  end
   
   it "should not crash if it can't understand a name" do
     t = Mail.new('To: <"Undisclosed-Recipient:"@msr19.hinet.net;>')

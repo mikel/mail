@@ -817,6 +817,18 @@ describe Mail::Encodings do
       expect(Mail::Encodings.address_encode(raw, 'utf-8')).to eq encoded
     end
 
+    it "should encode unicode local part" do
+      raw     = '"Mikel Lindsああr" tést1@lindsaar.net, group: "あdあ" <ßest2@lindsaar.net>;'
+      encoded = '=?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= =?UTF-8?B?dMOpc3Qx?=@lindsaar.net, group: =?UTF-8?B?44GCZOOBgg==?= <=?UTF-8?B?w59lc3Qy?=@lindsaar.net>;'
+      expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
+    end
+
+    it "should encode emoji local part" do
+      raw     = '😛@lindsaar.net'
+      encoded = '=?UTF-8?B?8J+Ymw==?=@lindsaar.net'
+      expect(Mail::Encodings.encode_non_usascii(raw, 'utf-8')).to eq encoded
+    end
+
     it "should handle a single ascii address correctly from a string" do
       raw     = ['"Mikel Lindsaar" <mikel@test.lindsaar.net>']
       encoded = '"Mikel Lindsaar" <mikel@test.lindsaar.net>'
