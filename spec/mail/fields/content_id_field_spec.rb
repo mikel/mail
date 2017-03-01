@@ -64,6 +64,14 @@ describe Mail::ContentIdField do
       expect(m.decoded).to eq "<1234@test.lindsaar.net>"
     end
 
+    it "should work with strange hostnames" do
+      allow(Socket).to receive(:gethostname).and_return("unknown-28:")
+
+      expect {
+        m = Mail::ContentIdField.new
+      }.not_to raise_exception
+    end
+
   end
   
   describe "ensuring only one message ID" do
