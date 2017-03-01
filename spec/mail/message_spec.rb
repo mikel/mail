@@ -53,6 +53,12 @@ describe Mail::Message do
       expect { Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml')) }.not_to raise_error
     end
 
+    it "should be able to parse an email with a blank display name" do
+      message = Mail::Message.new(File.read(fixture('emails', 'plain_emails', 'raw_email_with_blank_display_name.eml')))
+      message.from.should eq ["test@lindsaar.net", "jack@lindsar.com", "bob@gmail.com"]
+      message[:from].addrs.map {|x| x.display_name}.should eq ["Mikel Lindsaar", " ",""]
+    end
+
     it "should be able to parse an email with @ in display name" do
       message = Mail.read(fixture('emails', 'plain_emails', 'raw_email_with_at_display_name.eml'))
       expect(message.to).to eq ["smith@gmail.com", "raasdnil@gmail.com", "tom@gmail.com"]
