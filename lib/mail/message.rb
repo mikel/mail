@@ -231,21 +231,25 @@ module Mail
     #
     #  mail = Mail.read('file.eml')
     #  mail.deliver
-    def deliver
-      inform_interceptors
-      if delivery_handler
-        delivery_handler.deliver_mail(self) { do_delivery }
+    def deliver(freight = false)
+      if freight
+        add_to_freight_container
       else
-        do_delivery
+        inform_interceptors
+        if delivery_handler
+          delivery_handler.deliver_mail(self) { do_delivery }
+        else
+          do_delivery
+        end
+        inform_observers
       end
-      inform_observers
       self
     end
 
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
     # so use with caution.
     #
-    # It still however fires off the interceptors and calls the observers callbacks if they are defined.
+    # It still however fires off the intercepters and calls the observers callbacks if they are defined.
     #
     # Returns self
     def deliver!
@@ -1607,7 +1611,7 @@ module Mail
     end
 
     # Returns an AttachmentsList object, which holds all of the attachments in
-    # the receiver object (either the entire email or a part within) and all
+    # the receiver object (either the entier email or a part within) and all
     # of its descendants.
     #
     # It also allows you to add attachments to the mail object directly, like so:
@@ -2142,6 +2146,14 @@ module Mail
       end
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    # Add mail messages to SMTP temp class var
+    # TODO refactor to not use memory
+    def add_to_freight_container
+      if perform_deliveries
+        Mail::SMTP.freight_container << self
+      end
     end
 
     def do_delivery
