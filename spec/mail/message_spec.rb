@@ -202,6 +202,16 @@ describe Mail::Message do
         deserialized.parts.each {|part| expect(part).to be_a(Mail::Part)}
         expect(deserialized.parts.map(&:body)).to eq(['body', '<b>body</b>'])
       end
+
+      it 'should maintain the charset when the content type is set' do
+        @yaml_mail.content_type = 'text/plain'
+        @yaml_mail.charset = 'UTF-8'
+        @yaml_mail.from = %{"Bjørn" <me@somewhere.com>}
+        deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
+        deserialized.charset.should == 'UTF-8'
+        deserialized.header[:from].encoded.should == \
+          Mail::FromField.new(%{"Bjørn" <me@somewhere.com>}, 'UTF-8').encoded
+      end
     end
 
     describe "splitting" do
