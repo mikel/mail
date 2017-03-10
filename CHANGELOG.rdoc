@@ -59,7 +59,7 @@ Bugs:
 
 * #796 support uu encoding (grosser)
 
-== Version 2.6.2 (Unreleased) - Wed Oct 22 13:42 -0500 2014 Benjamin Fleischer <github@benjaminfleischer.com>
+== Version 2.6.2 - Wed Oct 22 13:42 -0500 2014 Benjamin Fleischer <github@benjaminfleischer.com>
 
 Performance:
 * #681 - fewer hotspot object allocations (srawlins)
