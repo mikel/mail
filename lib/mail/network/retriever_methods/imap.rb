@@ -153,8 +153,13 @@ module Mail
       # Start an IMAP session and ensures that it will be closed in any case.
       def start(config=Mail::Configuration.instance, &block)
         raise ArgumentError.new("Mail::Retrievable#imap_start takes a block") unless block_given?
-
-        imap = Net::IMAP.new(settings[:address], settings[:port], settings[:enable_ssl], nil, false)
+        tmp_ssl = settings[:enable_ssl]
+        tmp_ssl = false unless settings[:starttls_options].nil?
+        
+        imap = Net::IMAP.new(settings[:address], settings[:port], tmp_ssl, nil, false)
+        if settings[:starttls_options].is_a?(Hash)
+          imap.starttls(settings[:starttls_options])
+        end
         if settings[:authentication].nil?
           imap.login(settings[:user_name], settings[:password])
         else
