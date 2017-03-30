@@ -1641,6 +1641,11 @@ module Mail
     #  mail.attachments[0]                #=> Mail::Part (first attachment)
     #
     def attachments
+      parts = parts()
+      if attachment?
+        parts = parts.dup
+        parts.unshift self
+      end
       parts.attachments
     end
 
