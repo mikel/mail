@@ -664,7 +664,7 @@ describe Mail::Encodings do
       end
 
       it "should unquote multiple strings in the middle of the text" do
-        a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA=?= <b@example.com>"
+        a = "=?Shift_JIS?Q?=93=FA=96{=8C=EA?= <a@example.com>, =?Shift_JIS?Q?=93=FA=96{=8C=EA?= <b@example.com>"
         b = Mail::Encodings.unquote_and_convert_to(a, 'utf-8')
         expect(b).to eq "日本語 <a@example.com>, 日本語 <b@example.com>"
       end
