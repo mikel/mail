@@ -1,0 +1,33 @@
+test:
+  delivery:
+    method: test
+  retriever:
+    method: test
+development:
+  delivery:
+    method: exim
+    location: /usr/sbin/exim
+  retriever:
+    method: pop3
+    address: localhost
+    port: 995
+    user_name: <username>
+    password: <password>
+    enable_ssl: true
+production:
+  delivery:
+    method: smtp
+    address: smtp.gmail.com
+    port: 587
+    domain: your.host.name
+    user_name: <username>
+    password: <password>
+    authentication: plain
+    enable_starttls_auto: true
+  retriever:
+    method: pop3
+    address: pop.gmail.com
+    port: 995
+    user_name: <username>
+    password: <password>
+    enable_ssl: true
