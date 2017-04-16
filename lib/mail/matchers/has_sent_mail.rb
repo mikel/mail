@@ -102,6 +102,8 @@ module Mail
         result
       end
 
+      alias_method :negative_failure_message, :failure_message_when_negated
+
       protected
 
       def filter_matched_deliveries(deliveries)
