@@ -42,6 +42,14 @@ describe Mail::Header do
     it "should say if it has a message_id field defined" do
       header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\nMessage-ID: 1234")
       expect(header).to be_has_message_id
+      expect(header.has_message_id?).to eq(true)
+    end
+
+    it "should have a message ID when the previous field has trailing new lines" do
+      header = Mail::Header.new("To: Mikel\r\nFrom: bob\r\n\r\n     \r\n     Message-ID: 1234")
+      message_id = header["Message-ID"]
+      expect(message_id).to_not eq(nil)
+      expect(message_id.value).to eq("1234")
     end
 
     it "should say if it has a content_id field defined" do
