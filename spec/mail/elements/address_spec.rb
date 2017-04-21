@@ -12,6 +12,10 @@ describe Mail::Address do
       }.not_to raise_error
     end
 
+    it "should accept non-ascii characters" do
+      expect(Mail::Address.new('Dude <düde@somewhere.com>').address).to eq 'düde@somewhere.com'
+    end
+
     it "should allow us to instantiate an empty address object and call to_s" do
       expect(Mail::Address.new.to_s).to eq ''
     end
@@ -88,7 +92,7 @@ describe Mail::Address do
       encoded = '=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>'
       expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krütisch'
     end
-    
+
     it "should allow nil display name" do
       a = Mail::Address.new
       expect(a.display_name).to be_nil
