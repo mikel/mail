@@ -1,4 +1,4 @@
-== Version 2.6.5 - Unreleased
+== Version 2.6.5 - 2017-04-26 Jeremy Daer <jeremydaer@gmail.com>
 
 Features:
 * #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)
