@@ -579,7 +579,7 @@ describe "MIME Emails" do
       it "should not set Content-Transfer-Encoding to 7bit for 8bit files" do
         mail = Mail::Message.new
         mail.add_file(fixture('attachments', 'てすと.txt'))
-        expect(mail.attachments.first.content_transfer_encoding).to be_nil
+        expect(mail.attachments.first.content_transfer_encoding).to eq ''
       end
 
 
