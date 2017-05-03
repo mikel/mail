@@ -351,7 +351,7 @@ mail.cc              #=> 'sam@test.lindsaar.net'
 mail.subject         #=> "This is the subject"
 mail.date.to_s       #=> '21 Nov 1997 09:55:06 -0600'
 mail.message_id      #=> '<4D6AA7EB.6490534@xxx.xxx>'
-mail.body.decoded    #=> 'This is the body of the email...
+mail.decoded         #=> 'This is the body of the email...
 ```
 
 Many more methods available.
@@ -386,7 +386,7 @@ mail.attachments.each do | attachment |
     # extracting images for example...
     filename = attachment.filename
     begin
-      File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
+      File.open(images_dir + filename, "w+b", 0644) {|f| f.write attachment.decoded}
     rescue => e
       puts "Unable to save data for #{filename} because #{e.message}"
     end
