@@ -35,7 +35,6 @@ module Mail # :doc:
   if defined?(ActiveSupport)
     require 'active_support/inflector'
   else
-    require 'mail/core_extensions/string/access'
     require 'mail/core_extensions/string/multibyte'
     require 'mail/multibyte'
   end

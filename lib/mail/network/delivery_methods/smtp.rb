@@ -138,7 +138,7 @@ module Mail
       openssl_verify_mode = settings[:openssl_verify_mode]
 
       if openssl_verify_mode.kind_of?(String)
-        openssl_verify_mode = "OpenSSL::SSL::VERIFY_#{openssl_verify_mode.upcase}".constantize
+        openssl_verify_mode = OpenSSL::SSL.const_get("VERIFY_#{openssl_verify_mode.upcase}")
       end
 
       context = Net::SMTP.default_ssl_context
