@@ -121,7 +121,7 @@ module Mail
     def fold(prepend = 0) # :nodoc:
       encoding       = normalized_encoding
       decoded_string = decoded.to_s
-      should_encode  = decoded_string.not_ascii_only?
+      should_encode  = !decoded_string.ascii_only?
       if should_encode
         first = true
         words = decoded_string.split(/[ \t]/).map do |word|
@@ -130,7 +130,7 @@ module Mail
           else
             word = " #{word}"
           end
-          if word.not_ascii_only?
+          if !word.ascii_only?
             word
           else
             word.scan(/.{7}|.+$/)
