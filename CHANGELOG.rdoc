@@ -14,6 +14,7 @@ Performance:
 
 Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
+* Removed `at`, `from`, `last` and `is_utf8?` methods from String since they are not currently used anywhere in mail.
 
 Bugs:
 * #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
