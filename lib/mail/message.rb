@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require "yaml"
+require "mime-types"
 
 module Mail
   # The Message class provides a single point of access to all things to do with an
@@ -1977,6 +1978,7 @@ module Mail
   private
 
     HEADER_SEPARATOR = /#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m
+    DEFAULT_ATTACH_NAME = 'Mail Attachment'
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -2137,11 +2139,20 @@ module Mail
         filename = content_disp_name
       when content_location && content_loc_name
         filename = content_loc_name
+      when content_disposition == 'attachment'
+        filename = generate_filename(content_type)
       else
         filename = nil
       end
+
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    def generate_filename(content_type)
+      mime_types = MIME::Types[content_type]
+      extension = mime_types.any? && mime_types.first.extensions.any? ? mime_types.first.extensions.first : nil
+      [ DEFAULT_ATTACH_NAME, extension ].compact.join('.')
     end
 
     def do_delivery

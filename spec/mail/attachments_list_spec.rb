@@ -240,6 +240,11 @@ describe "reading emails with attachments" do
       expect(mail.attachments[0].filename).to eq 'hello.rb'
     end
 
+    it "should generate filename name if content-disposition filename is empty" do
+      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_msg_from_outlook.eml')))
+      expect(mail.attachments[0].filename).to eq 'Mail Attachment.eml'
+    end
+
     it "should decode an attachment" do
       mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
       expect(mail.attachments[0].decoded.length).to eq 1026

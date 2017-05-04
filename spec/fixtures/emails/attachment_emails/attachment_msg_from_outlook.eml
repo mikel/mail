@@ -1,0 +1,196 @@
+Delivered-To: xxx@gmail.com
+Received: by 10.64.136.212 with SMTP id qc20csp436196ieb;
+        Tue, 2 Dec 2014 07:25:06 -0800 (PST)
+X-Received: by 10.112.189.104 with SMTP id gh8mr46833242lbc.91.1417533906331;
+        Tue, 02 Dec 2014 07:25:06 -0800 (PST)
+Return-Path: <pavel@yyy.com>
+Received: from mail-lb0-f179.google.com (mail-lb0-f179.google.com. [209.85.217.179])
+        by mx.google.com with ESMTPS id y9si20525284lbw.115.2014.12.02.07.25.05
+        for <xxx@gmail.com>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Tue, 02 Dec 2014 07:25:05 -0800 (PST)
+Received-SPF: softfail (google.com: domain of transitioning pavel@yyy.com does not designate 209.85.217.179 as permitted sender) client-ip=209.85.217.179;
+Authentication-Results: mx.google.com;
+       spf=softfail (google.com: domain of transitioning pavel@yyy.com does not designate 209.85.217.179 as permitted sender) smtp.mail=pavel@yyy.com
+Received: by mail-lb0-f179.google.com with SMTP id z11so10492581lbi.38
+        for <xxx@gmail.com>; Tue, 02 Dec 2014 07:25:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20130820;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-type:thread-index:content-language;
+        bh=nGr/+B+qBY91lxb7yupRCU3j/ZJqtouXimUrdyfYrI0=;
+        b=m0RgOaH8lWCZeb21ykwjTUoHmB686jrCiU4+zekWRYB0BDaQGS2YEUosT6cUrgiPRQ
+         9zzaIgz8er64MuoUGKg5qG6BowSACeWYs+yE0oHsF71fuuglQH4NqZNa+E/xBjlX/wf8
+         +Mtn0QfQNbg62MXP257pC4js0KUxt7P/QDkmulXnfjoqNLSPCSWrudcDdEHkSXYtPtMR
+         C0UmsIJHG1Ng9q+YZ907s946PgWYrPtGw4fdA5nPqWXj5WOPdXpX2YJ5b/GMgt4u/f+2
+         0llbgmMf7kgnpm10jBGCl8X3Crpodwl1sqYegWynDcWZCSiAlIBFd79MeZkoPNl6uffN
+         Xaqw==
+X-Gm-Message-State: ALoCoQlL1lty38ZFcYIjsvOs9CrMZHPUwI/MhEAvdGiijIaJA5SyxsdTEhKEeNOx/cL9i58ryWrr
+X-Received: by 10.152.2.41 with SMTP id 9mr61153355lar.47.1417533905098;
+        Tue, 02 Dec 2014 07:25:05 -0800 (PST)
+Return-Path: <pavel@yyy.com>
+Received: from ie8winxp ([89.209.76.245])
+        by mx.google.com with ESMTPSA id xh2sm5684569lbb.7.2014.12.02.07.25.03
+        for <xxx@gmail.com>
+        (version=TLSv1 cipher=RC4-SHA bits=128/128);
+        Tue, 02 Dec 2014 07:25:04 -0800 (PST)
+From: "Pavel" <pavel@yyy.com>
+To: <xxx@gmail.com>
+Subject: This is mail with msg attahment sent from Outlook
+Date: Tue, 2 Dec 2014 17:25:00 +0200
+Message-ID: <012901d00e44$243914b0$6cab3e10$@com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_012A_01D00E54.E7C1E4B0"
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdAORCNP1hNlonFcRVSp9eSrQwx2nA==
+Content-Language: en-us
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_012A_01D00E54.E7C1E4B0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_001_012B_01D00E54.E7C1E4B0"
+
+
+------=_NextPart_001_012B_01D00E54.E7C1E4B0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+This is mail with msg attahment sent from Outlook 2007
+
+
+------=_NextPart_001_012B_01D00E54.E7C1E4B0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40"><head><META =
+HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii"><meta name=3DGenerator content=3D"Microsoft Word 12 =
+(filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US link=3Dblue =
+vlink=3Dpurple><div class=3DWordSection1><p class=3DMsoNormal>This is =
+mail with msg attahment sent from Outlook =
+2007<o:p></o:p></p></div></body></html>
+------=_NextPart_001_012B_01D00E54.E7C1E4B0--
+
+------=_NextPart_000_012A_01D00E54.E7C1E4B0
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment
+
+From: "Pavel" <pavel@yyy.com>
+To: <xxx@gmail.com>
+Subject: This is test mail without attachment
+Date: Tue, 2 Dec 2014 17:23:53 +0200
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0125_01D00E54.E7C1E4B0"
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdAOQ/t8AkWuwlPFQeySgK2MJJXRog==
+Content-Language: en-us
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0125_01D00E54.E7C1E4B0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Some text
+
+
+------=_NextPart_000_0125_01D00E54.E7C1E4B0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40"><head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered =
+medium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US link=3Dblue =
+vlink=3Dpurple><div class=3DWordSection1><p class=3DMsoNormal>Some =
+text<o:p></o:p></p></div></body></html>
+------=_NextPart_000_0125_01D00E54.E7C1E4B0--
+
+------=_NextPart_000_012A_01D00E54.E7C1E4B0--
