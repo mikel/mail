@@ -50,17 +50,6 @@ class String
         self
       end
     end
-
-    def is_utf8? #:nodoc
-      case encoding
-      when Encoding::UTF_8
-        valid_encoding?
-      when Encoding::ASCII_8BIT, Encoding::US_ASCII
-        dup.force_encoding(Encoding::UTF_8).valid_encoding?
-      else
-        false
-      end
-    end
   else
     def mb_chars
       if Mail::Multibyte.proxy_class.wants?(self)
@@ -68,12 +57,6 @@ class String
       else
         self
       end
-    end
-
-    # Returns true if the string has UTF-8 semantics (a String used for purely byte resources is unlikely to have
-    # them), returns false otherwise.
-    def is_utf8?
-      Mail::Multibyte::Chars.consumes?(self)
     end
   end
 end
