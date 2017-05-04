@@ -28,15 +28,13 @@ module Mail # :doc:
   require 'mail/version'
 
   require 'mail/core_extensions/string'
-  require 'mail/core_extensions/smtp' if RUBY_VERSION < '1.9.3'
+  require 'mail/core_extensions/smtp'
   require 'mail/indifferent_hash'
 
   # Only load our multibyte extensions if AS is not already loaded
   if defined?(ActiveSupport)
     require 'active_support/inflector'
   else
-    require 'mail/core_extensions/string/access'
-    require 'mail/core_extensions/string/multibyte'
     require 'mail/multibyte'
   end
 

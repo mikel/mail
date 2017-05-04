@@ -8,6 +8,7 @@ Features:
 * #1002 - Transcoding replaces invalid chars with "�" instead of discarding them. (kjg)
 * #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)
 * #1094 - Core extensions removal: Drop `String#at`, `from`, `last` and `is_utf8?` since they are no longer used by Mail internals. (metcalf)
+* #1095 - Core extensions removal: Drop `String#mb_chars`, `not_ascii_only?`, `constantize`, `first`, `to` to avoid monkey patching the standard library. (metcalf)
 
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
