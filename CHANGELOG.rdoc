@@ -13,6 +13,7 @@ Performance:
 
 Compatibility:
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
+* Remove support from Ruby < 2.0 and associated core_extensions.
 
 Bugs:
 * #605 - Fix Mail::Address#name for nil addresses (peterkovacs)
