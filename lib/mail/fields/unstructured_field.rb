@@ -122,30 +122,13 @@ module Mail
       encoding       = normalized_encoding
       decoded_string = decoded.to_s
       should_encode  = decoded_string.not_ascii_only?
-      if should_encode
-        first = true
-        words = decoded_string.split(/[ \t]/).map do |word|
-          if first
-            first = !first
-          else
-            word = " #{word}"
-          end
-          if word.not_ascii_only?
-            word
-          else
-            word.scan(/.{7}|.+$/)
-          end
-        end.flatten
-      else
-        words = decoded_string.split(/[ \t]/)
-      end
+      words = decoded_string.gsub("\t", ' ').split(/(?= )/)
 
       folded_lines   = []
       while !words.empty?
         limit = 78 - prepend
         limit = limit - 7 - encoding.length if should_encode
         line = String.new
-        first_word = true
         while !words.empty?
           break unless word = words.first.dup
           word.encode!(charset) if charset && word.respond_to?(:encode!)
@@ -159,13 +142,6 @@ module Mail
           break if !line.empty? && (line.length + word.length + 1 > limit)
           # Remove the word from the queue ...
           words.shift
-          # Add word separator
-          if first_word
-            first_word = false
-          else
-            line << " " if !should_encode
-          end
-
           # ... add it in encoded form to the current line
           line << word
         end
