@@ -1463,7 +1463,7 @@ module Mail
       if !body.empty?
         # Only give a warning if this isn't an attachment, has non US-ASCII and the user
         # has not specified an encoding explicitly.
-        if @defaulted_charset && body.raw_source.not_ascii_only? && !self.attachment?
+        if @defaulted_charset && !body.raw_source.ascii_only? && !self.attachment?
           warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
           $stderr.puts(warning)
         end

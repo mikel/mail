@@ -218,8 +218,11 @@ module Mail
     private
 
     def split(raw_field)
-      match_data = raw_field.mb_chars.match(FIELD_SPLIT)
-      [match_data[1].to_s.mb_chars.strip, match_data[2].to_s.mb_chars.strip.to_s]
+      match_data = Mail::Multibyte.mb_chars(raw_field).match(FIELD_SPLIT)
+      [
+        Mail::Multibyte.mb_chars(match_data[1].to_s).strip,
+        Mail::Multibyte.mb_chars(match_data[2].to_s).strip.to_s
+      ]
     rescue
       $stderr.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
     end

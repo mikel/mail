@@ -11,10 +11,6 @@ class String #:nodoc:
     MATCH_NON_US_ASCII = /[^\x00-\x7f]/
   end
 
-  def not_ascii_only?
-    !ascii_only?
-  end
-
   unless method_defined?(:bytesize)
     alias :bytesize :length
   end

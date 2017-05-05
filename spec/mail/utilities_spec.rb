@@ -18,8 +18,8 @@ describe "Utilities Module" do
       end
 
       it "should work with mb_chars" do
-        expect(token_safe?('.abc'.mb_chars)).to be_truthy
-        expect(token_safe?('?=abc'.mb_chars)).to be_falsey
+        expect(token_safe?(Mail::Multibyte.mb_chars('.abc'))).to be_truthy
+        expect(token_safe?(Mail::Multibyte.mb_chars('?=abc'))).to be_falsey
       end
     end
 
@@ -33,8 +33,8 @@ describe "Utilities Module" do
       end
 
       it "should work with mb_chars" do
-        expect(quote_token('.abc'.mb_chars)).to eq '.abc'
-        expect(quote_token('?=abc'.mb_chars)).to eq '"?=abc"'
+        expect(quote_token(Mail::Multibyte.mb_chars('.abc'))).to eq '.abc'
+        expect(quote_token(Mail::Multibyte.mb_chars('?=abc'))).to eq '"?=abc"'
       end
     end
 
@@ -52,8 +52,8 @@ describe "Utilities Module" do
       end
 
       it "should work with mb_chars" do
-        expect(atom_safe?('?=abc'.mb_chars)).to be_truthy
-        expect(atom_safe?('.abc'.mb_chars)).to be_falsey
+        expect(atom_safe?(Mail::Multibyte.mb_chars('?=abc'))).to be_truthy
+        expect(atom_safe?(Mail::Multibyte.mb_chars('.abc'))).to be_falsey
       end
     end
 
@@ -67,18 +67,18 @@ describe "Utilities Module" do
       end
 
       it "should work with mb_chars" do
-        expect(quote_atom('?=abc'.mb_chars)).to eq '?=abc'
-        expect(quote_atom('.abc'.mb_chars)).to eq '".abc"'
+        expect(quote_atom(Mail::Multibyte.mb_chars('?=abc'))).to eq '?=abc'
+        expect(quote_atom(Mail::Multibyte.mb_chars('.abc'))).to eq '".abc"'
       end
 
       it "should work with mb_chars" do
-        expect(quote_atom('?=abc'.mb_chars)).to eq '?=abc'
-        expect(quote_atom('.abc'.mb_chars)).to eq '".abc"'
+        expect(quote_atom(Mail::Multibyte.mb_chars('?=abc'))).to eq '?=abc'
+        expect(quote_atom(Mail::Multibyte.mb_chars('.abc'))).to eq '".abc"'
       end
 
       it "should quote white space" do
-        expect(quote_atom('ab abc'.mb_chars)).to eq '"ab abc"'
-        expect(quote_atom("a\sb\ta\r\nbc".mb_chars)).to eq %{"a\sb\ta\r\nbc"}
+        expect(quote_atom(Mail::Multibyte.mb_chars('ab abc'))).to eq '"ab abc"'
+        expect(quote_atom(Mail::Multibyte.mb_chars("a\sb\ta\r\nbc"))).to eq %{"a\sb\ta\r\nbc"}
       end
     end
 
@@ -150,14 +150,14 @@ describe "Utilities Module" do
       expect(unparen(test)).to eq result
     end
 
-    it "should work using ActiveSupport mb_chars" do
-      test = '(This is a string)'.mb_chars
+    it "should work using Multibyte.mb_chars" do
+      test = Mail::Multibyte.mb_chars('(This is a string)')
       result = 'This is a string'
       expect(unparen(test)).to eq result
     end
 
-    it "should work without parens using ActiveSupport mb_chars" do
-      test = 'This is a string'.mb_chars
+    it "should work without parens using Multibyte.mb_chars" do
+      test = Mail::Multibyte.mb_chars('This is a string')
       result = 'This is a string'
       expect(unparen(test)).to eq result
     end
@@ -178,14 +178,14 @@ describe "Utilities Module" do
       expect(unbracket(test)).to eq result
     end
 
-    it "should work using ActiveSupport mb_chars" do
-      test = '<This is a string>'.mb_chars
+    it "should work using Multibyte.mb_chars" do
+      test = Mail::Multibyte.mb_chars('<This is a string>')
       result = 'This is a string'
       expect(unbracket(test)).to eq result
     end
 
-    it "should work without parens using ActiveSupport mb_chars" do
-      test = 'This is a string'.mb_chars
+    it "should work without parens using Multibyte.mb_chars" do
+      test = Mail::Multibyte.mb_chars('This is a string')
       result = 'This is a string'
       expect(unbracket(test)).to eq(result)
     end
