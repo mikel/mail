@@ -303,6 +303,13 @@ limitMAIL
       expect(mail.attachments[0].filename).to eq "Foto0009.jpg"
     end
 
+    it 'should be able to read binary parts (issue 408)' do
+      mail = Mail.read(fixture(File.join("emails",
+                                         "attachment_emails",
+                                         "attachment_pdf_binary.eml")))
+      expect(mail.attachments.length).to eq 1
+      expect(mail.attachments[0].body.raw_source.bytesize).to eq 11464
+    end
   end
 end
 
