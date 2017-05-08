@@ -94,13 +94,13 @@ describe "SMTP Delivery Method" do
         delivery_method :file, :location => tmpdir
       end
 
-      lambda do
+      doing {
         Mail.deliver do
           to "to@somemail.com"
           subject "Email with no sender"
           body "body"
         end
-      end.should raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+      }.should raise_error('SMTP From address may not be blank: nil')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -108,13 +108,13 @@ describe "SMTP Delivery Method" do
         delivery_method :file, :location => tmpdir
       end
 
-      lambda do
+      doing {
         Mail.deliver do
           from "from@somemail.com"
           subject "Email with no recipient"
           body "body"
         end
-      end.should raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      }.should raise_error('SMTP To address may not be blank: []')
     end
 
   end

@@ -7,10 +7,8 @@ module Mail
   # It also provides a template of the minimum methods you require to implement
   # if you want to make a custom mailer for Mail
   class TestMailer
-    include Mail::CheckDeliveryParams
-
     # Provides a store of all the emails sent with the TestMailer so you can check them.
-    def TestMailer.deliveries
+    def self.deliveries
       @@deliveries ||= []
     end
 
@@ -25,20 +23,19 @@ module Mail
     # * length
     # * size
     # * and other common Array methods
-    def TestMailer.deliveries=(val)
+    def self.deliveries=(val)
       @@deliveries = val
     end
+
+    attr_accessor :settings
 
     def initialize(values)
       @settings = values.dup
     end
-    
-    attr_accessor :settings
 
     def deliver!(mail)
-      check_delivery_params(mail)
+      Mail::CheckDeliveryParams.check(mail)
       Mail::TestMailer.deliveries << mail
     end
-    
   end
 end
