@@ -101,7 +101,7 @@ describe "SMTP Delivery Method" do
           subject "Email with no sender"
           body "body"
         end
-      end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+      end.to raise_error('SMTP From address may not be blank: nil')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -115,7 +115,7 @@ describe "SMTP Delivery Method" do
           subject "Email with no recipient"
           body "body"
         end
-      end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      end.to raise_error('SMTP To address may not be blank: []')
     end
 
   end
