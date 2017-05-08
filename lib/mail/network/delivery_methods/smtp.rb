@@ -74,7 +74,7 @@ module Mail
   # 
   #   mail.deliver!
   class SMTP
-    include Mail::CheckDeliveryParams
+    attr_accessor :settings
 
     def initialize(values)
       self.settings = { :address              => "localhost",
@@ -90,12 +90,10 @@ module Mail
                       }.merge!(values)
     end
 
-    attr_accessor :settings
-
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
-      smtp_from, smtp_to, message = check_delivery_params(mail)
+      smtp_from, smtp_to, message = Mail::CheckDeliveryParams.check(mail)
 
       smtp = Net::SMTP.new(settings[:address], settings[:port])
       if settings[:tls] || settings[:ssl]
@@ -119,7 +117,6 @@ module Mail
         self
       end
     end
-    
 
     private
 

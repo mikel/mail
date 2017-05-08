@@ -1,7 +1,10 @@
-== Version 2.5.5.pre - Unreleased
+== Version 2.5.5 - unreleased
+
+Security:
+* #1097 – SMTP security: prevent command injection via To/From addresses. (jeremy)
 
 Bugs:
-* Backport #633: Cope with message parts that have an empty Content-Type (ThomasKoppensteiner, zeepeeare)
+* #633 – Cope with message parts that have an empty Content-Type (ThomasKoppensteiner, zeepeeare)
 
 == Version 2.5.4 - Tue May 14 14:45:00 +1100 2013 Mikel Lindsaar <mikel@lindsaar.net>
 
