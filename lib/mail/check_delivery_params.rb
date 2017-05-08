@@ -1,21 +1,58 @@
 # frozen_string_literal: true
 module Mail
-  module CheckDeliveryParams
-    def check_delivery_params(mail)
-      if Utilities.blank?(mail.smtp_envelope_from)
-        raise ArgumentError.new('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+  module CheckDeliveryParams #:nodoc:
+    class << self
+      def check(mail)
+        [ check_from(mail.smtp_envelope_from),
+          check_to(mail.smtp_envelope_to),
+          check_message(mail) ]
       end
 
-      if Utilities.blank?(mail.smtp_envelope_to)
-        raise ArgumentError.new('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      def check_from(addr)
+        if Utilities.blank?(addr)
+          raise ArgumentError, "SMTP From address may not be blank: #{addr.inspect}"
+        end
+
+        check_addr 'From', addr
       end
 
-      message = mail.encoded if mail.respond_to?(:encoded)
-      if Utilities.blank?(message)
-        raise ArgumentError.new('An encoded message is required to send an email')
+      def check_to(addrs)
+        if Utilities.blank?(addrs)
+          raise ArgumentError, "SMTP To address may not be blank: #{addrs.inspect}"
+        end
+
+        Array(addrs).map do |addr|
+          check_addr 'To', addr
+        end
       end
 
-      [mail.smtp_envelope_from, mail.smtp_envelope_to, message]
+      def check_addr(addr_name, addr)
+        validate_smtp_addr addr do |error_message|
+          raise ArgumentError, "SMTP #{addr_name} address #{error_message}: #{addr.inspect}"
+        end
+      end
+
+      def validate_smtp_addr(addr)
+        if addr.bytesize > 2048
+          yield 'may not exceed 2kB'
+        end
+
+        if /[\r\n]/ =~ addr
+          yield 'may not contain CR or LF line breaks'
+        end
+
+        addr
+      end
+
+      def check_message(message)
+        message = message.encoded if message.respond_to?(:encoded)
+
+        if Utilities.blank?(message)
+          raise ArgumentError, 'An encoded message is required to send an email'
+        end
+
+        message
+      end
     end
   end
 end
