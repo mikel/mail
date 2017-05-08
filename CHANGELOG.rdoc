@@ -1,5 +1,8 @@
 == HEAD
 
+Security:
+* #1097 – SMTP security: prevent command injection via To/From addresses. (jeremy)
+
 Features:
 * #804 - Configurable SMTP open_timeout and read_timeout. (ankane)
 * #853 - `Mail::Message#set_sort_order` overrides the default message part sort order. (rafbm)

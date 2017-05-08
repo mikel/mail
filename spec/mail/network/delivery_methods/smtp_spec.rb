@@ -270,7 +270,7 @@ describe "SMTP Delivery Method" do
           subject "Email with no sender"
           body "body"
         end
-      end.to raise_error('An SMTP From address is required to send a message. Set the message smtp_envelope_from, return_path, sender, or from address.')
+      end.to raise_error('SMTP From address may not be blank: nil')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -280,8 +280,67 @@ describe "SMTP Delivery Method" do
           subject "Email with no recipient"
           body "body"
         end
-      end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
+      end.to raise_error('SMTP To address may not be blank: []')
+    end
+
+    it "should raise on SMTP injection via MAIL FROM newlines" do
+      addr = "inject.from@example.com>\r\nDATA"
+
+      mail = Mail.new do
+        from addr
+        to "to@somemail.com"
+      end
+
+      expect(mail.smtp_envelope_from).to eq addr
+
+      expect do
+        mail.deliver
+      end.to raise_error(ArgumentError, "SMTP From address may not contain CR or LF line breaks: #{addr.inspect}")
+    end
+
+    it "should raise on SMTP injection via RCPT TO newlines" do
+      addr = "inject.to@example.com>\r\nDATA"
+
+      mail = Mail.new do
+        from "from@somemail.com"
+        to addr
+      end
+
+      expect(mail.smtp_envelope_to).to eq [addr]
+
+      expect do
+        mail.deliver
+      end.to raise_error(ArgumentError, "SMTP To address may not contain CR or LF line breaks: #{addr.inspect}")
+    end
+
+    it "should raise on SMTP injection via MAIL FROM overflow" do
+      addr = "inject.from@example.com#{'m' * 2025}DATA"
+
+      mail = Mail.new do
+        from addr
+        to "to@somemail.com"
+      end
+
+      expect(mail.smtp_envelope_from).to eq addr
+
+      expect do
+        mail.deliver
+      end.to raise_error(ArgumentError, "SMTP From address may not exceed 2kB: #{addr.inspect}")
+    end
+
+    it "should raise on SMTP injection via RCPT TO overflow" do
+      addr = "inject.to@example.com#{'m' * 2027}DATA"
+
+      mail = Mail.new do
+        from "from@somemail.com"
+        to addr
+      end
+
+      expect(mail.smtp_envelope_to).to eq [addr]
+
+      expect do
+        mail.deliver
+      end.to raise_error(ArgumentError, "SMTP To address may not exceed 2kB: #{addr.inspect}")
     end
   end
-
 end
