@@ -40,7 +40,7 @@ describe "SMTP Delivery Method" do
 
       delivery = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
 
-      expect(File.read(delivery)).to eq mail.encoded
+      expect(File.read(delivery)).to eq "#{mail.encoded}\r\n\r\n"
     end
 
     it "should send multiple emails to multiple files" do
@@ -57,8 +57,8 @@ describe "SMTP Delivery Method" do
       delivery_one = File.join(Mail.delivery_method.settings[:location], 'marcel@amont.com')
       delivery_two = File.join(Mail.delivery_method.settings[:location], 'bob@me.com')
 
-      expect(File.read(delivery_one)).to eq mail.encoded
-      expect(File.read(delivery_two)).to eq mail.encoded
+      expect(File.read(delivery_one)).to eq "#{mail.encoded}\r\n\r\n"
+      expect(File.read(delivery_two)).to eq "#{mail.encoded}\r\n\r\n"
     end
 
     it "should only create files based on the addr_spec of the destination" do

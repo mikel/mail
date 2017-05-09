@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'mail/check_delivery_params'
+require 'mail/smtp_envelope'
 
 module Mail
   # A delivery method implementation which sends via sendmail.
@@ -50,18 +50,18 @@ module Mail
     end
 
     def deliver!(mail)
-      smtp_from, smtp_to, message = Mail::CheckDeliveryParams.check(mail)
+      envelope = Mail::SmtpEnvelope.new(mail)
 
-      from = "-f #{self.class.shellquote(smtp_from)}" if smtp_from
-      to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
+      from = "-f #{self.class.shellquote(envelope.from)}" if envelope.from
+      to = envelope.to.map { |_to| self.class.shellquote(_to) }.join(' ')
 
       arguments = "#{settings[:arguments]} #{from} --"
-      self.class.call(settings[:location], arguments, to, message)
+      self.class.call(settings[:location], arguments, to, envelope.message)
     end
 
-    def self.call(path, arguments, destinations, encoded_message)
+    def self.call(path, arguments, destinations, message)
       popen "#{path} #{arguments} #{destinations}" do |io|
-        io.puts ::Mail::Utilities.binary_unsafe_to_lf(encoded_message)
+        io.puts ::Mail::Utilities.binary_unsafe_to_lf(message)
         io.flush
       end
     end

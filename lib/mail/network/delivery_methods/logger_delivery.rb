@@ -1,9 +1,7 @@
-require 'mail/check_delivery_params'
+require 'mail/smtp_envelope'
 
 module Mail
   class LoggerDelivery
-    include Mail::CheckDeliveryParams
-
     attr_reader :logger, :severity, :settings
 
     def initialize(settings)
@@ -13,8 +11,7 @@ module Mail
     end
 
     def deliver!(mail)
-      Mail::CheckDeliveryParams.check(mail)
-      logger.log(severity) { mail.encoded }
+      logger.log(severity) { Mail::SmtpEnvelope.new(mail).message }
     end
 
     private

@@ -333,7 +333,7 @@ describe "SMTP Delivery Method" do
     end
 
     it "should raise on SMTP injection via MAIL FROM overflow" do
-      addr = "inject.from@example.com#{'m' * 2025}DATA"
+      addr = "inject.from@example.com#{'m' * 2000}"
 
       mail = Mail.new do
         from addr
@@ -344,11 +344,11 @@ describe "SMTP Delivery Method" do
 
       expect do
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP From address may not exceed 2kB: #{addr.inspect}")
+      end.to raise_error(ArgumentError, "SMTP From address may not exceed 2000 bytes: #{addr.inspect}")
     end
 
     it "should raise on SMTP injection via RCPT TO overflow" do
-      addr = "inject.to@example.com#{'m' * 2027}DATA"
+      addr = "inject.to@example.com#{'m' * 2000}"
 
       mail = Mail.new do
         from "from@somemail.com"
@@ -359,7 +359,7 @@ describe "SMTP Delivery Method" do
 
       expect do
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP To address may not exceed 2kB: #{addr.inspect}")
+      end.to raise_error(ArgumentError, "SMTP To address may not exceed 2000 bytes: #{addr.inspect}")
     end
   end
 end

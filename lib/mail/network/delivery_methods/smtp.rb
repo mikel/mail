@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'mail/check_delivery_params'
+require 'mail/smtp_envelope'
 
 module Mail
   # == Sending Email with SMTP

@@ -42,8 +42,8 @@ module Mail
       :arguments  => '-i -t'
     }
 
-    def self.call(path, arguments, destinations, encoded_message)
-      super path, arguments, nil, encoded_message
+    def self.call(path, arguments, destinations, message)
+      super path, arguments, nil, message
     end
   end
 end
