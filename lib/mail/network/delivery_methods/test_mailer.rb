@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'mail/check_delivery_params'
+require 'mail/smtp_envelope'
 
 module Mail
   # The TestMailer is a bare bones mailer that does nothing.  It is useful
@@ -35,7 +35,9 @@ module Mail
     end
 
     def deliver!(mail)
-      Mail::CheckDeliveryParams.check(mail)
+      # Create the envelope to validate it
+      Mail::SmtpEnvelope.new(mail)
+
       Mail::TestMailer.deliveries << mail
     end
   end
