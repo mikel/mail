@@ -42,25 +42,14 @@ me a nice email :)
 Compatibility
 -------------
 
-Every Mail commit is tested by Travis on the [following platforms](https://github.com/mikel/mail/blob/master/.travis.yml)
+Mail supports Ruby 1.8.7+, including JRuby and Rubinius.
 
-* ruby-1.8.7 [ i686 ]
-* ruby-1.9.2 [ x86_64 ]
-* ruby-1.9.3 [ x86_64 ]
-* ruby-2.0.0 [ x86_64 ]
-* ruby-2.1.10 [ x86_64 ]
-* ruby-2.2.6 [ x86_64 ]
-* ruby-2.3.3 [ x86_64 ]
-* ruby-head [ x86_64 ]
-* jruby [ x86_64 ]
-* jruby-9.1.6.0 [ x86_64 ]
-* jruby-head [ x86_64 ]
-* rbx-2 [ x86_64 ]
+Every Mail commit is tested by Travis on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.travis.yml).
 
-Testing a specific mime type (needed for 1.8.7 for example) can be done manually with:
+Testing a specific version of mime-types (needed for Ruby 1.8.7, for example) can be done manually with:
 
 ```sh
-BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile (bundle check || bundle) && rake
+BUNDLE_GEMFILE=gemfiles/mime_types_1.16.gemfile bundle && rake
 ```
 
 Discussion
