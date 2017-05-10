@@ -4,7 +4,6 @@ require 'mail/fields/common/address_container'
 
 module Mail
   module CommonAddress # :nodoc:
-      
     def parse(val = value)
       unless Utilities.blank?(val)
         @address_list = AddressList.new(encode_if_needed(val))
@@ -12,15 +11,28 @@ module Mail
         nil
       end
     end
-    
+
     def charset
       @charset
     end
-    
+
     def encode_if_needed(val)
-      Encodings.address_encode(val, charset)
+      # Need to join arrays of addresses into a single value
+      if val.kind_of?(Array)
+        val.compact.map { |a| encode_if_needed a }.join(', ')
+
+      # Pass through UTF-8 addresses
+      elsif charset =~ /\AUTF-?8\z/i
+        val
+      elsif val.respond_to?(:encoding) && val.encoding == Encoding::UTF_8
+        val
+
+      # Encode non-UTF-8 strings
+      else
+        Encodings.encode_non_usascii(val, charset)
+      end
     end
-    
+
     # Allows you to iterate through each address object in the address_list
     def each
       address_list.addresses.each do |address|

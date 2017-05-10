@@ -3,6 +3,7 @@
   # https://tools.ietf.org/html/rfc2045#section-5.1
   # Previously: https://tools.ietf.org/html/rfc1049#section-3
   machine rfc2045_content_type;
+  alphtype int;
 
   include rfc5322_lexical_tokens "rfc5322_lexical_tokens.rl";
 

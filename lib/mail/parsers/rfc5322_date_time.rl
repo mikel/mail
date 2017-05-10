@@ -3,6 +3,7 @@
   # Section 3.3. Date and Time Specification
   # https://tools.ietf.org/html/rfc5322#section-3.3
   machine rfc5322_date_time;
+  alphtype int;
 
   include rfc5322_lexical_tokens "rfc5322_lexical_tokens.rl";
 

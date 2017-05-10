@@ -83,9 +83,31 @@ module Mail
 
       def initialize(element, value, reason)
         @element = element
-        @value = value
-        @reason = reason
-        super("#{element} can not parse |#{value}|\nReason was: #{reason}")
+        @value = to_utf8(value)
+        @reason = to_utf8(reason)
+        super("#{@element} can not parse |#{@value}|: #{@reason}")
+      end
+
+      private
+        def to_utf8(text)
+          if text.respond_to?(:force_encoding)
+            text.dup.force_encoding(Encoding::UTF_8)
+          else
+            text
+          end
+        end
+    end
+
+    class NilParseError < ParseError #:nodoc:
+      def initialize(element)
+        super element, nil, 'nil is invalid'
+      end
+    end
+
+    class IncompleteParseError < ParseError #:nodoc:
+      def initialize(element, original_text, unparsed_index)
+        parsed_text = to_utf8(original_text[0...unparsed_index])
+        super element, original_text, "Only able to parse up to #{parsed_text.inspect}"
       end
     end
 

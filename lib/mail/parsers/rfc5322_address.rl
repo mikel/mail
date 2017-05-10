@@ -3,6 +3,7 @@
   # Section 3.4. Address Specification
   # https://tools.ietf.org/html/rfc5322#section-3.4
   machine rfc5322_address;
+  alphtype int;
 
   include rfc5234_abnf_core_rules "rfc5234_abnf_core_rules.rl";
   include rfc5322_lexical_tokens "rfc5322_lexical_tokens.rl";
@@ -25,7 +26,8 @@
   # domain:
   domain_dot_atom_text = "."* domain_text ("."* domain_text)*;
   obs_dtext = obs_NO_WS_CTL | quoted_pair;
-  dtext = 0x21..0x5a | 0x5e..0x7e | obs_dtext;
+  rfc5322_dtext = 0x21..0x5a | 0x5e..0x7e | obs_dtext;
+  dtext = rfc5322_dtext | utf8_non_ascii; # RFC6532 for UTF-8
   domain_dot_atom = CFWS? domain_dot_atom_text (CFWS? >(comment_after_address,1));
   domain_literal = CFWS? "[" (FWS? dtext)* FWS? "]" CFWS?;
   obs_domain = atom ("." atom)*;

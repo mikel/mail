@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   # RFC 5322 Section 3.6.4: Identification Fields
   # https://tools.ietf.org/html/rfc5322#section-3.6.4
   machine message_ids;
+  alphtype int;
 
   # Message Ids
   action msg_id_s { msg_id_s = p }
-  action msg_id_e { message_ids.message_ids << data[msg_id_s..(p-1)].rstrip }
+  action msg_id_e { message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip }
 
   # No-op actions
   action angle_addr_s {}
@@ -47,12 +49,16 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module MessageIdsParser
+    extend Mail::Parsers::Utilities
+
     MessageIdsStruct = Struct.new(:message_ids, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
-      raise Mail::Field::ParseError.new(Mail::MessageIdsElement, data, 'nil is invalid') if data.nil?
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
+      raise Mail::Field::NilParseError.new(Mail::MessageIdsElement) if data.nil?
 
       # Parser state
       message_ids = MessageIdsStruct.new([])
@@ -67,7 +73,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::MessageIdsElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::MessageIdsElement, data, p)
       end
 
       message_ids

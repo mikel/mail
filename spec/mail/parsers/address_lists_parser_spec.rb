@@ -32,4 +32,30 @@ describe "AddressListsParser" do
       expect(a.parse(text).addresses.first.local).to eq 'ababab'
     end
   end
+
+  context "RFC6532 UTF-8 headers" do
+    it "extracts UTF-8 local string" do
+      text = '"🌈" (😁) <💌@👉.com>, 🤠:test@example.com;'
+
+      a = Mail::Parsers::AddressListsParser
+      result = a.parse(text)
+      expect(result.addresses.size).to eq 2
+
+      address = result.addresses[0]
+      expect(address.display_name).to eq '🌈'
+      expect(address.local).to eq '💌'
+      expect(address.domain).to eq '👉.com'
+
+      address = result.addresses[1]
+      expect(address.group).to eq '🤠'
+      expect(address.local).to eq 'test'
+      expect(address.domain).to eq 'example.com'
+    end
+
+    it "should parse an address" do
+      text = '"💌" <💌@💌.com>, 🤠: test2@lindsaar.net, Ada <test3@lindsaar.net>;'
+      a = Mail::Parsers::AddressListsParser
+      expect(a.parse(text)).not_to be_nil
+    end
+  end
 end

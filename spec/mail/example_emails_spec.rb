@@ -319,4 +319,23 @@ describe "Test emails" do
 
   end
 
+  describe 'RFC6532 UTF8 headers' do
+    before :each do
+      @message = Mail.read(fixture('emails', 'rfc6532', 'utf8_headers.eml'))
+    end
+
+    it 'subject' do
+      expect(@message.subject).to eq 'Säying Hello'
+    end
+
+    it 'from' do
+      expect(@message[:from].to_s).to eq '"Jöhn Doe" <jdöe@mächine.example>'
+      expect(@message[:from].addresses.first.to_s).to eq 'jdöe@mächine.example'
+    end
+
+    it 'to' do
+      expect(@message[:to].to_s).to eq '"Märy Smith" <märy@exämple.net>'
+      expect(@message[:to].addresses.first.to_s).to eq 'märy@exämple.net'
+    end
+  end
 end

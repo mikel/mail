@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine date_time;
+  alphtype int;
 
   # Phrase
   action phrase_s { phrase_s = p }
   action phrase_e {
-    phrase_lists.phrases << data[phrase_s..(p-1)] if phrase_s
+    phrase_lists.phrases << chars(data, phrase_s, p-1) if phrase_s
     phrase_s = nil
   }
 
@@ -48,12 +50,16 @@ require 'mail/utilities'
 
 module Mail::Parsers
   class PhraseListsParser
+    extend Mail::Parsers::Utilities
+
     PhraseListsStruct = Struct.new(:phrases, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
-      raise Mail::Field::ParseError.new(Mail::PhraseList, data, 'nil is invalid') if data.nil?
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
+      raise Mail::Field::NilParseError.new(Mail::PhraseList) if data.nil?
 
       # Parser state
       phrase_lists = PhraseListsStruct.new([])
@@ -68,7 +74,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::PhraseListsElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::PhraseListsElement, data, p)
       end
 
       phrase_lists

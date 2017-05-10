@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe "mail encoding" do
 
-  it "should allow you to assign a mail wide charset" do
+  it "should allow you to assign an email-wide charset" do
     mail = Mail.new
     mail.charset = 'utf-8'
     expect(mail.charset).to eq 'utf-8'
@@ -23,7 +23,7 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = "Mikel Lindsああr <mikel@test.lindsaar.net>"
-      result = "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+      result = "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
       expect(mail[:to].encoded).to eq result
     end
 
@@ -39,7 +39,7 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
-      result = "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      result = "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       expect(mail[:to].encoded).to eq result
     end
 
@@ -47,7 +47,7 @@ describe "mail encoding" do
       mail = Mail.new
       mail.charset = 'utf-8'
       mail.to = ["Foo áëô îü <extended@example.net>"]
-      result = "To: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
+      result = "To: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
       expect(mail[:to].encoded).to eq result
     end
 
@@ -56,7 +56,7 @@ describe "mail encoding" do
       mail.charset = 'utf-8'
       ['To', 'From', 'Cc', 'Reply-To'].each do |field|
         mail.send("#{field.downcase.gsub("-", '_')}=", ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"])
-        result = "#{field}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+        result = "#{field}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
         expect(mail[field].encoded).to eq result
       end
     end
@@ -112,66 +112,60 @@ describe "mail encoding" do
     end
   end
 
-  describe "specifying an email wide encoding" do
+  describe "specifying an email-wide encoding" do
     it "should allow you to send in unencoded strings to fields and encode them" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
-      subject = "This is あ string"
+      subject = "This is \xE4 string"
       subject = subject.dup.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.subject = subject
       result = mail[:subject].encoded
-      string = "Subject: =?ISO-8859-1?Q?This_is_=E3=81=82_string?=\r\n"
-      if RUBY_VERSION > '1.9'
-        string = string.dup.force_encoding('ISO8859-1')
-        result = result.dup.force_encoding('ISO8859-1')
+      if result.respond_to?(:force_encoding)
+        expect(result.encoding).to eq Encoding::UTF_8
       end
-      expect(result).to eq string
+      expect(result).to eq "Subject: =?ISO-8859-1?Q?This_is_=E4_string?=\r\n"
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
-      string = "Mikel Lindsああr <mikel@test.lindsaar.net>"
+
+      string = "Mikel Linds\xE4r <mikel@test.lindsaar.net>"
       string = string.dup.force_encoding('ISO8859-1') if RUBY_VERSION > '1.9'
       mail.to = string
+
       result = mail[:to].encoded
-      string = "To: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
-      if RUBY_VERSION > '1.9'
-        string = string.dup.force_encoding('ISO8859-1')
-        result = result.dup.force_encoding('ISO8859-1')
+      if result.respond_to?(:force_encoding)
+        expect(result.encoding).to eq Encoding::UTF_8
       end
-      expect(result).to eq string
+      expect(result).to eq "To: Mikel =?ISO-8859-1?B?TGluZHPkcg==?= <mikel@test.lindsaar.net>\r\n"
     end
 
     it "should allow you to send in multiple unencoded strings to address fields and encode them" do
       mail = Mail.new
       mail.charset = 'ISO-8859-1'
-      array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
+      array = ["Mikel Linds\xE4r <mikel@test.lindsaar.net>", "\xE4d <ada@test.lindsaar.net>"]
       array.map! { |a| a.dup.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
       mail.to = array
       result = mail[:to].encoded
-      string = "To: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
-      if RUBY_VERSION > '1.9'
-        string = string.dup.force_encoding('ISO8859-1')
-        result = result.dup.force_encoding('ISO8859-1')
+      if result.respond_to?(:force_encoding)
+        expect(result.encoding).to eq Encoding::UTF_8
       end
-      expect(result).to eq string
+      expect(result).to eq "To: Mikel =?ISO-8859-1?B?TGluZHPkcg==?= <mikel@test.lindsaar.net>, \r\n =?ISO-8859-1?B?5GQ=?= <ada@test.lindsaar.net>\r\n"
     end
 
     it "should allow you to send in multiple unencoded strings to any address field" do
       mail = Mail.new
-      array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
+      array = ["Mikel Linds\xE4r <mikel@test.lindsaar.net>", "\xE4d <ada@test.lindsaar.net>"]
       array.map! { |a| a.dup.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
       mail.charset = 'ISO-8859-1'
       ['To', 'From', 'Cc', 'Reply-To'].each do |field|
         mail.send("#{field.downcase.gsub("-", '_')}=", array)
-        string = "#{field}: Mikel =?ISO-8859-1?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
         result = mail[field].encoded
-        if RUBY_VERSION > '1.9'
-          string = string.dup.force_encoding('ISO8859-1')
-          result = result.dup.force_encoding('ISO8859-1')
+        if result.respond_to?(:force_encoding)
+          expect(result.encoding).to eq Encoding::UTF_8
         end
-        expect(result).to eq string
+        expect(result).to eq "#{field}: Mikel =?ISO-8859-1?B?TGluZHPkcg==?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?5GQ=?= <ada@test.lindsaar.net>\r\n"
       end
     end
   end

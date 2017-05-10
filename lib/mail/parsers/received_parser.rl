@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine date_time;
+  alphtype int;
 
   # Received Tokens
   action received_tokens_s { received_tokens_s = p }
-  action received_tokens_e { received.info = data[received_tokens_s..(p-1)] }
+  action received_tokens_e { received.info = chars(data, received_tokens_s, p-1) }
 
   # Date
   action date_s { date_s = p }
-  action date_e { received.date = data[date_s..(p-1)].strip }
+  action date_e { received.date = chars(data, date_s, p-1).strip }
 
   # Time
   action time_s { time_s = p }
-  action time_e { received.time = data[time_s..(p-1)] }
+  action time_e { received.time = chars(data, time_s, p-1) }
 
   # No-op actions
   action address_s {}
@@ -49,12 +51,16 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module ReceivedParser
+    extend Mail::Parsers::Utilities
+
     ReceivedStruct = Struct.new(:date, :time, :info, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
-      raise Mail::Field::ParseError.new(Mail::ReceivedElement, data, 'nil is invalid') if data.nil?
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
+      raise Mail::Field::NilParseError.new(Mail::ReceivedElement) if data.nil?
 
       # Parser state
       received = ReceivedStruct.new
@@ -69,7 +75,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::ReceivedElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::ReceivedElement, data, p)
       end
 
       received

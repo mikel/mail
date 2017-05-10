@@ -2,6 +2,7 @@
   # RFC 2045 MIME
   # https://tools.ietf.org/html/rfc2045
   machine rfc2045_mime;
+  alphtype int;
 
   include rfc5322_lexical_tokens "rfc5322_lexical_tokens.rl";
 
