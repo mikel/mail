@@ -168,31 +168,51 @@ module Mail
 
     def Encodings.address_encode(address, charset = 'utf-8')
       if address.is_a?(Array)
-        # loop back through for each element
         address.compact.map { |a| Encodings.address_encode(a, charset) }.join(", ")
-      else
-        # find any word boundary that is not ascii and encode it
-        encode_non_usascii(address, charset) if address
+      elsif address
+        encode_non_usascii(address, charset)
       end
     end
 
     def Encodings.encode_non_usascii(address, charset)
       return address if address.ascii_only? or charset.nil?
-      # Encode all strings embedded inside of quotes
-      address = address.gsub(/("[^"]*")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
-      # Then loop through all remaining items and encode as needed
-      tokens = address.split(/\s/)
-      map_with_index(tokens) do |word, i|
-        if word.ascii_only?
-          word
-        else
-          previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
-          if previous_non_ascii #why are we adding an extra space here?
-            word = " #{word}"
+
+      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
+      with_ascii_kcode do
+        # Encode all strings embedded inside of quotes
+        address = address.gsub(/("[^"]*")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+
+        # Then loop through all remaining items and encode as needed
+        tokens = address.split(/\s/)
+
+        map_with_index(tokens) do |word, i|
+          if word.ascii_only?
+            word
+          else
+            previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
+            if previous_non_ascii #why are we adding an extra space here?
+              word = " #{word}"
+            end
+            Encodings.b_value_encode(word, charset)
           end
-          Encodings.b_value_encode(word, charset)
+        end.join(' ')
+      end
+    end
+
+    if RUBY_VERSION < '1.9'
+      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
+      def Encodings.with_ascii_kcode #:nodoc:
+        if $KCODE
+          $KCODE, original_kcode = '', $KCODE
         end
-      end.join(' ')
+        yield
+      ensure
+        $KCODE = original_kcode if original_kcode
+      end
+    else
+      def Encodings.with_ascii_kcode #:nodoc:
+        yield
+      end
     end
 
     # Encode a string with Base64 Encoding and returns it ready to be inserted

@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine envelope_from;
+  alphtype int;
 
   # Address
   action address_s { address_s = p }
-  action address_e { envelope_from.address = data[address_s..(p-1)].rstrip }
+  action address_e { envelope_from.address = chars(data, address_s, p-1).rstrip }
 
   # ctime_date
   action ctime_date_s { ctime_date_s = p }
-  action ctime_date_e { envelope_from.ctime_date = data[ctime_date_s..(p-1)] }
+  action ctime_date_e { envelope_from.ctime_date = chars(data, ctime_date_s, p-1) }
 
   # No-op actions
   action angle_addr_s {}
@@ -47,11 +49,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module EnvelopeFromParser
+    extend Mail::Parsers::Utilities
+
     EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       envelope_from = EnvelopeFromStruct.new
       return envelope_from if Mail::Utilities.blank?(data)
 
@@ -67,7 +73,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::EnvelopeFromElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::EnvelopeFromElement, data, p)
       end
 
       envelope_from

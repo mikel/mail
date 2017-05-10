@@ -55,21 +55,20 @@ the [Google Group](http://groups.google.com/group/mail-ruby).
 Current Capabilities of Mail
 ----------------------------
 
-* RFC2822 Support, Reading and Writing
+* RFC5322 Support, Reading and Writing
+* RFC6532 Support, reading UTF-8 headers
 * RFC2045-2049 Support for multipart emails
 * Support for creating multipart alternate emails
 * Support for reading multipart/report emails &amp; getting details from such
-* Support for multibyte emails - needs quite a lot of work and testing
 * Wrappers for File, Net/POP3, Net/SMTP
-* Auto encoding of non US-ASCII header fields
-* Auto encoding of non US-ASCII bodies
+* Auto-encoding of non-US-ASCII bodies and header fields
 
-Mail is RFC2822 compliant now, that is, it can parse and generate valid US-ASCII
-emails.  There are a few obsoleted syntax emails that it will have problems with, but
-it also is quite robust, meaning, if it finds something it doesn't understand it will
-not crash, instead, it will skip the problem and keep parsing.  In the case of a header
-it doesn't understand, it will initialise the header as an optional unstructured
-field and continue parsing.
+Mail is RFC5322 and RFC6532 compliant now, that is, it can parse US-ASCII and UTF-8
+emails and generate US-ASCII emails. There are a few obsoleted syntax emails that
+it will have problems with, but it also is quite robust, meaning, if it finds something
+it doesn't understand it will not crash, instead, it will skip the problem and keep
+parsing. In the case of a header it doesn't understand, it will initialise the header
+as an optional unstructured field and continue parsing.
 
 This means Mail won't (ever) crunch your data (I think).
 

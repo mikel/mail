@@ -3,6 +3,7 @@
   # Section 3.2. Lexical Tokens
   # https://tools.ietf.org/html/rfc5322#section-3.2
   machine rfc5322_lexical_tokens;
+  alphtype int;
 
   include rfc5234_abnf_core_rules "rfc5234_abnf_core_rules.rl";
 
@@ -16,7 +17,8 @@
   FWS = (WSP* CRLF WSP+) | (CRLF WSP+) | obs_FWS;
 
   obs_ctext = obs_NO_WS_CTL;
-  ctext = 0x21..0x27 | 0x2a..0x5b | 0x5d..0x7e | obs_ctext;
+  rfc5322_ctext = 0x21..0x27 | 0x2a..0x5b | 0x5d..0x7e | obs_ctext;
+  ctext = rfc5322_ctext | utf8_non_ascii; # RFC6532 for UTF-8
 
   # Recursive comments
   action comment_begin { fcall comment_tail; }
@@ -27,16 +29,18 @@
   CFWS = ((FWS? comment)+ FWS?) | FWS;
 
   # 3.2.3. Atom
-  atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" |
-          "'" | "*" | "+" | "-" | "/" | "=" | "?" | "^" |
-          "_" | "`" | "{" | "|" | "}" | "~";
+  rfc5322_atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" |
+                  "'" | "*" | "+" | "-" | "/" | "=" | "?" | "^" |
+                  "_" | "`" | "{" | "|" | "}" | "~";
+  atext = rfc5322_atext | utf8_non_ascii; # RFC6532 for UTF-8
   atom = CFWS? atext+ CFWS?;
   dot_atom_text = atext ("." atext)*;
   dot_atom = CFWS? dot_atom_text CFWS?;
 
   # 3.2.4. Quoted Strings
   obs_qtext = obs_NO_WS_CTL;
-  qtext = 0x21 | 0x23..0x5b | 0x5d..0x7e | obs_qtext;
+  rfc5322_qtext = 0x21 | 0x23..0x5b | 0x5d..0x7e | obs_qtext;
+  qtext = rfc5322_qtext | utf8_non_ascii; # RFC6532 for UTF-8
 
   qcontent = qtext | quoted_pair;
   quoted_string = CFWS?

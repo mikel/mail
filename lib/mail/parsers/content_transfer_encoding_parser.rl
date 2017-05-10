@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine content_transfer_encoding;
+  alphtype int;
 
   action encoding_s { encoding_s = p }
-  action encoding_e { content_transfer_encoding.encoding = data[encoding_s..(p-1)].downcase }
+  action encoding_e { content_transfer_encoding.encoding = chars(data, encoding_s, p-1).downcase }
 
   # No-op actions
   action comment_e { }
@@ -29,11 +31,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module ContentTransferEncodingParser
+    extend Mail::Parsers::Utilities
+
     ContentTransferEncodingStruct = Struct.new(:encoding, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       content_transfer_encoding = ContentTransferEncodingStruct.new('')
       return content_transfer_encoding if Mail::Utilities.blank?(data)
 
@@ -49,7 +55,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::ContentTransferEncodingElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::ContentTransferEncodingElement, data, p)
       end
 
       content_transfer_encoding

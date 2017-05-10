@@ -216,7 +216,7 @@ describe Mail::Field do
 
     it "should allow you to send in unencoded strings without quotes to address fields and encode them" do
       to = Mail::ToField.new('Mikel Lindsああr <mikel@test.lindsaar.net>', 'utf-8')
-      expect(to.encoded).to eq "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
+      expect(to.encoded).to eq "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>\r\n"
     end
 
     it "should allow you to send in unencoded strings to address fields and encode them" do
@@ -226,7 +226,7 @@ describe Mail::Field do
 
     it "should allow you to send in multiple unencoded strings to address fields and encode them" do
       to = Mail::ToField.new(["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"], 'utf-8')
-      expect(to.encoded).to eq "To: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(to.encoded).to eq "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 
     it "should allow you to send in multiple unencoded strings to any address field" do
@@ -234,13 +234,13 @@ describe Mail::Field do
       mail.charset = 'utf-8'
       array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
       field = Mail::ToField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::ToField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "#{Mail::ToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::FromField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::FromField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "#{Mail::FromField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::CcField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::CcField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "#{Mail::CcField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::ReplyToField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::ReplyToField::CAPITALIZED_FIELD}: Mikel =?UTF-8?B?TGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "#{Mail::ReplyToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 
     it "should allow an encoded value in the Subject field and decode it automatically (issue 44)" do
@@ -274,8 +274,8 @@ describe Mail::Field do
 
     it "more tolerable to encoding definitions, UTF (issue 120)" do
       to = Mail::ToField.new("=?utf-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>", 'utf-8')
-      expect(to.encoded).to eq "To: =?utf-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       expect(to.decoded).to eq "\"あdあ\" <ada@test.lindsaar.net>"
+      expect(to.encoded).to eq "To: =?utf-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 
     it "more tolerable to encoding definitions, ISO (issue 120)" do

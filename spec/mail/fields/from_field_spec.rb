@@ -79,12 +79,10 @@ describe Mail::FromField do
     expect(t.decoded).to eq '"Foo áëô îü" <extended@example.net>'
     expect(t.encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
   end
-  
-  
+
   it "should work without quotes" do
     t = Mail::FromField.new('Foo áëô îü <extended@example.net>')
-    expect(t.encoded).to eq "From: Foo =?UTF-8?B?w6HDq8O0?= =?UTF-8?B?IMOuw7w=?= <extended@example.net>\r\n"
     expect(t.decoded).to eq '"Foo áëô îü" <extended@example.net>'
+    expect(t.encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
   end
-
 end

@@ -4,6 +4,7 @@
   #
   # TODO: recognize filename, size, creation date, etc.
   machine rfc2183_content_disposition;
+  alphtype int;
 
   include rfc2045_content_type "rfc2045_content_type.rl";
 

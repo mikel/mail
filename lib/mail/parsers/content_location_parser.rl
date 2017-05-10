@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   # RFC 2557 Content-Location
   # https://tools.ietf.org/html/rfc2557#section-4.1
   machine content_location;
+  alphtype int;
 
   # Quoted String
   action qstr_s { qstr_s = p }
-  action qstr_e { content_location.location = data[qstr_s..(p-1)] }
+  action qstr_e { content_location.location = chars(data, qstr_s, p-1) }
 
   # Token String
   action token_string_s { token_string_s = p }
-  action token_string_e { content_location.location = data[token_string_s..(p-1)] }
+  action token_string_e { content_location.location = chars(data, token_string_s, p-1) }
 
   # No-op actions
   action comment_e { }
@@ -36,11 +38,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module ContentLocationParser
+    extend Mail::Parsers::Utilities
+
     ContentLocationStruct = Struct.new(:location, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       content_location = ContentLocationStruct.new(nil)
       return content_location if Mail::Utilities.blank?(data)
 
@@ -56,7 +62,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::ContentLocationElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::ContentLocationElement, data, p)
       end
 
       content_location

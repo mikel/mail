@@ -5,6 +5,7 @@
   # RFC 6854 Update to Internet Message Format to Allow Group Syntax in the "From:" and "Sender:" Header Fields
   # https://tools.ietf.org/html/rfc6854
   machine rfc5322;
+  alphtype int;
 
   include rfc5234_abnf_core_rules "rfc5234_abnf_core_rules.rl";
 
@@ -18,7 +19,8 @@
   include rfc5322_address "rfc5322_address.rl";
 
   # 3.5. Overall Message Syntax
-  #text = 0x01..0x09 | "\v" | "\f" | 0x0e..0x1f;
+  #rfc5322_text = 0x01..0x09 | "\v" | "\f" | 0x0e..0x1f;
+  #text = rfc5322_text | utf8_non_ascii; # RFC6532 for UTF-8
   #obs_body = ((LF* CR* ((0x00 | text) LF* CR*)*) | CRLF)*
   #body = ((text{,998} CRLF)* text{,998}) | obs_body;
   #message = (fields | obs_fields) (CRLF body)?;

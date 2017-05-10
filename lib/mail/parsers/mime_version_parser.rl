@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine mime_version;
+  alphtype int;
 
   # Major Digits
   action major_digits_s { major_digits_s = p }
-  action major_digits_e { mime_version.major = data[major_digits_s..(p-1)] }
+  action major_digits_e { mime_version.major = chars(data, major_digits_s, p-1) }
 
   # Minor Digits
   action minor_digits_s { minor_digits_s = p }
-  action minor_digits_e { mime_version.minor = data[minor_digits_s..(p-1)] }
+  action minor_digits_e { mime_version.minor = chars(data, minor_digits_s, p-1) }
 
   # No-op actions
   action comment_s {}
@@ -26,11 +28,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module MimeVersionParser
+    extend Mail::Parsers::Utilities
+
     MimeVersionStruct = Struct.new(:major, :minor, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       return MimeVersionStruct.new('', nil) if Mail::Utilities.blank?(data)
 
       # Parser state
@@ -46,7 +52,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::MimeVersionElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::MimeVersionElement, data, p)
       end
 
       mime_version

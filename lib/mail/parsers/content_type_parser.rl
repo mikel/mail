@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine content_type;
+  alphtype int;
 
   # Main Type
   action main_type_s { main_type_s = p }
-  action main_type_e { content_type.main_type = data[main_type_s..(p-1)].downcase }
+  action main_type_e { content_type.main_type = chars(data, main_type_s, p-1).downcase }
 
   # Sub Type
   action sub_type_s { sub_type_s = p }
-  action sub_type_e { content_type.sub_type = data[sub_type_s..(p-1)].downcase }
+  action sub_type_e { content_type.sub_type = chars(data, sub_type_s, p-1).downcase }
 
   # Parameter Attribute
   action param_attr_s { param_attr_s = p }
-  action param_attr_e { param_attr = data[param_attr_s..(p-1)] }
+  action param_attr_e { param_attr = chars(data, param_attr_s, p-1) }
 
   # Quoted String
   action qstr_s { qstr_s = p }
-  action qstr_e { qstr = data[qstr_s..(p-1)] }
+  action qstr_e { qstr = chars(data, qstr_s, p-1) }
 
   # Parameter Value
   action param_val_s { param_val_s = p }
@@ -28,7 +30,7 @@ require 'mail/utilities'
     end
 
     # Use quoted s value if one exists, otherwise use parameter value
-    value = qstr || data[param_val_s..(p-1)]
+    value = qstr || chars(data, param_val_s, p-1)
 
     content_type.parameters << { param_attr => value }
     param_attr = nil
@@ -47,11 +49,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module ContentTypeParser
+    extend Mail::Parsers::Utilities
+
     ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       return ContentTypeStruct.new('text', 'plain', []) if Mail::Utilities.blank?(data)
       content_type = ContentTypeStruct.new(nil, nil, [])
 
@@ -68,7 +74,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::ContentTypeElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::ContentTypeElement, data, p)
       end
 
       content_type

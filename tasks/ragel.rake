@@ -1,5 +1,8 @@
 load 'lib/mail/parsers.rb'
 
+# RFC 6532 extensions rely on RFC 3629 UTF-8 chars
+rule 'lib/mail/parsers/rfc5234_abnf_core_rules.rl' => 'lib/mail/parsers/rfc3629_utf8.rl'
+
 # All RFC 5322 parsers depend on ABNF core rules
 rule /rfc5322_.+\.rl\z/ => 'lib/mail/parsers/rfc5234_abnf_core_rules.rl'
 

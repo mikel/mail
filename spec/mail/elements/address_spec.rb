@@ -216,6 +216,20 @@ describe Mail::Address do
       end
     end
 
+    describe 'RFC 6532 UTF-8 chars' do
+      it 'local' do
+        expect(Mail::Address.new('💌@example.com').local).to eq '💌'
+      end
+
+      it 'domain' do
+        expect(Mail::Address.new('test@exämple.com').domain).to eq 'exämple.com'
+      end
+
+      it 'display name' do
+        expect(Mail::Address.new('"💌" <test@example.com>').display_name).to eq '💌'
+      end
+    end
+
     describe "email addresses from the wild" do
       it "should handle |aamine@loveruby.net|" do
         address = Mail::Address.new('aamine@loveruby.net')

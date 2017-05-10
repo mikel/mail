@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 require 'mail/utilities'
+require 'mail/parsers/utilities'
 
 %%{
   machine content_disposition;
+  alphtype int;
 
   # Disposition Type
   action disp_type_s { disp_type_s = p }
-  action disp_type_e { content_disposition.disposition_type = data[disp_type_s..(p-1)].downcase }
+  action disp_type_e { content_disposition.disposition_type = chars(data, disp_type_s, p-1).downcase }
 
   # Parameter Attribute
   action param_attr_s { param_attr_s = p }
-  action param_attr_e { param_attr = data[param_attr_s..(p-1)] }
+  action param_attr_e { param_attr = chars(data, param_attr_s, p-1) }
 
   # Quoted String
   action qstr_s { qstr_s = p }
-  action qstr_e { qstr = data[qstr_s..(p-1)] }
+  action qstr_e { qstr = chars(data, qstr_s, p-1) }
 
   # Parameter Value
   action param_val_s { param_val_s = p }
@@ -24,7 +26,7 @@ require 'mail/utilities'
     end
 
     # Use quoted string value if one exists, otherwise use parameter value
-    value = qstr || data[param_val_s..(p-1)]
+    value = qstr || chars(data, param_val_s, p-1)
 
     content_disposition.parameters << { param_attr => value }
     param_attr = nil
@@ -47,11 +49,15 @@ require 'mail/utilities'
 
 module Mail::Parsers
   module ContentDispositionParser
+    extend Mail::Parsers::Utilities
+
     ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
 
     %%write data noprefix;
 
     def self.parse(data)
+      data = data.dup.force_encoding(Encoding::ASCII_8BIT) if data.respond_to?(:force_encoding)
+
       content_disposition = ContentDispositionStruct.new('', [])
       return content_disposition if Mail::Utilities.blank?(data)
 
@@ -67,7 +73,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::ParseError.new(Mail::ContentDispositionElement, data, "Only able to parse up to #{data[0..p]}")
+        raise Mail::Field::IncompleteParseError.new(Mail::ContentDispositionElement, data, p)
       end
 
       content_disposition
