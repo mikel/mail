@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+
+begin
+  require 'byebug'
+rescue LoadError
+end
+
+require 'mail'
+
+require 'irb'
+require 'irb/completion'
+IRB.start
