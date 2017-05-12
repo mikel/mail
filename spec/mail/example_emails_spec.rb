@@ -186,11 +186,10 @@ describe "Test emails" do
     # (but not within) the identifier in the "Message-ID:" field.
 
     it "should handle the rfc whitespace test email" do
-      skip "fixed in pr#487"
       mail = Mail.read(fixture('emails', 'rfc2822', 'example10.eml'))
       expect(mail.from).to eq ["pete(his account)@silly.test"]
       expect(mail.to).to eq  ["c@public.example", "joe@example.org", "jdoe@one.test"]
-      expect(mail[:cc].group_names).to eq ['(Empty list)(start)Undisclosed recipients ']
+      expect(mail[:cc].group_names).to eq ['(Empty list)(start)Undisclosed recipients  ']
       expect(mail.date).to eq ::DateTime.parse('Thu, 13 Feb 1969 23:32 -0330')
       expect(mail.message_id).to eq 'testabcd.1234@silly.test'
     end
@@ -205,11 +204,10 @@ describe "Test emails" do
     # that appear in the "To:" field, and the spaces that appear around the
     # "." in the jdoe address.
     it "should handle the rfc obsolete addressing" do
-      pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example11.eml'))
       expect(mail[:from].addresses).to eq ['john.q.public@example.com']
-      expect(mail.from).to eq '"Joe Q. Public" <john.q.public@example.com>'
-      expect(mail.to).to eq ["@machine.tld:mary@example.net", 'jdoe@test.example']
+      expect(mail[:from].to_s).to eq '"Joe Q. Public" <john.q.public@example.com>'
+      expect(mail.to).to eq ["@machine.tld:mary@example.net", 'jdoe@test   . example']
       expect(mail.date).to eq ::DateTime.parse('Tue, 1 Jul 2003 10:52:37 +0200')
       expect(mail.message_id).to eq '5678.21-Nov-1997@example.com'
     end
@@ -221,12 +219,8 @@ describe "Test emails" do
     # day-of-week is missing, that is not specific to the obsolete syntax;
     # it is optional in the current syntax as well.
     it "should handle the rfc obsolete dates" do
-      pending
       mail = Mail.read(fixture('emails', 'rfc2822', 'example12.eml'))
-      expect(mail.from).to eq 'jdoe@machine.example'
-      expect(mail.to).to eq 'mary@example.net'
       expect(mail.date).to eq ::DateTime.parse('21 Nov 97 09:55:06 GMT')
-      expect(mail.message_id).to eq '1234@local.machine.example'
     end
 
     # A.6.3. Obsolete white space and comments

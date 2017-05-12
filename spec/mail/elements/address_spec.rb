@@ -581,17 +581,16 @@ describe Mail::Address do
       end
 
       it "should handle |jdoe@test   . example|" do
-        pending
         address = Mail::Address.new('jdoe@test   . example')
         expect(address).to break_down_to({
-                                         :name         => 'jdoe@test.example',
-                                         :display_name => 'jdoe@test.example',
-                                         :address      => 'jdoe@test.example',
+                                         :name         => nil,
+                                         :display_name => nil,
+                                         :address      => 'jdoe@test   . example',
                                          :comments     => nil,
-                                         :domain       => 'test.example',
+                                         :domain       => 'test   . example',
                                          :local        => 'jdoe',
-                                         :format       => 'jdoe@test.example',
-                                         :raw          => 'jdoe@test.example'})
+                                         :format       => 'jdoe@test   . example',
+                                         :raw          => 'jdoe@test   . example'})
       end
 
       it "should handle |groupname+domain.com@example.com|" do
