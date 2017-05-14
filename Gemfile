@@ -10,4 +10,8 @@ gem 'rdoc', '< 4.3' if RUBY_VERSION < '2.0'
 
 gem 'mini_mime', :github => 'discourse/mini_mime'
 
-gem 'byebug', :platforms => :mri if RUBY_VERSION >= '2.0'
+if RUBY_VERSION >= '2.0'
+  gem 'byebug', :platforms => :mri
+else
+  gem 'ruby-debug', :platforms => :mri
+end

@@ -2,7 +2,11 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 begin
-  require 'byebug'
+  if RUBY_VERSION >= '2.0'
+    require 'byebug'
+  else
+    require 'ruby-debug'
+  end
 rescue LoadError
 end
 
