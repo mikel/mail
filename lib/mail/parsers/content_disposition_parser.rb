@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 
 
 
 module Mail::Parsers
   module ContentDispositionParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     ContentDispositionStruct = Struct.new(:disposition_type, :parameters, :error)
 

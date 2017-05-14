@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   # RFC 2557 Content-Location
@@ -38,7 +38,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   module ContentLocationParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     ContentLocationStruct = Struct.new(:location, :error)
 

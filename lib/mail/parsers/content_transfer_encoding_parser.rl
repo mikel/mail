@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   machine content_transfer_encoding;
@@ -31,7 +31,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   module ContentTransferEncodingParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     ContentTransferEncodingStruct = Struct.new(:encoding, :error)
 

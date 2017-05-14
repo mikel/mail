@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 
 
 
 module Mail::Parsers
   module DateTimeParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     DateTimeStruct = Struct.new(:date_string, :time_string, :error)
 

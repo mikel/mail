@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   machine mime_version;
@@ -28,7 +28,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   module MimeVersionParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     MimeVersionStruct = Struct.new(:major, :minor, :error)
 

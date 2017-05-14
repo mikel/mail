@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   machine envelope_from;
@@ -49,7 +49,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   module EnvelopeFromParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     EnvelopeFromStruct = Struct.new(:address, :ctime_date, :error)
 

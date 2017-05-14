@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 
 
 
 module Mail::Parsers
   module ContentTransferEncodingParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     ContentTransferEncodingStruct = Struct.new(:encoding, :error)
 

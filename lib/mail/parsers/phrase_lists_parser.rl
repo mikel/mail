@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   machine date_time;
@@ -50,7 +50,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   class PhraseListsParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     PhraseListsStruct = Struct.new(:phrases, :error)
 

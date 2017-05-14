@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 %%{
   # RFC 5322 Section 3.6.4: Identification Fields
@@ -49,7 +49,7 @@ require 'mail/parsers/utilities'
 
 module Mail::Parsers
   module MessageIdsParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     MessageIdsStruct = Struct.new(:message_ids, :error)
 

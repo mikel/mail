@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/utilities'
+require 'mail/parsers/tools'
 
 
 
 
 module Mail::Parsers
   module ContentTypeParser
-    extend Mail::Parsers::Utilities
+    extend Mail::Parsers::Tools
 
     ContentTypeStruct = Struct.new(:main_type, :sub_type, :parameters, :error)
 
