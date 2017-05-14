@@ -76,15 +76,6 @@ describe "Test Retriever" do
       end.to change { Mail.all.size }.by(-5)
     end
 
-    it "should handle the both of :count and :delete_after_find option" do
-      15.times do |idx|
-        expect do
-          expect(Mail.find(:count => 1, :delete_after_find => true)).to eq @emails[idx]
-        end.to change { Mail.all.size }.by(-1)
-      end
-      expect(Mail.find(:count => 1, :delete_after_find => true)).to be_empty
-    end
-
     it "should handle the :delete_after_find option with messages marked not for delete" do
       i = 0
       messages = []
