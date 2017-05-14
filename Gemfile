@@ -12,6 +12,8 @@ gem 'mini_mime', :github => 'discourse/mini_mime'
 
 if RUBY_VERSION >= '2.0'
   gem 'byebug', :platforms => :mri
+elsif RUBY_VERSION >= '1.9'
+  gem 'debugger', :platforms => :mri
 else
   gem 'ruby-debug', :platforms => :mri
 end
