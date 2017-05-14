@@ -14,5 +14,8 @@ describe "multibyte/chars" do
     chars = Chars.new('VĚDA A VÝZKUM')
     expect(chars.downcase).to eq("věda a výzkum")
   end
-end
 
+  it "has no ActiveSupport defined" do
+    expect(defined? ActiveSupport).to be_falsey
+  end
+end
