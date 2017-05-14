@@ -14,7 +14,6 @@ module Mail
 
     def value=(value)
       @length = nil
-      @tree = nil
       @element = nil
       @value = value
     end
