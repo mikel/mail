@@ -212,6 +212,10 @@ module Mail
       @field_order_id ||= (FIELD_ORDER_LOOKUP[self.name.to_s.downcase] || 100)
     end
 
+    def respond_to?(name)
+      field.respond_to?(name) || super
+    end
+
     def method_missing(name, *args, &block)
       field.send(name, *args, &block)
     end
