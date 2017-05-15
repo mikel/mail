@@ -31,7 +31,7 @@ describe "Logger Delivery Method" do
 
     logger = mail.delivery_method.logger
 
-    expect(logger).to receive(:log).with(:info) { mail.encoded }
+    expect(logger).to receive(:log).with(Logger::INFO) { mail.encoded }
 
     mail.deliver!
   end
@@ -43,7 +43,7 @@ describe "Logger Delivery Method" do
       delivery_method :logger, :logger => custom_logger, :severity => :debug
     end
 
-    expect(custom_logger).to receive(:log).with(:debug) { mail.encoded }
+    expect(custom_logger).to receive(:log).with(Logger::DEBUG) { mail.encoded }
 
     mail.deliver!
   end
