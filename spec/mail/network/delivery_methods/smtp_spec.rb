@@ -197,11 +197,11 @@ describe "SMTP Delivery Method" do
         to "to@somemail.com"
       end
 
-      expect(mail.smtp_envelope_from).to eq addr
+      mail.smtp_envelope_from.should eq addr
 
-      expect do
+      doing {
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP From address may not contain CR or LF line breaks: #{addr.inspect}")
+      }.should raise_error(ArgumentError, "SMTP From address may not contain CR or LF line breaks: #{addr.inspect}")
     end
 
     it "should raise on SMTP injection via RCPT TO newlines" do
@@ -212,11 +212,11 @@ describe "SMTP Delivery Method" do
         to addr
       end
 
-      expect(mail.smtp_envelope_to).to eq [addr]
+      mail.smtp_envelope_to.should eq [addr]
 
-      expect do
+      doing {
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP To address may not contain CR or LF line breaks: #{addr.inspect}")
+      }.should raise_error(ArgumentError, "SMTP To address may not contain CR or LF line breaks: #{addr.inspect}")
     end
 
     it "should raise on SMTP injection via MAIL FROM overflow" do
@@ -227,11 +227,11 @@ describe "SMTP Delivery Method" do
         to "to@somemail.com"
       end
 
-      expect(mail.smtp_envelope_from).to eq addr
+      mail.smtp_envelope_from.should eq addr
 
-      expect do
+      doing {
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP From address may not exceed 2kB: #{addr.inspect}")
+      }.should raise_error(ArgumentError, "SMTP From address may not exceed 2kB: #{addr.inspect}")
     end
 
     it "should raise on SMTP injection via RCPT TO overflow" do
@@ -242,11 +242,11 @@ describe "SMTP Delivery Method" do
         to addr
       end
 
-      expect(mail.smtp_envelope_to).to eq [addr]
+      mail.smtp_envelope_to.should eq [addr]
 
-      expect do
+      doing {
         mail.deliver
-      end.to raise_error(ArgumentError, "SMTP To address may not exceed 2kB: #{addr.inspect}")
+      }.should raise_error(ArgumentError, "SMTP To address may not exceed 2kB: #{addr.inspect}")
     end
   end
 end
