@@ -236,7 +236,7 @@ module Mail
     self.default_charset = 'UTF-8'
 
     def register_for_delivery_notification(observer)
-      $stderr.puts("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
+      warn("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
       Mail.register_observer(observer)
     end
 
@@ -1438,7 +1438,7 @@ module Mail
     end
 
     def has_transfer_encoding? # :nodoc:
-      $stderr.puts(":has_transfer_encoding? is deprecated in Mail 1.4.3.  Please use has_content_transfer_encoding?\n#{caller}")
+      warn(":has_transfer_encoding? is deprecated in Mail 1.4.3.  Please use has_content_transfer_encoding?\n#{caller}")
       has_content_transfer_encoding?
     end
 
@@ -1488,7 +1488,7 @@ module Mail
         # has not specified an encoding explicitly.
         if @defaulted_charset && !body.raw_source.ascii_only? && !self.attachment?
           warning = "Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect.\n"
-          $stderr.puts(warning)
+          warn(warning)
         end
         header[:content_type].parameters['charset'] = @charset
       end
@@ -1502,18 +1502,18 @@ module Mail
         header[:content_transfer_encoding] = '7bit'
       else
         warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\n"
-        $stderr.puts(warning)
+        warn(warning)
         header[:content_transfer_encoding] = '8bit'
       end
     end
 
     def add_transfer_encoding # :nodoc:
-      $stderr.puts(":add_transfer_encoding is deprecated in Mail 1.4.3.  Please use add_content_transfer_encoding\n#{caller}")
+      warn(":add_transfer_encoding is deprecated in Mail 1.4.3.  Please use add_content_transfer_encoding\n#{caller}")
       add_content_transfer_encoding
     end
 
     def transfer_encoding # :nodoc:
-      $stderr.puts(":transfer_encoding is deprecated in Mail 1.4.3.  Please use content_transfer_encoding\n#{caller}")
+      warn(":transfer_encoding is deprecated in Mail 1.4.3.  Please use content_transfer_encoding\n#{caller}")
       content_transfer_encoding
     end
 
@@ -1523,7 +1523,7 @@ module Mail
     end
 
     def message_content_type
-      $stderr.puts(":message_content_type is deprecated in Mail 1.4.3.  Please use mime_type\n#{caller}")
+      warn(":message_content_type is deprecated in Mail 1.4.3.  Please use mime_type\n#{caller}")
       mime_type
     end
 
@@ -1555,7 +1555,7 @@ module Mail
 
     # Returns the content type parameters
     def mime_parameters
-      $stderr.puts(':mime_parameters is deprecated in Mail 1.4.3, please use :content_type_parameters instead')
+      warn(':mime_parameters is deprecated in Mail 1.4.3, please use :content_type_parameters instead')
       content_type_parameters
     end
 
@@ -1828,7 +1828,7 @@ module Mail
     end
 
     def encode!
-      $stderr.puts("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
+      warn("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
       ready_to_send!
     end
 

@@ -246,7 +246,7 @@ module Mail
         Mail::Multibyte.mb_chars(match_data[2].to_s).strip.to_s
       ]
     rescue
-      $stderr.puts "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
+      warn "WARNING: Could not parse (and so ignoring) '#{raw_field}'"
     end
 
     # 2.2.3. Long Header Fields
