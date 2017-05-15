@@ -130,7 +130,11 @@ module Mail
       end
 
       if block_given?
-        instance_eval(&block)
+        if block.arity < 1
+          instance_eval(&block)
+        else
+          yield self
+        end
       end
 
       self

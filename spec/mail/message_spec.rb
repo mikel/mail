@@ -39,6 +39,27 @@ describe Mail::Message do
       expect(mail.to).to eq ['lindsaar@you.com']
     end
 
+    it "should optionally yield self to the passed block" do
+      class ClassThatCreatesMail
+        def initialize(from, to)
+          @from = from
+          @to = to
+        end
+
+        def create_mail
+          Mail::Message.new do |m|
+            m.from @from
+            m.to @to
+          end
+        end
+      end
+
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail
+
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
+    end
+
     it "should initialize a body and header class even if called with nothing to begin with" do
       mail = Mail::Message.new
       expect(mail.header.class).to eq Mail::Header
