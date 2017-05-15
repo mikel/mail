@@ -49,6 +49,7 @@ Features:
 * #872 - Low-level option to include BCC field in the encoded message (grossadamm)
 * #901 - Allow mail.text_part = '…' and mail.html_part = '<p>…</p>' (taavo)
 * #924 - Matcher for having attachments (schepedw)
+* #931 - Add capability to add and remove failure handlers (j-concepcion and ramontayag)
 
 Performance:
 * #956 - Use native String#encode for CR/LF conversion (carsonreinke)

@@ -1790,6 +1790,59 @@ describe Mail::Message do
       expect(mail.to).to eq ['fred@example.com']
     end
 
+    it "should trigger failure handlers when there's an exception" do
+      failed_handler_class = Class.new do
+        def self.failed_mail(mail, error)
+        end
+      end
+
+      Mail.register_failure_handler(failed_handler_class)
+      mail = Mail.new
+      mail.raise_delivery_errors = false
+
+      error = StandardError.new("something went wrong")
+      allow(mail.delivery_method).to receive(:deliver!).
+        and_raise(error)
+
+      expect(failed_handler_class).to receive(:failed_mail).
+        with(mail, error)
+
+      mail.deliver
+
+      Mail.unregister_failure_handler(failed_handler_class)
+    end
+
+    it "should allow failure handlers to be unregistered" do
+      failed_handler_class = Class.new do
+        def self.failed_mail(mail, error)
+        end
+      end
+
+      Mail.register_failure_handler(failed_handler_class)
+      Mail.unregister_failure_handler(failed_handler_class)
+      mail = Mail.new
+      mail.raise_delivery_errors = false
+
+      error = StandardError.new("something went wrong")
+      allow(mail.delivery_method).to receive(:deliver!).
+        and_raise(error)
+
+      expect(failed_handler_class).to_not receive(:failed_mail).
+        with(mail, error)
+
+      mail.deliver
+    end
+
+    it "does not blow up when there is a failure and no failure_handler is set" do
+      mail = Mail.new
+      mail.raise_delivery_errors = false
+
+      error = StandardError.new("something went wrong")
+      allow(mail.delivery_method).to receive(:deliver!).
+        and_raise(error)
+
+      expect { mail.deliver }.to_not raise_error
+    end
   end
 
   describe "error handling" do
