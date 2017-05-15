@@ -1588,6 +1588,10 @@ module Mail
       delivery_status_part and delivery_status_part.diagnostic_code
     end
 
+    def original_envelope_id
+      delivery_status_part and delivery_status_part.original_envelope_id
+    end
+
     def remote_mta
       delivery_status_part and delivery_status_part.remote_mta
     end
