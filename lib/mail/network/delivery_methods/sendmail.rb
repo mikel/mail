@@ -40,19 +40,59 @@ module Mail
   class Sendmail
     attr_accessor :settings
 
+    class DeliveryError < StandardError
+    end
+
     def initialize(values)
+
+      arguments = "-i"
+
+      if values[:use_args]
+        arguments = ["-i"]
+      end
+
       self.settings = { :location       => '/usr/sbin/sendmail',
-                        :arguments      => '-i' }.merge(values)
+                        :arguments      => arguments,
+                        :use_args => false }.merge(values)
+
     end
 
     def deliver!(mail)
       smtp_from, smtp_to, message = Mail::CheckDeliveryParams.check(mail)
 
-      from = "-f #{self.class.shellquote(smtp_from)}"
-      to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
+      if self.settings[:use_args]
 
-      arguments = "#{settings[:arguments]} #{from} --"
-      self.class.call(settings[:location], arguments, to, message)
+        if RUBY_VERSION < '1.9.0'
+          raise ArgumentError.new(":use_args not supported by ruby version")
+        end
+
+        exec_array = [settings[:location]]
+        exec_array.concat(settings[:arguments])
+        exec_array << "-f"
+        exec_array << smtp_from
+        exec_array << "--"
+        exec_array.concat(smtp_to)
+        self.class.exec_call(exec_array, message)
+      else
+        from = "-f #{self.class.shellquote(smtp_from)}"
+        to = smtp_to.map { |_to| self.class.shellquote(_to) }.join(' ')
+
+        arguments = "#{settings[:arguments]} #{from} --"
+        self.class.call(settings[:location], arguments, to, message)      
+      end
+
+    end
+
+    def self.exec_call(exec_array, encoded_message)
+      IO.popen exec_array, "w+", :err => :out do |io|
+        io.puts ::Mail::Utilities.to_lf(encoded_message)
+        io.flush
+      end
+
+
+      if $?.exitstatus != 0
+        raise DeliveryError.new("Bad Exit Status: #{$?.exitstatus}")
+      end
     end
 
     def self.call(path, arguments, destinations, encoded_message)

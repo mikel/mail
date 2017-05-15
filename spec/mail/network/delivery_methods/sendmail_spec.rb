@@ -51,6 +51,80 @@ describe "sendmail delivery agent" do
     mail.deliver!
   end
 
+
+  if RUBY_VERSION < '1.9.0'
+
+    it "should fail if trying to use arguments and old ruby version" do
+      Mail.defaults do
+        delivery_method :sendmail, :use_args => true
+      end
+
+      mail = Mail.new do
+        from    'roger@test.lindsaar.net'
+        to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
+        subject 'invalid RFC2822'
+      end
+
+      expect { mail.deliver!}.to raise_error(ArgumentError)
+    end
+
+  else
+    it "should spawn a sendmail process using arguments" do
+      Mail.defaults do
+        delivery_method :sendmail, :use_args => true
+      end
+
+      mail = Mail.new do
+        from    'roger@test.lindsaar.net'
+        to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
+        subject 'invalid RFC2822'
+      end
+
+      expect(IO).to receive(:popen).with(['/usr/sbin/sendmail', '-i', '-f', "roger@test.lindsaar.net", "--", "marcel@test.lindsaar.net" ,"bob@test.lindsaar.net"], "w+", :err => :out) do
+        system("true")
+      end
+
+      mail.deliver!
+    end
+
+    it "should spawn a sendmail process using arguments and allow argument customisation" do
+      Mail.defaults do
+        delivery_method :sendmail, :use_args => true, :arguments => ["-i", "-t"]
+      end
+
+      mail = Mail.new do
+        from    'roger@test.lindsaar.net'
+        to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
+        subject 'invalid RFC2822'
+      end
+
+      expect(IO).to receive(:popen).with(['/usr/sbin/sendmail', '-i', '-t', '-f', "roger@test.lindsaar.net", "--", "marcel@test.lindsaar.net" ,"bob@test.lindsaar.net"], "w+", :err => :out) do
+        system("true")
+      end
+
+      mail.deliver!
+    end
+
+    it "should spawn a sendmail process using arguments and handle errors" do
+      Mail.defaults do
+        delivery_method :sendmail, :use_args => true
+      end
+
+      mail = Mail.new do
+        from    'roger@test.lindsaar.net'
+        to      'marcel@test.lindsaar.net, bob@test.lindsaar.net'
+        subject 'invalid RFC2822'
+      end
+
+      expect(IO).to receive(:popen).with(['/usr/sbin/sendmail', '-i', '-f', "roger@test.lindsaar.net", "--", "marcel@test.lindsaar.net" ,"bob@test.lindsaar.net"], "w+", :err => :out) do
+        system("false")
+      end
+
+      expect { mail.deliver!}.to raise_error(Mail::Sendmail::DeliveryError)
+    end
+  end
+
+  
   describe 'SMTP From' do
 
     it 'should explicitly pass an envelope From address to sendmail' do
