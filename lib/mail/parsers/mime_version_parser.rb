@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/tools'
+require 'mail/parser_tools'
 
 
 
 
 module Mail::Parsers
   module MimeVersionParser
-    extend Mail::Parsers::Tools
+    extend Mail::ParserTools
 
     MimeVersionStruct = Struct.new(:major, :minor, :error)
 

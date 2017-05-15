@@ -1,14 +1,14 @@
 
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/tools'
+require 'mail/parser_tools'
 
 
 
 
 module Mail::Parsers
   module ContentLocationParser
-    extend Mail::Parsers::Tools
+    extend Mail::ParserTools
 
     ContentLocationStruct = Struct.new(:location, :error)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/tools'
+require 'mail/parser_tools'
 
 %%{
   machine date_time;
@@ -51,7 +51,7 @@ require 'mail/parsers/tools'
 
 module Mail::Parsers
   module ReceivedParser
-    extend Mail::Parsers::Tools
+    extend Mail::ParserTools
 
     ReceivedStruct = Struct.new(:date, :time, :info, :error)
 

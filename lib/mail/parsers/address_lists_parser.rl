@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'mail/utilities'
-require 'mail/parsers/tools'
+require 'mail/parser_tools'
 
 %%{
   machine address_lists;
@@ -131,7 +131,7 @@ require 'mail/parsers/tools'
 
 module Mail::Parsers
   module AddressListsParser
-    extend Mail::Parsers::Tools
+    extend Mail::ParserTools
 
     AddressListStruct = Struct.new(:addresses, :group_names, :error)
     AddressStruct = Struct.new(:raw, :domain, :comments, :local,
