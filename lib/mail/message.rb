@@ -1956,6 +1956,7 @@ module Mail
     end
 
   private
+    CONTENT_TYPE_REGEXP = /Content-Type:\s+multipart\/[\w\-\_]{1,20};.*?boundary="?([\d\w '\(\)\+_\,\-\.\/\:\=\?]{1,70})"?/mi
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -1967,12 +1968,32 @@ module Mail
     #
     # Additionally, I allow for the case where someone might have put whitespace
     # on the "gap line"
+    # 
+    #  Some email clients intermingle whitespace into the header portion of a multipart/mixed email.
+    #  This may not be RFC-compliant but GMail and Mac Mail and others are able to parse such messages,
+    #  So I think we should as well.
+    #
+    #  In these cases, we'll split along the first instance of the Boundary if it shows up in the message.
     def parse_message
-      header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      header_part, body_part = [nil, nil]
+
+      if match = raw_source[0..5000].match(CONTENT_TYPE_REGEXP)
+        boundary = match[1]
+        if location = raw_source =~ /#{CRLF}--#{boundary}#{CRLF}/m
+          header_part = raw_source[0..location-1]
+          header_part.rstrip!
+          body_part   = raw_source[location..-1]
+          body_part.lstrip!
+        end
+      end
+      
+      unless header_part
+        header_part, body_part = raw_source.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
+      end
       self.header = header_part
       self.body   = body_part
     end
-
+    
     def raw_source=(value)
       value.force_encoding("binary") if RUBY_VERSION >= "1.9.1"
       @raw_source = value.to_crlf
