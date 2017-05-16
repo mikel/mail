@@ -53,7 +53,7 @@ describe "Logger Delivery Method" do
   describe "sender and recipient validation" do
     it "should not raise errors if no sender is defined" do
       Mail.defaults do
-        delivery_method :logger, logger: Logger.new(StringIO.new)
+        delivery_method :logger, :logger => Logger.new(StringIO.new)
       end
 
       mail = Mail.new do
@@ -71,7 +71,7 @@ describe "Logger Delivery Method" do
 
     it "should raise an error if no recipient if defined" do
       Mail.defaults do
-        delivery_method :logger, logger: Logger.new(StringIO.new)
+        delivery_method :logger, :logger => Logger.new(StringIO.new)
       end
 
       mail = Mail.new do
