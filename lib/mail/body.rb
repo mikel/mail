@@ -139,9 +139,9 @@ module Mail
       @raw_source
     end
    
-    def get_best_encoding(target)
+    def get_best_encoding(target, allowed_encodings = Encodings.get_all)
       target_encoding = Mail::Encodings.get_encoding(target)
-      target_encoding.get_best_compatible(encoding, raw_source)
+      target_encoding.get_best_compatible(encoding, raw_source, allowed_encodings)
     end
  
     # Returns a body encoded using transfer_encoding.  Multipart always uses an
