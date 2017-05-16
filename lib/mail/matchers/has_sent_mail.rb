@@ -78,8 +78,16 @@ module Mail
         self
       end
 
-      def matching_body(body_matcher)
-        @body_matcher = body_matcher
+      def matching_body(body_matcher, multipart_match_on=nil)
+        if multipart_match_on.nil?
+          @body_matcher = body_matcher
+        else
+          multipart_match_on = multipart_match_on.to_sym
+          unless [:on_both_parts, :on_either_part, :on_text_part, :on_html_part].include?(multipart_match_on)
+            raise ArgumentError.new('Part must be one of :on_both_parts (default), :on_either_part, :on_text_part, :on_html_part')
+          end
+          @multipart_body_matcher = { :match => body_matcher, :on => multipart_match_on }
+        end
         self
       end
 
@@ -108,7 +116,8 @@ module Mail
         candidate_deliveries = deliveries
         modifiers =
           %w(sender recipients copy_recipients blind_copy_recipients subject
-          subject_matcher body body_matcher having_attachments attachments)
+          subject_matcher body body_matcher multipart_body_matcher
+          having_attachments attachments)
         modifiers.each do |modifier_name|
           next unless instance_variable_defined?("@#{modifier_name}")
           candidate_deliveries = candidate_deliveries.select{|matching_delivery| self.send("matches_on_#{modifier_name}?", matching_delivery)}
@@ -160,6 +169,31 @@ module Mail
         @body_matcher.match delivery.body.raw_source
       end
 
+      def matches_on_multipart_body_matcher?(delivery)
+        case @multipart_body_matcher[:on]
+        when :on_html_part
+          matches_on_multipart_body_matcher_html?(delivery)
+        when :on_text_part
+          matches_on_multipart_body_matcher_text?(delivery)
+        when :on_both_parts
+          matches_on_multipart_body_matcher_html?(delivery) &&
+            matches_on_multipart_body_matcher_text?(delivery)
+        when :on_either_part
+          matches_on_multipart_body_matcher_html?(delivery) ||
+            matches_on_multipart_body_matcher_text?(delivery)
+        end
+      end
+
+      def matches_on_multipart_body_matcher_html?(delivery)
+        return false unless delivery.html_part
+        @multipart_body_matcher[:match].match delivery.html_part.body.raw_source
+      end
+
+      def matches_on_multipart_body_matcher_text?(delivery)
+        return false unless delivery.text_part
+        @multipart_body_matcher[:match].match delivery.text_part.body.raw_source
+      end
+
       def explain_expectations
         result = ''
         result += "from #{@sender} " if instance_variable_defined?('@sender')
@@ -170,6 +204,7 @@ module Mail
         result += "with subject matching \"#{@subject_matcher}\" " if instance_variable_defined?('@subject_matcher')
         result += "with body \"#{@body}\" " if instance_variable_defined?('@body')
         result += "with body matching \"#{@body_matcher}\" " if instance_variable_defined?('@body_matcher')
+        result += "with multipart body matching \"#{@multipart_body_matcher[:match]}\" #{@multipart_body_matcher[:on].to_s.gsub(/_/, ' ')} " if instance_variable_defined?('@multipart_body_matcher')
         result
       end
 
