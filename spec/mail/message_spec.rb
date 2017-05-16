@@ -66,9 +66,11 @@ describe Mail::Message do
       expect(mail.from).to eq ['mikel@me.com']
       expect(mail.to).to eq ['lindsaar@you.com']
 
-      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
-      expect(mail.from).to eq ['mikel@me.com']
-      expect(mail.to).to eq ['lindsaar@you.com']
+      if RUBY_VERSION >= '1.9'
+        mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
+        expect(mail.from).to eq ['mikel@me.com']
+        expect(mail.to).to eq ['lindsaar@you.com']
+      end
     end
 
     it "should initialize a body and header class even if called with nothing to begin with" do
