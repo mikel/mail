@@ -453,8 +453,12 @@ module Mail
 
     # Provides a way to set custom headers, by passing in a hash
     def headers(hash = {})
-      hash.each_pair do |k,v|
-        header[k] = v
+      if hash.empty?
+        self.header_fields
+      else
+        hash.each_pair do |k,v|
+          header[k] = v
+        end
       end
     end
 

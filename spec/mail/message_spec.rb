@@ -439,6 +439,10 @@ describe Mail::Message do
         expect(@mail.header_fields.length).to eq 0
       end
 
+      it "should return header fields if headers is called with no argument" do
+        @mail.headers.should eq @mail.header_fields
+      end
+
     end
 
     describe "with :method=" do
