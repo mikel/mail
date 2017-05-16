@@ -1,18 +1,21 @@
-source 'https://rubygems.org/'
+source 'https://rubygems.org'
 
-gem 'activesupport', '>= 2.3.6' if RUBY_VERSION >= '1.9.3'
-gem 'activesupport', '>= 2.3.6', '< 4.0.0' if RUBY_VERSION < '1.9.3'
+if RUBY_VERSION < '1.9.3'
+  gem 'activesupport', '< 4'
+elsif RUBY_VERSION < '2.2.2'
+  gem 'activesupport', '< 5'
+end
 gem "tlsmail" if RUBY_VERSION <= '1.8.6'
 gem "mime-types", "~> 1.16"
 gem "treetop", "~> 1.4.10"
 gem 'i18n', '>= 0.4.0', '< 0.7.0' if RUBY_VERSION < '1.9.3'
 
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-  gem 'jruby-openssl'
-end
+gem 'jruby-openssl', :platform => :jruby
 
-group :test do
+# For gems not required to run tests
+group :local_development, :test do
   gem 'rake', '> 0.8.7', '< 11.0.1'
+  gem 'rdoc', '< 4.3' if RUBY_VERSION < '1.9'
   gem "rspec",      "~> 2.8.0"
   case
   when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
