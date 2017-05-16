@@ -1401,6 +1401,22 @@ describe Mail::Message do
 
       end
 
+      # https://www.ietf.org/rfc/rfc2046.txt
+      # No encoding other than "7bit", "8bit", or "binary" is permitted for
+      # the body of a "message/rfc822" entity.
+      it "rfc2046" do
+        mail = Mail.new
+        mail.body << Mail::Part.new.tap do |part|
+          part.content_disposition = 'attachment; filename="test.eml"'
+          part.content_type  = 'message/rfc822'
+          part.body          = 'a' * 999
+        end
+        mail.encoded
+        
+        expect(mail.parts.count).to eq(1)
+        expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
+      end
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do

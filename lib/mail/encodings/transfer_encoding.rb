@@ -32,12 +32,14 @@ module Mail
         self::NAME
       end
 
-      def self.get_best_compatible(source_encoding, str)
+      def self.get_best_compatible(source_encoding, str, allowed_encodings = nil)
         if self.can_transport?(source_encoding) && self.compatible_input?(str)
           source_encoding
         else
           choices = Encodings.get_all.select do |enc|
-            self.can_transport?(enc) && enc.can_encode?(source_encoding)
+            self.can_transport?(enc) &&
+              enc.can_encode?(source_encoding) &&
+              (allowed_encodings.nil? || allowed_encodings.include?(enc))
           end
 
           best = nil

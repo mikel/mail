@@ -2054,6 +2054,13 @@ module Mail
       body.split!(boundary)
     end
 
+    def allowed_encodings
+      case mime_type
+      when 'message/rfc822'
+        [Encodings::SevenBit, Encodings::EightBit, Encodings::Binary]
+      end
+    end
+
     def add_encoding_to_body
       if has_content_transfer_encoding?
         @body.encoding = content_transfer_encoding
@@ -2061,11 +2068,11 @@ module Mail
     end
 
     def identify_and_set_transfer_encoding
-        if body && body.multipart?
-            self.content_transfer_encoding = @transport_encoding
-        else
-            self.content_transfer_encoding = body.get_best_encoding(@transport_encoding)
-        end
+      if body && body.multipart?
+        self.content_transfer_encoding = @transport_encoding
+      else
+        self.content_transfer_encoding = body.get_best_encoding(@transport_encoding, allowed_encodings)
+      end
     end
 
     def add_required_fields

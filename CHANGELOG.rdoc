@@ -27,6 +27,7 @@ Compatibility:
 * #683 - SMTP: Work around Net::SMTP dot-stuffing bug with unterminated newlines on Ruby 1.8 and 1.9. (yyyc514)
 * #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 * #1103 – Support parsing UTF-8 headers. Implements RFC 6532. (jeremy)
+* #1106 – Limit message/rfc822 parts' transfer encoding per RFC 2046. (ahorek)
 
 Bugs:
 * #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)
