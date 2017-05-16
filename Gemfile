@@ -17,7 +17,7 @@ gem 'jruby-openssl', :platform => :jruby
 # For gems not required to run tests
 group :local_development, :test do
   gem 'rake', '> 0.8.7', '< 11.0.1'
-  gem 'rdoc', '< 4.3' if RUBY_VERSION < '1.9'
+  gem 'rdoc', '< 4.3' if RUBY_VERSION < '1.9.3'
   gem "rspec",      "~> 2.8.0"
   case
   when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
