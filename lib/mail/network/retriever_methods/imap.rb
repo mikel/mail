@@ -67,14 +67,14 @@ module Mail
     #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
     #           or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
     #           The default is 'ALL'
+    #   search_charset: charset for use search.
     #
     def find(options={}, &block)
       options = validate_options(options)
 
       start do |imap|
         options[:read_only] ? imap.examine(options[:mailbox]) : imap.select(options[:mailbox])
-
-        uids = imap.uid_search(options[:keys])
+        uids = imap.uid_search(options[:keys], options[:search_charset])
         uids.reverse! if options[:what].to_sym == :last
         uids = uids.first(options[:count]) if options[:count].is_a?(Integer)
         uids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
