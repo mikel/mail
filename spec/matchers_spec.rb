@@ -24,7 +24,7 @@ describe "have_sent_email" do
     mail
   end
 
-  let(:test_html_email) do
+  let(:test_html_mail) do
     Mail.new do
       from    'phil@example.com'
       to      ['bob@example.com', 'fred@example.com']
@@ -245,32 +245,30 @@ describe "have_sent_email" do
   context "with html-mail" do
     before(:each) do
       Mail::TestMailer.deliveries.clear
-      Mail::TestMailer.deliveries.should be_empty
     end
 
     context "when html-mail has been sent" do
       before(:each) do
         test_html_mail.deliver
-        Mail::TestMailer.deliveries.should_not be_empty
       end
 
       context "with #html_part" do
         context "and a matching html_part.body" do
-          it { should have_sent_email.with_html('Here is the html-part') }
+          it { is_expected.to have_sent_email.with_html('Here is the html-part') }
         end
 
         context "and a non-matching html_part.body" do
-          it { should_not have_sent_email.with_html('Here is the body') }
+          it { is_expected.not_to have_sent_email.with_html('Here is the body') }
         end
       end
 
       context "with #text_part" do
         context "and a matching text_part.body" do
-          it { should have_sent_email.with_text('Here is the text-part') }
+          it { is_expected.to have_sent_email.with_text('Here is the text-part') }
         end
 
         context "and a non-matching text_part.body" do
-          it { should_not have_sent_email.with_text('Here is the subject') }
+          it { is_expected.not_to have_sent_email.with_text('Here is the subject') }
         end
       end
     end
