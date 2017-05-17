@@ -4,8 +4,9 @@ require 'spec_helper'
 describe Mail::ReceivedElement do
 
   it "should raise an error if the input is nil" do
-    received_text = nil
-    expect { Mail::ReceivedElement.new(received_text) }.to raise_error(Mail::Field::ParseError)
+    received = Mail::ReceivedElement.new(nil)
+    expect(received.info).to be_nil
+    expect(received.date_time).to be_nil
   end
 
   it "should raise an error if the input is useless" do
@@ -26,5 +27,4 @@ describe Mail::ReceivedElement do
     rec = Mail::ReceivedElement.new(received_text)
     expect(rec.info).to eq info_text
   end
-
 end

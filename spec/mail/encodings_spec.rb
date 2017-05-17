@@ -857,7 +857,7 @@ describe Mail::Encodings do
     end
 
     it "should ignore single nil" do
-      expect(Mail::Encodings.address_encode(nil, 'utf-8')).to eq nil
+      expect(Mail::Encodings.address_encode(nil, 'utf-8')).to be_nil
     end
 
     it "should ignore nil in arrays" do

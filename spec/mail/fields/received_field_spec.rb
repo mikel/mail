@@ -45,5 +45,4 @@ describe Mail::ReceivedField do
     expect(t.decoded).to eq ''
     expect(t.encoded).to eq "Received: \r\n"
   end
-  
 end

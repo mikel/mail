@@ -30,10 +30,6 @@ describe Mail::BccField do
       expect { Mail::BccField.new("Mikel") }.not_to raise_error
     end
 
-    it "should mix in the CommonAddress module" do
-      expect(Mail::BccField.included_modules).to include(Mail::CommonAddress) 
-    end
-
     it "should accept a string without the field name" do
       t = Mail::BccField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Bcc'
@@ -41,8 +37,6 @@ describe Mail::BccField do
     end
 
   end
-  
-  # Actual testing of CommonAddress methods occurs in the address field spec file
 
   describe "instance methods" do
     it "should return an address" do

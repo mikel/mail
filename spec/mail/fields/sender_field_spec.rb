@@ -2,18 +2,15 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
+# sender          =       "Sender:" mailbox CRLF
 describe Mail::SenderField do
-  # sender          =       "Sender:" mailbox CRLF
-  #
+  let :field do
+    Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
+  end
 
   describe "initialization" do
-
     it "should initialize" do
       expect { Mail::SenderField.new("Mikel") }.not_to raise_error
-    end
-
-    it "should mix in the CommonAddress module" do
-      expect(Mail::SenderField.included_modules).to include(Mail::CommonAddress)
     end
 
     it "should accept a string without the field name" do
@@ -24,34 +21,25 @@ describe Mail::SenderField do
 
     it "should reject headers with multiple mailboxes" do
       pending 'Sender accepts an address list now, but should only accept a single address'
-      expect { Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>') }.to raise_error(Mail::Field::ParseError)
+      expect {
+        Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
+      }.to raise_error(Mail::Field::ParseError)
     end
   end
 
-  # Actual testing of CommonAddress methods oSenderurs in the address field spec file
-
-  describe "instance methods" do
-    it "should return an address" do
-      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
-    end
-
-    it "should return two addresses" do
-      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.address.to_s).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-    end
-
-    it "should return the formatted line on to_s" do
-      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-    end
-
-    it "should return the encoded line" do
-      t = Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.encoded).to eq "Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
-    end
-
+  it "formats the sender" do
+    expect(field.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
   end
 
+  it "parses a single sender address" do
+    expect(field.address).to eq 'mikel@test.lindsaar.net'
+  end
 
+  it "returns the field value" do
+    expect(field.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+  end
+
+  it "encodes a header line" do
+    expect(field.encoded).to eq "Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
+  end
 end

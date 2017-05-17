@@ -740,7 +740,7 @@ describe Mail::ContentTypeField do
     it "should just ignore illegal params like audio/x-midi;\r\n\sname=Part .exe" do
       c = Mail::ContentTypeField.new("audio/x-midi;\r\n\sname=Part .exe")
       expect(c.string).to eq 'audio/x-midi'
-      expect(c.parameters['name']).to eq nil
+      expect(c.parameters['name']).to be_nil
     end
 
     it "should handle: rfc822; format=flowed; charset=iso-8859-15" do

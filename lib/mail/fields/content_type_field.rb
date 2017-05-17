@@ -1,53 +1,55 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/fields/common/parameter_hash'
+require 'mail/fields/named_structured_field'
+require 'mail/fields/parameter_hash'
 
 module Mail
-  class ContentTypeField < StructuredField
+  class ContentTypeField < NamedStructuredField #:nodoc:
+    NAME = 'Content-Type'
 
-    FIELD_NAME = 'content-type'
-    CAPITALIZED_FIELD = 'Content-Type'
+    class << self
+      def singular?
+        true
+      end
 
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      if value.class == Array
+      def with_boundary(type)
+        new "#{type}; boundary=#{generate_boundary}"
+      end
+
+      def generate_boundary
+        "--==_mimepart_#{Mail.random_tag}"
+      end
+    end
+
+    def initialize(value = nil, charset = nil)
+      if value.is_a? Array
         @main_type = value[0]
         @sub_type = value[1]
         @parameters = ParameterHash.new.merge!(value.last)
       else
         @main_type = nil
         @sub_type = nil
-        @parameters = nil
         value = value.to_s
       end
-      value = ensure_filename_quoted(value)
-      super(CAPITALIZED_FIELD, value, charset)
-      self.parse
-      self
-    end
 
-    def parse(val = value)
-      unless Utilities.blank?(val)
-        self.value = val
-        @element = nil
-        element
-      end
+      super ensure_filename_quoted(value), charset
     end
 
     def element
-      begin
-        @element ||= Mail::ContentTypeElement.new(value)
-      rescue
-        attempt_to_clean
-      end
+      @element ||=
+        begin
+          Mail::ContentTypeElement.new(value)
+        rescue Mail::Field::ParseError
+          attempt_to_clean
+        end
     end
 
     def attempt_to_clean
       # Sanitize the value, handle special cases
-      @element ||= Mail::ContentTypeElement.new(sanatize(value))
-    rescue
+      Mail::ContentTypeElement.new(sanitize(value))
+    rescue Mail::Field::ParseError
       # All else fails, just get the MIME media type
-      @element ||= Mail::ContentTypeElement.new(get_mime_type(value))
+      Mail::ContentTypeElement.new(get_mime_type(value))
     end
 
     def main_type
@@ -61,31 +63,22 @@ module Mail
     def string
       "#{main_type}/#{sub_type}"
     end
+    alias_method :content_type, :string
 
     def default
       decoded
     end
 
-    alias :content_type :string
-
     def parameters
-      unless @parameters
+      unless defined? @parameters
         @parameters = ParameterHash.new
         element.parameters.each { |p| @parameters.merge!(p) }
       end
       @parameters
     end
 
-    def ContentTypeField.with_boundary(type)
-      new("#{type}; boundary=#{generate_boundary}")
-    end
-
-    def ContentTypeField.generate_boundary
-      "--==_mimepart_#{Mail.random_tag}"
-    end
-
     def value
-      if @value.class == Array
+      if @value.is_a? Array
         "#{@main_type}/#{@sub_type}; #{stringify(parameters)}"
       else
         @value
@@ -97,34 +90,17 @@ module Mail
     end
 
     def filename
-      case
-      when parameters['filename']
-        @filename = parameters['filename']
-      when parameters['name']
-        @filename = parameters['name']
-      else
-        @filename = nil
-      end
-      @filename
+      @filename ||= parameters['filename'] || parameters['name']
     end
 
-    # TODO: Fix this up
     def encoded
-      if parameters.length > 0
-        p = ";\r\n\s#{parameters.encoded}"
-      else
-        p = ""
-      end
-      "#{CAPITALIZED_FIELD}: #{content_type}#{p}\r\n"
+      p = ";\r\n\s#{parameters.encoded}" if parameters && parameters.length > 0
+      "#{name}: #{content_type}#{p}\r\n"
     end
 
     def decoded
-      if parameters.length > 0
-        p = "; #{parameters.decoded}"
-      else
-        p = ""
-      end
-      "#{content_type}" + p
+      p = "; #{parameters.decoded}" if parameters && parameters.length > 0
+      "#{content_type}#{p}"
     end
 
     private
@@ -140,8 +116,7 @@ module Mail
 
     # Various special cases from random emails found that I am not going to change
     # the parser for
-    def sanatize( val )
-
+    def sanitize(val)
       # TODO: check if there are cases where whitespace is not a separator
       val = val.
         gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
@@ -158,7 +133,7 @@ module Mail
       when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;\s?(ISO[\w\-]+)$/i
         # Microsoft helper:
         # Handles 'type/subtype;ISO-8559-1'
-        "#{$1}/#{$2}; charset=#{quote_atom($3)}"
+        "#{$1}/#{$2}; charset=#{Utilities.quote_atom($3)}"
       when val.chomp =~ /^text;?$/i
         # Handles 'text;' and 'text'
         "text/plain;"
@@ -167,7 +142,7 @@ module Mail
         "text/plain; #{$2}"
       when val =~ /([\w\-]+\/[\w\-]+);\scharset="charset="(\w+)""/i
         # Handles text/html; charset="charset="GB2312""
-        "#{$1}; charset=#{quote_atom($2)}"
+        "#{$1}; charset=#{Utilities.quote_atom($2)}"
       when val =~ /([\w\-]+\/[\w\-]+);\s+(.*)/i
         type = $1
         # Handles misquoted param values
@@ -176,7 +151,7 @@ module Mail
         params = $2.to_s.split(/\s+/)
         params = params.map { |i| i.to_s.chomp.strip }
         params = params.map { |i| i.split(/\s*\=\s*/) }
-        params = params.map { |i| "#{i[0]}=#{dquote(i[1].to_s.gsub(/;$/,""))}" }.join('; ')
+        params = params.map { |i| "#{i[0]}=#{Utilities.dquote(i[1].to_s.gsub(/;$/,""))}" }.join('; ')
         "#{type}; #{params}"
       when val =~ /^\s*$/
         'text/plain'
@@ -185,9 +160,9 @@ module Mail
       end
     end
 
-    def get_mime_type( val )
-      case
-      when val =~ /^([\w\-]+)\/([\w\-]+);.+$/i
+    def get_mime_type(val)
+      case val
+      when /^([\w\-]+)\/([\w\-]+);.+$/i
         "#{$1}/#{$2}"
       else
         'text/plain'

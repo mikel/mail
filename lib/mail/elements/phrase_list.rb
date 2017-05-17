@@ -4,11 +4,16 @@ require 'mail/parsers/phrase_lists_parser'
 require 'mail/utilities'
 
 module Mail
-  class PhraseList
+  class PhraseList #:nodoc:
     attr_reader :phrases
 
     def initialize(string)
-      @phrases = Mail::Parsers::PhraseListsParser.parse(string).phrases.map { |p| Mail::Utilities.unquote(p) }
+      @phrases =
+        if Utilities.blank? string
+          []
+        else
+          Mail::Parsers::PhraseListsParser.parse(string).phrases.map { |p| Mail::Utilities.unquote(p) }
+        end
     end
   end
 end

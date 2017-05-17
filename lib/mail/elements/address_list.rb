@@ -3,7 +3,7 @@
 require 'mail/parsers/address_lists_parser'
 
 module Mail
-  class AddressList # :nodoc:
+  class AddressList #:nodoc:
     attr_reader :addresses, :group_names
 
     # Mail::AddressList is the class that parses To, From and other address fields from

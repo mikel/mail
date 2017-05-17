@@ -2619,10 +2619,10 @@ begin
 	case _trans_actions[_trans]
 	when 2 then
 		begin
- msg_id_s = p 		end
+ msg_id_s = p+1 		end
 	when 30 then
 		begin
- message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip 		end
+ message_ids.message_ids << chars(data, msg_id_s, p-2) 		end
 	when 3 then
 		begin
 		end
@@ -2674,12 +2674,12 @@ begin
  		end
 	when 32 then
 		begin
- message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip 		end
+ message_ids.message_ids << chars(data, msg_id_s, p-2) 		end
 		begin
- msg_id_s = p 		end
+ msg_id_s = p+1 		end
 	when 31 then
 		begin
- message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip 		end
+ message_ids.message_ids << chars(data, msg_id_s, p-2) 		end
 		begin
  	begin
 		stack[top] = cs
@@ -2693,7 +2693,7 @@ begin
 		begin
 		end
 		begin
- msg_id_s = p 		end
+ msg_id_s = p+1 		end
 	when 16 then
 		begin
 		end
@@ -2833,7 +2833,7 @@ begin
 	  case _eof_actions[cs]
 	when 30 then
 		begin
- message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip 		end
+ message_ids.message_ids << chars(data, msg_id_s, p-2) 		end
 	when 3 then
 		begin
 		end

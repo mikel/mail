@@ -1,44 +1,31 @@
 # encoding: utf-8
 # frozen_string_literal: true
-# 
-# keywords        =       "Keywords:" phrase *("," phrase) CRLF
+require 'mail/fields/named_structured_field'
+
 module Mail
-  class KeywordsField < StructuredField
-    
-    FIELD_NAME = 'keywords'
-    CAPITALIZED_FIELD = 'Keywords'
-    
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
-      self
+  # keywords        =       "Keywords:" phrase *("," phrase) CRLF
+  class KeywordsField < NamedStructuredField #:nodoc:
+    NAME = 'Keywords'
+
+    def element
+      @element ||= PhraseList.new(value)
     end
 
-    def parse(val = value)
-      unless Utilities.blank?(val)
-        @phrase_list ||= PhraseList.new(value)
-      end
-    end
-    
-    def phrase_list
-      @phrase_list ||= PhraseList.new(value)
-    end
-      
     def keywords
-      phrase_list.phrases
-    end
-    
-    def encoded
-      "#{CAPITALIZED_FIELD}: #{keywords.join(",\r\n ")}\r\n"
-    end
-    
-    def decoded
-      keywords.join(', ')
+      element.phrases
     end
 
     def default
       keywords
     end
-    
+
+    private
+      def do_decode
+        keywords.join(', ')
+      end
+
+      def do_encode
+        "#{name}: #{keywords.join(",\r\n ")}\r\n"
+      end
   end
 end

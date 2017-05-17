@@ -9,8 +9,8 @@ require 'mail/parser_tools'
   alphtype int;
 
   # Message Ids
-  action msg_id_s { msg_id_s = p }
-  action msg_id_e { message_ids.message_ids << chars(data, msg_id_s, p-1).rstrip }
+  action msg_id_s { msg_id_s = p+1 }
+  action msg_id_e { message_ids.message_ids << chars(data, msg_id_s, p-2) }
 
   # No-op actions
   action angle_addr_s {}

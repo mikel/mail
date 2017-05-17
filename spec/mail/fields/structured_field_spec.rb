@@ -59,15 +59,5 @@ describe Mail::StructuredField do
     it "should return the field name and value in proper format when called to_s" do
       expect(@field.encoded).to eq "From: bob@me.com\r\n"
     end
-    
   end
-  
-  describe "structured field template methods" do
-    it "should raise an error if attempting to call :encoded or :decoded on the parent StructuredField class" do
-      field = Mail::StructuredField.new
-      expect { field.encoded }.to raise_error(NoMethodError)
-      expect { field.decoded }.to raise_error(NoMethodError)
-    end
-  end
-
 end

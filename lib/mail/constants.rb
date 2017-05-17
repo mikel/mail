@@ -19,6 +19,7 @@ module Mail
     CRLF          = /\r\n/
     WSP           = /[#{white_space}]/
     FWS           = /#{CRLF}#{WSP}*/
+    UNFOLD_WS     = /#{CRLF}(#{WSP})/m
     TEXT          = /[#{text}]/ # + obs-text
     FIELD_NAME    = /[#{field_name}]+/
     FIELD_PREFIX  = /\A(#{FIELD_NAME})/

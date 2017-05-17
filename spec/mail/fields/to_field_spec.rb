@@ -13,10 +13,6 @@ describe Mail::ToField do
       expect { Mail::ToField.new("Mikel") }.not_to raise_error
     end
 
-    it "should mix in the CommonAddress module" do
-      expect(Mail::ToField.included_modules).to include(Mail::CommonAddress) 
-    end
-
     it "should accept a string without the field name" do
       t = Mail::ToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'To'
@@ -24,8 +20,6 @@ describe Mail::ToField do
     end
 
   end
-  
-  # Actual testing of CommonAddress methods oTours in the address field spec file
 
   describe "instance methods" do
     it "should return an address" do

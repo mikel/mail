@@ -171,15 +171,15 @@ describe "Attachments" do
     before(:each) do
       @mail = Mail.new
       @mail.attachments['test.gif'] = read_raw_fixture('attachments', 'test.gif')
+      expect(@mail.attachments['test.gif'].has_content_id?).to be_falsey
+      @mail.attachments['test.gif'].add_content_id
       @cid = @mail.attachments['test.gif'].content_id
-    end
-
-    it "should return a content-id for the attachment on creation if passed inline => true" do
       expect(@cid).not_to be_nil
     end
 
     it "should return a valid content-id on inline attachments" do
-      expect(Mail::ContentIdField.new(@cid).errors).to be_empty
+      field = Mail::ContentIdField.new(@cid)
+      expect(field.errors).to be_empty
     end
 
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do

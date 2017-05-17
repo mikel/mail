@@ -52,7 +52,7 @@ describe Mail::InReplyToField do
     it "should handle an empty value" do
       t = Mail::InReplyToField.new('')
       expect(t.name).to eq 'In-Reply-To'
-      expect(t.decoded).to eq nil
+      expect(t.decoded).to be_nil
     end
     
   end

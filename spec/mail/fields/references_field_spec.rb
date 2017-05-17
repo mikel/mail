@@ -43,7 +43,7 @@ describe Mail::ReferencesField do
   it "should accept no message ids" do
     t = Mail::ReferencesField.new('')
     expect(t.name).to eq 'References'
-    expect(t.decoded).to eq nil
+    expect(t.decoded).to be_nil
   end
 
   it "should output lines shorter than 998 chars" do
@@ -51,5 +51,4 @@ describe Mail::ReferencesField do
     lines = k.encoded.split("\r\n\s")
     lines.each { |line| expect(line.length).to be < 998 }
   end
-
 end

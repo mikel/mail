@@ -96,12 +96,6 @@ describe Mail::ContentTransferEncodingField do
       expect(t.encoding).to eq "ietf-token"
     end
 
-    it "should replace the existing value" do
-      t = Mail::ContentTransferEncodingField.new("7bit")
-      t.parse("quoted-printable")
-      expect(t.encoding).to eq 'quoted-printable'
-    end
-
     it "should raise an error on bogus values" do
       expect { Mail::ContentTransferEncodingField.new("broken@foo") }.to raise_error(Mail::Field::ParseError)
     end

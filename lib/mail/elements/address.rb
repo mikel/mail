@@ -1,27 +1,27 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'mail/parsers/address_lists_parser'
+require 'mail/constants'
+require 'mail/utilities'
 
 module Mail
+  # Mail::Address handles all email addresses in Mail.  It takes an email address string
+  # and parses it, breaking it down into its component parts and allowing you to get the
+  # address, comments, display name, name, local part, domain part and fully formatted
+  # address.
+  #
+  # Mail::Address requires a correctly formatted email address per RFC2822 or RFC822.  It
+  # handles all obsolete versions including obsolete domain routing on the local part.
+  #
+  #  a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  #  a.format       #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
+  #  a.address      #=> 'mikel@test.lindsaar.net'
+  #  a.display_name #=> 'Mikel Lindsaar'
+  #  a.local        #=> 'mikel'
+  #  a.domain       #=> 'test.lindsaar.net'
+  #  a.comments     #=> ['My email address']
+  #  a.to_s         #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
   class Address
-    include Mail::Utilities
-
-    # Mail::Address handles all email addresses in Mail.  It takes an email address string
-    # and parses it, breaking it down into its component parts and allowing you to get the
-    # address, comments, display name, name, local part, domain part and fully formatted
-    # address.
-    #
-    # Mail::Address requires a correctly formatted email address per RFC2822 or RFC822.  It
-    # handles all obsolete versions including obsolete domain routing on the local part.
-    #
-    #  a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
-    #  a.format       #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
-    #  a.address      #=> 'mikel@test.lindsaar.net'
-    #  a.display_name #=> 'Mikel Lindsaar'
-    #  a.local        #=> 'mikel'
-    #  a.domain       #=> 'test.lindsaar.net'
-    #  a.comments     #=> ['My email address']
-    #  a.to_s         #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
     def initialize(value = nil)
       if value.nil?
         @parsed = false
@@ -47,11 +47,11 @@ module Mail
     def format(output_type = :decode)
       parse unless @parsed
       if @data.nil?
-        EMPTY
+        Constants::EMPTY
       elsif name = display_name(output_type)
-        [quote_phrase(name), "<#{address(output_type)}>", format_comments].compact.join(SPACE)
+        [Utilities.quote_phrase(name), "<#{address(output_type)}>", format_comments].compact.join(Constants::SPACE)
       elsif a = address(output_type)
-        [a, format_comments].compact.join(SPACE)
+        [a, format_comments].compact.join(Constants::SPACE)
       else
         raw
       end
@@ -135,7 +135,7 @@ module Mail
       if comments.nil? || comments.none?
         nil
       else
-        comments.map { |c| c.squeeze(SPACE) }
+        comments.map { |c| c.squeeze(Constants::SPACE) }
       end
     end
 
@@ -198,7 +198,7 @@ module Mail
     def strip_all_comments(string)
       unless Utilities.blank?(comments)
         comments.each do |comment|
-          string = string.gsub("(#{comment})", EMPTY)
+          string = string.gsub("(#{comment})", Constants::EMPTY)
         end
       end
       string.strip
@@ -208,7 +208,7 @@ module Mail
       unless Utilities.blank?(comments)
         comments.each do |comment|
           if @data.domain && @data.domain.include?("(#{comment})")
-            value = value.gsub("(#{comment})", EMPTY)
+            value = value.gsub("(#{comment})", Constants::EMPTY)
           end
         end
       end
@@ -228,15 +228,15 @@ module Mail
       if display_name
         str = display_name
       elsif comments
-        str = "(#{comments.join(SPACE).squeeze(SPACE)})"
+        str = "(#{comments.join(Constants::SPACE).squeeze(Constants::SPACE)})"
       end
 
-      unparen(str) unless Utilities.blank?(str)
+      Utilities.unparen(str) unless Utilities.blank?(str)
     end
 
     def format_comments
       if comments
-        comment_text = comments.map {|c| escape_paren(c) }.join(SPACE).squeeze(SPACE)
+        comment_text = comments.map {|c| Utilities.escape_paren(c) }.join(Constants::SPACE).squeeze(Constants::SPACE)
         @format_comments ||= "(#{comment_text})"
       else
         nil

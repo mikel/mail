@@ -1,20 +1,13 @@
 # encoding: utf-8
 # frozen_string_literal: true
-# 
-# 
-# 
+require 'mail/fields/named_unstructured_field'
+
 module Mail
-  class ContentDescriptionField < UnstructuredField
-    
-    FIELD_NAME = 'content-description'
-    CAPITALIZED_FIELD = 'Content-Description'
-    
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
-      self.parse
-      self
+  class ContentDescriptionField < NamedUnstructuredField #:nodoc:
+    NAME = 'Content-Description'
+
+    def self.singular?
+      true
     end
-    
   end
 end

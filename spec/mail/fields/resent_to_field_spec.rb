@@ -12,10 +12,6 @@ describe Mail::ResentToField do
       expect { Mail::ResentToField.new("Mikel") }.not_to raise_error
     end
 
-    it "should mix in the CommonAddress module" do
-      expect(Mail::ResentToField.included_modules).to include(Mail::CommonAddress) 
-    end
-
     it "should accept a string without the field name" do
       t = Mail::ResentToField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Resent-To'
@@ -23,8 +19,6 @@ describe Mail::ResentToField do
     end
 
   end
-  
-  # Actual testing of CommonAddress methods oResentTours in the address field spec file
 
   describe "instance methods" do
     it "should return an address" do

@@ -3,7 +3,7 @@
 require 'mail/parsers/date_time_parser'
 
 module Mail
-  class DateTimeElement # :nodoc:
+  class DateTimeElement #:nodoc:
     attr_reader :date_string, :time_string
 
     def initialize(string)

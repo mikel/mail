@@ -1,6 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require "yaml"
+require 'mail/constants'
+require 'mail/utilities'
+require 'yaml'
 
 module Mail
   # The Message class provides a single point of access to all things to do with an
@@ -46,10 +48,6 @@ module Mail
   #   follows the header and is separated from the header by an empty line
   #   (i.e., a line with nothing preceding the CRLF).
   class Message
-
-    include Constants
-    include Utilities
-
     # ==Making an email
     #
     # You can make an new mail object via a block, passing a string, file or direct assignment.
@@ -406,9 +404,9 @@ module Mail
     end
 
     # Sets the envelope from for the email
-    def set_envelope( val )
+    def set_envelope(val)
       @raw_envelope = val
-      @envelope = Mail::Envelope.new( val )
+      @envelope = Mail::Envelope.parse(val) rescue nil
     end
 
     # The raw_envelope is the From mikel@test.lindsaar.net Mon May  2 16:07:05 2009
@@ -1339,7 +1337,7 @@ module Mail
     #  mail['foo'] = '1234'
     #  mail['foo'].to_s #=> '1234'
     def [](name)
-      header[underscoreize(name)]
+      header[Utilities.underscoreize(name)]
     end
 
     # Method Missing in this implementation allows you to set any of the
@@ -1385,7 +1383,7 @@ module Mail
       #:nodoc:
       # Only take the structured fields, as we could take _anything_ really
       # as it could become an optional field... "but therin lies the dark side"
-      field_name = underscoreize(name).chomp("=")
+      field_name = Utilities.underscoreize(name).chomp("=")
       if Mail::Field::KNOWN_FIELDS.include?(field_name)
         if args.empty?
           header[field_name]
@@ -1984,7 +1982,7 @@ module Mail
 
   private
 
-    HEADER_SEPARATOR = /#{CRLF}#{CRLF}/
+    HEADER_SEPARATOR = /#{Constants::CRLF}#{Constants::CRLF}/
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -2030,7 +2028,7 @@ module Mail
 
     def set_envelope_header
       raw_string = raw_source.to_s
-      if match_data = raw_string.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
+      if match_data = raw_string.match(/\AFrom\s+([^:\s]#{Constants::TEXT}*)#{Constants::CRLF}/m)
         set_envelope(match_data[1])
         self.raw_source = raw_string.sub(match_data[0], "")
       end
@@ -2110,7 +2108,7 @@ module Mail
       body_content = nil
 
       passed_in_options.each_pair do |k,v|
-        k = underscoreize(k).to_sym if k.class == String
+        k = Utilities.underscoreize(k).to_sym if k.class == String
         if k == :headers
           self.headers(v)
         elsif k == :body

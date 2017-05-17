@@ -1,35 +1,25 @@
 # encoding: utf-8
 # frozen_string_literal: true
-# 
-# 
-# 
+require 'mail/fields/named_structured_field'
+require 'mail/utilities'
+
 module Mail
-  class MimeVersionField < StructuredField
-    
-    FIELD_NAME = 'mime-version'
-    CAPITALIZED_FIELD = 'Mime-Version'
+  class MimeVersionField < NamedStructuredField #:nodoc:
+    NAME = 'Mime-Version'
 
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      if Utilities.blank?(value)
-        value = '1.0'
-      end
-      super(CAPITALIZED_FIELD, value, charset)
-      self.parse
-      self
+    def self.singular?
+      true
+    end
 
+    def initialize(value = nil, charset = nil)
+      value = '1.0' if Utilities.blank?(value)
+      super value, charset
     end
-    
-    def parse(val = value)
-      unless Utilities.blank?(val)
-        @element = Mail::MimeVersionElement.new(val)
-      end
-    end
-    
+
     def element
       @element ||= Mail::MimeVersionElement.new(value)
     end
-    
+
     def version
       "#{element.major}.#{element.minor}"
     end
@@ -41,14 +31,13 @@ module Mail
     def minor
       element.minor.to_i
     end
-    
+
     def encoded
-      "#{CAPITALIZED_FIELD}: #{version}\r\n"
+      "#{name}: #{version}\r\n"
     end
-    
+
     def decoded
       version
     end
-    
   end
 end
