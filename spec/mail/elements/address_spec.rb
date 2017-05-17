@@ -22,31 +22,31 @@ describe Mail::Address do
 
     it "should allow us to instantiate an empty address object and call address" do
       [nil, '', ' '].each do |input|
-        expect(Mail::Address.new(input).address).to eq nil
+        expect(Mail::Address.new(input).address).to be_nil
       end
     end
 
     it "should allow us to instantiate an empty address object and call local" do
       [nil, '', ' '].each do |input|
-        expect(Mail::Address.new(input).local).to eq nil
+        expect(Mail::Address.new(input).local).to be_nil
       end
     end
 
     it "should allow us to instantiate an empty address object and call domain" do
       [nil, '', ' '].each do |input|
-        expect(Mail::Address.new(input).domain).to eq nil
+        expect(Mail::Address.new(input).domain).to be_nil
       end
     end
 
     it "should allow us to instantiate an empty address object and call name" do
       [nil, '', ' '].each do |input|
-        expect(Mail::Address.new(input).name).to eq nil
+        expect(Mail::Address.new(input).name).to be_nil
       end
     end
 
     ['"-Earnings...Notification-" <vodacom.co.rs>', '<56253817>'].each do |spammy_address|
       it "should ignore funky local-only spammy addresses in angle brackets #{spammy_address}" do
-        expect(Mail::Address.new(spammy_address).address).to eq nil
+        expect(Mail::Address.new(spammy_address).address).to be_nil
       end
     end
 

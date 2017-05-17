@@ -63,17 +63,17 @@ describe Mail::Field do
       end
     end
 
-    it "should match up fields to class names regardless of case" do
-      structured_fields = %w[ dATE fROM sENDER REPLY-TO TO CC BCC MESSAGE-ID IN-REPLY-TO
-                              REFERENCES KEYWORDS resent-date resent-from rESENT-sENDER
-                              rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD
-                              rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn
-                              cOntenT-transfer-EnCoDiNg Content-Description
-                              Content-Disposition cOnTENt-TyPe ]
-      structured_fields.each do |sf|
-        words = sf.split("-").map { |a| a.capitalize }
-        klass = "#{words.join}Field"
-        expect(Mail::Field.new(sf).field).to be_kind_of(Mail.const_get(klass))
+    %w[ dATE fROM sENDER REPLY-TO TO CC BCC MESSAGE-ID IN-REPLY-TO
+        REFERENCES KEYWORDS resent-date resent-from rESENT-sENDER
+        rESENT-tO rESent-cc resent-bcc reSent-MESSAGE-iD
+        rEtURN-pAtH rEcEiVeD Subject Comments Mime-VeRSIOn
+        cOntenT-transfer-EnCoDiNg Content-Description
+        Content-Disposition cOnTENt-TyPe
+    ].each do |sf|
+      words = sf.split("-").map { |a| a.capitalize }
+      klass = Mail.const_get("#{words.join}Field")
+      it "matches #{sf} to #{klass}" do
+        expect(Mail::Field.new(sf).field).to be_kind_of(klass)
       end
     end
 
@@ -241,13 +241,13 @@ describe Mail::Field do
       mail.charset = 'utf-8'
       array = ["Mikel Lindsああr <mikel@test.lindsaar.net>", "あdあ <ada@test.lindsaar.net>"]
       field = Mail::ToField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::ToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::FromField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::FromField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "From: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::CcField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::CcField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "Cc: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
       field = Mail::ReplyToField.new(array, 'utf-8')
-      expect(field.encoded).to eq "#{Mail::ReplyToField::CAPITALIZED_FIELD}: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
+      expect(field.encoded).to eq "Reply-To: =?UTF-8?B?TWlrZWwgTGluZHPjgYLjgYJy?= <mikel@test.lindsaar.net>, \r\n\s=?UTF-8?B?44GCZOOBgg==?= <ada@test.lindsaar.net>\r\n"
     end
 
     it "should allow an encoded value in the Subject field and decode it automatically (issue 44)" do

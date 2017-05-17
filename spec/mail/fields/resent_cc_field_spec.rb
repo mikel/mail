@@ -12,10 +12,6 @@ describe Mail::ResentCcField do
       expect { Mail::ResentCcField.new("Mikel") }.not_to raise_error
     end
 
-    it "should mix in the CommonAddress module" do
-      expect(Mail::ResentCcField.included_modules).to include(Mail::CommonAddress) 
-    end
-
     it "should accept a string without the field name" do
       t = Mail::ResentCcField.new('Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
       expect(t.name).to eq 'Resent-Cc'
@@ -23,8 +19,6 @@ describe Mail::ResentCcField do
     end
 
   end
-  
-  # Actual testing of CommonAddress methods oResentCcurs in the address field spec file
 
   describe "instance methods" do
     it "should return an address" do

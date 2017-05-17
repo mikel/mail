@@ -3,7 +3,7 @@
 require 'mail/parsers/content_transfer_encoding_parser'
 
 module Mail
-  class ContentTransferEncodingElement
+  class ContentTransferEncodingElement #:nodoc:
     attr_reader :encoding
 
     def initialize(string)

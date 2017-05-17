@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-require 'mail/fields/common/parameter_hash'
+require 'mail/fields/parameter_hash'
 
 describe Mail::ParameterHash do
   it "should return the values in the hash" do

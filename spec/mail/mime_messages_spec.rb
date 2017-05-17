@@ -13,7 +13,7 @@ describe "MIME Emails" do
 
       it "should return nil if the email has no mime version" do
         mail = Mail.new("To: bob")
-        expect(mail.mime_version).to eq nil
+        expect(mail.mime_version).to be_nil
       end
 
       it "should read the content-transfer-encoding" do
@@ -135,7 +135,7 @@ describe "MIME Emails" do
 
       it "should return nil if there is no content-type defined" do
         mail = Mail.new
-        expect(mail.boundary).to eq nil
+        expect(mail.boundary).to be_nil
       end
 
       it "should assign the text part and allow you to reference" do

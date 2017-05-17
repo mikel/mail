@@ -1,25 +1,18 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/fields/common/parameter_hash'
+require 'mail/fields/named_structured_field'
+require 'mail/fields/parameter_hash'
 
 module Mail
-  class ContentDispositionField < StructuredField
+  class ContentDispositionField < NamedStructuredField #:nodoc:
+    NAME = 'Content-Disposition'
 
-    FIELD_NAME = 'content-disposition'
-    CAPITALIZED_FIELD = 'Content-Disposition'
-
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      value = ensure_filename_quoted(value)
-      super(CAPITALIZED_FIELD, value, charset)
-      self.parse
-      self
+    def self.singular?
+      true
     end
 
-    def parse(val = value)
-      unless Utilities.blank?(val)
-        @element = Mail::ContentDispositionElement.new(val)
-      end
+    def initialize(value = nil, charset = nil)
+      super ensure_filename_quoted(value), charset
     end
 
     def element
@@ -37,35 +30,17 @@ module Mail
     end
 
     def filename
-      case
-      when parameters['filename']
-        @filename = parameters['filename']
-      when parameters['name']
-        @filename = parameters['name']
-      else
-        @filename = nil
-      end
-      @filename
+      @filename ||= parameters['filename'] || parameters['name']
     end
 
-    # TODO: Fix this up
     def encoded
-      if parameters.length > 0
-        p = ";\r\n\s#{parameters.encoded}\r\n"
-      else
-        p = "\r\n"
-      end
-      "#{CAPITALIZED_FIELD}: #{disposition_type}" + p
+      p = ";\r\n\s#{parameters.encoded}" if parameters.length > 0
+      "#{name}: #{disposition_type}#{p}\r\n"
     end
 
     def decoded
-      if parameters.length > 0
-        p = "; #{parameters.decoded}"
-      else
-        p = ""
-      end
-      "#{disposition_type}" + p
+      p = "; #{parameters.decoded}" if parameters.length > 0
+      "#{disposition_type}#{p}"
     end
-
   end
 end

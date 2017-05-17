@@ -31,10 +31,6 @@ describe Mail::DateField do
       expect(Mail::DateField.new("12 Aug 2009 00:00:02 GMT").date_time.class).to eq DateTime
     end
 
-    it "should mix in the CommonAddress module" do
-      expect(Mail::DateField.included_modules).to include(Mail::CommonDate) 
-    end
-
     it "should accept a string without the field name" do
       t = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')
       expect(t.name).to eq 'Date'

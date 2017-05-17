@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/fields/common/common_field'
+require 'mail/fields/common_field'
+require 'mail/utilities'
 
 module Mail
   # Provides access to an unstructured header field
@@ -15,58 +16,30 @@ module Mail
   #     field bodies are simply to be treated as a single line of characters
   #     with no further processing (except for header "folding" and
   #     "unfolding" as described in section 2.2.3).
-  class UnstructuredField
-
-    include Mail::CommonField
-    include Mail::Utilities
-
-    attr_accessor :charset
-    attr_reader :errors
-
+  class UnstructuredField < CommonField #:nodoc:
     def initialize(name, value, charset = nil)
-      @errors = []
-
       if value.is_a?(Array)
         # Probably has arrived here from a failed parse of an AddressList Field
         value = value.join(', ')
-      else
-        # Ensure we are dealing with a string
-        value = value.to_s
 
-        # Mark UTF-8 strings parsed from ASCII-8BIT
-        if value.respond_to?(:force_encoding) && value.encoding == Encoding::ASCII_8BIT
-          utf8 = value.dup.force_encoding(Encoding::UTF_8)
-          value = utf8 if utf8.valid_encoding?
-        end
+      # Mark UTF-8 strings parsed from ASCII-8BIT
+      elsif value.respond_to?(:force_encoding) && value.encoding == Encoding::ASCII_8BIT
+        utf8 = value.dup.force_encoding(Encoding::UTF_8)
+        value = utf8 if utf8.valid_encoding?
       end
 
-      if charset
-        self.charset = charset
-      else
+      charset ||=
         if value.respond_to?(:encoding)
-          self.charset = value.encoding
-        else
-          self.charset = $KCODE
+          value.encoding
+        elsif RUBY_VERSION < '1.9'
+          $KCODE
         end
-      end
-      self.name = name
-      self.value = value
-      self
+
+      super name, value.to_s, charset
     end
 
-    def encoded
-      do_encode
-    end
-
-    def decoded
-      do_decode
-    end
-
-    def default
-      decoded
-    end
-
-    def parse # An unstructured field does not parse
+    # An unstructured field does not parse
+    def parse
       self
     end
 
@@ -196,7 +169,7 @@ module Mail
     end
 
     def encode(value)
-      value = [value].pack(CAPITAL_M).gsub(EQUAL_LF, EMPTY)
+      value = [value].pack(Constants::CAPITAL_M).gsub(Constants::EQUAL_LF, Constants::EMPTY)
       value.gsub!(/"/,  '=22')
       value.gsub!(/\(/, '=28')
       value.gsub!(/\)/, '=29')
@@ -207,8 +180,8 @@ module Mail
     end
 
     def encode_crlf(value)
-      value.gsub!(CR, CR_ENCODED)
-      value.gsub!(LF, LF_ENCODED)
+      value.gsub!(Constants::CR, Constants::CR_ENCODED)
+      value.gsub!(Constants::LF, Constants::LF_ENCODED)
       value
     end
 
@@ -217,6 +190,5 @@ module Mail
       encoding = 'UTF-8' if encoding == 'UTF8' # Ruby 1.8.x and $KCODE == 'u'
       encoding
     end
-
   end
 end

@@ -1,17 +1,15 @@
 # encoding: utf-8
 # frozen_string_literal: true
-# 
-# subject         =       "Subject:" unstructured CRLF
+require 'mail/fields/named_unstructured_field'
+
 module Mail
-  class SubjectField < UnstructuredField
-    
-    FIELD_NAME = 'subject'
-    CAPITALIZED_FIELD = "Subject"
-    
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
+  #
+  # subject         =       "Subject:" unstructured CRLF
+  class SubjectField < NamedUnstructuredField #:nodoc:
+    NAME = 'Subject'
+
+    def self.singular?
+      true
     end
-    
   end
 end

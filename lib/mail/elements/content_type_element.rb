@@ -3,7 +3,7 @@
 require 'mail/parsers/content_type_parser'
 
 module Mail
-  class ContentTypeElement # :nodoc:
+  class ContentTypeElement #:nodoc:
     attr_reader :main_type, :sub_type, :parameters
 
     def initialize(string)
@@ -14,8 +14,12 @@ module Mail
     end
 
     private
-    def cleaned(string)
-      string =~ /(.+);\s*$/ ? $1 : string
-    end
+      def cleaned(string)
+        if string =~ /;\s*$/
+          $`
+        else
+          string
+        end
+      end
   end
 end

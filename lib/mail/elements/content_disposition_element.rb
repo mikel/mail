@@ -3,7 +3,7 @@
 require 'mail/parsers/content_disposition_parser'
 
 module Mail
-  class ContentDispositionElement # :nodoc:
+  class ContentDispositionElement #:nodoc:
     attr_reader :disposition_type, :parameters
 
     def initialize(string)

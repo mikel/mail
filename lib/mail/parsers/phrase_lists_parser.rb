@@ -882,7 +882,7 @@ end
 
 
       if p != eof || cs < 42
-        raise Mail::Field::IncompleteParseError.new(Mail::PhraseListsElement, data, p)
+        raise Mail::Field::IncompleteParseError.new(Mail::PhraseList, data, p)
       end
 
       phrase_lists

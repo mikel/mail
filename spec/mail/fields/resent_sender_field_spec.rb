@@ -1,19 +1,17 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
-# resent-sender   =       "Resent-Sender:" mailbox CRLF
 
+# resent-sender   =       "Resent-Sender:" mailbox CRLF
 describe Mail::ResentSenderField do
-  
+  let :field do
+    Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
+  end
+
   describe "initialization" do
 
     it "should initialize" do
       expect { Mail::ResentSenderField.new("Mikel") }.not_to raise_error
-    end
-
-    it "should mix in the CommonAddress module" do
-      expect(Mail::ResentSenderField.included_modules).to include(Mail::CommonAddress) 
     end
 
     it "should accept a string without the field name" do
@@ -23,31 +21,20 @@ describe Mail::ResentSenderField do
     end
 
   end
-  
-  # Actual testing of CommonAddress methods oResentSenderurs in the address field spec file
 
-  describe "instance methods" do
-    it "should return an address" do
-      t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
-    end
-
-    it "should return two addresses" do
-      t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.address.to_s).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-    end
-    
-    it "should return the formatted line on to_s" do
-      t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
-    end
-    
-    it "should return the encoded line" do
-      t = Mail::ResentSenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
-      expect(t.encoded).to eq "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
-    end
-    
+  it "formats the sender" do
+    expect(field.formatted).to eq ['Mikel Lindsaar <mikel@test.lindsaar.net>']
   end
-  
-  
+
+  it "parses a single sender address" do
+    expect(field.address).to eq 'mikel@test.lindsaar.net'
+  end
+
+  it "returns the field value" do
+    expect(field.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>'
+  end
+
+  it "encodes a header line" do
+    expect(field.encoded).to eq "Resent-Sender: Mikel Lindsaar <mikel@test.lindsaar.net>\r\n"
+  end
 end

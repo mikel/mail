@@ -9,7 +9,7 @@ describe 'AddressContainer' do
     m.to << 'bob@test.lindsaar.net'
     expect(m.to).to eq ['mikel@test.lindsaar.net', 'bob@test.lindsaar.net']
   end
-  
+
   it "should handle complex addresses correctly" do
     m = Mail.new("From: mikel@test.lindsaar.net")
     expect(m.from).to eq ['mikel@test.lindsaar.net']

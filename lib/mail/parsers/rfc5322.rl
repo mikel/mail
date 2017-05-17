@@ -32,9 +32,7 @@
   obs_id_left = local_part;
   id_left = dot_atom_text | obs_id_left;
   # id_right modifications to support multiple '@' in msg_id.
-  msg_id_atext = ALPHA | DIGIT | "!" | "#" | "$" | "%" | "&" | "'" | "*" |
-                 "+" | "-" | "/" | "=" | "?" | "^" | "_" | "`" | "{" | "|" |
-                 "}" | "~" | "@";
+  msg_id_atext = rfc5322_atext | "@";
   msg_id_dot_atom_text = (msg_id_atext+ "."?)+;
   obs_id_right = domain;
   no_fold_literal = "[" (dtext)* "]";
@@ -54,6 +52,5 @@
   # Envelope From
   ctime_date = day_name " "+ month " "+ day " " time_of_day " " year;
   null_sender = ('<>' ' '{0,1});
-  envelope_from = (addr_spec_no_angle_brackets | null_sender) >address_s %address_e " "
-                  (ctime_date >ctime_date_s %ctime_date_e);
+  envelope_from = (addr_spec_no_angle_brackets | null_sender) >address_s %address_e (" " (ctime_date >ctime_date_s %ctime_date_e))?;
 }%%

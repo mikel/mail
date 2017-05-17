@@ -3,7 +3,7 @@
 require 'mail/parsers/mime_version_parser'
 
 module Mail
-  class MimeVersionElement
+  class MimeVersionElement #:nodoc:
     attr_reader :major, :minor
 
     def initialize(string)

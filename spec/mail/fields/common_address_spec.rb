@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Mail::CommonAddress" do
+describe Mail::CommonAddressField do
 
   describe "address handling" do
 

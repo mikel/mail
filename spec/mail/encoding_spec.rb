@@ -154,17 +154,19 @@ describe "mail encoding" do
       expect(result).to eq "To: Mikel =?ISO-8859-1?B?TGluZHPkcg==?= <mikel@test.lindsaar.net>, \r\n =?ISO-8859-1?B?5GQ=?= <ada@test.lindsaar.net>\r\n"
     end
 
-    it "should allow you to send in multiple unencoded strings to any address field" do
-      mail = Mail.new
+    %w[ To From Cc Reply-To ].each do |field|
       array = ["Mikel Linds\xE4r <mikel@test.lindsaar.net>", "\xE4d <ada@test.lindsaar.net>"]
-      array.map! { |a| a.dup.force_encoding('ISO8859-1') } if RUBY_VERSION > '1.9'
-      mail.charset = 'ISO-8859-1'
-      ['To', 'From', 'Cc', 'Reply-To'].each do |field|
-        mail.send("#{field.downcase.gsub("-", '_')}=", array)
+      array.map! { |a| a.dup.force_encoding('ISO-8859-1') } if RUBY_VERSION > '1.9'
+
+      it "allows multiple unencoded strings in #{field}" do
+        mail = Mail.new
+        mail.charset = 'ISO-8859-1'
+
+        mail.send("#{Mail::Utilities.underscoreize(field)}=", array)
+        expect(mail[field].errors).to eq []
+
         result = mail[field].encoded
-        if result.respond_to?(:force_encoding)
-          expect(result.encoding).to eq Encoding::UTF_8
-        end
+        expect(result.encoding).to eq Encoding::UTF_8 if result.respond_to?(:force_encoding)
         expect(result).to eq "#{field}: Mikel =?ISO-8859-1?B?TGluZHPkcg==?= <mikel@test.lindsaar.net>, \r\n\s=?ISO-8859-1?B?5GQ=?= <ada@test.lindsaar.net>\r\n"
       end
     end

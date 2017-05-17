@@ -72,7 +72,7 @@ describe Mail::UnstructuredField do
 
     it "should return a nil on decoded if it has no value" do
       @field.value = nil
-      expect(@field.decoded).to eq nil
+      expect(@field.decoded).to be_nil
     end
 
     it "should just add the CRLF at the end of the line" do

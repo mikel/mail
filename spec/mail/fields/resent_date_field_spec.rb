@@ -10,10 +10,6 @@ describe Mail::ResentDateField do
   it "should be able to tell the time" do
     expect(Mail::ResentDateField.new("12 Aug 2009 00:00:02 GMT").date_time.class).to eq DateTime
   end
-  
-  it "should mix in the CommonAddress module" do
-    expect(Mail::ResentDateField.included_modules).to include(Mail::CommonDate) 
-  end
 
   it "should accept a string without the field name" do
     t = Mail::ResentDateField.new('12 Aug 2009 00:00:02 GMT')
