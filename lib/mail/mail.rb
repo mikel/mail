@@ -90,19 +90,11 @@ module Mail
   # Each mail object inherits the default set in Mail.delivery_method, however, on
   # a per email basis, you can override the method:
   #
-  #   mail.delivery_method :sendmail
+  #   mail.delivery_method :smtp
   # 
   # Or you can override the method and pass in settings:
   # 
-  #   mail.delivery_method :sendmail, { :address => 'some.host' }
-  # 
-  # You can also just modify the settings:
-  # 
-  #   mail.delivery_settings = { :address => 'some.host' }
-  # 
-  # The passed in hash is just merged against the defaults with +merge!+ and the result
-  # assigned the mail object.  So the above example will change only the :address value
-  # of the global smtp_settings to be 'some.host', keeping all other values
+  #   mail.delivery_method :smtp, :address => 'some.host'
   def self.defaults(&block)
     Configuration.instance.instance_eval(&block)
   end
