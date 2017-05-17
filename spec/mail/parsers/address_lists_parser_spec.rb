@@ -3,6 +3,14 @@
 require 'spec_helper'
 
 describe "AddressListsParser" do
+
+  context 'email with non-ascii characters' do
+    let(:text){ 'Dude <düde@somewhere.com>' }
+    subject{ Mail::Parsers::AddressListsParser.parse(text) }
+
+    it{ is_expected.not_to be_nil }
+  end
+
   it "should parse an address" do
     text = 'Mikel Lindsaar <test@lindsaar.net>, Friends: test2@lindsaar.net, Ada <test3@lindsaar.net>;'
     a = Mail::Parsers::AddressListsParser

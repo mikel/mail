@@ -114,6 +114,15 @@ describe Mail::Message do
       end
     end
 
+    it 'should handle non-ascii characters in email fields' do
+      mail = Mail.new do
+        from 'Düde <düde@somewhere.com>'
+      end
+      expect(mail.from).to contain_exactly('düde@somewhere.com')
+      expect(mail.header['From'].value).to eq('Düde <düde@somewhere.com>')
+      expect(mail.header['From'].addresses.first).to eq('düde@somewhere.com')
+    end
+
     it 'should be able to parse an email missing an encoding' do
       Mail.read(fixture('emails', 'error_emails', 'must_supply_encoding.eml'))
     end
