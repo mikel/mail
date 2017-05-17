@@ -120,6 +120,7 @@ module Mail
       mailbox = Net::IMAP.encode_utf7(mailbox)
 
       start do |imap|
+        imap.examine(mailbox)
         imap.uid_search(['ALL']).each do |uid|
           imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED])
         end
