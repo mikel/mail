@@ -46,6 +46,9 @@ Bugs:
 * #1023 - Fix double-quoting in display names. (garethrees)
 * #1032 - Fix that comparing messages changed their raw Message-ID to their parsed message_id. (bobjflong)
 * #1074 - Fix that the first address in a list is dropped when a subsequent address has non-US-ASCII characters. (domininik)
+* #1107 - Fix Address#display_name and other formatting flip-flopping between
+encoded and decoded forms depending on whether #encoded or #decoded was called
+last. (jeremy)
 
 == Version 2.6.4 - Wed Mar 23 08:16 -0700 2016 Jeremy Daer <jeremydaer@gmail.com>
 

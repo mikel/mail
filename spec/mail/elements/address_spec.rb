@@ -88,7 +88,16 @@ describe Mail::Address do
       encoded = '=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>'
       expect(Mail::Address.new(encoded).display_name).to eq 'Jan Krütisch'
     end
-    
+
+    it "doesn't get stuck on decode or encode output mode" do
+      a = Mail::Address.new('=?ISO-8859-1?Q?Jan_Kr=FCtisch?= <jan@krutisch.de>')
+      expect(a.display_name).to eq 'Jan Krütisch'
+
+      # Ignore result, ensure it doesn't flip format mode
+      a.encoded
+      expect(a.display_name).to eq 'Jan Krütisch'
+    end
+
     it "should allow nil display name" do
       a = Mail::Address.new
       expect(a.display_name).to be_nil
