@@ -605,48 +605,48 @@ describe "sending an email" do
     end
   end
 
-  it { should have_sent_email } # passes if any email at all was sent
+  it { is_expected.to have_sent_email } # passes if any email at all was sent
 
-  it { should have_sent_email.from('you@you.com') }
-  it { should have_sent_email.to('mike1@me.com') }
+  it { is_expected.to have_sent_email.from('you@you.com') }
+  it { is_expected.to have_sent_email.to('mike1@me.com') }
 
   # can specify a list of recipients...
-  it { should have_sent_email.to(['mike1@me.com', 'mike2@me.com']) }
+  it { is_expected.to have_sent_email.to(['mike1@me.com', 'mike2@me.com']) }
 
   # ...or chain recipients together
-  it { should have_sent_email.to('mike1@me.com').to('mike2@me.com') }
+  it { is_expected.to have_sent_email.to('mike1@me.com').to('mike2@me.com') }
 
-  it { should have_sent_email.with_subject('testing') }
+  it { is_expected.to have_sent_email.with_subject('testing') }
 
-  it { should have_sent_email.with_body('hello') }
+  it { is_expected.to have_sent_email.with_body('hello') }
 
   # Can match subject or body with a regex
   # (or anything that responds_to? :match)
 
-  it { should have_sent_email.matching_subject(/test(ing)?/) }
-  it { should have_sent_email.matching_body(/h(a|e)llo/) }
+  it { is_expected.to have_sent_email.matching_subject(/test(ing)?/) }
+  it { is_expected.to have_sent_email.matching_body(/h(a|e)llo/) }
 
   # Can chain together modifiers
   # Note that apart from recipients, repeating a modifier overwrites old value.
 
-  it { should have_sent_email.from('you@you.com').to('mike1@me.com').matching_body(/hell/)
+  it { is_expected.to have_sent_email.from('you@you.com').to('mike1@me.com').matching_body(/hell/)
 
   # test for attachments
 
   # ... by specific attachment
-  it { should_have_sent_email.with_attachments(my_attachment) }
+  it { is_expected.to have_sent_email.with_attachments(my_attachment) }
 
   # ... or any attachment
-  it { should_have_sent_email.with_attachments(any_attachment) }
+  it { is_expected.to have_sent_email.with_attachments(any_attachment) }
 
   # ... by array of attachments
-  it { should_have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important
+  it { is_expected.to have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important
 
   #... by presence
-  it { should_have_sent_email.with_any_attachments }
+  it { is_expected.to have_sent_email.with_any_attachments }
 
   #... or by absence
-  it { should_have_sent_email.with_no_attachments }
+  it { is_expected.to have_sent_email.with_no_attachments }
 
 end
 ```
