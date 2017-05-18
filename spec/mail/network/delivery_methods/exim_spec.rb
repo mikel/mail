@@ -68,6 +68,8 @@ describe "exim delivery agent" do
         body "body"
       end
 
+      Mail::Sendmail.should_receive(:call).with('/usr/sbin/exim', '-i -t -f "sender@test.lindsaar.net" --', nil, mail.encoded)
+
       mail.deliver
     end
 
