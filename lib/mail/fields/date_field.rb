@@ -39,11 +39,13 @@ module Mail
       else
         value = strip_field(FIELD_NAME, value)
         value.to_s.gsub!(/\(.*?\)/, '')
-        value = ::DateTime.parse(value.to_s.squeeze(" ")).strftime('%a, %d %b %Y %H:%M:%S %z')
+        begin
+          value = ::DateTime.parse(value.to_s.squeeze(" ")).strftime('%a, %d %b %Y %H:%M:%S %z')
+        rescue ArgumentError => e
+          raise e unless e.message == "invalid date"
+        end
       end
       super(CAPITALIZED_FIELD, value, charset)
-    rescue ArgumentError => e
-      raise e unless "invalid date"==e.message
     end
 
     def encoded

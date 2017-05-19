@@ -8,9 +8,14 @@ module Mail
     include Mail::Utilities
     attr_reader :date_time, :info
 
-    def initialize(string)
+    def initialize( string )
       received = Mail::Parsers::ReceivedParser.parse(string)
-      @date_time = ::DateTime.parse("#{received.date} #{received.time}")
+      begin
+        @date_time = ::DateTime.parse("#{received.date} #{received.time}")
+      rescue ArgumentError => e
+        raise e unless e.message == "invalid date"
+        @date_time = nil
+      end
       @info = received.info
     end
 
