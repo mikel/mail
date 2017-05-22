@@ -45,7 +45,8 @@ module Mail
                         :user_name            => nil,
                         :password             => nil,
                         :authentication       => nil,
-                        :enable_ssl           => false }.merge!(values)
+                        :enable_ssl           => false,
+                        :enable_starttls      => false }.merge!(values)
     end
 
     attr_accessor :settings
@@ -159,7 +160,12 @@ module Mail
       def start(config=Mail::Configuration.instance, &block)
         raise ArgumentError.new("Mail::Retrievable#imap_start takes a block") unless block_given?
 
+        settings[:enable_ssl] = false if settings[:enable_starttls]
+
         imap = Net::IMAP.new(settings[:address], settings[:port], settings[:enable_ssl], nil, false)
+
+        imap.starttls if settings[:enable_starttls]
+
         if settings[:authentication].nil?
           imap.login(settings[:user_name], settings[:password])
         else

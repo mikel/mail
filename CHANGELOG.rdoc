@@ -18,6 +18,8 @@ Features:
 * #1095 - Core extensions removal: Drop `String#mb_chars`, `not_ascii_only?`, `constantize`, `first`, `to` to avoid monkey patching the standard library. (metcalf)
 * #1111  - Mail::Field.parse API which deprecates calling Mail::Field.new with unparsed header fields. (jeremy)
 
+* Add starttls support for imap retriever (doits)
+
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
 
