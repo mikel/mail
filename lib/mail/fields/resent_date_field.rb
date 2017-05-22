@@ -17,7 +17,6 @@ module Mail
       if Utilities.blank?(value)
         value = ::DateTime.now.strftime('%a, %d %b %Y %H:%M:%S %z')
       else
-        value = strip_field(FIELD_NAME, value)
         value = ::DateTime.parse(value.to_s).strftime('%a, %d %b %Y %H:%M:%S %z')
       end
       super(CAPITALIZED_FIELD, value, charset)

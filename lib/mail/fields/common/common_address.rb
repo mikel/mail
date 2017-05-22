@@ -16,20 +16,14 @@ module Mail
       @charset
     end
 
-    def encode_if_needed(val)
+    def encode_if_needed(val) #:nodoc:
       # Need to join arrays of addresses into a single value
       if val.kind_of?(Array)
         val.compact.map { |a| encode_if_needed a }.join(', ')
 
-      # Pass through UTF-8 addresses
-      elsif charset =~ /\AUTF-?8\z/i
-        val
-      elsif val.respond_to?(:encoding) && val.encoding == Encoding::UTF_8
-        val
-
-      # Encode non-UTF-8 strings
+      # Pass through UTF-8; encode non-UTF-8.
       else
-        Encodings.encode_non_usascii(val, charset)
+        utf8_if_needed(val) || Encodings.encode_non_usascii(val, charset)
       end
     end
 
@@ -110,7 +104,26 @@ module Mail
     end
   
     private
-  
+
+    if 'string'.respond_to?(:encoding)
+      # Pass through UTF-8 addresses
+      def utf8_if_needed(val)
+        if charset =~ /\AUTF-?8\z/i
+          val
+        elsif val.encoding == Encoding::UTF_8
+          val
+        elsif (utf8 = val.dup.force_encoding(Encoding::UTF_8)).valid_encoding?
+          utf8
+        end
+      end
+    else
+      def utf8_if_needed(val)
+        if charset =~ /\AUTF-?8\z/i
+          val
+        end
+      end
+    end
+
     def do_encode(field_name)
       return '' if Utilities.blank?(value)
       address_array = address_list.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }

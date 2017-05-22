@@ -16,6 +16,7 @@ Features:
 * #1053 - Ruby 2.4.0 compatibility. Fixnum+Bignum unified as Integer. (peterkovacs)
 * #1094 - Core extensions removal: Drop `String#at`, `from`, `last` and `is_utf8?` since they are no longer used by Mail internals. (metcalf)
 * #1095 - Core extensions removal: Drop `String#mb_chars`, `not_ascii_only?`, `constantize`, `first`, `to` to avoid monkey patching the standard library. (metcalf)
+* #1111  - Mail::Field.parse API which deprecates calling Mail::Field.new with unparsed header fields. (jeremy)
 
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
@@ -25,6 +26,7 @@ Compatibility:
 * #535 - IMAP: fetch messages WITH IMAP FLAGS by passing a block with four args. (lawrencepit)
 * #655 - Sort attachments to the end of the parts list to work around email clients that may mistake a text attachment for the message body. (npickens)
 * #683 - SMTP: Work around Net::SMTP dot-stuffing bug with unterminated newlines on Ruby 1.8 and 1.9. (yyyc514)
+* #766 - No longer strip 'Subject: ' from legit subject lines. (grosser)
 * #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 * #1103 – Support parsing UTF-8 headers. Implements RFC 6532. (jeremy)
 * #1106 – Limit message/rfc822 parts' transfer encoding per RFC 2046. (ahorek)

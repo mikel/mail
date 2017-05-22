@@ -38,5 +38,4 @@ matrix:
     - rvm: jruby-head
     - rvm: rbx-2
     - rvm: rbx-3
-    - env: MBCHARS=activesupport
   fast_finish: true

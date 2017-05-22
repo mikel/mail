@@ -647,18 +647,16 @@ TRACEHEADER
     end
 
     it "should limit amount of parsed headers" do
-      old_maximum_amount = Mail::Header.maximum_amount
+      Mail::Header.maximum_amount, old_max = 10, Mail::Header.maximum_amount
+      $VERBOSE, old_verbose = nil, $VERBOSE
+
       begin
-        Mail::Header.maximum_amount = 10
-        begin
-          $VERBOSE, old_verbose = nil, $VERBOSE
-          header = Mail::Header.new("X-SubscriberID: 345\n" * 11)
-          expect(header.fields.size).to eq(10)
-        ensure
-          $VERBOSE = old_verbose
-        end
+        expect(Kernel).to receive(:warn).with(match(/10 header fields/))
+        header = Mail::Header.new("X-SubscriberID: 345\n" * 11)
+        expect(header.fields.size).to eq(10)
       ensure
-        Mail::Header.maximum_amount = old_maximum_amount
+        $VERBOSE = old_verbose
+        Mail::Header.maximum_amount = old_max
       end
     end
 

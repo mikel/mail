@@ -10,17 +10,11 @@ describe Mail::FromField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::FromField.new("From: Mikel") }.not_to raise_error
+      expect { Mail::FromField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
       expect(Mail::FromField.included_modules).to include(Mail::CommonAddress)
-    end
-
-    it "should accept a string with the field name" do
-      t = Mail::FromField.new('From: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      expect(t.name).to eq 'From'
-      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do

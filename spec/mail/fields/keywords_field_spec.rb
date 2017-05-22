@@ -10,13 +10,7 @@ describe Mail::KeywordsField do
       expect { Mail::KeywordsField.new("this, is, email") }.not_to raise_error
     end
     
-    it "should accept a string with the field name" do
-      k = Mail::KeywordsField.new('Keywords: these are keywords, so there')
-      expect(k.name).to eq 'Keywords'
-      expect(k.value).to eq 'these are keywords, so there'
-    end
-    
-    it "should accept a string with the field name" do
+    it "should accept a string without the field name" do
       k = Mail::KeywordsField.new('these are keywords, so there')
       expect(k.name).to eq 'Keywords'
       expect(k.value).to eq 'these are keywords, so there'

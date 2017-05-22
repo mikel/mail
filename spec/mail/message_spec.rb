@@ -121,7 +121,7 @@ describe Mail::Message do
     it "should be able to parse every email example we have without raising an exception" do
       emails = Dir.glob( fixture('emails/**/*') ).delete_if { |f| File.directory?(f) }
 
-      allow($stderr).to receive(:puts) # Don't want to get noisy about any warnings
+      allow(Kernel).to receive(:warn) # Don't want to get noisy about any warnings
       errors = false
       expected_failures = []
       emails.each do |email|
@@ -153,7 +153,7 @@ describe Mail::Message do
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
-      expect($stderr).to receive(:puts).with("WARNING: Could not parse (and so ignoring) 'quite Delivered-To: xxx@xxx.xxx'")
+      expect(Kernel).to receive(:warn).with('WARNING: Ignoring unparsable header "quite Delivered-To: xxx@xxx.xxx": invalid header name syntax: "quite Delivered-To"').once
       Mail.read(fixture('emails', 'plain_emails', 'raw_email_incorrect_header.eml')).to_s
     end
 

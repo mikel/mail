@@ -19,13 +19,6 @@ describe Mail::ReferencesField do
     expect { Mail::ReferencesField.new("<1234@test.lindsaar.net>") }.not_to raise_error
   end
 
-  it "should accept a string with the field name" do
-    t = Mail::ReferencesField.new('References: <1234@test.lindsaar.net>')
-    expect(t.name).to eq 'References'
-    expect(t.value).to eq '<1234@test.lindsaar.net>'
-    expect(t.message_id).to eq '1234@test.lindsaar.net'
-  end
-  
   it "should accept a string without the field name" do
     t = Mail::ReferencesField.new('<1234@test.lindsaar.net>')
     expect(t.name).to eq 'References'

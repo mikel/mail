@@ -41,13 +41,7 @@ describe Mail::ContentTransferEncodingField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ContentTransferEncodingField.new("Content-Transfer-Encoding: 7bit") }.not_to raise_error
-    end
-
-    it "should accept a string with the field name" do
-      t = Mail::ContentTransferEncodingField.new('Content-Transfer-Encoding: 7bit')
-      expect(t.name).to eq 'Content-Transfer-Encoding'
-      expect(t.value).to eq '7bit'
+      expect { Mail::ContentTransferEncodingField.new("7bit") }.not_to raise_error
     end
 
     it "should accept a string without the field name" do

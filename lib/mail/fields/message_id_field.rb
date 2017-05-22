@@ -46,7 +46,7 @@ module Mail
         self.name = CAPITALIZED_FIELD
         self.value = generate_message_id
       else
-        super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
+        super(CAPITALIZED_FIELD, value, charset)
       end
       self.parse
       self

@@ -61,13 +61,6 @@ describe Mail::MessageIdField do
       expect { Mail::MessageIdField.new("<1234@test.lindsaar.net>") }.not_to raise_error
     end
 
-    it "should accept a string with the field name" do
-      m = Mail::MessageIdField.new('Message-ID: <1234@test.lindsaar.net>')
-      expect(m.name).to eq 'Message-ID'
-      expect(m.value).to eq '<1234@test.lindsaar.net>'
-      expect(m.message_id).to eq '1234@test.lindsaar.net'
-    end
-
     it "should accept a string without the field name" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       expect(m.name).to eq 'Message-ID'
