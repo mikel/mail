@@ -7,51 +7,51 @@ describe "Mail::CommonAddress" do
   describe "address handling" do
 
     it "should give the addresses it is going to" do
-      field = Mail::ToField.new("To: test1@lindsaar.net")
+      field = Mail::ToField.new("test1@lindsaar.net")
       expect(field.addresses.first).to eq "test1@lindsaar.net"
     end
 
     it "should split up the address list into individual addresses" do
-      field = Mail::ToField.new("To: test1@lindsaar.net, test2@lindsaar.net")
+      field = Mail::ToField.new("test1@lindsaar.net, test2@lindsaar.net")
       expect(field.addresses).to eq ["test1@lindsaar.net", "test2@lindsaar.net"]
     end
 
     it "should give the formatted addresses" do
-      field = Mail::ToField.new("To: Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
+      field = Mail::ToField.new("Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
       expect(field.formatted).to eq ["Mikel <test1@lindsaar.net>", "Bob <test2@lindsaar.net>"]
     end
 
     it "should give the display names" do
-      field = Mail::ToField.new("To: Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
+      field = Mail::ToField.new("Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
       expect(field.display_names).to eq ["Mikel", "Bob"]
     end
 
     it "should give the actual address objects" do
-      field = Mail::ToField.new("To: Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
+      field = Mail::ToField.new("Mikel <test1@lindsaar.net>, Bob <test2@lindsaar.net>")
       field.addrs.each do |addr|
         expect(addr.class).to eq Mail::Address
       end
     end
 
     it "should handle groups as well" do
-      field = Mail::ToField.new("To: test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;")
+      field = Mail::ToField.new("test1@lindsaar.net, group: test2@lindsaar.net, me@lindsaar.net;")
       expect(field.addresses).to eq ["test1@lindsaar.net", "test2@lindsaar.net", "me@lindsaar.net"]
     end
 
     it "should provide a list of groups" do
-      field = Mail::ToField.new("To: test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
       expect(field.group_names).to eq ["My Group"]
     end
 
     it "should provide a list of addresses per group" do
-      field = Mail::ToField.new("To: test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
       expect(field.groups["My Group"].length).to eq 2
       expect(field.groups["My Group"].first.to_s).to eq 'test2@lindsaar.net'
       expect(field.groups["My Group"].last.to_s).to eq 'me@lindsaar.net'
     end
 
     it "should provide a list of addresses that are just in the groups" do
-      field = Mail::ToField.new("To: test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
+      field = Mail::ToField.new("test1@lindsaar.net, My Group: test2@lindsaar.net, me@lindsaar.net;")
       expect(field.group_addresses).to eq ['test2@lindsaar.net', 'me@lindsaar.net']
     end
 

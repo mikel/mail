@@ -9,6 +9,9 @@ require 'mail/fields/unstructured_field'
 
 module Mail
   class OptionalField < UnstructuredField
-    
+    private
+      def do_encode
+        "#{wrapped_value}\r\n"
+      end
   end
 end

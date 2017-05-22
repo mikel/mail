@@ -76,7 +76,7 @@ describe Mail::UnstructuredField do
     end
 
     it "should just add the CRLF at the end of the line" do
-      @field = Mail::SubjectField.new("Subject: =?utf-8?Q?testing_testing_=D6=A4?=")
+      @field = Mail::SubjectField.new("=?utf-8?Q?testing_testing_=D6=A4?=")
       result = "Subject: =?UTF-8?Q?testing_testing_=D6=A4?=\r\n"
       expect(@field.encoded).to eq result
       expect(@field.decoded).to eq "testing testing \326\244"

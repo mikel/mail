@@ -17,13 +17,6 @@ describe Mail::InReplyToField do
       expect { Mail::InReplyToField.new("<1234@test.lindsaar.net>") }.not_to raise_error
     end
 
-    it "should accept a string with the field name" do
-      t = Mail::InReplyToField.new('In-Reply-To: <1234@test.lindsaar.net>')
-      expect(t.name).to eq 'In-Reply-To'
-      expect(t.value).to eq '<1234@test.lindsaar.net>'
-      expect(t.message_id).to eq '1234@test.lindsaar.net'
-    end
-
     it "should accept a string without the field name" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
       expect(t.name).to eq 'In-Reply-To'

@@ -9,17 +9,11 @@ describe Mail::ResentFromField do
   describe "initialization" do
 
     it "should initialize" do
-      expect { Mail::ResentFromField.new("Resent-From: Mikel") }.not_to raise_error
+      expect { Mail::ResentFromField.new("Mikel") }.not_to raise_error
     end
 
     it "should mix in the CommonAddress module" do
       expect(Mail::ResentFromField.included_modules).to include(Mail::CommonAddress) 
-    end
-
-    it "should accept a string with the field name" do
-      t = Mail::ResentFromField.new('Resent-From: Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>')
-      expect(t.name).to eq 'Resent-From'
-      expect(t.value).to eq 'Mikel Lindsaar <mikel@test.lindsaar.net>, "Bob Smith" <bob@me.com>'
     end
 
     it "should accept a string without the field name" do

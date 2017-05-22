@@ -87,12 +87,6 @@ describe Mail::MimeVersionField do
       expect { Mail::MimeVersionField.new("1.0") }.not_to raise_error
     end
 
-    it "should accept a string with the field name" do
-      t = Mail::MimeVersionField.new('Mime-Version: 1.0')
-      expect(t.name).to eq 'Mime-Version'
-      expect(t.value).to eq '1.0'
-    end
-
     it "should accept a string without the field name" do
       t = Mail::MimeVersionField.new('1.0')
       expect(t.name).to eq 'Mime-Version'

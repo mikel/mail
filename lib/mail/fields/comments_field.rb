@@ -33,7 +33,7 @@ module Mail
     
     def initialize(value = nil, charset = 'utf-8')
       @charset = charset
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value))
+      super(CAPITALIZED_FIELD, value)
       self.parse
       self
     end

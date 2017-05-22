@@ -11,12 +11,6 @@ describe Mail::ContentLocationField do
       expect { Mail::ContentLocationField.new("Content-Location", "7bit") }.not_to raise_error
     end
 
-    it "should accept a string with the field name" do
-      t = Mail::ContentLocationField.new('Content-Location: photo.jpg')
-      expect(t.name).to eq 'Content-Location'
-      expect(t.value).to eq 'photo.jpg'
-    end
-
     it "should accept a string without the field name" do
       t = Mail::ContentLocationField.new('photo.jpg')
       expect(t.name).to eq 'Content-Location'

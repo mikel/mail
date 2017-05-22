@@ -12,7 +12,7 @@ module Mail
   class Envelope < StructuredField
     
     def initialize(*args)
-      super(FIELD_NAME, strip_field(FIELD_NAME, args.last))
+      super(FIELD_NAME, args.last.to_s)
     end
     
     def element

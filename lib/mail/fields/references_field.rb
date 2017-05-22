@@ -40,7 +40,7 @@ module Mail
     def initialize(value = nil, charset = 'utf-8')
       self.charset = charset
       value = value.join("\r\n\s") if value.is_a?(Array)
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
+      super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
     end

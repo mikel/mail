@@ -32,6 +32,12 @@ module Mail
       else
         # Ensure we are dealing with a string
         value = value.to_s
+
+        # Mark UTF-8 strings parsed from ASCII-8BIT
+        if value.respond_to?(:force_encoding) && value.encoding == Encoding::ASCII_8BIT
+          utf8 = value.dup.force_encoding(Encoding::UTF_8)
+          value = utf8 if utf8.valid_encoding?
+        end
       end
 
       if charset
@@ -67,7 +73,11 @@ module Mail
     private
 
     def do_encode
-      value.nil? ? '' : "#{wrapped_value}\r\n"
+      if value && !value.empty?
+        "#{wrapped_value}\r\n"
+      else
+        ''
+      end
     end
 
     def do_decode

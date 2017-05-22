@@ -13,7 +13,7 @@ module Mail
       self.charset = charset
       value = '7bit' if value.to_s =~ /7-?bits?/i
       value = '8bit' if value.to_s =~ /8-?bits?/i
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
+      super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
     end

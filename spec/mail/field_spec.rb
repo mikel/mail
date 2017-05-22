@@ -4,26 +4,59 @@ require 'spec_helper'
 
 describe Mail::Field do
 
-  describe "initialization" do
-
-    it "should be instantiated" do
-      expect {Mail::Field.new('To: Mikel')}.not_to raise_error
-      expect(Mail::Field.new('To: Mikel').field.class).to eq Mail::ToField
+  describe 'parsing' do
+    it "parses full header fields" do
+      expect($stderr).to_not receive(:puts)
+      field = Mail::Field.parse('To: Mikel')
+      expect(field.name).to eq 'To'
+      expect(field.value).to eq 'Mikel'
+      if field.value.respond_to?(:encoding)
+        expect(field.value.encoding).to eq Encoding::UTF_8
+      end
+      expect(field.field).to be_kind_of(Mail::ToField)
     end
 
-    it "should allow you to init on an array" do
+    it "parses missing whitespace" do
+      field = Mail::Field.parse('To:Bob')
+      expect(field.name).to eq 'To'
+      expect(field.value).to eq 'Bob'
+    end
+
+    it "parses added inapplicable whitespace" do
+      field = Mail::Field.parse('To                  :                   Bob                      ')
+      expect(field.name).to eq 'To'
+      expect(field.value).to eq 'Bob'
+    end
+  end
+
+  describe "initialization" do
+    if Mail::VERSION.version >= '2.8'
+      it "raises if instantiating by parsing a full header field" do
+        expect {
+          Mail::Field.new('To: Mikel')
+        }.to raise_error(ArgumentError)
+      end
+    else
+      it "deprecates instantiation by parsing a full header field" do
+        expect(Kernel).to receive(:warn).with('Passing an unparsed header field to Mail::Field.new is deprecated and will be removed in Mail 2.8.0. Use Mail::Field.parse instead.')
+        field = Mail::Field.new('To: Mikel')
+        expect(field.name).to eq 'To'
+        expect(field.value).to eq 'Mikel'
+        expect(field.field).to be_kind_of(Mail::ToField)
+      end
+    end
+
+    it "instantiates with name and value" do
+      expect(Mail::Field.new('To', 'Mikel').field).to be_kind_of(Mail::ToField)
+    end
+
+    it "accepts arrays of values" do
       field = Mail::Field.new("To", ['test1@lindsaar.net', 'Mikel <test2@lindsaar.net>'])
       expect(field.addresses).to eq ["test1@lindsaar.net", "test2@lindsaar.net"]
     end
 
-    it "should allow us to pass an empty value" do
-      expect {Mail::Field.new('To')}.not_to raise_error
-      expect(Mail::Field.new('To').field.class).to eq Mail::ToField
-    end
-
-    it "should allow us to pass a value" do
-      expect {Mail::Field.new('To', 'Mikel')}.not_to raise_error
-      expect(Mail::Field.new('To', 'Mikel').field.class).to eq Mail::ToField
+    it "accepts omitted values" do
+      expect(Mail::Field.new('To').field).to be_kind_of(Mail::ToField)
     end
 
     it "should match up fields to class names" do
@@ -36,7 +69,7 @@ describe Mail::Field do
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
-        expect(Mail::Field.new("#{sf}: ").field.class).to eq Mail.const_get(klass)
+        expect(Mail::Field.new(sf).field).to be_kind_of(Mail.const_get(klass))
       end
     end
 
@@ -50,91 +83,75 @@ describe Mail::Field do
       structured_fields.each do |sf|
         words = sf.split("-").map { |a| a.capitalize }
         klass = "#{words.join}Field"
-        expect(Mail::Field.new("#{sf}: ").field.class).to eq Mail.const_get(klass)
+        expect(Mail::Field.new(sf).field).to be_kind_of(Mail.const_get(klass))
       end
     end
 
     it "should say anything that is not a known field is an optional field" do
       unstructured_fields = %w[ Too Becc bccc Random X-Mail MySpecialField ]
+      value = '😊'
       unstructured_fields.each do |sf|
-        expect(Mail::Field.new("#{sf}: Value").field.class).to eq Mail::OptionalField
+        raw = "#{sf}: #{value}"
+        raw = raw.dup.force_encoding(Encoding::BINARY) if raw.respond_to?(:force_encoding)
+        field = Mail::Field.parse(raw)
+        expect(field.field).to be_kind_of(Mail::OptionalField)
+        expect(field.name).to eq(sf)
+        expect(field.value).to eq(value)
       end
-    end
-
-    it "should split the name and values out of the raw field passed in" do
-      field = Mail::Field.new('To: Bob')
-      expect(field.name).to eq 'To'
-      expect(field.value).to eq 'Bob'
-    end
-
-    it "should split the name and values out of the raw field passed in if missing whitespace" do
-      field = Mail::Field.new('To:Bob')
-      expect(field.name).to eq 'To'
-      expect(field.value).to eq 'Bob'
-    end
-
-    it "should split the name and values out of the raw field passed in if having added inapplicable whitespace" do
-      field = Mail::Field.new('To                  :                   Bob                      ')
-      expect(field.name).to eq 'To'
-      expect(field.value).to eq 'Bob'
     end
 
     it "should return an unstuctured field if the structured field parsing raises an error" do
       expect(Mail::ToField).to receive(:new).and_raise(Mail::Field::ParseError.new(Mail::ToField, 'To: Bob, ,,, Frank, Smith', "Some reason"))
-      field = Mail::Field.new('To: Bob, ,,, Frank, Smith')
-      expect(field.field.class).to eq Mail::UnstructuredField
+      field = Mail::Field.new('To', 'Bob, ,,, Frank, Smith')
+      expect(field.field).to be_kind_of(Mail::UnstructuredField)
       expect(field.name).to eq 'To'
       expect(field.value).to eq 'Bob, ,,, Frank, Smith'
+      if field.value.respond_to?(:encoding)
+        expect(field.value.encoding).to eq Encoding::UTF_8
+      end
     end
 
-    it "should call to_s on its field when sent to_s" do
-      @field = Mail::SubjectField.new('Subject: Hello bob')
-      expect(Mail::SubjectField).to receive(:new).and_return(@field)
-      expect(@field).to receive(:to_s).once
-      Mail::Field.new('Subject: Hello bob').to_s
+    it "delegates to_s to its field" do
+      field = Mail::Field.new('To', 'Bob')
+      expect(field.field).to receive(:to_s).once
+      field.to_s
     end
 
-    it "should pass missing methods to its instantiated field class" do
-      field = Mail::Field.new('To: Bob')
-      expect(field.field).to receive(:addresses).once
-      field.addresses
+    it "delegates missing methods to its field" do
+      field = Mail::Field.new('To', 'Bob')
+      expect(field.field).to receive(:anything_at_all).once
+      field.anything_at_all
     end
 
     it "should respond_to? its own methods and the same methods as its instantiated field class" do
-      field = Mail::Field.new('To: Bob')
+      field = Mail::Field.new('To', 'Bob')
       expect(field.respond_to?(:field)).to be_truthy
       expect(field.field).to receive(:"respond_to?").once
       field.respond_to?(:addresses)
     end
 
     it "should change its type if you change the name" do
-      field = Mail::Field.new("To: mikel@me.com")
-      expect(field.field.class).to eq Mail::ToField
+      field = Mail::Field.new('To', 'mikel@me.com')
+      expect(field.field).to be_kind_of(Mail::ToField)
       field.value = "bob@me.com"
-      expect(field.field.class).to eq Mail::ToField
+      expect(field.field).to be_kind_of(Mail::ToField)
     end
 
     it "should create a field without trying to parse if given a symbol" do
       field = Mail::Field.new('Message-ID')
-      expect(field.field.class).to eq Mail::MessageIdField
+      expect(field.field).to be_kind_of(Mail::MessageIdField)
     end
 
     it "should inherit charset" do
       charset = 'iso-2022-jp'
-      field = Mail::Field.new('Subject: こんにちは', charset)
+      field = Mail::Field.new('Subject', 'こんにちは', charset)
       expect(field.charset).to eq charset
-    end
-
-    it "should not strip out content that looks like the field name" do
-      pending "pr#766"
-      field = Mail::Field.new('Subject: subject: for your approval')
-      expect(field.value).to eq 'subject: for your approval'
     end
   end
 
   describe "error handling" do
     it "should populate the errors array if it finds a field it can't deal with" do
-      field = Mail::Field.new('Content-Transfer-Encoding: 8@bit')
+      field = Mail::Field.new('Content-Transfer-Encoding', '8@bit')
       expect(field.field.errors.size).to eq 1
       expect(field.field.errors[0][0]).to eq 'Content-Transfer-Encoding'
       expect(field.field.errors[0][1]).to eq '8@bit'
@@ -144,61 +161,61 @@ describe Mail::Field do
 
   describe "helper methods" do
     it "should reply if it is responsible for a field name as a capitalized string - structured field" do
-      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field = Mail::Field.new('To', 'mikel@test.lindsaar.net')
       expect(field.responsible_for?("To")).to be_truthy
     end
 
     it "should reply if it is responsible for a field as a lower case string - structured field" do
-      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field = Mail::Field.new('To', 'mikel@test.lindsaar.net')
       expect(field.responsible_for?("to")).to be_truthy
     end
 
     it "should reply if it is responsible for a field as a symbol - structured field" do
-      field = Mail::Field.new("To: mikel@test.lindsaar.net")
+      field = Mail::Field.new('To', 'mikel@test.lindsaar.net')
       expect(field.responsible_for?(:to)).to be_truthy
     end
 
     it "should say it is the \"same\" as another if their field types match" do
-      expect(Mail::Field.new("To: mikel").same(Mail::Field.new("To: bob"))).to be_truthy
+      expect(Mail::Field.new('To', 'mikel').same(Mail::Field.new('To', 'bob'))).to be_truthy
     end
 
     it "should say it is not the \"same\" as another if their field types don't match" do
-      expect(Mail::Field.new("To: mikel").same(Mail::Field.new("From: mikel"))).to be_falsey
+      expect(Mail::Field.new('To', 'mikel').same(Mail::Field.new('From', 'mikel'))).to be_falsey
     end
 
     it "should say it is not the \"same\" as nil" do
-      expect(Mail::Field.new("To: mikel").same(nil)).to be_falsey
+      expect(Mail::Field.new('To', 'mikel').same(nil)).to be_falsey
     end
 
     it "should say it is == to another if their field and names match" do
-      expect(Mail::Field.new("To: mikel")).to eq(Mail::Field.new("To: mikel"))
+      expect(Mail::Field.new('To', 'mikel')).to eq(Mail::Field.new('To', 'mikel'))
     end
 
     it "should say it is not == to another if their field names do not match" do
-      expect(Mail::Field.new("From: mikel")).not_to eq(Mail::Field.new("To: bob"))
+      expect(Mail::Field.new('From', 'mikel')).not_to eq(Mail::Field.new('To', 'bob'))
     end
 
     it "should say it is not == to another if their field names match, but not their values" do
-      expect(Mail::Field.new("To: mikel")).not_to eq(Mail::Field.new("To: bob"))
+      expect(Mail::Field.new('To', 'mikel')).not_to eq(Mail::Field.new('To', 'bob'))
     end
 
     it "should say it is not == to nil" do
-      expect(Mail::Field.new("From: mikel")).not_to eq(nil)
+      expect(Mail::Field.new('From', 'mikel')).not_to eq(nil)
     end
 
     it "should sort according to the field order" do
-      list = [Mail::Field.new("To: mikel"), Mail::Field.new("Return-Path: bob")]
+      list = [Mail::Field.new('To', 'mikel'), Mail::Field.new('Return-Path', 'bob')]
       expect(list.sort[0].name).to eq "Return-Path"
     end
   end
 
   describe 'user defined fields' do
     it "should say it is the \"same\" as another if their field names match" do
-      expect(Mail::Field.new("X-Foo: mikel").same(Mail::Field.new("X-Foo: bob"))).to be_truthy
+      expect(Mail::Field.new('X-Foo', 'mikel').same(Mail::Field.new('X-Foo', 'bob'))).to be_truthy
     end
 
     it "should say it is not == to another if their field names do not match" do
-      expect(Mail::Field.new("X-Foo: mikel")).not_to eq(Mail::Field.new("X-Bar: bob"))
+      expect(Mail::Field.new('X-Foo', 'mikel')).not_to eq(Mail::Field.new('X-Bar', 'bob'))
     end
   end
 

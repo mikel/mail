@@ -14,7 +14,7 @@ module Mail
       if Utilities.blank?(value)
         value = '1.0'
       end
-      super(CAPITALIZED_FIELD, strip_field(FIELD_NAME, value), charset)
+      super(CAPITALIZED_FIELD, value, charset)
       self.parse
       self
 
