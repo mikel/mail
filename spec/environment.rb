@@ -14,3 +14,11 @@ end
 
 require 'mail'
 require 'mail/parsers'
+
+if ENV['MBCHARS'] == 'activesupport'
+  require 'active_support'
+  Mail::Multibyte.proxy_class = ActiveSupport::Multibyte::Chars
+else
+  require 'mail/multibyte/chars'
+  Mail::Multibyte.proxy_class = Mail::Multibyte::Chars
+end

@@ -26,6 +26,9 @@ rvm:
 env:
   global:
     - JRUBY_OPTS="--server -J-Xms1500m -J-Xmx1500m -J-XX:+UseConcMarkSweepGC -J-XX:-UseGCOverheadLimit -J-XX:+CMSClassUnloadingEnabled"
+  matrix:
+    - MBCHARS=activesupport
+    - MBCHARS=builtin
 
 matrix:
   allow_failures:
@@ -35,4 +38,5 @@ matrix:
     - rvm: jruby-head
     - rvm: rbx-2
     - rvm: rbx-3
+    - env: MBCHARS=activesupport
   fast_finish: true
