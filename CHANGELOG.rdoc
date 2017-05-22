@@ -2,6 +2,7 @@
 
 Bugs:
 * #1131 - Fix that Message#without_attachments! didn't parse the remaining parts. (jeremy)
+* #1113 - Eliminate attachment corruption caused by CRLF conversion. (jeremy)
 
 == Version 2.6.6 - 2017-06-09 Jeremy Daer <jeremydaer@gmail.com>
 

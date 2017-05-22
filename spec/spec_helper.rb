@@ -38,8 +38,16 @@ if defined?(Encoding) && Encoding.respond_to?(:default_external=)
   end
 end
 
-def fixture(*name)
-  File.join(SPEC_ROOT, 'fixtures', name)
+def fixture_path(*path)
+  File.join SPEC_ROOT, 'fixtures', path
+end
+
+def read_raw_fixture(*path)
+  File.open fixture_path(*path), 'rb', &:read
+end
+
+def read_fixture(*path)
+  Mail.read fixture_path(*path)
 end
 
 # Produces an array or printable ascii by default.

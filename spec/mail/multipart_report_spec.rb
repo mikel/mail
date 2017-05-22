@@ -5,38 +5,38 @@ require 'spec_helper'
 describe "multipart/report emails" do
   
   it "should know if it is a multipart report type" do
-    mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+    mail = read_fixture('emails', 'multipart_report_emails', 'report_422.eml')
     expect(mail).to be_multipart_report
   end
   
   describe "delivery-status reports" do
     
     it "should know if it is a deliver-status report" do
-      mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+      mail = read_fixture('emails', 'multipart_report_emails', 'report_422.eml')
       expect(mail).to be_delivery_status_report
     end
 
     it "should find its message/delivery-status part" do
-      mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+      mail = read_fixture('emails', 'multipart_report_emails', 'report_422.eml')
       expect(mail.delivery_status_part).not_to be_nil
     end
     
     it "should handle a report that has a human readable message/delivery-status" do
-      mail = Mail.read(fixture('emails', 'multipart_report_emails', 'multipart_report_multiple_status.eml'))
+      mail = read_fixture('emails', 'multipart_report_emails', 'multipart_report_multiple_status.eml')
       expect(mail).to be_bounced
     end
 
     describe "multipart reports with more than one address" do
       it "should not crash" do
-        mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
-        mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
+        mail1 = read_fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml')
+        mail2 = read_fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml')
         expect { mail1.bounced? }.not_to raise_error
         expect { mail2.bounced? }.not_to raise_error
       end
 
       it "should not know that a multi address email was bounced" do
-        mail1 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml'))
-        mail2 = Mail.read(fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml'))
+        mail1 = read_fixture('emails', 'multipart_report_emails', 'multi_address_bounce1.eml')
+        mail2 = read_fixture('emails', 'multipart_report_emails', 'multi_address_bounce2.eml')
         expect(mail1).to be_bounced
         expect(mail2).to be_bounced
       end
@@ -45,7 +45,7 @@ describe "multipart/report emails" do
     describe "temporary failure" do
       
       before(:each) do
-        @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_422.eml'))
+        @mail = read_fixture('emails', 'multipart_report_emails', 'report_422.eml')
       end
       
       it "should be bounced" do
@@ -80,7 +80,7 @@ describe "multipart/report emails" do
     describe "permanent failure" do
       
       before(:each) do
-        @mail = Mail.read(fixture('emails', 'multipart_report_emails', 'report_530.eml'))
+        @mail = read_fixture('emails', 'multipart_report_emails', 'report_530.eml')
       end
       
       it "should be bounced" do
