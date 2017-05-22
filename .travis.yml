@@ -21,6 +21,7 @@ rvm:
   - jruby-9.1.6.0
   - jruby-head
   - rbx-2
+  - rbx-3
 
 env:
   global:
@@ -32,5 +33,6 @@ matrix:
     - rvm: jruby-9.0.5.0
     - rvm: jruby-9.1.6.0
     - rvm: jruby-head
-    - rvm: rbx-2
+    - rvy: rbx-2
+    - rvy: rbx-3
   fast_finish: true
