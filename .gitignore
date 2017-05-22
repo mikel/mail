@@ -6,7 +6,6 @@
 /corpus
 /coverage
 /Gemfile.lock
-/gemfiles/*.lock
 /gems
 /lib/mail/parsers/ragel/ruby/machines/*.dot
 /lib/mail/parsers/ragel/ruby/machines/*.svg
