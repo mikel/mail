@@ -1,25 +1,23 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'mail/multibyte/chars'
+
 module Mail #:nodoc:
   module Multibyte
-    require 'mail/multibyte/exceptions'
-    require 'mail/multibyte/chars'
-    require 'mail/multibyte/unicode'
+    # Raised when a problem with the encoding was found.
+    class EncodingError < StandardError; end
 
-    # The proxy class returned when calling mb_chars. You can use this accessor to configure your own proxy
-    # class so you can support other encodings. See the Mail::Multibyte::Chars implementation for
-    # an example how to do this.
-    #
-    # Example:
-    #   Mail::Multibyte.proxy_class = CharsForUTF32
-    def self.proxy_class=(klass)
-      @proxy_class = klass
+    class << self
+      # The proxy class returned when calling mb_chars. You can use this accessor to configure your own proxy
+      # class so you can support other encodings. See the Mail::Multibyte::Chars implementation for
+      # an example how to do this.
+      #
+      # Example:
+      #   Mail::Multibyte.proxy_class = CharsForUTF32
+      attr_accessor :proxy_class
     end
 
-    # Returns the current proxy class
-    def self.proxy_class
-      @proxy_class ||= Mail::Multibyte::Chars
-    end
+    self.proxy_class = Mail::Multibyte::Chars
 
     if RUBY_VERSION >= "1.9"
       # == Multibyte proxy

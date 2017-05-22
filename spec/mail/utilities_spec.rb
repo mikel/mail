@@ -71,17 +71,11 @@ describe "Utilities Module" do
         expect(quote_atom(Mail::Multibyte.mb_chars('.abc'))).to eq '".abc"'
       end
 
-      it "should work with mb_chars" do
-        expect(quote_atom(Mail::Multibyte.mb_chars('?=abc'))).to eq '?=abc'
-        expect(quote_atom(Mail::Multibyte.mb_chars('.abc'))).to eq '".abc"'
-      end
-
-      it "should quote white space" do
+      it "should quote mb_chars white space" do
         expect(quote_atom(Mail::Multibyte.mb_chars('ab abc'))).to eq '"ab abc"'
         expect(quote_atom(Mail::Multibyte.mb_chars("a\sb\ta\r\nbc"))).to eq %{"a\sb\ta\r\nbc"}
       end
     end
-
   end
 
   describe "quoting phrases" do
@@ -161,7 +155,6 @@ describe "Utilities Module" do
       result = 'This is a string'
       expect(unparen(test)).to eq result
     end
-
   end
 
   describe "unescaping brackets" do
@@ -189,7 +182,6 @@ describe "Utilities Module" do
       result = 'This is a string'
       expect(unbracket(test)).to eq(result)
     end
-
   end
 
   describe "quoting phrases" do
