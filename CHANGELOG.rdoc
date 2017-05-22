@@ -30,6 +30,7 @@ Compatibility:
 * #982 – Faithfully preserve unfolded whitespace rather than collapsing to a single space. (jeremy)
 * #1103 – Support parsing UTF-8 headers. Implements RFC 6532. (jeremy)
 * #1106 – Limit message/rfc822 parts' transfer encoding per RFC 2046. (ahorek)
+* #1112 – Support Windows-1258 charset by parsing it as Windows-1252 in Ruby. (jeremy)
 
 Bugs:
 * #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)

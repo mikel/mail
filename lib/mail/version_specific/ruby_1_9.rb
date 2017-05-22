@@ -42,7 +42,7 @@ module Mail
     class << self
       attr_accessor :charset_encoder
     end
-    self.charset_encoder = StrictCharsetEncoder.new
+    self.charset_encoder = BestEffortCharsetEncoder.new
 
     # Escapes any parenthesis in a string that are unescaped this uses
     # a Ruby 1.9.1 regexp feature of negative look behind
