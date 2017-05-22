@@ -1724,6 +1724,18 @@ describe Mail::Message do
   end
 
   describe "nested parts" do
+    it "adds a new text part when assigning the body on an already-multipart message" do
+      mail = Mail.new do
+        part :content_type => 'foo/bar', :body => 'baz'
+      end
+
+      mail.body 'this: body is not a header'
+
+      expect(mail.parts.size).to eq(2)
+      expect(mail.text_part).not_to be_nil
+      expect(mail.text_part.decoded).to eq('this: body is not a header')
+    end
+
     it "should provide a way to instantiate a new part as you go down" do
       mail = Mail.new do
         to           'mikel@test.lindsaar.net'

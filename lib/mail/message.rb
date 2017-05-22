@@ -1258,7 +1258,6 @@ module Mail
     def body(value = nil)
       if value
         self.body = value
-#        add_encoding_to_body
       else
         process_body_raw if @body_raw
         @body
@@ -2025,11 +2024,9 @@ module Mail
         @body_raw = nil
         add_encoding_to_body
       when @body && @body.multipart?
-        @body << Mail::Part.new(value)
-        add_encoding_to_body
+        self.text_part = value
       else
         @body_raw = value
-#        process_body_raw
       end
     end
 
