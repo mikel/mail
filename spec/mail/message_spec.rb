@@ -2130,4 +2130,63 @@ describe Mail::Message do
     end
   end
 
+  describe 'body section' do
+    context 'with a nested message' do
+      let(:nested_email) do
+        Mail::Message.new do
+          add_part(
+            Mail::Part.new do
+              text_part do
+                body 'text'
+              end
+
+              html_part do
+                body '<p>html</p>'
+              end
+            end
+          )
+
+          add_file :filename => 'foo.png', :content => ''
+        end
+      end
+
+      it "returns the appropriate part when given a valid part specifier" do
+        nested_email.body_section('1.2').content_type.should eq 'text/html'
+        nested_email.body_section('1.2').body.should eq '<p>html</p>'
+      end
+
+      it "returns nil when given an out-of-bounds part specifier" do
+        nested_email.body_section('1.5').should be_nil
+      end
+
+      it "returns nil when given a part specification for a non-existent part" do
+        nested_email.body_section('1.5.1').should be_nil
+      end
+
+      it "returns nil when given a too-long part specification" do
+        nested_email.body_section('1.1.1.1.1.1').should be_nil
+      end
+    end
+
+    context 'with a flat message' do
+      let(:flat_email) do
+        Mail::Message.new do
+          content_type 'text/plain'
+          body 'text'
+        end
+      end
+
+      it "returns the message when given '1' as a part specifier" do
+        flat_email.body_section('1').should eq flat_email
+      end
+
+      it "returns nil for any other specifier" do
+        flat_email.body_section('5').should be_nil
+      end
+
+      it "returns nil when given a too-long part specification" do
+        flat_email.body_section('1.1.1.1.1.1').should be_nil
+      end
+    end
+  end
 end
