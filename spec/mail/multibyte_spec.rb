@@ -16,7 +16,7 @@ describe Mail::Multibyte::Chars do
 
   if 'string'.respond_to?(:force_encoding)
     it "doesn't mutate input string encoding" do
-      s = "ascii".force_encoding(Encoding::US_ASCII)
+      s = 'ascii'.dup.force_encoding(Encoding::US_ASCII)
       chars = described_class.new(s)
       expect(s.encoding).to eq(Encoding::US_ASCII)
     end
