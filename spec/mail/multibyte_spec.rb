@@ -14,5 +14,12 @@ describe "multibyte/chars" do
     chars = Chars.new('VĚDA A VÝZKUM')
     expect(chars.downcase).to eq("věda a výzkum")
   end
-end
 
+  if 'string'.respond_to?(:force_encoding)
+    it "doesn't mutate input string encoding" do
+      s = "ascii".force_encoding(Encoding::US_ASCII)
+      chars = Chars.new(s)
+      expect(s.encoding).to eq(Encoding::US_ASCII)
+    end
+  end
+end

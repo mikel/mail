@@ -40,7 +40,7 @@ module Mail #:nodoc:
       if RUBY_VERSION >= "1.9"
         # Creates a new Chars instance by wrapping _string_.
         def initialize(string)
-          @wrapped_string = string
+          @wrapped_string = string.dup
           @wrapped_string.force_encoding(Encoding::UTF_8) unless @wrapped_string.frozen?
         end
       else
