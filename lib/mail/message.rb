@@ -1211,8 +1211,8 @@ module Mail
     def default( sym, val = nil )
       if val
         header[sym] = val
-      else
-        header[sym].default if header[sym]
+      elsif field = header[sym]
+        field.default
       end
     end
 
