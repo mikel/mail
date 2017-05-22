@@ -58,51 +58,51 @@ describe "MIME Emails" do
       end
 
       it "should recognize a multipart email" do
-        mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
+        mail = read_fixture('emails', 'mime_emails', 'raw_email7.eml')
         expect(mail).to be_multipart
       end
 
       it "should recognize a non multipart email" do
-        mail = Mail.read(fixture('emails', 'plain_emails', 'basic_email.eml'))
+        mail = read_fixture('emails', 'plain_emails', 'basic_email.eml')
         expect(mail).not_to be_multipart
       end
 
       it "should not report the email as :attachment?" do
-        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+        mail = read_fixture('emails', 'attachment_emails', 'attachment_pdf.eml')
         expect(mail.attachment?).to eq false
       end
 
       it "should report the email as :attachment?" do
-        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_only_email.eml')))
+        mail = read_fixture('emails', 'attachment_emails', 'attachment_only_email.eml')
         expect(mail.attachment?).to eq true
       end
 
       it "should recognize an attachment part" do
-        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+        mail = read_fixture('emails', 'attachment_emails', 'attachment_pdf.eml')
         expect(mail).not_to be_attachment
         expect(mail.parts[0].attachment?).to eq false
         expect(mail.parts[1].attachment?).to eq true
       end
 
       it "should give how may (top level) parts there are" do
-        mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email7.eml'))
+        mail = read_fixture('emails', 'mime_emails', 'raw_email7.eml')
         expect(mail.parts.length).to eq 2
       end
 
       it "should give the content_type of each part" do
-        mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email11.eml'))
+        mail = read_fixture('emails', 'mime_emails', 'raw_email11.eml')
         expect(mail.mime_type).to eq 'multipart/alternative'
         expect(mail.parts[0].mime_type).to eq 'text/plain'
         expect(mail.parts[1].mime_type).to eq 'text/enriched'
       end
 
       it "should report the mail :has_attachments?" do
-        mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+        mail = read_fixture('emails', 'attachment_emails', 'attachment_pdf.eml')
         expect(mail).to be_has_attachments
       end
 
       it "should only split on exact boundary matches" do
-        mail = Mail.read(fixture('emails', 'mime_emails', 'email_with_similar_boundaries.eml'))
+        mail = read_fixture('emails', 'mime_emails', 'email_with_similar_boundaries.eml')
         expect(mail.parts.size).to eq 2
         expect(mail.parts.first.parts.size).to eq 2
         expect(mail.boundary).to eq "----=_NextPart_476c4fde88e507bb8028170e8cf47c73"
@@ -328,7 +328,7 @@ describe "MIME Emails" do
 
       it "should detect a text_part in an existing email with plain text attachment" do
         m = Mail.new(:content_type => 'multipart/alternative')
-        m.add_file(fixture('attachments', 'てすと.txt'))
+        m.add_file(fixture_path('attachments', 'てすと.txt'))
         m.add_part(Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT'))
         m.add_part(Mail::Part.new(:content_type => 'text/plain', :body => 'PLAIN TEXT'))
         expect(m.text_part.body.decoded).to eq 'PLAIN TEXT'
@@ -376,18 +376,36 @@ describe "MIME Emails" do
     describe "finding attachments" do
 
       it "should return an array of attachments" do
-        mail = Mail.read(fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml'))
+        mail = read_fixture('emails', 'attachment_emails', 'attachment_content_disposition.eml')
         expect(mail.attachments.length).to eq 1
         expect(mail.attachments.first.filename).to eq 'api.rb'
       end
 
       it "should return an array of attachments" do
-        mail = Mail.read(fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml'))
+        mail = read_fixture('emails', 'mime_emails', 'raw_email_with_nested_attachment.eml')
         expect(mail.attachments.length).to eq 2
         expect(mail.attachments[0].filename).to eq 'truncated.png'
         expect(mail.attachments[1].filename).to eq 'smime.p7s'
       end
 
+      Dir.glob(fixture_path('attachments', "test.*")).each do |test_attachment|
+        # This spec fails for (most?) jpegs in 1.8.7
+        next if test_attachment.end_with?('test.jpg') && RUBY_VERSION < '1.9'
+
+        it "should find binary encoded attachments of type #{File.extname(test_attachment)}" do
+          pre, post = read_raw_fixture('emails', 'mime_emails', 'raw_email_with_binary_encoded.eml').split('BINARY_CONTENT_GOES_HERE')
+          raw_file  = File.open(test_attachment, "rb", &:read)
+
+          raw_mail = pre + raw_file + post
+          expect(raw_mail.encoding).to eq(Encoding::ASCII_8BIT) if raw_mail.respond_to?(:encoding)
+
+          mail = Mail.new(raw_mail)
+
+          expect(mail.attachments.size).to eq 1
+          expect(mail.attachments.first.decoded.bytesize).to eq raw_file.bytesize
+          expect(mail.attachments.first.decoded).to eq raw_file
+        end
+      end
     end
 
     describe "adding a file attachment" do
@@ -395,32 +413,32 @@ describe "MIME Emails" do
       it "should set to multipart/mixed if a text part and you add an attachment" do
         mail = Mail::Message.new
         mail.text_part { body("log message goes here") }
-        mail.add_file(fixture('attachments', 'test.png'))
+        mail.add_file(fixture_path('attachments', 'test.png'))
         expect(mail.mime_type).to eq 'multipart/mixed'
       end
 
       it "should set to multipart/mixed if you add an attachment and then a text part" do
         mail = Mail::Message.new
-        mail.add_file(fixture('attachments', 'test.png'))
+        mail.add_file(fixture_path('attachments', 'test.png'))
         mail.text_part { body("log message goes here") }
         expect(mail.mime_type).to eq 'multipart/mixed'
       end
 
       it "should add a part given a filename" do
         mail = Mail::Message.new
-        mail.add_file(fixture('attachments', 'test.png'))
+        mail.add_file(fixture_path('attachments', 'test.png'))
         expect(mail.parts.length).to eq 1 # First part is an empty text body
       end
 
       it "should give the part the right content type" do
         mail = Mail::Message.new
-        mail.add_file(fixture('attachments', 'test.png'))
+        mail.add_file(fixture_path('attachments', 'test.png'))
         expect(mail.parts.first[:content_type].content_type).to eq 'image/png'
       end
 
       it "should return attachment objects" do
         mail = Mail::Message.new
-        mail.add_file(fixture('attachments', 'test.png'))
+        mail.add_file(fixture_path('attachments', 'test.png'))
         expect(mail.attachments.first.class).to eq Mail::Part
       end
 
@@ -429,10 +447,10 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
-          add_file fixture('attachments', 'test.jpg')
-          add_file fixture('attachments', 'test.pdf')
-          add_file fixture('attachments', 'test.zip')
+          add_file fixture_path('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.jpg')
+          add_file fixture_path('attachments', 'test.pdf')
+          add_file fixture_path('attachments', 'test.zip')
         end
         expect(mail.attachments.length).to eq 4
         mail.attachments.each { |a| expect(a.class).to eq Mail::Part }
@@ -443,10 +461,10 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
-          add_file fixture('attachments', 'test.jpg')
-          add_file fixture('attachments', 'test.pdf')
-          add_file fixture('attachments', 'test.zip')
+          add_file fixture_path('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.jpg')
+          add_file fixture_path('attachments', 'test.pdf')
+          add_file fixture_path('attachments', 'test.zip')
         end
         expect(mail.attachments[0].filename).to eq 'test.png'
         expect(mail.attachments[1].filename).to eq 'test.jpg'
@@ -459,10 +477,10 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
-          add_file fixture('attachments', 'test.jpg')
-          add_file fixture('attachments', 'test.pdf')
-          add_file fixture('attachments', 'test.zip')
+          add_file fixture_path('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.jpg')
+          add_file fixture_path('attachments', 'test.pdf')
+          add_file fixture_path('attachments', 'test.zip')
         end
         expect(mail.attachments[0].mime_type).to eq 'image/png'
         expect(mail.attachments[1].mime_type).to eq 'image/jpeg'
@@ -475,34 +493,34 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
-          add_file fixture('attachments', 'test.jpg')
-          add_file fixture('attachments', 'test.pdf')
-          add_file fixture('attachments', 'test.zip')
+          add_file fixture_path('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.jpg')
+          add_file fixture_path('attachments', 'test.pdf')
+          add_file fixture_path('attachments', 'test.zip')
         end
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
-          original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+          original = read_raw_fixture('attachments', 'test.png')
           expect(tripped).to eq original
           tripped = mail.attachments[1].decoded
-          original = File.open(fixture('attachments', 'test.jpg'), 'rb', &:read)
+          original = read_raw_fixture('attachments', 'test.jpg')
           expect(tripped).to eq original
           tripped = mail.attachments[2].decoded
-          original = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
+          original = read_raw_fixture('attachments', 'test.pdf')
           expect(tripped).to eq original
           tripped = mail.attachments[3].decoded
-          original = File.open(fixture('attachments', 'test.zip'), 'rb', &:read)
+          original = read_raw_fixture('attachments', 'test.zip')
           expect(tripped).to eq original
         else
-          expect(mail.attachments[0].decoded).to eq File.read(fixture('attachments', 'test.png'))
-          expect(mail.attachments[1].decoded).to eq File.read(fixture('attachments', 'test.jpg'))
-          expect(mail.attachments[2].decoded).to eq File.read(fixture('attachments', 'test.pdf'))
-          expect(mail.attachments[3].decoded).to eq File.read(fixture('attachments', 'test.zip'))
+          expect(mail.attachments[0].decoded).to eq read_raw_fixture('attachments', 'test.png')
+          expect(mail.attachments[1].decoded).to eq read_raw_fixture('attachments', 'test.jpg')
+          expect(mail.attachments[2].decoded).to eq read_raw_fixture('attachments', 'test.pdf')
+          expect(mail.attachments[3].decoded).to eq read_raw_fixture('attachments', 'test.zip')
         end
       end
 
       it "should allow you to send in file data instead of having to read it" do
-        file_data = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+        file_data = read_raw_fixture('attachments', 'test.png')
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
@@ -511,10 +529,10 @@ describe "MIME Emails" do
         end
         if RUBY_VERSION >= '1.9'
           tripped = mail.attachments[0].decoded
-          original = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+          original = read_raw_fixture('attachments', 'test.png')
           expect(tripped).to eq original
         else
-          expect(mail.attachments[0].decoded).to eq File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+          expect(mail.attachments[0].decoded).to eq read_raw_fixture('attachments', 'test.png')
         end
       end
 
@@ -530,7 +548,7 @@ describe "MIME Emails" do
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
           body    "Attached"
-          add_file fixture('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.png')
         end
         expect(m.attachments.length).to eq 1
         expect(m.parts.length).to eq 2
@@ -543,7 +561,7 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.png')
           body    "Attached"
         end
         expect(m.parts.length).to eq 2
@@ -556,7 +574,7 @@ describe "MIME Emails" do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'
           to      'mikel@to.lindsaar.net'
-          add_file fixture('attachments', 'test.png')
+          add_file fixture_path('attachments', 'test.png')
           body    "First Line\n\nSecond Line\n\nThird Line\n\n"
           #Note: trailing \n\n is stripped off by Mail::Part initialization
         end
@@ -571,7 +589,7 @@ describe "MIME Emails" do
         mail = Mail.new
         mail.body = body
         mail.charset = 'UTF-8'
-        mail.add_file fixture('attachments', 'test.png')
+        mail.add_file fixture_path('attachments', 'test.png')
         expect($stderr).not_to receive(:puts)
         mail.to_s
       end

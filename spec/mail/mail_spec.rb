@@ -27,8 +27,8 @@ describe "mail" do
   end
 
   it "should read a file" do
-    wrap_method = Mail.read(fixture('emails', 'plain_emails', 'raw_email.eml')).to_s
-    file_method = Mail.new(File.open(fixture('emails', 'plain_emails', 'raw_email.eml'), 'rb', &:read)).to_s
+    wrap_method = read_fixture('emails', 'plain_emails', 'raw_email.eml').to_s
+    file_method = Mail.new(read_raw_fixture('emails', 'plain_emails', 'raw_email.eml')).to_s
     expect(wrap_method).to eq file_method
   end
 

@@ -1,0 +1,2 @@
+# Never autoconvert line endings on fixture emails
+*.eml -text

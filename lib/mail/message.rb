@@ -2013,7 +2013,7 @@ module Mail
 
     def raw_source=(value)
       value = value.dup.force_encoding(Encoding::BINARY) if RUBY_VERSION >= "1.9.1"
-      @raw_source = ::Mail::Utilities.to_crlf(value)
+      @raw_source = value
     end
 
     # see comments to body=. We take data and process it lazily

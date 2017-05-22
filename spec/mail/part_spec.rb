@@ -112,8 +112,8 @@ PARTEND
   end
   
   describe "delivery status reports" do
-    before(:each) do
-      part =<<ENDPART
+    before do
+      @delivery_report = Mail::Part.new(Mail::Utilities.to_crlf(<<ENDPART))
 Content-Type: message/delivery-status
 
 Reporting-MTA: dns; mail12.rrrr.com.au
@@ -127,7 +127,6 @@ Remote-MTA: DNS; mail.zzzzzz.com
 Diagnostic-Code: SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address
 Last-Attempt-Date: Mon, 24 Dec 2007 10:03:53 +1100
 ENDPART
-      @delivery_report = Mail::Part.new(part)
     end
 
     it "should know if it is a delivery-status report" do
