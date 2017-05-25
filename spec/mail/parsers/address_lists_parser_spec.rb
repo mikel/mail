@@ -9,6 +9,12 @@ describe "AddressListsParser" do
     expect(a.parse(text)).not_to be_nil
   end
 
+  it "should parse an address list that contains non US ASCII text" do
+    text  = 'test.muñiz@lindsaar.net'
+    a = Mail::Parsers::AddressListsParser
+    expect { a.parse(text) }.not_to raise_error
+  end
+
   it "should parse an address list separated by semicolons" do
     text = 'Mikel Lindsaar <test@lindsaar.net>; Friends: test2@lindsaar.net; Ada <test3@lindsaar.net>;'
     a = Mail::Parsers::AddressListsParser
