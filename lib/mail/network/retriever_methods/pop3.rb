@@ -41,7 +41,8 @@ module Mail
                         :user_name            => nil,
                         :password             => nil,
                         :authentication       => nil,
-                        :enable_ssl           => false }.merge!(values)
+                        :enable_ssl           => false,
+                        :read_timeout         => nil }.merge!(values)
     end
     
     attr_accessor :settings
@@ -128,6 +129,7 @@ module Mail
     
       pop3 = Net::POP3.new(settings[:address], settings[:port], false)
       pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if settings[:enable_ssl]
+      pop3.read_timeout = settings[:read_timeout] if settings[:read_timeout]
       pop3.start(settings[:user_name], settings[:password])
     
       yield pop3

@@ -217,4 +217,23 @@ describe "POP3 Retriever" do
 
   end
 
+  describe "read_timeout option" do
+
+    it "should override the POP3 default read_timeout" do
+      Mail.defaults do
+        retriever_method :pop3, { :address             => "localhost",
+                                  :port                => 995,
+                                  :user_name           => nil,
+                                  :password            => nil,
+                                  :enable_ssl          => true,
+                                  :read_timeout        => 200 }
+      end
+
+      Mail.retriever_method.send(:start) do |pop3|
+        expect(pop3.read_timeout).to eq 200
+      end
+    end
+
+  end
+
 end
