@@ -67,7 +67,8 @@ describe "Mail" do
                                                  :user_name            => nil,
                                                  :password             => nil,
                                                  :authentication       => nil,
-                                                 :enable_ssl           => true  })
+                                                 :enable_ssl           => true,
+                                                 :read_timeout         => nil })
     end
 
     it "should allow us to overwrite anything we need on SMTP" do

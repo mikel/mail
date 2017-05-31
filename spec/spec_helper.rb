@@ -168,6 +168,8 @@ end
 class MockPOP3
   @@start = false
 
+  attr_accessor :read_timeout
+
   def initialize
     @@popmails = []
     20.times do |i|
