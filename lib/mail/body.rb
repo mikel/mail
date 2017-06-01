@@ -46,10 +46,10 @@ module Mail
           raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
         end
       end
-      @encoding = (only_us_ascii? ? '7bit' : '8bit')
+      @encoding = default_encoding
       set_charset
     end
-    
+
     # Matches this body with another body.  Also matches the decoded value of this
     # body with a string.
     # 
@@ -200,13 +200,14 @@ module Mail
         @encoding
       end
     end
-    
+
     def encoding=( val )
-      @encoding = if val == "text" || Utilities.blank?(val)
-          (only_us_ascii? ? '7bit' : '8bit')
-      else
+      @encoding =
+        if val == "text" || Utilities.blank?(val)
+          default_encoding
+        else
           val
-      end
+        end
     end
 
     # Returns the preamble (any text that is before the first MIME boundary)
@@ -268,15 +269,21 @@ module Mail
       self
     end
 
-    def only_us_ascii?
-      return @only_us_ascii if defined?(@only_us_ascii)
-      @only_us_ascii = !(raw_source =~ /[^\x01-\x7f]/)
+    def ascii_only?
+      unless defined? @ascii_only
+        @ascii_only = raw_source.ascii_only?
+      end
+      @ascii_only
     end
-    
+
     def empty?
       !!raw_source.to_s.empty?
     end
-    
+
+    def default_encoding
+      ascii_only? ? '7bit' : '8bit'
+    end
+
     private
 
     # split parts by boundary, ignore first part if empty, append final part when closing boundary was missing
@@ -309,9 +316,9 @@ module Mail
     def end_boundary
       "\r\n--#{boundary}--\r\n"
     end
-    
+
     def set_charset
-      only_us_ascii? ? @charset = 'US-ASCII' : @charset = nil
+      @charset = ascii_only? ? 'US-ASCII' : nil
     end
   end
 end

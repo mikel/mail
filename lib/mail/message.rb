@@ -1494,16 +1494,8 @@ module Mail
     end
 
     # Adds a content transfer encoding
-    #
-    # Otherwise raises a warning
     def add_content_transfer_encoding
-      if body.only_us_ascii?
-        header[:content_transfer_encoding] = '7bit'
-      else
-        warning = "Non US-ASCII detected and no content-transfer-encoding defined.\nDefaulting to 8bit, set your own if this is incorrect.\n"
-        warn(warning)
-        header[:content_transfer_encoding] = '8bit'
-      end
+      header[:content_transfer_encoding] ||= body.default_encoding
     end
 
     def add_transfer_encoding # :nodoc:
