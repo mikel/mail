@@ -21,6 +21,7 @@ Features:
 
 Performance:
 * #1059 - Switch from mime-types to mini_mime for a much smaller memory footprint. (SamSaffron)
+* #1119 - Speed up large attachment encoding by memoizing slow ASCII-only checks. (dalibor)
 
 Compatibility:
 * #464 - Improve attachment filename detection by preferring Content-Disposition filename. (lawrencepit)
