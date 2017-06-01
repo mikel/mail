@@ -90,7 +90,7 @@ module Mail
     # set it to binary, otherwise as set to plain text
     def guess_encoding
       if @mime_type && !@mime_type.binary?
-        "7bit"
+        nil
       else
         "binary"
       end
