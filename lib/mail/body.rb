@@ -269,7 +269,8 @@ module Mail
     end
 
     def only_us_ascii?
-      !(raw_source =~ /[^\x01-\x7f]/)
+      return @only_us_ascii if defined?(@only_us_ascii)
+      @only_us_ascii = !(raw_source =~ /[^\x01-\x7f]/)
     end
     
     def empty?
