@@ -53,6 +53,11 @@ describe Mail::Body do
       expect(body.encoded).to eq "line one\r\nline two\r\n"
     end
 
+    it "should duplicate the empty raw_source string to allow it to be mutated" do
+      body = Mail::Body.new
+      expect(body.raw_source.frozen?).to eq false
+    end
+
   end
 
   describe "encoding" do
