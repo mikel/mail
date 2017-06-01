@@ -190,7 +190,7 @@ module Mail
       when val =~ /^([\w\-]+)\/([\w\-]+);.+$/i
         "#{$1}/#{$2}"
       else
-        'text/plain'
+        'encoding/binary'
       end
     end
   end
