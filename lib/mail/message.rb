@@ -1792,7 +1792,7 @@ module Mail
         basename = File.basename(values)
         filedata = File.open(values, 'rb') { |f| f.read }
       else
-        basename = values[:filename]
+        basename = values.delete(:filename)
         filedata = values
       end
       self.attachments[basename] = filedata
