@@ -144,6 +144,7 @@ module Mail
 
       # TODO: check if there are cases where whitespace is not a separator
       val = val.
+        gsub(/\s[\w\-]+:\s.*\\r\\n$/, ''). # cases with botched fields like Content-Type: text/html Content-Transfer-Encoding: 8bit\r\n
         gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
         gsub(/[; ]+/, '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below
