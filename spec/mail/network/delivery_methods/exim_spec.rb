@@ -89,7 +89,7 @@ describe "exim delivery agent" do
     mail.deliver!
   end
 
-  it "should not raise errors if no sender is defined" do
+  it "should raise an error if no sender is defined" do
     mail.from = nil
 
     expect(mail.smtp_envelope_from).to be_nil
