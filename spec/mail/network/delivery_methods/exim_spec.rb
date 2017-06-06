@@ -57,6 +57,18 @@ describe "exim delivery agent" do
 
       mail.deliver
     end
+
+    it 'should not escape ~ in return path address' do
+      mail.from = 'tilde~@test.lindsaar.net'
+
+      expect(Mail::Sendmail).to receive(:call).
+        with('/usr/sbin/exim',
+             '-i -t -f "tilde~@test.lindsaar.net" --',
+             nil,
+             mail.encoded)
+
+      mail.deliver
+    end
   end
 
   it "should still send an email if the settings have been set to nil" do
