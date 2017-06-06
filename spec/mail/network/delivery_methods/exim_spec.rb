@@ -57,14 +57,6 @@ describe "exim delivery agent" do
 
       mail.deliver
     end
-
-    it "should quote the destinations to ensure leading -hyphen doesn't confuse exim" do
-      mail.to = '-hyphen@test.lindsaar.net'
-
-      expect(Mail::Sendmail).to receive(:call).with('/usr/sbin/exim', '-i -t -f "roger@test.lindsaar.net" --', nil, mail.encoded)
-
-      mail.deliver
-    end
   end
 
   it "should still send an email if the settings have been set to nil" do
