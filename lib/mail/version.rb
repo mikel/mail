@@ -4,8 +4,8 @@ module Mail
 
     MAJOR = 2
     MINOR = 6
-    PATCH = 6
-    BUILD = nil
+    PATCH = 7
+    BUILD = 'pre'
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
 
