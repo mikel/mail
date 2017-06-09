@@ -24,6 +24,12 @@ describe Mail::AddressList do
       doing { Mail::AddressList.new(parse_text) }.should raise_error
     end
 
+    it "should not extend NilClass" do
+      parse_text  = 'test@lindsaar.net'
+      Mail::AddressList.new(parse_text)
+      nil.should_not respond_to(:comments)
+    end
+
     it "should give the address passed in" do
       parse_text  = 'test@lindsaar.net'
       result      = 'test@lindsaar.net'
