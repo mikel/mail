@@ -1,4 +1,4 @@
-== Version 2.6.6 - unreleased
+== Version 2.6.6 - 2017-06-09 Jeremy Daer <jeremydaer@gmail.com>
 
 Security:
 * #1097 – SMTP security: prevent command injection via To/From addresses. (jeremy)
