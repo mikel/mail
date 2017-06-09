@@ -1,3 +1,5 @@
+== Version 2.5.6 - unreleased
+
 == Version 2.5.5 - 2017-06-09 Jeremy Daer <jeremydaer@gmail.com>
 
 Security:
