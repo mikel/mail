@@ -174,7 +174,7 @@ class MockPOP3
     @@popmails = []
     20.times do |i|
       # "test00", "test01", "test02", ..., "test19"
-      @@popmails << MockPopMail.new("test#{i.to_s.rjust(2, '0')}", i)
+      @@popmails << MockPopMail.new("To: foo\r\n\r\ntest#{i.to_s.rjust(2, '0')}", i)
     end
   end
 
@@ -244,7 +244,7 @@ class MockIMAP
   @@marked_for_deletion = []
   @@default_examples = {
     :default => (0..19).map do |i|
-      MockIMAPFetchData.new("test#{i.to_s.rjust(2, '0')}", i, "DummyFlag#{i}")
+      MockIMAPFetchData.new("To: foo\r\n\r\ntest#{i.to_s.rjust(2, '0')}", i, "DummyFlag#{i}")
     end
   }
   @@default_examples['UTF-8'] = @@default_examples[:default].slice(0, 1)

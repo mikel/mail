@@ -126,7 +126,7 @@ require 'mail/parser_tools'
   action token_string_s { }
 
   include rfc5322 "rfc5322.rl";
-  main := address_lists;
+  main := address_list;
 }%%
 
 module Mail::Parsers
