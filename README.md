@@ -651,21 +651,6 @@ describe "sending an email" do
 end
 ```
 
-## Core Extensions
-
-The mail gem adds several constants and methods to Ruby's core objects (similar to the activesupport gem from the Rails project).  For example:
-
-    NilClass::blank?
-    NilClass::to_crlf
-    NilClass::to_lf
-    Object::blank?
-    String::to_crlf
-    String::to_lf
-    String::blank?
-    ...etc...
-
-For all the details, check out lib/mail/core_extensions/.
-
 ## Excerpts from TREC Spam Corpus 2005
 
 The spec fixture files in spec/fixtures/emails/from_trec_2005 are from the
