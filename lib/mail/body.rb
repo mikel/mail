@@ -158,17 +158,17 @@ module Mail
         dec = Mail::Encodings::get_encoding(encoding)
         enc = Mail::Encodings::get_encoding(be)
         if dec.nil?
-            # Cannot decode, so skip normalization
-            raw_source
+          # Cannot decode, so skip normalization
+          raw_source
         else
-            # Decode then encode to normalize and allow transforming 
-            # from base64 to Q-P and vice versa
-            decoded = dec.decode(raw_source)
-            if defined?(Encoding) && charset && charset != "US-ASCII"
-              decoded.encode!(charset)
-              decoded.force_encoding('BINARY') unless Encoding.find(charset).ascii_compatible?
-            end
-            enc.encode(decoded)
+          # Decode then encode to normalize and allow transforming 
+          # from base64 to Q-P and vice versa
+          decoded = dec.decode(raw_source)
+          if defined?(Encoding) && charset && charset != "US-ASCII"
+            decoded = decoded.encode(charset)
+            decoded.force_encoding('BINARY') unless Encoding.find(charset).ascii_compatible?
+          end
+          enc.encode(decoded)
         end
       end
     end
