@@ -43,10 +43,10 @@ describe "Round Tripping" do
     expect(Mail.new(initial.encoded).encoded).to eq initial.encoded
   end
 
-  it "should round trip attachment newlines" do
-    body = "I have \ntwo lines\n\n"
+  it "preserves text attachment newlines" do
+    body = "I have \r\ntwo lines\n\r"
     initial = Mail.new
     initial.add_file :filename => "foo.txt", :content => body
-    expect(Mail.new(initial.encoded).attachments.first.decoded).to eq body
+    expect(Mail.new(initial.encoded).attachments.first.decoded).to eq ::Mail::Utilities.binary_unsafe_to_lf(body)
   end
 end

@@ -390,7 +390,7 @@ describe Mail::Message do
       raw_message = read_raw_fixture('emails', 'multi_charset', 'ks_c_5601-1987.eml')
       original_encoding = raw_message.encoding if raw_message.respond_to?(:encoding)
       mail = Mail.new(raw_message)
-      expect(mail.decoded).to eq "스티해\n"
+      expect(mail.decoded.chomp).to eq "스티해"
       expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
     end
 

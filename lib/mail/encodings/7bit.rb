@@ -4,29 +4,19 @@ require 'mail/encodings/8bit'
 
 module Mail
   module Encodings
+    # 7bit and 8bit are equivalent. 7bit encoding is for text only.
     class SevenBit < EightBit
       NAME = '7bit'
-    
       PRIORITY = 1
+      Encodings.register(NAME, self)
 
-      # 7bit and 8bit operate the same
-      
-      # Decode the string
       def self.decode(str)
-        super
-      end
-    
-      # Encode the string
-      def self.encode(str)
-        super
-      end
-     
-      # Idenity encodings have a fixed cost, 1 byte out per 1 byte in
-      def self.cost(str)
-        super 
+        ::Mail::Utilities.binary_unsafe_to_lf str
       end
 
-      Encodings.register(NAME, self) 
+      def self.encode(str)
+        ::Mail::Utilities.binary_unsafe_to_crlf str
+      end
     end
   end
 end

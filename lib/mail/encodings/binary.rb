@@ -1,32 +1,13 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/encodings/transfer_encoding'
+require 'mail/encodings/identity'
 
 module Mail
   module Encodings
-    class Binary < TransferEncoding
+    class Binary < Identity
       NAME = 'binary'
-
       PRIORITY = 5
-
-      # Binary is an identiy encoding, meaning nothing to do
-      
-      # Decode the string
-      def self.decode(str)
-        str
-      end
-    
-      # Encode the string
-      def self.encode(str)
-        str
-      end
-     
-      # Idenity encodings have a fixed cost, 1 byte out per 1 byte in
-      def self.cost(str)
-        1.0
-      end
-
-      Encodings.register(NAME, self) 
+      Encodings.register(NAME, self)
     end
   end
 end

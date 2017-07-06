@@ -248,33 +248,62 @@ module Mail
       (LF.encode(:crlf_newline => true) rescue nil) == CRLF
       # Using String#encode is better performing than Regexp
 
-      def self.to_lf(input)
-        input.kind_of?(String) ? input.to_str.encode(input.encoding, :universal_newline => true) : ''
+      def self.binary_unsafe_to_lf(string) #:nodoc:
+        string.encode(string.encoding, :universal_newline => true)
       end
 
-      def self.to_crlf(input)
-        input.kind_of?(String) ? input.to_str.encode(input.encoding, :universal_newline => true).encode!(input.encoding, :crlf_newline => true) : ''
+      def self.binary_unsafe_to_crlf(string) #:nodoc:
+        string.encode(string.encoding, :universal_newline => true).encode!(string.encoding, :crlf_newline => true)
       end
 
+      def self.safe_for_line_ending_conversion?(string) #:nodoc:
+        string.ascii_only?
+      end
     else
-
-      def self.to_lf(input)
-        input.kind_of?(String) ? input.to_str.gsub(/\r\n|\r/, LF) : ''
+      def self.binary_unsafe_to_lf(string) #:nodoc:
+        string.gsub(/\r\n|\r/, LF)
       end
 
-      if RUBY_VERSION >= '1.9'
-        # This 1.9 only regex can save a reasonable amount of time (~20%)
-        # by not matching "\r\n" so the string is returned unchanged in
-        # the common case.
-        CRLF_REGEX = Regexp.new("(?<!\r)\n|\r(?!\n)")
+      TO_CRLF_REGEX =
+        if RUBY_VERSION >= '1.9'
+          # This 1.9 only regex can save a reasonable amount of time (~20%)
+          # by not matching "\r\n" so the string is returned unchanged in
+          # the common case.
+          Regexp.new("(?<!\r)\n|\r(?!\n)")
+        else
+          /\n|\r\n|\r/
+        end
+
+      def self.binary_unsafe_to_crlf(string) #:nodoc:
+        string.gsub(TO_CRLF_REGEX, CRLF)
+      end
+
+      def self.safe_for_line_ending_conversion?(string) #:nodoc:
+        string.ascii_only?
+      end
+    end
+
+    # Convert line endings to \n unless the string is binary. Used for
+    # sendmail delivery and for decoding 8bit Content-Transfer-Encoding.
+    def self.to_lf(string)
+      string = string.to_s
+      if safe_for_line_ending_conversion? string
+        binary_unsafe_to_lf string
       else
-        CRLF_REGEX = /\n|\r\n|\r/
+        string
       end
+    end
 
-      def self.to_crlf(input)
-        input.kind_of?(String) ? input.to_str.gsub(CRLF_REGEX, CRLF) : ''
+    # Convert line endings to \r\n unless the string is binary. Used for
+    # encoding 8bit and base64 Content-Transfer-Encoding and for convenience
+    # when parsing emails with \n line endings instead of the required \r\n.
+    def self.to_crlf(string)
+      string = string.to_s
+      if safe_for_line_ending_conversion? string
+        binary_unsafe_to_crlf string
+      else
+        string
       end
-
     end
 
     # Returns true if the object is considered blank.

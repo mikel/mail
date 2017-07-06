@@ -4,36 +4,35 @@ require 'mail/encodings/7bit'
 
 module Mail
   module Encodings
+    # Base64 encoding handles binary content at the cost of 4 output bytes
+    # per input byte.
     class Base64 < SevenBit
       NAME = 'base64'
-
       PRIORITY = 3
+      Encodings.register(NAME, self)
 
       def self.can_encode?(enc)
         true
       end
 
-      # Decode the string from Base64
       def self.decode(str)
-        RubyVer.decode_base64( str )
+        RubyVer.decode_base64(str)
       end
 
-      # Encode the string to Base64
       def self.encode(str)
-        ::Mail::Utilities.to_crlf(RubyVer.encode_base64( str ))
+        ::Mail::Utilities.binary_unsafe_to_crlf(RubyVer.encode_base64(str))
       end
 
-      # Base64 has a fixed cost, 4 bytes out per 3 bytes in
+      # 3 bytes in -> 4 bytes out
       def self.cost(str)
-        4.0/3
+        4.0 / 3
       end
 
-      # Base64 inserts newlines automatically and cannot violate the SMTP spec.
+      # Ruby Base64 inserts newlines automatically, so it doesn't exceed
+      # SMTP line length limits.
       def self.compatible_input?(str)
         true
       end
-
-      Encodings.register(NAME, self)
     end
   end
 end
