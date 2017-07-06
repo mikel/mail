@@ -36,7 +36,7 @@ describe Mail::Part do
     end
     expect(part.content_id).to eq "<thisis@acontentid>"
   end
-  
+
   it "should return an inline content_id" do
     part = Mail::Part.new do
       content_id "<thisis@acontentid>"
@@ -46,8 +46,8 @@ describe Mail::Part do
     expect($stderr).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     expect(part.inline_content_id).to eq "thisis@acontentid"
   end
-  
-  
+
+
   it "should URL escape its inline content_id" do
     part = Mail::Part.new do
       content_id "<thi%%sis@acontentid>"
@@ -57,14 +57,14 @@ describe Mail::Part do
     expect($stderr).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     expect(part.inline_content_id).to eq "thi%25%25sis@acontentid"
   end
-  
+
   it "should add a content_id if there is none and is asked for an inline_content_id" do
     part = Mail::Part.new
     expect(part.cid).not_to be_nil
     expect($stderr).to receive(:puts).with("Part#inline_content_id is deprecated, please call Part#cid instead")
     expect(part.inline_content_id).not_to be_nil
   end
-  
+
   it "should respond correctly to inline?" do
     part = Mail::Part.new(:content_disposition => 'attachment')
     expect(part).not_to be_inline
@@ -83,7 +83,8 @@ describe Mail::Part do
 
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do
-      part =<<PARTEND
+      expect($stderr).not_to receive(:puts)
+      Mail::Part.new(Mail::Utilities.to_crlf(<<PARTEND))
 
 The original message was received at Mon, 24 Dec 2007 10:03:47 +1100
 from 60-0-0-146.static.tttttt.com.au [60.0.0.146]
@@ -106,11 +107,9 @@ This message has been scanned for viruses and
 dangerous content by MailScanner, and is
 believed to be clean.
 PARTEND
-      expect($stderr).not_to receive(:puts)
-      Mail::Part.new(part)
     end
   end
-  
+
   describe "delivery status reports" do
     before do
       @delivery_report = Mail::Part.new(Mail::Utilities.to_crlf(<<ENDPART))
@@ -132,7 +131,7 @@ ENDPART
     it "should know if it is a delivery-status report" do
       expect(@delivery_report).to be_delivery_status_report_part
     end
-    
+
     it "should create a delivery_status_data header object" do
       expect(@delivery_report.delivery_status_data).not_to be_nil
     end
@@ -140,34 +139,34 @@ ENDPART
     it "should be bounced" do
       expect(@delivery_report).to be_bounced
     end
-    
+
     it "should say action 'delayed'" do
       expect(@delivery_report.action).to eq 'failed'
     end
-    
+
     it "should give a final recipient" do
       expect(@delivery_report.final_recipient).to eq 'RFC822; edwin@zzzzzzz.com'
     end
-    
+
     it "should give an error code" do
       expect(@delivery_report.error_status).to eq '5.3.0'
     end
-    
+
     it "should give a diagostic code" do
       expect(@delivery_report.diagnostic_code).to eq 'SMTP; 553 5.3.0 <edwin@zzzzzzz.com>... Unknown E-Mail Address'
     end
-    
+
     it "should give a remote-mta" do
       expect(@delivery_report.remote_mta).to eq 'DNS; mail.zzzzzz.com'
     end
-    
+
     it "should be retryable" do
       expect(@delivery_report).not_to be_retryable
     end
 
     context "on a part without a certain field" do
       before(:each) do
-        part =<<ENDPART
+        @delivery_report = Mail::Part.new(Mail::Utilities.to_crlf(<<ENDPART))
 Content-Type: message/delivery-status
 
 Reporting-MTA: dns; mail12.rrrr.com.au
@@ -180,7 +179,6 @@ Status: 5.3.0
 Remote-MTA: DNS; mail.zzzzzz.com
 Last-Attempt-Date: Mon, 24 Dec 2007 10:03:53 +1100
 ENDPART
-        @delivery_report = Mail::Part.new(part)
       end
 
       it "returns nil" do
@@ -188,7 +186,7 @@ ENDPART
       end
     end
   end
-  
+
   it "should correctly parse plain text raw source and not truncate after newlines - issue 208" do
     plain_text = "First Line\n\nSecond Line\n\nThird Line\n\n"
     #Note: trailing \n\n is stripped off by Mail::Part initialization

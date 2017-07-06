@@ -443,7 +443,7 @@ describe Mail::Body do
 
   describe "non US-ASCII charset" do
     it "should encoded" do
-      body = Mail::Body.new("あいうえお\n")
+      body = Mail::Body.new("あいうえお\r\n")
       body.charset = 'iso-2022-jp'
       expect = (RUBY_VERSION < '1.9') ? "あいうえお\r\n" : "\e$B$\"$$$&$($*\e(B\r\n"
       expect(body.encoded).to eq expect

@@ -36,6 +36,7 @@ Compatibility:
 * #1106 – Limit message/rfc822 parts' transfer encoding per RFC 2046. (ahorek)
 * #1112 – Support Windows-1258 charset by parsing it as Windows-1252 in Ruby. (jeremy)
 * #1114 – Setting `mail.body = …` on a multipart message now adds a new text part instead of adding a raw MIME part. (jeremy)
+* #1159 – Parse emails with \n newlines so long as they have no binary content. (jeremy)
 
 Bugs:
 * #539 - Fix that whitespace-only continued headers would be incorrectly parsed as the break between headers and body. (ConradIrwin)

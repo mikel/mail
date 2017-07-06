@@ -61,7 +61,7 @@ module Mail
 
     def self.call(path, arguments, destinations, encoded_message)
       popen "#{path} #{arguments} #{destinations}" do |io|
-        io.puts ::Mail::Utilities.to_lf(encoded_message)
+        io.puts ::Mail::Utilities.binary_unsafe_to_lf(encoded_message)
         io.flush
       end
     end
