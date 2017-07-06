@@ -1936,12 +1936,11 @@ describe Mail::Message do
 
       emails_with_attachments.each { |email|
         mail = read_fixture('emails', 'attachment_emails', "attachment_#{email}.eml")
-        mail_length_with_attachments = mail.to_s.length
+        non_attachment_parts = mail.parts.reject(&:attachment?)
         expect(mail.has_attachments?).to be_truthy
         mail.without_attachments!
 
-        mail_length_without_attachments = mail.to_s.length
-        expect(mail_length_without_attachments).to be < mail_length_with_attachments
+        expect(mail.parts).to eq non_attachment_parts
         expect(mail.has_attachments?).to be_falsey
       }
     end
