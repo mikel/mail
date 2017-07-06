@@ -1823,16 +1823,13 @@ module Mail
     end
 
     def without_attachments!
-      return self unless has_attachments?
+      if has_attachments?
+        parts.delete_if { |p| p.attachment? }
 
-      parts.delete_if { |p| p.attachment? }
-      body_raw = if parts.empty?
-                   ''
-                 else
-                   body.encoded
-                 end
-
-      @body = Mail::Body.new(body_raw)
+        reencoded = parts.empty? ? '' : body.encoded(content_transfer_encoding)
+        @body = nil # So the new parts won't be added to the existing body
+        self.body = reencoded
+      end
 
       self
     end

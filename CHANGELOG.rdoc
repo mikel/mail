@@ -1,5 +1,8 @@
 == Version 2.6.7 - unreleased
 
+Bugs:
+* #1131 - Fix that Message#without_attachments! didn't parse the remaining parts. (jeremy)
+
 == Version 2.6.6 - 2017-06-09 Jeremy Daer <jeremydaer@gmail.com>
 
 Security:
