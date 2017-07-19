@@ -1,1 +1,0 @@
-tlsmail: if ruby < 1.8.6... we could make it optional, or embed it in Mail
