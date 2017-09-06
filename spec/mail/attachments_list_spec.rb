@@ -128,6 +128,16 @@ describe "Attachments" do
 
   end
 
+  describe "single attachment" do
+    subject{ read_fixture("emails", "attachment_emails", "attachment_only_email.eml") }
+
+    it "should get one attachment from #attachments method" do
+      expect(subject.attachments.length).to eq(1)
+      expect(subject.attachments[0].filename).to eq("blah.gz")
+      expect(subject.attachments[0].decoded).not_to be_nil
+    end
+  end
+
   describe "multiple attachments" do
 
     it "should allow you to pass in more than one attachment" do

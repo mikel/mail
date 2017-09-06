@@ -58,6 +58,7 @@ Bugs:
 * #1110 - Fix that Mail::Multibyte::Chars#initialize mutated its argument by calling force_encoding on it. (jeremy)
 * #1113 - Eliminate attachment corruption caused by CRLF conversion. (jeremy)
 * #1131 - Fix that Message#without_attachments! didn't parse the remaining parts. (jeremy)
+* #1143 - Fix that Message#attachments cannot count singlepart attachment. (kirikak2)
 
 == Version 2.6.4 - Wed Mar 23 08:16 -0700 2016 Jeremy Daer <jeremydaer@gmail.com>
 
