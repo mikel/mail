@@ -125,5 +125,21 @@ describe "SMTP Delivery Method" do
         mail.deliver
       end.to raise_error('SMTP To address may not be blank: []')
     end
+
+    it "should use the present name of the file name to prevent file system traversal" do
+      Mail.defaults do
+        delivery_method :file, :location => tmpdir, :filename => "mail"
+      end
+
+      Mail.deliver do
+        from    'roger@moore.com'
+        to      'to@somemail.com'
+        subject "Email with no sender"
+        body    "body"
+      end
+
+      delivery = File.join(Mail.delivery_method.settings[:location], 'mail')
+      expect(File.exist?(delivery)).to be_truthy
+    end
   end
 end
