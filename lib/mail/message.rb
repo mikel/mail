@@ -1801,8 +1801,7 @@ module Mail
     def convert_to_multipart
       text = body.decoded
       self.body = ''
-      text_part = Mail::Part.new({:content_type => 'text/plain;',
-                                  :body => text})
+      text_part = Mail::Part.new({:content_type => 'text/plain;', :body => text})
       text_part.charset = charset unless @defaulted_charset
       self.body << text_part
     end
@@ -2077,7 +2076,6 @@ module Mail
 
     def add_multipart_alternate_header
       header['content-type'] = ContentTypeField.with_boundary('multipart/alternative').value
-      header['content_type'].parameters[:charset] = @charset
       body.boundary = boundary
     end
 
@@ -2085,7 +2083,6 @@ module Mail
       unless body.boundary && boundary
         header['content-type'] = 'multipart/mixed' unless header['content-type']
         header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
-        header['content_type'].parameters[:charset] = @charset
         body.boundary = boundary
       end
     end
@@ -2093,7 +2090,6 @@ module Mail
     def add_multipart_mixed_header
       unless header['content-type']
         header['content-type'] = ContentTypeField.with_boundary('multipart/mixed').value
-        header['content_type'].parameters[:charset] = @charset
         body.boundary = boundary
       end
     end
