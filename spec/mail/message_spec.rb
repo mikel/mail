@@ -1408,6 +1408,24 @@ describe Mail::Message do
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
 
+      describe "convert_to_multipart" do
+        subject do
+          read_fixture('emails', 'attachment_emails', 'attachment_only_email.eml').tap(&:convert_to_multipart)
+        end
+
+        it "original content headers move to the new part" do
+          expect(subject.header[:content_type]).to be_nil
+          expect(subject.header[:content_disposition]).to be_nil
+          expect(subject.header[:content_description]).to be_nil
+          expect(subject.header[:content_transfer_encoding]).to be_nil
+
+          expect(subject.parts[0].header[:content_type].value).to eq("application/x-gzip; NAME=blah.gz")
+          expect(subject.parts[0].header[:content_disposition].value).to eq("attachment; filename=blah.gz")
+          expect(subject.parts[0].header[:content_description].value).to eq("Attachment has identical content to above foo.gz")
+          expect(subject.parts[0].header[:content_transfer_encoding].value).to eq("base64")
+        end
+      end
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do
