@@ -164,4 +164,17 @@ describe Mail::Sendmail do
       mail.deliver!
     end.to raise_error('SMTP To address may not be blank: []')
   end
+
+  it 'raises an error if sendmail process return exit_code != 0' do
+    mail = Mail.new do
+      to 'to@somemail.com'
+      from 'from@somemail.com'
+      subject 'Email with no recipient'
+      body 'body'
+    end
+
+    mail.delivery_method :sendmail, { location: 'some_fake_location' }
+
+    expect{mail.deliver!}.to raise_error(RuntimeError)
+  end
 end
