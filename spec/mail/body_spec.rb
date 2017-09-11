@@ -457,4 +457,12 @@ describe Mail::Body do
       expect(body.encoded).to eq 'The Body'
     end
   end
+  
+  describe "Partslist empty" do
+    it "should not break on empty PartsList on body" do
+      body = Mail::Body.new('The Body')
+      body.sort_parts!
+      expect(body.parts.count).to eq 0
+    end
+  end
 end
