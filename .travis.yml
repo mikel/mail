@@ -3,6 +3,8 @@ sudo: false
 cache: bundler
 
 bundler_args: --without local_development
+before_install:
+  - gem update bundler
 
 script: bundle exec rake
 
