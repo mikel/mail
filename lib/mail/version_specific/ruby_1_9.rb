@@ -243,6 +243,10 @@ module Mail
       convert_to_encoding(encoding)
     end
 
+    def Ruby19.string_byteslice(str, range)
+      str.unpack('C*').slice(range).pack('C*').force_encoding(str.encoding)
+    end
+
     class << self
       private
 

@@ -222,10 +222,10 @@ module Mail
     #
     #  Encodings.b_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
-    def Encodings.b_value_encode(encoded_str, encoding = nil)
-      return encoded_str if encoded_str.to_s.ascii_only?
-      string, encoding = RubyVer.b_value_encode(encoded_str, encoding)
-      map_lines(string) do |str|
+    def Encodings.b_value_encode(input_string, input_encoding = nil)
+      return input_string if input_string.to_s.ascii_only?
+      Encodings.base64_chunks(input_string, 60).collect do |chunk|
+        str, encoding = RubyVer.b_value_encode(chunk, input_encoding)
         "=?#{encoding}?B?#{str.chomp}?="
       end.join(" ")
     end
@@ -300,6 +300,41 @@ module Mail
       end
 
       results
+    end
+
+    # Find out appropriate range to partition a string such that each substring, when
+    # encoded into base64, will be less than or equal to max_size_per_chunk in length.
+    def Encodings.each_base64_chunk_byterange(str, max_size_per_chunk)
+      raise "size per chunk must be multiple of 4" if (max_size_per_chunk % 4).nonzero?
+      # Base64 transforms 3 bytes into 4, so every byte is 4/3 chars in base64 output.
+      # To avoid accumulating float number, we first multiple the max sum by 3,
+      # and accumulating each byte multiply by 4.
+      max_sum = max_size_per_chunk * 3
+      sum = 0
+      byte_offset = 0
+      last_byte_offset = 0
+      str.each_char do |chr|
+        add_sum = chr.bytesize * 4
+        new_sum = sum + add_sum
+        if new_sum > max_sum
+          yield (last_byte_offset...byte_offset)
+          new_sum = add_sum
+          last_byte_offset = byte_offset
+        end
+        sum = new_sum
+        byte_offset += chr.bytesize
+      end
+      if byte_offset != last_byte_offset
+        yield (last_byte_offset...byte_offset)
+      end
+    end
+
+    def Encodings.base64_chunks(str, max_size_per_chunk)
+      [].tap do |results|
+        Encodings.each_base64_chunk_byterange(str, max_size_per_chunk) do |byterange|
+          results << RubyVer.string_byteslice(str, byterange)
+        end
+      end
     end
   end
 end
