@@ -222,12 +222,15 @@ module Mail
     #
     #  Encodings.b_value_encode('This is あ string', 'UTF-8')
     #  #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
-    def Encodings.b_value_encode(encoded_str, encoding = nil)
-      return encoded_str if encoded_str.to_s.ascii_only?
-      string, encoding = RubyVer.b_value_encode(encoded_str, encoding)
-      map_lines(string) do |str|
-        "=?#{encoding}?B?#{str.chomp}?="
-      end.join(" ")
+    def Encodings.b_value_encode(string, encoding = nil)
+      if string.to_s.ascii_only?
+        string
+      else
+        Encodings.each_base64_chunk_byterange(string, 60).map do |chunk|
+          str, encoding = RubyVer.b_value_encode(chunk, encoding)
+          "=?#{encoding}?B?#{str.chomp}?="
+        end.join(" ")
+      end
     end
 
     # Encode a string with Quoted-Printable Encoding and returns it ready to be inserted
@@ -300,6 +303,42 @@ module Mail
       end
 
       results
+    end
+
+    # Partition the string into bounded-size chunks without splitting
+    # multibyte characters.
+    def Encodings.each_base64_chunk_byterange(str, max_bytesize_per_base64_chunk, &block)
+      raise "size per chunk must be multiple of 4" if (max_bytesize_per_base64_chunk % 4).nonzero?
+
+      if block_given?
+        max_bytesize = ((3 * max_bytesize_per_base64_chunk) / 4.0).floor
+        each_chunk_byterange(str, max_bytesize, &block)
+      else
+        enum_for :each_base64_chunk_byterange, str, max_bytesize_per_base64_chunk
+      end
+    end
+
+    # Partition the string into bounded-size chunks without splitting
+    # multibyte characters.
+    def Encodings.each_chunk_byterange(str, max_bytesize_per_chunk)
+      return enum_for(:each_chunk_byterange, str, max_bytesize_per_chunk) unless block_given?
+
+      offset = 0
+      chunksize = 0
+
+      str.each_char do |chr|
+        charsize = chr.bytesize
+
+        if chunksize + charsize > max_bytesize_per_chunk
+          yield RubyVer.string_byteslice(str, offset, chunksize)
+          offset += chunksize
+          chunksize = charsize
+        else
+          chunksize += charsize
+        end
+      end
+
+      yield RubyVer.string_byteslice(str, offset, chunksize)
     end
   end
 end

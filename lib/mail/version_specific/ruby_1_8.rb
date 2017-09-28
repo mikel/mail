@@ -132,6 +132,10 @@ module Mail
       "#{encoding}'#{language}'#{URI.escape(str)}"
     end
 
+    def Ruby18.string_byteslice(str, *args)
+      str.slice(*args)
+    end
+
     private
 
     def Ruby18.normalize_iconv_charset_encoding(encoding)
