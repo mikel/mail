@@ -102,6 +102,13 @@ describe Mail::Encodings do
       end
     end
 
+    it "should correctly encode long string mixing with single/multi-byte characters" do
+      input = '意地悪 sample; = filename= name= "file" 笑.txt'
+      encoded = Mail::Encodings.decode_encode(input, :encode)
+      decoded = Mail::Encodings.decode_encode(encoded, :decode)
+      expect(decoded).to eq(input)
+    end
+
     it "should complain if there is no encoding passed for Ruby < 1.9" do
       string = "This is あ string"
       if string.respond_to?(:force_encoding)
