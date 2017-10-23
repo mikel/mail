@@ -2057,7 +2057,7 @@ module Mail
       if body && body.multipart?
         self.content_transfer_encoding = @transport_encoding
       else
-        self.content_transfer_encoding = body.get_best_encoding(@transport_encoding, allowed_encodings)
+        self.content_transfer_encoding = body.negotiate_best_encoding(@transport_encoding, allowed_encodings).to_s
       end
     end
 

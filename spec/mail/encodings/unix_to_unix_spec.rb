@@ -11,12 +11,16 @@ describe Mail::Encodings::UnixToUnix do
     Mail::Encodings::UnixToUnix.encode(str)
   end
 
-  it "can transport x-uuencode" do
-    expect(Mail::Encodings::UnixToUnix.can_transport?('x-uuencode')).to be_truthy
+  it "is registered as uuencode" do
+    expect(Mail::Encodings.get_encoding('uuencode')).to eq(Mail::Encodings::UnixToUnix)
   end
 
-  it "can transport uuencode" do
-    expect(Mail::Encodings::UnixToUnix.can_transport?('uuencode')).to be_truthy
+  it "is registered as x-uuencode" do
+    expect(Mail::Encodings.get_encoding('x-uuencode')).to eq(Mail::Encodings::UnixToUnix)
+  end
+
+  it "can transport itself" do
+    expect(Mail::Encodings::UnixToUnix.can_transport?(Mail::Encodings::UnixToUnix)).to be_truthy
   end
 
   it "decodes" do

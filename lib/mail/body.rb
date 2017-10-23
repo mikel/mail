@@ -139,24 +139,22 @@ module Mail
       @raw_source
     end
 
-    def get_best_encoding(target, allowed_encodings = nil)
-      target_encoding = Mail::Encodings.get_encoding(target)
-      target_encoding.get_best_compatible(encoding, raw_source, allowed_encodings)
+    def negotiate_best_encoding(message_encoding, allowed_encodings = nil)
+      Mail::Encodings::TransferEncoding.negotiate(message_encoding, encoding, raw_source, allowed_encodings)
     end
 
     # Returns a body encoded using transfer_encoding.  Multipart always uses an
     # identiy encoding (i.e. no encoding).
     # Calling this directly is not a good idea, but supported for compatibility
     # TODO: Validate that preamble and epilogue are valid for requested encoding
-    def encoded(transfer_encoding = '8bit')
+    def encoded(transfer_encoding = nil)
       if multipart?
         self.sort_parts!
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
-        be = get_best_encoding(transfer_encoding)
-        dec = Mail::Encodings::get_encoding(encoding)
-        enc = Mail::Encodings::get_encoding(be)
+        dec = Mail::Encodings.get_encoding(encoding)
+        enc = negotiate_best_encoding(transfer_encoding)
         if dec.nil?
           # Cannot decode, so skip normalization
           raw_source
@@ -172,7 +170,7 @@ module Mail
         end
       end
     end
-    
+
     def decoded
       if !Encodings.defined?(encoding)
         raise UnknownEncodingType, "Don't know how to decode #{encoding}, please call #encoded and decode it yourself."
