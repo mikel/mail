@@ -197,4 +197,32 @@ ENDPART
     expect(part.to_s).to match(/^First Line\r\n\r\nSecond Line\r\n\r\nThird Line/)
   end
 
+  describe "negotiating transfer encoding" do
+    it "doesn't override part encoding when it's compatible with message" do
+      mail = Mail.new
+      mail.body << Mail::Part.new.tap do |part|
+        part.header[:content_disposition] = 'attachment; filename="unnamed"'
+        part.content_type  = 'text/plain'
+        # part.body          = 'a' * 998
+        part.body          = 'a' * 999
+        part.body.encoding = 'base64'
+      end
+
+      part_body_encoding = mail.to_s.scan(/Content-Transfer-Encoding: (.+)\r$/).last.first
+      expect(part_body_encoding).to eq('base64')
+    end
+
+    it "retains specified encoding even though it isn't lowest cost" do
+      part = Mail::Part.new.tap do |part|
+        part.header[:content_disposition] = 'attachment; filename="unnamed"'
+        part.content_type  = 'text/plain'
+        # part.body          = 'a' * 998
+        part.body          = 'a' * 999
+        part.body.encoding = 'base64'
+      end
+
+      part_body_encoding = part.to_s.scan(/Content-Transfer-Encoding: (.+)\r$/).last.first
+      expect(part_body_encoding).to eq('base64')
+    end
+  end
 end
