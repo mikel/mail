@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.md", "CONTRIBUTING.md", "CHANGELOG.rdoc", "TODO.rdoc"]
+  s.extra_rdoc_files = %w[ README.md ]
   s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
   s.add_dependency('mini_mime', '>= 0.1.1')
@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rdoc')
 
-  s.files = %w(README.md MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
+  s.files = %w[ README.md MIT-LICENSE ] + Dir.glob("lib/**/*")
 end
