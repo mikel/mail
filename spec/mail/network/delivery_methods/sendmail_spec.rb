@@ -58,6 +58,18 @@ describe Mail::Sendmail do
 
       mail.deliver
     end
+
+    it 'does not escape ~ in From address' do
+      mail.from = 'tilde~@test.lindsaar.net'
+
+      expect(described_class).to receive(:call).
+        with('/usr/sbin/sendmail',
+             '-i -f "tilde~@test.lindsaar.net" --',
+             '"marcel@test.lindsaar.net" "bob@test.lindsaar.net"',
+             mail.encoded)
+
+      mail.deliver
+    end
   end
 
   context 'SMTP To' do
@@ -80,6 +92,18 @@ describe Mail::Sendmail do
         with('/usr/sbin/sendmail',
              '-i -f "roger@test.lindsaar.net" --',
              '"\"to+suffix test\"@test.lindsaar.net"',
+             mail.encoded)
+
+      mail.deliver
+    end
+
+    it 'does not escape ~ in To address' do
+      mail.to = 'tilde~@test.lindsaar.net'
+
+      expect(described_class).to receive(:call).
+        with('/usr/sbin/sendmail',
+             '-i -f "roger@test.lindsaar.net" --',
+             '"tilde~@test.lindsaar.net"',
              mail.encoded)
 
       mail.deliver

@@ -77,15 +77,18 @@ module Mail
     end
 
     # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
-    # it is modified to include '+' in the allowed list to allow for
-    # sendmail to accept email addresses as the sender with a + in them.
+    # with the following modifications:
+    #
+    # - Wraps in double quotes
+    # - Allows '+' to accept email addresses with them
+    # - Allows '~' as it is not unescaped in double quotes
     def self.shellquote(address)
       # Process as a single byte sequence because not all shell
       # implementations are multibyte aware.
       #
       # A LF cannot be escaped with a backslash because a backslash + LF
       # combo is regarded as line continuation and simply ignored. Strip it.
-      escaped = address.gsub(/([^A-Za-z0-9_\s\+\-.,:\/@])/n, "\\\\\\1").gsub("\n", '')
+      escaped = address.gsub(/([^A-Za-z0-9_\s\+\-.,:\/@~])/n, "\\\\\\1").gsub("\n", '')
       %("#{escaped}")
     end
   end
