@@ -1,0 +1,31 @@
+Delivered-To: raasdnil@gmail.com
+Received: by 10.140.178.13 with SMTP id a13cs354079rvf;
+        Fri, 21 Nov 2008 20:05:05 -0800 (PST)
+Received: by 10.151.44.15 with SMTP id w15mr2254748ybj.98.1227326704711;
+        Fri, 21 Nov 2008 20:05:04 -0800 (PST)
+Return-Path: <test@lindsaar.net>
+Received: from mail11.tpgi.com.au (mail11.tpgi.com.au [203.12.160.161])
+        by mx.google.com with ESMTP id 10si5117885gxk.81.2008.11.21.20.05.03;
+        Fri, 21 Nov 2008 20:05:04 -0800 (PST)
+Received-SPF: neutral (google.com: 203.12.160.161 is neither permitted nor denied by domain of test@lindsaar.net) client-ip=203.12.160.161;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 203.12.160.161 is neither permitted nor denied by domain of test@lindsaar.net) smtp.mail=test@lindsaar.net
+X-TPG-Junk-Status: Message not scanned
+X-TPG-Antivirus: Passed
+Received: from [192.0.0.253] (60-241-138-146.static.tpgi.com.au [60.0.0.146])
+	by mail11.tpgi.com.au (envelope-from test@lindsaar.net) (8.14.3/8.14.3) with ESMTP id mAM44xew022221
+	for <raasdnil@gmail.com>; Sat, 22 Nov 2008 15:05:01 +1100
+Message-Id: <6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net>
+From: Mikel Lindsaar <test@lindsaar.net>
+To: Mikel Lindsaar <raasdnil@gmail.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Apple Message framework v929.2)
+Subject: Testing 123
+Date: Sat, 22 Nov 2008 15:04:59 +1100
+X-Mailer: Apple Mail (2.929.2)
+
+Plain email.
+
+Hope it works well!
+
+Mikel

@@ -245,6 +245,12 @@ describe "reading emails with attachments" do
       expect(mail.attachments[0].decoded.length).to eq 1026
     end
 
+    it "should decode an attachment with linefeeds" do
+      mail = read_fixture('emails/attachment_emails/attachment_pdf_lf.eml')
+      expect(mail.attachments.size).to eq(1)
+      expect(mail.attachments[0].decoded.length).to eq 1026
+    end
+
     it "should find an attachment that has an encoded name value" do
       mail = read_fixture('emails/attachment_emails/attachment_with_encoded_name.eml')
       expect(mail.attachments.length).to eq 1
