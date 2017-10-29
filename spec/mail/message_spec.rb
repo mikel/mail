@@ -87,6 +87,10 @@ describe Mail::Message do
       expect { read_fixture('emails', 'plain_emails', 'basic_email.eml') }.not_to raise_error
     end
 
+    it "should be able to parse a basic email with linefeeds" do
+      expect { read_fixture('emails', 'plain_emails', 'basic_email_lf.eml') }.not_to raise_error
+    end
+
     it "should be able to parse an email with @ in display name" do
       message = read_fixture('emails', 'plain_emails', 'raw_email_with_at_display_name.eml')
       expect(message.to).to eq ["smith@gmail.com", "raasdnil@gmail.com", "tom@gmail.com"]
