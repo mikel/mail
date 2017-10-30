@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require "yaml"
+require 'mail/parsers/message_parser'
+require 'yaml'
 
 module Mail
   # The Message class provides a single point of access to all things to do with an
@@ -1994,6 +1995,11 @@ module Mail
     #   follows the header and is separated from the header by an empty line
     #   (i.e., a line with nothing preceding the CRLF).
     def parse_message
+      fields, body = Mail::Parsers::MessageParser.parse(raw_source)
+
+      @header = Mail::Header.new(nil, charset)
+      @header.fields = fields
+
       header_part, body_part = raw_source.lstrip.split(HEADER_SEPARATOR, 2)
       self.header = header_part
       self.body   = body_part

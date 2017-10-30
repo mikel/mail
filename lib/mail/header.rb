@@ -95,8 +95,18 @@ module Mail
       @fields = Mail::FieldList.new
       Kernel.warn "WARNING: More than #{self.class.maximum_amount} header fields; only using the first #{self.class.maximum_amount} and ignoring the rest" if unfolded_fields.length > self.class.maximum_amount
       unfolded_fields[0..(self.class.maximum_amount-1)].each do |field|
+        field =
+          case field
+          when Array
+            name, value = field
+            Field.new(name, value, charset)
+          when String
+            Field.parse(field, charset)
+          else
+            raise "Unrecognized field: #{field.inspect}"
+          end
 
-        if field = Field.parse(field, charset)
+        if field
           if limited_field?(field.name) && (selected = select_field_for(field.name)) && selected.any?
             selected.first.update(field.name, field.value)
           else

@@ -67,6 +67,6 @@
             (group_list?) ";" CFWS?;
   address = group | mailbox;
   #obs_addr_list = (CFWS? ",")* address ("," (address | CFWS)?)*;
-  address_lists = address? %(comment_after_address,0)
-                  (FWS* ("," | ";") FWS* address?)*;
+  address_list = address? %(comment_after_address,0)
+                 (FWS* ("," | ";") FWS* address?)*;
 }%%

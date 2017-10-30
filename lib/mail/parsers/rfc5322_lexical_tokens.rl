@@ -8,11 +8,16 @@
   include rfc5234_abnf_core_rules "rfc5234_abnf_core_rules.rl";
 
   # 3.2.1.  Quoted characters
+
+  # US-ASCII control characters that do not include the carriage return,
+  # line feed, and white space characters.
   obs_NO_WS_CTL = 0x01..0x08 | "\v" | "\f" | 0x0e..0x1f | 0x7f;
   obs_qp = "\\" (0x00 | obs_NO_WS_CTL | LF | CR);
+
   quoted_pair = ("\\" (VCHAR | WSP)) | obs_qp;
 
   # 3.2.2. Folding White Space and Comments
+  # 4.2. Obsolete Folding White Space, Erratum ID 1908
   obs_FWS = (CRLF? WSP)+;
   FWS = (WSP* CRLF WSP+) | (CRLF WSP+) | obs_FWS;
 
@@ -52,9 +57,16 @@
   # 3.2.5. Miscellaneous Tokens
   word = atom | quoted_string;
 
+  #obs_phrase = word (word | "." | CFWS)*
   obs_phrase = (word | "." | "@")+;
   phrase = (obs_phrase | word+) >phrase_s %phrase_e;
 
+  obs_phrase_list = (phrase | CFWS)? ("," (phrase | CFWS)?)*;
+
   # Not part of RFC, used for keywords per 3.6.5 Information Fields
   phrase_lists = phrase ("," FWS* phrase)*;
+
+  obs_utext = 0xd0 | obs_NO_WS_CTL | VCHAR;
+  obs_unstruct = ((CR* (obs_utext | FWS)+) | LF+)* CR*; # Erratum ID 1905
+  unstructured = ((FWS? VCHAR)+ WSP+) | obs_unstruct;
 }%%
