@@ -1,5 +1,8 @@
 == Version 2.8.0 (unreleased)
 
+Breaking changes:
+* Passing unparsed headers to Mail::Field.new is no longer supported. Use Mail::Field.parse. (jeremy)
+
 
 == Version 2.7.0 (2017-10-31)
 

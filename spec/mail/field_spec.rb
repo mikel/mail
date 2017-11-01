@@ -30,20 +30,10 @@ describe Mail::Field do
   end
 
   describe "initialization" do
-    if Mail::VERSION.version >= '2.8'
-      it "raises if instantiating by parsing a full header field" do
-        expect {
-          Mail::Field.new('To: Mikel')
-        }.to raise_error(ArgumentError)
-      end
-    else
-      it "deprecates instantiation by parsing a full header field" do
-        expect(Kernel).to receive(:warn).with('Passing an unparsed header field to Mail::Field.new is deprecated and will be removed in Mail 2.8.0. Use Mail::Field.parse instead.')
-        field = Mail::Field.new('To: Mikel')
-        expect(field.name).to eq 'To'
-        expect(field.value).to eq 'Mikel'
-        expect(field.field).to be_kind_of(Mail::ToField)
-      end
+    it "raises if instantiating by parsing a full header field" do
+      expect {
+        Mail::Field.new('To: Mikel')
+      }.to raise_error(ArgumentError)
     end
 
     it "instantiates with name and value" do

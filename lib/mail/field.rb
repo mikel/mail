@@ -162,9 +162,7 @@ module Mail
     def initialize(name, value = nil, charset = 'utf-8')
       case
       when name.index(COLON)
-        Kernel.warn 'Passing an unparsed header field to Mail::Field.new is deprecated and will be removed in Mail 2.8.0. Use Mail::Field.parse instead.'
-        @name, @unparsed_value = self.class.split(name)
-        @charset = Utilities.blank?(value) ? charset : value
+        raise ArgumentError, 'Passing an unparsed header field to Mail::Field.new is not supported in Mail 2.8.0+. Use Mail::Field.parse instead.'
       when Utilities.blank?(value)
         @name = name
         @unparsed_value = nil
