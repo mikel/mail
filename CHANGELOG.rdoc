@@ -1,4 +1,7 @@
-== HEAD
+== Version 2.7.1 (unreleased)
+
+
+== Version 2.7.0 (2017-10-31)
 
 Security:
 * #1097 – SMTP security: prevent command injection via To/From addresses. (jeremy)
