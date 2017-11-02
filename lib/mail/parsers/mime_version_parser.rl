@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine mime_version;
   alphtype int;
@@ -58,4 +61,8 @@ module Mail::Parsers
       mime_version
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

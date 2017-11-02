@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   # RFC 2557 Content-Location
   # https://tools.ietf.org/html/rfc2557#section-4.1
@@ -68,4 +71,8 @@ module Mail::Parsers
       content_location
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

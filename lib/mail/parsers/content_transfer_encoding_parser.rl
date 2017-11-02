@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine content_transfer_encoding;
   alphtype int;
@@ -61,4 +64,8 @@ module Mail::Parsers
       content_transfer_encoding
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

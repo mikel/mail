@@ -3,6 +3,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 
 
 
@@ -883,4 +886,8 @@ end
       date_time
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

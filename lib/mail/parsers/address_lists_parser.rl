@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine address_lists;
   alphtype int;
@@ -169,4 +172,8 @@ module Mail::Parsers
       address_list
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

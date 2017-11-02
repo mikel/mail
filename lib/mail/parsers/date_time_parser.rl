@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine date_time;
   alphtype int;
@@ -59,4 +62,8 @@ module Mail::Parsers
       date_time
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

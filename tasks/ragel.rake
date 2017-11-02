@@ -1,5 +1,3 @@
-load 'lib/mail/parsers.rb'
-
 # RFC 6532 extensions rely on RFC 3629 UTF-8 chars
 rule 'lib/mail/parsers/rfc5234_abnf_core_rules.rl' => 'lib/mail/parsers/rfc3629_utf8.rl'
 
@@ -8,6 +6,8 @@ rule %r|rfc5322_.+\.rl\z| => 'lib/mail/parsers/rfc5234_abnf_core_rules.rl'
 
 # RFC 5322 parser depends on its submodules
 file 'lib/mail/parsers/rfc5322.rl' => FileList['lib/mail/parsers/rfc5322_*.rl']
+
+rule %r|_parser\.rl\z| => 'lib/mail/parsers/rfc5322.rl'
 
 # Ruby parsers depend on Ragel parser definitions
 # (remove -L to include line numbers for debugging)
