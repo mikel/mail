@@ -233,11 +233,6 @@ module Mail
     def self.default_charset=(charset); @@default_charset = charset; end
     self.default_charset = 'UTF-8'
 
-    def register_for_delivery_notification(observer)
-      warn("Message#register_for_delivery_notification is deprecated, please call Mail.register_observer instead")
-      Mail.register_observer(observer)
-    end
-
     def inform_observers
       Mail.inform_observers(self)
     end
@@ -1434,11 +1429,6 @@ module Mail
       header[:content_transfer_encoding] && Utilities.blank?(header[:content_transfer_encoding].errors)
     end
 
-    def has_transfer_encoding? # :nodoc:
-      warn(":has_transfer_encoding? is deprecated in Mail 1.4.3.  Please use has_content_transfer_encoding?\n#{caller}")
-      has_content_transfer_encoding?
-    end
-
     # Creates a new empty Message-ID field and inserts it in the correct order
     # into the Header.  The MessageIdField object will automatically generate
     # a unique message ID if you try and encode it or output it to_s without
@@ -1496,24 +1486,9 @@ module Mail
       header[:content_transfer_encoding] ||= body.default_encoding
     end
 
-    def add_transfer_encoding # :nodoc:
-      warn(":add_transfer_encoding is deprecated in Mail 1.4.3.  Please use add_content_transfer_encoding\n#{caller}")
-      add_content_transfer_encoding
-    end
-
-    def transfer_encoding # :nodoc:
-      warn(":transfer_encoding is deprecated in Mail 1.4.3.  Please use content_transfer_encoding\n#{caller}")
-      content_transfer_encoding
-    end
-
     # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
       has_content_type? ? header[:content_type].string : nil rescue nil
-    end
-
-    def message_content_type
-      warn(":message_content_type is deprecated in Mail 1.4.3.  Please use mime_type\n#{caller}")
-      mime_type
     end
 
     # Returns the character set defined in the content type field
@@ -1540,12 +1515,6 @@ module Mail
     # Returns the sub content type
     def sub_type
       has_content_type? ? header[:content_type].sub_type : nil rescue nil
-    end
-
-    # Returns the content type parameters
-    def mime_parameters
-      warn(':mime_parameters is deprecated in Mail 1.4.3, please use :content_type_parameters instead')
-      content_type_parameters
     end
 
     # Returns the content type parameters
@@ -1814,11 +1783,6 @@ module Mail
         part.ready_to_send!
       end
       add_required_fields
-    end
-
-    def encode!
-      warn("Deprecated in 1.1.0 in favour of :ready_to_send! as it is less confusing with encoding and decoding.")
-      ready_to_send!
     end
 
     # Outputs an encoded string representation of the mail message including
