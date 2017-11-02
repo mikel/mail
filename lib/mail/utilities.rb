@@ -241,46 +241,26 @@ module Mail
 
     end
 
-    # Test String#encode works correctly with line endings.
-    # Some versions of Ruby (e.g. MRI <1.9, JRuby, Rubinius) line ending
-    # normalization does not work correctly or did not have #encode.
-    if ("\r".encode(:universal_newline => true) rescue nil) == LF &&
-      (LF.encode(:crlf_newline => true) rescue nil) == CRLF
-      # Using String#encode is better performing than Regexp
+    def self.binary_unsafe_to_lf(string) #:nodoc:
+      string.gsub(/\r\n|\r/, LF)
+    end
 
-      def self.binary_unsafe_to_lf(string) #:nodoc:
-        string.encode(string.encoding, :universal_newline => true)
+    TO_CRLF_REGEX =
+      if RUBY_VERSION >= '1.9'
+        # This 1.9 only regex can save a reasonable amount of time (~20%)
+        # by not matching "\r\n" so the string is returned unchanged in
+        # the common case.
+        Regexp.new("(?<!\r)\n|\r(?!\n)")
+      else
+        /\n|\r\n|\r/
       end
 
-      def self.binary_unsafe_to_crlf(string) #:nodoc:
-        string.encode(string.encoding, :universal_newline => true).encode!(string.encoding, :crlf_newline => true)
-      end
+    def self.binary_unsafe_to_crlf(string) #:nodoc:
+      string.gsub(TO_CRLF_REGEX, CRLF)
+    end
 
-      def self.safe_for_line_ending_conversion?(string) #:nodoc:
-        string.ascii_only?
-      end
-    else
-      def self.binary_unsafe_to_lf(string) #:nodoc:
-        string.gsub(/\r\n|\r/, LF)
-      end
-
-      TO_CRLF_REGEX =
-        if RUBY_VERSION >= '1.9'
-          # This 1.9 only regex can save a reasonable amount of time (~20%)
-          # by not matching "\r\n" so the string is returned unchanged in
-          # the common case.
-          Regexp.new("(?<!\r)\n|\r(?!\n)")
-        else
-          /\n|\r\n|\r/
-        end
-
-      def self.binary_unsafe_to_crlf(string) #:nodoc:
-        string.gsub(TO_CRLF_REGEX, CRLF)
-      end
-
-      def self.safe_for_line_ending_conversion?(string) #:nodoc:
-        string.ascii_only?
-      end
+    def self.safe_for_line_ending_conversion?(string) #:nodoc:
+      string.ascii_only?
     end
 
     # Convert line endings to \n unless the string is binary. Used for

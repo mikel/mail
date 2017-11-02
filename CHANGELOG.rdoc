@@ -1,5 +1,8 @@
 == Version 2.7.1 (unreleased)
 
+Performance:
+* Speed up message encoding, especially with large attachments. (dalibor)
+
 
 == Version 2.7.0 (2017-10-31)
 
