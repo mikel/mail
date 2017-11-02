@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   # RFC 5322 Section 3.6.4: Identification Fields
   # https://tools.ietf.org/html/rfc5322#section-3.6.4
@@ -79,4 +82,8 @@ module Mail::Parsers
       message_ids
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

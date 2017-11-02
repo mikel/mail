@@ -3,6 +3,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 
 
 
@@ -2855,4 +2858,8 @@ end
       message_ids
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

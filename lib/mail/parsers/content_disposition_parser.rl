@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine content_disposition;
   alphtype int;
@@ -79,4 +82,8 @@ module Mail::Parsers
       content_disposition
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

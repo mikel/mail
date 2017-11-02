@@ -3,6 +3,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 
 
 
@@ -506,4 +509,8 @@ end
       mime_version
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end

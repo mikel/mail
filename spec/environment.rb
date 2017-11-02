@@ -13,7 +13,6 @@ rescue LoadError
 end
 
 require 'mail'
-require 'mail/parsers'
 
 if ENV['MBCHARS'] == 'activesupport'
   require 'active_support'

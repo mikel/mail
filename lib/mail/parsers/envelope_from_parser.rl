@@ -2,6 +2,9 @@
 require 'mail/utilities'
 require 'mail/parser_tools'
 
+begin
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
 %%{
   machine envelope_from;
   alphtype int;
@@ -79,4 +82,8 @@ module Mail::Parsers
       envelope_from
     end
   end
+end
+
+ensure
+  $VERBOSE = original_verbose
 end
