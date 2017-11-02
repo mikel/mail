@@ -18,6 +18,12 @@ describe "PartsList" do
     p << 'text/html'
     p.sort!(order)
   end
+  
+  it "should not break on empty PartsList" do
+    p = Mail::PartsList.new
+    order = ['text/plain']
+    p.sort!(order)
+  end
 
   it "should not fail if we do not have a content_type" do
     p = Mail::PartsList.new

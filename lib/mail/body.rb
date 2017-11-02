@@ -130,7 +130,7 @@ module Mail
         p.body.set_sort_order(@part_sort_order)
         p.body.sort_parts!
       end
-      @parts.sort!(@part_sort_order)
+      @parts.sort!(@part_sort_order) if @parts.kind_of?(Mail::PartsList)
     end
     
     # Returns the raw source that the body was initialized with, without
