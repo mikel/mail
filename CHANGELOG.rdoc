@@ -7,6 +7,9 @@ Breaking changes:
 Compatibility:
 * Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
 
+Performance:
+* Speed up message encoding, especially with large attachments. (dalibor)
+
 
 == Version 2.7.0 (2017-10-31)
 
