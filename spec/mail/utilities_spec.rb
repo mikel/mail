@@ -463,21 +463,6 @@ describe "Utilities Module" do
       expect(Mail::Utilities.to_lf("\r \n\r\n")).to eq "\n \n\n"
     end
 
-    if defined?(Encoding)
-      it "preserves encoding" do
-        saved_default_internal = Encoding.default_internal
-        $VERBOSE, saved_verbose = nil, $VERBOSE
-        begin
-          Encoding.default_internal = "UTF-8"
-          ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
-          expect(Mail::Utilities.to_lf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
-        ensure
-          Encoding.default_internal = saved_default_internal
-          $VERBOSE = saved_verbose
-        end
-      end
-    end
-
     it "should handle japanese characters" do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
       expect(Mail::Utilities.binary_unsafe_to_lf(string)).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\n\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\n\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\n\n"
@@ -526,21 +511,6 @@ describe "Utilities Module" do
     it "should handle japanese characters" do
       string = "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
       expect(Mail::Utilities.binary_unsafe_to_crlf(string)).to eq "\343\201\202\343\201\210\343\201\206\343\201\210\343\201\212\r\n\r\n\343\201\213\343\201\215\343\201\217\343\201\221\343\201\223\r\n\r\n\343\201\225\343\201\227\343\201\244\343\201\233\343\201\235\r\n\r\n"
-    end
-
-    if defined?(Encoding)
-      it "preserves encoding" do
-        saved_default_internal = Encoding.default_internal
-        $VERBOSE, saved_verbose = nil, $VERBOSE
-        begin
-          Encoding.default_internal = "UTF-8"
-          ascii_string = "abcd".dup.force_encoding("ASCII-8BIT")
-          expect(Mail::Utilities.to_crlf(ascii_string).encoding).to eq(Encoding::ASCII_8BIT)
-        ensure
-          Encoding.default_internal = saved_default_internal
-          $VERBOSE = saved_verbose
-        end
-      end
     end
 
     describe "on NilClass" do
