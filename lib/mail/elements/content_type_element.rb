@@ -1,7 +1,5 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/parsers/content_type_parser'
-
 module Mail
   class ContentTypeElement #:nodoc:
     attr_reader :main_type, :sub_type, :parameters
