@@ -258,7 +258,12 @@ module Mail
     end
 
     def self.safe_for_line_ending_conversion?(string) #:nodoc:
-      string.ascii_only?
+      if RUBY_VERSION >= '1.9'
+        string.ascii_only? or 
+          (string.encoding != Encoding::BINARY and string.valid_encoding?)
+      else
+        string.ascii_only?
+      end
     end
 
     # Convert line endings to \n unless the string is binary. Used for

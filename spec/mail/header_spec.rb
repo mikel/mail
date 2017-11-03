@@ -460,6 +460,20 @@ HERE
       expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
 
+    it "should convert all lonesome LFs to CRLF in UTF-8 too" do
+      header_text =<<HERE
+Subject: Iñtërnâtiônàlizætiøn
+Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
+	by smtp.totallyrandom.com with esmtp (Exim 4.68)
+	(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)
+	id 1K4JeQ-0005Nd-Ij
+	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
+HERE
+      header = Mail::Header.new(header_text.gsub(/\n/, "\n"))
+      expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
+    end
+
+
     it "should convert all lonesome CRs to CRLF" do
       header_text =<<HERE
 Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
