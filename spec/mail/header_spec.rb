@@ -461,6 +461,7 @@ HERE
     end
 
     it "should convert all lonesome LFs to CRLF in UTF-8 too" do
+      skip if RUBY_VERSION < '1.9'
       header_text =<<HERE
 Subject: Iñtërnâtiônàlizætiøn
 Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
