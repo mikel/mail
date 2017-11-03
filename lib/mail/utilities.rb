@@ -259,8 +259,18 @@ module Mail
       string.gsub(TO_CRLF_REGEX, CRLF)
     end
 
-    def self.safe_for_line_ending_conversion?(string) #:nodoc:
-      string.ascii_only?
+    if RUBY_VERSION < '1.9'
+      def self.safe_for_line_ending_conversion?(string) #:nodoc:
+        string.ascii_only?
+      end
+    else
+      def self.safe_for_line_ending_conversion?(string) #:nodoc:
+        if string.encoding == Encoding::BINARY
+          string.ascii_only?
+        else
+          string.valid_encoding?
+        end
+      end
     end
 
     # Convert line endings to \n unless the string is binary. Used for

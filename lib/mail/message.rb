@@ -2000,7 +2000,6 @@ module Mail
     end
 
     def raw_source=(value)
-      value = value.dup.force_encoding(Encoding::BINARY) if RUBY_VERSION >= "1.9.1"
       @raw_source = ::Mail::Utilities.to_crlf(value)
     end
 

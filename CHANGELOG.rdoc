@@ -1,5 +1,8 @@
 == Version 2.7.1 (unreleased)
 
+Compatibility:
+* Restore LF=>CRLF conversions for properly encoded non-binary emails. (rubys)
+
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
 
