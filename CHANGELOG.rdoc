@@ -10,6 +10,8 @@ Compatibility:
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
 
+Features:
+* Restore LF=>CRLF conversions for properly encoded non-binary emails (rubys)
 
 == Version 2.7.0 (2017-10-31)
 
