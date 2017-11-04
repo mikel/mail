@@ -69,10 +69,12 @@ module Mail
     if RUBY_VERSION < '1.9.0'
       def self.popen(command, &block)
         IO.popen "#{command} 2>&1", 'w+', &block
+        raise $?.to_s unless $?.success?
       end
     else
       def self.popen(command, &block)
         IO.popen command, 'w+', :err => :out, &block
+        raise $?.to_s unless $?.success?
       end
     end
 
