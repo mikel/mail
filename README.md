@@ -46,7 +46,6 @@ me a nice email :)
 * [Encodings](#encodings)
 * [Contributing](#contributing)
 * [Usage](#usage)
-* [Core Extensions](#core-extensions)
 * [Excerpts from TREC Span Corpus 2005](#excerpts-from-trec-span-corpus-2005)
 * [License](#license)
 
@@ -100,8 +99,6 @@ good.  Additionally, all functional tests from TMail are to be passing before
 the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
-
-Note: If you care about core extensions (aka "monkey-patching"), please read the Core Extensions section near the end of this README.
 
 ## API Policy
 
