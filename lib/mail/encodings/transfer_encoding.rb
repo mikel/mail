@@ -33,7 +33,7 @@ module Mail
       end
 
       def self.negotiate(message_encoding, source_encoding, str, allowed_encodings = nil)
-        message_encoding = Encodings.get_encoding(message_encoding || '8bit')
+        message_encoding = Encodings.get_encoding(message_encoding) || Encodings.get_encoding('8bit')
         source_encoding  = Encodings.get_encoding(source_encoding)
 
         if message_encoding && source_encoding && message_encoding.can_transport?(source_encoding) && source_encoding.compatible_input?(str)

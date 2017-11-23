@@ -6,6 +6,9 @@ Compatibility:
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
 
+Bugs:
+* Fix transfer encoding when message encoding is blank. (jakubonty, saks)
+
 
 == Version 2.7.0 (2017-10-31)
 
