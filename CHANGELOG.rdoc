@@ -12,6 +12,7 @@ Performance:
 
 Bugs:
 * Fix transfer encoding when message encoding is blank. (jakubonty, saks)
+* Fix 7bit/base64 content transfer encoding mismatch. (ahorek)
 * Fix UTF-8 attachment filename quoting. (ahorek)
 
 
