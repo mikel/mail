@@ -1551,6 +1551,12 @@ describe Mail::Message do
         expect(Mail.new("Content-Transfer-Encoding: quoted-printable;\r\n\r\nfoo=\r\nbar=\r\nbaz=\r\n").decoded).to eq 'foobarbaz'
       end
 
+      it 'should properly encode eml attachments' do
+        mail = Mail.new
+        mail.attachments['original.eml'] = 'RAW'
+        expect { mail.encoded }.to_not raise_error
+      end
+
     end
 
   end
