@@ -154,7 +154,13 @@ module Mail
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
         dec = Mail::Encodings.get_encoding(encoding)
-        enc = negotiate_best_encoding(transfer_encoding)
+        enc =
+          if Utilities.blank?(transfer_encoding)
+            dec
+          else
+            negotiate_best_encoding(transfer_encoding)
+          end
+
         if dec.nil?
           # Cannot decode, so skip normalization
           raw_source
