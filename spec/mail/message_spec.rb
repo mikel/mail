@@ -1405,6 +1405,18 @@ describe Mail::Message do
 
       end
 
+      it "rfc2046 can be decoded" do
+        body = "This is NOT plain text ASCII　− かきくけこ" * 30
+        mail = Mail.new
+        mail.body << Mail::Part.new.tap do |part|
+          part.content_disposition = 'attachment; filename="test.eml"'
+          part.content_type  = 'message/rfc822'
+          part.body          = body
+        end
+
+        expect(Mail.new(mail.to_s).parts.last.decoded).to include('NOT plain')
+      end
+
       # https://www.ietf.org/rfc/rfc2046.txt
       # No encoding other than "7bit", "8bit", or "binary" is permitted for
       # the body of a "message/rfc822" entity.

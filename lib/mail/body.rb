@@ -153,6 +153,10 @@ module Mail
         encoded_parts = parts.map { |p| p.encoded }
         ([preamble] + encoded_parts).join(crlf_boundary) + end_boundary + epilogue.to_s
       else
+        if transfer_encoding == ''
+          # transfer_encoding wasn't negotiated, see #identify_and_set_transfer_encoding
+          return raw_source
+        end
         dec = Mail::Encodings.get_encoding(encoding)
         enc = negotiate_best_encoding(transfer_encoding)
         if dec.nil?
