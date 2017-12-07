@@ -284,6 +284,10 @@ class MockIMAP
     [self.class.examples[set]]
   end
 
+  def uid_copy(set, attr)
+    [self.class.examples[set]]
+  end
+
   def uid_store(set, attr, flags)
     if attr == "+FLAGS" && flags.include?(Net::IMAP::DELETED)
       @@marked_for_deletion << set

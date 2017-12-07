@@ -132,6 +132,11 @@ describe "IMAP Retriever" do
       expect(MockIMAP.examples.size).to eq 10
     end
 
+    it "should handle the move_to_option" do
+      Mail.find(:move_to => "done")
+      expect(MockIMAP.examples.size).to eq 10
+    end
+
     it "should handle the find_and_delete method" do
       Mail.find_and_delete(:count => 15)
       expect(MockIMAP.examples.size).to eq 5
