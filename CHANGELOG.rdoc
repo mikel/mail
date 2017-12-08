@@ -12,6 +12,7 @@ Compatibility:
 * Gracefully parse invalid dates in Date and Received headers. (okkez)
 * Converting to multipart moves Content-* headers to the new part. (kirikak2)
 * Multipart Content-Type no longer includes a needless charset param. (kirikak2)
+* Use "Re: " instead of "RE: " (mashedcode)
 
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
