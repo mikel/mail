@@ -294,7 +294,7 @@ module Mail
           reply.references ||= bracketed_message_id
         end
         if subject
-          reply.subject = subject =~ /^Re:/i ? subject : "RE: #{subject}"
+          reply.subject = subject =~ /^Re:/i ? subject : "Re: #{subject}"
         end
         if reply_to || from
           reply.to = self[reply_to ? :reply_to : :from].to_s

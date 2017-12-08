@@ -1979,8 +1979,8 @@ describe Mail::Message do
         expect(@mail.reply.references).to eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
 
-      it "should RE: the original subject" do
-        expect(@mail.reply.subject).to eq 'RE: Testing 123'
+      it "should Re: the original subject" do
+        expect(@mail.reply.subject).to eq 'Re: Testing 123'
       end
 
       it "should be sent to the original sender" do
@@ -2041,7 +2041,7 @@ describe Mail::Message do
         expect(@mail.reply[:references].message_ids).to eq ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
       end
 
-      it "should not append another RE:" do
+      it "should not append another Re:" do
         expect(@mail.reply.subject).to eq "Re: Test reply email"
       end
 
