@@ -1,4 +1,4 @@
-# Mail [![Build Status](https://travis-ci.org/mikel/mail.png?branch=master)](https://travis-ci.org/mikel/mail)
+# Mail [![Build Status](https://travis-ci.org/mikel/mail.svg?branch=master)](https://travis-ci.org/mikel/mail)
 
 ## Introduction
 
