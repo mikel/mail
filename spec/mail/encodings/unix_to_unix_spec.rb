@@ -41,8 +41,7 @@ describe Mail::Encodings::UnixToUnix do
   if RUBY_VERSION > "1.9"
     it "encodes / decodes non-ascii" do
       expect(encode("Happy ああr")).to eq "-2&%P<'D@XX&\"XX&\"<@``\n"
-      expected = (RUBY_ENGINE == "jruby" ? "Happy ああr" : "Happy ああr".dup.force_encoding("binary"))
-      expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq expected
+      expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq "Happy ああr".dup.force_encoding("binary")
     end
   end
 
