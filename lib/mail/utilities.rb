@@ -45,7 +45,7 @@ module Mail
     # If the string supplied has TOKEN unsafe characters in it, will return the string quoted
     # in double quotes, otherwise returns the string unmodified
     def quote_token( str )
-      if RUBY_VERSION >= '1.9'
+      if RUBY_VERSION >= '1.9' && str.is_a?(String)
         original_encoding = str.encoding
         ascii_str = str.dup.force_encoding('ASCII-8BIT')
         if token_safe?( ascii_str )
