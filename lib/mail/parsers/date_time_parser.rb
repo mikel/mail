@@ -696,7 +696,6 @@ end
 
       
 begin
-	testEof = false
 	_slen, _trans, _keys, _inds, _acts, _nacts = nil
 	_goto_level = 0
 	_resume = 10
