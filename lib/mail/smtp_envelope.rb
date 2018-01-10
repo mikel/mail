@@ -27,8 +27,8 @@ module Mail
         raise ArgumentError, "SMTP To address may not be blank: #{addr.inspect}"
       end
 
-      @to = Array(addr).map do |addr|
-        validate_addr 'To', addr
+      @to = Array(addr).map do |local_addr|
+        validate_addr 'To', local_addr
       end
     end
 

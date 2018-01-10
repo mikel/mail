@@ -205,12 +205,11 @@ ENDPART
     end
 
     it "retains specified encoding even though it isn't lowest cost" do
-      part = Mail::Part.new.tap do |part|
-        part.header[:content_disposition] = 'attachment; filename="unnamed"'
-        part.content_type  = 'text/plain'
-        # part.body          = 'a' * 998
-        part.body          = 'a' * 999
-        part.body.encoding = 'base64'
+      part = Mail::Part.new.tap do |local_part|
+        local_part.header[:content_disposition] = 'attachment; filename="unnamed"'
+        local_part.content_type  = 'text/plain'
+        local_part.body          = 'a' * 999
+        local_part.body.encoding = 'base64'
       end
 
       part_body_encoding = part.to_s.scan(/Content-Transfer-Encoding: (.+)\r$/).last.first
