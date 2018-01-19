@@ -18,6 +18,7 @@ Compatibility:
 
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
+* Expose Mail::Field#unparsed_value to read the raw field value, before parsing. (Tensho)
 
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)

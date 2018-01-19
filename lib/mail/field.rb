@@ -145,6 +145,8 @@ module Mail
       end
     end
 
+    attr_reader :unparsed_value
+
     # Create a field by name and optional value:
     #
     #  Mail::Field.new("field-name", "value")

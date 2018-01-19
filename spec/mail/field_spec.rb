@@ -321,6 +321,23 @@ describe Mail::Field do
     end
   end
 
+  describe "value" do
+    let(:original) { { :template => "t1" } }
+    subject { Mail::Field.new("name", original) }
+
+    context "parsed" do
+      it "returns parsed value" do
+        expect(subject.value).to eq(original.to_s)
+      end
+    end
+
+    context "unparsed" do
+      it "returns origin unparsed value" do
+        expect(subject.unparsed_value).to eq(original)
+      end
+    end
+  end
+
   describe Mail::Field::ParseError do
     it "should be structured" do
       error = nil
@@ -334,7 +351,6 @@ describe Mail::Field do
       expect(error.value).to eq "invalid"
       expect(error.reason).not_to be_nil
     end
-
   end
 
 end
