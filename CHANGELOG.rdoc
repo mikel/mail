@@ -4,6 +4,9 @@ Compatibility:
 * Restore LF=>CRLF conversions for properly encoded non-binary emails. (rubys)
 * Gracefully parse certain invalid Content-Type headers. (rafbm)
 
+Features:
+* Expose Mail::Field#unparsed_value to read the raw field value, before parsing. (Tensho)
+
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
 
