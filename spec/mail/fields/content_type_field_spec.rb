@@ -560,6 +560,15 @@ describe Mail::ContentTypeField do
       expect(c.parameters).to eql({"boundary" => '=_NextPart_Lycos_15031600484464_ID'})
     end
 
+    it "should handle 'multipart/mixed; boundary=\"=_NextPart_2rfkindysadvnqw3nerasdf\";windows-852" do
+      string = %q{multipart/mixed; boundary="=_NextPart_2rfkindysadvnqw3nerasdf";windows-852}
+      c = Mail::ContentTypeField.new(string)
+      expect(c.content_type).to eq 'multipart/mixed'
+      expect(c.main_type).to eq 'multipart'
+      expect(c.sub_type).to eq 'mixed'
+      expect(c.parameters).to eql({"boundary" => '=_NextPart_2rfkindysadvnqw3nerasdf', "windows-852" => ''})
+    end
+
     it "should handle 'multipart/alternative; boundary=----=_=NextPart_000_0093_01C81419.EB75E850" do
       string = %q{multipart/alternative; boundary=----=_=NextPart_000_0093_01C81419.EB75E850}
       c = Mail::ContentTypeField.new(string)
