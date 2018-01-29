@@ -13,6 +13,7 @@ Compatibility:
 * Converting to multipart moves Content-* headers to the new part. (kirikak2)
 * Multipart Content-Type no longer includes a needless charset param. (kirikak2)
 * Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
+* Gracefully parse certain invalid Content-Type headers. (rafbm)
 
 Performance:
 * Speed up message encoding, especially with large attachments. (dalibor)
