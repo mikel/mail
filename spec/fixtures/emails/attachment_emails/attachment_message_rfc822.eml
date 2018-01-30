@@ -17,7 +17,8 @@ Content-Type: text/plain;
 This is the first part.
 
 --Apple-Mail-13-196941151
-Content-Type: message/rfc822
+Content-Type: message/rfc822;
+  name="ForwardedMessage.eml";
 
 From xxxx@xxxx.com Tue May 10 11:28:07 2005
 Return-Path: <xxxx@xxxx.com>

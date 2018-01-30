@@ -1,0 +1,24 @@
+From email_test@me.nowhere
+Return-Path: <email_test@me.nowhere>
+Received: from omta05sl.mx.bigpond.com by me.nowhere.else with ESMTP id 632BD5758 for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:21 +1000
+Received: from oaamta05sl.mx.bigpond.com by omta05sl.mx.bigpond.com with ESMTP id <20071021093820.HSPC16667.omta05sl.mx.bigpond.com@oaamta05sl.mx.bigpond.com> for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:20 +1000
+Received: from mikel091a by oaamta05sl.mx.bigpond.com with SMTP id <20071021093820.JFMT24025.oaamta05sl.mx.bigpond.com@mikel091a> for <mikel@me.nowhere.else>; Sun, 21 Oct 2007 19:38:20 +1000
+Date: Sun, 21 Oct 2007 19:38:13 +1000
+From: Mikel Lindsaar <email_test@me.nowhere>
+Reply-To: Mikel Lindsaar <email_test@me.nowhere>
+To: mikel@me.nowhere
+Message-Id: <009601c813c6$19df3510$0437d30a@mikel091a>
+Subject: Testing outlook
+Subject: Another PDF
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+  boundary=----=_Part_13069834_15179892.1376435426074
+
+
+------=_Part_13069834_15179892.1376435426074
+Content-Type: image/jpeg; name=2013-08-13_19-08-28-1.jpg
+Content-Transfer-Encoding: binary
+Content-Location: 2013-08-13_19-08-28-1.jpg
+
+BINARY_CONTENT_GOES_HERE
+------=_Part_13069834_15179892.1376435426074--

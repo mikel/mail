@@ -19,7 +19,7 @@ describe "Attachments" do
 
   before(:each) do
     @mail = Mail.new
-    @test_png = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+    @test_png = read_raw_fixture('attachments', 'test.png')
   end
 
   describe "from direct content" do
@@ -40,7 +40,7 @@ describe "Attachments" do
     end
 
     it "should assign mime-encoded multibyte filename" do
-      @mail.attachments['てすと.txt'] = File.open(fixture('attachments', 'てすと.txt'), 'rb', &:read)
+      @mail.attachments['てすと.txt'] = read_raw_fixture('attachments', 'てすと.txt')
       expect(Mail::Utilities.blank?(@mail.attachments)).not_to eq true
       expect(Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode)).to eq 'てすと.txt'
     end
@@ -132,10 +132,10 @@ describe "Attachments" do
 
     it "should allow you to pass in more than one attachment" do
       mail = Mail.new
-      mail.attachments['test.pdf'] = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
-      mail.attachments['test.gif'] = File.open(fixture('attachments', 'test.gif'), 'rb', &:read)
-      mail.attachments['test.jpg'] = File.open(fixture('attachments', 'test.jpg'), 'rb', &:read)
-      mail.attachments['test.zip'] = File.open(fixture('attachments', 'test.zip'), 'rb', &:read)
+      mail.attachments['test.pdf'] = read_raw_fixture('attachments', 'test.pdf')
+      mail.attachments['test.gif'] = read_raw_fixture('attachments', 'test.gif')
+      mail.attachments['test.jpg'] = read_raw_fixture('attachments', 'test.jpg')
+      mail.attachments['test.zip'] = read_raw_fixture('attachments', 'test.zip')
       expect(mail.attachments[0].filename).to eq 'test.pdf'
       expect(mail.attachments[1].filename).to eq 'test.gif'
       expect(mail.attachments[2].filename).to eq 'test.jpg'
@@ -148,9 +148,9 @@ describe "Attachments" do
 
     it "should set the content_disposition to inline or attachment as appropriate" do
       mail = Mail.new
-      mail.attachments['test.pdf'] = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
+      mail.attachments['test.pdf'] = read_raw_fixture('attachments', 'test.pdf')
       expect(mail.attachments['test.pdf'].content_disposition).to eq 'attachment; filename=test.pdf'
-      mail.attachments.inline['test.png'] = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+      mail.attachments.inline['test.png'] = read_raw_fixture('attachments', 'test.png')
       expect(mail.attachments.inline['test.png'].content_disposition).to eq 'inline; filename=test.png'
     end
 
@@ -170,7 +170,7 @@ describe "Attachments" do
   describe "getting the content ID from an attachment" do
     before(:each) do
       @mail = Mail.new
-      @mail.attachments['test.gif'] = File.open(fixture('attachments', 'test.gif'), 'rb', &:read)
+      @mail.attachments['test.gif'] = read_raw_fixture('attachments', 'test.gif')
       @cid = @mail.attachments['test.gif'].content_id
     end
 
@@ -192,14 +192,14 @@ describe "Attachments" do
   describe "setting the content type correctly" do
     it "should set the content type to multipart/mixed if none given and you add an attachment" do
       mail = Mail.new
-      mail.attachments['test.pdf'] = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
+      mail.attachments['test.pdf'] = read_raw_fixture('attachments', 'test.pdf')
       mail.encoded
       expect(mail.mime_type).to eq 'multipart/mixed'
     end
 
     it "allows you to set the attachment before the content type" do
       mail = Mail.new
-      mail.attachments["test.png"] = File.open(fixture('attachments', 'test.png'), 'rb', &:read)
+      mail.attachments["test.png"] = read_raw_fixture('attachments', 'test.png')
       mail.body = "Lots of HTML"
       mail.mime_version = '1.0'
       mail.content_type = 'text/html; charset=UTF-8'
@@ -215,7 +215,7 @@ describe "Attachments" do
       end
       mail = Mail.new
       expect {
-        mail.attachments[filename] = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
+        mail.attachments[filename] = read_raw_fixture('attachments', 'test.pdf')
       }.not_to raise_error
     end
   end
@@ -226,27 +226,27 @@ describe "reading emails with attachments" do
   describe "test emails" do
 
     it "should find the attachment using content location" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_location.eml')))
+      mail = read_fixture('emails/attachment_emails/attachment_content_location.eml')
       expect(mail.attachments.length).to eq 1
     end
 
     it "should find an attachment defined with 'name' and Content-Disposition: attachment" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
+      mail = read_fixture('emails/attachment_emails/attachment_content_disposition.eml')
       expect(mail.attachments.length).to eq 1
     end
 
-    it "should use the content-type filename or name over the content-disposition filename" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_content_disposition.eml')))
+    it "should use the content-disposition filename over the content-type filename or name" do
+      mail = read_fixture('emails/attachment_emails/attachment_content_disposition.eml')
       expect(mail.attachments[0].filename).to eq 'hello.rb'
     end
 
     it "should decode an attachment" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_pdf.eml')))
+      mail = read_fixture('emails/attachment_emails/attachment_pdf.eml')
       expect(mail.attachments[0].decoded.length).to eq 1026
     end
 
     it "should find an attachment that has an encoded name value" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', 'attachment_with_encoded_name.eml')))
+      mail = read_fixture('emails/attachment_emails/attachment_with_encoded_name.eml')
       expect(mail.attachments.length).to eq 1
       result = mail.attachments[0].filename
       if RUBY_VERSION >= '1.9'
@@ -258,21 +258,19 @@ describe "reading emails with attachments" do
     end
 
     it "should find an attachment that has a name not surrounded by quotes" do
-      mail = Mail.read(fixture(File.join('emails', 'attachment_emails', "attachment_with_unquoted_name.eml")))
+      mail = read_fixture('emails/attachment_emails/attachment_with_unquoted_name.eml')
       expect(mail.attachments.length).to eq 1
       expect(mail.attachments.first.filename).to eq "This is a test.txt"
     end
 
     it "should find attachments inside parts with content-type message/rfc822" do
-      mail = Mail.read(fixture(File.join("emails",
-                                         "attachment_emails",
-                                         "attachment_message_rfc822.eml")))
+      mail = read_fixture('emails/attachment_emails/attachment_message_rfc822.eml')
       expect(mail.attachments.length).to eq 1
-      expect(mail.attachments[0].decoded.length).to eq 1026
+      expect(mail.attachments[0].decoded.length).to eq 3712
     end
 
     it "attach filename decoding (issue 83)" do
-      data = <<-limitMAIL
+      mail = Mail.new(Mail::Utilities.to_crlf(<<-limitMAIL))
 Subject: aaa
 From: aaa@aaa.com
 To: bbb@aaa.com
@@ -301,7 +299,6 @@ X-Attachment-Id: f_gbneqxxy0
 YWFhCg==
 --0016e64c0af257c3a7048b69e1ac--
 limitMAIL
-      mail = Mail.new(data)
       #~ puts Mail::Encodings.decode_encode(mail.attachments[0].filename, :decode)
       expect(mail.attachments[0].filename).to eq "Foto0009.jpg"
     end
@@ -322,10 +319,10 @@ describe "attachment order" do
       end
     end
 
-    mail.attachments['test.zip'] = File.open(fixture('attachments', 'test.zip'), 'rb', &:read)
-    mail.attachments['test.pdf'] = File.open(fixture('attachments', 'test.pdf'), 'rb', &:read)
-    mail.attachments['test.gif'] = File.open(fixture('attachments', 'test.gif'), 'rb', &:read)
-    mail.attachments['test.jpg'] = File.open(fixture('attachments', 'test.jpg'), 'rb', &:read)
+    mail.attachments['test.zip'] = read_raw_fixture('attachments', 'test.zip')
+    mail.attachments['test.pdf'] = read_raw_fixture('attachments', 'test.pdf')
+    mail.attachments['test.gif'] = read_raw_fixture('attachments', 'test.gif')
+    mail.attachments['test.jpg'] = read_raw_fixture('attachments', 'test.jpg')
     expect(mail.attachments[0].filename).to eq 'test.zip'
     expect(mail.attachments[1].filename).to eq 'test.pdf'
     expect(mail.attachments[2].filename).to eq 'test.gif'
