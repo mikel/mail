@@ -44,6 +44,70 @@ module Mail
       raise NoMethodError, "#collect! is not defined, please call #collect and create a new PartsList"
     end
 
+    def inspect_structure(parent_id = '')
+      enum_for(:map).with_index { |part, i|
+        i = i + 1 # Use 1-based indexes since this is for humans to read
+        id = parent_id.empty? ? "#{i}" : "#{parent_id}.#{i}"
+        if part.content_type == "message/rfc822"
+          sub_list = Mail.new(part.body).parts
+        else
+          sub_list = part.parts
+        end
+        id + '. ' + part.inspect +
+          if sub_list.any?
+            "\n" + sub_list.inspect_structure(id)
+          end.to_s
+      }.join("\n")
+    end
+
+    def recursive
+      Enumerator.new do |y|
+        each { |part|
+          if part.content_type == "message/rfc822"
+            sub_list = Mail.new(part.body).parts
+          else
+            sub_list = part.parts
+          end
+          y.yield part
+          if sub_list.any?
+            sub_list.recursive_each {|part|
+              y.yield part }
+          end
+        }
+      end
+    end
+
+    def recursive_each
+      recursive.each {|part| yield part }
+    end
+
+    def recursive_size
+      i = 0
+      recursive_each {|p| i += 1 }
+      i
+    end
+
+    def recursive_delete_if
+      delete_if { |part|
+        if part.content_type == "message/rfc822"
+          sub_list = Mail.new(part.body).parts
+        else
+          sub_list = part.parts
+        end
+        (yield part).tap {
+          if sub_list.any?
+            sub_list.recursive_delete_if {|part| yield part }
+          end
+        }
+      }
+    end
+
+    def delete_attachments
+      recursive_delete_if { |part|
+        part.attachment?
+      }
+    end
+
     def sort
       self.class.new(@parts.sort)
     end

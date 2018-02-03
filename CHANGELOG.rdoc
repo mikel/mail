@@ -5,6 +5,7 @@ Breaking changes:
 * Sendmail and exim delivery :arguments option must be an array of string args. (benmmurphy)
 * Passing unparsed headers to Mail::Field.new is no longer supported. Use Mail::Field.parse. (jeremy)
 * Removed long-deprecated features: Message#register_for_delivery_notification, #has_transfer_encoding?, #add_transfer_encoding, #transfer_encoding, #message_content_type, #mime_parameters, #encode!, and Part#inline_content_id. (jeremy)
+* Change Message#without_attachments! to delete attachments recursively (TylerRick)
 
 Compatibility:
 * Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)

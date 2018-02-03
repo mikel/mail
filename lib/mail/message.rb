@@ -1808,7 +1808,7 @@ module Mail
 
     def without_attachments!
       if has_attachments?
-        parts.delete_if { |p| p.attachment? }
+        parts.delete_attachments
 
         reencoded = parts.empty? ? '' : body.encoded(content_transfer_encoding)
         @body = nil # So the new parts won't be added to the existing body
@@ -1870,6 +1870,15 @@ module Mail
 
     def inspect
       "#<#{self.class}:#{self.object_id}, Multipart: #{multipart?}, Headers: #{header.field_summary}>"
+    end
+
+    def inspect_structure
+      inspect +
+      if self.multipart?
+        "\n" + parts.inspect_structure
+      else
+        ''
+      end
     end
 
     def decoded
