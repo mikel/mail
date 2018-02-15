@@ -266,6 +266,12 @@ describe "reading emails with attachments" do
       expect(mail.attachments.first.filename).to eq "This is a test.txt"
     end
 
+    it "should decode an attachment without ascii compatible filename" do
+      mail = read_fixture('emails/attachment_emails/attachment_nonascii_filename.eml')
+      expect(mail.attachments.length).to eq 1
+      expect(mail.attachments.first.filename).to eq "ciële.txt"
+    end
+
     it "should find attachments inside parts with content-type message/rfc822" do
       mail = read_fixture('emails/attachment_emails/attachment_message_rfc822.eml')
       expect(mail.attachments.length).to eq 1
