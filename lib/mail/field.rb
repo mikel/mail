@@ -173,6 +173,8 @@ module Mail
       @name = FIELD_NAME_MAP[@name.to_s.downcase] || @name
     end
 
+    attr_reader :unparsed_value
+
     def field=(field)
       @field = field
     end
