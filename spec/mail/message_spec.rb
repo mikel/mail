@@ -1977,11 +1977,11 @@ describe Mail::Message do
 
       emails_with_attachments.each { |file_name|
         mail = read_fixture('emails', *file_name)
-        non_attachment_parts = mail.parts.recursive.reject(&:attachment?)
+        non_attachment_parts = mail.all_parts.reject(&:attachment?)
         expect(mail.has_attachments?).to be_truthy
         mail.without_attachments!
 
-        expect(mail.parts.recursive.to_a).to eq non_attachment_parts
+        expect(mail.all_parts).to eq non_attachment_parts
         expect(mail.has_attachments?).to be_falsey
       }
     end

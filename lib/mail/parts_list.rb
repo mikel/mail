@@ -60,25 +60,18 @@ module Mail
       }.join("\n")
     end
 
-    def recursive
-      Enumerator.new do |y|
-        each { |part|
-          if part.content_type == "message/rfc822"
-            sub_list = Mail.new(part.body).parts
-          else
-            sub_list = part.parts
-          end
-          y.yield part
-          if sub_list.any?
-            sub_list.recursive_each {|part|
-              y.yield part }
-          end
-        }
-      end
-    end
+    def recursive_each(&block)
+      each do |part|
+        if part.content_type == "message/rfc822"
+          sub_list = Mail.new(part.body).parts
+        else
+          sub_list = part.parts
+        end
 
-    def recursive_each
-      recursive.each {|part| yield part }
+        yield part
+
+        sub_list.recursive_each(&block)
+      end
     end
 
     def recursive_size
