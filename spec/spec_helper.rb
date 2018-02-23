@@ -241,6 +241,7 @@ end
 class MockIMAP
   @@connection = false
   @@mailbox = nil
+  @@readonly = false
   @@marked_for_deletion = []
   @@default_examples = {
     :default => (0..19).map do |i|
@@ -270,10 +271,12 @@ class MockIMAP
 
   def select(mailbox)
     @@mailbox = mailbox
+    @@readonly = false
   end
 
   def examine(mailbox)
     select(mailbox)
+    @@readonly = true
   end
 
   def uid_search(keys, charset = nil)
@@ -298,6 +301,7 @@ class MockIMAP
   end
 
   def self.mailbox; @@mailbox end    # test only
+  def self.readonly?; @@readonly end # test only
 
   def self.disconnected?; @@connection == false end
   def      disconnected?; @@connection == false end
