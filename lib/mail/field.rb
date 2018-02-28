@@ -293,7 +293,7 @@ module Mail
     #  treated in its unfolded form for further syntactic and semantic
     #  evaluation.
     def unfold(string)
-      string.gsub(/#{CRLF}(#{WSP})/m, '\1')
+      string.gsub(/#{Constants::CRLF}(#{Constants::WSP})/m, '\1')
     end
   end
 end

@@ -1984,7 +1984,7 @@ module Mail
 
   private
 
-    HEADER_SEPARATOR = /#{CRLF}#{CRLF}/
+    HEADER_SEPARATOR = /#{Constants::CRLF}#{Constants::CRLF}/
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -2000,7 +2000,7 @@ module Mail
     end
 
     def raw_source=(value)
-      @raw_source = ::Mail::Utilities.to_crlf(value)
+      @raw_source = value
     end
 
     # see comments to body=. We take data and process it lazily
@@ -2029,7 +2029,7 @@ module Mail
 
     def set_envelope_header
       raw_string = raw_source.to_s
-      if match_data = raw_string.match(/\AFrom\s(#{TEXT}+)#{CRLF}/m)
+      if match_data = raw_string.match(/\AFrom\s(#{TEXT}+)#{Constants::CRLF}/m)
         set_envelope(match_data[1])
         self.raw_source = raw_string.sub(match_data[0], "")
       end
