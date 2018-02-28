@@ -8,6 +8,8 @@ if RUBY_VERSION < '1.9.3'
   gem 'i18n', '< 0.7'
 elsif RUBY_VERSION < '2.2.2'
   gem 'activesupport', '< 5'
+elsif RUBY_VERSION < '2.4.1'
+  gem 'activesupport', '< 6'
 else
   gem 'activesupport', :git => 'https://github.com/rails/rails'
 end
