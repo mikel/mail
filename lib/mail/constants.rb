@@ -16,7 +16,7 @@ module Mail
       control = control.dup.force_encoding(Encoding::BINARY)
     end
 
-    CRLF          = /\r\n/
+    CRLF          = /\r?\n/
     WSP           = /[#{white_space}]/
     FWS           = /#{CRLF}#{WSP}*/
     UNFOLD_WS     = /#{CRLF}(#{WSP})/m

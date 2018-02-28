@@ -1981,7 +1981,7 @@ module Mail
     end
 
     def raw_source=(value)
-      @raw_source = ::Mail::Utilities.to_crlf(value)
+      @raw_source = value
     end
 
     # see comments to body=. We take data and process it lazily
