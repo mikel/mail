@@ -7,9 +7,6 @@ module Mail
   module Utilities
     extend self
 
-    LF   = "\n"
-    CRLF = "\r\n"
-
     # Returns true if the string supplied is free from characters not allowed as an ATOM
     def atom_safe?( str )
       not Constants::ATOM_UNSAFE === str
@@ -250,7 +247,7 @@ module Mail
     end
 
     def self.binary_unsafe_to_lf(string) #:nodoc:
-      string.gsub(/\r\n|\r/, LF)
+      string.gsub(/\r\n|\r/, Constants::LF)
     end
 
     TO_CRLF_REGEX =
@@ -264,7 +261,7 @@ module Mail
       end
 
     def self.binary_unsafe_to_crlf(string) #:nodoc:
-      string.gsub(TO_CRLF_REGEX, CRLF)
+      string.gsub(TO_CRLF_REGEX, Constants::CRLF)
     end
 
     if RUBY_VERSION < '1.9'

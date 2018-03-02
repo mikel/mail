@@ -1965,7 +1965,7 @@ module Mail
 
   private
 
-    HEADER_SEPARATOR = /#{Constants::CRLF}#{Constants::CRLF}/
+    HEADER_SEPARATOR = /#{Constants::LAX_CRLF}#{Constants::LAX_CRLF}/
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -2010,7 +2010,7 @@ module Mail
 
     def set_envelope_header
       raw_string = raw_source.to_s
-      if match_data = raw_string.match(/\AFrom\s+([^:\s]#{Constants::TEXT}*)#{Constants::CRLF}/m)
+      if match_data = raw_string.match(/\AFrom\s+([^:\s]#{Constants::TEXT}*)#{Constants::LAX_CRLF}/m)
         set_envelope(match_data[1])
         self.raw_source = raw_string.sub(match_data[0], "")
       end
