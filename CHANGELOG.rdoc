@@ -9,6 +9,7 @@ Breaking changes:
 
 Compatibility:
 * Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
+* Normalize Quoted-Printable line endings for text content. (jeremy)
 * Gracefully parse invalid dates in Date and Received headers. (okkez)
 * Converting to multipart moves Content-* headers to the new part. (kirikak2)
 * Multipart Content-Type no longer includes a needless charset param. (kirikak2)
