@@ -75,7 +75,7 @@ module Mail
           mails.each do |mail|
             mail_data = StringIO.new
             mail.pop(mail_data)
-            new_message = Mail.new(mail_data.string)
+            new_message = Mail.new(mail_data.string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''))
             new_message.mark_for_delete = true if options[:delete_after_find]
             yield new_message
             mail.delete if options[:delete_after_find] && new_message.is_marked_for_delete? # Delete if still marked for delete
@@ -85,7 +85,7 @@ module Mail
           mails.each do |mail|
             mail_data = StringIO.new
             mail.pop mail_data
-            emails << Mail.new(mail_data.string)
+            emails << Mail.new(mail_data.string.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''))
             mail.delete if options[:delete_after_find]
           end
           emails.size == 1 && options[:count] == 1 ? emails.first : emails
