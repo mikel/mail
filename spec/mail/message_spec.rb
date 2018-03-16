@@ -402,6 +402,14 @@ describe Mail::Message do
         end
       end
     end
+
+    if '1.9+'.respond_to?(:encoding)
+      it "should allow invalid bytes in UTF-8" do
+        mail = Mail.new("From: mikel\r\nSubject: foo \xE1 bar\r\n\r\nThis is the body")
+        expect(mail.body.to_s).to eq 'This is the body'
+        expect(mail.subject).to eq String.new("foo \xE1 bar").force_encoding(Encoding::BINARY)
+      end
+    end
   end
 
   describe "directly setting values of a message" do
