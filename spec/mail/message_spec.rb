@@ -165,6 +165,16 @@ describe Mail::Message do
       expect(Mail::Utilities.blank?(mail.in_reply_to)).to be_truthy
     end
 
+    it "should be able to pass two In-Reply-To headers" do
+      mail = Mail.new("From: bob\r\nIn-Reply-To: <a@a.a>\r\nIn-Reply-To: <b@b.b>\r\nSubject: Hello!\r\n\r\nemail message\r\n")
+      expect(mail.in_reply_to).to eq 'b@b.b'
+    end
+
+    it "should be able to pass two References headers" do
+      mail = Mail.new("From: bob\r\nReferences: <a@a.a>\r\nReferences: <b@b.b>\r\nSubject: Hello!\r\n\r\nemail message\r\n")
+      expect(mail.references).to eq 'b@b.b'
+    end
+
     describe "YAML serialization" do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
