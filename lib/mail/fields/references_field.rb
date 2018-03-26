@@ -31,6 +31,10 @@ module Mail
   class ReferencesField < CommonMessageIdField #:nodoc:
     NAME = 'References'
 
+    def self.singular?
+      true
+    end
+
     def initialize(value = nil, charset = nil)
       value = value.join("\r\n\s") if value.is_a?(Array)
       super value, charset
