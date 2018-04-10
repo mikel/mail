@@ -100,7 +100,7 @@ module Mail
     
     # A part may not have a header.... so, just init a body if no header
     def parse_message
-      header_part, body_part = raw_source.split(/#{Constants::CRLF}#{Constants::WSP}*#{Constants::CRLF}/m, 2)
+      header_part, body_part = raw_source.split(/#{Constants::LAX_CRLF}#{Constants::WSP}*#{Constants::LAX_CRLF}/m, 2)
       if header_part =~ Constants::HEADER_LINE
         self.header = header_part
         self.body   = body_part
