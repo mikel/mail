@@ -302,16 +302,16 @@ module Mail
         # See http://www.unicode.org/reports/tr15, Table 1
         codepoints = u_unpack(string)
         case form
-          when :d
-            reorder_characters(decompose_codepoints(:canonical, codepoints))
-          when :c
-            compose_codepoints(reorder_characters(decompose_codepoints(:canonical, codepoints)))
-          when :kd
-            reorder_characters(decompose_codepoints(:compatability, codepoints))
-          when :kc
-            compose_codepoints(reorder_characters(decompose_codepoints(:compatability, codepoints)))
-          else
-            raise ArgumentError, "#{form} is not a valid normalization variant", caller
+        when :d
+          reorder_characters(decompose_codepoints(:canonical, codepoints))
+        when :c
+          compose_codepoints(reorder_characters(decompose_codepoints(:canonical, codepoints)))
+        when :kd
+          reorder_characters(decompose_codepoints(:compatability, codepoints))
+        when :kc
+          compose_codepoints(reorder_characters(decompose_codepoints(:compatability, codepoints)))
+        else
+          raise ArgumentError, "#{form} is not a valid normalization variant", caller
         end.pack('U*')
       end
 
