@@ -27,6 +27,7 @@ rvm:
 env:
   global:
     - JRUBY_OPTS="--server -J-Xms1500m -J-Xmx1500m -J-XX:+UseConcMarkSweepGC -J-XX:-UseGCOverheadLimit -J-XX:+CMSClassUnloadingEnabled"
+    - RUBYOPT="-w"
   matrix:
     - MBCHARS=activesupport
     - MBCHARS=builtin
