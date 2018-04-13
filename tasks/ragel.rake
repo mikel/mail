@@ -11,7 +11,7 @@ rule %r|_parser\.rl\z| => 'lib/mail/parsers/rfc5322.rl'
 
 # Ruby parsers depend on Ragel parser definitions
 # (remove -L to include line numbers for debugging)
-rule %r|_parser\.rb\z| => '.rl' do |t|
+rule %r|_parser\.rb\z| => '%X.rl' do |t|
   sh "ragel -s -R -L -F1 -o #{t.name} #{t.source}"
 end
 
