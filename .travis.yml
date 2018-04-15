@@ -4,7 +4,6 @@ cache: bundler
 
 bundler_args: --without local_development
 before_install:
-  - gem update --system
   - gem install bundler
 
 script: bundle exec rake
@@ -28,6 +27,7 @@ rvm:
 env:
   global:
     - JRUBY_OPTS="--server -J-Xms1500m -J-Xmx1500m -J-XX:+UseConcMarkSweepGC -J-XX:-UseGCOverheadLimit -J-XX:+CMSClassUnloadingEnabled"
+    - RUBYOPT="-w"
   matrix:
     - MBCHARS=activesupport
     - MBCHARS=builtin
