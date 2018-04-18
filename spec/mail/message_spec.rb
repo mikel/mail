@@ -1448,7 +1448,7 @@ describe Mail::Message do
         end
         mail.encoded
 
-        expect(mail.multipart?).to eq(true)
+        expect(mail.multipart?).to be_truthy
         expect(mail.parts.last.content_transfer_encoding).to match(/quoted-printable|base64/)
       end
 
