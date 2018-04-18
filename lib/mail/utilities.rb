@@ -116,8 +116,11 @@ module Mail
     #  str = '(This is a string)'
     #  unparen( str ) #=> 'This is a string'
     def unparen( str )
-      match = str.match(/^\((.*?)\)$/)
-      match ? match[1] : str
+      if str.start_with?('(') && str.end_with?(')')
+        str.slice(1..-2)
+      else
+        str
+      end
     end
 
     # Wraps a string in angle brackets and escapes any that are in the string itself
@@ -136,8 +139,11 @@ module Mail
     #  str = '<This is a string>'
     #  unbracket( str ) #=> 'This is a string'
     def unbracket( str )
-      match = str.match(/^\<(.*?)\>$/)
-      match ? match[1] : str
+      if str.start_with?('<') && str.end_with?('>')
+        str.slice(1..-2)
+      else
+        str
+      end
     end
 
     # Escape parenthesies in a string
