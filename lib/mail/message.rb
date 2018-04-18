@@ -2122,21 +2122,30 @@ module Mail
 
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
-      content_type_name = header[:content_type].filename rescue nil
-      content_disp_name = header[:content_disposition].filename rescue nil
-      content_loc_name  = header[:content_location].location rescue nil
-      case
-      when content_disposition && content_disp_name
-        filename = content_disp_name
-      when content_type && content_type_name
-        filename = content_type_name
-      when content_location && content_loc_name
-        filename = content_loc_name
-      else
-        filename = nil
-      end
+      filename = find_attachment_filename
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    def find_attachment_filename
+      filename_from_field(header[:content_location]) ||
+      filename_from_field(header[:content_disposition]) ||
+      filename_from_field(header[:content_type])
+    end
+
+    def filename_from_field(field)
+      return if field.nil?
+
+      case field.field
+      when ContentLocationField
+        field.location
+      when ContentTypeField, ContentDispositionField
+        field.filename
+      when NilClass, UnstructuredField
+        nil
+      else
+        raise ArgumentError, "Don't know how to extract filename from #{field}"
+      end
     end
 
     def do_delivery
