@@ -276,8 +276,14 @@ describe "Test emails" do
         @message = read_fixture('emails', 'mime_emails', 'sig_only_email.eml')
       end
 
-      it "should not error on multiart/signed emails" do
+      it "should not error on multipart/signed emails" do
         expect { @message.encoded }.not_to raise_error
+      end
+
+      it "should use compatible encoding" do
+        signature = Mail.new(@message.encoded).parts.last
+        expect(signature.mime_type).to eq('application/pgp-signature')
+        expect(['quoted-printable', 'base64']).to include(signature.content_transfer_encoding)
       end
 
       it "should have one attachment called signature.asc" do
