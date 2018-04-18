@@ -36,11 +36,17 @@ module Mail
         message_encoding = Encodings.get_encoding(message_encoding) || Encodings.get_encoding('8bit')
         source_encoding  = Encodings.get_encoding(source_encoding)
 
-        if message_encoding && source_encoding && message_encoding.can_transport?(source_encoding) && source_encoding.compatible_input?(str)
+        if compatible?(message_encoding, source_encoding, str, allowed_encodings)
           source_encoding
         else
           renegotiate(message_encoding, source_encoding, str, allowed_encodings)
         end
+      end
+
+      def self.compatible?(message_encoding, source_encoding, str, allowed_encodings = nil)
+        message_encoding && source_encoding &&
+        message_encoding.can_transport?(source_encoding) && source_encoding.compatible_input?(str) &&
+        (allowed_encodings.nil? || allowed_encodings.include?(source_encoding))
       end
 
       def self.renegotiate(message_encoding, source_encoding, str, allowed_encodings = nil)

@@ -1432,9 +1432,24 @@ describe Mail::Message do
           part.body          = 'a' * 999
         end
         mail.encoded
-        
+
         expect(mail.parts.count).to eq(1)
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
+      end
+
+      # https://www.ietf.org/rfc/rfc1847.txt
+      # No encoding other than "quoted-printable", or "base64" is permitted for
+      # the body of a "multipart/signed" entity.
+      it "rfc1847" do
+        mail = Mail.new
+        mail.body << Mail::Part.new.tap do |part|
+          part.content_disposition = 'attachment; filename="test.asc"'
+          part.content_type  = 'application/pgp-signature'
+        end
+        mail.encoded
+
+        expect(mail.multipart?).to be_truthy
+        expect(mail.parts.last.content_transfer_encoding).to match(/quoted-printable|base64/)
       end
 
       describe "convert_to_multipart" do

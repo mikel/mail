@@ -2024,6 +2024,8 @@ module Mail
       case mime_type
       when 'message/rfc822'
         [Encodings::SevenBit, Encodings::EightBit, Encodings::Binary]
+      when 'application/pgp-signature'
+        [Encodings::QuotedPrintable, Encodings::Base64]
       end
     end
 
