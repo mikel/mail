@@ -121,7 +121,7 @@ module Mail
       if 'string'.respond_to?(:encoding)
         # Pass through UTF-8 addresses
         def utf8_if_needed(val, val_charset)
-          if val_charset =~ /\AUTF-?8\z/i
+          if ::Mail::Utilities.match?(val_charset, /\AUTF-?8\z/i)
             val
           elsif val.encoding == Encoding::UTF_8
             val

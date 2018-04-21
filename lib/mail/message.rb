@@ -294,7 +294,7 @@ module Mail
           reply.references ||= bracketed_message_id
         end
         if subject
-          reply.subject = subject =~ /^Re:/i ? subject : "Re: #{subject}"
+          reply.subject = ::Mail::Utilities.match?(subject, /^Re:/i) ? subject : "Re: #{subject}"
         end
         if reply_to || from
           reply.to = self[reply_to ? :reply_to : :from].to_s
@@ -1314,11 +1314,12 @@ module Mail
     #  mail['foo'] = '1234'
     #  mail['foo'].to_s #=> '1234'
     def []=(name, value)
-      if name.to_s == 'body'
+      str_name = name.to_s
+      if str_name == 'body'
         self.body = value
-      elsif name.to_s =~ /content[-_]type/i
+      elsif ::Mail::Utilities.match?(str_name, /content[-_]type/i)
         header[name] = value
-      elsif name.to_s == 'charset'
+      elsif str_name == 'charset'
         self.charset = value
       else
         header[name] = value
@@ -1524,17 +1525,17 @@ module Mail
 
     # Returns true if the message is multipart
     def multipart?
-      has_content_type? ? !!(main_type =~ /^multipart$/i) : false
+      has_content_type? ? ::Mail::Utilities.match?(main_type, /^multipart$/i) : false
     end
 
     # Returns true if the message is a multipart/report
     def multipart_report?
-      multipart? && sub_type =~ /^report$/i
+      multipart? && ::Mail::Utilities.match?(sub_type, /^report$/i)
     end
 
     # Returns true if the message is a multipart/report; report-type=delivery-status;
     def delivery_status_report?
-      multipart_report? && content_type_parameters['report-type'] =~ /^delivery-status$/i
+      multipart_report? && ::Mail::Utilities.match?(content_type_parameters['report-type'], /^delivery-status$/i)
     end
 
     # returns the part in a multipart/report email that has the content-type delivery-status
@@ -1853,7 +1854,7 @@ module Mail
           m.transport_encoding(v)
         when k == 'multipart_body'
           v.map {|part| m.add_part Mail::Part.from_yaml(part) }
-        when k =~ /^@/
+        when ::Mail::Utilities.match?(k, /^@/)
           m.instance_variable_set(k.to_sym, v)
         end
       end
@@ -1960,7 +1961,7 @@ module Mail
     end
 
     def text?
-      has_content_type? ? !!(main_type =~ /^text$/i) : false
+      has_content_type? ? ::Mail::Utilities.match?(main_type, /^text$/i) : false
     end
 
   private

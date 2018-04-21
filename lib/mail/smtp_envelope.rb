@@ -47,7 +47,7 @@ module Mail
           raise ArgumentError, "SMTP #{addr_name} address may not exceed #{MAX_ADDRESS_BYTESIZE} bytes: #{addr.inspect}"
         end
 
-        if /[\r\n]/ =~ addr
+        if ::Mail::Utilities.match?(addr, /[\r\n]/)
           raise ArgumentError, "SMTP #{addr_name} address may not contain CR or LF line breaks: #{addr.inspect}"
         end
 

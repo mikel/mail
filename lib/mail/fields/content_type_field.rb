@@ -134,7 +134,7 @@ module Mail
         # Microsoft helper:
         # Handles 'type/subtype;ISO-8559-1'
         "#{$1}/#{$2}; charset=#{Utilities.quote_atom($3)}"
-      when val.chomp =~ /^text;?$/i
+      when ::Mail::Utilities.match?(val.chomp, /^text;?$/i)
         # Handles 'text;' and 'text'
         "text/plain;"
       when val.chomp =~ /^(\w+);\s(.*)$/i
@@ -153,7 +153,7 @@ module Mail
         params = params.map { |i| i.split(/\s*\=\s*/, 2) }
         params = params.map { |i| "#{i[0]}=#{Utilities.dquote(i[1].to_s.gsub(/;$/,""))}" }.join('; ')
         "#{type}; #{params}"
-      when val =~ /^\s*$/
+      when ::Mail::Utilities.match?(val, /^\s*$/)
         'text/plain'
       else
         val
