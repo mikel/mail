@@ -16,7 +16,7 @@ module Mail
       # Decode the string from Quoted-Printable. Cope with hard line breaks
       # that were incorrectly encoded as hex instead of literal CRLF.
       def self.decode(str)
-        ::Mail::Utilities.to_lf ::Mail::Utilities.to_crlf(str).gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n").unpack("M*").first
+        ::Mail::Utilities.unpack1(::Mail::Utilities.to_lf(::Mail::Utilities.to_crlf(str).gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n")), 'M*')
       end
 
       def self.encode(str)

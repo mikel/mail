@@ -168,6 +168,17 @@ module Mail
       @uri_parser ||= URI.const_defined?(:DEFAULT_PARSER) ? URI::DEFAULT_PARSER : URI
     end
 
+    # use optimized unpack1 if available
+    if ''.respond_to?(:unpack1)
+      def unpack1( str, type )
+        str.unpack1(type)
+      end
+    else
+      def unpack1( str, type )
+        str.unpack(type)[0]
+      end
+    end
+
     # Matches two objects with their to_s values case insensitively
     #
     # Example:

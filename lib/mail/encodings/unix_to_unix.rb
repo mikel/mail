@@ -5,7 +5,7 @@ module Mail
       NAME = "x-uuencode"
 
       def self.decode(str)
-        str.sub(/\Abegin \d+ [^\n]*\n/, '').unpack('u').first
+        ::Mail::Utilities.unpack1( str.sub(/\Abegin \d+ [^\n]*\n/, ''), 'u' )
       end
 
       def self.encode(str)
