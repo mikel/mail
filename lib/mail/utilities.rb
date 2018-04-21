@@ -165,7 +165,7 @@ module Mail
     # use optimized match? if available
     if ''.respond_to?(:match?)
       def match?( str, pattern )
-        str.match?(pattern)
+        str ? str.match?(pattern) : false
       end
     else
       def match?( str, pattern )
