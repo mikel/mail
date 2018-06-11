@@ -418,14 +418,14 @@ Content-Type: multipart/alternative;
   boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
 Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
 Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
 
 ----==_mimepart_4a914f0c911be_6f0f1ab8026659
 Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
 Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
@@ -434,7 +434,7 @@ This is plain text
 Content-Type: text/html; charset=UTF-8
 Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
 Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
 <h1>This is HTML</h1>

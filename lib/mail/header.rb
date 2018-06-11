@@ -213,7 +213,7 @@ module Mail
 
     # Returns true if the header has a MIME version defined (empty or not)
     def has_mime_version?
-      fields.has_field? 'Mime-Version'
+      fields.has_field? 'MIME-Version'
     end
 
     private
