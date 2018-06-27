@@ -1,8 +1,14 @@
 require './lib/mail/version'
 
+gem_version = if ENV['GEM_PRE_RELEASE'].nil? || ENV['GEM_PRE_RELEASE'].empty?
+                Mail::VERSION
+              else
+                "#{Mail::VERSION}.#{ENV['GEM_PRE_RELEASE']}"
+              end
+
 Gem::Specification.new do |s|
   s.name        = "mail"
-  s.version     = Mail::VERSION::STRING
+  s.version     = gem_version
   s.author      = "Mikel Lindsaar"
   s.email       = "raasdnil@gmail.com"
   s.homepage    = "https://github.com/mikel/mail"
