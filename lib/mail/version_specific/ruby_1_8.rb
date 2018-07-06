@@ -48,6 +48,17 @@ module Mail
       Base64.encode64(str)
     end
 
+    def Ruby18.encode_quoted_printable(str)
+      [str].pack("M").gsub(/(=0D=?\n)/) do |match|
+        case match
+        when "=0D\n"
+          "=0D=0A=\r\n"
+        when "=0D=\n"
+          "=0D=\r\n"
+        end
+      end.gsub(/([^=\r])\n/, "\\1=0A=\r\n").gsub(/^\n/, "=0A=\r\n")
+    end
+
     def Ruby18.has_constant?(klass, string)
       klass.constants.include?( string )
     end
