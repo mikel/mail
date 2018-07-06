@@ -39,6 +39,12 @@ describe Mail::Encodings::QuotedPrintable do
     expect(Mail::Encodings::QuotedPrintable.decode("=00=00=00=00")).to eq result
   end
 
+  it "should not exceed 76 chars limit per line" do
+    Mail::Encodings::QuotedPrintable.encode((("a" * 72) + "\r\n") * 5).each_line do |line|
+      expect(line.length).to be <= 76
+    end
+  end
+
   [["\r", "=0D"], ["\n", "=0A=\r\n"], ["\r\n", "=0D=0A=\r\n"]].each do |crlf, linebreak|
     expected = "paragraph#{linebreak}second paragraph=\r\n"
     it "should not encode #{crlf.inspect} as a single cr or lf" do
