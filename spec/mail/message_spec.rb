@@ -1,4 +1,4 @@
-# encoding: utf-8
+﻿# encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
 
@@ -1564,7 +1564,7 @@ describe Mail::Message do
           body "The=3Dbody"
         end
         expect(mail.body.decoded).to eq "The=body"
-        expect(mail.body.encoded).to eq "The=3Dbody=\n"
+        expect(mail.body.encoded).to eq "The=3Dbody=\r\n"
       end
 
       it "should change a body on decode if given an encoding type to decode" do

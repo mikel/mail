@@ -4,17 +4,17 @@ require 'spec_helper'
 describe Mail::Encodings::QuotedPrintable do
   
   it "should encode quoted printable from text" do
-    result = "This is\na test=\n"
+    result = "This is=0A=\r\na test=\r\n"
     expect(Mail::Encodings::QuotedPrintable.encode("This is\na test")).to eq result
   end
 
   it "should encode quoted printable from crlf text" do
-    result = "This is=0D\na test=\n"
+    result = "This is=0D=0A=\r\na test=\r\n"
     expect(Mail::Encodings::QuotedPrintable.encode("This is\r\na test")).to eq result
   end
 
   it "should encode quoted printable from cr text" do
-    result = "This is=0Da test=\n"
+    result = "This is=0Da test=\r\n"
     expect(Mail::Encodings::QuotedPrintable.encode("This is\ra test")).to eq result
   end
   
@@ -24,8 +24,14 @@ describe Mail::Encodings::QuotedPrintable do
   end
   
   it "should encode quoted printable from binary" do
-    result = "=00=00=00=00=\n"
+    result = "=00=00=00=00=\r\n"
     expect(Mail::Encodings::QuotedPrintable.encode("\000\000\000\000")).to eq result
+  end
+
+  it "should encode quoted printable pavel test" do
+    pad = "a" * 71
+    result = pad + "=0D=0A=\r\n=0A=\r\ntest=\r\n"
+    expect(Mail::Encodings::QuotedPrintable.encode(pad + "\r\ntest")).to eq result
   end
   
   it "should decode quoted printable text" do
@@ -33,19 +39,11 @@ describe Mail::Encodings::QuotedPrintable do
     expect(Mail::Encodings::QuotedPrintable.decode("=00=00=00=00")).to eq result
   end
 
-  [["\r", "=0D"], ["\n", "=0A"], ["\r\n", "=0D=0A"]].each do |crlf, linebreak|
-    expected = "first line wraps\r\n\r\nsecond paragraph"
-    it "should cope with inappropriate #{linebreak} line break encoding" do
-      body = "first line=\r\n wraps#{linebreak}\r\n#{linebreak}\r\nsecond paragraph=\r\n"
-      expect(Mail::Encodings::QuotedPrintable.decode(body)).to eq expected
-    end
-  end
-
-  [["\r", "=0D"], ["\n", "=0A"], ["\r\n", "=0D=0A"]].each do |crlf, linebreak|
-    expected = "first line wraps#{crlf}#{crlf}second paragraph"
-    it "should allow encoded #{linebreak} line breaks with soft line feeds" do
-      body = "first line=\r\n wraps#{linebreak}=\r\n#{linebreak}=\r\nsecond paragraph=\r\n"
-      expect(Mail::Encodings::QuotedPrintable.decode(body)).to eq expected
+  [["\r", "=0D"], ["\n", "=0A=\r\n"], ["\r\n", "=0D=0A=\r\n"]].each do |crlf, linebreak|
+    expected = "paragraph#{linebreak}second paragraph=\r\n"
+    it "should not encode #{crlf.inspect} as a single cr or lf" do
+      body = "paragraph#{crlf}second paragraph"
+      expect(Mail::Encodings::QuotedPrintable.encode(body)).to eq expected
     end
   end
   

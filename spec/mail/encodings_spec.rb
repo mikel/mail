@@ -1,4 +1,4 @@
-# encoding: utf-8
+﻿# encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
 
@@ -256,10 +256,10 @@ describe Mail::Encodings do
       string = "This is あ string"
       if string.respond_to?(:force_encoding)
         string = string.dup.force_encoding('UTF-8')
-        expect(Mail::Encodings.q_value_encode(string)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string=?='
+        expect(Mail::Encodings.q_value_encode(string)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string?='
       else
         encoding = 'UTF-8'
-        expect(Mail::Encodings.q_value_encode(string, encoding)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string=?='
+        expect(Mail::Encodings.q_value_encode(string, encoding)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string?='
       end
     end
 

@@ -13,14 +13,22 @@ module Mail
         EightBit.can_encode? enc
       end
 
-      # Decode the string from Quoted-Printable. Cope with hard line breaks
-      # that were incorrectly encoded as hex instead of literal CRLF.
+      # Decode the string from Quoted-Printable.
       def self.decode(str)
-        str.gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n").unpack("M*").first
+        str.unpack("M").first
       end
 
       def self.encode(str)
-        [str].pack("M")
+        [str].pack("M").gsub(/(=0D=?\n|(?<!=)=?\n)/) do |match|
+          case match
+          when "=0D\n", "=0D=\n"
+            "=0D=0A=\r\n"
+          when "\n"
+            "=0A=\r\n"
+          when "=\n"
+            "=\r\n"
+          end
+        end
       end
 
       def self.cost(str)
