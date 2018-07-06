@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.summary     = "Mail provides a nice Ruby DSL for making, sending and reading emails."
   s.license     = "MIT"
 
-  s.has_rdoc = true
   s.extra_rdoc_files = %w[ README.md ]
   s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
