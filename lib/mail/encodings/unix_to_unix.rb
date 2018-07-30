@@ -14,6 +14,7 @@ module Mail
 
       Encodings.register(NAME, self)
       Encodings.register("uuencode", self)
+      Encodings.register("x-uue", self)
     end
   end
 end
