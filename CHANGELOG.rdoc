@@ -3,6 +3,7 @@
 Compatibility:
 * Restore LF=>CRLF conversions for properly encoded non-binary emails. (rubys)
 * Gracefully parse certain invalid Content-Type headers. (rafbm)
+* Support `x-uue` transfer encoding as uuencoding. (jkraemer)
 
 Features:
 * Expose Mail::Field#unparsed_value to read the raw field value, before parsing. (Tensho)

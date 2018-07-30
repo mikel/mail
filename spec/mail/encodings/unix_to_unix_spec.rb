@@ -19,6 +19,10 @@ describe Mail::Encodings::UnixToUnix do
     expect(Mail::Encodings.get_encoding('x-uuencode')).to eq(Mail::Encodings::UnixToUnix)
   end
 
+  it "is registered as x-uue" do
+    expect(Mail::Encodings.get_encoding('x-uue')).to eq(Mail::Encodings::UnixToUnix)
+  end
+
   it "can transport itself" do
     expect(Mail::Encodings::UnixToUnix.can_transport?(Mail::Encodings::UnixToUnix)).to be_truthy
   end
