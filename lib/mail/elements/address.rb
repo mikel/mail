@@ -163,7 +163,7 @@ module Mail
     #  a.inspect #=> "#<Mail::Address:14184910 Address: |Mikel <mikel@test.lindsaar.net> (My email)| >"
     def inspect
       parse unless @parsed
-      "#<#{self.class}:#{self.object_id} Address: |#{to_s}| >"
+      "#<#{self.class}:#{self.object_id} Address: |#{self}| >"
     end
 
     def encoded
