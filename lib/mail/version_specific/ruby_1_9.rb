@@ -174,7 +174,7 @@ module Mail
     end
 
     def Ruby19.uri_parser
-      @uri_parser ||= URI::Parser.new
+      URI::DEFAULT_PARSER
     end
 
     # Pick a Ruby encoding corresponding to the message charset. Most
