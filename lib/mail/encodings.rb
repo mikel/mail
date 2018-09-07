@@ -244,7 +244,7 @@ module Mail
       string, encoding = RubyVer.q_value_encode(encoded_str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
       map_lines(string) do |str|
-        "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
+        "=?#{encoding}?Q?#{str.chomp.tr(' ', '_')}?="
       end.join(" ")
     end
 
