@@ -175,7 +175,7 @@ module Mail
       value.gsub!(/\)/, '=29')
       value.gsub!(/\?/, '=3F')
       value.gsub!(/_/,  '=5F')
-      value.gsub!(/ /,  '_')
+      value.tr!(' ',  '_')
       value
     end
 
@@ -186,7 +186,7 @@ module Mail
     end
 
     def normalized_encoding
-      encoding = charset.to_s.upcase.gsub('_', '-')
+      encoding = charset.to_s.upcase.tr('_', '-')
       encoding = 'UTF-8' if encoding == 'UTF8' # Ruby 1.8.x and $KCODE == 'u'
       encoding
     end
