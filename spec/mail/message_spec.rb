@@ -1491,7 +1491,7 @@ describe Mail::Message do
           expect(mail.to_s).to match(%r{Content-Transfer-Encoding: base64})
         end
 
-        it "should not use 8bit transfer encoding when 8bit is allowed" do
+        it "should use 8bit transfer encoding when 8bit is forced" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.charset = "UTF-8"
