@@ -133,10 +133,6 @@ module Mail
       @parts.sort!(@part_sort_order)
     end
     
-    # Returns the raw source that the body was initialized with, without
-    # any tampering
-    attr_reader :raw_source
-
     def negotiate_best_encoding(message_encoding, allowed_encodings = nil)
       Mail::Encodings::TransferEncoding.negotiate(message_encoding, encoding, raw_source, allowed_encodings)
     end
@@ -187,8 +183,6 @@ module Mail
       decoded
     end
 
-    attr_accessor :charset
-
     def encoding(val = nil)
       if val
         self.encoding = val
@@ -206,25 +200,31 @@ module Mail
         end
     end
 
-    # Returns the preamble (any text that is before the first MIME boundary)
-    # Sets the preamble to a string (adds text before the first MIME boundary)
+    # Returns the raw source that the body was initialized with, without
+    # any tampering
+    attr_reader :raw_source
+
+    # Returns parts of the body
+    attr_reader :parts
+
+    # Returns and sets the original character encoding
+    attr_accessor :charset
+
+    # Returns and sets the preamble as a string (any text that is before the first MIME boundary)
     attr_accessor :preamble
-    
-    # Returns the epilogue (any text that is after the last MIME boundary)
-    # Sets the epilogue to a string (adds text after the last MIME boundary)
+
+    # Returns and sets the epilogue as a string (any text that is after the last MIME boundary)
     attr_accessor :epilogue
-    
+
+    # Returns and sets the boundary used by the body
+    # Allows you to change the boundary of this Body object
+    attr_accessor :boundary
+
     # Returns true if there are parts defined in the body
     def multipart?
       true unless parts.empty?
     end
-    
-    # Returns the boundary used by the body
-    # Allows you to change the boundary of this Body object
-    attr_accessor :boundary
 
-    attr_reader :parts
-    
     def <<( val )
       if @parts
         @parts << val
