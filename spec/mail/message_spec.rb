@@ -1482,7 +1482,9 @@ describe Mail::Message do
 
         it "should use QP transfer encoding for 8bit text attachment with only a few 8bit characters" do
           mail = Mail.new
-          mail.attachments['iso_text.txt'] = (+"Pok\xE9mon").force_encoding('BINARY')
+          file_content = String.new("Pok\xE9mon")
+          file_content = file_content.force_encoding('BINARY') if file_content.respond_to?(:force_encoding)
+          mail.attachments['iso_text.txt'] = file_content
           mail.body = 'This is plain text US-ASCII'
           expect(mail.to_s).to match(%r{
             Content-Transfer-Encoding:\ 7bit
