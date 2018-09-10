@@ -1480,6 +1480,21 @@ describe Mail::Message do
           expect(mail.to_s).to match(%r{Content-Transfer-Encoding: quoted-printable})
         end
 
+        it "should use QP transfer encoding for 8bit text attachment with only a few 8bit characters" do
+          mail = Mail.new
+          mail.attachments['iso_text.txt'] = (+"Pok\xE9mon").force_encoding('BINARY')
+          mail.body = 'This is plain text US-ASCII'
+          expect(mail.to_s).to match(%r{
+            Content-Transfer-Encoding:\ 7bit
+            .*
+            This\ is\ plain\ text\ US-ASCII
+            .*
+            Content-Transfer-Encoding:\ quoted-printable
+            .*
+            Pok=E9mon
+          }mx)
+        end
+
         it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
