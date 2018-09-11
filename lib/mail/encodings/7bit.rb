@@ -17,6 +17,11 @@ module Mail
       def self.encode(str)
         ::Mail::Utilities.binary_unsafe_to_crlf str
       end
+
+      # Per RFC 2045 2.7. 7bit Data, No octets with decimal values greater than 127 are allowed.
+      def self.compatible_input?(str)
+        str.ascii_only? && super
+      end
     end
   end
 end
