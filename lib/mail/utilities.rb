@@ -159,7 +159,7 @@ module Mail
     end
 
     def uri_parser
-      @uri_parser ||= URI.const_defined?(:Parser) ? URI::Parser.new : URI
+      @uri_parser ||= URI.const_defined?(:DEFAULT_PARSER) ? URI::DEFAULT_PARSER : URI
     end
 
     # Matches two objects with their to_s values case insensitively
