@@ -2034,10 +2034,12 @@ module Mail
     end
 
     def identify_and_set_transfer_encoding
-      if body && body.multipart?
-        self.content_transfer_encoding = @transport_encoding
-      else
-        self.content_transfer_encoding = body.negotiate_best_encoding(@transport_encoding, allowed_encodings).to_s
+      if body
+        if body.multipart?
+          self.content_transfer_encoding = @transport_encoding
+        else
+          self.content_transfer_encoding = body.negotiate_best_encoding(@transport_encoding, allowed_encodings).to_s
+        end
       end
     end
 
