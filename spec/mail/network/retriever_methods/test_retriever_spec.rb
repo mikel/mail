@@ -80,7 +80,7 @@ describe "Test Retriever" do
       i = 0
       messages = []
       Mail.find(:delete_after_find => true) do |message|
-        if i % 2
+        if i.even?
           message.mark_for_delete = false
           messages << message
         end
