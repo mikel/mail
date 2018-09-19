@@ -419,7 +419,7 @@ module Mail #:nodoc:
         # exclude lstrip!, rstrip! and strip! because they are already work as expected on multibyte strings.
         if public_method_defined?(method)
           define_method("#{method}!") do |*args|
-            @wrapped_string = send(args.nil? ? method : method, *args).to_s
+            @wrapped_string = send(method, *args).to_s
             self
           end
         end
