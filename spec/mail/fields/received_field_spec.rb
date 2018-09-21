@@ -53,5 +53,6 @@ describe Mail::ReceivedField do
     expect(t.value).to eq "mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>; Mon, 29 Jul 2013 25:12:46 +0900"
     expect(t.info).to eq "mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>"
     expect(t.date_time).to eq nil
+    expect(t.formatted_date).to eq nil
   end
 end
