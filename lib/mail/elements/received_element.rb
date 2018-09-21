@@ -28,6 +28,7 @@ module Mail
         ::DateTime.parse("#{received.date} #{received.time}")
       rescue ArgumentError => e
         raise e unless e.message == 'invalid date'
+        warn "WARNING: Invalid date field for recieved element (#{received.date} #{received.time}): #{e.class}: #{e.message}"
         nil
       end
   end
