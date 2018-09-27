@@ -37,7 +37,9 @@ module Mail
     end
 
     def formatted_date
-      date_time.strftime("%a, %d %b %Y %H:%M:%S ") + date_time.zone.delete(':')
+      if date_time.respond_to? :strftime and date_time.respond_to? :zone
+        date_time.strftime("%a, %d %b %Y %H:%M:%S ") + date_time.zone.delete(':')
+      end
     end
 
     private
