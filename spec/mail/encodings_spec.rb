@@ -421,11 +421,7 @@ describe Mail::Encodings do
 
     it "should leave US-ASCII without spaces alone" do
       string = "fun"
-      if RUBY_VERSION >= '1.9'
-        expect(Mail::Encodings.param_encode(string)).to eq 'fun'
-      else
-        expect(Mail::Encodings.param_encode(string)).to eq 'fun'
-      end
+      expect(Mail::Encodings.param_encode(string)).to eq 'fun'
     end
   end
 
