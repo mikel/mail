@@ -267,7 +267,7 @@ module Mail
       parts_regex = /
         (?:                    # non-capturing group
           \A                |  # start of string OR
-          \r\n                 # line break
+          \r?\n                # line break
          )
         (
           --#{Regexp.escape(boundary || "")}  # boundary delimiter
