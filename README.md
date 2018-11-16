@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Mail is an internet library for Ruby that is designed to handle emails
+Mail is an internet library for Ruby that is designed to handle email
 generation, parsing and sending in a simple, rubyesque manner.
 
 The purpose of this library is to provide a single point of access to handle
-all email functions, including sending and receiving emails.  All network
+all email functions, including sending and receiving email.  All network
 type actions are done through proxy methods to Net::SMTP, Net::POP3 etc.
 
 Built from my experience with TMail, it is designed to be a pure ruby
-implementation that makes generating, sending and parsing emails a no
+implementation that makes generating, sending and parsing email a no
 brainer.
 
 It is also designed from the ground up to work with the more modern versions
@@ -61,14 +61,14 @@ the [Google Group](http://groups.google.com/group/mail-ruby).
 
 * RFC5322 Support, Reading and Writing
 * RFC6532 Support, reading UTF-8 headers
-* RFC2045-2049 Support for multipart emails
-* Support for creating multipart alternate emails
-* Support for reading multipart/report emails &amp; getting details from such
+* RFC2045-2049 Support for multipart email
+* Support for creating multipart alternate email
+* Support for reading multipart/report email &amp; getting details from such
 * Wrappers for File, Net/POP3, Net/SMTP
 * Auto-encoding of non-US-ASCII bodies and header fields
 
 Mail is RFC5322 and RFC6532 compliant now, that is, it can parse US-ASCII and UTF-8
-emails and generate US-ASCII emails. There are a few obsoleted syntax emails that
+email and generate US-ASCII email. There are a few obsoleted email syntax that
 it will have problems with, but it also is quite robust, meaning, if it finds something
 it doesn't understand it will not crash, instead, it will skip the problem and keep
 parsing. In the case of a header it doesn't understand, it will initialise the header
