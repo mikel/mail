@@ -439,7 +439,7 @@ Content-Transfer-Encoding: 7bit
 ```
 
 Mail inserts the content transfer encoding, the mime version,
-the content-id's and handles the content-type and boundary.
+the content-IDs and handles the content-type and boundary.
 
 Mail assumes that if your text in the body is only us-ascii, that your
 transfer encoding is 7bit and it is text/plain.  You can override this
