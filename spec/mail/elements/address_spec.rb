@@ -166,6 +166,16 @@ describe Mail::Address do
       expect(Mail::Address.new(junk).format).to eq junk
     end
 
+    it "is equal to another address instance with the same value" do
+      a = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
+      b = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
+      expect(a).to eq(b)
+    end
+
+    it "is equal to itself" do
+      a = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
+      expect(a).to eq(a)
+    end
   end
 
   describe "assigning values directly" do
