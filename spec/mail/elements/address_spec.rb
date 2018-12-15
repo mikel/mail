@@ -176,6 +176,18 @@ describe Mail::Address do
       a = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
       expect(a).to eq(a)
     end
+
+    it "is not equal to another address instance with a different value" do
+      a = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
+      b = Mail::Address.new('test@lindsaar.net')
+      expect(a).not_to eq(b)
+    end
+
+    it "is not equal to a non-address object" do
+      a = Mail::Address.new('Mikel Lindsaar <test@lindsaar.net>')
+      b = 'Mikel Lindsaar <test@lindsaar.net>'
+      expect(a).not_to eq(b)
+    end
   end
 
   describe "assigning values directly" do
