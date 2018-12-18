@@ -1440,6 +1440,39 @@ describe Mail::Message do
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
 
+      describe 'charset=' do
+        before do
+          @mail = Mail.new do
+            to 'mikel@test.lindsaar.net'
+            from 'bob@test.lindsaar.net'
+            subject 'Multipart email'
+            text_part do
+              body 'This is plain text'
+            end
+            html_part do
+              content_type 'text/html; charset=UTF-8'
+              body '<h1>This is HTML</h1>'
+            end
+          end
+        end
+        
+        it "should not add an empty charset header" do
+          @mail.charset = nil
+          
+          expect(@mail.multipart?).to eq true
+          expect(@mail.parts.count).to eq 2
+          expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
+        end
+        
+        it "should remove the charset header" do
+          @mail.charset = 'iso-8859-1'
+          @mail.charset = nil
+          
+          expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
+          expect(@mail.encoded.scan(/charset=iso-8859-1/).count).to eq 0
+        end
+      end
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do
