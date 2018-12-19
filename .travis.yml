@@ -33,10 +33,17 @@ env:
     - MBCHARS=builtin
 
 matrix:
+  include:
+    - name: actionmailer
+      script: spec/travis-actionmailer.sh
+      rvm: 2.5
+      install: skip
+      env: BUNDLE_GEMFILE=$PWD/rails/Gemfile
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby
     - rvm: jruby-head
     - rvm: rbx-2
     - rvm: rbx-3
+    - name: actionmailer
   fast_finish: true
