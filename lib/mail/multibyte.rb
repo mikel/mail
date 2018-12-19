@@ -19,7 +19,6 @@ module Mail #:nodoc:
 
     self.proxy_class = Mail::Multibyte::Chars
 
-    if RUBY_VERSION >= "1.9"
       # == Multibyte proxy
       #
       # +mb_chars+ is a multibyte safe proxy for string methods.
@@ -54,21 +53,12 @@ module Mail #:nodoc:
       # For more information about the methods defined on the Chars proxy see Mail::Multibyte::Chars. For
       # information about how to change the default Multibyte behaviour see Mail::Multibyte.
       def self.mb_chars(str)
-        if proxy_class.consumes?(str)
+        if is_utf8?(str)
           proxy_class.new(str)
         else
           str
         end
       end
-    else
-      def self.mb_chars(str)
-        if proxy_class.wants?(str)
-          proxy_class.new(str)
-        else
-          str
-        end
-      end
-    end
 
     # Regular expressions that describe valid byte sequences for a character
     VALID_CHARACTER = {
