@@ -23,6 +23,7 @@ rvm:
   - jruby-head
   - rbx-2
   - rbx-3
+  - truffleruby
 
 env:
   global:
@@ -37,6 +38,7 @@ matrix:
     - rvm: ruby-head
     - rvm: jruby
     - rvm: jruby-head
+    - rvm: truffleruby
     - rvm: rbx-2
     - rvm: rbx-3
   fast_finish: true
