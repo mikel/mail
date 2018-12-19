@@ -72,15 +72,6 @@ module Mail #:nodoc:
         true
       end
 
-      # Returns +true+ when the proxy class can handle the string. Returns +false+ otherwise.
-      def self.consumes?(string)
-        # Unpack is a little bit faster than regular expressions.
-        string.unpack('U*')
-        true
-      rescue ArgumentError
-        false
-      end
-
       include Comparable
 
       # Returns -1, 0, or 1, depending on whether the Chars object is to be sorted before,
@@ -95,12 +86,6 @@ module Mail #:nodoc:
       end
 
       if RUBY_VERSION < "1.9"
-        # Returns +true+ if the Chars class can and should act as a proxy for the string _string_. Returns
-        # +false+ otherwise.
-        def self.wants?(string)
-          $KCODE == 'UTF8' && consumes?(string)
-        end
-
         # Returns a new Chars object containing the _other_ object concatenated to the string.
         #
         # Example:
