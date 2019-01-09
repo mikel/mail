@@ -274,7 +274,7 @@ describe "SMTP Delivery Method" do
       expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
     end
 
-    it "should not raise errors if there is no envelope From address" do
+    it "should raise an error if there is no envelope From address" do
       mail = Mail.new do
         to "to@somemail.com"
         subject "Email with no sender"
@@ -285,7 +285,7 @@ describe "SMTP Delivery Method" do
 
       expect do
         mail.deliver
-      end.to raise_error('SMTP From address may not be blank: nil')
+      end.to raise_error(ArgumentError, 'SMTP From address may not be blank: nil')
     end
 
     it "should raise an error if no recipient if defined" do
@@ -299,7 +299,7 @@ describe "SMTP Delivery Method" do
 
       expect do
         mail.deliver
-      end.to raise_error('SMTP To address may not be blank: []')
+      end.to raise_error(ArgumentError, 'SMTP To address may not be blank: []')
     end
 
     it "should raise on SMTP injection via MAIL FROM newlines" do
