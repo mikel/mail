@@ -11,6 +11,14 @@ describe Mail::Encodings::UnixToUnix do
     Mail::Encodings::UnixToUnix.encode(str)
   end
 
+  it "can transport x-uuencode" do
+    expect(Mail::Encodings::UnixToUnix.can_transport?('x-uuencode')).to be_truthy
+  end
+
+  it "can transport uuencode" do
+    expect(Mail::Encodings::UnixToUnix.can_transport?('uuencode')).to be_truthy
+  end
+
   it "decodes" do
     text = strip_heredoc(<<-TEXT)
       begin 644 Happy.txt
