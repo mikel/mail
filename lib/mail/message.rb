@@ -255,7 +255,8 @@ module Mail
         do_delivery
       end
       inform_observers
-      delivery_method.settings[:return_response] ? response : self
+      
+      response
     end
 
     # This method bypasses checking perform_deliveries and raise_delivery_errors,

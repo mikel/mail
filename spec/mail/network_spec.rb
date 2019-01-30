@@ -218,7 +218,9 @@ describe "Mail" do
 
     class MyDeliveryMethod
       attr_accessor :settings
-      def initialize(values = {}); end
+      def initialize(values = {})
+        self.settings = {}
+      end
       def deliver!(message); true; end
     end
 
