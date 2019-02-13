@@ -39,9 +39,9 @@ module Mail
       else
         # Do join first incase we have been given an Array in Ruby 1.9
         if string.respond_to?(:join)
-          @raw_source = ::Mail::Utilities.to_crlf(string.join(''))
+          @raw_source = string.join('')
         elsif string.respond_to?(:to_s)
-          @raw_source = ::Mail::Utilities.to_crlf(string.to_s)
+          @raw_source = string.to_s
         else
           raise "You can only assign a string or an object that responds_to? :join or :to_s to a body."
         end
@@ -295,7 +295,7 @@ module Mail
       parts_regex = /
         (?:                    # non-capturing group
           \A                |  # start of string OR
-          \r\n                 # line break
+          \r?\n                # line break with optional CR
          )
         (
           --#{Regexp.escape(boundary || "")}  # boundary delimiter
