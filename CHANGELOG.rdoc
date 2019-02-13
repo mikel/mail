@@ -29,5 +29,6 @@ Features:
 Bug Fixes:
 * Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
 * Regression: Adding a part should not reset the mail's charset to nil @railsbob
+* Handle parsing of LF-only body with separate parts @sebbASF
 
 Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.
