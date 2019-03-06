@@ -2,8 +2,6 @@ language: ruby
 cache: bundler
 
 bundler_args: --without local_development
-before_install:
-  - gem install bundler
 
 script: bundle exec rake
 
