@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.summary     = "Mail provides a nice Ruby DSL for making, sending and reading emails."
   s.license     = "MIT"
 
-  s.has_rdoc = true
   s.extra_rdoc_files = %w[ README.md ]
   s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
@@ -20,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '> 0.8.7')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rdoc')
+  s.add_development_dependency('rufo')
 
   s.files = %w[ README.md MIT-LICENSE ] + Dir.glob("lib/**/*")
 end

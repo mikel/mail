@@ -19,6 +19,10 @@ describe Mail::Encodings::UnixToUnix do
     expect(Mail::Encodings.get_encoding('x-uuencode')).to eq(Mail::Encodings::UnixToUnix)
   end
 
+  it "is registered as x-uue" do
+    expect(Mail::Encodings.get_encoding('x-uue')).to eq(Mail::Encodings::UnixToUnix)
+  end
+
   it "can transport itself" do
     expect(Mail::Encodings::UnixToUnix.can_transport?(Mail::Encodings::UnixToUnix)).to be_truthy
   end
@@ -41,8 +45,7 @@ describe Mail::Encodings::UnixToUnix do
   if RUBY_VERSION > "1.9"
     it "encodes / decodes non-ascii" do
       expect(encode("Happy ああr")).to eq "-2&%P<'D@XX&\"XX&\"<@``\n"
-      expected = (RUBY_ENGINE == "jruby" ? "Happy ああr" : "Happy ああr".dup.force_encoding("binary"))
-      expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq expected
+      expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq "Happy ああr".dup.force_encoding("binary")
     end
   end
 

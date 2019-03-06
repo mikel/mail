@@ -7,9 +7,6 @@ module Mail
   module Utilities
     extend self
 
-    LF   = "\n"
-    CRLF = "\r\n"
-
     # Returns true if the string supplied is free from characters not allowed as an ATOM
     def atom_safe?( str )
       not Constants::ATOM_UNSAFE === str
@@ -24,9 +21,9 @@ module Mail
     # If the string supplied has PHRASE unsafe characters in it, will return the string quoted
     # in double quotes, otherwise returns the string unmodified
     def quote_phrase( str )
-      if RUBY_VERSION >= '1.9'
+      if str.respond_to?(:force_encoding)
         original_encoding = str.encoding
-        ascii_str = str.dup.force_encoding('ASCII-8BIT')
+        ascii_str = str.to_s.dup.force_encoding('ASCII-8BIT')
         if Constants::PHRASE_UNSAFE === ascii_str
           dquote(ascii_str).force_encoding(original_encoding)
         else
@@ -45,7 +42,17 @@ module Mail
     # If the string supplied has TOKEN unsafe characters in it, will return the string quoted
     # in double quotes, otherwise returns the string unmodified
     def quote_token( str )
-      token_safe?( str ) ? str : dquote(str)
+      if str.respond_to?(:force_encoding)
+        original_encoding = str.encoding
+        ascii_str = str.to_s.dup.force_encoding('ASCII-8BIT')
+        if token_safe?( ascii_str )
+          str
+        else
+          dquote(ascii_str).force_encoding(original_encoding)
+        end
+      else
+        token_safe?( str ) ? str : dquote(str)
+      end
     end
 
     # Wraps supplied string in double quotes and applies \-escaping as necessary,
@@ -109,8 +116,11 @@ module Mail
     #  str = '(This is a string)'
     #  unparen( str ) #=> 'This is a string'
     def unparen( str )
-      match = str.match(/^\((.*?)\)$/)
-      match ? match[1] : str
+      if str.start_with?('(') && str.end_with?(')')
+        str.slice(1..-2)
+      else
+        str
+      end
     end
 
     # Wraps a string in angle brackets and escapes any that are in the string itself
@@ -129,8 +139,11 @@ module Mail
     #  str = '<This is a string>'
     #  unbracket( str ) #=> 'This is a string'
     def unbracket( str )
-      match = str.match(/^\<(.*?)\>$/)
-      match ? match[1] : str
+      if str.start_with?('<') && str.end_with?('>')
+        str.slice(1..-2)
+      else
+        str
+      end
     end
 
     # Escape parenthesies in a string
@@ -152,7 +165,7 @@ module Mail
     end
 
     def uri_parser
-      @uri_parser ||= URI.const_defined?(:Parser) ? URI::Parser.new : URI
+      @uri_parser ||= URI.const_defined?(:DEFAULT_PARSER) ? URI::DEFAULT_PARSER : URI
     end
 
     # Matches two objects with their to_s values case insensitively
@@ -240,7 +253,7 @@ module Mail
     end
 
     def self.binary_unsafe_to_lf(string) #:nodoc:
-      string.gsub(/\r\n|\r/, LF)
+      string.gsub(/\r\n|\r/, Constants::LF)
     end
 
     TO_CRLF_REGEX =
@@ -254,7 +267,7 @@ module Mail
       end
 
     def self.binary_unsafe_to_crlf(string) #:nodoc:
-      string.gsub(TO_CRLF_REGEX, CRLF)
+      string.gsub(TO_CRLF_REGEX, Constants::CRLF)
     end
 
     if RUBY_VERSION < '1.9'

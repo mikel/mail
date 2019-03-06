@@ -382,7 +382,7 @@ describe "Utilities Module" do
   end
 
   describe "url escaping" do
-    uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+    uri_parser = Mail::Utilities.uri_parser
 
     it "should have a wrapper on URI.escape" do
       expect(uri_escape("@?@!")).to eq uri_parser.escape("@?@!")

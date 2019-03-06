@@ -416,20 +416,12 @@ describe Mail::Encodings do
 
     it "should just quote US-ASCII with spaces" do
       string = "This is even more"
-      if RUBY_VERSION >= '1.9'
-        expect(Mail::Encodings.param_encode(string)).to eq '"This is even more"'
-      else
-        expect(Mail::Encodings.param_encode(string)).to eq '"This is even more"'
-      end
+      expect(Mail::Encodings.param_encode(string)).to eq '"This is even more"'
     end
 
     it "should leave US-ASCII without spaces alone" do
       string = "fun"
-      if RUBY_VERSION >= '1.9'
-        expect(Mail::Encodings.param_encode(string)).to eq 'fun'
-      else
-        expect(Mail::Encodings.param_encode(string)).to eq 'fun'
-      end
+      expect(Mail::Encodings.param_encode(string)).to eq 'fun'
     end
   end
 

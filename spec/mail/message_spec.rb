@@ -165,6 +165,16 @@ describe Mail::Message do
       expect(Mail::Utilities.blank?(mail.in_reply_to)).to be_truthy
     end
 
+    it "should be able to pass two In-Reply-To headers" do
+      mail = Mail.new("From: bob\r\nIn-Reply-To: <a@a.a>\r\nIn-Reply-To: <b@b.b>\r\nSubject: Hello!\r\n\r\nemail message\r\n")
+      expect(mail.in_reply_to).to eq 'b@b.b'
+    end
+
+    it "should be able to pass two References headers" do
+      mail = Mail.new("From: bob\r\nReferences: <a@a.a>\r\nReferences: <b@b.b>\r\nSubject: Hello!\r\n\r\nemail message\r\n")
+      expect(mail.references).to eq 'b@b.b'
+    end
+
     describe "YAML serialization" do
       before(:each) do
         # Ensure specs don't randomly fail due to messages being generated 1 second apart
@@ -1392,6 +1402,25 @@ describe Mail::Message do
 
       end
 
+      it "rfc2046 can be decoded" do
+        mail = Mail.new
+        mail.body << Mail::Part.new.tap do |part|
+          part.content_disposition = 'attachment; filename="test.eml"'
+          part.content_type = 'message/rfc822'
+          part.body = "This is NOT plain text ASCII　− かきくけこ" * 30
+        end
+
+        roundtripped = Mail.new(mail.encoded)
+        expect(roundtripped.content_transfer_encoding).to eq '7bit'
+        expect(roundtripped.parts.last.content_transfer_encoding).to eq ''
+
+        # Check that the part's transfer encoding isn't set to 7bit, causing
+        # the actual content to end up encoded with base64.
+        expect(roundtripped.encoded).to include('NOT plain')
+        expect(roundtripped.content_transfer_encoding).to eq '7bit'
+        expect(roundtripped.parts.last.content_transfer_encoding).to eq ''
+      end
+
       # https://www.ietf.org/rfc/rfc2046.txt
       # No encoding other than "7bit", "8bit", or "binary" is permitted for
       # the body of a "message/rfc822" entity.
@@ -1451,6 +1480,23 @@ describe Mail::Message do
           expect(mail.to_s).to match(%r{Content-Transfer-Encoding: quoted-printable})
         end
 
+        it "should use QP transfer encoding for 8bit text attachment with only a few 8bit characters" do
+          mail = Mail.new
+          file_content = String.new("Pok\xE9mon")
+          file_content = file_content.force_encoding('BINARY') if file_content.respond_to?(:force_encoding)
+          mail.attachments['iso_text.txt'] = file_content
+          mail.body = 'This is plain text US-ASCII'
+          expect(mail.to_s).to match(%r{
+            Content-Transfer-Encoding:\ 7bit
+            .*
+            This\ is\ plain\ text\ US-ASCII
+            .*
+            Content-Transfer-Encoding:\ quoted-printable
+            .*
+            Pok=E9mon
+          }mx)
+        end
+
         it "should use base64 transfer encoding for 8-bit text with lots of 8bit characters" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
@@ -1462,7 +1508,7 @@ describe Mail::Message do
           expect(mail.to_s).to match(%r{Content-Transfer-Encoding: base64})
         end
 
-        it "should not use 8bit transfer encoding when 8bit is allowed" do
+        it "should use 8bit transfer encoding when 8bit is forced" do
           body = "This is NOT plain text ASCII　− かきくけこ"
           mail = Mail.new
           mail.charset = "UTF-8"
@@ -1582,6 +1628,10 @@ describe Mail::Message do
 
     it "should respond true to text?" do
       expect(message.text?).to eq true
+    end
+
+    it "inspect_structure should return the same as inspect (no attachments)" do
+      expect(message.inspect_structure).to eq message.inspect
     end
 
     if RUBY_VERSION > "1.9"
@@ -1944,16 +1994,21 @@ describe Mail::Message do
 
   describe "without_attachments!" do
     it "should delete all attachments" do
-      emails_with_attachments = ['content_disposition', 'content_location',
-                                 'pdf', 'with_encoded_name', 'with_quoted_filename']
+      emails_with_attachments = [
+        ['attachment_emails', 'attachment_content_disposition.eml'],
+        ['attachment_emails', 'attachment_content_location.eml'],
+        ['attachment_emails', 'attachment_pdf.eml'],
+        ['attachment_emails', 'attachment_with_encoded_name.eml'],
+        ['attachment_emails', 'attachment_with_quoted_filename.eml'],
+        ['mime_emails', 'raw_email7.eml']]
 
-      emails_with_attachments.each { |email|
-        mail = read_fixture('emails', 'attachment_emails', "attachment_#{email}.eml")
-        non_attachment_parts = mail.parts.reject(&:attachment?)
+      emails_with_attachments.each { |file_name|
+        mail = read_fixture('emails', *file_name)
+        non_attachment_parts = mail.all_parts.reject(&:attachment?)
         expect(mail.has_attachments?).to be_truthy
         mail.without_attachments!
 
-        expect(mail.parts).to eq non_attachment_parts
+        expect(mail.all_parts).to eq non_attachment_parts
         expect(mail.has_attachments?).to be_falsey
       }
     end
@@ -1979,8 +2034,8 @@ describe Mail::Message do
         expect(@mail.reply.references).to eq '6B7EC235-5B17-4CA8-B2B8-39290DEB43A3@test.lindsaar.net'
       end
 
-      it "should RE: the original subject" do
-        expect(@mail.reply.subject).to eq 'RE: Testing 123'
+      it "should Re: the original subject" do
+        expect(@mail.reply.subject).to eq 'Re: Testing 123'
       end
 
       it "should be sent to the original sender" do
@@ -2041,7 +2096,7 @@ describe Mail::Message do
         expect(@mail.reply[:references].message_ids).to eq ['473FF3B8.9020707@xxx.org', '348F04F142D69C21-291E56D292BC@xxxx.net', '473FFE27.20003@xxx.org']
       end
 
-      it "should not append another RE:" do
+      it "should not append another Re:" do
         expect(@mail.reply.subject).to eq "Re: Test reply email"
       end
 

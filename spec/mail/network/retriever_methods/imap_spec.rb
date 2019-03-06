@@ -195,6 +195,7 @@ describe "IMAP Retriever" do
       expect(Net::IMAP).to receive(:encode_utf7).once
       Mail.delete_all
 
+      expect(MockIMAP.readonly?).to be_falsey
       expect(MockIMAP.examples.size).to eq 0
     end
   end

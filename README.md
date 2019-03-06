@@ -1,16 +1,16 @@
-# Mail [![Build Status](https://travis-ci.org/mikel/mail.png?branch=master)](https://travis-ci.org/mikel/mail)
+# Mail [![Build Status](https://travis-ci.org/mikel/mail.svg?branch=master)](https://travis-ci.org/mikel/mail)
 
 ## Introduction
 
-Mail is an internet library for Ruby that is designed to handle emails
+Mail is an internet library for Ruby that is designed to handle email
 generation, parsing and sending in a simple, rubyesque manner.
 
 The purpose of this library is to provide a single point of access to handle
-all email functions, including sending and receiving emails.  All network
+all email functions, including sending and receiving email.  All network
 type actions are done through proxy methods to Net::SMTP, Net::POP3 etc.
 
 Built from my experience with TMail, it is designed to be a pure ruby
-implementation that makes generating, sending and parsing emails a no
+implementation that makes generating, sending and parsing email a no
 brainer.
 
 It is also designed from the ground up to work with the more modern versions
@@ -23,17 +23,14 @@ Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
 you are doing, you can fiddle with every last bit of your email directly.
 
-## Donations
+## You can contribute to this library
 
-Mail has been downloaded millions of times, by people around the world, in fact,
-it represents more than 1% of *all* gems downloaded.
+Yes, you! Mail is used in countless apps by people around the world. It is,
+like all open source software, a labour of love borne from our free time.
+If you would like to say thanks, please dig in and contribute alongside us!
+Triage and fix [GitHub issues](https://github.com/mikel/mail/issues), improve
+our documentation, add new features—up to you! Thank you for pitching in.
 
-It is (like all open source software) a labour of love and something I am doing
-with my own free time.  If you would like to say thanks, please feel free to
-[make a donation](http://www.pledgie.com/campaigns/8790) and feel free to send
-me a nice email :)
-
-<a href='http://www.pledgie.com/campaigns/8790'><img alt='Click here to lend your support to: mail and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/8790.png?skin_name=chrome' border='0' /></a>
 
 # Contents
 * [Compatibility](#compatibility)
@@ -64,14 +61,14 @@ the [Google Group](http://groups.google.com/group/mail-ruby).
 
 * RFC5322 Support, Reading and Writing
 * RFC6532 Support, reading UTF-8 headers
-* RFC2045-2049 Support for multipart emails
-* Support for creating multipart alternate emails
-* Support for reading multipart/report emails &amp; getting details from such
+* RFC2045-2049 Support for multipart email
+* Support for creating multipart alternate email
+* Support for reading multipart/report email &amp; getting details from such
 * Wrappers for File, Net/POP3, Net/SMTP
 * Auto-encoding of non-US-ASCII bodies and header fields
 
 Mail is RFC5322 and RFC6532 compliant now, that is, it can parse US-ASCII and UTF-8
-emails and generate US-ASCII emails. There are a few obsoleted syntax emails that
+email and generate US-ASCII email. There are a few obsoleted email syntax that
 it will have problems with, but it also is quite robust, meaning, if it finds something
 it doesn't understand it will not crash, instead, it will skip the problem and keep
 parsing. In the case of a header it doesn't understand, it will initialise the header
@@ -442,7 +439,7 @@ Content-Transfer-Encoding: 7bit
 ```
 
 Mail inserts the content transfer encoding, the mime version,
-the content-id's and handles the content-type and boundary.
+the content-IDs and handles the content-type and boundary.
 
 Mail assumes that if your text in the body is only us-ascii, that your
 transfer encoding is 7bit and it is text/plain.  You can override this

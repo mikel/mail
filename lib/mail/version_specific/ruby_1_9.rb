@@ -52,7 +52,7 @@ module Mail
     end
 
     def Ruby19.paren( str )
-      str = $1 if str =~ /^\((.*)?\)$/
+      str = ::Mail::Utilities.unparen( str )
       str = escape_paren( str )
       '(' + str + ')'
     end
@@ -63,7 +63,7 @@ module Mail
     end
 
     def Ruby19.bracket( str )
-      str = $1 if str =~ /^\<(.*)?\>$/
+      str = ::Mail::Utilities.unbracket( str )
       str = escape_bracket( str )
       '<' + str + '>'
     end
@@ -174,7 +174,7 @@ module Mail
     end
 
     def Ruby19.uri_parser
-      @uri_parser ||= URI::Parser.new
+      URI::DEFAULT_PARSER
     end
 
     # Pick a Ruby encoding corresponding to the message charset. Most

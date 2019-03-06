@@ -294,7 +294,7 @@ module Mail
           reply.references ||= bracketed_message_id
         end
         if subject
-          reply.subject = subject =~ /^Re:/i ? subject : "RE: #{subject}"
+          reply.subject = subject =~ /^Re:/i ? subject : "Re: #{subject}"
         end
         if reply_to || from
           reply.to = self[reply_to ? :reply_to : :from].to_s
@@ -1808,7 +1808,7 @@ module Mail
 
     def without_attachments!
       if has_attachments?
-        parts.delete_if { |p| p.attachment? }
+        parts.delete_attachments
 
         reencoded = parts.empty? ? '' : body.encoded(content_transfer_encoding)
         @body = nil # So the new parts won't be added to the existing body
@@ -1870,6 +1870,15 @@ module Mail
 
     def inspect
       "#<#{self.class}:#{self.object_id}, Multipart: #{multipart?}, Headers: #{header.field_summary}>"
+    end
+
+    def inspect_structure
+      inspect +
+      if self.multipart?
+        "\n" + parts.inspect_structure
+      else
+        ''
+      end
     end
 
     def decoded
@@ -1956,7 +1965,7 @@ module Mail
 
   private
 
-    HEADER_SEPARATOR = /#{Constants::CRLF}#{Constants::CRLF}/
+    HEADER_SEPARATOR = /#{Constants::LAX_CRLF}#{Constants::LAX_CRLF}/
 
     #  2.1. General Description
     #   A message consists of header fields (collectively called "the header
@@ -1972,7 +1981,7 @@ module Mail
     end
 
     def raw_source=(value)
-      @raw_source = ::Mail::Utilities.to_crlf(value)
+      @raw_source = value
     end
 
     # see comments to body=. We take data and process it lazily
@@ -2001,7 +2010,7 @@ module Mail
 
     def set_envelope_header
       raw_string = raw_source.to_s
-      if match_data = raw_string.match(/\AFrom\s+([^:\s]#{Constants::TEXT}*)#{Constants::CRLF}/m)
+      if match_data = raw_string.match(/\AFrom\s+([^:\s]#{Constants::TEXT}*)#{Constants::LAX_CRLF}/m)
         set_envelope(match_data[1])
         self.raw_source = raw_string.sub(match_data[0], "")
       end
@@ -2025,10 +2034,12 @@ module Mail
     end
 
     def identify_and_set_transfer_encoding
-      if body && body.multipart?
-        self.content_transfer_encoding = @transport_encoding
-      else
-        self.content_transfer_encoding = body.negotiate_best_encoding(@transport_encoding, allowed_encodings).to_s
+      if body
+        if body.multipart?
+          self.content_transfer_encoding = @transport_encoding
+        else
+          self.content_transfer_encoding = body.negotiate_best_encoding(@transport_encoding, allowed_encodings).to_s
+        end
       end
     end
 

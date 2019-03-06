@@ -184,8 +184,7 @@ describe "Attachments" do
 
     it "should provide a URL escaped content_id (without brackets) for use inside an email" do
       @inline = @mail.attachments['test.gif'].cid
-      uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
-      expect(@inline).to eq uri_parser.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
+      expect(@inline).to eq Mail::Utilities.uri_parser.escape(@cid.gsub(/^</, '').gsub(/>$/, ''))
     end
   end
 
@@ -264,6 +263,12 @@ describe "reading emails with attachments" do
       mail = read_fixture('emails/attachment_emails/attachment_with_unquoted_name.eml')
       expect(mail.attachments.length).to eq 1
       expect(mail.attachments.first.filename).to eq "This is a test.txt"
+    end
+
+    it "should decode an attachment without ascii compatible filename" do
+      mail = read_fixture('emails/attachment_emails/attachment_nonascii_filename.eml')
+      expect(mail.attachments.length).to eq 1
+      expect(mail.attachments.first.filename).to eq "ciële.txt"
     end
 
     it "should find attachments inside parts with content-type message/rfc822" do

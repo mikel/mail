@@ -16,10 +16,10 @@ module Mail
       control = control.dup.force_encoding(Encoding::BINARY)
     end
 
-    CRLF          = /\r\n/
+    LAX_CRLF      = /\r?\n/
     WSP           = /[#{white_space}]/
-    FWS           = /#{CRLF}#{WSP}*/
-    UNFOLD_WS     = /#{CRLF}(#{WSP})/m
+    FWS           = /#{LAX_CRLF}#{WSP}*/
+    UNFOLD_WS     = /#{LAX_CRLF}(#{WSP})/m
     TEXT          = /[#{text}]/ # + obs-text
     FIELD_NAME    = /[#{field_name}]+/
     FIELD_PREFIX  = /\A(#{FIELD_NAME})/
@@ -27,7 +27,7 @@ module Mail
     FIELD_LINE    = /^[#{field_name}]+:\s*.+$/
     FIELD_SPLIT   = /^(#{FIELD_NAME})\s*:\s*(#{FIELD_BODY})?$/
     HEADER_LINE   = /^([#{field_name}]+:\s*.+)$/
-    HEADER_SPLIT  = /#{CRLF}(?!#{WSP})/
+    HEADER_SPLIT  = /#{LAX_CRLF}(?!#{WSP})/
 
     QP_UNSAFE     = /[^#{qp_safe}]/
     QP_SAFE       = /[#{qp_safe}]/
@@ -44,6 +44,7 @@ module Mail
     HYPHEN         = '-'
     COLON          = ':'
     ASTERISK       = '*'
+    CRLF           = "\r\n"
     CR             = "\r"
     LF             = "\n"
     CR_ENCODED     = "=0D"

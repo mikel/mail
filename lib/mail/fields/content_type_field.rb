@@ -150,7 +150,7 @@ module Mail
         # and: audio/x-midi;\r\n\sname=Part .exe
         params = $2.to_s.split(/\s+/)
         params = params.map { |i| i.to_s.chomp.strip }
-        params = params.map { |i| i.split(/\s*\=\s*/) }
+        params = params.map { |i| i.split(/\s*\=\s*/, 2) }
         params = params.map { |i| "#{i[0]}=#{Utilities.dquote(i[1].to_s.gsub(/;$/,""))}" }.join('; ')
         "#{type}; #{params}"
       when val =~ /^\s*$/
