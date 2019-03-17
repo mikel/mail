@@ -44,6 +44,10 @@ describe Mail::KeywordsField do
       expect(k.keywords).to eq ['these, are keywords (another comment to be ignored)', 'so there (This is an irrelevant comment)']
     end
     
+    it "should raise ParseError when value is invalid" do
+      k = Mail::KeywordsField.new('Not: Valid')
+      expect { k.keywords }.to raise_error(Mail::Field::ParseError)
+    end
   end
   
   describe "encoding and decoding" do
