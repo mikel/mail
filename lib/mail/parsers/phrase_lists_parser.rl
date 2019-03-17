@@ -74,7 +74,7 @@ module Mail::Parsers
       %%write exec;
 
       if p != eof || cs < %%{ write first_final; }%%
-        raise Mail::Field::IncompleteParseError.new(Mail::PhraseListsElement, data, p)
+        raise Mail::Field::IncompleteParseError.new(Mail::PhraseList, data, p)
       end
 
       phrase_lists
