@@ -57,7 +57,7 @@ module Mail
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is false. Use #find_and_delete if you would like this to default to true.
     #
-    def find(options = {}, &block)
+    def find(options = nil, &block)
       options = validate_options(options)
       
       start do |pop3|
@@ -113,7 +113,7 @@ module Mail
   
     # Set default options
     def validate_options(options)
-      options ||= {}
+      options = options ? Hash[options] : {}
       options[:count] ||= 10
       options[:order] ||= :asc
       options[:what]  ||= :first

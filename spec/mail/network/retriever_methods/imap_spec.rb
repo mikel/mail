@@ -76,6 +76,10 @@ describe "IMAP Retriever" do
   end
 
   describe "find and options" do
+    it "should work with a frozen hash argument" do
+      messages = Mail.find({:count => :all, :what => :last, :order => :asc}.freeze)
+      expect(messages.map { |m| m.raw_source }).to eq MockIMAP.examples.map { |m| m.attr['RFC822'] }
+    end
     it "should handle the :count option" do
       messages = Mail.find(:count => :all, :what => :last, :order => :asc)
       expect(messages.map { |m| m.raw_source }).to eq MockIMAP.examples.map { |m| m.attr['RFC822'] }

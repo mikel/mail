@@ -46,6 +46,11 @@ describe "POP3 Retriever" do
 
   describe "find and options" do
 
+    it "should work with a frozen hash argument" do
+      messages = Mail.find({:count => :all, :what => :last, :order => :asc}.freeze)
+      expect(messages.map { |m| m.raw_source }.sort).to eq MockPOP3.popmails.map { |p| p.pop }
+    end
+
     it "should handle the :count option" do
       messages = Mail.find(:count => :all, :what => :last, :order => :asc)
       expect(messages.map { |m| m.raw_source }.sort).to eq MockPOP3.popmails.map { |p| p.pop }

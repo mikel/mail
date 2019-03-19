@@ -17,7 +17,8 @@ module Mail
       @@emails = []
     end
 
-    def find(options = {}, &block)
+    def find(options = nil, &block)
+      options = options ? Hash[options] : {}
       options[:count] ||= :all
       options[:order] ||= :asc
       options[:what] ||= :first
