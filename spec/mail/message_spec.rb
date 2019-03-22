@@ -1439,7 +1439,7 @@ describe Mail::Message do
           part.body          = 'a' * 999
         end
         mail.encoded
-        
+
         expect(mail.parts.count).to eq(1)
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
@@ -1459,19 +1459,19 @@ describe Mail::Message do
             end
           end
         end
-        
+
         it "should not add an empty charset header" do
           @mail.charset = nil
-          
+
           expect(@mail.multipart?).to eq true
           expect(@mail.parts.count).to eq 2
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
         end
-        
+
         it "should remove the charset header" do
           @mail.charset = 'iso-8859-1'
           @mail.charset = nil
-          
+
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
           expect(@mail.encoded.scan(/charset=iso-8859-1/).count).to eq 0
         end
@@ -1492,6 +1492,41 @@ describe Mail::Message do
           expect(subject.parts[0].header[:content_disposition].value).to eq("attachment; filename=blah.gz")
           expect(subject.parts[0].header[:content_description].value).to eq("Attachment has identical content to above foo.gz")
           expect(subject.parts[0].header[:content_transfer_encoding].value).to eq("base64")
+        end
+      end
+
+      describe "attachment?" do
+        context "with content location" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_content_location.eml')
+          end
+
+          it "returns true using the content location filename" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
+        end
+
+        context "with content type filename" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_with_filename.eml')
+          end
+
+          it "returns true using the content type filename" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
+        end
+
+        context "without content location or filename" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_missing_filename.eml')
+          end
+
+          it "returns true for the inline attachment" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
         end
       end
 

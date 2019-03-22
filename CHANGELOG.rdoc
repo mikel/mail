@@ -17,5 +17,7 @@ Compatibility:
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
 
+Bugs:
+* Handle case when inline image attachment parts do not contain a filename or Content-Location header. (lao9)
 
 Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.
