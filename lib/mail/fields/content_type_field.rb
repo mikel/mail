@@ -93,6 +93,18 @@ module Mail
       @filename ||= parameters['filename'] || parameters['name']
     end
 
+    def attachment_name
+      case
+      when filename
+        @attachment_name = filename
+      when string && !non_attachment_types.include?(string)
+        @attachment_name = "untitled"
+      else
+        @attachment_name = nil
+      end
+      @attachment_name
+    end
+
     def encoded
       p = ";\r\n\s#{parameters.encoded}" if parameters && parameters.length > 0
       "#{name}: #{content_type}#{p}\r\n"
@@ -167,6 +179,10 @@ module Mail
       else
         'text/plain'
       end
+    end
+
+    def non_attachment_types
+      ['text/plain', 'text/html', 'text/enriched', 'application/x-yaml', 'multipart/alternative', 'multipart/mixed']
     end
   end
 end

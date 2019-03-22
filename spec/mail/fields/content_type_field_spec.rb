@@ -674,6 +674,31 @@ describe Mail::ContentTypeField do
 
   end
 
+  describe "finding an attachment_name" do
+
+    it "should return the filename if there is a filename" do
+      string = %q{application/octet-stream; filename=mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      expect(c.attachment_name).to eq 'mikel.jpg'
+    end
+
+    it "should return nil if it is missing a filename and not an attachment type" do
+      c = Mail::ContentTypeField.new(['text', 'html', {'charset' => 'UTF-8'}])
+      expect(c.attachment_name).to eq nil
+    end
+
+    it "should return nil if it is missing a filename and has no attachment type" do
+      c = Mail::ContentTypeField.new
+      expect(c.attachment_name).to eq nil
+    end
+
+    it "should return 'untitled' if it missing a filename and an attachment type" do
+      c = Mail::ContentTypeField.new('image/jpg')
+      expect(c.attachment_name).to eq 'untitled'
+    end
+
+  end
+
   describe "handling badly formated content-type fields" do
 
     it "should handle missing sub-type on a text content type" do
