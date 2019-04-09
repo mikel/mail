@@ -48,6 +48,7 @@ describe "Mail" do
                                                 :enable_starttls      => nil,
                                                 :openssl_verify_mode  => nil,
                                                 :ssl                  => nil,
+                                                :ssl_version          => nil,
                                                 :tls                  => nil,
                                                 :open_timeout         => nil,
                                                 :read_timeout         => nil })
