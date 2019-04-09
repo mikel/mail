@@ -206,6 +206,28 @@ describe "SMTP Delivery Method" do
 
       expect { mail.deliver! }.not_to raise_error
     end
+
+    it "should set verify mode if one is given" do
+      context = OpenSSL::SSL::SSLContext.new
+      allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
+      expect(context).to receive(:ssl_version=).with(:TLSv1_2).at_least(1)
+
+      Mail.defaults do
+        delivery_method :smtp,
+                        :address => 'smtp.mockup.com',
+                        :port => 587,
+                        :tls => true,
+                        :ssl_version => :TLSv1_2
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      expect { mail.deliver! }.not_to raise_error
+    end
   end
 
   describe "enabling STARTTLS" do

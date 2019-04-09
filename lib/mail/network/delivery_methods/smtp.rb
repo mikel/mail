@@ -89,7 +89,10 @@ module Mail
       :ssl                  => nil,
       :tls                  => nil,
       :open_timeout         => nil,
-      :read_timeout         => nil
+      :read_timeout         => nil,
+      # See https://github.com/ruby/openssl/blob/master/lib/openssl/ssl.rb#L188-L189
+      # Examples: :SSLv23, :SSLv2, :SSLv3, :TLSv1, :TLSv1_1, :TLSv_1_2
+      :ssl_version          => nil,
     }
 
     def initialize(values)
@@ -140,6 +143,7 @@ module Mail
         end
 
         context = Net::SMTP.default_ssl_context
+        context.ssl_version = settings[:ssl_version] if settings[:ssl_version]
         context.verify_mode = openssl_verify_mode if openssl_verify_mode
         context.ca_path = settings[:ca_path] if settings[:ca_path]
         context.ca_file = settings[:ca_file] if settings[:ca_file]
