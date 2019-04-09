@@ -3,7 +3,7 @@ cache: bundler
 
 bundler_args: --without local_development
 before_install:
-  - gem install bundler
+  - gem install bundler -v 1.17.3
 
 script: bundle exec rake
 
@@ -17,6 +17,7 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
+  - 2.6
   - ruby-head
   - jruby
   - jruby-head
