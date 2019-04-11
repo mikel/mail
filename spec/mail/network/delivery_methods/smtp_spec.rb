@@ -207,7 +207,7 @@ describe "SMTP Delivery Method" do
       expect { mail.deliver! }.not_to raise_error
     end
 
-    it "should set verify mode if one is given" do
+    it "should set SSL version if one is given" do
       context = OpenSSL::SSL::SSLContext.new
       allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
       expect(context).to receive(:ssl_version=).with(:TLSv1_2).at_least(1)
