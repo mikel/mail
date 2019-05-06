@@ -129,7 +129,7 @@ module Mail
         str = charset_encoder.encode(str, charset)
       end
       transcode_to_scrubbed_utf8(str)
-    rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
+    rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError
       warn "Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
     end

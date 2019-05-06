@@ -211,6 +211,12 @@ describe Mail::Encodings do
         string = '=?GB2312?B?6V8=?='.dup.force_encoding('us-ascii')
         expect(Mail::Encodings.value_decode(string)).to eq("開")
       end
+
+      it "should decode an invalid utf-7 byte sequence" do
+        string = "=?utf-7?B?aVBhZHMsIE1hY0Jvb2tzLCAmIG1vcmUgdXAgdG8gOTArQUNVLSBPZmY=?="
+        result = "iPads, MacBooks, & more up to 90+ACU- Off"
+        expect(Mail::Encodings.value_decode(string)).to eq(result)
+      end
     end
   end
 
