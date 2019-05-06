@@ -33,8 +33,7 @@ describe "POP3 Retriever" do
     it "should get all emails without a given block" do
       expect(MockPOP3).not_to be_started
 
-      messages = []
-      Mail.all
+      messages = Mail.all
 
       expect(messages.map { |m| m.raw_source }.sort).to eq MockPOP3.popmails.map { |p| p.pop }.sort
       expect(MockPOP3).not_to be_started
