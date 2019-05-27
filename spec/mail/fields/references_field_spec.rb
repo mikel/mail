@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
+#
 #    The "References:" field will contain the contents of the parent's
 #    "References:" field (if any) followed by the contents of the parent's
 #    "Message-ID:" field (if any).  If the parent message does not contain
@@ -24,6 +24,24 @@ describe Mail::ReferencesField do
     expect(t.name).to eq 'References'
     expect(t.value).to eq '<1234@test.lindsaar.net>'
     expect(t.message_id).to eq '1234@test.lindsaar.net'
+  end
+
+  it "should accept multiple message ids separated by new line" do
+    t = Mail::ReferencesField.new('<1234@test.lindsaar.net>\r\n <5678@test.lindsaar.net>')
+    expect(t.name).to eq 'References'
+    expect(t.value).to eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+    expect(t.message_id).to eq '1234@test.lindsaar.net'
+    expect(t.message_ids).to eq ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+    expect(t.to_s).to eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+  end
+
+  it "should accept multiple message ids separated by comma" do
+    t = Mail::ReferencesField.new('<1234@test.lindsaar.net>,<5678@test.lindsaar.net>')
+    expect(t.name).to eq 'References'
+    expect(t.value).to eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
+    expect(t.message_id).to eq '1234@test.lindsaar.net'
+    expect(t.message_ids).to eq ['1234@test.lindsaar.net', '5678@test.lindsaar.net']
+    expect(t.to_s).to eq '<1234@test.lindsaar.net> <5678@test.lindsaar.net>'
   end
 
   it "should accept multiple message ids" do
