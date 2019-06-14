@@ -169,7 +169,11 @@ module Mail
     def charset=(val)
       params = self[:content_type].parameters rescue nil
       if params
-        params[:charset] = val
+        if val
+          params[:charset] = val
+        else
+          params.delete(:charset)
+        end
       end
       @charset = val
     end

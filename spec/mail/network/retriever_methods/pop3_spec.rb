@@ -33,10 +33,7 @@ describe "POP3 Retriever" do
     it "should get all emails without a given block" do
       expect(MockPOP3).not_to be_started
 
-      messages = []
-      Mail.all do |message|
-        messages << message
-      end
+      messages = Mail.all
 
       expect(messages.map { |m| m.raw_source }.sort).to eq MockPOP3.popmails.map { |p| p.pop }.sort
       expect(MockPOP3).not_to be_started
@@ -45,6 +42,11 @@ describe "POP3 Retriever" do
   end
 
   describe "find and options" do
+
+    it "should work with a frozen hash argument" do
+      messages = Mail.find({:count => :all, :what => :last, :order => :asc}.freeze)
+      expect(messages.map { |m| m.raw_source }.sort).to eq MockPOP3.popmails.map { |p| p.pop }
+    end
 
     it "should handle the :count option" do
       messages = Mail.find(:count => :all, :what => :last, :order => :asc)

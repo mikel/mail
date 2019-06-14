@@ -70,7 +70,7 @@ module Mail
     #           The default is 'ALL'
     #   search_charset: charset to pass to IMAP server search. Omitted by default. Example: 'UTF-8' or 'ASCII'.
     #
-    def find(options={}, &block)
+    def find(options=nil, &block)
       options = validate_options(options)
 
       start do |imap|
@@ -142,7 +142,7 @@ module Mail
 
       # Set default options
       def validate_options(options)
-        options ||= {}
+        options = options ? Hash[options] : {}
         options[:mailbox] ||= 'INBOX'
         options[:count]   ||= 10
         options[:order]   ||= :asc

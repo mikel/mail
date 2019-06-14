@@ -37,6 +37,14 @@ describe "Test Retriever" do
       @emails = populate(15)
     end
 
+    it "should work with frozen hash arguments" do
+      expect(Mail.find({:count => 1}.freeze)).to eq @emails.first
+      expect(Mail.first({}.freeze)).to eq @emails.first
+      expect(Mail.last({}.freeze)).to eq @emails.last
+      expect(Mail.all({}.freeze)).to eq @emails
+      expect(Mail.find_and_delete({}.freeze)).to eq @emails
+    end
+
     it "should handle the :count option" do
       expect(Mail.find(:count => :all)).to eq @emails
       expect(Mail.find(:count => 1)).to eq @emails.first
