@@ -50,6 +50,11 @@ module Mail
       set_charset
     end
 
+    def init_with(coder)
+      coder.map.each { |k, v| instance_variable_set(:"@#{k}", v) }
+      @parts = Mail::PartsList.new(coder['parts'])
+    end
+
     # Matches this body with another body.  Also matches the decoded value of this
     # body with a string.
     # 
