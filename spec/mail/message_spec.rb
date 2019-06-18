@@ -231,6 +231,13 @@ describe Mail::Message do
         expect(deserialized.delivery_handler).to be_nil
       end
 
+      it "should deserialize parts as an instance of Mail::PartsList" do
+        yaml = @yaml_mail.to_yaml
+        yaml_hash = YAML.load(yaml)
+        deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
+        expect(deserialized.parts).to be_kind_of(Mail::PartsList)
+      end
+
       it "should handle multipart mail" do
         @yaml_mail.add_part Mail::Part.new(:content_type => 'text/html', :body => '<b>body</b>')
         deserialized = Mail::Message.from_yaml(@yaml_mail.to_yaml)
