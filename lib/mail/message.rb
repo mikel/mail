@@ -110,6 +110,7 @@ module Mail
       @separate_parts = false
       @text_part = nil
       @html_part = nil
+      @amp_part = nil
       @errors = nil
       @header = nil
       @charset = self.class.default_charset
@@ -1649,6 +1650,15 @@ module Mail
       end
     end
 
+    # Accessor for amp_part
+    def amp_part(&block)
+      if block_given?
+        self.amp_part = Mail::Part.new(:content_type => 'text/x-amp-html', &block)
+      else
+        @amp_part || find_first_mime_type('text/x-amp-html')
+      end
+    end
+
     # Helper to add a html part to a multipart/alternative email.  If this and
     # text_part are both defined in a message, then it will be a multipart/alternative
     # message and set itself that way.
@@ -1659,14 +1669,14 @@ module Mail
 
         @html_part = msg
         @html_part.content_type = 'text/html' unless @html_part.has_content_type?
-        add_multipart_alternate_header if text_part
+        add_multipart_alternate_header if text_part || amp_part
         add_part @html_part
 
       # If nil, delete the html part and back out of multipart/alternative.
       elsif @html_part
         parts.delete_if { |p| p.object_id == @html_part.object_id }
         @html_part = nil
-        if text_part
+        if text_part || amp_part
           self.content_type = nil
           body.boundary = nil
         end
@@ -1683,14 +1693,38 @@ module Mail
 
         @text_part = msg
         @text_part.content_type = 'text/plain' unless @text_part.has_content_type?
-        add_multipart_alternate_header if html_part
+        add_multipart_alternate_header if html_part || amp_part
         add_part @text_part
 
       # If nil, delete the text part and back out of multipart/alternative.
       elsif @text_part
         parts.delete_if { |p| p.object_id == @text_part.object_id }
         @text_part = nil
-        if html_part
+        if html_part || amp_part
+          self.content_type = nil
+          body.boundary = nil
+        end
+      end
+    end
+
+    # Helper to add a text part to a multipart/alternative email.  If this and
+    # amp_part are both defined in a message, then it will be a multipart/alternative
+    # message and set itself that way.
+    def amp_part=(msg)
+      # Assign the text part and set multipart/alternative if there's an amp part.
+      if msg
+        msg = Mail::Part.new(:body => msg) unless msg.kind_of?(Mail::Message)
+
+        @amp_part = msg
+        @amp_part.content_type = 'text/x-amp-html' unless @amp_part.has_content_type?
+        add_multipart_alternate_header if html_part || text_part
+        add_part @amp_part
+
+      # If nil, delete the text part and back out of multipart/alternative.
+      elsif @amp_part
+        parts.delete_if { |p| p.object_id == @amp_part.object_id }
+        @amp_part = nil
+        if html_part || text_part
           self.content_type = nil
           body.boundary = nil
         end
@@ -1832,7 +1866,7 @@ module Mail
       if multipart?
         hash['multipart_body'] = []
         body.parts.map { |part| hash['multipart_body'] << part.to_yaml }
-        special_variables.push(:@body, :@text_part, :@html_part)
+        special_variables.push(:@body, :@text_part, :@html_part, :@amp_part)
       end
       (instance_variables.map(&:to_sym) - special_variables).each do |var|
         hash[var.to_s] = instance_variable_get(var)
@@ -2000,7 +2034,6 @@ module Mail
         @body_raw = value
       end
     end
-
 
     def process_body_raw
       @body = Mail::Body.new(@body_raw)

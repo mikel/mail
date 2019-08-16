@@ -398,6 +398,11 @@ mail = Mail.deliver do
     content_type 'text/html; charset=UTF-8'
     body '<h1>This is HTML</h1>'
   end
+
+  amp_part do
+    content_type 'text/x-amp-html; charset=UTF-8'
+    body '<h1>This is amp</h1>'
+  end
 end
 ```
 
@@ -467,8 +472,14 @@ html_part = Mail::Part.new do
   body '<h1>This is HTML</h1>'
 end
 
+amp_part do
+  content_type 'text/x-amp-html; charset=UTF-8'
+  body '<h1>This is amp</h1>'
+end
+
 mail.text_part = text_part
 mail.html_part = html_part
+mail.amp_part = amp_part
 ```
 
 Results in the same email as done using the block form
@@ -537,6 +548,11 @@ Of course... Mail will round trip an attachment as well
   html_part do
     content_type 'text/html; charset=UTF-8'
     body '<h1>Funky Title</h1><p>Here is the attachment you wanted</p>'
+  end
+
+  amp_part do
+    content_type 'text/x-amp-html; charset=UTF-8'
+    body '<h1>This is amp</h1>'
   end
 
   add_file '/path/to/myfile.pdf'
