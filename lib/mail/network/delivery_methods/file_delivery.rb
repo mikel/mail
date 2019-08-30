@@ -22,7 +22,7 @@ module Mail
     attr_accessor :settings
 
     def initialize(values)
-      self.settings = { :location => './mails' }.merge!(values)
+      self.settings = { :location => './mails', :suffix => '' }.merge!(values)
     end
 
     def deliver!(mail)
@@ -35,7 +35,7 @@ module Mail
       end
 
       envelope.to.uniq.each do |to|
-        path = ::File.join(settings[:location], File.basename(to.to_s))
+        path = ::File.join(settings[:location], File.basename(to.to_s+settings[:suffix]))
 
         ::File.open(path, 'a') do |f|
           f.write envelope.message
