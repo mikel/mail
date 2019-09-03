@@ -142,7 +142,7 @@ describe "Mail" do
       mail.delivery_method :file, :location => tmpdir
       expect(mail.delivery_method.class).to eq Mail::FileDelivery
       expect(mail.delivery_method.settings).to eql({:location => tmpdir,
-                                                    :suffix => ''})
+                                                    :extension => ''})
     end
 
     it "should not change the default when it changes the delivery_method" do
