@@ -11,6 +11,7 @@ Features:
 
 * Updated README to improve around sending multipart mail @kapfenho
 * Add delivery_interceptors method to Mail class to fetch registered interceptors @ghousemohamed
+* Configure smtp-delivery using a url @eval
 
 Code Improvements:
 
