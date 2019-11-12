@@ -10,7 +10,7 @@ begin
   alphtype int;
 
   # Phrase
-  action phrase_s { phrase_s = p }
+  action phrase_s { phrase_s ||= p }
   action phrase_e { phrase_e = p-1 }
 
   # Quoted String.
@@ -50,21 +50,28 @@ begin
 
   # Ignore address end events without a start event.
   action address_e {
+    skip = false
     if address_s
       if address.local.nil? && local_dot_atom_pre_comment_e && local_dot_atom_s && local_dot_atom_e
         if address.domain
           address.local = chars(data, local_dot_atom_s, local_dot_atom_e)
         else
-          address.local = chars(data, local_dot_atom_s, local_dot_atom_pre_comment_e)
+         if p == eof
+           address.local = chars(data, local_dot_atom_s, local_dot_atom_pre_comment_e)
+         else
+           skip = true
+         end
         end
       end
-      address.raw = chars(data, address_s, p-1)
-      address_list.addresses << address if address
+      unless skip
+        address.raw = chars(data, address_s, p-1)
+        address_list.addresses << address if address
 
-      # Start next address
-      address = AddressStruct.new(nil, nil, [], nil, nil, nil, nil)
-      address.group = group_name
-      address_s = nil
+        # Start next address
+        address = AddressStruct.new(nil, nil, [], nil, nil, nil, nil)
+        address.group = group_name
+        phrase_s = phrase_e = address_s = nil
+      end
     end
   }
 
