@@ -141,7 +141,8 @@ describe "Mail" do
       tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
       mail.delivery_method :file, :location => tmpdir
       expect(mail.delivery_method.class).to eq Mail::FileDelivery
-      expect(mail.delivery_method.settings).to eql({:location => tmpdir})
+      expect(mail.delivery_method.settings).to eql({:location => tmpdir,
+                                                    :extension => ''})
     end
 
     it "should not change the default when it changes the delivery_method" do
