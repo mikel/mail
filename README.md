@@ -284,15 +284,25 @@ mail.delivery_method :logger
 mail.delivery_method :logger, logger: other_logger, severity: :debug
 ```
 
-### Getting Emails from a POP Server:
+### Getting Emails from a POP or IMAP Server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
 within <code>Mail.defaults</code>:
 
 ```ruby
+# e.g. POP3
 Mail.defaults do
   retriever_method :pop3, :address    => "pop.gmail.com",
                           :port       => 995,
+                          :user_name  => '<username>',
+                          :password   => '<password>',
+                          :enable_ssl => true
+end
+
+# IMAP
+Mail.defaults do
+  retriever_method :imap, :address    => "imap.mailbox.org",
+                          :port       => 993,
                           :user_name  => '<username>',
                           :password   => '<password>',
                           :enable_ssl => true
