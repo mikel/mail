@@ -144,7 +144,7 @@ I have tried to simplify it some:
 
 ## Contributing
 
-Please do!  Contributing is easy in Mail.  Please read the CONTRIBUTING.md document for more info
+Please do!  Contributing is easy in Mail.  Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for more info.
 
 ## Usage
 
