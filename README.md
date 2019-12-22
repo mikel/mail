@@ -151,6 +151,8 @@ Please do!  Contributing is easy in Mail.  Please read the CONTRIBUTING.md docum
 All major mail functions should be able to happen from the Mail module.
 So, you should be able to just <code>require 'mail'</code> to get started.
 
+`mail` is pretty well documented in its Ruby code.  You can look it up e.g. at [rubydoc.info](https://www.rubydoc.info/gems/mail).
+
 ### Making an email
 
 ```ruby
