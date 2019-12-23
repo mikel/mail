@@ -144,12 +144,14 @@ I have tried to simplify it some:
 
 ## Contributing
 
-Please do!  Contributing is easy in Mail.  Please read the CONTRIBUTING.md document for more info
+Please do!  Contributing is easy in Mail.  Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for more info.
 
 ## Usage
 
 All major mail functions should be able to happen from the Mail module.
 So, you should be able to just <code>require 'mail'</code> to get started.
+
+`mail` is pretty well documented in its Ruby code.  You can look it up e.g. at [rubydoc.info](https://www.rubydoc.info/gems/mail).
 
 ### Making an email
 
@@ -284,15 +286,25 @@ mail.delivery_method :logger
 mail.delivery_method :logger, logger: other_logger, severity: :debug
 ```
 
-### Getting Emails from a POP Server:
+### Getting Emails from a POP or IMAP Server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
 within <code>Mail.defaults</code>:
 
 ```ruby
+# e.g. POP3
 Mail.defaults do
   retriever_method :pop3, :address    => "pop.gmail.com",
                           :port       => 995,
+                          :user_name  => '<username>',
+                          :password   => '<password>',
+                          :enable_ssl => true
+end
+
+# IMAP
+Mail.defaults do
+  retriever_method :imap, :address    => "imap.mailbox.org",
+                          :port       => 993,
                           :user_name  => '<username>',
                           :password   => '<password>',
                           :enable_ssl => true
