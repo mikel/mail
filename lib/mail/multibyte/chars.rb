@@ -316,7 +316,7 @@ module Mail #:nodoc:
       #
       # Example:
       #   s = 'こんにちは'
-      #   s.mb_chars.limit(7) # => "こに"
+      #   s.mb_chars.limit(7) # => "こん"
       def limit(limit)
         slice(0...translate_offset(limit))
       end
