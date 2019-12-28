@@ -27,15 +27,18 @@ describe "SMTP Delivery Method" do
 
   describe "general usage" do
     it "dot-stuff unterminated last line of the message" do
+      body = "this is a test\n.\nonly a test\n."
+
       Mail.deliver do
         from 'from@example.com'
         to 'to@example.com'
         subject 'dot-stuff last line'
-        body "this is a test\n.\nonly a test\n."
+        body body
       end
 
       message = MockSMTP.deliveries.first
-      expect(Mail.new(message).decoded).to eq("this is a test\n..\nonly a test\n..")
+      body << "." if Mail::SMTPConnection.new(connection: Mail.delivery_method).send(:dot_stuff?)
+      expect(Mail.new(message).decoded).to eq(body)
     end
 
     it "should send emails from given settings" do
