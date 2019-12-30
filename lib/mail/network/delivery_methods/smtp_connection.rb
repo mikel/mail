@@ -66,11 +66,7 @@ module Mail
       end
 
       def dot_stuff(message)
-        if message.end_with?("\r\n.")
-          message << "."
-        end
-
-        message
+        message.gsub(/(\r\n\.)([^\r\n]*$)/, '\1.\2')
       end
   end
 end
