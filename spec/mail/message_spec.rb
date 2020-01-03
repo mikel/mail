@@ -1587,7 +1587,7 @@ describe Mail::Message do
           body '<h1>This is HTML</h1>'
         end
       end
-      expect { mail.decoded }.to raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
+      expect { mail.decoded }.to raise_error(NoMethodError, 'This message cannot be decoded as _entire_ message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
 
     it "should return the decoded body if you call decode and the message is not multipart" do
