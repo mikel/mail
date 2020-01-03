@@ -1892,7 +1892,7 @@ module Mail
       when !self.multipart?
         body.decoded
       else
-        raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+        raise NoMethodError, 'This message cannot be decoded as _entire_ message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
       end
     end
 
