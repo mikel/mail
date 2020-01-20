@@ -189,6 +189,13 @@ describe "mail encoding" do
     expect(m.subject).to eq "Hello #{replace} World"
   end
 
+  it "should handle incompatible encodings by force encoding to UTF-8" do
+    m = Mail.new
+    subject = "\xEC =?utf-8?Q?=F0=9F=98=80?=".dup.force_encoding("ASCII-8BIT")
+    m['Subject'] = Mail::SubjectField.new(subject)
+    expect(m.subject).to eq "� 😀"
+  end
+
   it "should replace characters of unknown and invalid encoding" do
     m = Mail.new
     m['Subject'] = Mail::SubjectField.new("Hello=?UNKNOWN?B?4g==?=")
