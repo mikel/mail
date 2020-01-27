@@ -90,9 +90,12 @@ module Mail
       :tls                  => nil,
       :open_timeout         => nil,
       :read_timeout         => nil,
+      # Ruby 2.6 requires constants: OpenSSL::SSL::TLS1_1_VERSION, OpenSSL::SSL::TLS1_2_VERSION, etc.
       # See https://github.com/ruby/openssl/blob/master/lib/openssl/ssl.rb#L188-L189
-      # Examples: :SSLv23, :SSLv2, :SSLv3, :TLSv1, :TLSv1_1, :TLSv_1_2
-      :ssl_version          => nil,
+      # Ruby 2.7 can use symbols: :SSLv23, :SSLv2, :SSLv3, :TLSv1, :TLSv1_1, :TLSv_1_2
+      # See https://github.com/ruby/openssl/blob/ea49ccc82aa4d939f7c95e674272e8e0e553cbbc/lib/openssl/ssl.rb#L217-L222
+      :min_ssl_version      => nil,
+      :max_ssl_version      => nil,
     }
 
     def initialize(values)
@@ -143,7 +146,8 @@ module Mail
         end
 
         context = Net::SMTP.default_ssl_context
-        context.ssl_version = settings[:ssl_version] if settings[:ssl_version]
+        context.min_version = settings[:min_ssl_version] if settings[:min_ssl_version]
+        context.max_version = settings[:max_ssl_version] if settings[:max_ssl_version]
         context.verify_mode = openssl_verify_mode if openssl_verify_mode
         context.ca_path = settings[:ca_path] if settings[:ca_path]
         context.ca_file = settings[:ca_file] if settings[:ca_file]
