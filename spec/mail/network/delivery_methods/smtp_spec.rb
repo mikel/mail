@@ -210,16 +210,14 @@ describe "SMTP Delivery Method" do
     it "should set SSL version if one is given" do
       context = OpenSSL::SSL::SSLContext.new
       allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
-      expect(context).to receive(:min_version=).with(OpenSSL::SSL::TLS1_1_VERSION).at_least(1).and_call_original
-      expect(context).to receive(:max_version=).with(OpenSSL::SSL::TLS1_2_VERSION).at_least(1).and_call_original
+      expect(context).to receive(:ssl_version=).with(:TLSv1_2).at_least(1)
 
       Mail.defaults do
         delivery_method :smtp,
                         :address => 'smtp.mockup.com',
                         :port => 587,
                         :tls => true,
-                        :min_ssl_version => OpenSSL::SSL::TLS1_1_VERSION,
-                        :max_ssl_version => OpenSSL::SSL::TLS1_2_VERSION
+                        :ssl_version => :TLSv1_2
       end
 
       mail = Mail.deliver do
