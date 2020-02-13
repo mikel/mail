@@ -139,8 +139,9 @@ describe Mail::Message do
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
-      expect($stderr).not_to receive(:puts)
-      read_fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')
+      expect {
+        read_fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')
+      }.to_not output.to_stderr
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
@@ -1322,8 +1323,7 @@ describe Mail::Message do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          expect($stderr).not_to receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should set the content type to text/plain; charset=us-ascii" do
@@ -1354,8 +1354,12 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
+
+          result = nil
+          expect {
+            result = mail.to_s
+          }.to output(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./).to_stderr
+          expect(result).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1364,8 +1368,12 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
+
+          result = nil
+          expect {
+            result = mail.to_s
+          }.to output(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./).to_stderr
+          expect(result).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should not raise a warning if there is no charset parameter and the content-type is not text" do
@@ -1374,8 +1382,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "image/png"
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to_not receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should not raise a warning if there is a charset defined and there is non ascii chars" do
@@ -1384,8 +1391,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           mail.content_type = "text/plain; charset=UTF-8"
-          expect($stderr).not_to receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should be able to set a content type with an array and hash" do
