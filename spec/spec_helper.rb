@@ -314,9 +314,3 @@ class Net::IMAP
     MockIMAP.new
   end
 end
-
-module Kernel
-  def warn(m)
-    $stderr.puts(m)
-  end
-end

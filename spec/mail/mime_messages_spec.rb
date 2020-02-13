@@ -618,8 +618,7 @@ describe "MIME Emails" do
         mail.body = body
         mail.charset = 'UTF-8'
         mail.add_file fixture_path('attachments', 'test.png')
-        expect($stderr).not_to receive(:puts)
-        mail.to_s
+        expect { mail.to_s }.to_not output.to_stderr
       end
 
 
