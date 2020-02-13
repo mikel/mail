@@ -6,8 +6,11 @@ describe Mail::Field do
 
   describe 'parsing' do
     it "parses full header fields" do
-      expect($stderr).to_not receive(:puts)
-      field = Mail::Field.parse('To: Mikel')
+      field = nil
+      expect {
+        field = Mail::Field.parse('To: Mikel')
+      }.to_not output.to_stderr
+
       expect(field.name).to eq 'To'
       expect(field.value).to eq 'Mikel'
       if field.value.respond_to?(:encoding)
