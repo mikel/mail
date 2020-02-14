@@ -176,6 +176,10 @@ describe "have_sent_email" do
         it { is_expected.to have_sent_email.with_attachments(an_attachment_with_filename(first_attachment.filename)) }
       end
 
+      context 'matching by mimetype' do
+        it { is_expected.to have_sent_email.with_attachments(an_attachment_with_mime_type(first_attachment.mime_type)) }
+      end
+
       context 'single attachment passed' do
         it { is_expected.to have_sent_email.with_attachments(first_attachment) }
       end
