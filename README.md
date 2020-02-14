@@ -645,6 +645,12 @@ describe "sending an email" do
   # ... or any attachment
   it { is_expected.to have_sent_email.with_attachments(any_attachment) }
 
+  # ... or attachment with filename
+  it { is_expected.to have_sent_email.with_attachments(an_attachment_with_filename('file.txt')) }
+
+  # ... or attachment with mime_type
+  it { is_expected.to have_sent_email.with_attachments(an_attachment_with_mime_type('application/pdf')) }
+
   # ... by array of attachments
   it { is_expected.to have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important
 

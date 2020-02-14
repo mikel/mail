@@ -16,6 +16,7 @@ Compatibility:
 
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
+* `an_attachment_with_mime_type` matcher added to match attachments by mime type
 
 
 Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.
