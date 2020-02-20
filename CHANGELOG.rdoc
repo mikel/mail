@@ -1,5 +1,8 @@
 == Version 2.7.2 (unreleased)
 
+Bugs:
+* Fix duplicate dots at beginning of lines. (c960657)
+
 
 == Version 2.7.1 (2018-10-13)
 
@@ -870,5 +873,6 @@ content-disposition or content-location
 * Added attachment.original_filename for ActionMailer friendliness
 
 == Sat Oct 25 13:38:01 UTC 2009 Mikel Lindsaar <raasdnil@gmail.com>
+=======
 
 * Birthday, Mail released as a gem... phew
