@@ -27,7 +27,7 @@ describe "SMTP Delivery Method" do
 
   describe "general usage" do
     it "dot-stuff unterminated last line of the message" do
-      skip "is skipped on Ruby versions without dot-stuff bug" unless Mail::SMTPConnection.new(connection: Mail.delivery_method).send(:dot_stuff?)
+      skip "is skipped on Ruby versions without dot-stuff bug" unless Mail::SMTPConnection.new(:connection => Mail.delivery_method).send(:dot_stuff?)
 
       Mail.deliver do
         from 'from@example.com'
