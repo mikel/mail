@@ -17,7 +17,4 @@ Compatibility:
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
 
-Bugs:
-* Fix duplicate dots at beginning of lines. (c960657)
-
 Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.

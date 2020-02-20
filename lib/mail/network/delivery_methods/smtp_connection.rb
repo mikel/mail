@@ -50,9 +50,7 @@ module Mail
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
       envelope = Mail::SmtpEnvelope.new(mail)
-      message = envelope.message
-      message = dot_stuff(message) if dot_stuff?
-      response = smtp.sendmail(message, envelope.from, envelope.to)
+      response = smtp.sendmail(dot_stuff(envelope.message), envelope.from, envelope.to)
       settings[:return_response] ? response : self
     end
 
@@ -66,7 +64,11 @@ module Mail
       end
 
       def dot_stuff(message)
-        message.gsub(/(\r\n\.)([^\r\n]*$)/, '\1.\2')
+        if dot_stuff?
+          message.gsub(/(\r\n\.)([^\r\n]*$)/, '\1.\2')
+        else
+          message
+        end
       end
   end
 end
