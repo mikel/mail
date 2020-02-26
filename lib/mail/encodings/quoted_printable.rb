@@ -16,7 +16,14 @@ module Mail
       # Decode the string from Quoted-Printable. Cope with hard line breaks
       # that were incorrectly encoded as hex instead of literal CRLF.
       def self.decode(str)
-        str.gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n").unpack("M*").first
+        original_string_encoding = str.encoding
+        decoded_string = str.gsub(/(?:=0D=0A|=0D|=0A)\r\n/, "\r\n").unpack("M*").first
+
+        unless original_string_encoding.name == "US-ASCII"
+          decoded_string.force_encoding(original_string_encoding)
+        end
+
+        decoded_string
       end
 
       def self.encode(str)

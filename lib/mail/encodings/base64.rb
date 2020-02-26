@@ -16,7 +16,14 @@ module Mail
       end
 
       def self.decode(str)
-        RubyVer.decode_base64(str)
+        original_string_encoding = str.encoding
+        decoded_string = RubyVer.decode_base64(str)
+
+        unless original_string_encoding.name == "US-ASCII"
+          decoded_string.force_encoding(original_string_encoding)
+        end
+
+        decoded_string
       end
 
       def self.encode(str)

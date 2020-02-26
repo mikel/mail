@@ -110,8 +110,8 @@ describe Mail::Body do
       expect(body.decoded).to eq "The=body"
     end
 
-    it "should not change Rubys string encoding on decode" do
-      body = Mail::Body.new("The=3Dbødy")
+    it "should preserve the original Ruby string encoding" do
+      body = Mail::Body.new("The=3Dbody")
       body.encoding = 'quoted-printable'
 
       original_string_encoding = body.raw_source.encoding
