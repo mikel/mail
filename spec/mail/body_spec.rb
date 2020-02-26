@@ -110,10 +110,26 @@ describe Mail::Body do
       expect(body.decoded).to eq "The=body"
     end
 
+    it "should not change Rubys string encoding on decode" do
+      body = Mail::Body.new("The=3Dbødy")
+      body.encoding = 'quoted-printable'
+
+      original_string_encoding = body.raw_source.encoding
+      expect(body.decoded.encoding).to eq(original_string_encoding)
+    end
+
     it "should change a body on decode if given an encoding type to decode" do
       body = Mail::Body.new("VGhlIGJvZHk=\n")
       body.encoding = 'base64'
       expect(body.decoded).to eq "The body"
+    end
+
+    it "should preserve the original Ruby string encoding" do
+      body = Mail::Body.new("VGhlIGJvZHk=\n")
+      body.encoding = 'base64'
+
+      original_string_encoding = body.raw_source.encoding
+      expect(body.decoded.encoding).to eq(original_string_encoding)
     end
 
   end
