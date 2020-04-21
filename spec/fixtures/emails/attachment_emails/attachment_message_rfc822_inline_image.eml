@@ -1,0 +1,95 @@
+From: test@example.com
+To: foo@example.com
+Subject: test
+Date: Tue, 21 Apr 2020 15:40:22 +0200 (CEST)
+Message-Id: <9169D984-4E0B-45EF-82D5-8F5E53AD7012@example.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------=_MB7A4C516C-8688-4B63-8C13-CC0B5BA90B2B"
+Content-Transfer-Encoding: 7bit
+
+--------=_MB7A4C516C-8688-4B63-8C13-CC0B5BA90B2B
+Content-Type: multipart/related;
+ boundary="------=_MB7DFCF053-5DBC-4ABA-BA34-0A2FA19EC02A"
+Content-Transfer-Encoding: 7bit
+
+
+--------=_MB7DFCF053-5DBC-4ABA-BA34-0A2FA19EC02A
+Content-Type: multipart/alternative;
+ boundary="------=_MB41C5AACC-67CF-4DFC-A53A-865270BC750F"
+Content-Transfer-Encoding: 7bit
+
+--------=_MB41C5AACC-67CF-4DFC-A53A-865270BC750F
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><body><img src=3D"cid:emedfeb92f-a786-4718-a446-98db8afb53fb@kronos=
+" /></body></html>=
+ 
+
+--------=_MB41C5AACC-67CF-4DFC-A53A-865270BC750F--
+
+--------=_MB7DFCF053-5DBC-4ABA-BA34-0A2FA19EC02A
+Content-Type: image/png;
+	name=img.png
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+	size=370;
+	filename=img.png
+Content-ID: <emedfeb92f-a786-4718-a446-98db8afb53fb@kronos>
+
+iVBORw0KGgoAAAANSUhEUgAAACoAAAAgCAIAAADrOn1qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB
+JElEQVRIx+2WzYmFMBDHs2FPQu4hTXiwBSFV2MU0IaagxBoiaA+CAbGFuAcXCb4nG/Nenizkf5CB
+GfklmQ8GrXdIa70ZGN2qhE/4hP9Dxpgz1zAMcfFKqaqqlFJPXQDQNE0svDFGCIEQEkIcTqCU2lxt
+2wa8gReeUgoAm+2eYGcjhAAgz/Or+G/POM75xt6/rgEAW8BVfa3r6h/tXndXALvruqIoLjce53zP
+wov3/odj5/HxH3shFv5Q5097IVblH9h7vt1eCCiCa2PnwHYrUQgRMno9tzMpZVmWUsozV13XAbse
+8v9nmqYzV9/30VdNSumZK2DcpnUj4T8uay3G+Db8siyEkBvw1tp5nsdxZIz9rhta689lGmNCCGMs
+y7KQbeft+gGA2/AdlcTEpAAAAABJRU5ErkJggg==
+
+--------=_MB7DFCF053-5DBC-4ABA-BA34-0A2FA19EC02A--
+
+--------=_MB7A4C516C-8688-4B63-8C13-CC0B5BA90B2B
+Content-Type: message/rfc822;
+ name=Testmail.eml
+Content-Disposition: attachment;
+ filename=Testmail.eml
+
+From xxxx@xxxx.com Tue May 10 11:28:07 2005
+Return-Path: <xxxx@xxxx.com>
+X-Original-To: xxxx@xxxx.com
+Delivered-To: xxxx@xxxx.com
+Received: from localhost (localhost [127.0.0.1])
+	by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F
+	for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)
+Received: from xxx.xxxxx.com ([127.0.0.1])
+ by localhost (xxx.xxxxx.com [127.0.0.1]) (amavisd-new, port 10024)
+ with LMTP id 70060-03 for <xxxx@xxxx.com>;
+ Tue, 10 May 2005 17:26:49 +0000 (GMT)
+Received: from xxx.xxxxx.com (xxx.xxxxx.com [69.36.39.150])
+	by xxx.xxxxx.com (Postfix) with ESMTP id 8B957A94B
+	for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:48 +0000 (GMT)
+Received: from xxx.xxxxx.com (xxx.xxxxx.com [64.233.184.203])
+	by xxx.xxxxx.com (Postfix) with ESMTP id 9972514824C
+	for <xxxx@xxxx.com>; Tue, 10 May 2005 12:26:40 -0500 (CDT)
+Received: by xxx.xxxxx.com with SMTP id 68so1694448wri
+        for <xxxx@xxxx.com>; Tue, 10 May 2005 10:26:40 -0700 (PDT)
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
+        s=beta; d=xxxxx.com;
+        h=received:message-id:date:from:reply-to:to:subject:mime-version:content-type;
+        b=g8ZO5ttS6GPEMAz9WxrRk9+9IXBUfQIYsZLL6T88+ECbsXqGIgfGtzJJFn6o9CE3/HMrrIGkN5AisxVFTGXWxWci5YA/7PTVWwPOhJff5BRYQDVNgRKqMl/SMttNrrRElsGJjnD1UyQ/5kQmcBxq2PuZI5Zc47u6CILcuoBcM+A=
+Received: by 10.54.96.19 with SMTP id t19mr621017wrb;
+        Tue, 10 May 2005 10:26:39 -0700 (PDT)
+Received: by 10.54.110.5 with HTTP; Tue, 10 May 2005 10:26:39 -0700 (PDT)
+Message-ID: <xxxx@xxxx.com>
+Date: Tue, 10 May 2005 11:26:39 -0600
+From: Test Tester <xxxx@xxxx.com>
+Reply-To: Test Tester <xxxx@xxxx.com>
+To: xxxx@xxxx.com, xxxx@xxxx.com
+Subject: Another PDF
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_Part_2192_32400445.1115745999735"
+X-Virus-Scanned: amavisd-new at textdrive.com
+
+--------=_MB7A4C516C-8688-4B63-8C13-CC0B5BA90B2B--

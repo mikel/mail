@@ -270,8 +270,15 @@ describe "reading emails with attachments" do
 
     it "should find attachments inside parts with content-type message/rfc822" do
       mail = read_fixture('emails/attachment_emails/attachment_message_rfc822.eml')
-      expect(mail.attachments.length).to eq 1
-      expect(mail.attachments[0].decoded.length).to eq 1026
+      expect(mail.attachments.length).to eq 2
+      expect(mail.attachments[1].decoded.length).to eq 1026
+    end
+
+    it "should include content-type message/rfc822 as an attachment" do
+      mail = read_fixture('emails/attachment_emails/attachment_message_rfc822_inline_image.eml')
+      expect(mail.attachments.length).to eq 2
+      expect(mail.attachments[1].decoded.length).to eq 1815
+      expect(mail.attachments[0].inline?).to eq(true)
     end
 
     it "attach filename decoding (issue 83)" do
