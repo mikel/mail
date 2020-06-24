@@ -123,12 +123,6 @@ module Mail
         gsub(/[; ]+/, '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below
 
-      if val =~ /(boundary=(\S*))/i
-        val = "#{$`.downcase}boundary=#{$2}#{$'.downcase}"
-      else
-        val.downcase!
-      end
-
       case
       when val.chomp =~ /^\s*([\w\-]+)\/([\w\-]+)\s*;\s?(ISO[\w\-]+)$/i
         # Microsoft helper:

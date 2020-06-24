@@ -708,7 +708,7 @@ describe Mail::ContentTypeField do
     it "should handle 'text/plain;ISO-8559-1'" do
       c = Mail::ContentTypeField.new('text/plain;ISO-8559-1')
       expect(c.string).to eq 'text/plain'
-      expect(c.parameters['charset']).to eq 'iso-8559-1'
+      expect(c.parameters['charset']).to eq 'ISO-8559-1'
     end
 
     it "should handle 'text/plain; charset = \"iso-8859-1\"'" do
@@ -726,7 +726,7 @@ describe Mail::ContentTypeField do
     it 'should handle text/html; charset="charset="GB2312""' do
       c = Mail::ContentTypeField.new('text/html; charset="charset="GB2312""')
       expect(c.string).to eq 'text/html'
-      expect(c.parameters['charset']).to eq 'gb2312'
+      expect(c.parameters['charset']).to eq 'GB2312'
     end
 
     it "should handle application/octet-stream; name=archiveshelp1[1].htm" do
