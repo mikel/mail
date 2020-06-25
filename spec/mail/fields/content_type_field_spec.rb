@@ -769,6 +769,11 @@ describe Mail::ContentTypeField do
       expect(c.parameters['boundary']).to eq 'boundary123?WUT'
     end
 
+    it "should preserve encoding of filenames" do
+      c = Mail::ContentTypeField.new('Content-Type: application/pdf; name==?utf-8?B?RXhhbXBsZS5wZGY=?=')
+      expect(c.string).to eq 'application/pdf'
+      expect(c.parameters['name']).to eq '=?utf-8?B?RXhhbXBsZS5wZGY=?='
+    end
   end
 
 end
