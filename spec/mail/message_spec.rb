@@ -1261,7 +1261,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          expect(mail.to_s).to match(/Mime-Version: 3.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 3.0\r\n/)
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -1272,7 +1272,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should make an email and inject a mime_version if none was set if told to_s" do
@@ -1282,7 +1282,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should add the mime version to the message permanently once sent to_s" do
