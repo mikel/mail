@@ -3,6 +3,7 @@
 module Mail # :doc:
 
   require 'date'
+  require 'ragel/array'
   require 'shellwords'
 
   require 'uri'
