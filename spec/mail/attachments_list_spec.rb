@@ -259,6 +259,13 @@ describe "reading emails with attachments" do
       expect(result).to eq expected
     end
 
+    it "should find an attachment that has an base64 encoded name value" do
+      mail = read_fixture('emails/attachment_emails/attachment_with_base64_encoded_name.eml')
+      expect(mail.attachments.length).to eq 1
+      result = mail.attachments[0].filename
+      expect(result).to eq "This is a test.pdf"
+    end
+
     it "should find an attachment that has a name not surrounded by quotes" do
       mail = read_fixture('emails/attachment_emails/attachment_with_unquoted_name.eml')
       expect(mail.attachments.length).to eq 1

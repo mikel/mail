@@ -125,6 +125,10 @@ module Mail
 
       if val =~ /(boundary=(\S*))/i
         val = "#{$`.downcase}boundary=#{$2}#{$'.downcase}"
+      elsif val =~ /(name=(\S*))/i
+        val = "#{$`.downcase}name=#{$2}#{$'.downcase}"
+      elsif val =~ /(filename=(\S*))/i
+        val = "#{$`.downcase}filename=#{$2}#{$'.downcase}"
       else
         val.downcase!
       end
