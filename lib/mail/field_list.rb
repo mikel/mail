@@ -6,8 +6,6 @@ module Mail
   # email fields in order.  And allows you to insert new fields without
   # having to worry about the order they will appear in.
   class FieldList < Array
-    include Enumerable
-
     def has_field?(field_name)
       any? { |f| f.responsible_for? field_name }
     end
