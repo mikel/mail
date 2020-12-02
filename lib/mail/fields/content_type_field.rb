@@ -123,12 +123,8 @@ module Mail
         gsub(/[; ]+/, '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below
 
-      if val =~ /(boundary=(\S*))/i
-        val = "#{$`.downcase}boundary=#{$2}#{$'.downcase}"
-      elsif val =~ /(name=(\S*))/i
-        val = "#{$`.downcase}name=#{$2}#{$'.downcase}"
-      elsif val =~ /(filename=(\S*))/i
-        val = "#{$`.downcase}filename=#{$2}#{$'.downcase}"
+      if val =~ /((boundary|name|filename)=(\S*))/i
+        val = "#{$`.downcase}#{$2}=#{$3}#{$'.downcase}"
       else
         val.downcase!
       end
