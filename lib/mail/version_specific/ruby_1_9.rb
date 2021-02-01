@@ -72,7 +72,7 @@ module Mail
       if !str.end_with?("=") && str.length % 4 != 0
         str = str.ljust((str.length + 3) & ~3, "=")
       end
-      str.unpack( 'm' ).first
+      ::Mail::Utilities.unpack1( str, 'm' )
     end
 
     def Ruby19.encode_base64(str)
@@ -109,7 +109,7 @@ module Mail
     def Ruby19.decode_utf7(utf7)
       utf7.gsub(/&([^-]+)?-/n) do
         if $1
-          ($1.tr(",", "/") + "===").unpack("m")[0].encode(Encoding::UTF_8, Encoding::UTF_16BE)
+          ::Mail::Utilities.unpack1( ($1.tr(",", "/") + "==="), 'm' ).encode(Encoding::UTF_8, Encoding::UTF_16BE)
         else
           "&"
         end
