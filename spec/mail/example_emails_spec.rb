@@ -301,6 +301,20 @@ describe "Test emails" do
       end
     end
 
+    describe "handling multiple references with one of them invalid" do
+      before(:each) do
+        @message = read_fixture('emails', 'error_emails', 'multiple_references_with_one_invalid.eml')
+      end
+
+      it "should parse the email and encode without crashing" do
+        expect { @message.encoded }.not_to raise_error
+      end
+
+      it "should return the valid References value" do
+        expect(@message.references).to eq "foo@bar.net"
+      end
+    end
+
   end
 
   describe "empty address lists" do

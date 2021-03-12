@@ -10,13 +10,8 @@ module Mail
       any? { |f| f.responsible_for? field_name }
     end
 
-    def select_fields(field_name)
-      select { |f| f.responsible_for? field_name }
-    end
-
     def get_field(field_name)
       fields = select_fields(field_name)
-
       case fields.size
       when 0; nil
       when 1; fields.first
@@ -68,6 +63,17 @@ module Mail
 
     def summary
       map { |f| "<#{f.name}: #{f.value}>" }.join(", ")
+    end
+
+    private
+
+    def select_fields(field_name)
+      fields = select { |f| f.responsible_for? field_name }
+      if fields.size > 1 && fields.any?(&:singular?)
+        Array(fields.detect { |f| f.errors.size == 0 } || fields.first)
+      else
+        fields
+      end
     end
   end
 end
