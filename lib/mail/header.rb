@@ -228,10 +228,6 @@ module Mail
       self.fields = @raw_source.split(Constants::HEADER_SPLIT)
     end
 
-    def select_fields_for(name)
-      fields.select_fields { |f| f.responsible_for?(name) }
-    end
-
 
     # Enumerable support. Yield each field in order.
     def each(&block)
