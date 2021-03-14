@@ -333,8 +333,8 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode("=?utf-8?Q?a a?=")).to eq "a a"
     end
 
-    it "should decode a string ending with a question mark" do
-      expect(Mail::Encodings.value_decode("=?UTF-8?Q?=C3=A5??=")).to eq "å?"
+    it "should decode a string ending with an unencoded question mark" do
+      expect(Mail::Encodings.value_decode("=?UTF-8?Q?=C3=A5???=")).to eq "å??"
     end
 
     it "should treat unrecognized charsets as binary" do
