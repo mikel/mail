@@ -2,6 +2,7 @@
 
 Bugs:
 * Fix duplicate dots at beginning of lines. (c960657)
+* Don't alter attachment filenames when Content-Type parsing fails. (nbianca)
 
 
 == Version 2.7.1 (2018-10-13)
