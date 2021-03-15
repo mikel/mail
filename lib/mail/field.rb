@@ -143,6 +143,10 @@ module Mail
         warn "WARNING: Ignoring unparsable header #{raw_field.inspect}: #{error.class}: #{error.message}"
         nil
       end
+
+      def field_class_for(name) #:nodoc:
+        FIELDS_MAP[name.to_s.downcase]
+      end
     end
 
     attr_reader :unparsed_value
@@ -263,15 +267,11 @@ module Mail
     def parse_field(name, value, charset)
       value = unfold(value) if value.is_a?(String)
 
-      if klass = field_class_for(name)
+      if klass = self.class.field_class_for(name)
         klass.parse(value, charset)
       else
         OptionalField.parse(name, value, charset)
       end
-    end
-
-    def field_class_for(name)
-      FIELDS_MAP[name.to_s.downcase]
     end
 
     # 2.2.3. Long Header Fields

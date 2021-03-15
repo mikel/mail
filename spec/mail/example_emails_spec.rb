@@ -315,6 +315,26 @@ describe "Test emails" do
       end
     end
 
+   describe "handling multiple content-disposition with all of them invalid" do
+      before(:each) do
+        @message = read_fixture('emails', 'error_emails', 'multiple_invalid_content_dispositions.eml')
+      end
+
+      it "should parse the email and encode without crashing" do
+        expect { @message.encoded }.not_to raise_error
+      end
+
+      it "should recognise the email as not attachment" do
+        expect(@message.attachment?).to be_falsey
+        expect(@message.has_attachments?).to be_falsey
+      end
+
+      it "should return one invalid Content-Disposition value" do
+        expect(@message[:content_disposition].errors).to_not be_empty
+        expect(@message.content_disposition).to eq "invalid"
+      end
+    end
+
   end
 
   describe "empty address lists" do
