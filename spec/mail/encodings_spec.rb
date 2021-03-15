@@ -262,10 +262,10 @@ describe Mail::Encodings do
       string = "This is あ string"
       if string.respond_to?(:force_encoding)
         string = string.dup.force_encoding('UTF-8')
-        expect(Mail::Encodings.q_value_encode(string)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string=?='
+        expect(Mail::Encodings.q_value_encode(string)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string?='
       else
         encoding = 'UTF-8'
-        expect(Mail::Encodings.q_value_encode(string, encoding)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string=?='
+        expect(Mail::Encodings.q_value_encode(string, encoding)).to eq '=?UTF-8?Q?This_is_=E3=81=82_string?='
       end
     end
 
@@ -720,9 +720,9 @@ describe Mail::Encodings do
 
     it "should handle a new line in the text" do
       if 'string'.respond_to?(:force_encoding)
-        expected = "\nRe: ol\341".dup.force_encoding('ISO-8859-1').encode('utf-8')
+        expected = "\r\nRe: ol\341".dup.force_encoding('ISO-8859-1').encode('utf-8')
       else
-        expected = Iconv.conv("UTF-8", "ISO-8859-1", "\nRe: ol\341")
+        expected = Iconv.conv("UTF-8", "ISO-8859-1", "\r\nRe: ol\341")
       end
       encoded = "=?ISO-8859-1?Q?\nRe=3A_ol=E1?="
       expect(Mail::Encodings.value_decode(encoded)).to eq expected
