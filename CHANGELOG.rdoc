@@ -14,6 +14,7 @@ Compatibility:
 * Converting to multipart moves Content-* headers to the new part. (kirikak2)
 * Multipart Content-Type no longer includes a needless charset param. (kirikak2)
 * Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
+* Gracefully handle multiple, possibly-invalid headers for what should be singular fields. (rosa)
 
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
