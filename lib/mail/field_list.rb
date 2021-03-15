@@ -69,10 +69,18 @@ module Mail
 
     def select_fields(field_name)
       fields = select { |f| f.responsible_for? field_name }
-      if fields.size > 1 && fields.any?(&:singular?)
+      if fields.size > 1 && singular?(field_name)
         Array(fields.detect { |f| f.errors.size == 0 } || fields.first)
       else
         fields
+      end
+    end
+
+    def singular?(field_name)
+      if klass = Mail::Field.field_class_for(field_name)
+        klass.singular?
+      else
+        false
       end
     end
   end
