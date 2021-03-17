@@ -17,6 +17,7 @@ Compatibility:
 * Multipart Content-Type no longer includes a needless charset param. (kirikak2)
 * Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
 * Gracefully handle multiple, possibly-invalid headers for what should be singular fields. (rosa)
+* SMTP delivery with enable_tls/starttls/starttls_auto: false now disables these options, since starttls is now :auto by default in upstream net-smtp. (jeremy)
 
 Features:
 * Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
