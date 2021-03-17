@@ -180,7 +180,7 @@ describe "Mail" do
 
     before(:each) do
       # Set the delivery method to test as the default
-      MockSMTP.clear_deliveries
+      MockSMTP.reset
     end
 
     it "should deliver a mail message" do
