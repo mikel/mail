@@ -111,17 +111,33 @@ module Mail
 
       def build_smtp_session
         Net::SMTP.new(settings[:address], settings[:port]).tap do |smtp|
-          if settings[:tls] || settings[:ssl]
-            if smtp.respond_to?(:enable_tls)
+          tls = settings[:tls] || settings[:ssl]
+          if !tls.nil?
+            case tls
+            when true
               smtp.enable_tls(ssl_context)
+            when false
+              smtp.disable_tls
+            else
+              raise ArgumentError, "Unrecognized :tls value #{settings[:tls].inspect}; expected true, false, or nil"
             end
-          elsif settings[:enable_starttls]
-            if smtp.respond_to?(:enable_starttls)
+          elsif settings.include?(:enable_starttls) && !settings[:enable_starttls].nil?
+            case settings[:enable_starttls]
+            when true
               smtp.enable_starttls(ssl_context)
+            when false
+              smtp.disable_starttls
+            else
+              raise ArgumentError, "Unrecognized :enable_starttls value #{settings[:enable_starttls].inspect}; expected true, false, or nil"
             end
-          elsif settings[:enable_starttls_auto]
-            if smtp.respond_to?(:enable_starttls_auto)
+          elsif settings.include?(:enable_starttls_auto) && !settings[:enable_starttls_auto].nil?
+            case settings[:enable_starttls_auto]
+            when true
               smtp.enable_starttls_auto(ssl_context)
+            when false
+              smtp.disable_starttls_auto
+            else
+              raise ArgumentError, "Unrecognized :enable_starttls_auto value #{settings[:enable_starttls_auto].inspect}; expected true, false, or nil"
             end
           end
 
