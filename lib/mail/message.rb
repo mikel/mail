@@ -285,7 +285,7 @@ module Mail
           bracketed_message_id = "<#{message_id}>"
           reply.in_reply_to = bracketed_message_id
           if !references.nil?
-            refs = [references].flatten.map { |r| "<#{r}>" }
+            refs = [references].flat_map { |r| "<#{r}>" }
             refs << bracketed_message_id
             reply.references = refs.join(' ')
           elsif !in_reply_to.nil? && !in_reply_to.kind_of?(Array)
