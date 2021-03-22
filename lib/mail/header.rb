@@ -159,20 +159,21 @@ module Mail
         fields.add_field Field.new(name.to_s, value, charset)
 
         # Update charset if specified in Content-Type
-        if name == 'content-type'
-          params = self[:content_type].parameters rescue nil
+        if name == 'content-type' && self[:content_type]
+          params = self[:content_type].parameters
           @charset = params[:charset] if params && params[:charset]
         end
       end
     end
 
     def charset=(val)
-      params = self[:content_type].parameters rescue nil
-      if params
-        if val
-          params[:charset] = val
-        else
-          params.delete(:charset)
+      if self[:content_type]
+        if (params = self[:content_type].parameters)
+          if val
+            params[:charset] = val
+          else
+            params.delete(:charset)
+          end
         end
       end
       @charset = val
