@@ -15,6 +15,8 @@ module Mail
         stripped = string.to_s.gsub(/\(.*?\)/, '').squeeze(' ')
         begin
           datetime = ::DateTime.parse(stripped)
+        rescue RangeError
+        # If fails to convert because date is out of range, fall back to use the string, no need to raise
         rescue ArgumentError => e
           raise unless 'invalid date' == e.message
         end
