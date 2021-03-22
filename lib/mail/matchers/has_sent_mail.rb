@@ -88,6 +88,11 @@ module Mail
         self
       end
 
+      def with_amp(body)
+        @amp_part_body = body
+        self
+      end
+
       def with_text(body)
         @text_part_body = body
         self
@@ -118,7 +123,7 @@ module Mail
         candidate_deliveries = deliveries
         modifiers =
           %w(sender recipients copy_recipients blind_copy_recipients subject
-          subject_matcher body body_matcher html_part_body text_part_body  having_attachments attachments)
+          subject_matcher body body_matcher html_part_body amp_part_body text_part_body  having_attachments attachments)
         modifiers.each do |modifier_name|
           next unless instance_variable_defined?("@#{modifier_name}")
           candidate_deliveries = candidate_deliveries.select{|matching_delivery| self.send("matches_on_#{modifier_name}?", matching_delivery)}
@@ -174,6 +179,10 @@ module Mail
         delivery.html_part.body == @html_part_body
       end
 
+      def matches_on_amp_part_body?(delivery)
+        delivery.amp_part.body == @amp_part_body
+      end
+
       def matches_on_text_part_body?(delivery)
         delivery.text_part.body == @text_part_body
       end
@@ -190,6 +199,7 @@ module Mail
         result += "with body matching \"#{@body_matcher}\" " if instance_variable_defined?('@body_matcher')
         result += "with a text part matching \"#{@text_part_body}\" " if instance_variable_defined?('@text_part_body')
         result += "with an HTML part matching \"#{@html_part_body}\" " if instance_variable_defined?('@html_part_body')
+        result += "with an AMP part matching \"#{@amp_part_body}\" " if instance_variable_defined?('@amp_part_body')
         result
       end
 
