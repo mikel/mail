@@ -36,12 +36,14 @@ Content-Type: multipart/mixed;
 X-Virus-Scanned: amavisd-new at textdrive.com
 
 ------=_Part_2192_32400445.1115745999735
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
 
 Just attaching another PDF, here, to see what the message looks like,
 and to see if I can figure out what is going wrong here.
+
+Plus some non-ascii téxt.
 
 ------=_Part_2192_32400445.1115745999735
 Content-Type: application/pdf; name="broken.pdf"
