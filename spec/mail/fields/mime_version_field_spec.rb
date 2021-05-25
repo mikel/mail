@@ -89,7 +89,7 @@ describe Mail::MimeVersionField do
 
     it "should accept a string without the field name" do
       t = Mail::MimeVersionField.new('1.0')
-      expect(t.name).to eq 'Mime-Version'
+      expect(t.name).to eq 'MIME-Version'
       expect(t.value).to eq '1.0'
     end
 
@@ -148,7 +148,7 @@ describe Mail::MimeVersionField do
     
     it "should provide an encoded value" do
       t = Mail::MimeVersionField.new('1.0 (This is a comment)')
-      expect(t.encoded).to eq "Mime-Version: 1.0\r\n"
+      expect(t.encoded).to eq "MIME-Version: 1.0\r\n"
     end
 
     it "should provide an decoded value" do
