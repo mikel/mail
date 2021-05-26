@@ -25,6 +25,66 @@ describe "SMTP Delivery Method" do
     MockSMTP.clear_deliveries
   end
 
+  describe 'settings via url' do
+    def smtp_delivery_settings_for_url(url, options = {})
+      Mail.defaults { delivery_method :smtp, {:url => url}.merge(options) }
+
+      Mail.delivery_method.settings
+    end
+
+    it 'provides smtp defaults' do
+      expect(smtp_delivery_settings_for_url('smtp:///')).to \
+        include(:address              => 'localhost',
+                :port                 => 25,
+                :domain               => 'localhost.localdomain',
+                :enable_starttls_auto => true)
+    end
+
+    it 'provides smtps defaults' do
+      expect(smtp_delivery_settings_for_url('smtps:///')).to \
+        include(:address => 'localhost',
+                :port    => 465,
+                :domain  => 'localhost.localdomain',
+                :tls     => true)
+    end
+
+    it 'allows for all attributes to be set' do
+      url = 'smtp://mailer.org:12345?domain=sender.org&authentication=plain&openssl_verify_mode=peer&tls=true&open_timeout=1&read_timeout=2'
+      expect(smtp_delivery_settings_for_url(url)).to \
+        include(:address              => 'mailer.org',
+                :port                 => 12345,
+                :domain               => 'sender.org',
+                :authentication       => 'plain',
+                :openssl_verify_mode  => 'peer',
+                :tls                  => 'true',
+                :open_timeout         => 1,
+                :read_timeout         => 2)
+    end
+
+    it 'allows for url-attributes to be overriden' do
+      overrides = {:address => 'real-host', :domain => 'real-domain'}
+      expect(smtp_delivery_settings_for_url('smtp://user:pw@host?domain=sender.org', overrides)).to \
+        include(overrides)
+    end
+
+    it 'escapes credentials' do
+      expect(smtp_delivery_settings_for_url('smtps://user%40host:pw-with-%2F@mailer.org')).to \
+        include(:user_name => 'user@host',
+                :password => 'pw-with-/')
+    end
+
+    it 'accepts an URI' do
+      expect(smtp_delivery_settings_for_url(URI.parse('smtps://host'))).to \
+        include(:address => 'host')
+    end
+
+    it 'should raise an error for url without smtp(s) scheme' do
+      expect {
+        smtp_delivery_settings_for_url('foo://host')
+      }.to raise_error(/is not a valid SMTP-url/)
+    end
+  end
+
   describe "general usage" do
     it "dot-stuff unterminated last line of the message" do
       skip "is skipped on Ruby versions without dot-stuff bug" unless Mail::SMTPConnection.new(:connection => Mail.delivery_method).send(:dot_stuff?)

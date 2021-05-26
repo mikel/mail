@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'mail/smtp_envelope'
+require 'mail/utilities'
 
 module Mail
   # == Sending Email with SMTP
@@ -35,7 +36,19 @@ module Mail
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
   #                              :enable_starttls_auto => true  }
+  #
+  #     # ...or using the url-attribute (note the URL-encoded userinfo):
+  #     delivery_method :smtp,
+  #        { :url => 'smtps://user%40gmail.com:app-password@smtp.gmail.com' }
   #   end
+  #
+  # === Sending via Fastmail
+  #
+  #   Mail.defaults do
+  #     delivery_method :smtp,
+  #       { :url => 'smtps://user%40fastmail.fm:app-pw@smtp.fastmail.com' }
+  #   end
+  #
   #
   # === Certificate verification
   #
@@ -74,6 +87,68 @@ module Mail
   # 
   #   mail.deliver!
   class SMTP
+    class UrlResolver
+
+      DEFAULTS = {
+        "smtp" => {
+          :address              => 'localhost',
+          :port                 => 25,
+          :domain               => 'localhost.localdomain',
+          :enable_starttls_auto => true
+        },
+        "smtps" => {
+          :address              => 'localhost',
+          :port                 => 465,
+          :domain               => 'localhost.localdomain',
+          :enable_starttls_auto => false,
+          :tls                  => true
+        }
+      }
+
+      def initialize(url)
+        @uri = url.is_a?(URI) ? url : uri_parser.parse(url)
+        unless DEFAULTS.has_key?(@uri.scheme)
+          raise ArgumentError, "#{url} is not a valid SMTP-url. Required format: smtp(s)://host?domain=sender.org"
+        end
+        @query = uri.query
+      end
+
+      def to_hash
+        config = raw_config
+        config.map { |key, value| config[key] = uri_parser.unescape(value) if value.is_a? String }
+        config
+      end
+
+      private
+        attr_reader :uri
+
+        def raw_config
+          scheme_defaults.merge(query_hash).merge({
+              :address              => uri.host,
+              :port                 => uri.port,
+              :user_name            => uri.user,
+              :password             => uri.password
+          }.delete_if {|_key, value| Utilities.blank?(value) })
+        end
+
+        def uri_parser
+          Utilities.uri_parser
+        end
+
+        def query_hash
+          @query_hash = begin
+            result = Hash[(@query || "").split("&").map { |pair| k,v = pair.split("="); [k.to_sym, v] }]
+            result[:open_timeout] &&= result[:open_timeout].to_i
+            result[:read_timeout] &&= result[:read_timeout].to_i
+            result
+          end
+        end
+
+        def scheme_defaults
+          DEFAULTS[uri.scheme]
+        end
+    end
+
     attr_accessor :settings
 
     DEFAULTS = {
@@ -92,8 +167,13 @@ module Mail
       :read_timeout         => 5
     }
 
-    def initialize(values)
-      self.settings = DEFAULTS.merge(values)
+    def initialize(config)
+      settings = DEFAULTS
+
+      if config.has_key?(:url)
+        settings = settings.merge(UrlResolver.new(config.delete(:url)).to_hash)
+      end
+      self.settings = settings.merge(config)
     end
 
     def deliver!(mail)

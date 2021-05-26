@@ -267,6 +267,14 @@ Mail.defaults do
 end
 ```
 
+A url is also accepted for smtp:
+```ruby
+Mail.defaults do
+  # note the URL-encoded userinfo:
+  delivery_method :smtp, url: 'smtps://user%40gmail.com:app-password@smtp.gmail.com'
+end
+```
+
 
 Exim requires its own delivery manager, and can be used like so:
 
