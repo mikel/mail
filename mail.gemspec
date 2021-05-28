@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency('mini_mime', '>= 0.1.1')
   s.add_dependency('net-smtp')
+  s.add_dependency('net-imap')
+  s.add_dependency('net-pop')
 
   s.add_development_dependency('bundler', '>= 1.0.3')
   s.add_development_dependency('rake', '> 0.8.7')
