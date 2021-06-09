@@ -73,6 +73,8 @@ end
 
 # Original mockup from ActionMailer
 class MockSMTP
+  attr_accessor :open_timeout, :read_timeout
+
   def self.deliveries
     @@deliveries
   end
