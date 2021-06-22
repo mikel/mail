@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
+#
 #    The "References:" field will contain the contents of the parent's
 #    "References:" field (if any) followed by the contents of the parent's
 #    "Message-ID:" field (if any).  If the parent message does not contain

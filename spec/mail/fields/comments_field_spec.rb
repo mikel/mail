@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 describe Mail::CommentsField do
-  # 
+  #
   # comments        =       "Comments:" unstructured CRLF
-  
+
   it "should initialize" do
     expect { Mail::CommentsField.new("this is a comment") }.not_to raise_error
   end
@@ -15,6 +15,6 @@ describe Mail::CommentsField do
     expect(t.name).to eq 'Comments'
     expect(t.value).to eq 'this is a comment'
   end
-  
-  
+
+
 end
