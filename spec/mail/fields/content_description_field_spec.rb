@@ -16,7 +16,7 @@ RSpec.describe Mail::ContentDescriptionField do
   # set, although the mechanism specified in RFC 2047 may be used for
   # non-US-ASCII Content-Description values.
   #
-  
+
   describe "initialization" do
 
     it "should initialize" do

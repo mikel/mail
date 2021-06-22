@@ -23,7 +23,7 @@ RSpec.describe Mail::BccField do
   #    copies were sent to someone.  Which method to use with "Bcc:" fields
   #    is implementation dependent, but refer to the "Security
   #    Considerations" section of this document for a discussion of each.
-  
+
   describe "initialization" do
 
     it "should initialize" do
@@ -56,12 +56,12 @@ RSpec.describe Mail::BccField do
       expect(t.addresses[1]).to eq 'mikel@me.com'
       expect(t.addresses[2]).to eq 'bob@you.com'
     end
-    
+
     it "should return the formatted line on to_s" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
-    
+
     it "should return nothing by default on encoded as Bcc should not be in the mail" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq ""
@@ -72,19 +72,19 @@ RSpec.describe Mail::BccField do
       t.include_in_headers = true
       expect(t.encoded).to eq "Bcc: sam@me.com\r\n"
     end
-    
+
     it "should return the encoded line when requested to include in headers" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       t.include_in_headers = true
       expect(t.encoded).to eq "Bcc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
-    
+
     it "should return the decoded line" do
       t = Mail::BccField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.decoded).to eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
-    
+
   end
-  
-  
+
+
 end

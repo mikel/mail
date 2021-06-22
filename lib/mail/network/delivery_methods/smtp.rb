@@ -3,18 +3,18 @@ require 'mail/smtp_envelope'
 
 module Mail
   # == Sending Email with SMTP
-  # 
+  #
   # Mail allows you to send emails using SMTP.  This is done by wrapping Net::SMTP in
   # an easy to use manner.
-  # 
+  #
   # === Sending via SMTP server on Localhost
-  # 
+  #
   # Sending locally (to a postfix or sendmail server running on localhost) requires
   # no special setup.  Just to Mail.deliver &block or message.deliver! and it will
   # be sent in this method.
-  # 
+  #
   # === Sending via MobileMe
-  # 
+  #
   #   Mail.defaults do
   #     delivery_method :smtp, { :address              => "smtp.me.com",
   #                              :port                 => 587,
@@ -24,9 +24,9 @@ module Mail
   #                              :authentication       => 'plain',
   #                              :enable_starttls_auto => true  }
   #   end
-  # 
+  #
   # === Sending via GMail
-  # 
+  #
   #   Mail.defaults do
   #     delivery_method :smtp, { :address              => "smtp.gmail.com",
   #                              :port                 => 587,
@@ -48,30 +48,30 @@ module Mail
   # verify mode constant (OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER),
   # or a string containing the name of an OpenSSL verify mode (none, peer).
   #
-  # === Others 
-  # 
+  # === Others
+  #
   # Feel free to send me other examples that were tricky
-  # 
+  #
   # === Delivering the email
-  # 
+  #
   # Once you have the settings right, sending the email is done by:
-  # 
+  #
   #   Mail.deliver do
   #     to 'mikel@test.lindsaar.net'
   #     from 'ada@test.lindsaar.net'
   #     subject 'testing sendmail'
   #     body 'testing sendmail'
   #   end
-  # 
+  #
   # Or by calling deliver on a Mail message
-  # 
+  #
   #   mail = Mail.new do
   #     to 'mikel@test.lindsaar.net'
   #     from 'ada@test.lindsaar.net'
   #     subject 'testing sendmail'
   #     body 'testing sendmail'
   #   end
-  # 
+  #
   #   mail.deliver!
   class SMTP
     attr_accessor :settings

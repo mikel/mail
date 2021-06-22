@@ -6,7 +6,7 @@ RSpec.describe Mail::ToField do
   # 
   #    The "To:" field contains the address(es) of the primary recipient(s)
   #    of the message.
-  
+
   describe "initialization" do
 
     it "should initialize" do
@@ -39,37 +39,37 @@ RSpec.describe Mail::ToField do
       expect(t.addresses[1]).to eq 'mikel@me.com'
       expect(t.addresses[2]).to eq 'bob@you.com'
     end
-    
+
     it "should return the formatted line on to_s" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
-    
+
     it "should return the encoded line" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq "To: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
-    
+
     it "should return the decoded line" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.decoded).to eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
-    
+
     it "should get multiple address out from a group list" do
       t = Mail::ToField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.addresses).to eq ["sam@me.com", "mikel@me.com", "bob@you.com"]
     end
-    
+
     it "should handle commas in the address" do
       t = Mail::ToField.new('"Long, stupid email address" <mikel@test.lindsaar.net>')
       expect(t.addresses).to eq ["mikel@test.lindsaar.net"]
     end
-    
+
     it "should handle commas in the address for multiple fields" do
       t = Mail::ToField.new('"Long, stupid email address" <mikel@test.lindsaar.net>, "Another, really, really, long, stupid email address" <bob@test.lindsaar.net>')
       expect(t.addresses).to eq ["mikel@test.lindsaar.net", "bob@test.lindsaar.net"]
     end
-    
+
   end
 
 
@@ -105,11 +105,11 @@ RSpec.describe Mail::ToField do
       expect(t.encoded).to eq "To: =?UTF-8?B?8J+YjQ==?=@me.eu\r\n"
     end
   end
-  
+
   it "should not crash if it can't understand a name" do
     t = Mail.new('To: <"Undisclosed-Recipient:"@msr19.hinet.net;>')
     expect { t.encoded }.not_to raise_error
     expect(t.encoded).to match(/To\:\s<"Undisclosed\-Recipient\:"@msr19\.hinet\.net;>\r\n/)
   end
-  
+
 end
