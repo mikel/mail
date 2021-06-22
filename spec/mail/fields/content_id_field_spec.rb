@@ -58,7 +58,7 @@ describe Mail::ContentIdField do
     end
 
   end
-  
+
   describe "ensuring only one message ID" do
 
     it "should not accept a string with multiple message IDs but only return the first" do
@@ -88,7 +88,7 @@ describe Mail::ContentIdField do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
       expect(m.encoded).to eq "Content-ID: <1234@test.lindsaar.net>\r\n"
     end
-    
+
     it "should respond to :responsible_for?" do
       m = Mail::ContentIdField.new('<1234@test.lindsaar.net>')
       expect(m).to respond_to(:responsible_for?)
@@ -100,7 +100,7 @@ describe Mail::ContentIdField do
       m = Mail::ContentIdField.new
       expect(Mail::Utilities.blank?(m.content_id)).not_to be_truthy
     end
-    
+
     it "should generate a random message ID" do
       m = Mail::ContentIdField.new
       1.upto(100) do
