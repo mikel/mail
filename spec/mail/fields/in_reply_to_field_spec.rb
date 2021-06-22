@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
+#
 #    The "In-Reply-To:" field will contain the contents of the "Message-
 #    ID:" field of the message to which this one is a reply (the "parent
 #    message").  If there is more than one parent message, then the "In-
@@ -23,12 +23,12 @@ describe Mail::InReplyToField do
       expect(t.value).to eq '<1234@test.lindsaar.net>'
       expect(t.message_id).to eq '1234@test.lindsaar.net'
     end
-    
+
     it "should provide encoded" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
       expect(t.encoded).to eq "In-Reply-To: <1234@test.lindsaar.net>\r\n"
     end
-    
+
     it "should handle many encoded message IDs" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
       expect(t.encoded).to eq "In-Reply-To: <1234@test.lindsaar.net>\r\n <4567@test.lindsaar.net>\r\n"
@@ -43,18 +43,18 @@ describe Mail::InReplyToField do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net>')
       expect(t.decoded).to eq "<1234@test.lindsaar.net>"
     end
-    
+
     it "should handle many decoded message IDs" do
       t = Mail::InReplyToField.new('<1234@test.lindsaar.net> <4567@test.lindsaar.net>')
       expect(t.decoded).to eq '<1234@test.lindsaar.net> <4567@test.lindsaar.net>'
     end
-    
+
     it "should handle an empty value" do
       t = Mail::InReplyToField.new('')
       expect(t.name).to eq 'In-Reply-To'
       expect(t.decoded).to be_nil
     end
-    
+
   end
 
   describe "handlign multiple message ids" do
