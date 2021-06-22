@@ -152,7 +152,7 @@ module Mail
     retriever_method.first(*args, &block)
   end
 
-  # Receive the first email(s) from the default retriever
+  # Receive the last email(s) from the default retriever
   # See Mail::Retriever for a complete documentation.
   def self.last(*args, &block)
     retriever_method.last(*args, &block)
