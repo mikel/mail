@@ -130,7 +130,7 @@ module Mail
         if raw_field.index(Constants::COLON)
           name, value = raw_field.split(Constants::COLON, 2)
           name.rstrip!
-          if name =~ /\A#{Constants::FIELD_NAME}\z/
+          if ::Mail::Utilities.match?(name, /\A#{Constants::FIELD_NAME}\z/)
             [ name.rstrip, value.strip ]
           else
             Kernel.warn "WARNING: Ignoring unparsable header #{raw_field.inspect}: invalid header name syntax: #{name.inspect}"
