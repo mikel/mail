@@ -49,8 +49,6 @@ describe "SMTP Delivery Method" do
   end
 
   it "should not dot-stuff unterminated last line with no leading dot" do
-    body = "this is a test\n.\nonly a test"
-
     Mail.deliver do
       from 'from@example.com'
       to 'to@example.com'
