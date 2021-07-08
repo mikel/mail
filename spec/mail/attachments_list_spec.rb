@@ -142,6 +142,20 @@ describe "Attachments" do
       expect(mail.attachments[3].filename).to eq 'test.zip'
     end
 
+    it "should allow you to merge a hash of attachments" do
+      mail = Mail.new
+      attachments = {
+        'test.pdf' => read_raw_fixture('attachments', 'test.pdf'),
+        'test.gif' => read_raw_fixture('attachments', 'test.gif'),
+        'test.jpg' => read_raw_fixture('attachments', 'test.jpg'),
+        'test.zip' => read_raw_fixture('attachments', 'test.zip')
+      }
+      mail.attachments.merge!(attachments)
+      expect(mail.attachments['test.pdf']).not_to be_nil
+      expect(mail.attachments['test.gif']).not_to be_nil
+      expect(mail.attachments['test.jpg']).not_to be_nil
+      expect(mail.attachments['test.zip']).not_to be_nil
+    end
   end
 
   describe "inline attachments" do
