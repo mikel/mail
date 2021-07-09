@@ -1,4 +1,5 @@
-require './lib/mail/version'
+$LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
+require 'mail/version'
 
 Gem::Specification.new do |s|
   s.name        = "mail"
