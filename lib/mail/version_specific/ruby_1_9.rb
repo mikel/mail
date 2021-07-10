@@ -15,10 +15,10 @@ module Mail
     end
 
     class BestEffortCharsetEncoder
-      def encode(string, charset)
+      def encode(string, charset, raise_utf7_exceptions = false)
         case charset
         when /utf-?7/i
-          Mail::Ruby19.decode_utf7(string)
+          Mail::Ruby19.decode_utf7(string, raise_utf7_exceptions)
         else
           string.force_encoding(pick_encoding(charset))
         end
@@ -106,10 +106,16 @@ module Mail
       end.force_encoding(Encoding::ASCII_8BIT)
     end
 
-    def Ruby19.decode_utf7(utf7)
+    def Ruby19.decode_utf7(utf7, raise_utf7_exceptions)
       utf7.gsub(/&([^-]+)?-/n) do
         if $1
-          ($1.tr(",", "/") + "===").unpack("m")[0].encode(Encoding::UTF_8, Encoding::UTF_16BE)
+          utf_16be = ($1.tr(",", "/") + "===").unpack("m")[0].force_encoding(Encoding::UTF_16BE)
+          if raise_utf7_exceptions
+            # special case - in B encoding, raise exceptions on conversion errors
+            utf_16be.encode(Encoding::UTF_8)
+          else
+            transcode_to_scrubbed_utf8(utf_16be)
+          end
         else
           "&"
         end
@@ -126,7 +132,7 @@ module Mail
       if match
         charset = match[1]
         str = Ruby19.decode_base64(match[2])
-        str = charset_encoder.encode(str, charset)
+        str = charset_encoder.encode(str, charset, true)
       end
       transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError
