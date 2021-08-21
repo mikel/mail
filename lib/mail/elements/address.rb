@@ -71,6 +71,18 @@ module Mail
       end
     end
 
+    # Returns the address that is in the address itself with domain IDNA-encoded.
+    #
+    #  a = Address.new('Mikel Lindsaar (My email address) <mikel@tést.lindsaar.net>')
+    #  a.address_idna #=> 'mikel@xn--tst-bma.lindsaar.net'
+    def address_idna
+      if d = domain_idna
+        "#{local}@#{d}"
+      else
+        local
+      end
+    end
+
     # Provides a way to assign an address to an already made Mail::Address object.
     #
     #  a = Address.new
@@ -118,6 +130,17 @@ module Mail
     def domain(output_type = :decode)
       parse unless @parsed
       Encodings.decode_encode(strip_all_comments(get_domain), output_type) if get_domain
+    end
+
+    # Returns the domain part (the right hand side of the @ sign in the email address) of
+    # the address in IDNA encoding.
+    #
+    #  a = Address.new('Mikel Lindsaar (My email address) <mikel@tést.lindsaar.net>')
+    #  a.domain_idna #=> 'xn--tst-bma.lindsaar.net'
+    def domain_idna
+      if d = domain
+        Encodings.idna_encode(d)
+      end
     end
 
     # Returns an array of comments that are in the email, or nil if there

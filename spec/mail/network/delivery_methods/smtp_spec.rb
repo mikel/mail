@@ -262,6 +262,19 @@ describe "SMTP Delivery Method" do
       expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
     end
 
+    it "IDNA-encodes non-ASCII From and To addresses" do
+      Mail.defaults do
+        delivery_method :smtp, :idna => true
+      end
+
+      Mail.deliver do
+        to "tö@soméemail.com"
+        from "fröm@soméemail.com"
+      end
+      expect(MockSMTP.deliveries[0][1]).to eq 'fröm@xn--somemail-d1a.com'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(tö@xn--somemail-d1a.com)
+    end
+
     it "supports the null sender in the envelope from address" do
       Mail.deliver do
         to "to@someemail.com"

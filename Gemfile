@@ -26,6 +26,7 @@ elsif RUBY_VERSION < '2.2.2'
 end
 
 gem 'mini_mime'
+gem 'simpleidn'
 
 if RUBY_VERSION >= '2.0'
   gem 'byebug', :platforms => :mri

@@ -339,5 +339,11 @@ module Mail
 
       yield RubyVer.string_byteslice(str, offset, chunksize)
     end
+
+    def Encodings.idna_encode(str)
+      return str if str.ascii_only?
+
+      SimpleIDN.to_ascii(str)
+    end
   end
 end

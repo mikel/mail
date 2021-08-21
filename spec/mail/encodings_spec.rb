@@ -966,4 +966,12 @@ describe Mail::Encodings do
       end
     end
   end
+
+  describe "IDNA encoding" do
+    it "should encode a string correctly" do
+      raw = 'tést.example.com'
+      encoded = 'xn--tst-bma.example.com'
+      expect(Mail::Encodings.idna_encode(raw)).to eq encoded
+    end
+  end
 end

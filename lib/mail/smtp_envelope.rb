@@ -43,12 +43,16 @@ module Mail
 
     private
       def validate_addr(addr_name, addr)
-        if addr.bytesize > MAX_ADDRESS_BYTESIZE
-          raise ArgumentError, "SMTP #{addr_name} address may not exceed #{MAX_ADDRESS_BYTESIZE} bytes: #{addr.inspect}"
-        end
-
         if /[\r\n]/ =~ addr
           raise ArgumentError, "SMTP #{addr_name} address may not contain CR or LF line breaks: #{addr.inspect}"
+        end
+
+        if !addr.ascii_only?
+          addr = Address.new(addr).address_idna
+        end
+
+        if addr.bytesize > MAX_ADDRESS_BYTESIZE
+          raise ArgumentError, "SMTP #{addr_name} address may not exceed #{MAX_ADDRESS_BYTESIZE} bytes: #{addr.inspect}"
         end
 
         addr
