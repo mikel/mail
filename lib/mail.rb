@@ -8,7 +8,6 @@ module Mail # :doc:
   require 'uri'
   require 'net/smtp'
   require 'mini_mime'
-  require 'simpleidn'
 
   if RUBY_VERSION <= '1.8.6'
     begin

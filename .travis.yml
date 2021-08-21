@@ -30,6 +30,9 @@ env:
 
 matrix:
   include:
+    - name: without-simpleidn
+      rvm: 2.5
+      env: SIMPLEIDN=no
     - name: actionmailer
       script: spec/travis-actionmailer.sh
       rvm: 2.5

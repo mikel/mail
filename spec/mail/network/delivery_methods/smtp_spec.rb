@@ -271,8 +271,13 @@ describe "SMTP Delivery Method" do
         to "tö@soméemail.com"
         from "fröm@soméemail.com"
       end
-      expect(MockSMTP.deliveries[0][1]).to eq 'fröm@xn--somemail-d1a.com'
-      expect(MockSMTP.deliveries[0][2]).to eq %w(tö@xn--somemail-d1a.com)
+      if Mail::Encodings.idna_supported?
+        expect(MockSMTP.deliveries[0][1]).to eq 'fröm@xn--somemail-d1a.com'
+        expect(MockSMTP.deliveries[0][2]).to eq %w(tö@xn--somemail-d1a.com)
+      else
+        expect(MockSMTP.deliveries[0][1]).to eq 'fröm@soméemail.com'
+        expect(MockSMTP.deliveries[0][2]).to eq %w(tö@soméemail.com)
+      end
     end
 
     it "supports the null sender in the envelope from address" do

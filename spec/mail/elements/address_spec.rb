@@ -135,7 +135,11 @@ describe Mail::Address do
       parse_text = 'Mikel Lindsaar <test@lindsäär.net>'
       result     = 'xn--lindsr-fuaa.net'
       a          = Mail::Address.new(parse_text)
-      expect(a.domain_idna).to eq result
+      if Mail::Encodings.idna_supported?
+        expect(a.domain_idna).to eq result
+      else
+        expect {a.domain_idna}.to raise_error("Must install simpleidn gem")
+      end
     end
 
     it "should give back the formatted address" do

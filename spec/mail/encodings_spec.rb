@@ -968,10 +968,22 @@ describe Mail::Encodings do
   end
 
   describe "IDNA encoding" do
+    it "should report on IDNA support" do
+      if RUBY_VERSION >= '1.9.3'
+        expect(Mail::Encodings.idna_supported?).to be true
+      else
+        expect(Mail::Encodings.idna_supported?).to be false
+      end
+    end
+
     it "should encode a string correctly" do
       raw = 'tést.example.com'
-      encoded = 'xn--tst-bma.example.com'
-      expect(Mail::Encodings.idna_encode(raw)).to eq encoded
+      if Mail::Encodings.idna_supported?
+        encoded = 'xn--tst-bma.example.com'
+        expect(Mail::Encodings.idna_encode(raw)).to eq encoded
+      else
+        expect {Mail::Encodings.idna_encode(raw)}.to raise_error("Must install simpleidn gem")
+      end
     end
   end
 end

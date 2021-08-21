@@ -47,7 +47,7 @@ module Mail
           raise ArgumentError, "SMTP #{addr_name} address may not contain CR or LF line breaks: #{addr.inspect}"
         end
 
-        if !addr.ascii_only?
+        if !addr.ascii_only? && Encodings.idna_supported?
           addr = Address.new(addr).address_idna
         end
 
