@@ -1521,7 +1521,7 @@ module Mail
 
     # Returns the content type parameters
     def content_type_parameters
-      has_content_type? ? header[:content_type].parameters : nil rescue nil
+      has_content_type? ? header[:content_type].parameters : {} rescue {}
     end
 
     # Returns true if the message is multipart
@@ -1581,7 +1581,7 @@ module Mail
 
     # Returns the current boundary for this message part
     def boundary
-      content_type_parameters ? content_type_parameters['boundary'] : nil
+      content_type_parameters['boundary']
     end
 
     # Returns a parts list object of all the parts in the message

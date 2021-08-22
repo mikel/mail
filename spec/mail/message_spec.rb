@@ -1413,6 +1413,10 @@ describe Mail::Message do
           expect(mail.content_type_parameters).to eql({"charset" => "UTF-8"})
         end
 
+        it "should return an empty hash of content type parameters when there is no content type" do
+          mail = Mail.new
+          expect(mail.content_type_parameters).to eql({})
+        end
       end
 
       it "rfc2046 can be decoded" do
@@ -1445,7 +1449,7 @@ describe Mail::Message do
           part.body          = 'a' * 999
         end
         mail.encoded
-        
+
         expect(mail.parts.count).to eq(1)
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
@@ -1465,19 +1469,19 @@ describe Mail::Message do
             end
           end
         end
-        
+
         it "should not add an empty charset header" do
           @mail.charset = nil
-          
+
           expect(@mail.multipart?).to eq true
           expect(@mail.parts.count).to eq 2
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
         end
-        
+
         it "should remove the charset header" do
           @mail.charset = 'iso-8859-1'
           @mail.charset = nil
-          
+
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
           expect(@mail.encoded.scan(/charset=iso-8859-1/).count).to eq 0
         end
