@@ -125,8 +125,8 @@ module Mail
             end
           end
 
-          smtp.open_timeout = settings[:open_timeout] if settings[:open_timeout]
-          smtp.read_timeout = settings[:read_timeout] if settings[:read_timeout]
+          smtp.open_timeout = settings[:open_timeout] if settings[:open_timeout] && smtp.respond_to?(:open_timeout)
+          smtp.read_timeout = settings[:read_timeout] if settings[:read_timeout] && smtp.respond_to?(:read_timeout)
         end
       end
 
