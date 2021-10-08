@@ -533,7 +533,7 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
-    it "should handle a very long string efficiently" do
+    it "should handle a very long string efficiently", ruby: ">= 2.2" do
       string = "This is a string " * 10_000
       expect do
         Mail::Encodings.value_decode(string)

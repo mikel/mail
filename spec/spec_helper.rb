@@ -28,6 +28,18 @@ RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
   c.include RSpec::Benchmark::Matchers
+
+  # https://github.com/rspec/rspec-core/blob/f81ff4a89ae190ca834b66214d356b0854ebfe67/spec/spec_helper.rb#L99-L108
+  c.filter_run_excluding :ruby => lambda {|version|
+    case version.to_s
+    when "!jruby"
+      RUBY_ENGINE == "jruby"
+    when /^> (.*)/
+      !(RUBY_VERSION.to_s > $1)
+    else
+      !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
+    end
+  }
 end
 
 # NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
