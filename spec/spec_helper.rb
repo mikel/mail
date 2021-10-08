@@ -17,6 +17,7 @@ unless defined?(MAIL_SPEC_SUITE_RUNNING)
 end
 
 require 'rspec'
+require 'rspec-benchmark'
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
@@ -26,6 +27,7 @@ $stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
+  c.include RSpec::Benchmark::Matchers
 end
 
 # NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
