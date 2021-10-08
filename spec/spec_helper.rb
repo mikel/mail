@@ -27,7 +27,7 @@ RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
 
-  MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION = 2.2
+  MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION = "2.2"
   if RUBY_VERSION >= MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
     require 'rspec-benchmark'
     c.include RSpec::Benchmark::Matchers
