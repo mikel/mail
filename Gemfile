@@ -8,10 +8,10 @@ if RUBY_VERSION < '1.9.3'
   gem 'i18n', '< 0.7'
 elsif RUBY_VERSION < '2.2.2'
   gem 'activesupport', '< 5'
-elsif RUBY_VERSION < '2.5.0'
+elsif RUBY_VERSION < '2.7.0'
   gem 'activesupport', '< 6'
 else
-  gem 'activesupport', :git => 'https://github.com/rails/rails'
+  gem 'activesupport', :git => 'https://github.com/rails/rails', :branch => :main
 end
 
 gem 'tlsmail', '~> 0.0.1' if RUBY_VERSION <= '1.8.6'
