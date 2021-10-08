@@ -129,6 +129,13 @@ class MockSMTP
     context
   end
 
+  def open_timeout=(timeout)
+    # no-op
+  end
+
+  def read_timeout=(timeout)
+    # no-op
+  end
 end
 
 class Net::SMTP
