@@ -17,7 +17,6 @@ unless defined?(MAIL_SPEC_SUITE_RUNNING)
 end
 
 require 'rspec'
-require 'rspec-benchmark'
 require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
 
 require 'mail'
@@ -27,18 +26,15 @@ $stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
-  c.include RSpec::Benchmark::Matchers
 
-  # https://github.com/rspec/rspec-core/blob/f81ff4a89ae190ca834b66214d356b0854ebfe67/spec/spec_helper.rb#L99-L108
-  c.filter_run_excluding :ruby => lambda {|version|
-    case version.to_s
-    when "!jruby"
-      RUBY_ENGINE == "jruby"
-    when /^> (.*)/
-      !(RUBY_VERSION.to_s > $1)
-    else
-      !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
-    end
+  MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION = 2.2
+  if RUBY_VERSION >= MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
+    require 'rspec-benchmark'
+    c.include RSpec::Benchmark::Matchers
+  end
+
+  c.filter_run_excluding :require_rspec_benchmark => lambda { |version|
+    RUBY_VERSION < MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
   }
 end
 
