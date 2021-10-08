@@ -537,7 +537,7 @@ describe Mail::Encodings do
       string = "This is a string " * 10_000
       expect do
         Mail::Encodings.value_decode(string)
-      end.to perform_at_least(5000).ips
+      end.to perform_at_least(2_000).ips
     end
 
     it "should handle Base64 encoded ISO-2022-JP string" do
