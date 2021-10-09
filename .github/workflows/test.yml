@@ -1,4 +1,4 @@
-name: Test
+name: RSpec tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  ruby:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
