@@ -9,10 +9,12 @@ on:
 jobs:
   ruby:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
        include:
+         - docker-image: 'flavorjones/truffleruby:stable'
          - docker-image: 'bitnami/jruby:latest'
          - docker-image: 'library/ruby:1.9'
            bundler-version: '1.17.3'
@@ -31,17 +33,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install bundler ${{ matrix.bundler-version }}
       run: gem install bundler ${{ matrix.bundler-version && format('{0} {1}', '-v', matrix.bundler-version) || '' }}
-    - name: Install dependencies
-      run: bundle install
-    - name: Run tests
-      run: bundle exec rake spec
-  truffleruby:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: truffleruby
-    - uses: actions/checkout@v2
     - name: Install dependencies
       run: bundle install
     - name: Run tests
