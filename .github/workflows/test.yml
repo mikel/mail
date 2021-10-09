@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+       include:
+         - ruby-version: '1.9'
+           bundler-version: '1.17.3'
+         - ruby-version: '2.0'
+           bundler-version: '1.17.3'
+         - ruby-version: '2.2'
+           bundler-version: '1.17.3'
+         - ruby-version: '2.3'
+         - ruby-version: '2.4'
+         - ruby-version: '2.5'
+         - ruby-version: '2.6'
+         - ruby-version: '2.7'
+         - ruby-version: '3.0'
+    container: docker://library/ruby:${{ matrix.ruby-version }}
+    steps:
+    - uses: actions/checkout@v2
+    - if: ${{ matrix.bundler-version }}
+      name: Install bundler ${{ matrix.bundler-version }}
+      run: gem install bundler -v ${{ matrix.bundler-version }}
+    - if: ${{ !matrix.bundler-version }}
+      name: Install bundler
+      run: gem install bundler
+    - name: Install dependencies
+      run: bundle install
+    - name: Run tests
+      run: bundle exec rspec
