@@ -14,7 +14,7 @@ jobs:
       matrix:
        include:
          - docker-image: 'flavorjones/truffleruby:stable'
-         - docker-image: 'jruby:latest'
+         - docker-image: 'circleci/jruby:9.3.0-jdk17-node-browsers-legacy'
          - docker-image: 'library/ruby:1.9'
            bundler-version: '1.17.3'
          - docker-image: 'library/ruby:2.0'
