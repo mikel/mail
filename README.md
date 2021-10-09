@@ -1,4 +1,4 @@
-# Mail [![RSpec tests](https://github.com/mikel/mail/actions/workflows/test.yml/badge.svg)](https://github.com/mikel/mail/actions/workflows/test.yml)
+# Mail [![Build Status](https://github.com/mikel/mail/actions/workflows/test.yml/badge.svg)](https://github.com/mikel/mail/actions/workflows/test.yml)
 
 ## Introduction
 
