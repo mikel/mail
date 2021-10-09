@@ -15,6 +15,7 @@ jobs:
       matrix:
        include:
          - docker-image: 'silvioq/ruby-1.8.7'
+           bundler-version: '1.17.3'
          - docker-image: 'library/ruby:1.9'
            bundler-version: '1.17.3'
          - docker-image: 'library/ruby:2.0'
