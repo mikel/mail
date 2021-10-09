@@ -28,12 +28,8 @@ jobs:
     container: docker://library/ruby:${{ matrix.ruby-version }}
     steps:
     - uses: actions/checkout@v2
-    - if: ${{ matrix.bundler-version }}
-      name: Install bundler ${{ matrix.bundler-version }}
-      run: gem install bundler -v ${{ matrix.bundler-version }}
-    - if: ${{ !matrix.bundler-version }}
-      name: Install bundler
-      run: gem install bundler
+    - name: Install bundler ${{ matrix.bundler-version }}
+      run: gem install bundler ${{ matrix.bundler-version && ('-v ' + matrix.bundler-version) || '' }}
     - name: Install dependencies
       run: bundle install
     - name: Run tests
