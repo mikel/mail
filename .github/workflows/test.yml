@@ -13,19 +13,21 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - ruby-version: '1.9'
+         - docker-image: 'flavorjones/truffleruby:stable'
+         - docker-image: 'jruby:latest'
+         - docker-image: 'library/ruby:1.9'
            bundler-version: '1.17.3'
-         - ruby-version: '2.0'
+         - docker-image: 'library/ruby:2.0'
            bundler-version: '1.17.3'
-         - ruby-version: '2.2'
+         - docker-image: 'library/ruby:2.2'
            bundler-version: '1.17.3'
-         - ruby-version: '2.3'
-         - ruby-version: '2.4'
-         - ruby-version: '2.5'
-         - ruby-version: '2.6'
-         - ruby-version: '2.7'
-         - ruby-version: '3.0'
-    container: docker://library/ruby:${{ matrix.ruby-version }}
+         - docker-image: 'library/ruby:2.3'
+         - docker-image: 'library/ruby:2.4'
+         - docker-image: 'library/ruby:2.5'
+         - docker-image: 'library/ruby:2.6'
+         - docker-image: 'library/ruby:2.7'
+         - docker-image: 'library/ruby:3.0'
+    container: docker://${{ matrix.docker-image }}
     steps:
     - uses: actions/checkout@v2
     - name: Install bundler ${{ matrix.bundler-version }}
