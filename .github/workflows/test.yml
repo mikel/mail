@@ -29,7 +29,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install bundler ${{ matrix.bundler-version }}
-      run: gem install bundler ${{ matrix.bundler-version && ('-v ' + matrix.bundler-version) || '' }}
+      run: gem install bundler ${{ matrix.bundler-version && format('{0} {1}', '-v', matrix.bundler-version) || '' }}
     - name: Install dependencies
       run: bundle install
     - name: Run tests
