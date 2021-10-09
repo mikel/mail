@@ -14,8 +14,7 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - docker-image: 'flavorjones/truffleruby:stable'
-         - docker-image: 'bitnami/jruby:latest'
+         - docker-image: 'ollijh/circleci-ruby1.8'
          - docker-image: 'library/ruby:1.9'
            bundler-version: '1.17.3'
          - docker-image: 'library/ruby:2.0'
@@ -28,6 +27,8 @@ jobs:
          - docker-image: 'library/ruby:2.6'
          - docker-image: 'library/ruby:2.7'
          - docker-image: 'library/ruby:3.0'
+         - docker-image: 'flavorjones/truffleruby:stable'
+         - docker-image: 'bitnami/jruby:latest'
     container: docker://${{ matrix.docker-image }}
     steps:
     - uses: actions/checkout@v2
