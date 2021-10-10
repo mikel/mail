@@ -11,7 +11,7 @@ elsif RUBY_VERSION < '2.2.2'
 elsif RUBY_VERSION < '2.7.0'
   gem 'activesupport', '< 6'
 else
-  gem 'activesupport', :git => 'https://github.com/rails/rails', :branch => :main
+  gem 'activesupport', :git => 'https://github.com/rails/rails', :branch => 'main'
 end
 
 gem 'tlsmail', '~> 0.0.1' if RUBY_VERSION <= '1.8.6'

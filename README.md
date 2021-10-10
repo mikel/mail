@@ -1,4 +1,4 @@
-# Mail [![Build Status](https://travis-ci.org/mikel/mail.svg?branch=master)](https://travis-ci.org/mikel/mail)
+# Mail [![Build Status](https://github.com/mikel/mail/actions/workflows/test.yml/badge.svg)](https://github.com/mikel/mail/actions/workflows/test.yml)
 
 ## Introduction
 
@@ -50,7 +50,7 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 Mail supports Ruby 1.8.7+, including JRuby and Rubinius.
 
-Every Mail commit is tested by Travis on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.travis.yml).
+Every Mail commit is tested by GitHub Actions on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.github/workflows/test.yml).
 
 ## Discussion
 
