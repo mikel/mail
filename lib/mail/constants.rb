@@ -38,7 +38,7 @@ module Mail
 
     ENCODED_VALUE = %r{
       \=\?     # literal =?
-      ([^?]+)  # non-greedy up to the next ? is the charset
+      ([^?]+)  #
       \?([QB]) # either a "Q" or a "B"
       \?       # literal ?
       [^?]?.*? #
