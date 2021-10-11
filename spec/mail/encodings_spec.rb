@@ -728,6 +728,10 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(encoded)).to eq expected
     end
 
+    it "should handle a question mark in the text" do
+      encoded = "=?iso-8859-1?Q?Hello World?_-_How are you??="
+      expect(Mail::Encodings.value_decode(encoded)).to eq "Hello World? - How are you?"
+    end
   end
 
   describe "pre encoding non usascii text" do
@@ -931,7 +935,7 @@ describe Mail::Encodings do
     it "splits adjacent encodings into separate parts" do
       convert "A=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?=", "B"]
     end
-    
+
     it "splits adjacent encodings without unencoded into separate parts" do
       convert "=?iso-2022-jp?B?X=?==?iso-2022-jp?B?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?iso-2022-jp?B?Y=?="]
     end
@@ -943,10 +947,10 @@ describe Mail::Encodings do
     it "does not join different encodings" do
       convert "A=?iso-2022-jp?B?X=?==?utf-8?B?Y=?=B", ["A", "=?iso-2022-jp?B?X=?=", "=?utf-8?B?Y=?=", "B"]
     end
-    
+
     it "does not keep the separator character between two different encodings" do
       rfc_1342_newline_separators = ["\x0A", "\x20"]
-      
+
       rfc_1342_newline_separators.each do |rfc_1342_separator|
         convert "=?iso-2022-jp?B?X=?=#{rfc_1342_separator}=?utf-8?Q?Y=?=", ["=?iso-2022-jp?B?X=?=", "=?utf-8?Q?Y=?="]
       end

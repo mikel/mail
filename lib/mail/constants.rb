@@ -35,8 +35,27 @@ module Mail
     ATOM_UNSAFE   = /[#{Regexp.quote aspecial}#{control}#{sp}]/n
     PHRASE_UNSAFE = /[#{Regexp.quote aspecial}#{control}]/n
     TOKEN_UNSAFE  = /[#{Regexp.quote tspecial}#{control}#{sp}]/n
-    ENCODED_VALUE = /\=\?([^?]+)\?([QB])\?[^?]*?\?+\=/mi
-    FULL_ENCODED_VALUE = /(\=\?[^?]+\?[QB]\?[^?]*?\?+\=)/mi
+
+    ENCODED_VALUE = %r{
+      \=\?     # literal =?
+      ([^?]+)  # non-greedy up to the next ? is the charset
+      \?([QB]) # either a "Q" or a "B"
+      \?       # literal ?
+      [^?]?.*? #
+      \?=      # literal ?=
+    }mix # m is multi-line, i is case-insensitive, x is free-spacing
+
+    FULL_ENCODED_VALUE = %r{
+      (
+        \=\?
+        [^?]+
+        \?
+        [QB]
+        \?
+        [^?]*?
+        \?+\=
+      )
+    }mix # m is multi-line, i is case-insensitive, x is free-spacing
 
     EMPTY          = ''
     SPACE          = ' '
