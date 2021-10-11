@@ -41,7 +41,7 @@ module Mail
       ([^?]+)  #
       \?([QB]) # either a "Q" or a "B"
       \?       # literal ?
-      [^?]?.*? #
+      .*?      # lazily match all characters
       \?=      # literal ?=
     }mix # m is multi-line, i is case-insensitive, x is free-spacing
 
@@ -52,7 +52,7 @@ module Mail
         \?
         [QB]
         \?
-        [^?]*?
+        .*?       # lazily match all characters
         \?+\=
       )
     }mix # m is multi-line, i is case-insensitive, x is free-spacing
