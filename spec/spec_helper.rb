@@ -140,14 +140,6 @@ class MockSMTP
     @@security = :enable_starttls_auto
     context
   end
-
-  def open_timeout=(timeout)
-    # no-op
-  end
-
-  def read_timeout=(timeout)
-    # no-op
-  end
 end
 
 class Net::SMTP
