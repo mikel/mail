@@ -4,6 +4,7 @@ Bugs:
 * Fix duplicate dots at beginning of lines. (c960657)
 * Don't alter attachment filenames when Content-Type parsing fails. (nbianca)
 * Fix decoding fields ending in question marks. (jeremy)
+* Fix decoding quoted-printable fields containing question marks. (lewispb)
 
 
 == Version 2.7.1 (2018-10-13)
