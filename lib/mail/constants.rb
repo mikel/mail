@@ -46,10 +46,10 @@ module Mail
       \?\=     # literal ?=
     }mix # m is multi-line, i is case-insensitive, x is free-spacing
 
-    FULL_ENCODED_VALUE = %r{
+    FULL_ENCODED_VALUE = %r{ # Identical to ENCODED_VALUE but captures the whole rather than components of
       (
-        \=\?
-        [^?]+
+        \=\?    # literal =?
+        [^?]+   #
         \?      # literal ?
         [QB]    # either a "Q" or a "B"
         \?      # literal ?
