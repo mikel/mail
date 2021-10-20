@@ -26,6 +26,16 @@ $stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
+
+  MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION = "2.2"
+  if RUBY_VERSION >= MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
+    require 'rspec-benchmark'
+    c.include RSpec::Benchmark::Matchers
+  end
+
+  c.filter_run_excluding :require_rspec_benchmark => lambda { |version|
+    RUBY_VERSION < MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
+  }
 end
 
 # NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
@@ -130,7 +140,6 @@ class MockSMTP
     @@security = :enable_starttls_auto
     context
   end
-
 end
 
 class Net::SMTP

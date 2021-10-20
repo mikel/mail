@@ -533,9 +533,11 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
-    it "should handle a very long string efficiently" do
-      string = "This is a string " * 10000
-      expect(Mail::Encodings.value_decode(string)).to eq string
+    it "should handle a very long string efficiently", :require_rspec_benchmark do
+      expect do |n|
+        long_string = "This is a string " * n
+        Mail::Encodings.value_decode(long_string)
+      end.to perform_linear.in_range(8, 128_000)
     end
 
     it "should handle Base64 encoded ISO-2022-JP string" do
