@@ -1,4 +1,4 @@
-if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
+if !ENV["APPRAISAL_INITIALIZED"] && !ENV["CI"]
   ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
 end
 require 'rubygems'
