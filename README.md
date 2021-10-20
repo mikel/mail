@@ -97,6 +97,10 @@ the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
 
+You can run tests locally by running `bundle exec rspec`.
+
+You can run tests on all supported Ruby versions by using [act](https://github.com/nektos/act).
+
 ## API Policy
 
 No API removals within a single point release.  All removals to be deprecated with
