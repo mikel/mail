@@ -30,7 +30,7 @@ jobs:
          - docker-image: 'library/ruby:3.0'
          - docker-image: 'flavorjones/truffleruby:stable'
          - docker-image: 'bitnami/jruby:latest'
-    container: docker://${{ matrix.docker-image }}
+    container: ${{ matrix.docker-image }}
     steps:
     - uses: actions/checkout@v2
     - name: Install bundler ${{ matrix.bundler-version }}
