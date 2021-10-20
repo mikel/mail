@@ -39,21 +39,22 @@ module Mail
     ENCODED_VALUE = %r{
       \=\?     # literal =?
       ([^?]+)  #
-      \?([QB]) # either a "Q" or a "B"
+      \?       # literal ?
+      ([QB])   # either a "Q" or a "B"
       \?       # literal ?
       .*?      # lazily match all characters
-      \?=      # literal ?=
+      \?\=     # literal ?=
     }mix # m is multi-line, i is case-insensitive, x is free-spacing
 
     FULL_ENCODED_VALUE = %r{
       (
         \=\?
         [^?]+
-        \?
-        [QB]
-        \?
-        .*?       # lazily match all characters
-        \?+\=
+        \?      # literal ?
+        [QB]    # either a "Q" or a "B"
+        \?      # literal ?
+        .*?     # lazily match all characters
+        \?\=    # literal ?=
       )
     }mix # m is multi-line, i is case-insensitive, x is free-spacing
 
