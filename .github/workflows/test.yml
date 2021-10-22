@@ -39,3 +39,21 @@ jobs:
       run: bundle install
     - name: Run tests
       run: bundle exec rake spec
+  actionmailer:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3
+        bundler-cache: true
+    - name: Setup mail with ActionMailer edge
+      run: |
+        git clone --depth=1 https://github.com/rails/rails.git -b main
+        cd rails
+        echo -e "\ngem 'mail', path: '../'" >> Gemfile
+        bundle update --bundler --source mail
+    - name: Run ActionMailer tests
+      run: |
+        cd rails/actionmailer
+        bundle exec rake
