@@ -43,7 +43,7 @@ module Mail # :doc:
     autoload(name, path)
   end
 
-  # This runs through the autoload list and explictly requires them for you.
+  # This runs through the autoload list and explicitly requires them for you.
   # Useful when running mail in a threaded process.
   #
   # Usage:

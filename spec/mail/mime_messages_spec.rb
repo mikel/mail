@@ -470,7 +470,7 @@ describe "MIME Emails" do
         expect(mail.attachments.first.class).to eq Mail::Part
       end
 
-      it "should be return an aray of attachments" do
+      it "should be return an array of attachments" do
         mail = Mail::Message.new do
           from    'mikel@from.lindsaar.net'
           subject 'Hello there Mikel'

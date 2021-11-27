@@ -78,7 +78,7 @@ module Mail
     #  unquote(string) #=> 'This is a string'
     #
     #  string = '"This is \"a string\""'
-    #  unqoute(string) #=> 'This is "a string"'
+    #  unquote(string) #=> 'This is "a string"'
     def unquote( str )
       if str =~ /^"(.*?)"$/
         unescape($1)

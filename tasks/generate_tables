@@ -3,7 +3,7 @@
 # under MIT license
 # Usage:
 #   ruby tasks/generate_tables
-# The Unicode version downloaded is determined by the UNICODE_VERSION lib/mail/multibye/unicode.rb
+# The Unicode version downloaded is determined by the UNICODE_VERSION lib/mail/multibyte/unicode.rb
 require './lib/mail/multibyte/unicode'
 
 require 'open-uri'

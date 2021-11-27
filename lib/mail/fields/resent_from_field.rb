@@ -10,7 +10,7 @@ module Mail
   #
   # Sending resent_from to a mail message will instantiate a Mail::Field object that
   # has a ResentFromField as its field type.  This includes all Mail::CommonAddress
-  # module instance metods.
+  # module instance methods.
   #
   # Only one Resent-From field can appear in a header, though it can have multiple
   # addresses and groups of addresses.

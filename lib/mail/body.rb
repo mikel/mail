@@ -143,7 +143,7 @@ module Mail
     end
 
     # Returns a body encoded using transfer_encoding.  Multipart always uses an
-    # identiy encoding (i.e. no encoding).
+    # identity encoding (i.e. no encoding).
     # Calling this directly is not a good idea, but supported for compatibility
     # TODO: Validate that preamble and epilogue are valid for requested encoding
     def encoded(transfer_encoding = nil)

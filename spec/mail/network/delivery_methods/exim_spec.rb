@@ -69,7 +69,7 @@ describe "exim delivery agent" do
     mail.deliver!
   end
 
-  it "should escape evil haxxor attemptes" do
+  it "should escape evil haxxor attempts" do
     evil = '"foo\";touch /tmp/PWNED;\""@blah.com'
 
     expect(mail.delivery_method).to receive(:popen).with(

@@ -15,7 +15,7 @@ describe Mail::ContentTransferEncodingField do
   # It is necessary, therefore, to define a standard mechanism for
   # encoding such data into a 7bit short line format.  Proper labelling
   # of unencoded material in less restrictive formats for direct use over
-  # less restrictive transports is also desireable.  This document
+  # less restrictive transports is also desirable.  This document
   # specifies that such encodings will be indicated by a new "Content-
   # Transfer-Encoding" header field.  This field has not been defined by
   # any previous standard.

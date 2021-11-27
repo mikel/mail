@@ -134,7 +134,7 @@ describe Mail::Body do
       expect(body.boundary).to eq '----=_Part_2192_32400445'
     end
 
-    it "should split at the boundry string given returning two message bodies" do
+    it "should split at the boundary string given returning two message bodies" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
       expect(body.split!('----=_Part_2192_32400445').parts.length).to eq 2

@@ -119,7 +119,7 @@ describe Mail::Address do
       expect(a.domain).to eq result
     end
 
-    it "should give back the formated address" do
+    it "should give back the formatted address" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar <test@lindsaar.net>'
       a          = Mail::Address.new(parse_text)

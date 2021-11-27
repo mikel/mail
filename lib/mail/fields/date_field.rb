@@ -12,7 +12,7 @@ module Mail
   # has a DateField as its field type.  This includes all Mail::CommonAddress
   # module instance methods.
   #
-  # There must be excatly one Date field in an RFC2822 email.
+  # There must be exactly one Date field in an RFC2822 email.
   #
   # == Examples:
   #

@@ -10,7 +10,7 @@ module Mail
   #
   # Sending sender to a mail message will instantiate a Mail::Field object that
   # has a SenderField as its field type.  This includes all Mail::CommonAddress
-  # module instance metods.
+  # module instance methods.
   #
   # Only one Sender field can appear in a header, though it can have multiple
   # addresses and groups of addresses.

@@ -10,7 +10,7 @@ module Mail
   #
   # Sending in_reply_to to a mail message will instantiate a Mail::Field object that
   # has a InReplyToField as its field type.  This includes all Mail::CommonMessageId
-  # module instance metods.
+  # module instance methods.
   #
   # Note that, the #message_ids method will return an array of message IDs without the
   # enclosing angle brackets which per RFC are not syntactically part of the message id.

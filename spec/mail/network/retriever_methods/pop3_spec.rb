@@ -150,7 +150,7 @@ describe "POP3 Retriever" do
   end
 
   describe "delete_all" do
-    it "should delete all mesages" do
+    it "should delete all messages" do
       Mail.all
       Mail.delete_all
 

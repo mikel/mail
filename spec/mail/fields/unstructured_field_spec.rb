@@ -124,18 +124,18 @@ describe Mail::UnstructuredField do
 
   describe "folding" do
 
-    it "should not fold itself if it is 78 chracters long" do
+    it "should not fold itself if it is 78 characters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters....")
       expect(@field.encoded).to eq "Subject: This is a subject header message that is _exactly_ 78 characters....\r\n"
     end
 
-    it "should fold itself if it is 79 chracters long" do
+    it "should fold itself if it is 79 characters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is absolutely 79 characters long")
       result = "Subject: This is a subject header message that is absolutely 79 characters\r\n\slong\r\n"
       expect(@field.encoded).to eq result
     end
 
-    it "should fold itself if it is 997 chracters long" do
+    it "should fold itself if it is 997 characters long" do
       @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. This is a subject header message that is going to be 997 characters long. And this makes it 997....")
       lines = @field.encoded.split("\r\n\s")
       lines.each { |line| expect(line.length).to be < 78 }

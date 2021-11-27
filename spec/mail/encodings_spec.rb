@@ -174,7 +174,7 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq(result)
     end
 
-    it "should collapse adjacent words with multiple encodings on one line seperated by non-spaces" do
+    it "should collapse adjacent words with multiple encodings on one line separated by non-spaces" do
       string = "Re:[=?iso-2022-jp?B?GyRCJTAlayE8JV0lcyEmJTglYyVRJXMzdDwwMnEbKEI=?=\n =?iso-2022-jp?B?GyRCPFIbKEI=?=] =?iso-2022-jp?B?GyRCSlY/LiEnGyhC?=\n  =?iso-2022-jp?B?GyRCIVolMCVrITwlXSVzIVskKkxkJCQ5ZyRvJDsbKEI=?=\n =?iso-2022-jp?B?GyRCJE43byRLJEQkJCRGIUolaiUvJSglOSVIGyhC?=#1056273\n =?iso-2022-jp?B?GyRCIUsbKEI=?="
       result = "Re:[グルーポン・ジャパン株式会社] 返信：【グルーポン】お問い合わせの件について（リクエスト#1056273\n ）"
       expect(Mail::Encodings.value_decode(string)).to eq(result)
