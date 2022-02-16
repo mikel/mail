@@ -13,11 +13,7 @@ module Mail
   # Make sure the path you specify with :location is writable by the Ruby process
   # running Mail.
   class FileDelivery
-    if RUBY_VERSION >= '1.9.1'
-      require 'fileutils'
-    else
-      require 'ftools'
-    end
+    require 'fileutils'
 
     attr_accessor :settings
 

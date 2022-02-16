@@ -88,7 +88,6 @@ module Mail
     end
 
     def Ruby19.transcode_charset(str, from_encoding, to_encoding = Encoding::UTF_8)
-      to_encoding = to_encoding.to_s if RUBY_VERSION < '1.9.3'
       to_encoding = Encoding.find(to_encoding)
       replacement_char = to_encoding == Encoding::UTF_8 ? '�' : '?'
       charset_encoder.encode(str.dup, from_encoding).encode(to_encoding, :undef => :replace, :invalid => :replace, :replace => replacement_char)
@@ -243,14 +242,8 @@ module Mail
       convert_to_encoding(encoding)
     end
 
-    if "string".respond_to?(:byteslice)
-      def Ruby19.string_byteslice(str, *args)
-        str.byteslice(*args)
-      end
-    else
-      def Ruby19.string_byteslice(str, *args)
-        str.unpack('C*').slice(*args).pack('C*').force_encoding(str.encoding)
-      end
+    def Ruby19.string_byteslice(str, *args)
+      str.byteslice(*args)
     end
 
     class << self

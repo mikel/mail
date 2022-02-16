@@ -222,34 +222,12 @@ module Mail
       str.to_s.downcase.tr(Constants::HYPHEN, Constants::UNDERSCORE)
     end
 
-    if RUBY_VERSION <= '1.8.6'
+    def map_lines( str, &block )
+      str.each_line.map(&block)
+    end
 
-      def map_lines( str, &block )
-        results = []
-        str.each_line do |line|
-          results << yield(line)
-        end
-        results
-      end
-
-      def map_with_index( enum, &block )
-        results = []
-        enum.each_with_index do |token, i|
-          results[i] = yield(token, i)
-        end
-        results
-      end
-
-    else
-
-      def map_lines( str, &block )
-        str.each_line.map(&block)
-      end
-
-      def map_with_index( enum, &block )
-        enum.each_with_index.map(&block)
-      end
-
+    def map_with_index( enum, &block )
+      enum.each_with_index.map(&block)
     end
 
     def self.binary_unsafe_to_lf(string) #:nodoc:
@@ -257,30 +235,20 @@ module Mail
     end
 
     TO_CRLF_REGEX =
-      if RUBY_VERSION >= '1.9'
-        # This 1.9 only regex can save a reasonable amount of time (~20%)
-        # by not matching "\r\n" so the string is returned unchanged in
-        # the common case.
-        Regexp.new("(?<!\r)\n|\r(?!\n)")
-      else
-        /\n|\r\n|\r/
-      end
+      # This 1.9 only regex can save a reasonable amount of time (~20%)
+      # by not matching "\r\n" so the string is returned unchanged in
+      # the common case.
+      Regexp.new("(?<!\r)\n|\r(?!\n)")
 
     def self.binary_unsafe_to_crlf(string) #:nodoc:
       string.gsub(TO_CRLF_REGEX, Constants::CRLF)
     end
 
-    if RUBY_VERSION < '1.9'
-      def self.safe_for_line_ending_conversion?(string) #:nodoc:
+    def self.safe_for_line_ending_conversion?(string) #:nodoc:
+      if string.encoding == Encoding::BINARY
         string.ascii_only?
-      end
-    else
-      def self.safe_for_line_ending_conversion?(string) #:nodoc:
-        if string.encoding == Encoding::BINARY
-          string.ascii_only?
-        else
-          string.valid_encoding?
-        end
+      else
+        string.valid_encoding?
       end
     end
 

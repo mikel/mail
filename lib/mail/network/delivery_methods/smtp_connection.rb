@@ -50,25 +50,8 @@ module Mail
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
       envelope = Mail::SmtpEnvelope.new(mail)
-      response = smtp.sendmail(dot_stuff(envelope.message), envelope.from, envelope.to)
+      response = smtp.sendmail(envelope.message, envelope.from, envelope.to)
       settings[:return_response] ? response : self
     end
-
-    private
-      # Older versions of Net::SMTP does not dot-stuff an unterminated last line:
-      # https://bugs.ruby-lang.org/issues/9627
-      def dot_stuff?
-        RUBY_VERSION < "2.0.0" ||
-          RUBY_VERSION == "2.0.0" && RUBY_PATCHLEVEL < 576 ||
-          RUBY_VERSION >= "2.1.0" && RUBY_VERSION < "2.1.3"
-      end
-
-      def dot_stuff(message)
-        if dot_stuff?
-          message.gsub(/(\r\n\.)([^\r\n]*$)/, '\1.\2')
-        else
-          message
-        end
-      end
   end
 end

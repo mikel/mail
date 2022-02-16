@@ -109,17 +109,6 @@ describe Mail::UnstructuredField do
       @field = Mail::UnstructuredField.new("References", string)
       expect(@field.decoded).to eq 'ä&ä&ä'
     end
-
-    if !'1.9'.respond_to?(:force_encoding)
-      it "shouldn't get fooled into encoding on 1.8 due to an unrelated Encoding constant" do
-        begin
-          Mail::UnstructuredField::Encoding = 'derp'
-          expect(@field.encoded).to eq "Subject: Hello Frank\r\n"
-        ensure
-          Mail::UnstructuredField.send :remove_const, :Encoding
-        end
-      end
-    end
   end
 
   describe "folding" do
@@ -156,33 +145,21 @@ describe Mail::UnstructuredField do
     end
 
     it "should fold itself if it is non us-ascii" do
-      @original = $KCODE if RUBY_VERSION < '1.9'
       string = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
       @field = Mail::UnstructuredField.new("Subject", string)
-      if string.respond_to?(:force_encoding)
-        string = string.dup.force_encoding('UTF-8')
-      else
-        $KCODE = 'u'
-      end
+      string = string.dup.force_encoding('UTF-8')
       result = "Subject: =?UTF-8?Q?This_is_=E3=81=82_really_long_string_This_is_=E3=81=82?=\r\n\s=?UTF-8?Q?_really_long_string_This_is_=E3=81=82_really_long_string_This_is?=\r\n\s=?UTF-8?Q?_=E3=81=82_really_long_string_This_is_=E3=81=82_really_long?=\r\n\s=?UTF-8?Q?_string?=\r\n"
       expect(@field.encoded).to eq result
       expect(@field.decoded).to eq string
-      $KCODE = @original if RUBY_VERSION < '1.9'
     end
 
     it "should fold properly with my actual complicated header" do
-      @original = $KCODE if RUBY_VERSION < '1.9'
       string = %|{"unique_args": {"mailing_id":147,"account_id":2}, "to": ["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys": {"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}": ["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"], "{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til at stå hvornår folk har skrevet sig op ...)"], "{{unsubscribe_url}}": ["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"], "{{email}}": ["larspind@gmail.com"], "{{link:308}}": ["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"], "{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}|
       @field = Mail::UnstructuredField.new("X-SMTPAPI", string)
-      if string.respond_to?(:force_encoding)
-        string = string.dup.force_encoding('UTF-8')
-      else
-        $KCODE = 'u'
-      end
+      string = string.dup.force_encoding('UTF-8')
       result = "X-SMTPAPI: =?UTF-8?Q?{=22unique=5Fargs=22:_{=22mailing=5Fid=22:147,=22a?=\r\n =?UTF-8?Q?ccount=5Fid=22:2},_=22to=22:_[=22larspind@gmail.com=22],_=22categ?=\r\n =?UTF-8?Q?ory=22:_=22mailing=22,_=22filters=22:_{=22domainkeys=22:_{=22sett?=\r\n =?UTF-8?Q?ings=22:_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:_{=22{{op?=\r\n =?UTF-8?Q?en=5Fimage=5Furl}}=22:_[=22http://betaling.larspind.local/O?=\r\n =?UTF-8?Q?/token/147/Mailing::FakeRecipient=22],_=22{{name}}=22:_[=22[FIRST?=\r\n =?UTF-8?Q?_NAME]=22],_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at?=\r\n =?UTF-8?Q?_st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF-8?Q?_=22{{unsubscribe=5Furl}}=22:_[=22http://betaling.larspind.?=\r\n =?UTF-8?Q?local/U/token/147/Mailing::FakeRecipient=22],_=22{{email}}=22:?=\r\n =?UTF-8?Q?_[=22larspind@gmail.com=22],_=22{{link:308}}=22:_[=22http://beta?=\r\n =?UTF-8?Q?ling.larspind.local/L/308/0/Mailing::FakeRecipient=22],_=22{{con?=\r\n =?UTF-8?Q?firm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:_[=22[REF]=22]}}?=\r\n"
       expect(@field.encoded).to eq result
       expect(@field.decoded).to eq string
-      $KCODE = @original if RUBY_VERSION < '1.9'
     end
 
     it "should fold properly with continuous spaces around the linebreak" do
@@ -205,8 +182,7 @@ describe Mail::UnstructuredField do
     it "should encoded with ISO-2022-JP encoding" do
       @field = Mail::UnstructuredField.new("Subject", "あいうえお")
       @field.charset = 'iso-2022-jp'
-      expect = (RUBY_VERSION < '1.9') ? "Subject: =?ISO-2022-JP?Q?=E3=81=82=E3=81=84=E3=81=86=E3=81=88=E3=81=8A?=\r\n" : "Subject: =?ISO-2022-JP?Q?=1B$B$=22$$$&$=28$*=1B=28B?=\r\n"
-      expect(@field.encoded).to eq expect
+      expect(@field.encoded).to eq "Subject: =?ISO-2022-JP?Q?=1B$B$=22$$$&$=28$*=1B=28B?=\r\n"
     end
   end
 end

@@ -233,14 +233,8 @@ module Mail
       field.send(name, *args, &block)
     end
 
-    if RUBY_VERSION >= '1.9.2'
-      def respond_to_missing?(method_name, include_private)
-        field.respond_to?(method_name, include_private) || super
-      end
-    else
-      def respond_to?(method_name, include_private = false)
-        field.respond_to?(method_name, include_private) || super
-      end
+    def respond_to_missing?(method_name, include_private)
+      field.respond_to?(method_name, include_private) || super
     end
 
     FIELD_ORDER_LOOKUP = Hash[%w[

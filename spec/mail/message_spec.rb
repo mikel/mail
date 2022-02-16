@@ -66,11 +66,9 @@ describe Mail::Message do
       expect(mail.from).to eq ['mikel@me.com']
       expect(mail.to).to eq ['lindsaar@you.com']
 
-      if RUBY_VERSION >= '1.9'
-        mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
-        expect(mail.from).to eq ['mikel@me.com']
-        expect(mail.to).to eq ['lindsaar@you.com']
-      end
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
     end
 
     it "should initialize a body and header class even if called with nothing to begin with" do
@@ -1680,12 +1678,10 @@ describe Mail::Message do
       expect(message.inspect_structure).to eq message.inspect
     end
 
-    if RUBY_VERSION > "1.9"
-      it "uses the Ruby19 charset encoder" do
-        with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
-          message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
-          expect(message.decoded).to eq("Hi –")
-        end
+    it "uses the Ruby19 charset encoder" do
+      with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
+        message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
+        expect(message.decoded).to eq("Hi –")
       end
     end
   end

@@ -27,20 +27,9 @@ RSpec.configure do |c|
   c.mock_with :rspec
   c.include(CustomMatchers)
 
-  MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION = "2.2"
-  if RUBY_VERSION >= MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
-    require 'rspec-benchmark'
-    c.include RSpec::Benchmark::Matchers
-  end
-
-  c.filter_run_excluding :require_rspec_benchmark => lambda { |version|
-    RUBY_VERSION < MINIMUM_RSPEC_BENCHMARK_RUBY_VERSION
-  }
+  require 'rspec-benchmark'
+  c.include RSpec::Benchmark::Matchers
 end
-
-# NOTE: We set the KCODE manually here in 1.8.X because upgrading to rspec-2.8.0 caused it
-#       to default to "NONE" (Why!?).
-$KCODE='UTF8' if RUBY_VERSION < '1.9'
 
 if defined?(Encoding) && Encoding.respond_to?(:default_external=)
   begin

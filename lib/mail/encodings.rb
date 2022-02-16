@@ -65,8 +65,7 @@ module Mail
     #    param_encode_language 'jp'
     #  end
     #
-    # The character set used for encoding will either be the value of $KCODE for
-    # Ruby < 1.9 or the encoding on the string passed in.
+    # The character set used for encoding will be the encoding on the string passed in.
     #
     # Example:
     #
@@ -99,8 +98,8 @@ module Mail
     # the =?<encoding>?[QB]?<string>?=" format.
     #
     # The output type needs to be :decode to decode the input string or :encode to
-    # encode the input string.  The character set used for encoding will either be
-    # the value of $KCODE for Ruby < 1.9 or the encoding on the string passed in.
+    # encode the input string.  The character set used for encoding will be the
+    # encoding on the string passed in.
     #
     # On encoding, will only send out Base64 encoded strings.
     def Encodings.decode_encode(str, output_type)
@@ -111,7 +110,7 @@ module Mail
         if str.ascii_only?
           str
         else
-          Encodings.b_value_encode(str, find_encoding(str))
+          Encodings.b_value_encode(str, str.encoding)
         end
       end
     end
@@ -145,13 +144,8 @@ module Mail
         output
       elsif to_encoding
         begin
-          if RUBY_VERSION >= '1.9'
-            output.encode(to_encoding)
-          else
-            require 'iconv'
-            Iconv.iconv(to_encoding, 'UTF-8', output).first
-          end
-        rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
+          output.encode(to_encoding)
+        rescue Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
           # actually is...not much we can do in this case but just return the
           # unconverted text.
@@ -176,42 +170,23 @@ module Mail
     def Encodings.encode_non_usascii(address, charset)
       return address if address.ascii_only? or charset.nil?
 
-      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
-      with_ascii_kcode do
-        # Encode all strings embedded inside of quotes
-        address = address.gsub(/("[^"]*[^\/]")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+      # Encode all strings embedded inside of quotes
+      address = address.gsub(/("[^"]*[^\/]")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
 
-        # Then loop through all remaining items and encode as needed
-        tokens = address.split(/\s/)
+      # Then loop through all remaining items and encode as needed
+      tokens = address.split(/\s/)
 
-        map_with_index(tokens) do |word, i|
-          if word.ascii_only?
-            word
-          else
-            previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
-            if previous_non_ascii #why are we adding an extra space here?
-              word = " #{word}"
-            end
-            Encodings.b_value_encode(word, charset)
+      map_with_index(tokens) do |word, i|
+        if word.ascii_only?
+          word
+        else
+          previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
+          if previous_non_ascii #why are we adding an extra space here?
+            word = " #{word}"
           end
-        end.join(' ')
-      end
-    end
-
-    if RUBY_VERSION < '1.9'
-      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
-      def Encodings.with_ascii_kcode #:nodoc:
-        if $KCODE
-          $KCODE, original_kcode = '', $KCODE
+          Encodings.b_value_encode(word, charset)
         end
-        yield
-      ensure
-        $KCODE = original_kcode if original_kcode
-      end
-    else
-      def Encodings.with_ascii_kcode #:nodoc:
-        yield
-      end
+      end.join(' ')
     end
 
     # Encode a string with Base64 Encoding and returns it ready to be inserted
@@ -268,10 +243,6 @@ module Mail
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
       RubyVer.q_value_decode(str)
-    end
-
-    def Encodings.find_encoding(str)
-      RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
     end
 
     # Gets the encoding type (Q or B) from the string.

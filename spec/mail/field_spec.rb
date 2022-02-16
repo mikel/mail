@@ -254,27 +254,21 @@ describe Mail::Field do
     end
 
     it "should allow an encoded value in the Subject field and decode it automatically (issue 44)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("=?ISO-8859-1?Q?2_=FAlt?=", 'utf-8')
       expect(subject.decoded).to eq "2 últ"
     end
 
     it "should allow you to encoded text in the middle (issue 44)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("ma=?ISO-8859-1?Q?=F1ana?=", 'utf-8')
       expect(subject.decoded).to eq "mañana"
     end
 
     it "more tolerable to encoding definitions, ISO (issue 120)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("ma=?ISO88591?Q?=F1ana?=", 'utf-8')
       expect(subject.decoded).to eq "mañana"
     end
 
     it "more tolerable to encoding definitions, ISO-long (issue 120)" do
-      # Rubies under 1.9 don't handle encoding conversions
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 
@@ -295,8 +289,6 @@ describe Mail::Field do
 
 
     it "more tolerable to encoding definitions, Windows (issue 120)" do
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 
@@ -312,8 +304,6 @@ describe Mail::Field do
     end
 
     it "should support ascii encoded windows subjects" do
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 

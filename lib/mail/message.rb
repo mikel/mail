@@ -147,7 +147,7 @@ module Mail
       #     m.to 'recipient@example.com'
       #   end
       if block_given?
-        if block.arity.zero? || (RUBY_VERSION < '1.9' && block.arity < 1)
+        if block.arity.zero?
           instance_eval(&block)
         else
           yield self

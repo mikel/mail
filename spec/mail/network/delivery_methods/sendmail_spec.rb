@@ -133,7 +133,7 @@ describe Mail::Sendmail do
   it 'raises on nonzero exitstatus' do
     command = %w[ /usr/sbin/sendmail -i -f roger@test.lindsaar.net -- marcel@test.lindsaar.net bob@test.lindsaar.net ]
     args = [ command, 'w+' ]
-    args << { :err => :out } if RUBY_VERSION >= '1.9'
+    args << { :err => :out }
 
     expect(IO).to receive(:popen).with(*args) { system 'false' }
 

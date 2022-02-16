@@ -42,11 +42,9 @@ describe Mail::Encodings::UnixToUnix do
     expect(encode("Happy today")).to eq "+2&%P<'D@=&]D87D`\n"
   end
 
-  if RUBY_VERSION > "1.9"
-    it "encodes / decodes non-ascii" do
-      expect(encode("Happy ああr")).to eq "-2&%P<'D@XX&\"XX&\"<@``\n"
-      expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq "Happy ああr".dup.force_encoding("binary")
-    end
+  it "encodes / decodes non-ascii" do
+    expect(encode("Happy ああr")).to eq "-2&%P<'D@XX&\"XX&\"<@``\n"
+    expect(decode("-2&%P<'D@XX&\"XX&\"<@``\n")).to eq "Happy ああr".dup.force_encoding("binary")
   end
 
   it "can read itself" do

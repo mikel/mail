@@ -84,27 +84,25 @@ describe "Utilities Module" do
       expect { quote_phrase(input_str) }.not_to raise_error
     end
 
-    if RUBY_VERSION >= '1.9'
-      describe "given a non-unsafe string" do
-        it "should not change the encoding" do
-          input_str = "blargh"
-          input_str_encoding = input_str.encoding
+    describe "given a non-unsafe string" do
+      it "should not change the encoding" do
+        input_str = "blargh"
+        input_str_encoding = input_str.encoding
 
-          result = quote_phrase(input_str)
+        result = quote_phrase(input_str)
 
-          expect(result.encoding).to eq input_str_encoding
-        end
+        expect(result.encoding).to eq input_str_encoding
       end
+    end
 
-      describe "given an unsafe string" do
-        it "should not change the encoding" do
-          input_str = "Bjørn"
-          input_str_encoding = input_str.encoding
+    describe "given an unsafe string" do
+      it "should not change the encoding" do
+        input_str = "Bjørn"
+        input_str_encoding = input_str.encoding
 
-          result = quote_phrase(input_str)
+        result = quote_phrase(input_str)
 
-          expect(result.encoding).to eq input_str_encoding
-        end
+        expect(result.encoding).to eq input_str_encoding
       end
     end
   end

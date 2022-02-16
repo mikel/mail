@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w[ README.md ]
   s.rdoc_options << '--exclude' << 'lib/mail/values/unicode_tables.dat'
 
+  s.required_ruby_version = ">= 2.5"
+
   s.add_dependency('mini_mime', '>= 0.1.1')
 
   s.add_development_dependency('bundler', '>= 1.0.3')

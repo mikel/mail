@@ -417,9 +417,6 @@ describe "MIME Emails" do
       end
 
       Dir.glob(fixture_path('attachments', "test.*")).each do |test_attachment|
-        # This spec fails for (most?) jpegs in 1.8.7
-        next if test_attachment.end_with?('test.jpg') && RUBY_VERSION < '1.9'
-
         it "should find binary encoded attachments of type #{File.extname(test_attachment)}" do
           pre, post = read_raw_fixture('emails', 'mime_emails', 'raw_email_with_binary_encoded.eml').split('BINARY_CONTENT_GOES_HERE')
           raw_file  = File.open(test_attachment, "rb", &:read)
@@ -526,25 +523,19 @@ describe "MIME Emails" do
           add_file fixture_path('attachments', 'test.pdf')
           add_file fixture_path('attachments', 'test.zip')
         end
-        if RUBY_VERSION >= '1.9'
-          tripped = mail.attachments[0].decoded
-          original = read_raw_fixture('attachments', 'test.png')
-          expect(tripped).to eq original
-          tripped = mail.attachments[1].decoded
-          original = read_raw_fixture('attachments', 'test.jpg')
-          expect(tripped).to eq original
-          tripped = mail.attachments[2].decoded
-          original = read_raw_fixture('attachments', 'test.pdf')
-          expect(tripped).to eq original
-          tripped = mail.attachments[3].decoded
-          original = read_raw_fixture('attachments', 'test.zip')
-          expect(tripped).to eq original
-        else
-          expect(mail.attachments[0].decoded).to eq read_raw_fixture('attachments', 'test.png')
-          expect(mail.attachments[1].decoded).to eq read_raw_fixture('attachments', 'test.jpg')
-          expect(mail.attachments[2].decoded).to eq read_raw_fixture('attachments', 'test.pdf')
-          expect(mail.attachments[3].decoded).to eq read_raw_fixture('attachments', 'test.zip')
-        end
+
+        tripped = mail.attachments[0].decoded
+        original = read_raw_fixture('attachments', 'test.png')
+        expect(tripped).to eq original
+        tripped = mail.attachments[1].decoded
+        original = read_raw_fixture('attachments', 'test.jpg')
+        expect(tripped).to eq original
+        tripped = mail.attachments[2].decoded
+        original = read_raw_fixture('attachments', 'test.pdf')
+        expect(tripped).to eq original
+        tripped = mail.attachments[3].decoded
+        original = read_raw_fixture('attachments', 'test.zip')
+        expect(tripped).to eq original
       end
 
       it "should allow you to send in file data instead of having to read it" do
@@ -555,13 +546,10 @@ describe "MIME Emails" do
           to      'mikel@to.lindsaar.net'
           add_file(:filename => 'test.png', :content => file_data)
         end
-        if RUBY_VERSION >= '1.9'
-          tripped = mail.attachments[0].decoded
-          original = read_raw_fixture('attachments', 'test.png')
-          expect(tripped).to eq original
-        else
-          expect(mail.attachments[0].decoded).to eq read_raw_fixture('attachments', 'test.png')
-        end
+
+        tripped = mail.attachments[0].decoded
+        original = read_raw_fixture('attachments', 'test.png')
+        expect(tripped).to eq original
       end
 
       it "should support :mime_type option" do
