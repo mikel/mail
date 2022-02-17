@@ -8,18 +8,25 @@ on:
 
 jobs:
   ruby:
+    name: ${{ matrix.docker-image }} (timeout ${{ matrix.timeout }})
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: ${{ matrix.timeout }}
     strategy:
       fail-fast: false
       matrix:
        include:
          - docker-image: 'library/ruby:2.5'
+           timeout: 5
          - docker-image: 'library/ruby:2.6'
+           timeout: 5
          - docker-image: 'library/ruby:2.7'
+           timeout: 5
          - docker-image: 'library/ruby:3.0'
+           timeout: 5
          - docker-image: 'flavorjones/truffleruby:stable'
+           timeout: 50
          - docker-image: 'bitnami/jruby:latest'
+           timeout: 5
     container: ${{ matrix.docker-image }}
     steps:
     - uses: actions/checkout@v2
