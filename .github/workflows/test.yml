@@ -8,30 +8,31 @@ on:
 
 jobs:
   ruby:
-    name: ${{ matrix.docker-image }} (timeout ${{ matrix.timeout }})
+    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
     runs-on: ubuntu-latest
     timeout-minutes: ${{ matrix.timeout }}
     strategy:
       fail-fast: false
       matrix:
        include:
-         - docker-image: 'library/ruby:2.5'
+         - ruby: 2.5
            timeout: 5
-         - docker-image: 'library/ruby:2.6'
+         - ruby: 2.6
            timeout: 5
-         - docker-image: 'library/ruby:2.7'
+         - ruby: 2.7
            timeout: 5
-         - docker-image: 'library/ruby:3.0'
+         - ruby: '3.0'
            timeout: 5
-         - docker-image: 'flavorjones/truffleruby:stable'
+         - ruby: truffleruby
            timeout: 50
-         - docker-image: 'bitnami/jruby:latest'
+         - ruby: jruby
            timeout: 5
-    container: ${{ matrix.docker-image }}
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: bundle install
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
     - name: Run tests
       run: bundle exec rake spec
   actionmailer:
