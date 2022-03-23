@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'mail/constants'
 require 'mail/utilities'
-require 'yaml'
+require 'mail/yaml'
 
 module Mail
   # The Message class provides a single point of access to all things to do with an
@@ -1841,7 +1841,7 @@ module Mail
     end
 
     def self.from_yaml(str)
-      hash = YAML.load(str)
+      hash = Mail::YAML.load(str)
       m = self.new(:headers => hash['headers'])
       hash.delete('headers')
       hash.each do |k,v|

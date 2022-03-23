@@ -196,7 +196,7 @@ describe Mail::Message do
 
       it "should serialize the basic information to YAML" do
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['headers']['To']).to       eq "someone@somewhere.com"
         expect(yaml_output['headers']['Cc']).to       eq "someoneelse@somewhere.com"
         expect(yaml_output['headers']['Subject']).to  eq "subject"
@@ -214,7 +214,7 @@ describe Mail::Message do
       it "should serialize a Message with a custom delivery_handler" do
         @yaml_mail.delivery_handler = DeliveryAgent
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['delivery_handler']).to eq "DeliveryAgent"
       end
 
@@ -226,7 +226,7 @@ describe Mail::Message do
 
       it "should not deserialize a delivery_handler that does not exist" do
         yaml = @yaml_mail.to_yaml
-        yaml_hash = YAML.load(yaml)
+        yaml_hash = Mail::YAML.load(yaml)
         yaml_hash['delivery_handler'] = "NotARealClass"
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         expect(deserialized.delivery_handler).to be_nil
@@ -234,7 +234,7 @@ describe Mail::Message do
 
       it "should deserialize parts as an instance of Mail::PartsList" do
         yaml = @yaml_mail.to_yaml
-        yaml_hash = YAML.load(yaml)
+        yaml_hash = Mail::YAML.load(yaml)
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         expect(deserialized.parts).to be_kind_of(Mail::PartsList)
       end
