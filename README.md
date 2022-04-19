@@ -47,7 +47,7 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 ## Compatibility
 
-Mail supports Ruby 2.5+, including JRuby and Rubinius.
+Mail supports Ruby 2.5+, including JRuby and TruffleRuby.
 
 Every Mail commit is tested by GitHub Actions on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.github/workflows/test.yml).
 
