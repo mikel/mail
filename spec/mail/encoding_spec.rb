@@ -199,7 +199,7 @@ describe "mail encoding" do
   describe "#pick_encoding" do
     it "picks binary for nil" do
       expect { ::Encoding.find(nil) }.to raise_error(TypeError)
-      expect(Mail::Ruby19.pick_encoding(nil)).to eq(Encoding::BINARY)
+      expect(Mail::RubyVer.pick_encoding(nil)).to eq(Encoding::BINARY)
     end
 
     {
@@ -210,7 +210,7 @@ describe "mail encoding" do
     }.each do |from, to|
       it "should support #{from}" do
         expect { ::Encoding.find(from) }.to raise_error(ArgumentError)
-        expect(Mail::Ruby19.pick_encoding(from)).to eq(to)
+        expect(Mail::RubyVer.pick_encoding(from)).to eq(to)
       end
     end
   end

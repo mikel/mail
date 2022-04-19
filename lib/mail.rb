@@ -9,8 +9,7 @@ module Mail # :doc:
   require 'net/smtp'
   require 'mini_mime'
 
-  require 'mail/version_specific/ruby_1_9'
-  RubyVer = Ruby19
+  require 'mail/version_specific'
 
   require 'mail/version'
 
