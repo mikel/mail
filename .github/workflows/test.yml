@@ -35,6 +35,7 @@ jobs:
         bundler-cache: true
     - name: Run tests
       run: bundle exec rake spec
+      continue-on-error: ${{ matrix.ruby == 'truffleruby' }}
   actionmailer:
     runs-on: ubuntu-latest
     steps:
