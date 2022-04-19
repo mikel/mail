@@ -49,6 +49,8 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 Mail supports Ruby 2.5+, including JRuby and TruffleRuby.
 
+As new versions of Ruby are released, Mail will be compatible with support for the "preview" and all "normal maintenance", "security maintenance" and the two most recent "end of life" versions listed at the [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/) page.  Pull requests to assist in adding support for new preview releases are more than welcome.
+
 Every Mail commit is tested by GitHub Actions on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.github/workflows/test.yml).
 
 ## Discussion
