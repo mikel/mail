@@ -9,8 +9,6 @@ module Mail # :doc:
   require 'net/smtp'
   require 'mini_mime'
 
-  require 'mail/version_specific'
-
   require 'mail/version'
 
   require 'mail/indifferent_hash'
