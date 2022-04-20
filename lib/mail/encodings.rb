@@ -52,7 +52,7 @@ module Mail
 
     def Encodings.transcode_charset(str, from_charset, to_charset = 'UTF-8')
       if from_charset
-        RubyVer.transcode_charset str, from_charset, to_charset
+        Utilities.transcode_charset str, from_charset, to_charset
       else
         str
       end
@@ -77,7 +77,7 @@ module Mail
       when str.ascii_only?
         str
       else
-        RubyVer.param_encode(str)
+        Utilities.param_encode(str)
       end
     end
 
@@ -91,7 +91,7 @@ module Mail
     #  str.encoding #=> 'ISO-8859-1'      ## Only on Ruby 1.9
     #  str #=> "This is fun"
     def Encodings.param_decode(str, encoding)
-      RubyVer.param_decode(str, encoding)
+      Utilities.param_decode(str, encoding)
     end
 
     # Decodes or encodes a string as needed for either Base64 or QP encoding types in
@@ -201,7 +201,7 @@ module Mail
         string
       else
         Encodings.each_base64_chunk_byterange(string, 60).map do |chunk|
-          str, encoding = RubyVer.b_value_encode(chunk, encoding)
+          str, encoding = Utilities.b_value_encode(chunk, encoding)
           "=?#{encoding}?B?#{str.chomp}?="
         end.join(" ")
       end
@@ -216,7 +216,7 @@ module Mail
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def Encodings.q_value_encode(encoded_str, encoding = nil)
       return encoded_str if encoded_str.to_s.ascii_only?
-      string, encoding = RubyVer.q_value_encode(encoded_str, encoding)
+      string, encoding = Utilities.q_value_encode(encoded_str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
       map_lines(string) do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
@@ -232,7 +232,7 @@ module Mail
     #  Encodings.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
     #  #=> 'This is あ string'
     def Encodings.b_value_decode(str)
-      RubyVer.b_value_decode(str)
+      Utilities.b_value_decode(str)
     end
 
     # Decodes a Quoted-Printable string from the "=?UTF-8?Q?This_is_=E3=81=82_string?=" format
@@ -242,7 +242,7 @@ module Mail
     #  Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
-      RubyVer.q_value_decode(str)
+      Utilities.q_value_decode(str)
     end
 
     # Gets the encoding type (Q or B) from the string.
@@ -300,7 +300,7 @@ module Mail
         charsize = chr.bytesize
 
         if chunksize + charsize > max_bytesize_per_chunk
-          yield RubyVer.string_byteslice(str, offset, chunksize)
+          yield Utilities.string_byteslice(str, offset, chunksize)
           offset += chunksize
           chunksize = charsize
         else
@@ -308,7 +308,7 @@ module Mail
         end
       end
 
-      yield RubyVer.string_byteslice(str, offset, chunksize)
+      yield Utilities.string_byteslice(str, offset, chunksize)
     end
   end
 end

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe '.decode_base64' do
   it "handles unpadded base64 correctly" do
-    decoded = Mail::RubyVer.decode_base64("YQ")
+    decoded = Mail::Utilities.decode_base64("YQ")
     expect(decoded).to eq "a"
   end
 end

@@ -106,7 +106,7 @@ module Mail
     #
     #  paren( 'This is a string' ) #=> '(This is a string)'
     def paren( str )
-      RubyVer.paren( str )
+      Utilities.paren( str )
     end
 
     # Unwraps a string from being wrapped in parenthesis
@@ -129,7 +129,7 @@ module Mail
     #
     #  bracket( 'This is a string' ) #=> '<This is a string>'
     def bracket( str )
-      RubyVer.bracket( str )
+      Utilities.bracket( str )
     end
 
     # Unwraps a string from being wrapped in parenthesis
@@ -153,7 +153,7 @@ module Mail
     #  str = 'This is (a) string'
     #  escape_paren( str ) #=> 'This is \(a\) string'
     def escape_paren( str )
-      RubyVer.escape_paren( str )
+      Utilities.escape_paren( str )
     end
 
     def uri_escape( str )

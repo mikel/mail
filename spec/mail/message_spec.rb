@@ -1656,10 +1656,10 @@ describe Mail::Message do
     end
 
     def with_encoder(encoder)
-      old, Mail::RubyVer.charset_encoder = Mail::RubyVer.charset_encoder, encoder
+      old, Mail::Utilities.charset_encoder = Mail::Utilities.charset_encoder, encoder
       yield
     ensure
-      Mail::RubyVer.charset_encoder = old
+      Mail::Utilities.charset_encoder = old
     end
 
     let(:message){
@@ -1678,8 +1678,8 @@ describe Mail::Message do
       expect(message.inspect_structure).to eq message.inspect
     end
 
-    it "uses the RubyVer charset encoder" do
-      with_encoder(Mail::RubyVer::BestEffortCharsetEncoder.new) do
+    it "uses the Utilities charset encoder" do
+      with_encoder(Mail::Utilities::BestEffortCharsetEncoder.new) do
         message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
         expect(message.decoded).to eq("Hi –")
       end

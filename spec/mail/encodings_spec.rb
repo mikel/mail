@@ -851,10 +851,10 @@ describe Mail::Encodings do
     end
 
     def with_encoder(encoder)
-      old, Mail::RubyVer.charset_encoder = Mail::RubyVer.charset_encoder, encoder
+      old, Mail::Utilities.charset_encoder = Mail::Utilities.charset_encoder, encoder
       yield
     ensure
-      Mail::RubyVer.charset_encoder = old
+      Mail::Utilities.charset_encoder = old
     end
 
     it "can use a custom encoder" do
@@ -871,7 +871,7 @@ describe Mail::Encodings do
     end
 
     it "can convert ansi with best effort" do
-      with_encoder Mail::RubyVer::BestEffortCharsetEncoder.new do
+      with_encoder Mail::Utilities::BestEffortCharsetEncoder.new do
         expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
       end
     end
@@ -925,11 +925,11 @@ describe Mail::Encodings do
 
   describe ".pick_encoding" do
     it "finds encoding" do
-      expect(Mail::RubyVer.pick_encoding("Windows-1252")).to eq Encoding::Windows_1252
+      expect(Mail::Utilities.pick_encoding("Windows-1252")).to eq Encoding::Windows_1252
     end
 
     it "uses binary for unfound" do
-      expect(Mail::RubyVer.pick_encoding("ISO-Foo")).to eq Encoding::BINARY
+      expect(Mail::Utilities.pick_encoding("ISO-Foo")).to eq Encoding::BINARY
     end
   end
 end

@@ -2,14 +2,14 @@
 # frozen_string_literal: true
 
 module Mail
-  class RubyVer
+  module Utilities
     class StrictCharsetEncoder
       def encode(string, charset)
         case charset
         when /utf-?7/i
-          Mail::RubyVer.decode_utf7(string)
+          Mail::Utilities.decode_utf7(string)
         else
-          string.force_encoding(Mail::RubyVer.pick_encoding(charset))
+          string.force_encoding(Mail::Utilities.pick_encoding(charset))
         end
       end
     end
@@ -18,7 +18,7 @@ module Mail
       def encode(string, charset)
         case charset
         when /utf-?7/i
-          Mail::RubyVer.decode_utf7(string)
+          Mail::Utilities.decode_utf7(string)
         else
           string.force_encoding(pick_encoding(charset))
         end
@@ -35,7 +35,7 @@ module Mail
         else
           charset
         end
-        Mail::RubyVer.pick_encoding(charset)
+        Mail::Utilities.pick_encoding(charset)
       end
     end
 
@@ -46,55 +46,55 @@ module Mail
 
     # Escapes any parenthesis in a string that are unescaped this uses
     # a Ruby 1.9.1 regexp feature of negative look behind
-    def RubyVer.escape_paren( str )
+    def Utilities.escape_paren( str )
       re = /(?<!\\)([\(\)])/          # Only match unescaped parens
       str.gsub(re) { |s| '\\' + s }
     end
 
-    def RubyVer.paren( str )
+    def Utilities.paren( str )
       str = ::Mail::Utilities.unparen( str )
       str = escape_paren( str )
       '(' + str + ')'
     end
 
-    def RubyVer.escape_bracket( str )
+    def Utilities.escape_bracket( str )
       re = /(?<!\\)([\<\>])/          # Only match unescaped brackets
       str.gsub(re) { |s| '\\' + s }
     end
 
-    def RubyVer.bracket( str )
+    def Utilities.bracket( str )
       str = ::Mail::Utilities.unbracket( str )
       str = escape_bracket( str )
       '<' + str + '>'
     end
 
-    def RubyVer.decode_base64(str)
+    def Utilities.decode_base64(str)
       if !str.end_with?("=") && str.length % 4 != 0
         str = str.ljust((str.length + 3) & ~3, "=")
       end
       str.unpack( 'm' ).first
     end
 
-    def RubyVer.encode_base64(str)
+    def Utilities.encode_base64(str)
       [str].pack( 'm' )
     end
 
-    def RubyVer.has_constant?(klass, string)
+    def Utilities.has_constant?(klass, string)
       klass.const_defined?( string, false )
     end
 
-    def RubyVer.get_constant(klass, string)
+    def Utilities.get_constant(klass, string)
       klass.const_get( string )
     end
 
-    def RubyVer.transcode_charset(str, from_encoding, to_encoding = Encoding::UTF_8)
+    def Utilities.transcode_charset(str, from_encoding, to_encoding = Encoding::UTF_8)
       to_encoding = Encoding.find(to_encoding)
       replacement_char = to_encoding == Encoding::UTF_8 ? '�' : '?'
       charset_encoder.encode(str.dup, from_encoding).encode(to_encoding, :undef => :replace, :invalid => :replace, :replace => replacement_char)
     end
 
     # From Ruby stdlib Net::IMAP
-    def RubyVer.encode_utf7(string)
+    def Utilities.encode_utf7(string)
       string.gsub(/(&)|[^\x20-\x7e]+/) do
         if $1
           "&-"
@@ -105,7 +105,7 @@ module Mail
       end.force_encoding(Encoding::ASCII_8BIT)
     end
 
-    def RubyVer.decode_utf7(utf7)
+    def Utilities.decode_utf7(utf7)
       utf7.gsub(/&([^-]+)?-/n) do
         if $1
           ($1.tr(",", "/") + "===").unpack("m")[0].encode(Encoding::UTF_8, Encoding::UTF_16BE)
@@ -115,16 +115,16 @@ module Mail
       end
     end
 
-    def RubyVer.b_value_encode(str, encoding = nil)
+    def Utilities.b_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
-      [RubyVer.encode_base64(str), encoding]
+      [Utilities.encode_base64(str), encoding]
     end
 
-    def RubyVer.b_value_decode(str)
+    def Utilities.b_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
       if match
         charset = match[1]
-        str = RubyVer.decode_base64(match[2])
+        str = Utilities.decode_base64(match[2])
         str = charset_encoder.encode(str, charset)
       end
       transcode_to_scrubbed_utf8(str)
@@ -133,12 +133,12 @@ module Mail
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
-    def RubyVer.q_value_encode(str, encoding = nil)
+    def Utilities.q_value_encode(str, encoding = nil)
       encoding = str.encoding.to_s
       [Encodings::QuotedPrintable.encode(str), encoding]
     end
 
-    def RubyVer.q_value_decode(str)
+    def Utilities.q_value_decode(str)
       match = str.match(/\=\?(.+)?\?[Qq]\?(.*)\?\=/m)
       if match
         charset = match[1]
@@ -157,7 +157,7 @@ module Mail
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
-    def RubyVer.param_decode(str, encoding)
+    def Utilities.param_decode(str, encoding)
       str = uri_parser.unescape(str)
       str = charset_encoder.encode(str, encoding) if encoding
       transcode_to_scrubbed_utf8(str)
@@ -166,13 +166,13 @@ module Mail
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
-    def RubyVer.param_encode(str)
+    def Utilities.param_encode(str)
       encoding = str.encoding.to_s.downcase
       language = Configuration.instance.param_encode_language
       "#{encoding}'#{language}'#{uri_parser.escape(str)}"
     end
 
-    def RubyVer.uri_parser
+    def Utilities.uri_parser
       URI::DEFAULT_PARSER
     end
 
@@ -182,7 +182,7 @@ module Mail
     # TODO: add this as a test somewhere:
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
-    def RubyVer.pick_encoding(charset)
+    def Utilities.pick_encoding(charset)
       charset = charset.to_s
       encoding = case charset.downcase
 
@@ -242,7 +242,7 @@ module Mail
       convert_to_encoding(encoding)
     end
 
-    def RubyVer.string_byteslice(str, *args)
+    def Utilities.string_byteslice(str, *args)
       str.byteslice(*args)
     end
 
