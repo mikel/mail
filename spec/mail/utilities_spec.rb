@@ -84,27 +84,25 @@ describe "Utilities Module" do
       expect { quote_phrase(input_str) }.not_to raise_error
     end
 
-    if RUBY_VERSION >= '1.9'
-      describe "given a non-unsafe string" do
-        it "should not change the encoding" do
-          input_str = "blargh"
-          input_str_encoding = input_str.encoding
+    describe "given a non-unsafe string" do
+      it "should not change the encoding" do
+        input_str = "blargh"
+        input_str_encoding = input_str.encoding
 
-          result = quote_phrase(input_str)
+        result = quote_phrase(input_str)
 
-          expect(result.encoding).to eq input_str_encoding
-        end
+        expect(result.encoding).to eq input_str_encoding
       end
+    end
 
-      describe "given an unsafe string" do
-        it "should not change the encoding" do
-          input_str = "Bjørn"
-          input_str_encoding = input_str.encoding
+    describe "given an unsafe string" do
+      it "should not change the encoding" do
+        input_str = "Bjørn"
+        input_str_encoding = input_str.encoding
 
-          result = quote_phrase(input_str)
+        result = quote_phrase(input_str)
 
-          expect(result.encoding).to eq input_str_encoding
-        end
+        expect(result.encoding).to eq input_str_encoding
       end
     end
   end
@@ -525,6 +523,13 @@ describe "Utilities Module" do
         string = klass.new('')
         expect(Mail::Utilities.to_crlf(string)).to be_an_instance_of(String)
       end
+    end
+  end
+
+  describe '.decode_base64' do
+    it "handles unpadded base64 correctly" do
+      decoded = Mail::Utilities.decode_base64("YQ")
+      expect(decoded).to eq "a"
     end
   end
 end

@@ -66,11 +66,9 @@ describe Mail::Message do
       expect(mail.from).to eq ['mikel@me.com']
       expect(mail.to).to eq ['lindsaar@you.com']
 
-      if RUBY_VERSION >= '1.9'
-        mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
-        expect(mail.from).to eq ['mikel@me.com']
-        expect(mail.to).to eq ['lindsaar@you.com']
-      end
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
     end
 
     it "should initialize a body and header class even if called with nothing to begin with" do
@@ -196,7 +194,7 @@ describe Mail::Message do
 
       it "should serialize the basic information to YAML" do
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['headers']['To']).to       eq "someone@somewhere.com"
         expect(yaml_output['headers']['Cc']).to       eq "someoneelse@somewhere.com"
         expect(yaml_output['headers']['Subject']).to  eq "subject"
@@ -214,7 +212,7 @@ describe Mail::Message do
       it "should serialize a Message with a custom delivery_handler" do
         @yaml_mail.delivery_handler = DeliveryAgent
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['delivery_handler']).to eq "DeliveryAgent"
       end
 
@@ -226,7 +224,7 @@ describe Mail::Message do
 
       it "should not deserialize a delivery_handler that does not exist" do
         yaml = @yaml_mail.to_yaml
-        yaml_hash = YAML.load(yaml)
+        yaml_hash = Mail::YAML.load(yaml)
         yaml_hash['delivery_handler'] = "NotARealClass"
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         expect(deserialized.delivery_handler).to be_nil
@@ -234,7 +232,7 @@ describe Mail::Message do
 
       it "should deserialize parts as an instance of Mail::PartsList" do
         yaml = @yaml_mail.to_yaml
-        yaml_hash = YAML.load(yaml)
+        yaml_hash = Mail::YAML.load(yaml)
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         expect(deserialized.parts).to be_kind_of(Mail::PartsList)
       end
@@ -1658,10 +1656,10 @@ describe Mail::Message do
     end
 
     def with_encoder(encoder)
-      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      old, Mail::Utilities.charset_encoder = Mail::Utilities.charset_encoder, encoder
       yield
     ensure
-      Mail::Ruby19.charset_encoder = old
+      Mail::Utilities.charset_encoder = old
     end
 
     let(:message){
@@ -1680,12 +1678,10 @@ describe Mail::Message do
       expect(message.inspect_structure).to eq message.inspect
     end
 
-    if RUBY_VERSION > "1.9"
-      it "uses the Ruby19 charset encoder" do
-        with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
-          message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
-          expect(message.decoded).to eq("Hi –")
-        end
+    it "uses the Utilities charset encoder" do
+      with_encoder(Mail::Utilities::BestEffortCharsetEncoder.new) do
+        message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
+        expect(message.decoded).to eq("Hi –")
       end
     end
   end

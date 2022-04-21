@@ -15,39 +15,6 @@ describe "SMTP Delivery Method" do
     Mail.delivery_method.smtp.finish
   end
 
-  it "should not dot-stuff in recent Ruby versions" do
-    skip "is skipped on older Ruby versions" if RUBY_VERSION < '2.1.3'
-    expect(Mail.delivery_method.send(:dot_stuff?)).to eq false
-  end
-
-  it "dot-stuff unterminated last line of the message" do
-    skip "is skipped on Ruby versions without dot-stuff bug" unless Mail.delivery_method.send(:dot_stuff?)
-
-    Mail.deliver do
-      from 'from@example.com'
-      to 'to@example.com'
-      subject 'dot-stuff last line'
-      body "this is a test\n... only a test\n... or is it?"
-    end
-
-    message = MockSMTP.deliveries.first
-    expect(Mail.new(message).decoded).to eq("this is a test\n... only a test\n.... or is it?")
-  end
-
-  it "dot-stuff unterminated last line of the message containing a single dot" do
-    skip "is skipped on Ruby versions without dot-stuff bug" unless Mail.delivery_method.send(:dot_stuff?)
-
-    Mail.deliver do
-      from 'from@example.com'
-      to 'to@example.com'
-      subject 'dot-stuff last line'
-      body "this is a test\n.\nonly a test\n."
-    end
-
-    message = MockSMTP.deliveries.first
-    expect(Mail.new(message).decoded).to eq("this is a test\n.\nonly a test\n..")
-  end
-
   it "should not dot-stuff unterminated last line with no leading dot" do
     body = "this is a test\n.\nonly a test"
 

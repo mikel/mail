@@ -14,10 +14,9 @@ implementation that makes generating, sending and parsing email a no
 brainer.
 
 It is also designed from the ground up to work with the more modern versions
-of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
-than Ruby 1.8.x and so these features have been taken full advantage of in this
-library allowing Mail to handle a lot more messages more cleanly than TMail.
-Mail does run on Ruby 1.8.x... it's just not as fun to code.
+of Ruby.  Modern Rubies handle text encodings much more wonderfully than before
+so these features have been taken full advantage of in this library allowing
+Mail to handle a lot more messages more cleanly than TMail.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
@@ -48,7 +47,9 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 ## Compatibility
 
-Mail supports Ruby 1.8.7+, including JRuby and Rubinius.
+Mail supports Ruby 2.5+, including JRuby and TruffleRuby.
+
+As new versions of Ruby are released, Mail will be compatible with support for the "preview" and all "normal maintenance", "security maintenance" and the two most recent "end of life" versions listed at the [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/) page.  Pull requests to assist in adding support for new preview releases are more than welcome.
 
 Every Mail commit is tested by GitHub Actions on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.github/workflows/test.yml).
 

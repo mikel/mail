@@ -649,27 +649,16 @@ describe Mail::ContentTypeField do
     end
 
     it "should encode a non us-ascii filename" do
-      @original = $KCODE if RUBY_VERSION < '1.9'
       Mail.defaults do
         param_encode_language('jp')
       end
       c = Mail::ContentTypeField.new('application/octet-stream')
       string = "01 Quien Te Dij\221at. Pitbull.mp3"
-      case
-      when RUBY_VERSION >= '1.9.3'
-        string = string.dup.force_encoding('SJIS')
-        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=windows-31j'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
-      when RUBY_VERSION >= '1.9'
-        string = string.dup.force_encoding('SJIS')
-        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=shift_jis'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
-      else
-        $KCODE = 'SJIS'
-        result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=sjis'jp'01%20Quien%20Te%20Dij%91at.%20Pitbull.mp3\r\n}
-      end
+      string = string.dup.force_encoding('SJIS')
+      result = %Q{Content-Type: application/octet-stream;\r\n\sfilename*=windows-31j'jp'01%20Quien%20Te%20Dij%91%61t.%20Pitbull.mp3\r\n}
       c.filename = string
       expect(c.parameters).to eql({"filename" => string})
       expect(c.encoded).to eq result
-      $KCODE = @original if RUBY_VERSION < '1.9'
     end
 
   end

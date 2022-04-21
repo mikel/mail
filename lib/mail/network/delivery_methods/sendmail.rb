@@ -76,20 +76,10 @@ module Mail
     end
 
     private
-      if RUBY_VERSION < '1.9.0'
-        def popen(command, &block)
-          IO.popen(command, 'w+', &block).tap do
-            if $?.exitstatus != 0
-              raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
-            end
-          end
-        end
-      else
-        def popen(command, &block)
-          IO.popen(command, 'w+', :err => :out, &block).tap do
-            if $?.exitstatus != 0
-              raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
-            end
+      def popen(command, &block)
+        IO.popen(command, 'w+', :err => :out, &block).tap do
+          if $?.exitstatus != 0
+            raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
           end
         end
       end

@@ -97,10 +97,7 @@ module Mail
     end
 
     def set_mime_type(filename)
-      # Have to do this because MIME::Types is not Ruby 1.9 safe yet
-      if RUBY_VERSION >= '1.9'
-        filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
-      end
+      filename = filename.encode(Encoding::UTF_8) if filename.respond_to?(:encode)
 
       @mime_type = MiniMime.lookup_by_filename(filename)
       @mime_type && @mime_type.content_type

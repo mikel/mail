@@ -8,37 +8,34 @@ on:
 
 jobs:
   ruby:
+    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: ${{ matrix.timeout }}
     strategy:
       fail-fast: false
       matrix:
        include:
-         - docker-image: 'silvioq/ruby-1.8.7'
-           bundler-version: '1.17.3'
-         - docker-image: 'library/ruby:1.9'
-           bundler-version: '1.17.3'
-         - docker-image: 'library/ruby:2.0'
-           bundler-version: '1.17.3'
-         - docker-image: 'library/ruby:2.2'
-           bundler-version: '1.17.3'
-         - docker-image: 'library/ruby:2.3'
-         - docker-image: 'library/ruby:2.4'
-         - docker-image: 'library/ruby:2.5'
-         - docker-image: 'library/ruby:2.6'
-         - docker-image: 'library/ruby:2.7'
-         - docker-image: 'library/ruby:3.0'
-         - docker-image: 'flavorjones/truffleruby:stable'
-         - docker-image: 'bitnami/jruby:latest'
-    container: ${{ matrix.docker-image }}
+         - ruby: 2.5
+           timeout: 5
+         - ruby: 2.6
+           timeout: 5
+         - ruby: 2.7
+           timeout: 5
+         - ruby: '3.0'
+           timeout: 5
+         - ruby: truffleruby
+           timeout: 50
+         - ruby: jruby
+           timeout: 5
     steps:
     - uses: actions/checkout@v2
-    - name: Install bundler ${{ matrix.bundler-version }}
-      run: gem install bundler ${{ matrix.bundler-version && format('{0} {1}', '-v', matrix.bundler-version) || '' }}
-    - name: Install dependencies
-      run: bundle install
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
     - name: Run tests
       run: bundle exec rake spec
+      continue-on-error: ${{ matrix.ruby == 'truffleruby' }}
   actionmailer:
     runs-on: ubuntu-latest
     steps:
