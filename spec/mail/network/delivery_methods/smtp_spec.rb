@@ -276,7 +276,7 @@ describe "SMTP Delivery Method" do
       end.to raise_error(ArgumentError, 'SMTP From address may not be blank: nil')
     end
 
-    it "should raise an error if no recipient if defined" do
+    it "should raise an error if no recipient is defined" do
       mail = Mail.new do
         from "from@somemail.com"
         subject "Email with no recipient"
