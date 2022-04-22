@@ -1,25 +1,9 @@
-== Version 2.8.0 (unreleased)
+== Version 2.9.0 (unreleased)
 
 Breaking changes:
-* Add Ruby 3.1 support (deivid-rodriguez, voxik, eregon)
-* Drop support for Ruby < 2.5 (deivid-rodriguez, voxik)
-* Message#without_attachments! now deletes nested attachments. (TylerRick)
-* Sendmail and exim delivery now raise DeliveryError when the command exits with a nonzero exitstatus. (benmmurphy, CoolElvis)
-* Sendmail and exim delivery :arguments option must be an array of string args. (benmmurphy)
-* Passing unparsed headers to Mail::Field.new is no longer supported. Use Mail::Field.parse. (jeremy)
-* Removed long-deprecated features: Message#register_for_delivery_notification, #has_transfer_encoding?, #add_transfer_encoding, #transfer_encoding, #message_content_type, #mime_parameters, #encode!, and Part#inline_content_id. (jeremy)
 
 Compatibility:
-* Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
-* Normalize Quoted-Printable line endings for text content. (jeremy)
-* Gracefully parse invalid dates in Date and Received headers. (okkez)
-* Converting to multipart moves Content-* headers to the new part. (kirikak2)
-* Multipart Content-Type no longer includes a needless charset param. (kirikak2)
-* Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
-* Gracefully handle multiple, possibly-invalid headers for what should be singular fields. (rosa)
 
 Features:
-* Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
-* `an_attachment_with_mime_type` matcher added to match attachments by mime type
 
-Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.
+Please check [2-8-stable](https://github.com/mikel/mail/blob/2-8-stable/CHANGELOG.rdoc) for previous changes.
