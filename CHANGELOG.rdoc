@@ -1,6 +1,7 @@
 == Version 2.8.0 (unreleased)
 
 Breaking changes:
+* Add Ruby 3.1 support (deivid-rodriguez, voxik, eregon)
 * Drop support for Ruby < 2.5 (deivid-rodriguez, voxik)
 * Message#without_attachments! now deletes nested attachments. (TylerRick)
 * Sendmail and exim delivery now raise DeliveryError when the command exits with a nonzero exitstatus. (benmmurphy, CoolElvis)
