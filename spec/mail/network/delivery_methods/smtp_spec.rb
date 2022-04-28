@@ -194,6 +194,38 @@ describe "SMTP Delivery Method" do
 
       expect { mail.deliver! }.not_to raise_error
     end
+
+    it 'should set OpenSSL default cert store when using TLS' do
+      context = OpenSSL::SSL::SSLContext.new
+      allow(Net::SMTP).to receive(:default_ssl_context).and_return(context)
+      expect(context).to receive(:cert_store=).with(OpenSSL::SSL::SSLContext::DEFAULT_CERT_STORE).at_least(1)
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      expect { mail.deliver! }.not_to raise_error
+    end
+  end
+
+  describe 'without TLS' do
+    it 'should not call ssl_context' do
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :enable_starttls_auto => false
+      end
+
+      expect(Net::SMTP).to_not receive(:default_ssl_context)
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'Testing without TLS'
+      end
+
+      expect { mail.deliver! }.not_to raise_error
+    end
   end
 
   describe "enabling STARTTLS" do
