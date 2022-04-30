@@ -14,10 +14,13 @@ module Mail
         new "#{type}; boundary=#{generate_boundary}"
       end
 
+      attr_accessor :boundary_generator
+
       def generate_boundary
-        "--==_mimepart_#{Mail.random_tag}"
+        "--#{boundary_generator.call}"
       end
     end
+    self.boundary_generator = -> { "==_mimepart_#{Mail.random_tag}" }
 
     def initialize(value = nil, charset = nil)
       if value.is_a? Array
