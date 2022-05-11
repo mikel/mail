@@ -4,7 +4,7 @@ require 'spec_helper'
 # 
 # resent-cc       =       "Resent-Cc:" address-list CRLF
 
-describe Mail::ResentCcField do
+RSpec.describe Mail::ResentCcField do
   
   describe "initialization" do
 

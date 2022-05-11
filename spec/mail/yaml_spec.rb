@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::YAML do
+RSpec.describe Mail::YAML do
 
   describe "#load" do
 

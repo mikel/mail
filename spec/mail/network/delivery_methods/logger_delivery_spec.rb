@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'logger'
 require 'stringio'
 
-describe "Logger Delivery Method" do
+RSpec.describe "Logger Delivery Method" do
   before(:each) do
     # Reset all defaults back to original state
     Mail.defaults do

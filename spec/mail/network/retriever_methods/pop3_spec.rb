@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "POP3 Retriever" do
+RSpec.describe "POP3 Retriever" do
 
   before(:each) do
     # Reset all defaults back to original state

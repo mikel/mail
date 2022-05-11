@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ResentMessageIdField do
+RSpec.describe Mail::ResentMessageIdField do
 
   it "should initialize" do
     expect { Mail::ResentMessageIdField.new("<1234@test.lindsaar.net>") }.not_to raise_error

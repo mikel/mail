@@ -9,7 +9,7 @@ class MyTestDeliveryMethod
   end
 end
 
-describe Mail::Configuration do
+RSpec.describe Mail::Configuration do
 
   describe "network configurations" do
 

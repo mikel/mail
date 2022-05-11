@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ToField do
+RSpec.describe Mail::ToField do
   # 
   #    The "To:" field contains the address(es) of the primary recipient(s)
   #    of the message.

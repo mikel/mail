@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Test Retriever" do
+RSpec.describe "Test Retriever" do
 
   before(:each) do
     Mail.defaults do

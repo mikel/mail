@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "multipart/report emails" do
+RSpec.describe "multipart/report emails" do
   
   it "should know if it is a multipart report type" do
     mail = read_fixture('emails', 'multipart_report_emails', 'report_422.eml')

@@ -25,6 +25,7 @@ $stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 
 RSpec.configure do |c|
   c.mock_with :rspec
+  c.disable_monkey_patching!
   c.include(CustomMatchers)
 
   require 'rspec-benchmark'

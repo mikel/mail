@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ReturnPathField do
+RSpec.describe Mail::ReturnPathField do
   it "should allow you to specify a field" do
     rp = Mail::ReturnPathField.new('mikel@test.lindsaar.net')
     expect(rp.address).to eq 'mikel@test.lindsaar.net'

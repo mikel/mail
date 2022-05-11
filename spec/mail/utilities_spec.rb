@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Utilities Module" do
+RSpec.describe "Utilities Module" do
 
   include Mail::Utilities
 

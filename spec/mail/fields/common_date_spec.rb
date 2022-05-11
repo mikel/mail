@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::CommonDateField do
+RSpec.describe Mail::CommonDateField do
   describe "encoding and decoding fields" do
     it "should allow us to encode an date field" do
       field = Mail::DateField.new('12 Aug 2009 00:00:02 GMT')

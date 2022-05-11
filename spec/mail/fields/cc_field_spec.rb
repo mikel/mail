@@ -7,7 +7,7 @@ require 'spec_helper'
 #    addresses of others who are to receive the message, though the
 #    content of the message may not be directed at them.
 
-describe Mail::CcField do
+RSpec.describe Mail::CcField do
   
   describe "initialization" do
 

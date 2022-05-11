@@ -13,7 +13,7 @@ require 'spec_helper'
 #    or "Message-ID:" fields, then the new message will have no
 #    "References:" field.
 
-describe Mail::ReferencesField do
+RSpec.describe Mail::ReferencesField do
 
   it "should initialize" do
     expect { Mail::ReferencesField.new("<1234@test.lindsaar.net>") }.not_to raise_error

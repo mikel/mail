@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentTransferEncodingField do
+RSpec.describe Mail::ContentTransferEncodingField do
 
   # Content-Transfer-Encoding Header Field
   #

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Encodings::Base64 do
+RSpec.describe Mail::Encodings::Base64 do
   
   it "should encode base 64 from text" do
     result = "VGhpcyBpcyBhIHRlc3Q=\r\n"

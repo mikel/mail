@@ -4,7 +4,7 @@ require 'spec_helper'
 # 
 # resent-bcc      =       "Resent-Bcc:" (address-list / [CFWS]) CRLF
 
-describe Mail::ResentBccField do
+RSpec.describe Mail::ResentBccField do
   
   describe "initialization" do
 

@@ -11,7 +11,7 @@ def check_decoded(actual, expected)
   expect(actual).to eq expected.dup.force_encoding(Encoding::BINARY)
 end
 
-describe "Attachments" do
+RSpec.describe "Attachments" do
 
   before(:each) do
     @mail = Mail.new
@@ -211,7 +211,7 @@ describe "Attachments" do
 
 end
 
-describe "reading emails with attachments" do
+RSpec.describe "reading emails with attachments" do
   describe "test emails" do
 
     it "should find the attachment using content location" do
@@ -311,7 +311,7 @@ limitMAIL
   end
 end
 
-describe "attachment order" do
+RSpec.describe "attachment order" do
   it "should be preserved instead  when content type exists" do
     mail = Mail.new do
       to "aaaa@aaaa.aaa"
