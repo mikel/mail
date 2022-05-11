@@ -138,7 +138,7 @@ RSpec.describe "Mail" do
 
     it "should be able to change the delivery_method and pass in settings" do
       mail = Mail.new
-      tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
+      tmpdir = File.expand_path('../../tmp/mail', __dir__)
       mail.delivery_method :file, :location => tmpdir
       expect(mail.delivery_method.class).to eq Mail::FileDelivery
       expect(mail.delivery_method.settings).to eql({:location => tmpdir,

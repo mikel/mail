@@ -17,6 +17,7 @@ Code Improvements:
 * refactor: Use Dir.glob only once in gemspec's "files" directive @olleolleolle
 * Configure RSpec's zero-monkey patching mode @olleolleolle
 * Added support for JRuby 9.4 @mikel
+* Prefer `__dir__` @olleolleolle
 
 Bug Fixes:
 
