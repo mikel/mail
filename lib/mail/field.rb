@@ -35,42 +35,6 @@ module Mail
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
 
-    FIELDS_MAP = {
-      "to" => ToField,
-      "cc" => CcField,
-      "bcc" => BccField,
-      "message-id" => MessageIdField,
-      "in-reply-to" => InReplyToField,
-      "references" => ReferencesField,
-      "subject" => SubjectField,
-      "comments" => CommentsField,
-      "keywords" => KeywordsField,
-      "date" => DateField,
-      "from" => FromField,
-      "sender" => SenderField,
-      "reply-to" => ReplyToField,
-      "resent-date" => ResentDateField,
-      "resent-from" => ResentFromField,
-      "resent-sender" =>  ResentSenderField,
-      "resent-to" => ResentToField,
-      "resent-cc" => ResentCcField,
-      "resent-bcc" => ResentBccField,
-      "resent-message-id" => ResentMessageIdField,
-      "return-path" => ReturnPathField,
-      "received" => ReceivedField,
-      "mime-version" => MimeVersionField,
-      "content-transfer-encoding" => ContentTransferEncodingField,
-      "content-description" => ContentDescriptionField,
-      "content-disposition" => ContentDispositionField,
-      "content-type" => ContentTypeField,
-      "content-id" => ContentIdField,
-      "content-location" => ContentLocationField,
-    }
-
-    FIELD_NAME_MAP = FIELDS_MAP.inject({}) do |map, (field, field_klass)|
-      map.update(field => field_klass::NAME)
-    end
-
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -145,7 +109,12 @@ module Mail
       end
 
       def field_class_for(name) #:nodoc:
-        FIELDS_MAP[name.to_s.downcase]
+        name = name.to_s.downcase
+        @fields_map ||= {}
+        @fields_map[name] ||= begin
+          klass = name.split('-').map(&:capitalize).join + "Field"
+          Mail.const_get(klass) rescue nil
+        end
       end
     end
 
@@ -176,7 +145,8 @@ module Mail
         @unparsed_value = value
         @charset = charset
       end
-      @name = FIELD_NAME_MAP[@name.to_s.downcase] || @name
+      klass = self.class.field_class_for(@name)
+      @name = klass ? klass::NAME : @name
     end
 
     def field=(field)

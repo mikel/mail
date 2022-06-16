@@ -1,6 +1,7 @@
 == Version 2.9.0 (unreleased)
 
 Breaking changes:
+* Removed Mail::Field::FIELDS_MAP and Mail::Field::FIELD_NAME_MAP (c960657)
 
 Compatibility:
 

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'spec_helper'
-require 'mail/fields/common_message_id_field'
 
 describe Mail::CommonMessageIdField do
 

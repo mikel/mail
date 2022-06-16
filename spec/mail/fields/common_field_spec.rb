@@ -1,7 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-require 'mail/fields/common_field'
 
 describe Mail::CommonField do
 

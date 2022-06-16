@@ -1,5 +1,3 @@
-require 'mail/fields/named_structured_field'
-require 'mail/elements/date_time_element'
 require 'mail/utilities'
 
 module Mail
