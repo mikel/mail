@@ -2041,6 +2041,39 @@ describe Mail::Message do
       expect(mail.charset).to eq 'ISO-8859-1'
       expect(p.charset).to eq nil
     end
+
+    it "should preserve the charset of the mail when nil vs UTF-8" do
+      mail = Mail.new
+      mail['charset'] = nil
+      expect(mail.charset).to eq nil
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
+      expect(p.charset).to eq 'UTF-8'
+      mail.add_part(p)
+      expect(mail.charset).to eq nil
+      expect(p.charset).to eq 'UTF-8'
+    end
+
+    it "should preserve the charset of the mail when nil vs ISO-8859-1" do
+      mail = Mail.new
+      mail['charset'] = nil
+      expect(mail.charset).to eq nil
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'ISO-8859-1')
+      expect(p.charset).to eq 'ISO-8859-1'
+      mail.add_part(p)
+      expect(mail.charset).to eq nil
+      expect(p.charset).to eq 'ISO-8859-1'
+    end
+
+    it "should preserve the charset of the mail when nil vs nil" do
+      mail = Mail.new
+      mail['charset'] = nil
+      expect(mail.charset).to eq nil
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
+      expect(p.charset).to eq nil
+      mail.add_part(p)
+      expect(mail.charset).to eq nil
+      expect(p.charset).to eq nil
+    end
   end
 
   describe "ordering messages" do
