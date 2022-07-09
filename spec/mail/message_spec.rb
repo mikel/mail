@@ -1989,90 +1989,21 @@ describe Mail::Message do
     end
   end
 
-  describe "adding parts" do
-    it "should preserve the charset of the mail when UTF-8 vs UTF-8" do
-      mail = Mail.new
-      expect(mail.charset).to eq 'UTF-8'
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
-      expect(p.charset).to eq 'UTF-8'
-      mail.add_part(p)
-      expect(mail.charset).to eq 'UTF-8'
-      expect(p.charset).to eq 'UTF-8'
-    end
-
-    it "should preserve the charset of the mail when UTF-8 vs ISO-8859-1" do
-      mail = Mail.new
-      expect(mail.charset).to eq 'UTF-8'
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'ISO-8859-1')
-      expect(p.charset).to eq 'ISO-8859-1'
-      mail.add_part(p)
-      expect(mail.charset).to eq 'UTF-8'
-      expect(p.charset).to eq 'ISO-8859-1'
-    end
-
-    it "should preserve the charset of the mail when UTF-8 vs nil" do
-      mail = Mail.new
-      expect(mail.charset).to eq 'UTF-8'
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
-      expect(p.charset).to eq nil
-      mail.add_part(p)
-      expect(mail.charset).to eq 'UTF-8'
-      expect(p.charset).to eq nil
-    end
-
-    it "should preserve the charset of the mail when ISO-8859-1 vs UTF-8" do
-      mail = Mail.new
-      mail['charset'] = 'ISO-8859-1'
-      expect(mail.charset).to eq 'ISO-8859-1'
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
-      expect(p.charset).to eq 'UTF-8'
-      mail.add_part(p)
-      expect(mail.charset).to eq 'ISO-8859-1'
-      expect(p.charset).to eq 'UTF-8'
-    end
-
-    it "should preserve the charset of the mail when ISO-8859-1 vs nil" do
-      mail = Mail.new
-      mail['charset'] = 'ISO-8859-1'
-      expect(mail.charset).to eq 'ISO-8859-1'
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
-      expect(p.charset).to eq nil
-      mail.add_part(p)
-      expect(mail.charset).to eq 'ISO-8859-1'
-      expect(p.charset).to eq nil
-    end
-
-    it "should preserve the charset of the mail when nil vs UTF-8" do
-      mail = Mail.new
-      mail['charset'] = nil
-      expect(mail.charset).to eq nil
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
-      expect(p.charset).to eq 'UTF-8'
-      mail.add_part(p)
-      expect(mail.charset).to eq nil
-      expect(p.charset).to eq 'UTF-8'
-    end
-
-    it "should preserve the charset of the mail when nil vs ISO-8859-1" do
-      mail = Mail.new
-      mail['charset'] = nil
-      expect(mail.charset).to eq nil
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'ISO-8859-1')
-      expect(p.charset).to eq 'ISO-8859-1'
-      mail.add_part(p)
-      expect(mail.charset).to eq nil
-      expect(p.charset).to eq 'ISO-8859-1'
-    end
-
-    it "should preserve the charset of the mail when nil vs nil" do
-      mail = Mail.new
-      mail['charset'] = nil
-      expect(mail.charset).to eq nil
-      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
-      expect(p.charset).to eq nil
-      mail.add_part(p)
-      expect(mail.charset).to eq nil
-      expect(p.charset).to eq nil
+  describe "adding parts should preserve the charset of the mail" do
+    charsets = ['UTF-8', 'ISO-8859-1', nil]
+    charsets.each do |mail_charset|
+      charsets.each do |part_charset|
+        it "when #{mail_charset || 'nil'} vs #{part_charset || 'nil'}" do
+          mail = Mail.new
+          mail['charset'] = mail_charset
+          expect(mail.charset).to eq mail_charset
+          p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => part_charset)
+          expect(p.charset).to eq part_charset
+          mail.add_part(p)
+          expect(mail.charset).to eq mail_charset
+          expect(p.charset).to eq part_charset
+        end
+      end
     end
   end
 
