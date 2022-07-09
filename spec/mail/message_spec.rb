@@ -1989,6 +1989,60 @@ describe Mail::Message do
     end
   end
 
+  describe "adding parts" do
+    it "should preserve the charset of the mail when UTF-8 vs UTF-8" do
+      mail = Mail.new
+      expect(mail.charset).to eq 'UTF-8'
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
+      expect(p.charset).to eq 'UTF-8'
+      mail.add_part(p)
+      expect(mail.charset).to eq 'UTF-8'
+      expect(p.charset).to eq 'UTF-8'
+    end
+
+    it "should preserve the charset of the mail when UTF-8 vs ISO-8859-1" do
+      mail = Mail.new
+      expect(mail.charset).to eq 'UTF-8'
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'ISO-8859-1')
+      expect(p.charset).to eq 'ISO-8859-1'
+      mail.add_part(p)
+      expect(mail.charset).to eq 'UTF-8'
+      expect(p.charset).to eq 'ISO-8859-1'
+    end
+
+    it "should preserve the charset of the mail when UTF-8 vs nil" do
+      mail = Mail.new
+      expect(mail.charset).to eq 'UTF-8'
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
+      expect(p.charset).to eq nil
+      mail.add_part(p)
+      expect(mail.charset).to eq 'UTF-8'
+      expect(p.charset).to eq nil
+    end
+
+    it "should preserve the charset of the mail when ISO-8859-1 vs UTF-8" do
+      mail = Mail.new
+      mail['charset'] = 'ISO-8859-1'
+      expect(mail.charset).to eq 'ISO-8859-1'
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => 'UTF-8')
+      expect(p.charset).to eq 'UTF-8'
+      mail.add_part(p)
+      expect(mail.charset).to eq 'ISO-8859-1'
+      expect(p.charset).to eq 'UTF-8'
+    end
+
+    it "should preserve the charset of the mail when ISO-8859-1 vs nil" do
+      mail = Mail.new
+      mail['charset'] = 'ISO-8859-1'
+      expect(mail.charset).to eq 'ISO-8859-1'
+      p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT')
+      expect(p.charset).to eq nil
+      mail.add_part(p)
+      expect(mail.charset).to eq 'ISO-8859-1'
+      expect(p.charset).to eq nil
+    end
+  end
+
   describe "ordering messages" do
     it "should put all attachments as the last item" do
       mail = Mail.new
