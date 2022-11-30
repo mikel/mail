@@ -6,4 +6,9 @@ Compatibility:
 
 Features:
 
+Bug Fixes:
+
+* Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
+
+
 Please check [2-8-stable](https://github.com/mikel/mail/blob/2-8-stable/CHANGELOG.rdoc) for previous changes.
