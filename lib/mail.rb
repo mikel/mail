@@ -60,6 +60,9 @@ module Mail # :doc:
   require 'mail/matchers/has_sent_mail'
   require 'mail/matchers/attachment_matchers.rb'
 
+  # Deprecated will be removed in 3.0 release
+  require 'mail/check_delivery_params'
+
   # Finally... require all the Mail.methods
   require 'mail/mail'
 end
