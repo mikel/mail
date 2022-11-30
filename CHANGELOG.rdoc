@@ -4,6 +4,8 @@ Breaking changes:
 
 Compatibility:
 
+* Update MIME-Version to have correct case per RFC 2045 @mikel
+
 Features:
 
 * Updated README to improve around sending multipart mail @kapfenho

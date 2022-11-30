@@ -433,7 +433,7 @@ From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
 To: nicolas@test.lindsaar.net.au
 Message-ID: <626835f736e19_10873fdfa3c2ffd4947a3@sender.at.mail>
 Subject: First multipart email sent with Mail
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/mixed;
  boundary=\"--==_mimepart_626835f733867_10873fdfa3c2ffd494636\";
  charset=UTF-8
