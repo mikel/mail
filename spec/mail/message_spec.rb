@@ -1989,6 +1989,24 @@ describe Mail::Message do
     end
   end
 
+  describe "adding parts should preserve the charset of the mail" do
+    charsets = ['UTF-8', 'ISO-8859-1', nil]
+    charsets.each do |mail_charset|
+      charsets.each do |part_charset|
+        it "when #{mail_charset || 'nil'} vs #{part_charset || 'nil'}" do
+          mail = Mail.new
+          mail['charset'] = mail_charset
+          expect(mail.charset).to eq mail_charset
+          p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => part_charset)
+          expect(p.charset).to eq part_charset
+          mail.add_part(p)
+          expect(mail.charset).to eq mail_charset
+          expect(p.charset).to eq part_charset
+        end
+      end
+    end
+  end
+
   describe "ordering messages" do
     it "should put all attachments as the last item" do
       mail = Mail.new
