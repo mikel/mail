@@ -236,6 +236,11 @@ module Mail
     end
   end
 
+  # Returns a list of registered delivery interceptors.
+  def self.delivery_interceptors
+    @@delivery_interceptors
+  end
+
   protected
 
   RANDOM_TAG='%x%x_%x%x%d%x'

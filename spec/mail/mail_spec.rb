@@ -32,4 +32,45 @@ RSpec.describe "mail" do
     expect(wrap_method).to eq file_method
   end
 
+  describe "delivery_interceptors" do
+
+    class InterceptorAgentOne
+      @@intercept = false
+      def self.intercept=(val)
+        @@intercept = val
+      end
+      def self.delivering_email(mail)
+        if @@intercept
+          mail.to = 'bob@example.com'
+        end
+      end
+    end
+
+    class InterceptorAgentTwo
+      @@intercept = false
+      def self.intercept=(val)
+        @@intercept = val
+      end
+      def self.delivering_email(mail)
+        if @@intercept
+          mail.to = 'bob@example.com'
+        end
+      end
+    end
+
+    it "should return empty array if no interceptors have been registered" do
+      expect(Mail.delivery_interceptors).to eq []
+    end
+
+    it "should return array of registered delivery interceptors" do
+      Mail.register_interceptor(InterceptorAgentOne)
+      expect(Mail.delivery_interceptors).to eq [InterceptorAgentOne]
+      Mail.register_interceptor(InterceptorAgentTwo)
+      expect(Mail.delivery_interceptors).to eq [InterceptorAgentOne, InterceptorAgentTwo]
+      Mail.unregister_interceptor(InterceptorAgentOne)
+      expect(Mail.delivery_interceptors).to eq [InterceptorAgentTwo]
+    end
+
+  end
+
 end
