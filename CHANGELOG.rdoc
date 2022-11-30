@@ -4,6 +4,8 @@ Breaking changes:
 
 Compatibility:
 
+* Update MIME-Version to have correct case per RFC 2045 @mikel
+
 Features:
 
 Please check [2-8-stable](https://github.com/mikel/mail/blob/2-8-stable/CHANGELOG.rdoc) for previous changes.

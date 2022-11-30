@@ -1409,7 +1409,7 @@ module Mail
       header.has_date?
     end
 
-    # Returns true if the message has a Mime-Version field, the field may or may
+    # Returns true if the message has a MIME-Version field, the field may or may
     # not have a value, but the field exists or not.
     def has_mime_version?
       header.has_mime_version?

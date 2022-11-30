@@ -30,7 +30,7 @@ From: Test Tester <xxxx@xxxx.com>
 Reply-To: Test Tester <xxxx@xxxx.com>
 To: xxxx@xxxx.com, xxxx@xxxx.com
 Subject: Another PDF with 🎉 Unicode chars in it 🍿
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/mixed; 
 	boundary="----=_Part_2192_32400445.1115745999735"
 X-Virus-Scanned: amavisd-new at textdrive.com

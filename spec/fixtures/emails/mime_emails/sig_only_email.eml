@@ -3,7 +3,7 @@ From: Test <test@test.lindsaar.net>
 To: Mikel <mikel@test.lindsaar.net>
 Subject: Re: Testing multipart/signed
 Message-ID: <20070604150131.40d4fa1e@reforged>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/signed; boundary=Sig_2GIY2xfzqSADMmu9sKGJqWm;
  protocol="application/pgp-signature"; micalg=PGP-SHA1
 

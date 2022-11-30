@@ -56,7 +56,7 @@ describe Mail::Field do
       structured_fields = %w[ Date From Sender Reply-To To Cc Bcc Message-ID In-Reply-To
                               References Keywords Resent-Date Resent-From Resent-Sender
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
-                              Return-Path Received Subject Comments Mime-Version
+                              Return-Path Received Subject Comments MIME-Version
                               Content-Transfer-Encoding Content-Description
                               Content-Disposition Content-Type ]
       structured_fields.each do |sf|

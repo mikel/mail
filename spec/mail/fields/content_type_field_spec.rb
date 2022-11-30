@@ -749,7 +749,7 @@ describe Mail::ContentTypeField do
     end
 
     it "should just get the mime type if all else fails with some real garbage" do
-      c = Mail::ContentTypeField.new("text/html; format=flowed; charset=iso-8859-15  Mime-Version: 1.0")
+      c = Mail::ContentTypeField.new("text/html; format=flowed; charset=iso-8859-15  MIME-Version: 1.0")
       expect(c.string).to eq 'text/html'
     end
 

@@ -5,7 +5,7 @@ Content-Disposition: attachment; filename=blah.gz
 Content-Transfer-Encoding: base64
 Content-Description: Attachment has identical content to above foo.gz
 Message-Id: <1066974048.4264.62.camel@localhost>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Date: 23 Oct 2003 22:40:49 -0700
 Content-Type: application/x-gzip; NAME=blah.gz
 
