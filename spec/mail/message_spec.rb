@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Message do
+RSpec.describe Mail::Message do
 
   def basic_email
     "To: mikel\r\nFrom: bob\r\nSubject: Hello!\r\n\r\nemail message\r\n"
@@ -1448,6 +1448,14 @@ describe Mail::Message do
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
 
+      describe 'charset' do
+        it 'should return a default value for multipart mails' do
+          mail = Mail.new
+          mail.add_part(Mail::Part.new(body: 'PLAIN TEXT', content_type: 'text/plain'))
+          expect(mail.charset).to eq 'UTF-8'
+        end
+      end
+
       describe 'charset=' do
         before do
           @mail = Mail.new do
@@ -1986,6 +1994,24 @@ describe Mail::Message do
       expect(mail.from).to eq ['extended@example.net']
       expect(mail[:from].decoded).to eq '"Foo áëô îü" <extended@example.net>'
       expect(mail[:from].encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
+    end
+  end
+
+  describe "adding parts should preserve the charset of the mail" do
+    charsets = ['UTF-8', 'ISO-8859-1', nil]
+    charsets.each do |mail_charset|
+      charsets.each do |part_charset|
+        it "when #{mail_charset || 'nil'} vs #{part_charset || 'nil'}" do
+          mail = Mail.new
+          mail['charset'] = mail_charset
+          expect(mail.charset).to eq mail_charset
+          p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => part_charset)
+          expect(p.charset).to eq part_charset
+          mail.add_part(p)
+          expect(mail.charset).to eq mail_charset
+          expect(p.charset).to eq part_charset
+        end
+      end
     end
   end
 

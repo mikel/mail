@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'mail/fields/common_message_id_field'
 
-describe Mail::CommonMessageIdField do
+RSpec.describe Mail::CommonMessageIdField do
 
   describe "encoding and decoding fields" do
 

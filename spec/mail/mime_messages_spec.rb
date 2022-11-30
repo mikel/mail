@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "MIME Emails" do
+RSpec.describe "MIME Emails" do
 
     describe "general helper methods" do
 

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Header do
+RSpec.describe Mail::Header do
 
   describe "initialization" do
 

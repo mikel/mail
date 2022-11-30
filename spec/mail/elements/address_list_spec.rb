@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::AddressList do
+RSpec.describe Mail::AddressList do
 
   describe "parsing" do
     it "should parse an address list" do

@@ -53,7 +53,7 @@ require 'spec_helper'
 #    "Message-ID:" field changes, not any particular syntactic difference
 #    that appears (or does not appear) in the message.
 
-describe Mail::MessageIdField do
+RSpec.describe Mail::MessageIdField do
 
   describe "initialization" do
 

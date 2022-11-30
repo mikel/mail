@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'mail/multibyte/chars'
 
-describe Mail::Multibyte::Chars do
+RSpec.describe Mail::Multibyte::Chars do
   it "should upcase" do
     chars = described_class.new('Laurent, où sont les tests ?')
     expect(chars.upcase).to eq("LAURENT, OÙ SONT LES TESTS ?")

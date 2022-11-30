@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::StructuredField do
+RSpec.describe Mail::StructuredField do
 
   describe "initialization" do
     

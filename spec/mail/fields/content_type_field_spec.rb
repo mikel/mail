@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentTypeField do
+RSpec.describe Mail::ContentTypeField do
   # Content-Type Header Field
   #
   # The purpose of the Content-Type field is to describe the data

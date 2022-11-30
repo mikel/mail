@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Field do
+RSpec.describe Mail::Field do
 
   describe 'parsing' do
     it "parses full header fields" do

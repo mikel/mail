@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'mail/fields/parameter_hash'
 
-describe Mail::ParameterHash do
+RSpec.describe Mail::ParameterHash do
   it "should return the values in the hash" do
     hash = Mail::ParameterHash.new
     hash.merge!({'value1' => 'one', 'value2' => 'two'})

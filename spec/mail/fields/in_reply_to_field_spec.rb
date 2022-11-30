@@ -10,7 +10,7 @@ require 'spec_helper'
 #    the parent messages, then the new message will have no "In-Reply-To:"
 #    field.
 
-describe Mail::InReplyToField do
+RSpec.describe Mail::InReplyToField do
 
   describe "initialization" do
     it "should initialize" do

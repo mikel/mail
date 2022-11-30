@@ -6,7 +6,7 @@ class MyDelivery; def initialize(settings); end; end
 
 class MyRetriever; def initialize(settings); end; end
 
-describe "Mail" do
+RSpec.describe "Mail" do
 
   before(:each) do
     # Reset all defaults back to original state

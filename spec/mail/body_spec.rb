@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Body do
+RSpec.describe Mail::Body do
 
   # 3.5 Overall message syntax
   #

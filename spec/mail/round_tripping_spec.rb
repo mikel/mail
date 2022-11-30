@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Round Tripping" do
+RSpec.describe "Round Tripping" do
 
   it "should round trip a basic email" do
     mail = Mail.new('Subject: FooBar')

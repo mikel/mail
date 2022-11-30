@@ -2,6 +2,6 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Object do
+RSpec.describe Object do
 
 end
