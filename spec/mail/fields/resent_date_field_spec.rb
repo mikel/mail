@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ResentDateField do
+RSpec.describe Mail::ResentDateField do
   it "should initialize" do
     expect { Mail::ResentDateField.new("12 Aug 2009 00:00:02 GMT") }.not_to raise_error
   end

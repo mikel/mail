@@ -602,7 +602,7 @@ Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end
 
-describe "sending an email" do
+RSpec.describe "sending an email" do
   include Mail::Matchers
 
   before(:each) do

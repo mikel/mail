@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::DateTimeElement do
+RSpec.describe Mail::DateTimeElement do
 
   it "should parse a date" do
     date_text  = 'Wed, 27 Apr 2005 14:15:31 -0700'

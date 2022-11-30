@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::MimeVersionField do
+RSpec.describe Mail::MimeVersionField do
   # MIME-Version Header Field
   # 
   # Since RFC 822 was published in 1982, there has really been only one

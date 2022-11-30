@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "AddressListsParser" do
+RSpec.describe "AddressListsParser" do
   it "should parse an address" do
     text = 'Mikel Lindsaar <test@lindsaar.net>, Friends: test2@lindsaar.net, Ada <test3@lindsaar.net>;'
     a = Mail::Parsers::AddressListsParser

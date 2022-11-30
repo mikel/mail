@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'AddressContainer' do
+RSpec.describe 'AddressContainer' do
   it "should allow you to append an address to an address field result" do
     m = Mail.new("To: mikel@test.lindsaar.net")
     expect(m.to).to eq ['mikel@test.lindsaar.net']

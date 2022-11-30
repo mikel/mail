@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "mail encoding" do
+RSpec.describe "mail encoding" do
 
   it "should allow you to assign an email-wide charset" do
     mail = Mail.new

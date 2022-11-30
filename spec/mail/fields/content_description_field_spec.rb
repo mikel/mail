@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentDescriptionField do
+RSpec.describe Mail::ContentDescriptionField do
   # Content-Description Header Field
   #
   # The ability to associate some descriptive information with a given

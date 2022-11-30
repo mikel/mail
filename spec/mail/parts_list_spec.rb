@@ -3,7 +3,7 @@
 
 require 'spec_helper'
 
-describe "PartsList" do
+RSpec.describe "PartsList" do
   it "should return itself on sort" do
     p = Mail::PartsList.new
     p << 2

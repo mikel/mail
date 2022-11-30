@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::KeywordsField do
+RSpec.describe Mail::KeywordsField do
 
   describe "initializing" do
     

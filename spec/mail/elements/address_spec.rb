@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Address do
+RSpec.describe Mail::Address do
 
   describe "functionality" do
 

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Test emails" do
+RSpec.describe "Test emails" do
 
   describe "from RFC2822" do
 

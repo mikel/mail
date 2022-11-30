@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "mail" do
+RSpec.describe "mail" do
   
   it "should be able to be instantiated" do
     expect { Mail }.not_to raise_error

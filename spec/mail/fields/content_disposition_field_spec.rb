@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentDispositionField do
+RSpec.describe Mail::ContentDispositionField do
 
   describe "initialization" do
 

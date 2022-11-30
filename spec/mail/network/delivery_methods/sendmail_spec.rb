@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Sendmail do
+RSpec.describe Mail::Sendmail do
   let :mail do
     Mail.new do
       from    'roger@test.lindsaar.net'

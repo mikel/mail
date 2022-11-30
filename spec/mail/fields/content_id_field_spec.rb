@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentIdField do
+RSpec.describe Mail::ContentIdField do
   # Content-ID Header Field
   #
   # In constructing a high-level user agent, it may be desirable to allow

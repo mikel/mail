@@ -5,7 +5,7 @@ require 'spec_helper'
 # reply-to        =       "Reply-To:" address-list CRLF
 # 
 
-describe Mail::ReplyToField do
+RSpec.describe Mail::ReplyToField do
   
   describe "initialization" do
 

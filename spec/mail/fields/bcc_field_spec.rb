@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::BccField do
+RSpec.describe Mail::BccField do
   
   #    The "Bcc:" field (where the "Bcc" means "Blind Carbon Copy") contains
   #    addresses of recipients of the message whose addresses are not to be

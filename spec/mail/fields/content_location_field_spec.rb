@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentLocationField do
+RSpec.describe Mail::ContentLocationField do
 
   # Content-Location Header Field
   # 

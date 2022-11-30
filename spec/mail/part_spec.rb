@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Part do
+RSpec.describe Mail::Part do
 
   it "should not add a default Content-ID" do
     part = Mail::Part.new

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "SMTP Delivery Method" do
+RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
     Mail.defaults do

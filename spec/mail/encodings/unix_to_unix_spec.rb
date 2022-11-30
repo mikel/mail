@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Encodings::UnixToUnix do
+RSpec.describe Mail::Encodings::UnixToUnix do
   def decode(str)
     Mail::Encodings::UnixToUnix.decode(str)
   end

@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'mail/fields/common_field'
 
-describe Mail::CommonField do
+RSpec.describe Mail::CommonField do
 
   describe "multi-charset support" do
 
