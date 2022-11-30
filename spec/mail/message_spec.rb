@@ -1448,6 +1448,14 @@ describe Mail::Message do
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
       end
 
+      describe 'charset' do
+        it 'should return a default value for multipart mails' do
+          mail = Mail.new
+          mail.add_part(Mail::Part.new(body: 'PLAIN TEXT', content_type: 'text/plain'))
+          expect(mail.charset).to eq 'UTF-8'
+        end
+      end
+
       describe 'charset=' do
         before do
           @mail = Mail.new do
