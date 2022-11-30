@@ -6,6 +6,8 @@ Compatibility:
 
 Features:
 
+* Updated README to improve around sending multipart mail @kapfenho
+
 Code Improvements:
 
 * Use Rake's default rakelib/ directory @olleolleolle
