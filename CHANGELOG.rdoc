@@ -16,6 +16,7 @@ Code Improvements:
 * Use Rake's default rakelib/ directory @olleolleolle
 * refactor: Use Dir.glob only once in gemspec's "files" directive @olleolleolle
 * Configure RSpec's zero-monkey patching mode @olleolleolle
+* Added support for JRuby 9.4 @mikel
 
 Bug Fixes:
 

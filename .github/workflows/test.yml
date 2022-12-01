@@ -25,9 +25,19 @@ jobs:
            timeout: 5
          - ruby: 3.1
            timeout: 5
+         - ruby: truffleruby
+           timeout: 50
          - ruby: truffleruby-head
            timeout: 50
          - ruby: jruby
+           timeout: 5
+         - ruby: jruby-head
+           timeout: 5
+         - ruby: jruby-9.4
+           timeout: 5
+         - ruby: jruby-9.3
+           timeout: 5
+         - ruby: jruby-9.2
            timeout: 5
     steps:
     - uses: actions/checkout@v2
