@@ -35,6 +35,38 @@ module Mail
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
 
+    FIELD_NAME_MAP = {
+      "to" => "ToField",
+      "cc" => "CcField",
+      "bcc" => "BccField",
+      "message-id" => "MessageIdField",
+      "in-reply-to" => "InReplyToField",
+      "references" => "ReferencesField",
+      "subject" => "SubjectField",
+      "comments" => "CommentsField",
+      "keywords" => "KeywordsField",
+      "date" => "DateField",
+      "from" => "FromField",
+      "sender" => "SenderField",
+      "reply-to" => "ReplyToField",
+      "resent-date" => "ResentDateField",
+      "resent-from" => "ResentFromField",
+      "resent-sender" => "ResentSenderField",
+      "resent-to" => "ResentToField",
+      "resent-cc" => "ResentCcField",
+      "resent-bcc" => "ResentBccField",
+      "resent-message-id" => "ResentMessageIdField",
+      "return-path" => "ReturnPathField",
+      "received" => "ReceivedField",
+      "mime-version" => "MimeVersionField",
+      "content-transfer-encoding" => "ContentTransferEncodingField",
+      "content-description" => "ContentDescriptionField",
+      "content-disposition" => "ContentDispositionField",
+      "content-type" => "ContentTypeField",
+      "content-id" => "ContentIdField",
+      "content-location" => "ContentLocationField",
+    }
+
     # Generic Field Exception
     class FieldError < StandardError
     end
@@ -109,12 +141,8 @@ module Mail
       end
 
       def field_class_for(name) #:nodoc:
-        name = name.to_s.downcase
-        @fields_map ||= {}
-        @fields_map[name] ||= begin
-          klass = name.split('-').map(&:capitalize).join + "Field"
-          Mail.const_get(klass) rescue nil
-        end
+        class_name = FIELD_NAME_MAP[name.to_s.downcase]
+        Mail.const_get(class_name) if class_name
       end
     end
 
