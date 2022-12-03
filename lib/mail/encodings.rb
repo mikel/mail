@@ -72,7 +72,7 @@ module Mail
     #  Mail::Encodings.param_encode("This is fun") #=> "us-ascii'en'This%20is%20fun"
     def Encodings.param_encode(str)
       case
-      when str.ascii_only? && str =~ TOKEN_UNSAFE
+      when str.ascii_only? && TOKEN_UNSAFE.match?(str)
         %Q{"#{str}"}
       when str.ascii_only?
         str
@@ -121,7 +121,7 @@ module Mail
     # String has to be of the format =?<encoding>?[QB]?<string>?=
     def Encodings.value_decode(str)
       # Optimization: If there's no encoded-words in the string, just return it
-      return str unless str =~ ENCODED_VALUE
+      return str unless ENCODED_VALUE.match?(str)
 
       lines = collapse_adjacent_encodings(str)
 
