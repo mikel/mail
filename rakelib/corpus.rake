@@ -3,7 +3,7 @@ require 'benchmark'
 namespace :corpus do
 
   task :load_mail do
-    require File.expand_path('../../spec/environment', __FILE__)
+    require File.expand_path('../spec/environment', __dir__)
     require 'mail'
   end
 
