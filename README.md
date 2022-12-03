@@ -42,7 +42,7 @@ our documentation, add new features—up to you! Thank you for pitching in.
 * [Encodings](#encodings)
 * [Contributing](#contributing)
 * [Usage](#usage)
-* [Excerpts from TREC Span Corpus 2005](#excerpts-from-trec-span-corpus-2005)
+* [Excerpts from TREC Spam Corpus 2005](#excerpts-from-trec-spam-corpus-2005)
 * [License](#license)
 
 ## Compatibility
