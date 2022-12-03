@@ -41,28 +41,28 @@ RSpec.describe Mail::CcField do
       expect(t.addresses[1]).to eq 'mikel@me.com'
       expect(t.addresses[2]).to eq 'bob@you.com'
     end
-    
+
     it "should return the formatted line on to_s" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
-    
+
     it "should return the encoded line for one address" do
       t = Mail::CcField.new('sam@me.com')
       expect(t.encoded).to eq "Cc: sam@me.com\r\n"
     end
-    
+
     it "should return the encoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq "Cc: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
-    
+
     it "should return the decoded line" do
       t = Mail::CcField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.decoded).to eq "sam@me.com, my_group: mikel@me.com, bob@you.com;"
     end
-    
+
   end
-  
-  
+
+
 end

@@ -5,47 +5,47 @@ require 'spec_helper'
 RSpec.describe Mail::KeywordsField do
 
   describe "initializing" do
-    
+
     it "should initialize" do
       expect { Mail::KeywordsField.new("this, is, email") }.not_to raise_error
     end
-    
+
     it "should accept a string without the field name" do
       k = Mail::KeywordsField.new('these are keywords, so there')
       expect(k.name).to eq 'Keywords'
       expect(k.value).to eq 'these are keywords, so there'
     end
-    
+
   end
-  
+
   describe "giving a list of keywords" do
     it "should return a list of keywords" do
       k = Mail::KeywordsField.new('these are keywords, so there')
       expect(k.keywords).to eq ['these are keywords', 'so there']
     end
-    
+
     it "should handle phrases" do
       k = Mail::KeywordsField.new('"these, are keywords", so there')
       expect(k.keywords).to eq ['these, are keywords', 'so there']
     end
-    
+
     it "should handle comments" do
       k = Mail::KeywordsField.new('"these, are keywords", so there (This is an irrelevant comment)')
       expect(k.keywords).to eq ['these, are keywords', 'so there (This is an irrelevant comment)']
     end
-    
+
     it "should handle comments" do
       k = Mail::KeywordsField.new('"these, are keywords", so there (This is an irrelevant comment)')
       expect(k.keywords).to eq ['these, are keywords', 'so there (This is an irrelevant comment)']
     end
-    
+
     it "should handle comments in quotes" do
       k = Mail::KeywordsField.new('"these, are keywords (another comment to be ignored)", so there (This is an irrelevant comment)')
       expect(k.keywords).to eq ['these, are keywords (another comment to be ignored)', 'so there (This is an irrelevant comment)']
     end
-    
+
   end
-  
+
   describe "encoding and decoding" do
     it "should encode" do
       k = Mail::KeywordsField.new('these are keywords, so there')

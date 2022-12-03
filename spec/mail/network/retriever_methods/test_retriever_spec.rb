@@ -14,7 +14,7 @@ RSpec.describe "Test Retriever" do
   end
 
   describe "all" do
-    
+
     before do
       @emails = populate(15)
     end
@@ -30,7 +30,7 @@ RSpec.describe "Test Retriever" do
     end
 
   end
-  
+
   describe "find" do
 
     before do
