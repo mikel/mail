@@ -4,7 +4,7 @@ require 'mail/utilities'
 
 module Mail
   class MimeVersionField < NamedStructuredField #:nodoc:
-    NAME = 'Mime-Version'
+    NAME = 'MIME-Version'
 
     def self.singular?
       true

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::EnvelopeFromElement do
-  
+RSpec.describe Mail::EnvelopeFromElement do
+
   describe "parsing a from envelope string" do
     it "should parse a full field" do
       expect { Mail::EnvelopeFromElement.new("mikel@test.lindsaar.net  Mon Aug  7 00:39:21 2009") }.not_to raise_error

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::CommonField do
+RSpec.describe Mail::CommonField do
 
   describe "multi-charset support" do
 

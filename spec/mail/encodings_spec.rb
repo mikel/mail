@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Encodings do
+RSpec.describe Mail::Encodings do
 
   describe "base64 Encoding" do
 

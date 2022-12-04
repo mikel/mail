@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ContentDescriptionField do
+RSpec.describe Mail::ContentDescriptionField do
   # Content-Description Header Field
   #
   # The ability to associate some descriptive information with a given
@@ -16,7 +16,7 @@ describe Mail::ContentDescriptionField do
   # set, although the mechanism specified in RFC 2047 may be used for
   # non-US-ASCII Content-Description values.
   #
-  
+
   describe "initialization" do
 
     it "should initialize" do

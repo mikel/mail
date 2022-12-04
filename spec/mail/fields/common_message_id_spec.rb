@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::CommonMessageIdField do
+RSpec.describe Mail::CommonMessageIdField do
 
   describe "encoding and decoding fields" do
 

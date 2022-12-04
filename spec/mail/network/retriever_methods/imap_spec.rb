@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "IMAP Retriever" do
+RSpec.describe "IMAP Retriever" do
 
   before(:each) do
     Mail.defaults do

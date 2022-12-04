@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # sender          =       "Sender:" mailbox CRLF
-describe Mail::SenderField do
+RSpec.describe Mail::SenderField do
   let :field do
     Mail::SenderField.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
   end

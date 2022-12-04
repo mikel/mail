@@ -42,12 +42,25 @@ our documentation, add new features—up to you! Thank you for pitching in.
 * [Encodings](#encodings)
 * [Contributing](#contributing)
 * [Usage](#usage)
-* [Excerpts from TREC Span Corpus 2005](#excerpts-from-trec-span-corpus-2005)
+* [Excerpts from TREC Spam Corpus 2005](#excerpts-from-trec-spam-corpus-2005)
 * [License](#license)
 
 ## Compatibility
 
-Mail supports Ruby 2.5+, including JRuby and TruffleRuby.
+Mail is tested against:
+
+* Ruby: 2.5
+* Ruby: 2.6
+* Ruby: 2.7
+* Ruby: 3.0
+* Ruby: 3.1
+* JRuby: 9.2
+* JRuby: 9.3
+* JRuby: 9.4
+* JRuby: stable
+* JRuby: head
+* Truffleruby: stable
+* Truffleruby: head
 
 As new versions of Ruby are released, Mail will be compatible with support for the "preview" and all "normal maintenance", "security maintenance" and the two most recent "end of life" versions listed at the [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/) page.  Pull requests to assist in adding support for new preview releases are more than welcome.
 
@@ -403,18 +416,21 @@ simple as possible.... (asking a lot from a mail library)
 
 ```ruby
 mail = Mail.deliver do
-  to      'nicolas@test.lindsaar.net.au'
-  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-  subject 'First multipart email sent with Mail'
-
-  text_part do
-    body 'This is plain text'
+  part :content_type => "multipart/mixed" do |p1|
+    p1.part :content_type => "multipart/related" do |p2|
+      p2.part :content_type => "multipart/alternative",
+              :content_disposition => "inline" do |p3|
+        p3.part :content_type => "text/plain; charset=utf-8",
+                :body => "Here is the attachment you wanted\n"
+        p3.part :content_type => "text/html; charset=utf-8",
+                :body => "<h1>Funky Title</h1><p>Here is the attachment you wanted</p>\n"
+      end
+    end
+    add_file '/path/to/myfile.pdf'
   end
-
-  html_part do
-    content_type 'text/html; charset=UTF-8'
-    body '<h1>This is HTML</h1>'
-  end
+  from      "Mikel Lindsaar <mikel@test.lindsaar.net.au>"
+  to        "nicolas@test.lindsaar.net.au"
+  subject   "First multipart email sent with Mail"
 end
 ```
 
@@ -425,34 +441,76 @@ so desire...
 ```
 puts mail.to_s #=>
 
-To: nicolas@test.lindsaar.net.au
+Date: Tue, 26 Apr 2022 20:12:07 +0200
 From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
+To: nicolas@test.lindsaar.net.au
+Message-ID: <626835f736e19_10873fdfa3c2ffd4947a3@sender.at.mail>
 Subject: First multipart email sent with Mail
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary=\"--==_mimepart_626835f733867_10873fdfa3c2ffd494636\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636
+Content-Type: multipart/mixed;
+ boundary=\"--==_mimepart_626835f73382a_10873fdfa3c2ffd494518\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f73382a_10873fdfa3c2ffd494518
+Content-Type: multipart/related;
+ boundary=\"--==_mimepart_626835f7337f5_10873fdfa3c2ffd494438\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f7337f5_10873fdfa3c2ffd494438
 Content-Type: multipart/alternative;
-  boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
-Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
+ boundary=\"--==_mimepart_626835f733702_10873fdfa3c2ffd494376\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-ID: <626835f738373_10873fdfa3c2ffd49488b@sender.at.mail>
+
+
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
+Here is the attachment you wanted
 
-----==_mimepart_4a914f0c911be_6f0f1ab8026659
-Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
-Content-Type: text/plain
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376
+Content-Type: text/html;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-This is plain text
-----==_mimepart_4a914f0c911be_6f0f1ab8026659
-Content-Type: text/html; charset=UTF-8
-Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+<h1>Funky Title</h1><p>Here is the attachment you wanted</p>
 
-<h1>This is HTML</h1>
-----==_mimepart_4a914f0c911be_6f0f1ab8026659--
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376--
+
+----==_mimepart_626835f7337f5_10873fdfa3c2ffd494438--
+
+----==_mimepart_626835f73382a_10873fdfa3c2ffd494518--
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636
+Content-Type: text/plain;
+ charset=UTF-8;
+ filename=myfile.txt
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename=myfile.txt
+Content-ID: <6
+26835f7386ab_10873fdfa3c2ffd4949b8@sender.at.mail>
+
+Hallo,
+Test
+End
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636--
 ```
 
 Mail inserts the content transfer encoding, the mime version,
@@ -602,7 +660,7 @@ Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end
 
-describe "sending an email" do
+RSpec.describe "sending an email" do
   include Mail::Matchers
 
   before(:each) do

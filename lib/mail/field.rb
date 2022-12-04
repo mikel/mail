@@ -90,7 +90,7 @@ module Mail
       "resent-message-id" => "Resent-Message-ID",
       "return-path" => "Return-Path",
       "received" => "Received",
-      "mime-version" => "Mime-Version",
+      "mime-version" => "MIME-Version",
       "content-transfer-encoding" => "Content-Transfer-Encoding",
       "content-description" => "Content-Description",
       "content-disposition" => "Content-Disposition",

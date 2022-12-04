@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Body do
+RSpec.describe Mail::Body do
 
   # 3.5 Overall message syntax
   #
@@ -230,7 +230,7 @@ describe Mail::Body do
     end
 
     it "should split if boundary is not set" do
-      multipart_body = "\n\n--\nDate: Thu, 01 Aug 2013 15:14:20 +0100\nMime-Version: 1.0\nContent-Type: text/plain\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment;\n filename=\"\"\nContent-ID: <51fa6d3cac796_d84e3fe5a58349e025683@local.mail>\n\n\n\n----"
+      multipart_body = "\n\n--\nDate: Thu, 01 Aug 2013 15:14:20 +0100\nMIME-Version: 1.0\nContent-Type: text/plain\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment;\n filename=\"\"\nContent-ID: <51fa6d3cac796_d84e3fe5a58349e025683@local.mail>\n\n\n\n----"
       body = Mail::Body.new(multipart_body)
       expect { body.split!(nil) }.not_to raise_error
     end

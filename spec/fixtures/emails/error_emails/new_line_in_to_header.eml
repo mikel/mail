@@ -23,7 +23,7 @@ To: leads@sg.dc.com,
 	cc@c-l-example.com
 Message-Id: <4cb5c7d0a3cce_120e..fdbed2b861958562@s.t-example.com.tmail>
 Subject: [Online Lead] Online Lead #1111111
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 
 <?xml version="1.0" encoding="UTF-8"?>

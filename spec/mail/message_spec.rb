@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Message do
+RSpec.describe Mail::Message do
 
   def basic_email
     "To: mikel\r\nFrom: bob\r\nSubject: Hello!\r\n\r\nemail message\r\n"
@@ -1259,7 +1259,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          expect(mail.to_s).to match(/Mime-Version: 3.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 3.0\r\n/)
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -1270,7 +1270,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should make an email and inject a mime_version if none was set if told to_s" do
@@ -1280,7 +1280,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should add the mime version to the message permanently once sent to_s" do
@@ -1443,9 +1443,17 @@ describe Mail::Message do
           part.body          = 'a' * 999
         end
         mail.encoded
-        
+
         expect(mail.parts.count).to eq(1)
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
+      end
+
+      describe 'charset' do
+        it 'should return a default value for multipart mails' do
+          mail = Mail.new
+          mail.add_part(Mail::Part.new(body: 'PLAIN TEXT', content_type: 'text/plain'))
+          expect(mail.charset).to eq 'UTF-8'
+        end
       end
 
       describe 'charset=' do
@@ -1463,19 +1471,19 @@ describe Mail::Message do
             end
           end
         end
-        
+
         it "should not add an empty charset header" do
           @mail.charset = nil
-          
+
           expect(@mail.multipart?).to eq true
           expect(@mail.parts.count).to eq 2
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
         end
-        
+
         it "should remove the charset header" do
           @mail.charset = 'iso-8859-1'
           @mail.charset = nil
-          
+
           expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
           expect(@mail.encoded.scan(/charset=iso-8859-1/).count).to eq 0
         end
@@ -1598,7 +1606,7 @@ describe Mail::Message do
           body '<h1>This is HTML</h1>'
         end
       end
-      expect { mail.decoded }.to raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
+      expect { mail.decoded }.to raise_error(NoMethodError, 'This message cannot be decoded as _entire_ message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
 
     it "should return the decoded body if you call decode and the message is not multipart" do
@@ -1986,6 +1994,24 @@ describe Mail::Message do
       expect(mail.from).to eq ['extended@example.net']
       expect(mail[:from].decoded).to eq '"Foo áëô îü" <extended@example.net>'
       expect(mail[:from].encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
+    end
+  end
+
+  describe "adding parts should preserve the charset of the mail" do
+    charsets = ['UTF-8', 'ISO-8859-1', nil]
+    charsets.each do |mail_charset|
+      charsets.each do |part_charset|
+        it "when #{mail_charset || 'nil'} vs #{part_charset || 'nil'}" do
+          mail = Mail.new
+          mail['charset'] = mail_charset
+          expect(mail.charset).to eq mail_charset
+          p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => part_charset)
+          expect(p.charset).to eq part_charset
+          mail.add_part(p)
+          expect(mail.charset).to eq mail_charset
+          expect(p.charset).to eq part_charset
+        end
+      end
     end
   end
 

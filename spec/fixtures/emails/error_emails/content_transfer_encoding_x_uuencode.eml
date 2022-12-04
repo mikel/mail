@@ -16,7 +16,7 @@ Received: from LIST.TRANSMISSION.BPA.GOV by LIST.TRANSMISSION.BPA.GOV
 Received: from [207.202.136.216] (ip136.r2.d.pdx.nwlink.com [207.202.136.136])
           by comet.pacifier.com (8.11.2/8.11.1) with ESMTP id g0ALxLX06696;
           Thu, 10 Jan 2002 13:59:21 -0800 (PST)
-Mime-Version: 1.0
+MIME-Version: 1.0
 X-Sender: lpeters@mail.pacifier.com
 References: <1168BAF252B7D41194810001028D743108913C@SERVER>
 Content-Type: multipart/mixed;

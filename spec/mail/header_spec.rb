@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Header do
+RSpec.describe Mail::Header do
 
   describe "initialization" do
 
@@ -616,13 +616,13 @@ TRACEHEADER
     end
 
     it "should say it has a date id if it does" do
-      expect(Mail::Header.new('Mime-Version: 1.0')).to be_has_mime_version
+      expect(Mail::Header.new('MIME-Version: 1.0')).to be_has_mime_version
     end
   end
 
   describe "mime version handling" do
     it "should return the mime version of the email" do
-      header = Mail::Header.new("Mime-Version: 1.0")
+      header = Mail::Header.new("MIME-Version: 1.0")
       expect(header['mime-version'].value).to eq '1.0'
     end
 

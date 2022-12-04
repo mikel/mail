@@ -1,14 +1,14 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require File.expand_path('../environment', __FILE__)
+require File.expand_path('environment', __dir__)
 
 unless defined?(MAIL_ROOT)
   $stderr.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
-  MAIL_ROOT = File.join(File.dirname(__FILE__), '../')
+  MAIL_ROOT = File.join(__dir__, '../')
 end
 
 unless defined?(SPEC_ROOT)
-  SPEC_ROOT = File.join(File.dirname(__FILE__))
+  SPEC_ROOT = __dir__
 end
 
 unless defined?(MAIL_SPEC_SUITE_RUNNING)
@@ -17,7 +17,7 @@ unless defined?(MAIL_SPEC_SUITE_RUNNING)
 end
 
 require 'rspec'
-require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
+require File.join(__dir__, 'matchers', 'break_down_to')
 
 require 'mail'
 
@@ -25,6 +25,7 @@ $stderr.puts("Running Specs for Mail Version #{Mail::VERSION::STRING}")
 
 RSpec.configure do |c|
   c.mock_with :rspec
+  c.disable_monkey_patching!
   c.include(CustomMatchers)
 
   require 'rspec-benchmark'

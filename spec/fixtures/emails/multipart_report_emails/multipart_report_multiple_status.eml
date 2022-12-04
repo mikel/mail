@@ -58,7 +58,7 @@ Received: from blah.com (snooki [10.12.126.68])
     for <u@ci.com>; Tue, 29 Jun 2010 15:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=blah.com;
     s=2010; t=1277826145; bh=wC3hHAhQgApcTmwQsi2F4OJf40rbyIek/WwIuzSc3V
-    M=; h=Date:From:Reply-To:To:Message-ID:Subject:Mime-Version:
+    M=; h=Date:From:Reply-To:To:Message-ID:Subject:MIME-Version:
      Content-Type:Content-Transfer-Encoding:List-Unsubscribe; b=aw+Bhd8
     t1goZUXWBAHSrHaM1IdqhkXqF5WVMwGRYcnya4FHNw05XfpB3TTpTFda13DfhtziFRk
     zHSfiNbMapv7Vz+D3A/9NHg5nKahSMosZVTa0BfajYWNd1aY8JUWUlxdQHxQQ4ygCBj
@@ -69,7 +69,7 @@ Reply-To: HomeRun <notification+45b0d380@blah.com>
 To: u@ci.com
 Message-ID: <4c2a146147ac8_61ff157c4ec1652df@s.h.c.mail>
 Subject: Your Friend F M wants you to join HomeRun
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/alternative;
  boundary="--==_mimepart_4c2a146141756_61ff157c4ec1649a8";
  charset=UTF-8
@@ -80,7 +80,7 @@ List-Unsubscribe: <mailto:unsubscribe+45b0d380@blah.com>
 
 ----==_mimepart_4c2a146141756_61ff157c4ec1649a8
 Date: Tue, 29 Jun 2010 15:42:25 +0000
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain;
  charset=UTF-8
 Content-Transfer-Encoding: base64
@@ -93,7 +93,7 @@ dC4sIFNhbiBGcmFuY2lzY28sIENBLCA5NDEyMywgVVNB
 
 ----==_mimepart_4c2a146141756_61ff157c4ec1649a8
 Date: Tue, 29 Jun 2010 15:42:25 +0000
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/html;
  charset=UTF-8
 Content-Transfer-Encoding: base64

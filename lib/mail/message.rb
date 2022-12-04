@@ -1409,7 +1409,7 @@ module Mail
       header.has_date?
     end
 
-    # Returns true if the message has a Mime-Version field, the field may or may
+    # Returns true if the message has a MIME-Version field, the field may or may
     # not have a value, but the field exists or not.
     def has_mime_version?
       header.has_mime_version?
@@ -1496,7 +1496,7 @@ module Mail
     # Returns the character set defined in the content type field
     def charset
       if @header
-        has_content_type? ? content_type_parameters['charset'] : @charset
+        has_content_type? && !multipart? ? content_type_parameters['charset'] : @charset
       else
         @charset
       end
@@ -1892,7 +1892,7 @@ module Mail
       when !self.multipart?
         body.decoded
       else
-        raise NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
+        raise NoMethodError, 'This message cannot be decoded as _entire_ message, try calling #decoded on the various fields and body or parts if it is a multipart message.'
       end
     end
 
@@ -2066,7 +2066,11 @@ module Mail
 
     def add_boundary
       unless body.boundary && boundary
-        header['content-type'] = 'multipart/mixed' unless header['content-type']
+        unless header['content-type']
+          _charset = charset
+          header['content-type'] = 'multipart/mixed'
+          header['content-type'].parameters[:charset] = _charset
+        end
         header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
         body.boundary = boundary
       end

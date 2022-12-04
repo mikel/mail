@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('rufo')
 
-  s.files = %w[ README.md MIT-LICENSE ] + Dir.glob("lib/**/*")
+  s.files = Dir.glob(%w[ README.md MIT-LICENSE lib/**/* ])
 end
