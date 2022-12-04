@@ -55,6 +55,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: feature/parse_lf
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3
