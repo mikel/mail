@@ -35,7 +35,7 @@ module Mail
 
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
 
-    FIELD_NAME_MAP = {
+    FIELDS_MAP = {
       "to" => "ToField",
       "cc" => "CcField",
       "bcc" => "BccField",
@@ -65,6 +65,38 @@ module Mail
       "content-type" => "ContentTypeField",
       "content-id" => "ContentIdField",
       "content-location" => "ContentLocationField",
+    }
+
+    FIELD_NAME_MAP = {
+      "to" => "To",
+      "cc" => "Cc",
+      "bcc" => "Bcc",
+      "message-id" => "Message-ID",
+      "in-reply-to" => "In-Reply-To",
+      "references" => "References",
+      "subject" => "Subject",
+      "comments" => "Comments",
+      "keywords" => "Keywords",
+      "date" => "Date",
+      "from" => "From",
+      "sender" => "Sender",
+      "reply-to" => "Reply-To",
+      "resent-date" => "Resent-Date",
+      "resent-from" => "Resent-From",
+      "resent-sender" => "Resent-Sender",
+      "resent-to" => "Resent-To",
+      "resent-cc" => "Resent-Cc",
+      "resent-bcc" => "Resent-Bcc",
+      "resent-message-id" => "Resent-Message-ID",
+      "return-path" => "Return-Path",
+      "received" => "Received",
+      "mime-version" => "Mime-Version",
+      "content-transfer-encoding" => "Content-Transfer-Encoding",
+      "content-description" => "Content-Description",
+      "content-disposition" => "Content-Disposition",
+      "content-type" => "Content-Type",
+      "content-id" => "Content-ID",
+      "content-location" => "Content-Location",
     }
 
     # Generic Field Exception
@@ -141,7 +173,7 @@ module Mail
       end
 
       def field_class_for(name) #:nodoc:
-        class_name = FIELD_NAME_MAP[name.to_s.downcase]
+        class_name = FIELDS_MAP[name.to_s.downcase]
         Mail.const_get(class_name) if class_name
       end
     end
