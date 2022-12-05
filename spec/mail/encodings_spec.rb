@@ -934,22 +934,26 @@ RSpec.describe Mail::Encodings do
   end
 
   describe "IDNA encoding" do
+    after do
+      Mail::Encodings.instance_variable_set(:@idna_supported, nil)
+    end
+
     it "should report on IDNA support" do
-      if RUBY_VERSION >= '1.9.3'
-        expect(Mail::Encodings.idna_supported?).to be true
-      else
-        expect(Mail::Encodings.idna_supported?).to be false
-      end
+      expect(Mail::Encodings.idna_supported?).to be !ENV.key?('SKIP_SIMPLEIDN')
     end
 
     it "should encode a string correctly" do
+      skip "simpleidn gem not installed" unless Mail::Encodings.idna_supported?
+
       raw = 'tést.example.com'
-      if Mail::Encodings.idna_supported?
-        encoded = 'xn--tst-bma.example.com'
-        expect(Mail::Encodings.idna_encode(raw)).to eq encoded
-      else
-        expect {Mail::Encodings.idna_encode(raw)}.to raise_error("Must install simpleidn gem")
-      end
+      encoded = 'xn--tst-bma.example.com'
+      expect(Mail::Encodings.idna_encode(raw)).to eq encoded
+    end
+
+    it "should raise if simpleidn gem is missing" do
+      Mail::Encodings.instance_variable_set(:@idna_supported, false)
+      raw = 'tést.example.com'
+      expect {Mail::Encodings.idna_encode(raw)}.to raise_error("Must install simpleidn gem")
     end
   end
 end

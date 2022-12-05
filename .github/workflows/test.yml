@@ -17,6 +17,10 @@ jobs:
        include:
          - ruby: 2.5
            timeout: 5
+         - ruby: 2.5
+           timeout: 5
+           env:
+             SKIP_SIMPLEIDN: 1
          - ruby: 2.6
            timeout: 5
          - ruby: 2.7
@@ -25,6 +29,10 @@ jobs:
            timeout: 5
          - ruby: 3.1
            timeout: 5
+         - ruby: 3.1
+           timeout: 5
+           env:
+             SKIP_SIMPLEIDN: 1
          - ruby: truffleruby
            timeout: 50
          - ruby: truffleruby-head

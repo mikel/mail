@@ -11,6 +11,6 @@ end
 gem 'jruby-openssl', :platforms => :jruby
 
 gem 'mini_mime'
-gem 'simpleidn' if RUBY_VERSION >= '1.9.3' && ENV['SIMPLEIDN'] != 'no'
+gem 'simpleidn' unless ENV.key?('SKIP_SIMPLEIDN')
 
 gem 'byebug', :platforms => :mri
