@@ -1,6 +1,7 @@
 == Version 2.9.0 (unreleased)
 
 Breaking changes:
+* Mail::Field::FIELDS_MAP now contains class names, not Class instances (c960657)
 
 Compatibility:
 

@@ -152,6 +152,36 @@ RSpec.describe Mail::Field do
     end
   end
 
+  describe "constants" do
+    it "should include all known fields in FIELDS_MAP" do
+      expect(Mail::Field::FIELDS_MAP.keys).to match_array Mail::Field::KNOWN_FIELDS
+    end
+
+    it "should include all known fields in FIELDS_MAP" do
+      Mail::Field::FIELDS_MAP.each do |field, class_name|
+        klass = Mail.const_get(class_name)
+        expect(klass).to be < Mail::CommonField
+      end
+    end
+
+    it "should include all known fields in FIELD_NAME_MAP" do
+      expect(Mail::Field::FIELD_NAME_MAP.keys).to match_array Mail::Field::KNOWN_FIELDS
+    end
+
+    it "should have matching keys and values in FIELD_NAME_MAP" do
+      Mail::Field::FIELD_NAME_MAP.each do |field, name|
+        expect(name.downcase).to eq field
+      end
+    end
+
+    it "should contain the proper names in FIELD_NAME_MAP" do
+      Mail::Field::FIELD_NAME_MAP.each do |field, name|
+        klass = Mail::Field.field_class_for(field)
+        expect(name).to eq klass::NAME
+      end
+    end
+  end
+
   describe "helper methods" do
     it "should reply if it is responsible for a field name as a capitalized string - structured field" do
       field = Mail::Field.new('To', 'mikel@test.lindsaar.net')

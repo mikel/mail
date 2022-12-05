@@ -1,7 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-require 'mail/fields/parameter_hash'
 
 RSpec.describe Mail::ParameterHash do
   it "should return the values in the hash" do

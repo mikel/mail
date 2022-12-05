@@ -48,7 +48,7 @@ module Mail # :doc:
   require 'mail/field'
   require 'mail/field_list'
 
-  require 'mail/envelope'
+  register_autoload :Envelope, 'mail/envelope'
 
   # Autoload header field elements and transfer encodings.
   require 'mail/elements'
@@ -58,7 +58,7 @@ module Mail # :doc:
   require 'mail/encodings/unix_to_unix'
 
   require 'mail/matchers/has_sent_mail'
-  require 'mail/matchers/attachment_matchers.rb'
+  require 'mail/matchers/attachment_matchers'
 
   # Finally... require all the Mail.methods
   require 'mail/mail'
