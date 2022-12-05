@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'psych', '!= 5.0.0' # fails with undefined method `_native_parse' for #<Psych::Parser:0x2bd276f0>
+
 gemspec
 
 if RUBY_VERSION < '2.7.0'
