@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'psych', '4.0.6' # temp fix; looks like 5.0.0 is broken
-
 gemspec
-
 
 if RUBY_VERSION < '2.7.0'
   gem 'activesupport', '< 6'

@@ -40,6 +40,10 @@ jobs:
          - ruby: jruby-9.2
            timeout: 5
     steps:
+    - name: Psych 5.0.0 needs libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libaml-dev
     - uses: actions/checkout@v2
       with:
         ref: feature/parse_lf
