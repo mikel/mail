@@ -43,7 +43,7 @@ jobs:
     - name: Psych 5.0.0 needs libyaml-dev
       run: |
         sudo apt-get update
-        sudo apt-get install libaml-dev
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
       with:
         ref: feature/parse_lf
