@@ -312,7 +312,8 @@ module Mail
     end
 
     def Encodings.idna_supported?
-      begin
+      return @idna_supported unless @idna_supported.nil?
+      @idna_supported ||= begin
         require 'simpleidn'
         true
       rescue LoadError => e
