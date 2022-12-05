@@ -325,7 +325,6 @@ module Mail
       return str if str.ascii_only?
       raise 'Must install simpleidn gem' unless Encodings.idna_supported?
 
-      require 'simpleidn'
       SimpleIDN.to_ascii(str)
     end
   end
