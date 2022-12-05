@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Field do
+RSpec.describe Mail::Field do
 
   describe 'parsing' do
     it "parses full header fields" do
@@ -56,7 +56,7 @@ describe Mail::Field do
       structured_fields = %w[ Date From Sender Reply-To To Cc Bcc Message-ID In-Reply-To
                               References Keywords Resent-Date Resent-From Resent-Sender
                               Resent-To Resent-Cc Resent-Bcc Resent-Message-ID
-                              Return-Path Received Subject Comments Mime-Version
+                              Return-Path Received Subject Comments MIME-Version
                               Content-Transfer-Encoding Content-Description
                               Content-Disposition Content-Type ]
       structured_fields.each do |sf|
@@ -149,6 +149,36 @@ describe Mail::Field do
       expect(field.field.errors[0][0]).to eq 'Content-Transfer-Encoding'
       expect(field.field.errors[0][1]).to eq '8@bit'
       expect(field.field.errors[0][2].to_s).to match(/ContentTransferEncodingElement can not parse |17-bit|/)
+    end
+  end
+
+  describe "constants" do
+    it "should include all known fields in FIELDS_MAP" do
+      expect(Mail::Field::FIELDS_MAP.keys).to match_array Mail::Field::KNOWN_FIELDS
+    end
+
+    it "should include all known fields in FIELDS_MAP" do
+      Mail::Field::FIELDS_MAP.each do |field, class_name|
+        klass = Mail.const_get(class_name)
+        expect(klass).to be < Mail::CommonField
+      end
+    end
+
+    it "should include all known fields in FIELD_NAME_MAP" do
+      expect(Mail::Field::FIELD_NAME_MAP.keys).to match_array Mail::Field::KNOWN_FIELDS
+    end
+
+    it "should have matching keys and values in FIELD_NAME_MAP" do
+      Mail::Field::FIELD_NAME_MAP.each do |field, name|
+        expect(name.downcase).to eq field
+      end
+    end
+
+    it "should contain the proper names in FIELD_NAME_MAP" do
+      Mail::Field::FIELD_NAME_MAP.each do |field, name|
+        klass = Mail::Field.field_class_for(field)
+        expect(name).to eq klass::NAME
+      end
     end
   end
 
@@ -254,27 +284,21 @@ describe Mail::Field do
     end
 
     it "should allow an encoded value in the Subject field and decode it automatically (issue 44)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("=?ISO-8859-1?Q?2_=FAlt?=", 'utf-8')
       expect(subject.decoded).to eq "2 últ"
     end
 
     it "should allow you to encoded text in the middle (issue 44)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("ma=?ISO-8859-1?Q?=F1ana?=", 'utf-8')
       expect(subject.decoded).to eq "mañana"
     end
 
     it "more tolerable to encoding definitions, ISO (issue 120)" do
-      skip if RUBY_VERSION < '1.9'
       subject = Mail::SubjectField.new("ma=?ISO88591?Q?=F1ana?=", 'utf-8')
       expect(subject.decoded).to eq "mañana"
     end
 
     it "more tolerable to encoding definitions, ISO-long (issue 120)" do
-      # Rubies under 1.9 don't handle encoding conversions
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 
@@ -295,8 +319,6 @@ describe Mail::Field do
 
 
     it "more tolerable to encoding definitions, Windows (issue 120)" do
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 
@@ -312,8 +334,6 @@ describe Mail::Field do
     end
 
     it "should support ascii encoded windows subjects" do
-      skip if RUBY_VERSION < '1.9'
-
       # TODO: JRuby 1.7.0 has an encoding issue https://jira.codehaus.org/browse/JRUBY-6999
       skip if defined?(JRUBY_VERSION) && JRUBY_VERSION >= '1.7.0'
 

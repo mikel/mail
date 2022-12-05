@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
+#
 #    The "References:" field will contain the contents of the parent's
 #    "References:" field (if any) followed by the contents of the parent's
 #    "Message-ID:" field (if any).  If the parent message does not contain
@@ -13,7 +13,7 @@ require 'spec_helper'
 #    or "Message-ID:" fields, then the new message will have no
 #    "References:" field.
 
-describe Mail::ReferencesField do
+RSpec.describe Mail::ReferencesField do
 
   it "should initialize" do
     expect { Mail::ReferencesField.new("<1234@test.lindsaar.net>") }.not_to raise_error

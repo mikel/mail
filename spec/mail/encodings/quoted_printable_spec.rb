@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Encodings::QuotedPrintable do
-  
+RSpec.describe Mail::Encodings::QuotedPrintable do
+
   it "should encode quoted printable from text" do
     result = "This is\r\na test=\r\n"
     expect(Mail::Encodings::QuotedPrintable.encode("This is\na test")).to eq result

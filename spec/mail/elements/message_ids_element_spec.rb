@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::MessageIdsElement do
+RSpec.describe Mail::MessageIdsElement do
 
   it "should parse a message_id" do
     msg_id_text  = '<1234@test.lindsaar.net>'

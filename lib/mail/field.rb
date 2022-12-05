@@ -36,40 +36,68 @@ module Mail
     KNOWN_FIELDS = STRUCTURED_FIELDS + ['comments', 'subject']
 
     FIELDS_MAP = {
-      "to" => ToField,
-      "cc" => CcField,
-      "bcc" => BccField,
-      "message-id" => MessageIdField,
-      "in-reply-to" => InReplyToField,
-      "references" => ReferencesField,
-      "subject" => SubjectField,
-      "comments" => CommentsField,
-      "keywords" => KeywordsField,
-      "date" => DateField,
-      "from" => FromField,
-      "sender" => SenderField,
-      "reply-to" => ReplyToField,
-      "resent-date" => ResentDateField,
-      "resent-from" => ResentFromField,
-      "resent-sender" =>  ResentSenderField,
-      "resent-to" => ResentToField,
-      "resent-cc" => ResentCcField,
-      "resent-bcc" => ResentBccField,
-      "resent-message-id" => ResentMessageIdField,
-      "return-path" => ReturnPathField,
-      "received" => ReceivedField,
-      "mime-version" => MimeVersionField,
-      "content-transfer-encoding" => ContentTransferEncodingField,
-      "content-description" => ContentDescriptionField,
-      "content-disposition" => ContentDispositionField,
-      "content-type" => ContentTypeField,
-      "content-id" => ContentIdField,
-      "content-location" => ContentLocationField,
+      "to" => "ToField",
+      "cc" => "CcField",
+      "bcc" => "BccField",
+      "message-id" => "MessageIdField",
+      "in-reply-to" => "InReplyToField",
+      "references" => "ReferencesField",
+      "subject" => "SubjectField",
+      "comments" => "CommentsField",
+      "keywords" => "KeywordsField",
+      "date" => "DateField",
+      "from" => "FromField",
+      "sender" => "SenderField",
+      "reply-to" => "ReplyToField",
+      "resent-date" => "ResentDateField",
+      "resent-from" => "ResentFromField",
+      "resent-sender" => "ResentSenderField",
+      "resent-to" => "ResentToField",
+      "resent-cc" => "ResentCcField",
+      "resent-bcc" => "ResentBccField",
+      "resent-message-id" => "ResentMessageIdField",
+      "return-path" => "ReturnPathField",
+      "received" => "ReceivedField",
+      "mime-version" => "MimeVersionField",
+      "content-transfer-encoding" => "ContentTransferEncodingField",
+      "content-description" => "ContentDescriptionField",
+      "content-disposition" => "ContentDispositionField",
+      "content-type" => "ContentTypeField",
+      "content-id" => "ContentIdField",
+      "content-location" => "ContentLocationField",
     }
 
-    FIELD_NAME_MAP = FIELDS_MAP.inject({}) do |map, (field, field_klass)|
-      map.update(field => field_klass::NAME)
-    end
+    FIELD_NAME_MAP = {
+      "to" => "To",
+      "cc" => "Cc",
+      "bcc" => "Bcc",
+      "message-id" => "Message-ID",
+      "in-reply-to" => "In-Reply-To",
+      "references" => "References",
+      "subject" => "Subject",
+      "comments" => "Comments",
+      "keywords" => "Keywords",
+      "date" => "Date",
+      "from" => "From",
+      "sender" => "Sender",
+      "reply-to" => "Reply-To",
+      "resent-date" => "Resent-Date",
+      "resent-from" => "Resent-From",
+      "resent-sender" => "Resent-Sender",
+      "resent-to" => "Resent-To",
+      "resent-cc" => "Resent-Cc",
+      "resent-bcc" => "Resent-Bcc",
+      "resent-message-id" => "Resent-Message-ID",
+      "return-path" => "Return-Path",
+      "received" => "Received",
+      "mime-version" => "MIME-Version",
+      "content-transfer-encoding" => "Content-Transfer-Encoding",
+      "content-description" => "Content-Description",
+      "content-disposition" => "Content-Disposition",
+      "content-type" => "Content-Type",
+      "content-id" => "Content-ID",
+      "content-location" => "Content-Location",
+    }
 
     # Generic Field Exception
     class FieldError < StandardError
@@ -145,7 +173,8 @@ module Mail
       end
 
       def field_class_for(name) #:nodoc:
-        FIELDS_MAP[name.to_s.downcase]
+        class_name = FIELDS_MAP[name.to_s.downcase]
+        Mail.const_get(class_name) if class_name
       end
     end
 
@@ -176,7 +205,8 @@ module Mail
         @unparsed_value = value
         @charset = charset
       end
-      @name = FIELD_NAME_MAP[@name.to_s.downcase] || @name
+      klass = self.class.field_class_for(@name)
+      @name = klass ? klass::NAME : @name
     end
 
     def field=(field)
@@ -233,14 +263,8 @@ module Mail
       field.send(name, *args, &block)
     end
 
-    if RUBY_VERSION >= '1.9.2'
-      def respond_to_missing?(method_name, include_private)
-        field.respond_to?(method_name, include_private) || super
-      end
-    else
-      def respond_to?(method_name, include_private = false)
-        field.respond_to?(method_name, include_private) || super
-      end
+    def respond_to_missing?(method_name, include_private)
+      field.respond_to?(method_name, include_private) || super
     end
 
     FIELD_ORDER_LOOKUP = Hash[%w[

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "have_sent_email" do
+RSpec.describe "have_sent_email" do
   include Mail::Matchers
 
   let(:include_attachments) { true }

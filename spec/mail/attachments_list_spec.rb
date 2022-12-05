@@ -7,15 +7,11 @@ def encode_base64(str)
 end
 
 def check_decoded(actual, expected)
-  if RUBY_VERSION >= '1.9'
-    expect(actual.encoding).to eq Encoding::BINARY
-    expect(actual).to eq expected.dup.force_encoding(Encoding::BINARY)
-  else
-    expect(actual).to eq expected
-  end
+  expect(actual.encoding).to eq Encoding::BINARY
+  expect(actual).to eq expected.dup.force_encoding(Encoding::BINARY)
 end
 
-describe "Attachments" do
+RSpec.describe "Attachments" do
 
   before(:each) do
     @mail = Mail.new
@@ -110,11 +106,7 @@ describe "Attachments" do
 
    it "should be able to call read on the attachment to return the decoded data" do
       @mail.attachments['test.png'] = { :content => @test_png }
-      if RUBY_VERSION >= '1.9'
-        expected = @mail.attachments[0].read.force_encoding(@test_png.encoding)
-      else
-        expected = @mail.attachments[0].read
-      end
+      expected = @mail.attachments[0].read.force_encoding(@test_png.encoding)
       expect(expected).to eq @test_png
     end
 
@@ -209,9 +201,7 @@ describe "Attachments" do
   describe "should handle filenames with non-7bit characters correctly" do
     it "should not raise an exception with a filename that contains a non-7bit-character" do
       filename = "f\u00f6\u00f6.b\u00e4r"
-      if RUBY_VERSION >= '1.9'
-        expect(filename.encoding).to eq Encoding::UTF_8
-      end
+      expect(filename.encoding).to eq Encoding::UTF_8
       mail = Mail.new
       expect {
         mail.attachments[filename] = read_raw_fixture('attachments', 'test.pdf')
@@ -221,7 +211,7 @@ describe "Attachments" do
 
 end
 
-describe "reading emails with attachments" do
+RSpec.describe "reading emails with attachments" do
   describe "test emails" do
 
     it "should find the attachment using content location" do
@@ -254,7 +244,7 @@ describe "reading emails with attachments" do
       mail = read_fixture('emails/attachment_emails/attachment_with_encoded_name.eml')
       expect(mail.attachments.length).to eq 1
       result = mail.attachments[0].filename
-      replace = '�' if RUBY_VERSION > '1.9'
+      replace = '�'
       expected = "01 Quien Te Dij#{replace}at. Pitbull.mp3"
       expect(result).to eq expected
     end
@@ -321,7 +311,7 @@ limitMAIL
   end
 end
 
-describe "attachment order" do
+RSpec.describe "attachment order" do
   it "should be preserved instead  when content type exists" do
     mail = Mail.new do
       to "aaaa@aaaa.aaa"

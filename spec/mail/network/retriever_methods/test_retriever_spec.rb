@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Test Retriever" do
+RSpec.describe "Test Retriever" do
 
   before(:each) do
     Mail.defaults do
@@ -14,7 +14,7 @@ describe "Test Retriever" do
   end
 
   describe "all" do
-    
+
     before do
       @emails = populate(15)
     end
@@ -30,7 +30,7 @@ describe "Test Retriever" do
     end
 
   end
-  
+
   describe "find" do
 
     before do

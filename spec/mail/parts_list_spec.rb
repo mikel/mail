@@ -3,7 +3,7 @@
 
 require 'spec_helper'
 
-describe "PartsList" do
+RSpec.describe "PartsList" do
   it "should return itself on sort" do
     p = Mail::PartsList.new
     p << 2
@@ -95,6 +95,6 @@ describe "PartsList" do
 
   it "should have a round-tripping YAML serialization" do
     p = Mail::PartsList.new([1, 2])
-    expect(YAML.load(YAML.dump(p))).to eq(p)
+    expect(Mail::YAML.load(YAML.dump(p))).to eq(p)
   end
 end

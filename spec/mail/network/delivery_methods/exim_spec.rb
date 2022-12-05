@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "exim delivery agent" do
+RSpec.describe "exim delivery agent" do
   let :mail do
     Mail.new do
       from    'roger@test.lindsaar.net'

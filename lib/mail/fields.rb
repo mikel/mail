@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 module Mail
+  register_autoload :CommonField, 'mail/fields/common_field'
+  register_autoload :CommonAddressField, 'mail/fields/common_address_field'
+  register_autoload :CommonMessageIdField, 'mail/fields/common_message_id_field'
+  register_autoload :CommonDateField, 'mail/fields/common_date_field'
+
   register_autoload :UnstructuredField, 'mail/fields/unstructured_field'
+  register_autoload :NamedUnstructuredField, 'mail/fields/named_unstructured_field'
   register_autoload :StructuredField, 'mail/fields/structured_field'
   register_autoload :OptionalField, 'mail/fields/optional_field'
 
@@ -19,6 +25,7 @@ module Mail
   register_autoload :KeywordsField, 'mail/fields/keywords_field'
   register_autoload :MessageIdField, 'mail/fields/message_id_field'
   register_autoload :MimeVersionField, 'mail/fields/mime_version_field'
+  register_autoload :NamedStructuredField, 'mail/fields/named_structured_field'
   register_autoload :ReceivedField, 'mail/fields/received_field'
   register_autoload :ReferencesField, 'mail/fields/references_field'
   register_autoload :ReplyToField, 'mail/fields/reply_to_field'
@@ -33,4 +40,6 @@ module Mail
   register_autoload :SenderField, 'mail/fields/sender_field'
   register_autoload :SubjectField, 'mail/fields/subject_field'
   register_autoload :ToField, 'mail/fields/to_field'
+
+  register_autoload :ParameterHash, 'mail/fields/parameter_hash'
 end

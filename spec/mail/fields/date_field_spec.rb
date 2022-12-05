@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::DateField do
+RSpec.describe Mail::DateField do
   #    The origination date field consists of the field name "Date" followed
   #    by a date-time specification.
   #

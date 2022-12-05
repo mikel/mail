@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "SMTP Delivery Method" do
+RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
     # Reset all defaults back to an original state
@@ -25,7 +25,7 @@ describe "SMTP Delivery Method" do
   end
 
   describe "general usage" do
-    tmpdir = File.expand_path('../../../../tmp/mail', __FILE__)
+    tmpdir = File.expand_path('../../../tmp/mail', __dir__)
 
     it "should send an email to a file" do
       Mail.defaults do

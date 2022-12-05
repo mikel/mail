@@ -16,11 +16,11 @@ module Mail
       end
 
       def self.decode(str)
-        RubyVer.decode_base64(str)
+        Utilities.decode_base64(str)
       end
 
       def self.encode(str)
-        ::Mail::Utilities.binary_unsafe_to_crlf(RubyVer.encode_base64(str))
+        ::Mail::Utilities.binary_unsafe_to_crlf(Utilities.encode_base64(str))
       end
 
       # 3 bytes in -> 4 bytes out

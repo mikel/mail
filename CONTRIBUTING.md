@@ -12,14 +12,12 @@ pull request merged quickly:
 5. Add a spec for your change. Only refactoring and documentation changes
    require no new specs. If you are adding functionality or fixing a bug, we need
    a spec!
-6. Test the spec _at_ _least_ against MRI-1.9.3 and MRI-1.8.7
+6. Test the spec on supported rubies.
 7. Update the README if needed to reflect your change / addition
 8. Update the CHANGELOG and give yourself credit
 9. With all specs passing push your changes back to your fork
 10. Send me a pull request.
   - If it needs any changes, please push or force push to the same branch you made the pull request from.  GitHub will just update the pull request with your changes.
-
-Note, specs that break MRI 1.8.7 or 1.9.3 will not be accepted.
 
 At this point you're waiting on us. We like to at least comment on, if not
 accept, pull requests within three business days (and, typically, one business
