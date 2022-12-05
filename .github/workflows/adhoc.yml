@@ -50,7 +50,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-        rubygems: 3.3.12
+        # rubygems: 3.3.12
         bundler-cache: true
     - name: Run tests1
       run: bundle exec rake spec
