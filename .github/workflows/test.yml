@@ -1,6 +1,7 @@
 name: RSpec tests
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
   pull_request:
