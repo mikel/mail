@@ -23,8 +23,8 @@ jobs:
         #    timeout: 5
         #  - ruby: '3.0'
         #    timeout: 5
-        #  - ruby: 3.1
-        #    timeout: 5
+         - ruby: 3.1
+           timeout: 5
         #  - ruby: truffleruby
         #    timeout: 50
         #  - ruby: truffleruby-head
@@ -54,16 +54,16 @@ jobs:
         bundler-cache: true
     - name: Run tests1
       run: bundle exec rake spec
-      continue-on-error: true
-    - name: Run tests2
-      run: bundle exec rake spec
-      continue-on-error: true
-    - name: Run tests3
-      run: bundle exec rake spec
-      continue-on-error: true
-    - name: Run tests4
-      run: bundle exec rake spec
-      continue-on-error: true
+    #   continue-on-error: true
+    # - name: Run tests2
+    #   run: bundle exec rake spec
+    #   continue-on-error: true
+    # - name: Run tests3
+    #   run: bundle exec rake spec
+    #   continue-on-error: true
+    # - name: Run tests4
+    #   run: bundle exec rake spec
+    #   continue-on-error: true
       # continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
   # actionmailer:
   #   runs-on: ubuntu-latest
