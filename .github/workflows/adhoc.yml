@@ -66,6 +66,12 @@ jobs:
     - name: Run tests4
       run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
       continue-on-error: true
+    - name: Run tests5
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests6
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
     - name: Run Summary
       run: |
         echo "${{ env.action_state }}"
