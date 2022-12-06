@@ -69,7 +69,8 @@ jobs:
     - name: Run Summary
       run: |
         echo "${{ env.action_state }}"
-        test "${{ env.action_state }}" == 'failed' && exit 1
+        # This will be be true for a successful run
+        test "${{ env.action_state }}" != 'failed'
       # continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
   # actionmailer:
   #   runs-on: ubuntu-latest
