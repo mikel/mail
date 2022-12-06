@@ -8,7 +8,7 @@ on:
 
 jobs:
   ruby:
-    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
+    name: ${{ matrix.ruby }} ${{ matrix.env }} (timeout ${{ matrix.timeout }})
     runs-on: ubuntu-latest
     timeout-minutes: ${{ matrix.timeout }}
     strategy:
