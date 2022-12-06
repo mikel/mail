@@ -30,10 +30,6 @@ jobs:
          - ruby: jruby
            timeout: 5
     steps:
-    - name: Installing libyaml-dev
-      run: |
-        sudo apt-get update
-        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
