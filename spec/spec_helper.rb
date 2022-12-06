@@ -75,6 +75,10 @@ end
 class MockSMTP
   attr_accessor :open_timeout, :read_timeout
 
+  def self.capabilities=(capabilities)
+    @@capabilities = capabilities
+  end
+
   def self.deliveries
     @@deliveries
   end
@@ -129,6 +133,11 @@ class MockSMTP
     raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
     @@security = :enable_starttls_auto
     context
+  end
+
+  def capable?(capability)
+    return false unless defined?(@@capabilities)
+    @@capabilities&.include?(capability)
   end
 end
 

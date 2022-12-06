@@ -49,7 +49,9 @@ module Mail
     # Send the message via SMTP.
     # The from and to attributes are optional. If not set, they are retrieve from the Message.
     def deliver!(mail)
-      envelope = Mail::SmtpEnvelope.new(mail)
+      # Net::SMTP#cabable? was added in net-smtp 0.3.1 (included in Ruby 3.1).
+      smtputf8 = smtp.respond_to?(:capable?) && smtp.capable?('SMTPUTF8')
+      envelope = Mail::SmtpEnvelope.new(mail, smtputf8_supported: smtputf8)
       response = smtp.sendmail(envelope.message, envelope.from, envelope.to)
       settings[:return_response] ? response : self
     end

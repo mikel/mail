@@ -23,6 +23,7 @@ RSpec.describe "SMTP Delivery Method" do
                                 }
     end
     MockSMTP.clear_deliveries
+    MockSMTP.capabilities = []
   end
 
   describe "general usage" do
@@ -248,21 +249,94 @@ RSpec.describe "SMTP Delivery Method" do
       expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com)
     end
 
-    it "IDNA-encodes non-ASCII From and To addresses" do
+    it "IDNA-encodes non-ASCII From and To addresses without SMTPUTF8 support" do
       Mail.defaults do
-        delivery_method :smtp, :idna => true
+        delivery_method :smtp
       end
 
       Mail.deliver do
-        to "tö@soméemail.com"
         from "fröm@soméemail.com"
+        to "tö@soméemail.com"
       end
+
       if Mail::Encodings.idna_supported?
         expect(MockSMTP.deliveries[0][1]).to eq 'fröm@xn--somemail-d1a.com'
         expect(MockSMTP.deliveries[0][2]).to eq %w(tö@xn--somemail-d1a.com)
       else
         expect(MockSMTP.deliveries[0][1]).to eq 'fröm@soméemail.com'
         expect(MockSMTP.deliveries[0][2]).to eq %w(tö@soméemail.com)
+      end
+    end
+
+    it "does not pass SMTPUTF8 parameter for ASCII From and To addresses with SMTPUTF8 support" do
+      Mail.defaults do
+        delivery_method :smtp
+      end
+
+      MockSMTP.capabilities = ['SMTPUTF8']
+
+      Mail.deliver do
+        to "to@someemail.com"
+        from "from@someemail.com"
+      end
+
+      expect(MockSMTP.deliveries[0][1]).to eq 'from@someemail.com'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(to@someemail.com)
+    end
+
+    it "passes SMTPUTF8 parameter for non-ASCII From address with SMTPUTF8 support" do
+      Mail.defaults do
+        delivery_method :smtp
+      end
+
+      MockSMTP.capabilities = ['SMTPUTF8']
+
+      Mail.deliver do
+        from "fröm@soméemail.com"
+        to "to@someemail.com"
+      end
+
+      if defined?(Net::SMTP::Address)
+        from_address = MockSMTP.deliveries[0][1]
+        expect(from_address).to be_instance_of Net::SMTP::Address
+        expect(from_address.to_s).to eq 'fröm@soméemail.com'
+        expect(from_address.parameters).to eq ['SMTPUTF8']
+      elsif Mail::Encodings.idna_supported?
+        expect(MockSMTP.deliveries[0][1]).to eq 'fröm@xn--somemail-d1a.com'
+      else
+        expect(MockSMTP.deliveries[0][1]).to eq 'fröm@soméemail.com'
+      end
+
+      expect(MockSMTP.deliveries[0][2]).to eq %w(to@someemail.com)
+    end
+
+    it "passes SMTPUTF8 parameter for non-ASCII To address with SMTPUTF8 support" do
+      Mail.defaults do
+        delivery_method :smtp
+      end
+
+      MockSMTP.capabilities = ['SMTPUTF8']
+
+      Mail.deliver do
+        to "tö@soméemail.com"
+        from "from@somemail.com"
+      end
+
+      if defined?(Net::SMTP::Address)
+        from_address = MockSMTP.deliveries[0][1]
+        expect(from_address).to be_instance_of Net::SMTP::Address
+        expect(from_address.to_s).to eq 'from@somemail.com'
+        expect(from_address.parameters).to eq ['SMTPUTF8']
+
+        expect(MockSMTP.deliveries[0][2]).to eq %w(tö@soméemail.com)
+      else
+        expect(MockSMTP.deliveries[0][1]).to eq 'from@somemail.com'
+
+        if Mail::Encodings.idna_supported?
+          expect(MockSMTP.deliveries[0][2]).to eq %w(tö@xn--somemail-d1a.com)
+        else
+          expect(MockSMTP.deliveries[0][2]).to eq %w(tö@soméemail.com)
+        end
       end
     end
 
