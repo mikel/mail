@@ -8,7 +8,7 @@ on:
 
 jobs:
   ruby:
-    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
+    name: ${{ matrix.ruby }} ${{ matrix.env }} (timeout ${{ matrix.timeout }})
     runs-on: ubuntu-latest
     timeout-minutes: ${{ matrix.timeout }}
     strategy:
@@ -17,6 +17,9 @@ jobs:
        include:
          - ruby: 2.5
            timeout: 5
+         - ruby: 2.5
+           timeout: 5
+           env: SKIP_SIMPLEIDN=true
          - ruby: 2.6
            timeout: 5
          - ruby: 2.7
@@ -25,6 +28,9 @@ jobs:
            timeout: 5
          - ruby: 3.1
            timeout: 5
+         - ruby: 3.1
+           timeout: 5
+           env: SKIP_SIMPLEIDN=true
          - ruby: truffleruby
            timeout: 50
          - ruby: truffleruby-head
@@ -47,7 +53,7 @@ jobs:
         rubygems: 3.3.12
         bundler-cache: true
     - name: Run tests
-      run: bundle exec rake spec
+      run: ${{ matrix.env }} bundle exec rake spec
       continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
   actionmailer:
     runs-on: ubuntu-latest
