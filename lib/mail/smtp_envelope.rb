@@ -77,19 +77,3 @@ module Mail
       end
   end
 end
-
-#        if !addr.ascii_only?
-#          # Net::SMTP::Address was added in net-smtp 0.3.1 (included in Ruby 3.1).
-#          if @smtputf8_supported && defined?(Net::SMTP::Address)
-#            addr = Net::SMTP::Address.new(addr, 'SMTPUTF8')
-#          elsif Encodings.idna_supported?
-#            # If the SMTP server does not announce support for the SMTPUTF8 extension, do the
-#            # IDNa encoding of the domain part client-side.
-#            addr = Address.new(addr).address_idna
-#          end
-#
-#          # If we cannot IDNa-encode the domain part, of if the local part contains
-#          # non-ASCII characters, there is no standards-complaint way to send the
-#          # mail via a server without SMTPUTF8 support. Our best chance is to just
-#          # pass the UTF8-encoded address to the server.
-#        end
