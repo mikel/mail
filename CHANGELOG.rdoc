@@ -1,7 +1,8 @@
 == Version 2.9.0 (unreleased)
 
 Breaking changes:
-* Mail::Field::FIELDS_MAP now contains class names, not Class instances (c960657)
+
+* Mail::Field::FIELDS_MAP now contains class names, not Class instances @c960657
 
 Compatibility:
 
@@ -11,6 +12,7 @@ Features:
 
 * Updated README to improve around sending multipart mail @kapfenho
 * Add delivery_interceptors method to Mail class to fetch registered interceptors @ghousemohamed
+* Support for non-ASCII addresses (IDN) @c960657
 
 Code Improvements:
 
