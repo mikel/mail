@@ -57,17 +57,14 @@ jobs:
     - name: Install dependencies
       run: |
         cat Gemfile
+        echo "gem 'psych', '4.0.6'" >>Gemfile
         bundle install
+        cat Gemfile
       continue-on-error: true
-    - name: Fix up dependencies
-      run: |
-        gem list psych
-        gem install psych -v 4.0.6
-        gem uninstall psych -v 5.0.0
-        gem list psych
     - name: Show psych
       run: |
         gem list psych
+      continue-on-error: true
     - name: Run tests1
       run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
     #   continue-on-error: true
