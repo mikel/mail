@@ -38,9 +38,9 @@ jobs:
         #  - ruby: jruby-9.4
         #    timeout: 5
          - ruby: jruby-9.3
-           timeout: 5
+           timeout: 10
          - ruby: jruby-9.2
-           timeout: 5
+           timeout: 10
     steps:
     - name: Psych 5.0.0 needs libyaml-dev
       run: |
