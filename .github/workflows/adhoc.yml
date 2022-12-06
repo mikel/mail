@@ -3,6 +3,8 @@ name: Adhoc RSpec tests
 on:
   workflow_dispatch:
 
+  pull_request:
+    branches: [ feature/parse_lf ]
   push:
     branches: [ feature/parse_lf ]
 
