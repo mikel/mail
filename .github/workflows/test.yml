@@ -50,7 +50,10 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         rubygems: 3.3.12
-        bundler-cache: true
+        # install separately to avoid issue with 5.0.0
+        # bundler-cache: true
+    - name: Install gems
+      run: bundle install
     - name: Run tests
       run: bundle exec rake spec
       continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
