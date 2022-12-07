@@ -950,10 +950,17 @@ RSpec.describe Mail::Encodings do
       expect(Mail::Encodings.idna_encode(raw)).to eq encoded
     end
 
-    it "should raise if simpleidn gem is missing" do
+    it "should raise on non-ASCII string if simpleidn gem is missing" do
       Mail::Encodings.instance_variable_set(:@idna_supported, false)
       raw = 'tést.example.com'
       expect {Mail::Encodings.idna_encode(raw)}.to raise_error("Must install simpleidn gem")
+    end
+
+    it "should not raise on ASCII string if simpleidn gem is missing" do
+      Mail::Encodings.instance_variable_set(:@idna_supported, false)
+      raw = 'example.com'
+      encoded = Mail::Encodings.idna_encode(raw)
+      expect(encoded).to eq raw
     end
   end
 end
