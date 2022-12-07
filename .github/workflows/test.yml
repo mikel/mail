@@ -43,7 +43,6 @@ jobs:
     steps:
     - name: Psych 5.0.0 needs libyaml-dev
       run: |
-        sudo apt-get update
         sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
@@ -62,7 +61,6 @@ jobs:
     steps:
     - name: Psych 5.0.0 needs libyaml-dev
       run: |
-        sudo apt-get update
         sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
