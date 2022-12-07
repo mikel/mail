@@ -282,14 +282,14 @@ RSpec.describe "MIME Emails" do
           content_type "text/html; charset=US-ASCII"
           body "<b>This is HTML</b>"
         end
-        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
+        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary=#{mail.boundary}|)
       end
 
       it "should set the content type to multipart/alternative if you declare html and text parts" do
         mail = Mail.new
         mail.text_part { }
         mail.html_part { }
-        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary="#{mail.boundary}"|)
+        expect(mail.to_s).to match(%r|Content-Type: multipart/alternative;\s+boundary=#{mail.boundary}|)
       end
 
       it "should not set the content type to multipart/alternative if you declare an html part but not a text part" do

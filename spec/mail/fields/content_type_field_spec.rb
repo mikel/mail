@@ -189,12 +189,12 @@ RSpec.describe Mail::ContentTypeField do
 
     it "should give back an initialized instance with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
-      expect(boundary.encoded).to match(%r{Content-Type: multipart/mixed;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n})
+      expect(boundary.encoded).to match(%r{Content-Type: multipart/mixed;\r\n\sboundary=--_mimepart_[\w]+_[\w]+\r\n})
     end
 
     it "should give back an initialized instance with different type with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
-      expect(boundary.encoded).to match(%r{Content-Type: multipart/alternative;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n})
+      expect(boundary.encoded).to match(%r{Content-Type: multipart/alternative;\r\n\sboundary=--_mimepart_[\w]+_[\w]+\r\n})
     end
 
     it "should give unique boundaries" do
