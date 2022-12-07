@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'psych', '!= 5.0.0' # issue with 5.0.0: _native_parse not found on JRuby
+gem 'psych', '!= 5.0.0', :platforms => :jruby # issue with 5.0.0: _native_parse not found on JRuby
 
 if RUBY_VERSION < '2.7.0'
   gem 'activesupport', '< 6'
