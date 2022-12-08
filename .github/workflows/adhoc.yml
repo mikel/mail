@@ -52,15 +52,8 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-        # rubygems: 3.2.3
-        # bundler-cache: true
-    - name: Install dependencies
-      run: |
-        cat Gemfile
-        echo "gem 'psych', '4.0.6'" >>Gemfile
-        bundle install
-        cat Gemfile
-      continue-on-error: true
+        rubygems: 3.2.3
+        bundler-cache: true
     - name: Show psych
       run: |
         gem list psych
