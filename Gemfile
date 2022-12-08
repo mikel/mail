@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'psych', '4.0.6' # 5.0.0 does not work on JRuby (cannot find _native_parse method)
-
 if RUBY_VERSION < '2.7.0'
   gem 'activesupport', '< 6'
 else
