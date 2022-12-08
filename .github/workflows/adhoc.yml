@@ -54,6 +54,7 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
         rubygems: 3.2.3
         bundler-cache: true
+        cache-version: 4
     - name: Show psych
       run: |
         gem list psych
