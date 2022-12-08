@@ -40,7 +40,7 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
         rubygems: 3.3.12
         bundler-cache: true
-        cache-version: ${{ matrix.ruby }}
+        cache-version: 3
     - name: Run tests
       run: bundle exec rake spec
       continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
