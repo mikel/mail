@@ -40,6 +40,10 @@ jobs:
          - ruby: jruby-9.2
            timeout: 5
     steps:
+    - name: Psych 5.0.0 needs libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
@@ -52,6 +56,10 @@ jobs:
   actionmailer:
     runs-on: ubuntu-latest
     steps:
+    - name: Psych 5.0.0 needs libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
