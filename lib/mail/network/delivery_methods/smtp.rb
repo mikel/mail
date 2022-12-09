@@ -135,7 +135,7 @@ module Mail
             when true
               smtp.enable_starttls_auto(ssl_context)
             when false
-              smtp.disable_starttls_auto
+              smtp.disable_starttls
             else
               raise ArgumentError, "Unrecognized :enable_starttls_auto value #{settings[:enable_starttls_auto].inspect}; expected true, false, or nil"
             end
