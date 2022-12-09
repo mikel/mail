@@ -25,10 +25,10 @@ jobs:
            timeout: 5
          - ruby: 3.1
            timeout: 5
-         - ruby: truffleruby
-           timeout: 50
-         - ruby: truffleruby-head
-           timeout: 50
+#          - ruby: truffleruby
+#            timeout: 50
+#          - ruby: truffleruby-head
+#            timeout: 50
          - ruby: jruby
            timeout: 5
          - ruby: jruby-head
