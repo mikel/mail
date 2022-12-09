@@ -83,7 +83,9 @@ RSpec.describe Mail::Message do
       # This can fail if the two messages get different timestamps
       # This will happen rarely
       # TODO work out how to force time lag between two encoded invocations by ==
-      expect(one).to eq two
+      5.times do
+        expect(one).to eq two
+      end
     end
 
     it "should not report basic emails as bounced" do
