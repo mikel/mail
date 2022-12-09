@@ -77,6 +77,15 @@ RSpec.describe Mail::Message do
       expect(mail.body.class).to eq Mail::Body
     end
 
+    it "should compare equal" do
+      one = Mail::Message.new(basic_email)
+      two = Mail::Message.new(basic_email)
+      # This can fail if the two messages get different timestamps
+      # This will happen rarely
+      # TODO work out how to force time lag between two encoded invocations by ==
+      expect(one).to eq two
+    end
+
     it "should not report basic emails as bounced" do
       expect(Mail::Message.new).not_to be_bounced
     end
