@@ -237,6 +237,48 @@ RSpec.describe "SMTP Delivery Method" do
 
       expect(MockSMTP.starttls).to eq false
     end
+
+    it 'should allow forcing STARTTLS auto' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :address         => "localhost",
+                                 :port            => 25,
+                                 :domain          => 'localhost.localdomain',
+                                 :user_name       => nil,
+                                 :password        => nil,
+                                 :authentication  => nil,
+                                 :enable_starttls_auto => true  }
+
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq :auto
+    end
+
+    it 'should allow disabling automatic STARTTLS auto' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :address         => "localhost",
+                                 :port            => 25,
+                                 :domain          => 'localhost.localdomain',
+                                 :user_name       => nil,
+                                 :password        => nil,
+                                 :authentication  => nil,
+                                 :enable_starttls_auto => false }
+
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq false
+    end
   end
 
   describe "SMTP Envelope" do
