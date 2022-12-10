@@ -187,9 +187,9 @@ RSpec.describe Mail::Message do
 
     describe "YAML serialization" do
       before(:each) do
-        # Ensure specs don't randomly fail due to messages being generated 1 second apart
-        time = DateTime.now
-        allow(DateTime).to receive(:now).and_return(time)
+#         # Ensure specs don't randomly fail due to messages being generated 1 second apart -- '==' should also work across second boundaries!
+#         time = DateTime.now
+#         allow(DateTime).to receive(:now).and_return(time)
 
         @yaml_mail = Mail::Message.new(:to => 'someone@somewhere.com',
                                   :cc => 'someoneelse@somewhere.com',
