@@ -349,6 +349,10 @@ module Mail
     # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
     # different Message-ID value, then they are false.
     #
+    # Note that Mail creates Date and Mime-Type fields if they don't exist.
+    # The Date field is derived from the current time, so this needs to be allowed for in comparisons.
+    # (Mime-type does not depend on dynamic data, so cannot affect equality)
+    #
     # So, in practice the == operator works like this:
     #
     #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
@@ -373,11 +377,14 @@ module Mail
     def ==(other)
       return false unless other.respond_to?(:encoded)
 
+      stamp = Mail::CommonDateField.normalize_datetime('')
+      # Note: must always dup the inputs so they are not altered by encoded
       if self.message_id && other.message_id
-        self.encoded == other.encoded
+        dup.tap { |m| m.date ||= stamp }.encoded ==
+          other.dup.tap { |m| m.date ||= stamp }.encoded
       else
-        dup.tap { |m| m.message_id = '<temp@test>' }.encoded ==
-          other.dup.tap { |m| m.message_id = '<temp@test>' }.encoded
+        dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded ==
+          other.dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded
       end
     end
 
