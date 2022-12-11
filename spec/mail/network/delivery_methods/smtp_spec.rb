@@ -202,19 +202,42 @@ RSpec.describe "SMTP Delivery Method" do
         to 'ada@test.lindsaar.net'
         subject 'Re: No way!'
         body 'Yeah sure'
-        delivery_method :smtp, { :address         => "localhost",
-                                 :port            => 25,
-                                 :domain          => 'localhost.localdomain',
-                                 :user_name       => nil,
-                                 :password        => nil,
-                                 :authentication  => nil,
-                                 :enable_starttls => true  }
-
+        delivery_method :smtp, { :enable_starttls => true }
       end
 
       message.deliver!
 
       expect(MockSMTP.starttls).to eq :always
+    end
+
+    it 'should allow forcing STARTTLS via enable_starttls: :always (overriding :enable_starttls_auto)' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :enable_starttls => :always,
+                                 :enable_starttls_auto => true }
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq :always
+    end
+
+    it 'should allow detecting STARTTLS via enable_starttls: :auto (overriding :enable_starttls_auto)' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :enable_starttls => :auto,
+                                 :enable_starttls_auto => false }
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq :auto
     end
 
     it 'should allow disabling automatic STARTTLS' do
@@ -223,14 +246,7 @@ RSpec.describe "SMTP Delivery Method" do
         to 'ada@test.lindsaar.net'
         subject 'Re: No way!'
         body 'Yeah sure'
-        delivery_method :smtp, { :address         => "localhost",
-                                 :port            => 25,
-                                 :domain          => 'localhost.localdomain',
-                                 :user_name       => nil,
-                                 :password        => nil,
-                                 :authentication  => nil,
-                                 :enable_starttls => false }
-
+        delivery_method :smtp, { :enable_starttls => false }
       end
 
       message.deliver!
