@@ -46,23 +46,33 @@ jobs:
          - ruby: jruby-9.2
            timeout: 5
     steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         rubygems: 3.3.12
         bundler-cache: true
+        cache-version: 4
     - name: Run tests
       run: ${{ matrix.env }} bundle exec rake spec
       continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
   actionmailer:
     runs-on: ubuntu-latest
     steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3
         bundler-cache: true
+        cache-version: 4
     - name: Setup mail with ActionMailer edge
       run: |
         git clone --depth=1 https://github.com/rails/rails.git -b main
