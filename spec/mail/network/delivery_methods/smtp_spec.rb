@@ -237,6 +237,20 @@ RSpec.describe "SMTP Delivery Method" do
 
       expect(MockSMTP.starttls).to eq false
     end
+
+    it 'raises when setting STARTTLS with tls' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :tls => true, :enable_starttls => :always }
+      end
+
+      expect {
+        message.deliver!
+      }.to raise_error(ArgumentError, /:enable_starttls and :tls are mutually exclusive/)
+    end
   end
 
   describe "SMTP Envelope" do
