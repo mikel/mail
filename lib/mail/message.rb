@@ -374,7 +374,7 @@ module Mail
     #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m1 == m2 #=> false
-    def ==(other)
+    def ==(other) # TODO could be more efficient
       return false unless other.respond_to?(:encoded)
 
       stamp = Mail::CommonDateField.normalize_datetime('')
