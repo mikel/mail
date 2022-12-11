@@ -5,7 +5,7 @@ require 'spec_helper'
 #
 # from            =       "From:" mailbox-list CRLF
 
-describe Mail::FromField do
+RSpec.describe Mail::FromField do
 
   describe "initialization" do
 

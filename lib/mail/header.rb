@@ -169,7 +169,11 @@ module Mail
     def charset=(val)
       params = self[:content_type].parameters rescue nil
       if params
-        params[:charset] = val
+        if val
+          params[:charset] = val
+        else
+          params.delete(:charset)
+        end
       end
       @charset = val
     end
@@ -213,7 +217,7 @@ module Mail
 
     # Returns true if the header has a MIME version defined (empty or not)
     def has_mime_version?
-      fields.has_field? 'Mime-Version'
+      fields.has_field? 'MIME-Version'
     end
 
     private
@@ -222,10 +226,6 @@ module Mail
     # strings.
     def split_header
       self.fields = @raw_source.split(Constants::HEADER_SPLIT)
-    end
-
-    def select_fields_for(name)
-      fields.select_fields { |f| f.responsible_for?(name) }
     end
 
 

@@ -11,38 +11,38 @@ module Mail
     #   count: number of emails to retrieve. The default value is 1.
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def first(options = {}, &block)
-      options ||= {}
+    def first(options = nil, &block)
+      options = options ? Hash[options] : {}
       options[:what] = :first
       options[:count] ||= 1
       find(options, &block)
     end
-    
+
     # Get the most recent received email(s)
     #
     # Possible options:
     #   count: number of emails to retrieve. The default value is 1.
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def last(options = {}, &block)
-      options ||= {}
+    def last(options = nil, &block)
+      options = options ? Hash[options] : {}
       options[:what] = :last
       options[:count] ||= 1
       find(options, &block)
     end
-    
+
     # Get all emails.
     #
     # Possible options:
     #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
     #
-    def all(options = {}, &block)
-      options ||= {}
+    def all(options = nil, &block)
+      options = options ? Hash[options] : {}
       options[:count] = :all
       find(options, &block)
     end
 
-    # Find emails in the mailbox, and then deletes them. Without any options, the 
+    # Find emails in the mailbox, and then deletes them. Without any options, the
     # five last received emails are returned.
     #
     # Possible options:
@@ -53,11 +53,11 @@ module Mail
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is true. Call #find if you would like this to default to false.
     #
-    def find_and_delete(options = {}, &block)
-      options ||= {}
+    def find_and_delete(options = nil, &block)
+      options = options ? Hash[options] : {}
       options[:delete_after_find] ||= true
-      find(options, &block)      
-    end 
+      find(options, &block)
+    end
 
   end
 

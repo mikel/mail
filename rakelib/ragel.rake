@@ -17,11 +17,11 @@ rule %r|_parser\.rb\z| => '%X.rl' do |t|
 end
 
 # Dot files for Ragel parsers
-rule %r|_parser\.dot\z| => '.rl' do |t|
+rule %r|_parser\.dot\z| => '%X.rl' do |t|
   sh "ragel -s -V -o #{t.name} #{t.source}"
 end
 
-rule %r|_parser\.svg\z| => '.dot' do |t|
+rule %r|_parser\.svg\z| => '%X.dot' do |t|
   sh "dot -v -Tsvg -Goverlap=scale -o #{t.name} #{t.source}"
 end
 

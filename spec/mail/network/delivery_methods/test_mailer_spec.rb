@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Mail::TestMailer" do
+RSpec.describe "Mail::TestMailer" do
   before(:each) do
     # Reset all defaults back to original state
     Mail.defaults do

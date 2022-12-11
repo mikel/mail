@@ -2,34 +2,34 @@
 # frozen_string_literal: true
 require 'spec_helper'
 # 3.6.4. Identification fields
-#  
+#
 #   Though optional, every message SHOULD have a "Message-ID:" field.
 #   Furthermore, reply messages SHOULD have "In-Reply-To:" and
 #   "References:" fields as appropriate, as described below.
-#   
+#
 #   The "Message-ID:" field contains a single unique message identifier.
 #   The "References:" and "In-Reply-To:" field each contain one or more
 #   unique message identifiers, optionally separated by CFWS.
-#   
+#
 #   The message identifier (msg-id) is similar in syntax to an angle-addr
 #   construct without the internal CFWS.
-#  
+#
 #  message-id      =       "Message-ID:" msg-id CRLF
-#  
+#
 #  in-reply-to     =       "In-Reply-To:" 1*msg-id CRLF
-#  
+#
 #  references      =       "References:" 1*msg-id CRLF
-#  
+#
 #  msg-id          =       [CFWS] "<" id-left "@" id-right ">" [CFWS]
-#  
+#
 #  id-left         =       dot-atom-text / no-fold-quote / obs-id-left
-#  
+#
 #  id-right        =       dot-atom-text / no-fold-literal / obs-id-right
-#  
+#
 #  no-fold-quote   =       DQUOTE *(qtext / quoted-pair) DQUOTE
-#  
+#
 #  no-fold-literal =       "[" *(dtext / quoted-pair) "]"
-#  
+#
 #    The "Message-ID:" field provides a unique message identifier that
 #    refers to a particular version of a particular message.  The
 #    uniqueness of the message identifier is guaranteed by the host that
@@ -38,7 +38,7 @@ require 'spec_helper'
 #    identifier pertains to exactly one instantiation of a particular
 #    message; subsequent revisions to the message each receive new message
 #    identifiers.
-#     
+#
 #    Note: There are many instances when messages are "changed", but those
 #    changes do not constitute a new instantiation of that message, and
 #    therefore the message would not get a new message identifier.  For
@@ -53,7 +53,7 @@ require 'spec_helper'
 #    "Message-ID:" field changes, not any particular syntactic difference
 #    that appears (or does not appear) in the message.
 
-describe Mail::MessageIdField do
+RSpec.describe Mail::MessageIdField do
 
   describe "initialization" do
 
@@ -75,7 +75,7 @@ describe Mail::MessageIdField do
     end
 
   end
-  
+
   describe "ensuring only one message ID" do
 
     it "should not accept a string with multiple message IDs but only return the first" do
@@ -111,7 +111,7 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       expect(m.decoded).to eq "<1234@test.lindsaar.net>"
     end
-    
+
     it "should respond to :responsible_for?" do
       m = Mail::MessageIdField.new('<1234@test.lindsaar.net>')
       expect(m).to respond_to(:responsible_for?)
@@ -123,7 +123,7 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new
       expect(Mail::Utilities.blank?(m.message_id)).not_to be_truthy
     end
-    
+
     it "should generate a random message ID" do
       m = Mail::MessageIdField.new
       1.upto(100) do
@@ -131,7 +131,7 @@ describe Mail::MessageIdField do
       end
     end
   end
-  
+
   describe "weird message IDs" do
     it "should be able to parse <000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>" do
       m = Mail::MessageIdField.new('<000701c874a6$3df7eaf0$b9e7c0d0$@geille@fiscon.com>')
@@ -162,7 +162,7 @@ describe Mail::MessageIdField do
       m = Mail::MessageIdField.new( '<000301caf03a$77d922ae$82dba8c0@.pool.ukrtel.net>')
       expect(m.message_id).to eq '000301caf03a$77d922ae$82dba8c0@.pool.ukrtel.net'
     end
-  
+
     it 'should be able to parse <"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com>' do
       m = Mail::MessageIdField.new( '<"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com>' )
       expect(m.message_id).to eq '"urn:correios:msg:2011071303483114f523ef89e040878bca2e451a999448"@1310528911569.rte-svc-na-5006.iad5.amazon.com'

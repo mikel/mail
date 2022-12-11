@@ -1,4 +1,4 @@
-Mime-Version: 1.0 (Apple Message framework v730)
+MIME-Version: 1.0 (Apple Message framework v730)
 Content-Type: multipart/mixed; boundary=Apple-Mail-13-196941151
 Message-Id: <9169D984-4E0B-45EF-82D4-8F5E53AD7012@example.com>
 From: foo@example.com
@@ -52,7 +52,7 @@ From: Test Tester <xxxx@xxxx.com>
 Reply-To: Test Tester <xxxx@xxxx.com>
 To: xxxx@xxxx.com, xxxx@xxxx.com
 Subject: Another PDF
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/mixed;
 	boundary="----=_Part_2192_32400445.1115745999735"
 X-Virus-Scanned: amavisd-new at textdrive.com

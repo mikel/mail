@@ -52,7 +52,7 @@ module Mail
 
     def Encodings.transcode_charset(str, from_charset, to_charset = 'UTF-8')
       if from_charset
-        RubyVer.transcode_charset str, from_charset, to_charset
+        Utilities.transcode_charset str, from_charset, to_charset
       else
         str
       end
@@ -65,8 +65,7 @@ module Mail
     #    param_encode_language 'jp'
     #  end
     #
-    # The character set used for encoding will either be the value of $KCODE for
-    # Ruby < 1.9 or the encoding on the string passed in.
+    # The character set used for encoding will be the encoding on the string passed in.
     #
     # Example:
     #
@@ -78,7 +77,7 @@ module Mail
       when str.ascii_only?
         str
       else
-        RubyVer.param_encode(str)
+        Utilities.param_encode(str)
       end
     end
 
@@ -92,15 +91,15 @@ module Mail
     #  str.encoding #=> 'ISO-8859-1'      ## Only on Ruby 1.9
     #  str #=> "This is fun"
     def Encodings.param_decode(str, encoding)
-      RubyVer.param_decode(str, encoding)
+      Utilities.param_decode(str, encoding)
     end
 
     # Decodes or encodes a string as needed for either Base64 or QP encoding types in
     # the =?<encoding>?[QB]?<string>?=" format.
     #
     # The output type needs to be :decode to decode the input string or :encode to
-    # encode the input string.  The character set used for encoding will either be
-    # the value of $KCODE for Ruby < 1.9 or the encoding on the string passed in.
+    # encode the input string.  The character set used for encoding will be the
+    # encoding on the string passed in.
     #
     # On encoding, will only send out Base64 encoded strings.
     def Encodings.decode_encode(str, output_type)
@@ -111,7 +110,7 @@ module Mail
         if str.ascii_only?
           str
         else
-          Encodings.b_value_encode(str, find_encoding(str))
+          Encodings.b_value_encode(str, str.encoding)
         end
       end
     end
@@ -145,13 +144,8 @@ module Mail
         output
       elsif to_encoding
         begin
-          if RUBY_VERSION >= '1.9'
-            output.encode(to_encoding)
-          else
-            require 'iconv'
-            Iconv.iconv(to_encoding, 'UTF-8', output).first
-          end
-        rescue Iconv::IllegalSequence, Iconv::InvalidEncoding, Errno::EINVAL
+          output.encode(to_encoding)
+        rescue Errno::EINVAL
           # the 'from' parameter specifies a charset other than what the text
           # actually is...not much we can do in this case but just return the
           # unconverted text.
@@ -176,42 +170,23 @@ module Mail
     def Encodings.encode_non_usascii(address, charset)
       return address if address.ascii_only? or charset.nil?
 
-      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
-      with_ascii_kcode do
-        # Encode all strings embedded inside of quotes
-        address = address.gsub(/("[^"]*[^\/]")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
+      # Encode all strings embedded inside of quotes
+      address = address.gsub(/("[^"]*[^\/]")/) { |s| Encodings.b_value_encode(unquote(s), charset) }
 
-        # Then loop through all remaining items and encode as needed
-        tokens = address.split(/\s/)
+      # Then loop through all remaining items and encode as needed
+      tokens = address.split(/\s/)
 
-        map_with_index(tokens) do |word, i|
-          if word.ascii_only?
-            word
-          else
-            previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
-            if previous_non_ascii #why are we adding an extra space here?
-              word = " #{word}"
-            end
-            Encodings.b_value_encode(word, charset)
+      map_with_index(tokens) do |word, i|
+        if word.ascii_only?
+          word
+        else
+          previous_non_ascii = i>0 && tokens[i-1] && !tokens[i-1].ascii_only?
+          if previous_non_ascii #why are we adding an extra space here?
+            word = " #{word}"
           end
-        end.join(' ')
-      end
-    end
-
-    if RUBY_VERSION < '1.9'
-      # With KCODE=u we can't use regexps on other encodings. Go ASCII.
-      def Encodings.with_ascii_kcode #:nodoc:
-        if $KCODE
-          $KCODE, original_kcode = '', $KCODE
+          Encodings.b_value_encode(word, charset)
         end
-        yield
-      ensure
-        $KCODE = original_kcode if original_kcode
-      end
-    else
-      def Encodings.with_ascii_kcode #:nodoc:
-        yield
-      end
+      end.join(' ')
     end
 
     # Encode a string with Base64 Encoding and returns it ready to be inserted
@@ -226,7 +201,7 @@ module Mail
         string
       else
         Encodings.each_base64_chunk_byterange(string, 60).map do |chunk|
-          str, encoding = RubyVer.b_value_encode(chunk, encoding)
+          str, encoding = Utilities.b_value_encode(chunk, encoding)
           "=?#{encoding}?B?#{str.chomp}?="
         end.join(" ")
       end
@@ -241,7 +216,7 @@ module Mail
     #  #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def Encodings.q_value_encode(encoded_str, encoding = nil)
       return encoded_str if encoded_str.to_s.ascii_only?
-      string, encoding = RubyVer.q_value_encode(encoded_str, encoding)
+      string, encoding = Utilities.q_value_encode(encoded_str, encoding)
       string.gsub!("=\r\n", '') # We already have limited the string to the length we want
       map_lines(string) do |str|
         "=?#{encoding}?Q?#{str.chomp.gsub(/ /, '_')}?="
@@ -257,7 +232,7 @@ module Mail
     #  Encodings.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
     #  #=> 'This is あ string'
     def Encodings.b_value_decode(str)
-      RubyVer.b_value_decode(str)
+      Utilities.b_value_decode(str)
     end
 
     # Decodes a Quoted-Printable string from the "=?UTF-8?Q?This_is_=E3=81=82_string?=" format
@@ -267,11 +242,7 @@ module Mail
     #  Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
     #  #=> 'This is あ string'
     def Encodings.q_value_decode(str)
-      RubyVer.q_value_decode(str)
-    end
-
-    def Encodings.find_encoding(str)
-      RUBY_VERSION >= '1.9' ? str.encoding : $KCODE
+      Utilities.q_value_decode(str)
     end
 
     # Gets the encoding type (Q or B) from the string.
@@ -329,7 +300,7 @@ module Mail
         charsize = chr.bytesize
 
         if chunksize + charsize > max_bytesize_per_chunk
-          yield RubyVer.string_byteslice(str, offset, chunksize)
+          yield Utilities.string_byteslice(str, offset, chunksize)
           offset += chunksize
           chunksize = charsize
         else
@@ -337,7 +308,7 @@ module Mail
         end
       end
 
-      yield RubyVer.string_byteslice(str, offset, chunksize)
+      yield Utilities.string_byteslice(str, offset, chunksize)
     end
   end
 end

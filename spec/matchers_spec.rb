@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "have_sent_email" do
+RSpec.describe "have_sent_email" do
   include Mail::Matchers
 
   let(:include_attachments) { true }
@@ -174,6 +174,10 @@ describe "have_sent_email" do
 
       context 'matching by filename' do
         it { is_expected.to have_sent_email.with_attachments(an_attachment_with_filename(first_attachment.filename)) }
+      end
+
+      context 'matching by mimetype' do
+        it { is_expected.to have_sent_email.with_attachments(an_attachment_with_mime_type(first_attachment.mime_type)) }
       end
 
       context 'single attachment passed' do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Envelope do
+RSpec.describe Mail::Envelope do
   # From RFC4155 The application/mbox Media Type
   #
   #   o Each message in the mbox database MUST be immediately preceded

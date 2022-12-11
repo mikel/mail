@@ -29,7 +29,7 @@ module Mail
   #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
   #            instance of Message, not an array of Message instances.
-  #   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+  #   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
   #            or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
   #            The default is 'ALL'
   #
@@ -38,7 +38,7 @@ module Mail
   #
   class IMAP < Retriever
     require 'net/imap' unless defined?(Net::IMAP)
-    
+
     def initialize(values)
       self.settings = { :address              => "localhost",
                         :port                 => 143,
@@ -65,12 +65,12 @@ module Mail
     #              This is helpful when you don't want your messages to be set to read automatically. Default is false.
     #   delete_after_find: flag for whether to delete each retreived email after find. Default
     #           is false. Use #find_and_delete if you would like this to default to true.
-    #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string, 
+    #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
     #           or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
     #           The default is 'ALL'
     #   search_charset: charset to pass to IMAP server search. Omitted by default. Example: 'UTF-8' or 'ASCII'.
     #
-    def find(options={}, &block)
+    def find(options=nil, &block)
       options = validate_options(options)
 
       start do |imap|
@@ -142,7 +142,7 @@ module Mail
 
       # Set default options
       def validate_options(options)
-        options ||= {}
+        options = options ? Hash[options] : {}
         options[:mailbox] ||= 'INBOX'
         options[:count]   ||= 10
         options[:order]   ||= :asc

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Body do
+RSpec.describe Mail::Body do
 
   # 3.5 Overall message syntax
   #
@@ -230,7 +230,7 @@ describe Mail::Body do
     end
 
     it "should split if boundary is not set" do
-      multipart_body = "\n\n--\nDate: Thu, 01 Aug 2013 15:14:20 +0100\nMime-Version: 1.0\nContent-Type: text/plain\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment;\n filename=\"\"\nContent-ID: <51fa6d3cac796_d84e3fe5a58349e025683@local.mail>\n\n\n\n----"
+      multipart_body = "\n\n--\nDate: Thu, 01 Aug 2013 15:14:20 +0100\nMIME-Version: 1.0\nContent-Type: text/plain\nContent-Transfer-Encoding: 7bit\nContent-Disposition: attachment;\n filename=\"\"\nContent-ID: <51fa6d3cac796_d84e3fe5a58349e025683@local.mail>\n\n\n\n----"
       body = Mail::Body.new(multipart_body)
       expect { body.split!(nil) }.not_to raise_error
     end
@@ -445,8 +445,7 @@ describe Mail::Body do
     it "should encoded" do
       body = Mail::Body.new("あいうえお\r\n")
       body.charset = 'iso-2022-jp'
-      expect = (RUBY_VERSION < '1.9') ? "あいうえお\r\n" : "\e$B$\"$$$&$($*\e(B\r\n"
-      expect(body.encoded).to eq expect
+      expect(body.encoded).to eq "\e$B$\"$$$&$($*\e(B\r\n"
     end
   end
 
@@ -455,6 +454,14 @@ describe Mail::Body do
       body = Mail::Body.new('The Body')
       body.encoding = 'invalid'
       expect(body.encoded).to eq 'The Body'
+    end
+  end
+
+  describe "Partslist empty" do
+    it "should not break on empty PartsList on body" do
+      body = Mail::Body.new('The Body')
+      body.sort_parts!
+      expect(body.parts.count).to eq 0
     end
   end
 end

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "ContentTransferEncodingParser" do
+RSpec.describe "ContentTransferEncodingParser" do
 
   it "should work" do
     text = "quoted-printable"

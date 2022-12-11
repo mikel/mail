@@ -1,0 +1,79 @@
+name: RSpec tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  ruby:
+    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+       include:
+         - ruby: 2.5
+           timeout: 5
+         - ruby: 2.6
+           timeout: 5
+         - ruby: 2.7
+           timeout: 5
+         - ruby: '3.0'
+           timeout: 5
+         - ruby: 3.1
+           timeout: 5
+         - ruby: truffleruby
+           timeout: 50
+         - ruby: truffleruby-head
+           timeout: 50
+         - ruby: jruby
+           timeout: 5
+         - ruby: jruby-head
+           timeout: 5
+         - ruby: jruby-9.4
+           timeout: 5
+         - ruby: jruby-9.3
+           timeout: 5
+         - ruby: jruby-9.2
+           timeout: 5
+    steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        rubygems: 3.3.12
+        bundler-cache: true
+        cache-version: 4
+    - name: Run tests
+      run: bundle exec rake spec
+      continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
+  actionmailer:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3
+        bundler-cache: true
+        cache-version: 4
+    - name: Setup mail with ActionMailer edge
+      run: |
+        git clone --depth=1 https://github.com/rails/rails.git -b main
+        cd rails
+        echo -e "\ngem 'mail', path: '../'" >> Gemfile
+        bundle update --bundler --source mail
+    - name: Run ActionMailer tests
+      run: |
+        cd rails/actionmailer
+        bundle exec rake

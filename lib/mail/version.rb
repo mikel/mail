@@ -3,7 +3,7 @@ module Mail
   module VERSION
 
     MAJOR = 2
-    MINOR = 8
+    MINOR = 9
     PATCH = 0
     BUILD = 'edge'
 

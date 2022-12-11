@@ -2,23 +2,16 @@
 # frozen_string_literal: true
 module Mail
 
-  # Field List class provides an enhanced array that keeps a list of 
+  # Field List class provides an enhanced array that keeps a list of
   # email fields in order.  And allows you to insert new fields without
   # having to worry about the order they will appear in.
   class FieldList < Array
-    include Enumerable
-
     def has_field?(field_name)
       any? { |f| f.responsible_for? field_name }
     end
 
-    def select_fields(field_name)
-      select { |f| f.responsible_for? field_name }
-    end
-
     def get_field(field_name)
       fields = select_fields(field_name)
-
       case fields.size
       when 0; nil
       when 1; fields.first
@@ -70,6 +63,25 @@ module Mail
 
     def summary
       map { |f| "<#{f.name}: #{f.value}>" }.join(", ")
+    end
+
+    private
+
+    def select_fields(field_name)
+      fields = select { |f| f.responsible_for? field_name }
+      if fields.size > 1 && singular?(field_name)
+        Array(fields.detect { |f| f.errors.size == 0 } || fields.first)
+      else
+        fields
+      end
+    end
+
+    def singular?(field_name)
+      if klass = Mail::Field.field_class_for(field_name)
+        klass.singular?
+      else
+        false
+      end
     end
   end
 end

@@ -1,10 +1,10 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
-# 
+#
 # resent-from     =       "Resent-From:" mailbox-list CRLF
 
-describe Mail::ResentFromField do
+RSpec.describe Mail::ResentFromField do
   
   describe "initialization" do
 
@@ -38,18 +38,18 @@ describe Mail::ResentFromField do
       expect(t.addresses[1]).to eq 'mikel@me.com'
       expect(t.addresses[2]).to eq 'bob@you.com'
     end
-    
+
     it "should return the formatted line on to_s" do
       t = Mail::ResentFromField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.value).to eq 'sam@me.com, my_group: mikel@me.com, bob@you.com;'
     end
-    
+
     it "should return the encoded line" do
       t = Mail::ResentFromField.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       expect(t.encoded).to eq "Resent-From: sam@me.com, \r\n\smy_group: mikel@me.com, \r\n\sbob@you.com;\r\n"
     end
-    
+
   end
-  
-  
+
+
 end

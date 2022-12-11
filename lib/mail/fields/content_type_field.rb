@@ -1,7 +1,5 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/fields/named_structured_field'
-require 'mail/fields/parameter_hash'
 
 module Mail
   class ContentTypeField < NamedStructuredField #:nodoc:
@@ -123,8 +121,8 @@ module Mail
         gsub(/[; ]+/, '; '). #use '; ' as a separator (or EOL)
         gsub(/;\s*$/,'') #remove trailing to keep examples below
 
-      if val =~ /(boundary=(\S*))/i
-        val = "#{$`.downcase}boundary=#{$2}#{$'.downcase}"
+      if val =~ /((boundary|name|filename)=(\S*))/i
+        val = "#{$`.downcase}#{$2}=#{$3}#{$'.downcase}"
       else
         val.downcase!
       end

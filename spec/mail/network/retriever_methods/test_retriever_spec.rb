@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "Test Retriever" do
+RSpec.describe "Test Retriever" do
 
   before(:each) do
     Mail.defaults do
@@ -14,7 +14,7 @@ describe "Test Retriever" do
   end
 
   describe "all" do
-    
+
     before do
       @emails = populate(15)
     end
@@ -30,11 +30,19 @@ describe "Test Retriever" do
     end
 
   end
-  
+
   describe "find" do
 
     before do
       @emails = populate(15)
+    end
+
+    it "should work with frozen hash arguments" do
+      expect(Mail.find({:count => 1}.freeze)).to eq @emails.first
+      expect(Mail.first({}.freeze)).to eq @emails.first
+      expect(Mail.last({}.freeze)).to eq @emails.last
+      expect(Mail.all({}.freeze)).to eq @emails
+      expect(Mail.find_and_delete({}.freeze)).to eq @emails
     end
 
     it "should handle the :count option" do

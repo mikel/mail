@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::PhraseList do
+RSpec.describe Mail::PhraseList do
 
   describe "parsing" do
     it "should parse a phrase list" do

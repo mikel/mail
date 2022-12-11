@@ -6,7 +6,7 @@ class MyDelivery; def initialize(settings); end; end
 
 class MyRetriever; def initialize(settings); end; end
 
-describe "Mail" do
+RSpec.describe "Mail" do
 
   before(:each) do
     # Reset all defaults back to original state
@@ -49,8 +49,8 @@ describe "Mail" do
                                                 :openssl_verify_mode  => nil,
                                                 :ssl                  => nil,
                                                 :tls                  => nil,
-                                                :open_timeout         => nil,
-                                                :read_timeout         => nil })
+                                                :open_timeout         => 5,
+                                                :read_timeout         => 5 })
     end
 
     it "should set the retriever method" do
@@ -138,10 +138,11 @@ describe "Mail" do
 
     it "should be able to change the delivery_method and pass in settings" do
       mail = Mail.new
-      tmpdir = File.expand_path('../../../tmp/mail', __FILE__)
+      tmpdir = File.expand_path('../../tmp/mail', __dir__)
       mail.delivery_method :file, :location => tmpdir
       expect(mail.delivery_method.class).to eq Mail::FileDelivery
-      expect(mail.delivery_method.settings).to eql({:location => tmpdir})
+      expect(mail.delivery_method.settings).to eql({:location => tmpdir,
+                                                    :extension => ''})
     end
 
     it "should not change the default when it changes the delivery_method" do

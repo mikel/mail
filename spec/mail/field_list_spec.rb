@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::FieldList do
+RSpec.describe Mail::FieldList do
   it "should be able to add new fields" do
     fl = Mail::FieldList.new
     fl << Mail::Field.parse("To: mikel@me.com")

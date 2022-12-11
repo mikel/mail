@@ -9,6 +9,10 @@ module Mail
       AttachmentFilenameMatcher.new(filename)
     end
 
+    def an_attachment_with_mime_type(filename)
+      AttachmentMimeTypeMatcher.new(filename)
+    end
+
     class AnyAttachmentMatcher
       def ===(other)
         other.attachment?
@@ -23,6 +27,17 @@ module Mail
 
       def ===(other)
         other.attachment? && other.filename == filename
+      end
+    end
+
+    class AttachmentMimeTypeMatcher
+      attr_reader :mime_type
+      def initialize(mime_type)
+        @mime_type = mime_type
+      end
+
+      def ===(other)
+        other.attachment? && other.mime_type == mime_type
       end
     end
   end

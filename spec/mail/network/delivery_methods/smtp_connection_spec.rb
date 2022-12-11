@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "SMTP Delivery Method" do
+RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
     Mail.defaults do
@@ -15,16 +15,30 @@ describe "SMTP Delivery Method" do
     Mail.delivery_method.smtp.finish
   end
 
-  it "dot-stuff unterminated last line of the message" do
+  it "should not dot-stuff unterminated last line with no leading dot" do
+    body = "this is a test\n.\nonly a test"
+
     Mail.deliver do
       from 'from@example.com'
       to 'to@example.com'
       subject 'dot-stuff last line'
-      body "this is a test\n.\nonly a test\n."
+      body "this is a test\n.\nonly a test"
     end
 
     message = MockSMTP.deliveries.first
-    expect(Mail.new(message).decoded).to eq("this is a test\n..\nonly a test\n..")
+    expect(Mail.new(message).decoded).to eq("this is a test\n.\nonly a test")
+  end
+
+  it "should not dot-stuff newline-terminated last line" do
+    Mail.deliver do
+      from 'from@example.com'
+      to 'to@example.com'
+      subject 'dot-stuff last line'
+      body "this is a test\n.\nonly a test\n.\n"
+    end
+
+    message = MockSMTP.deliveries.first
+    expect(Mail.new(message).decoded).to eq("this is a test\n.\nonly a test\n.\n")
   end
 
   it "should send an email using open SMTP connection" do

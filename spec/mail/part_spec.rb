@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Part do
+RSpec.describe Mail::Part do
 
   it "should not add a default Content-ID" do
     part = Mail::Part.new
@@ -77,8 +77,8 @@ describe Mail::Part do
 
   describe "parts that have a missing header" do
     it "should not try to init a header if there is none" do
-      expect($stderr).not_to receive(:puts)
-      Mail::Part.new(Mail::Utilities.to_crlf(<<PARTEND))
+      expect {
+        Mail::Part.new(Mail::Utilities.to_crlf(<<PARTEND))
 
 The original message was received at Mon, 24 Dec 2007 10:03:47 +1100
 from 60-0-0-146.static.tttttt.com.au [60.0.0.146]
@@ -101,6 +101,7 @@ This message has been scanned for viruses and
 dangerous content by MailScanner, and is
 believed to be clean.
 PARTEND
+       }.to_not output.to_stderr
     end
   end
 

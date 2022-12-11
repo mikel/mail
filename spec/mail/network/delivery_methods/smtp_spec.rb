@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "SMTP Delivery Method" do
+RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
     # Reset all defaults back to original state
@@ -26,18 +26,6 @@ describe "SMTP Delivery Method" do
   end
 
   describe "general usage" do
-    it "dot-stuff unterminated last line of the message" do
-      Mail.deliver do
-        from 'from@example.com'
-        to 'to@example.com'
-        subject 'dot-stuff last line'
-        body "this is a test\n.\nonly a test\n."
-      end
-
-      message = MockSMTP.deliveries.first
-      expect(Mail.new(message).decoded).to eq("this is a test\n..\nonly a test\n..")
-    end
-
     it "should send emails from given settings" do
 
       mail = Mail.deliver do
@@ -288,7 +276,7 @@ describe "SMTP Delivery Method" do
       end.to raise_error(ArgumentError, 'SMTP From address may not be blank: nil')
     end
 
-    it "should raise an error if no recipient if defined" do
+    it "should raise an error if no recipient is defined" do
       mail = Mail.new do
         from "from@somemail.com"
         subject "Email with no recipient"

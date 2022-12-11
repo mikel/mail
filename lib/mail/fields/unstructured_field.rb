@@ -1,6 +1,5 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/fields/common_field'
 require 'mail/utilities'
 
 module Mail
@@ -31,8 +30,6 @@ module Mail
       charset ||=
         if value.respond_to?(:encoding)
           value.encoding
-        elsif RUBY_VERSION < '1.9'
-          $KCODE
         end
 
       super name, value.to_s, charset
@@ -186,9 +183,7 @@ module Mail
     end
 
     def normalized_encoding
-      encoding = charset.to_s.upcase.gsub('_', '-')
-      encoding = 'UTF-8' if encoding == 'UTF8' # Ruby 1.8.x and $KCODE == 'u'
-      encoding
+      charset.to_s.upcase.gsub('_', '-')
     end
   end
 end

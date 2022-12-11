@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Message do
+RSpec.describe Mail::Message do
 
   def basic_email
     "To: mikel\r\nFrom: bob\r\nSubject: Hello!\r\n\r\nemail message\r\n"
@@ -66,11 +66,9 @@ describe Mail::Message do
       expect(mail.from).to eq ['mikel@me.com']
       expect(mail.to).to eq ['lindsaar@you.com']
 
-      if RUBY_VERSION >= '1.9'
-        mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
-        expect(mail.from).to eq ['mikel@me.com']
-        expect(mail.to).to eq ['lindsaar@you.com']
-      end
+      mail = ClassThatCreatesMail.new('mikel@me.com', 'lindsaar@you.com').create_mail_with_splat_args
+      expect(mail.from).to eq ['mikel@me.com']
+      expect(mail.to).to eq ['lindsaar@you.com']
     end
 
     it "should initialize a body and header class even if called with nothing to begin with" do
@@ -139,8 +137,9 @@ describe Mail::Message do
     end
 
     it "should not raise a warning on having non US-ASCII characters in the header (should just handle it)" do
-      expect($stderr).not_to receive(:puts)
-      read_fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')
+      expect {
+        read_fixture('emails', 'plain_emails', 'raw_email_string_in_date_field.eml')
+      }.to_not output.to_stderr
     end
 
     it "should raise a warning (and keep parsing) on having an incorrectly formatted header" do
@@ -195,7 +194,7 @@ describe Mail::Message do
 
       it "should serialize the basic information to YAML" do
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['headers']['To']).to       eq "someone@somewhere.com"
         expect(yaml_output['headers']['Cc']).to       eq "someoneelse@somewhere.com"
         expect(yaml_output['headers']['Subject']).to  eq "subject"
@@ -213,7 +212,7 @@ describe Mail::Message do
       it "should serialize a Message with a custom delivery_handler" do
         @yaml_mail.delivery_handler = DeliveryAgent
         yaml = @yaml_mail.to_yaml
-        yaml_output = YAML.load(yaml)
+        yaml_output = Mail::YAML.load(yaml)
         expect(yaml_output['delivery_handler']).to eq "DeliveryAgent"
       end
 
@@ -225,10 +224,17 @@ describe Mail::Message do
 
       it "should not deserialize a delivery_handler that does not exist" do
         yaml = @yaml_mail.to_yaml
-        yaml_hash = YAML.load(yaml)
+        yaml_hash = Mail::YAML.load(yaml)
         yaml_hash['delivery_handler'] = "NotARealClass"
         deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
         expect(deserialized.delivery_handler).to be_nil
+      end
+
+      it "should deserialize parts as an instance of Mail::PartsList" do
+        yaml = @yaml_mail.to_yaml
+        yaml_hash = Mail::YAML.load(yaml)
+        deserialized = Mail::Message.from_yaml(yaml_hash.to_yaml)
+        expect(deserialized.parts).to be_kind_of(Mail::PartsList)
       end
 
       it "should handle multipart mail" do
@@ -1253,7 +1259,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version("3.0 (This is an unreal version number)")
-          expect(mail.to_s).to match(/Mime-Version: 3.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 3.0\r\n/)
         end
 
         it "should generate a mime version if nothing is passed to add_date" do
@@ -1264,7 +1270,7 @@ describe Mail::Message do
                body 'This is a body of the email'
           end
           mail.add_mime_version
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should make an email and inject a mime_version if none was set if told to_s" do
@@ -1274,7 +1280,7 @@ describe Mail::Message do
             subject 'This is a test email'
                body 'This is a body of the email'
           end
-          expect(mail.to_s).to match(/Mime-Version: 1.0\r\n/)
+          expect(mail.to_s).to match(/MIME-Version: 1.0\r\n/)
         end
 
         it "should add the mime version to the message permanently once sent to_s" do
@@ -1315,8 +1321,7 @@ describe Mail::Message do
           body = "This is plain text US-ASCII"
           mail = Mail.new
           mail.body = body
-          expect($stderr).not_to receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should set the content type to text/plain; charset=us-ascii" do
@@ -1347,8 +1352,12 @@ describe Mail::Message do
           mail = Mail.new
           mail.body = body
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
+
+          result = nil
+          expect {
+            result = mail.to_s
+          }.to output(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./).to_stderr
+          expect(result).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should raise a warning if there is no charset parameter and there is non ascii chars and default to text/plain, UTF-8" do
@@ -1357,8 +1366,12 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "text/plain"
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to receive(:puts).with(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./m)
-          expect(mail.to_s).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
+
+          result = nil
+          expect {
+            result = mail.to_s
+          }.to output(/Non US-ASCII detected and no charset defined.\nDefaulting to UTF-8, set your own if this is incorrect./).to_stderr
+          expect(result).to match(%r{|Content-Type: text/plain; charset=UTF-8|})
         end
 
         it "should not raise a warning if there is no charset parameter and the content-type is not text" do
@@ -1367,8 +1380,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_type = "image/png"
           mail.content_transfer_encoding = "8bit"
-          expect($stderr).to_not receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should not raise a warning if there is a charset defined and there is non ascii chars" do
@@ -1377,8 +1389,7 @@ describe Mail::Message do
           mail.body = body
           mail.content_transfer_encoding = "8bit"
           mail.content_type = "text/plain; charset=UTF-8"
-          expect($stderr).not_to receive(:puts)
-          mail.to_s
+          expect { mail.to_s }.to_not output.to_stderr
         end
 
         it "should be able to set a content type with an array and hash" do
@@ -1432,9 +1443,50 @@ describe Mail::Message do
           part.body          = 'a' * 999
         end
         mail.encoded
-        
+
         expect(mail.parts.count).to eq(1)
         expect(mail.parts.last.content_transfer_encoding).to match(/7bit|8bit|binary/)
+      end
+
+      describe 'charset' do
+        it 'should return a default value for multipart mails' do
+          mail = Mail.new
+          mail.add_part(Mail::Part.new(body: 'PLAIN TEXT', content_type: 'text/plain'))
+          expect(mail.charset).to eq 'UTF-8'
+        end
+      end
+
+      describe 'charset=' do
+        before do
+          @mail = Mail.new do
+            to 'mikel@test.lindsaar.net'
+            from 'bob@test.lindsaar.net'
+            subject 'Multipart email'
+            text_part do
+              body 'This is plain text'
+            end
+            html_part do
+              content_type 'text/html; charset=UTF-8'
+              body '<h1>This is HTML</h1>'
+            end
+          end
+        end
+
+        it "should not add an empty charset header" do
+          @mail.charset = nil
+
+          expect(@mail.multipart?).to eq true
+          expect(@mail.parts.count).to eq 2
+          expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
+        end
+
+        it "should remove the charset header" do
+          @mail.charset = 'iso-8859-1'
+          @mail.charset = nil
+
+          expect(@mail.encoded.scan(/charset=UTF-8/).count).to eq 2
+          expect(@mail.encoded.scan(/charset=iso-8859-1/).count).to eq 0
+        end
       end
 
       describe "convert_to_multipart" do
@@ -1554,7 +1606,7 @@ describe Mail::Message do
           body '<h1>This is HTML</h1>'
         end
       end
-      expect { mail.decoded }.to raise_error(NoMethodError, 'Can not decode an entire message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
+      expect { mail.decoded }.to raise_error(NoMethodError, 'This message cannot be decoded as _entire_ message, try calling #decoded on the various fields and body or parts if it is a multipart message.')
     end
 
     it "should return the decoded body if you call decode and the message is not multipart" do
@@ -1581,7 +1633,7 @@ describe Mail::Message do
           body "The=3Dbody"
         end
         expect(mail.body.decoded).to eq "The=body"
-        expect(mail.body.encoded).to eq "The=3Dbody=\n"
+        expect(mail.body.encoded).to eq "The=3Dbody=\r\n"
       end
 
       it "should change a body on decode if given an encoding type to decode" do
@@ -1612,10 +1664,10 @@ describe Mail::Message do
     end
 
     def with_encoder(encoder)
-      old, Mail::Ruby19.charset_encoder = Mail::Ruby19.charset_encoder, encoder
+      old, Mail::Utilities.charset_encoder = Mail::Utilities.charset_encoder, encoder
       yield
     ensure
-      Mail::Ruby19.charset_encoder = old
+      Mail::Utilities.charset_encoder = old
     end
 
     let(:message){
@@ -1634,12 +1686,10 @@ describe Mail::Message do
       expect(message.inspect_structure).to eq message.inspect
     end
 
-    if RUBY_VERSION > "1.9"
-      it "uses the Ruby19 charset encoder" do
-        with_encoder(Mail::Ruby19::BestEffortCharsetEncoder.new) do
-          message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
-          expect(message.decoded).to eq("Hi –")
-        end
+    it "uses the Utilities charset encoder" do
+      with_encoder(Mail::Utilities::BestEffortCharsetEncoder.new) do
+        message = Mail.new("Content-Type: text/plain;\r\n charset=windows-1258\r\nContent-Transfer-Encoding: base64\r\n\r\nSGkglg==\r\n")
+        expect(message.decoded).to eq("Hi –")
       end
     end
   end
@@ -1944,6 +1994,24 @@ describe Mail::Message do
       expect(mail.from).to eq ['extended@example.net']
       expect(mail[:from].decoded).to eq '"Foo áëô îü" <extended@example.net>'
       expect(mail[:from].encoded).to eq "From: =?UTF-8?B?Rm9vIMOhw6vDtCDDrsO8?= <extended@example.net>\r\n"
+    end
+  end
+
+  describe "adding parts should preserve the charset of the mail" do
+    charsets = ['UTF-8', 'ISO-8859-1', nil]
+    charsets.each do |mail_charset|
+      charsets.each do |part_charset|
+        it "when #{mail_charset || 'nil'} vs #{part_charset || 'nil'}" do
+          mail = Mail.new
+          mail['charset'] = mail_charset
+          expect(mail.charset).to eq mail_charset
+          p = Mail::Part.new(:content_type => 'text/html', :body => 'HTML TEXT', :charset => part_charset)
+          expect(p.charset).to eq part_charset
+          mail.add_part(p)
+          expect(mail.charset).to eq mail_charset
+          expect(p.charset).to eq part_charset
+        end
+      end
     end
   end
 

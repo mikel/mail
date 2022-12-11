@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::Header do
+RSpec.describe Mail::Header do
 
   describe "initialization" do
 
@@ -460,9 +460,8 @@ HERE
       expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
 
-    if RUBY_VERSION >= '1.9'
-      it "should convert all lonesome LFs to CRLF in UTF-8 too" do
-        header = Mail::Header.new(<<HERE)
+    it "should convert all lonesome LFs to CRLF in UTF-8 too" do
+      header = Mail::Header.new(<<HERE)
 Subject: Iñtërnâtiônàlizætiøn
 Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	by smtp.totallyrandom.com with esmtp (Exim 4.68)
@@ -471,10 +470,8 @@ Received: from [127.0.220.158] (helo=fg-out-1718.google.com)
 	for support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700
 HERE
 
-        expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
-      end
+      expect(header['Received'].value).to eq "from [127.0.220.158] (helo=fg-out-1718.google.com)\tby smtp.totallyrandom.com with esmtp (Exim 4.68)\t(envelope-from <stuff+caf_=support=aaa.somewhere.com@gmail.com>)\tid 1K4JeQ-0005Nd-Ij\tfor support@aaa.somewhere.com; Thu, 05 Jun 2008 10:53:29 -0700"
     end
-
 
     it "should convert all lonesome CRs to CRLF" do
       header = Mail::Header.new(<<HERE.gsub(/\n/, "\r"))
@@ -619,13 +616,13 @@ TRACEHEADER
     end
 
     it "should say it has a date id if it does" do
-      expect(Mail::Header.new('Mime-Version: 1.0')).to be_has_mime_version
+      expect(Mail::Header.new('MIME-Version: 1.0')).to be_has_mime_version
     end
   end
 
   describe "mime version handling" do
     it "should return the mime version of the email" do
-      header = Mail::Header.new("Mime-Version: 1.0")
+      header = Mail::Header.new("MIME-Version: 1.0")
       expect(header['mime-version'].value).to eq '1.0'
     end
 

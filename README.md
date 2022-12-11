@@ -1,4 +1,4 @@
-# Mail [![Build Status](https://travis-ci.org/mikel/mail.svg?branch=master)](https://travis-ci.org/mikel/mail)
+# Mail [![Build Status](https://github.com/mikel/mail/actions/workflows/test.yml/badge.svg)](https://github.com/mikel/mail/actions/workflows/test.yml)
 
 ## Introduction
 
@@ -14,10 +14,9 @@ implementation that makes generating, sending and parsing email a no
 brainer.
 
 It is also designed from the ground up to work with the more modern versions
-of Ruby.  This is because Ruby > 1.9 handles text encodings much more wonderfully
-than Ruby 1.8.x and so these features have been taken full advantage of in this
-library allowing Mail to handle a lot more messages more cleanly than TMail.
-Mail does run on Ruby 1.8.x... it's just not as fun to code.
+of Ruby.  Modern Rubies handle text encodings much more wonderfully than before
+so these features have been taken full advantage of in this library allowing
+Mail to handle a lot more messages more cleanly than TMail.
 
 Finally, Mail has been designed with a very simple object oriented system
 that really opens up the email messages you are parsing, if you know what
@@ -43,14 +42,29 @@ our documentation, add new features—up to you! Thank you for pitching in.
 * [Encodings](#encodings)
 * [Contributing](#contributing)
 * [Usage](#usage)
-* [Excerpts from TREC Span Corpus 2005](#excerpts-from-trec-span-corpus-2005)
+* [Excerpts from TREC Spam Corpus 2005](#excerpts-from-trec-spam-corpus-2005)
 * [License](#license)
 
 ## Compatibility
 
-Mail supports Ruby 1.8.7+, including JRuby and Rubinius.
+Mail is tested against:
 
-Every Mail commit is tested by Travis on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.travis.yml).
+* Ruby: 2.5
+* Ruby: 2.6
+* Ruby: 2.7
+* Ruby: 3.0
+* Ruby: 3.1
+* JRuby: 9.2
+* JRuby: 9.3
+* JRuby: 9.4
+* JRuby: stable
+* JRuby: head
+* Truffleruby: stable
+* Truffleruby: head
+
+As new versions of Ruby are released, Mail will be compatible with support for the "preview" and all "normal maintenance", "security maintenance" and the two most recent "end of life" versions listed at the [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/) page.  Pull requests to assist in adding support for new preview releases are more than welcome.
+
+Every Mail commit is tested by GitHub Actions on [all supported Ruby versions](https://github.com/mikel/mail/blob/master/.github/workflows/test.yml).
 
 ## Discussion
 
@@ -96,6 +110,10 @@ good.  Additionally, all functional tests from TMail are to be passing before
 the gem gets released.
 
 It also means you can be sure Mail will behave correctly.
+
+You can run tests locally by running `bundle exec rspec`.
+
+You can run tests on all supported Ruby versions by using [act](https://github.com/nektos/act).
 
 ## API Policy
 
@@ -144,12 +162,14 @@ I have tried to simplify it some:
 
 ## Contributing
 
-Please do!  Contributing is easy in Mail.  Please read the CONTRIBUTING.md document for more info
+Please do!  Contributing is easy in Mail.  Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for more info.
 
 ## Usage
 
 All major mail functions should be able to happen from the Mail module.
 So, you should be able to just <code>require 'mail'</code> to get started.
+
+`mail` is pretty well documented in its Ruby code.  You can look it up e.g. at [rubydoc.info](https://www.rubydoc.info/gems/mail).
 
 ### Making an email
 
@@ -284,15 +304,25 @@ mail.delivery_method :logger
 mail.delivery_method :logger, logger: other_logger, severity: :debug
 ```
 
-### Getting Emails from a POP Server:
+### Getting Emails from a POP or IMAP Server:
 
 You can configure Mail to receive email using <code>retriever_method</code>
 within <code>Mail.defaults</code>:
 
 ```ruby
+# e.g. POP3
 Mail.defaults do
   retriever_method :pop3, :address    => "pop.gmail.com",
                           :port       => 995,
+                          :user_name  => '<username>',
+                          :password   => '<password>',
+                          :enable_ssl => true
+end
+
+# IMAP
+Mail.defaults do
+  retriever_method :imap, :address    => "imap.mailbox.org",
+                          :port       => 993,
                           :user_name  => '<username>',
                           :password   => '<password>',
                           :enable_ssl => true
@@ -386,18 +416,21 @@ simple as possible.... (asking a lot from a mail library)
 
 ```ruby
 mail = Mail.deliver do
-  to      'nicolas@test.lindsaar.net.au'
-  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-  subject 'First multipart email sent with Mail'
-
-  text_part do
-    body 'This is plain text'
+  part :content_type => "multipart/mixed" do |p1|
+    p1.part :content_type => "multipart/related" do |p2|
+      p2.part :content_type => "multipart/alternative",
+              :content_disposition => "inline" do |p3|
+        p3.part :content_type => "text/plain; charset=utf-8",
+                :body => "Here is the attachment you wanted\n"
+        p3.part :content_type => "text/html; charset=utf-8",
+                :body => "<h1>Funky Title</h1><p>Here is the attachment you wanted</p>\n"
+      end
+    end
+    add_file '/path/to/myfile.pdf'
   end
-
-  html_part do
-    content_type 'text/html; charset=UTF-8'
-    body '<h1>This is HTML</h1>'
-  end
+  from      "Mikel Lindsaar <mikel@test.lindsaar.net.au>"
+  to        "nicolas@test.lindsaar.net.au"
+  subject   "First multipart email sent with Mail"
 end
 ```
 
@@ -408,34 +441,76 @@ so desire...
 ```
 puts mail.to_s #=>
 
-To: nicolas@test.lindsaar.net.au
+Date: Tue, 26 Apr 2022 20:12:07 +0200
 From: Mikel Lindsaar <mikel@test.lindsaar.net.au>
+To: nicolas@test.lindsaar.net.au
+Message-ID: <626835f736e19_10873fdfa3c2ffd4947a3@sender.at.mail>
 Subject: First multipart email sent with Mail
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary=\"--==_mimepart_626835f733867_10873fdfa3c2ffd494636\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636
+Content-Type: multipart/mixed;
+ boundary=\"--==_mimepart_626835f73382a_10873fdfa3c2ffd494518\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f73382a_10873fdfa3c2ffd494518
+Content-Type: multipart/related;
+ boundary=\"--==_mimepart_626835f7337f5_10873fdfa3c2ffd494438\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_626835f7337f5_10873fdfa3c2ffd494438
 Content-Type: multipart/alternative;
-  boundary=--==_mimepart_4a914f0c911be_6f0f1ab8026659
-Message-ID: <4a914f12ac7e_6f0f1ab80267d1@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
+ boundary=\"--==_mimepart_626835f733702_10873fdfa3c2ffd494376\";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-ID: <626835f738373_10873fdfa3c2ffd49488b@sender.at.mail>
+
+
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
+Here is the attachment you wanted
 
-----==_mimepart_4a914f0c911be_6f0f1ab8026659
-Content-ID: <4a914f12c8c4_6f0f1ab80268d6@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
-Content-Type: text/plain
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376
+Content-Type: text/html;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-This is plain text
-----==_mimepart_4a914f0c911be_6f0f1ab8026659
-Content-Type: text/html; charset=UTF-8
-Content-ID: <4a914f12cf86_6f0f1ab802692c@baci.local.mail>
-Date: Mon, 24 Aug 2009 00:15:46 +1000
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+<h1>Funky Title</h1><p>Here is the attachment you wanted</p>
 
-<h1>This is HTML</h1>
-----==_mimepart_4a914f0c911be_6f0f1ab8026659--
+----==_mimepart_626835f733702_10873fdfa3c2ffd494376--
+
+----==_mimepart_626835f7337f5_10873fdfa3c2ffd494438--
+
+----==_mimepart_626835f73382a_10873fdfa3c2ffd494518--
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636
+Content-Type: text/plain;
+ charset=UTF-8;
+ filename=myfile.txt
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename=myfile.txt
+Content-ID: <6
+26835f7386ab_10873fdfa3c2ffd4949b8@sender.at.mail>
+
+Hallo,
+Test
+End
+
+----==_mimepart_626835f733867_10873fdfa3c2ffd494636--
 ```
 
 Mail inserts the content transfer encoding, the mime version,
@@ -585,7 +660,7 @@ Mail.defaults do
   delivery_method :test # in practice you'd do this in spec_helper.rb
 end
 
-describe "sending an email" do
+RSpec.describe "sending an email" do
   include Mail::Matchers
 
   before(:each) do
@@ -632,6 +707,12 @@ describe "sending an email" do
 
   # ... or any attachment
   it { is_expected.to have_sent_email.with_attachments(any_attachment) }
+
+  # ... or attachment with filename
+  it { is_expected.to have_sent_email.with_attachments(an_attachment_with_filename('file.txt')) }
+
+  # ... or attachment with mime_type
+  it { is_expected.to have_sent_email.with_attachments(an_attachment_with_mime_type('application/pdf')) }
 
   # ... by array of attachments
   it { is_expected.to have_sent_email.with_attachments([my_attachment1, my_attachment2]) } #note that order is important

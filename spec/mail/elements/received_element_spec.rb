@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Mail::ReceivedElement do
+RSpec.describe Mail::ReceivedElement do
 
   it "should raise an error if the input is nil" do
     received = Mail::ReceivedElement.new(nil)

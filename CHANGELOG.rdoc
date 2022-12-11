@@ -1,21 +1,29 @@
-== Version 2.8.0 (unreleased)
+== Version 2.9.0 (unreleased)
 
 Breaking changes:
-* Message#without_attachments! now deletes nested attachments. (TylerRick)
-* Sendmail and exim delivery now raise DeliveryError when the command exits with a nonzero exitstatus. (benmmurphy, CoolElvis)
-* Sendmail and exim delivery :arguments option must be an array of string args. (benmmurphy)
-* Passing unparsed headers to Mail::Field.new is no longer supported. Use Mail::Field.parse. (jeremy)
-* Removed long-deprecated features: Message#register_for_delivery_notification, #has_transfer_encoding?, #add_transfer_encoding, #transfer_encoding, #message_content_type, #mime_parameters, #encode!, and Part#inline_content_id. (jeremy)
+* Mail::Field::FIELDS_MAP now contains class names, not Class instances (c960657)
 
 Compatibility:
-* Handle a wide variety of non-RFC Message-ID formats. (peterkovacs)
-* Gracefully parse invalid dates in Date and Received headers. (okkez)
-* Converting to multipart moves Content-* headers to the new part. (kirikak2)
-* Multipart Content-Type no longer includes a needless charset param. (kirikak2)
-* Replies prefix subject with "Re: " instead of "RE: " per 5322 3.6.5. (mashedcode)
+
+* Update MIME-Version to have correct case per RFC 2045 @mikel
 
 Features:
-* Message#inspect_structure and PartsList#inspect_structure pretty-print the hierarchy of message parts. (TylerRick)
+
+* Updated README to improve around sending multipart mail @kapfenho
+* Add delivery_interceptors method to Mail class to fetch registered interceptors @ghousemohamed
+
+Code Improvements:
+
+* Use Rake's default rakelib/ directory @olleolleolle
+* refactor: Use Dir.glob only once in gemspec's "files" directive @olleolleolle
+* Configure RSpec's zero-monkey patching mode @olleolleolle
+* Added support for JRuby 9.4 @mikel
+* Prefer `__dir__` @olleolleolle
+
+Bug Fixes:
+
+* Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
+* Regression: Adding a part should not reset the mail's charset to nil @railsbob
 
 
-Please check [2-7-stable](https://github.com/mikel/mail/blob/2-7-stable/CHANGELOG.rdoc) for previous changes.
+Please check [2-8-stable](https://github.com/mikel/mail/blob/2-8-stable/CHANGELOG.rdoc) for previous changes.
