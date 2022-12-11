@@ -116,7 +116,13 @@ module Mail
         return false if smtp_tls?
 
         if setting_provided?(:enable_starttls) && settings[:enable_starttls]
-          :always
+          # enable_starttls: provided and truthy
+          case settings[:enable_starttls]
+          when :auto then :auto
+          when :always then :always
+          else
+            :always
+          end
         else
           # enable_starttls: not provided or false
           if setting_provided?(:enable_starttls_auto)
