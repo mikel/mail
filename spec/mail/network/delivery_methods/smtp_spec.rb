@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe "SMTP Delivery Method" do
+RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
     MockSMTP.reset
@@ -238,46 +238,18 @@ describe "SMTP Delivery Method" do
       expect(MockSMTP.starttls).to eq false
     end
 
-    it 'should allow forcing STARTTLS auto' do
+    it 'raises when setting STARTTLS with tls' do
       message = Mail.new do
         from 'mikel@test.lindsaar.net'
         to 'ada@test.lindsaar.net'
         subject 'Re: No way!'
         body 'Yeah sure'
-        delivery_method :smtp, { :address         => "localhost",
-                                 :port            => 25,
-                                 :domain          => 'localhost.localdomain',
-                                 :user_name       => nil,
-                                 :password        => nil,
-                                 :authentication  => nil,
-                                 :enable_starttls_auto => true  }
-
+        delivery_method :smtp, { :tls => true, :enable_starttls => :always }
       end
 
-      message.deliver!
-
-      expect(MockSMTP.starttls).to eq :auto
-    end
-
-    it 'should allow disabling automatic STARTTLS auto' do
-      message = Mail.new do
-        from 'mikel@test.lindsaar.net'
-        to 'ada@test.lindsaar.net'
-        subject 'Re: No way!'
-        body 'Yeah sure'
-        delivery_method :smtp, { :address         => "localhost",
-                                 :port            => 25,
-                                 :domain          => 'localhost.localdomain',
-                                 :user_name       => nil,
-                                 :password        => nil,
-                                 :authentication  => nil,
-                                 :enable_starttls_auto => false }
-
-      end
-
-      message.deliver!
-
-      expect(MockSMTP.starttls).to eq false
+      expect {
+        message.deliver!
+      }.to raise_error(ArgumentError, /:enable_starttls and :tls are mutually exclusive/)
     end
   end
 
@@ -325,7 +297,7 @@ describe "SMTP Delivery Method" do
       end.to raise_error(ArgumentError, 'SMTP From address may not be blank: nil')
     end
 
-    it "should raise an error if no recipient if defined" do
+    it "should raise an error if no recipient is defined" do
       mail = Mail.new do
         from "from@somemail.com"
         subject "Email with no recipient"
