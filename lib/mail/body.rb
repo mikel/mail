@@ -39,7 +39,7 @@ module Mail
       else
         # Do join first incase we have been given an Array in Ruby 1.9
         if string.respond_to?(:join)
-          @raw_source = ::Mail::Utilities.to_crlf(string.join(''))
+          @raw_source = ::Mail::Utilities.to_crlf(string.join)
         elsif string.respond_to?(:to_s)
           @raw_source = ::Mail::Utilities.to_crlf(string.to_s)
         else
