@@ -46,7 +46,7 @@ module Mail #:nodoc:
 
       # Forward all undefined methods to the wrapped string.
       def method_missing(method, *args, &block)
-        if method.to_s =~ /!$/
+        if method.to_s.end_with?('!')
           @wrapped_string.__send__(method, *args, &block)
           self
         else
