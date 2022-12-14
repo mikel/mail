@@ -1,6 +1,7 @@
 == Version 2.8.1 (unreleased)
 
 Bug Fixes:
+* Regression: sendmail accepts string :arguments (@sebbASF)
 * Regression: accept enable_starttls_auto: false @ahorek
 
 == Version 2.8.0 (3-Dec-2022)

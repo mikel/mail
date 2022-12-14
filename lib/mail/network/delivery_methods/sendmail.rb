@@ -49,8 +49,12 @@ module Mail
     end
 
     def initialize(values)
+      if values[:arguments].is_a?(String)
+        deprecation_warn.call \
+          'Initializing Mail::Sendmail with :arguments of type String is deprecated.' \
+          ' Instead ensure :arguments is an array of strings, e.g. ["-i", "-t"]'
+      end
       self.settings = self.class::DEFAULTS.merge(values)
-      raise ArgumentError, ":arguments expected to be an Array of individual string args" if settings[:arguments].is_a?(String)
     end
 
     def destinations_for(envelope)
@@ -60,8 +64,13 @@ module Mail
     def deliver!(mail)
       envelope = Mail::SmtpEnvelope.new(mail)
 
+      arguments = settings[:arguments]
+      if arguments.is_a? String
+        return old_deliver(envelope)
+      end
+
       command = [settings[:location]]
-      command.concat Array(settings[:arguments])
+      command.concat Array(arguments)
       command.concat [ '-f', envelope.from ] if envelope.from
 
       if destinations = destinations_for(envelope)
@@ -83,5 +92,42 @@ module Mail
           end
         end
       end
+
+    #+ support for delivery using string arguments (deprecated)
+    def old_deliver(envelope)
+      smtp_from = envelope.from
+      smtp_to = destinations_for(envelope)
+
+      from = "-f #{shellquote(smtp_from)}" if smtp_from
+      destination = smtp_to.map { |to| shellquote(to) }.join(' ')
+
+      arguments = "#{settings[:arguments]} #{from} --"
+      command = "#{settings[:location]} #{arguments} #{destination}"
+      popen command do |io|
+        io.puts ::Mail::Utilities.binary_unsafe_to_lf(envelope.message)
+        io.flush
+      end
+    end
+
+    # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
+    # with the following modifications:
+    #
+    # - Wraps in double quotes
+    # - Allows '+' to accept email addresses with them
+    # - Allows '~' as it is not unescaped in double quotes
+    def shellquote(address)
+      # Process as a single byte sequence because not all shell
+      # implementations are multibyte aware.
+      #
+      # A LF cannot be escaped with a backslash because a backslash + LF
+      # combo is regarded as line continuation and simply ignored. Strip it.
+      escaped = address.gsub(/([^A-Za-z0-9_\s\+\-.,:\/@~])/n, "\\\\\\1").gsub("\n", '')
+      %("#{escaped}")
+    end
+    #- support for delivery using string arguments
+
+    def deprecation_warn
+      defined?(ActiveSupport::Deprecation.warn) ? ActiveSupport::Deprecation.method(:warn) : Kernel.method(:warn)
+    end
   end
 end
