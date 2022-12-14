@@ -177,8 +177,8 @@ describe Mail::Sendmail do
 
     expect(mail.delivery_method).to receive(:popen).
       with(%w[ /usr/sbin/sendmail -i -t
-        -f roger@test.lindsaar.net
-        -- marcel@test.lindsaar.net bob@test.lindsaar.net ].join(' '))
+        -f "roger@test.lindsaar.net"
+        -- "marcel@test.lindsaar.net" "bob@test.lindsaar.net" ].join(' '))
 
     mail.deliver!
   end
