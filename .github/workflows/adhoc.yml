@@ -1,0 +1,80 @@
+name: Adhoc RSpec tests
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+    branches: [ feature/parse_lf ]
+  push:
+    branches: [ feature/parse_lf ]
+
+jobs:
+  ruby:
+    name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+       include:
+         - ruby: 2.5
+           timeout: 5
+         - ruby: 2.6
+           timeout: 5
+         - ruby: 2.7
+           timeout: 5
+         - ruby: '3.0'
+           timeout: 5
+         - ruby: 3.1
+           timeout: 5
+         - ruby: jruby
+           timeout: 10
+         - ruby: jruby-head
+           timeout: 10
+         - ruby: jruby-9.4
+           timeout: 10
+         - ruby: jruby-9.3
+           timeout: 10
+         - ruby: jruby-9.2
+           timeout: 10
+    steps:
+    - name: Psych 5.0.0 needs libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
+    - uses: actions/checkout@v2
+      with:
+        ref: feature/parse_lf
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        rubygems: 3.2.3
+        bundler-cache: true
+        cache-version: 4
+    - name: Show psych
+      run: |
+        gem list psych --details
+      continue-on-error: true
+    - name: Run tests1
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests2
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests3
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests4
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests5
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run tests6
+      run: bundle exec rake spec || echo "action_state=failed" >> $GITHUB_ENV
+      continue-on-error: true
+    - name: Run Summary
+      run: |
+        echo "${{ env.action_state }}"
+        # This will be be true for a successful run
+        test "${{ env.action_state }}" != 'failed'

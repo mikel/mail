@@ -420,7 +420,7 @@ module Mail
       end
       transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError
-      warn "Encoding conversion failed #{$!}"
+      warn "WARNING: Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
@@ -444,7 +444,7 @@ module Mail
       end
       transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "Encoding conversion failed #{$!}"
+      warn "WARNING: Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
@@ -453,7 +453,7 @@ module Mail
       str = charset_encoder.encode(str, encoding) if encoding
       transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "Encoding conversion failed #{$!}"
+      warn "WARNING: Encoding conversion failed #{$!}"
       str.dup.force_encoding(Encoding::UTF_8)
     end
 
