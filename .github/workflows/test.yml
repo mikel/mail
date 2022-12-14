@@ -33,7 +33,8 @@ jobs:
     - name: Installing libyaml-dev
       run: |
         sudo apt-get update
-        sudo apt-get install libyaml-dev    - uses: actions/checkout@v2
+        sudo apt-get install libyaml-dev
+    - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
@@ -48,7 +49,8 @@ jobs:
     - name: Installing libyaml-dev
       run: |
         sudo apt-get update
-        sudo apt-get install libyaml-dev    - uses: actions/checkout@v2
+        sudo apt-get install libyaml-dev
+    - uses: actions/checkout@v2
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
