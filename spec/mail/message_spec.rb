@@ -1747,9 +1747,9 @@ RSpec.describe Mail::Message do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <2@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
         m3 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello")
-        expect(m1).to eq m3 # preconditions
-        expect(m2).to eq m3
-        expect(m1).to eq m2 # Check transitivity
+        if m1 == m3 && m2 == m3
+          expect(m1).to eq m2 # Check transitivity
+        end
       end
     end
 
