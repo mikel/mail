@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, 2-8-stable ]
 
 jobs:
   ruby:
@@ -30,6 +30,10 @@ jobs:
          - ruby: jruby
            timeout: 5
     steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
@@ -42,6 +46,10 @@ jobs:
   actionmailer:
     runs-on: ubuntu-latest
     steps:
+    - name: Installing libyaml-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libyaml-dev
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
