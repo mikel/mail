@@ -49,6 +49,12 @@ module Mail
     end
 
     def initialize(values)
+      if values[:arguments].is_a?(String)
+        values[:arguments] = try_arrayfy_arguments(values[:arguments])
+        if values[:arguments].is_a?(Array)
+          deprecation_warn.call "Mail::Sendmail :arguments should be an Array of string args, not a string."
+        end
+      end
       self.settings = self.class::DEFAULTS.merge(values)
       raise ArgumentError, ":arguments expected to be an Array of individual string args" if settings[:arguments].is_a?(String)
     end
@@ -82,6 +88,19 @@ module Mail
             raise DeliveryError, "Delivery failed with exitstatus #{$?.exitstatus}: #{command.inspect}"
           end
         end
+      end
+
+      # Prevent raising on callers using ActionMailer < 7.1, using AM's default
+      # sendmail arguments: '-i -t' or '-i'.
+      # Returns `str` when `str` contains other flags.
+      def try_arrayfy_arguments(str)
+        result = str.strip.split(/ +/)
+
+        (result - %w[-t -i]).empty? ? result : str
+      end
+
+      def deprecation_warn
+        defined?(ActiveSupport::Deprecation.warn) ? ActiveSupport::Deprecation.method(:warn) : Kernel.method(:warn)
       end
   end
 end

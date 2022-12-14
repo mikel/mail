@@ -169,4 +169,17 @@ describe Mail::Sendmail do
       mail.deliver!
     end.to raise_error('SMTP To address may not be blank: []')
   end
+
+  it 'allows for legacy callers with :arguments strings containing default flags -i and/or -t' do
+    Mail.defaults do
+      delivery_method :sendmail, :arguments => '-i -t'
+    end
+
+    expect(mail.delivery_method).to receive(:popen).
+      with(%w[ /usr/sbin/sendmail -i -t
+        -f roger@test.lindsaar.net
+        -- marcel@test.lindsaar.net bob@test.lindsaar.net ])
+
+    mail.deliver!
+  end
 end
