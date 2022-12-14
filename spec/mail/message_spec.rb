@@ -1746,6 +1746,15 @@ RSpec.describe Mail::Message do
         expect(m1.message_id).to eq '4321@test.lindsaar.net'
         expect(m2.message_id).to eq '1234@test.lindsaar.net'
       end
+
+      it "should be transitive" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <2@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
+        m3 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello")
+        expect(m1).to eq m3 # preconditions
+        expect(m2).to eq m3
+        expect(m1).to eq m2 # Check transitivity
+      end
     end
 
     it "should implement the spaceship operator on the date field" do
