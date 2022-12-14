@@ -1,6 +1,7 @@
 name: RSpec tests
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
   pull_request:
@@ -44,7 +45,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libyaml-dev
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
@@ -61,7 +62,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libyaml-dev
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3
