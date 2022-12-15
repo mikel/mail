@@ -50,10 +50,11 @@ module Mail
 
     def initialize(values)
       if values[:arguments].is_a?(String)
-        deprecation_warn.call "Mail::Sendmail :arguments should be an Array of string args, not a string."
+        deprecation_warn.call \
+          'Initializing Mail::Sendmail with :arguments of type String is deprecated.' \
+          ' Instead ensure :arguments is an array of strings, e.g. ["-i", "-t"]'
       end
       self.settings = self.class::DEFAULTS.merge(values)
-      # raise ArgumentError, ":arguments expected to be an Array of individual string args" if settings[:arguments].is_a?(String)
     end
 
     def destinations_for(envelope)
