@@ -171,6 +171,8 @@ describe Mail::Sendmail do
   end
 
   it 'allows for legacy callers with :arguments strings containing default flags -i and/or -t' do
+    expect(Kernel).to receive(:warn).with(/:arguments of type String is deprecated/)
+
     Mail.defaults do
       delivery_method :sendmail, :arguments => '-i -t'
     end
