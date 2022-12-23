@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 require "mail/utilities"
 require "mail/parser_tools"
@@ -610,10 +609,10 @@ begin
               _trans = if (_slen > 0 &&
                            _trans_keys[_keys] <= _wide &&
                            _wide <= _trans_keys[_keys + 1])
-                         _indicies[_inds + _wide - _trans_keys[_keys]]
-                       else
-                         _indicies[_inds + _slen]
-                       end
+                  _indicies[_inds + _wide - _trans_keys[_keys]]
+                else
+                  _indicies[_inds + _slen]
+                end
               cs = _trans_targs[_trans]
               if _trans_actions[_trans] != 0
                 case _trans_actions[_trans]
@@ -654,7 +653,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -712,7 +711,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -742,7 +741,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -799,7 +798,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -823,7 +822,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -857,7 +856,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
@@ -875,7 +874,7 @@ begin
                     # Use quoted string value if one exists, otherwise use parameter value
                     value = qstr || chars(data, param_val_s, p - 1)
 
-                    content_disposition.parameters << {param_attr => value}
+                    content_disposition.parameters << { param_attr => value }
                     param_attr = nil
                     qstr = nil
                   end
