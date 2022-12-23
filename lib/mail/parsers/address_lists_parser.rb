@@ -33228,6 +33228,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 2461
           raise Mail::Field::IncompleteParseError.new(Mail::AddressList, data, p)
         end

@@ -499,6 +499,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 23
           raise Mail::Field::IncompleteParseError.new(Mail::MimeVersionElement, data, p)
         end

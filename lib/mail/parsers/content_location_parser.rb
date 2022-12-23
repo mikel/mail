@@ -588,7 +588,7 @@ begin
         return content_location if Mail::Utilities.blank?(data)
 
         # Parser state
-        disp_type_s = param_attr_s = param_attr = qstr_s = qstr = param_val_s = nil
+        qstr_s = qstr = param_val_s = nil
 
         # 5.1 Variables Used by Ragel
         p = 0
@@ -806,6 +806,10 @@ begin
               break
             end
           end
+        end
+
+        if false
+          testEof
         end
 
         if p != eof || cs < 32

@@ -55,6 +55,10 @@ module Mail::Parsers
       %%write init;
       %%write exec;
 
+      if false
+        testEof
+      end
+
       if p != eof || cs < %%{ write first_final; }%%
         raise Mail::Field::IncompleteParseError.new(Mail::DateTimeElement, data, p)
       end

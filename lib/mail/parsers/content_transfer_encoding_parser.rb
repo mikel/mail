@@ -508,6 +508,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 21
           raise Mail::Field::IncompleteParseError.new(Mail::ContentTransferEncodingElement, data, p)
         end

@@ -5147,6 +5147,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 318
           raise Mail::Field::IncompleteParseError.new(Mail::MessageIdsElement, data, p)
         end

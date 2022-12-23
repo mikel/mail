@@ -877,6 +877,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 103
           raise Mail::Field::IncompleteParseError.new(Mail::DateTimeElement, data, p)
         end
