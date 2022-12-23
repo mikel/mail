@@ -1034,6 +1034,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 47
           raise Mail::Field::IncompleteParseError.new(Mail::ContentTypeElement, data, p)
         end

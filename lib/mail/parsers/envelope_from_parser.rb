@@ -3661,6 +3661,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 257
           raise Mail::Field::IncompleteParseError.new(Mail::EnvelopeFromElement, data, p)
         end

@@ -8768,6 +8768,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 648
           raise Mail::Field::IncompleteParseError.new(Mail::ReceivedElement, data, p)
         end

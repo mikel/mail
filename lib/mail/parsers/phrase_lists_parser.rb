@@ -870,6 +870,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 42
           raise Mail::Field::IncompleteParseError.new(Mail::PhraseList, data, p)
         end

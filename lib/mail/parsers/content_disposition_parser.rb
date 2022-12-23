@@ -887,6 +887,10 @@ begin
           end
         end
 
+        if false
+          testEof
+        end
+
         if p != eof || cs < 40
           raise Mail::Field::IncompleteParseError.new(Mail::ContentDispositionElement, data, p)
         end
