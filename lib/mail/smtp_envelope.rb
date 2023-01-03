@@ -48,7 +48,7 @@ module Mail
 
     private
       def validate_addr(addr_name, addr)
-        if /[\r\n]/ =~ addr
+        if /[\r\n]/.match?(addr)
           raise ArgumentError, "SMTP #{addr_name} address may not contain CR or LF line breaks: #{addr.inspect}"
         end
 

@@ -5,25 +5,10 @@ require 'spec_helper'
 RSpec.describe "SMTP Delivery Method" do
 
   before(:each) do
+    MockSMTP.reset
+
     # Reset all defaults back to original state
-    Mail.defaults do
-      delivery_method :smtp, { :address              => "localhost",
-                               :port                 => 25,
-                               :domain               => 'localhost.localdomain',
-                               :user_name            => nil,
-                               :password             => nil,
-                               :authentication       => nil,
-                               :enable_starttls      => nil,
-                               :enable_starttls_auto => true,
-                               :openssl_verify_mode  => nil,
-                               :tls                  => nil,
-                               :ssl                  => nil,
-                               :open_timeout         => nil,
-                               :read_timeout         => nil
-                                }
-    end
-    MockSMTP.clear_deliveries
-    MockSMTP.capabilities = []
+    Mail.defaults { delivery_method :smtp, {} }
   end
 
   describe "general usage" do
@@ -208,7 +193,7 @@ RSpec.describe "SMTP Delivery Method" do
 
       message.deliver!
 
-      expect(MockSMTP.security).to eq :enable_starttls_auto
+      expect(MockSMTP.starttls).to eq :auto
     end
 
     it 'should allow forcing STARTTLS' do
@@ -217,19 +202,70 @@ RSpec.describe "SMTP Delivery Method" do
         to 'ada@test.lindsaar.net'
         subject 'Re: No way!'
         body 'Yeah sure'
-        delivery_method :smtp, { :address         => "localhost",
-                                 :port            => 25,
-                                 :domain          => 'localhost.localdomain',
-                                 :user_name       => nil,
-                                 :password        => nil,
-                                 :authentication  => nil,
-                                 :enable_starttls => true  }
-
+        delivery_method :smtp, { :enable_starttls => true }
       end
 
       message.deliver!
 
-      expect(MockSMTP.security).to eq :enable_starttls
+      expect(MockSMTP.starttls).to eq :always
+    end
+
+    it 'should allow forcing STARTTLS via enable_starttls: :always (overriding :enable_starttls_auto)' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :enable_starttls => :always,
+                                 :enable_starttls_auto => true }
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq :always
+    end
+
+    it 'should allow detecting STARTTLS via enable_starttls: :auto (overriding :enable_starttls_auto)' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :enable_starttls => :auto,
+                                 :enable_starttls_auto => false }
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq :auto
+    end
+
+    it 'should allow disabling automatic STARTTLS' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :enable_starttls => false }
+      end
+
+      message.deliver!
+
+      expect(MockSMTP.starttls).to eq false
+    end
+
+    it 'raises when setting STARTTLS with tls' do
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :tls => true, :enable_starttls => :always }
+      end
+
+      expect {
+        message.deliver!
+      }.to raise_error(ArgumentError, /:enable_starttls and :tls are mutually exclusive/)
     end
   end
 

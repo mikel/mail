@@ -294,7 +294,7 @@ module Mail
           reply.references ||= bracketed_message_id
         end
         if subject
-          reply.subject = subject =~ /^Re:/i ? subject : "Re: #{subject}"
+          reply.subject = /^Re:/i.match?(subject) ? subject : "Re: #{subject}"
         end
         if reply_to || from
           reply.to = self[reply_to ? :reply_to : :from].to_s
@@ -349,6 +349,10 @@ module Mail
     # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
     # different Message-ID value, then they are false.
     #
+    # Note that Mail creates Date and Mime-Type fields if they don't exist.
+    # The Date field is derived from the current time, so this needs to be allowed for in comparisons.
+    # (Mime-type does not depend on dynamic data, so cannot affect equality)
+    #
     # So, in practice the == operator works like this:
     #
     #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
@@ -370,14 +374,17 @@ module Mail
     #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m1 == m2 #=> false
-    def ==(other)
+    def ==(other) # TODO could be more efficient
       return false unless other.respond_to?(:encoded)
 
+      stamp = Mail::CommonDateField.normalize_datetime('')
+      # Note: must always dup the inputs so they are not altered by encoded
       if self.message_id && other.message_id
-        self.encoded == other.encoded
+        dup.tap { |m| m.date ||= stamp }.encoded ==
+          other.dup.tap { |m| m.date ||= stamp }.encoded
       else
-        dup.tap { |m| m.message_id = '<temp@test>' }.encoded ==
-          other.dup.tap { |m| m.message_id = '<temp@test>' }.encoded
+        dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded ==
+          other.dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded
       end
     end
 
@@ -1316,7 +1323,7 @@ module Mail
     def []=(name, value)
       if name.to_s == 'body'
         self.body = value
-      elsif name.to_s =~ /content[-_]type/i
+      elsif /content[-_]type/i.match?(name.to_s)
         header[name] = value
       elsif name.to_s == 'charset'
         self.charset = value
@@ -1526,17 +1533,17 @@ module Mail
 
     # Returns true if the message is multipart
     def multipart?
-      has_content_type? ? !!(main_type =~ /^multipart$/i) : false
+      has_content_type? ? /^multipart$/i.match?(main_type) : false
     end
 
     # Returns true if the message is a multipart/report
     def multipart_report?
-      multipart? && sub_type =~ /^report$/i
+      multipart? && /^report$/i.match?(sub_type)
     end
 
     # Returns true if the message is a multipart/report; report-type=delivery-status;
     def delivery_status_report?
-      multipart_report? && content_type_parameters['report-type'] =~ /^delivery-status$/i
+      multipart_report? && /^delivery-status$/i.match?(content_type_parameters['report-type'])
     end
 
     # returns the part in a multipart/report email that has the content-type delivery-status
@@ -1855,7 +1862,7 @@ module Mail
           m.transport_encoding(v)
         when k == 'multipart_body'
           v.map {|part| m.add_part Mail::Part.from_yaml(part) }
-        when k =~ /^@/
+        when k.start_with?('@')
           m.instance_variable_set(k.to_sym, v)
         end
       end
@@ -1962,7 +1969,7 @@ module Mail
     end
 
     def text?
-      has_content_type? ? !!(main_type =~ /^text$/i) : false
+      has_content_type? ? /^text$/i.match?(main_type) : false
     end
 
   private

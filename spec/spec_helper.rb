@@ -71,9 +71,30 @@ def strip_heredoc(string)
   string.gsub(/^[ \t]{#{indent}}/, '')
 end
 
+class Net::SMTP
+  class << self
+    alias unstubbed_new new
+  end
+
+  def self.new(*args)
+    MockSMTP.new
+  end
+end
+
 # Original mockup from ActionMailer
 class MockSMTP
   attr_accessor :open_timeout, :read_timeout
+
+  def self.reset
+    test = Net::SMTP.unstubbed_new('example.com')
+    @@tls = test.tls?
+    @@starttls = test.starttls?
+
+    @@deliveries = []
+    @@capabilities = []
+  end
+
+  reset
 
   def self.capabilities=(capabilities)
     @@capabilities = capabilities
@@ -83,13 +104,12 @@ class MockSMTP
     @@deliveries
   end
 
-  def self.security
-    @@security
+  def self.tls
+    @@tls
   end
 
-  def initialize
-    @@deliveries = []
-    @@security = nil
+  def self.starttls
+    @@starttls
   end
 
   def sendmail(mail, from, to)
@@ -109,41 +129,35 @@ class MockSMTP
     return true
   end
 
-  def self.clear_deliveries
-    @@deliveries = []
-  end
-
-  def self.clear_security
-    @@security = nil
-  end
-
   def enable_tls(context)
-    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security && @@security != :enable_tls
-    @@security = :enable_tls
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@starttls == :always
+    @@tls = true
     context
   end
 
+  def disable_tls
+    @@tls = false
+  end
+
   def enable_starttls(context = nil)
-    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
-    @@security = :enable_starttls
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@tls
+    @@starttls = :always
     context
   end
 
   def enable_starttls_auto(context)
-    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@security == :enable_tls
-    @@security = :enable_starttls_auto
+    raise ArgumentError, "SMTPS and STARTTLS is exclusive" if @@tls
+    @@starttls = :auto
     context
+  end
+
+  def disable_starttls
+    @@starttls = false
   end
 
   def capable?(capability)
     return false unless defined?(@@capabilities)
     @@capabilities&.include?(capability)
-  end
-end
-
-class Net::SMTP
-  def self.new(*args)
-    MockSMTP.new
   end
 end
 
