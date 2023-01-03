@@ -156,8 +156,7 @@ class MockSMTP
   end
 
   def capable?(capability)
-    return false unless defined?(@@capabilities)
-    @@capabilities&.include?(capability)
+    @@capabilities.include?(capability)
   end
 end
 
