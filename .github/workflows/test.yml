@@ -1,11 +1,23 @@
 name: RSpec tests
 
+concurrency:
+  group: "${{github.workflow}}-${{github.ref}}"
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - "*-stable"
+    tags:
+      - "*"
   pull_request:
-    branches: [ master ]
+    types:
+      - opened
+      - synchronize
+    branches:
+      - "*"
 
 jobs:
   ruby:
