@@ -43,3 +43,8 @@ Syntax:
 * Follow the conventions you see used in the source already.
 
 And in case we didn't emphasize it enough: we love specs!
+
+
+## Releases
+
+Releases are performed automatically by a Github Action which executes whenever a version tag (eg `v2.8.1`) is pushed.

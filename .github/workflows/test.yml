@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [ master ]
+    tags: [v*]
   pull_request:
     branches: [ master ]
 
@@ -78,3 +79,18 @@ jobs:
       run: |
         cd rails/actionmailer
         bundle exec rake
+  release:
+    needs: [ruby, actionmailer]
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'refs/tags/v') }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3
+          bundler-cache: true
+          cache-version: 4
+      - uses: cadwallion/publish-rubygems-action@master
+        env:
+          RELEASE_COMMAND: rake release
+          RUBYGEMS_API_KEY: ${{ secrets.rubygems_api_key }}
