@@ -4,6 +4,11 @@ Bug Fixes:
 * Regression: sendmail accepts string :arguments (@sebbASF)
 * Regression: accept enable_starttls_auto: false @ahorek
 
+== Version 2.8.0.1 (12-Jan-2023)
+
+Bug fixes:
+* Regression: incorrect permissions for some files (mikel)
+
 == Version 2.8.0 (3-Dec-2022)
 
 Breaking changes:
