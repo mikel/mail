@@ -1697,11 +1697,6 @@ RSpec.describe Mail::Message do
   describe "helper methods" do
 
     describe "==" do
-      before(:each) do
-        # Ensure specs don't randomly fail due to messages being generated 1 second apart
-        time = DateTime.now
-        expect(DateTime).to receive(:now).at_least(:once).and_return(time)
-      end
 
       it "should be implemented" do
         expect { Mail.new == Mail.new }.not_to raise_error
