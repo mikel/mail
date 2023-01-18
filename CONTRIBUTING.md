@@ -33,7 +33,7 @@ taken straight from the Ruby on Rails guide:
 * Update the documentation, the surrounding one, examples elsewhere, guides,
   whatever is affected by your contribution
 
-Syntax:
+Coding conventions:
 
 * Two spaces, no tabs.
 * No trailing whitespace. Blank lines should not have any space.
