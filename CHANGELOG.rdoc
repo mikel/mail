@@ -11,7 +11,7 @@ Features:
 
 * Updated README to improve around sending multipart mail @kapfenho
 * Add delivery_interceptors method to Mail class to fetch registered interceptors @ghousemohamed
-* `Mail::ContentTypeField` now supports setting a `boundary_generator` to allow injecting boundary creation behavior @dugancathal
+* `Mail::ContentTypeField` now supports setting a `boundary_generator`, allowing custom boundary creation behavior @dugancathal
 
 Code Improvements:
 
