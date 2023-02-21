@@ -16,5 +16,3 @@ gem 'jruby-openssl', :platforms => :jruby
 gem 'mini_mime'
 
 gem 'byebug', :platforms => :mri
-
-gem "strscan", ">= 3.0.2.pre1"
