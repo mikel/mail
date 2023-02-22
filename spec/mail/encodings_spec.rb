@@ -325,6 +325,15 @@ RSpec.describe Mail::Encodings do
       expect(unwrapped.gsub("Subject: ", "")).to eq original
     end
 
+    it "should round trip ASCII-only word with more than 998 characters and no white space" do
+      original = "ThisIsASubjectHeaderMessageThatIsGoingToBeMoreThan998CharactersLong." * 20
+      mail = Mail.new
+      mail.subject = original
+      wrapped = mail[:subject].wrapped_value
+      unwrapped = Mail::Encodings.value_decode(wrapped)
+      expect(unwrapped.gsub("Subject: ", "")).to eq original
+    end
+
     it "should decode a blank string" do
       expect(Mail::Encodings.value_decode("=?utf-8?Q??=")).to eq ""
     end

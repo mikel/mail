@@ -157,9 +157,30 @@ RSpec.describe Mail::UnstructuredField do
       string = %|{"unique_args": {"mailing_id":147,"account_id":2}, "to": ["larspind@gmail.com"], "category": "mailing", "filters": {"domainkeys": {"settings": {"domain":1,"enable":1}}}, "sub": {"{{open_image_url}}": ["http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient"], "{{name}}": ["[FIRST NAME]"], "{{signup_reminder}}": ["(her kommer til at stå hvornår folk har skrevet sig op ...)"], "{{unsubscribe_url}}": ["http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient"], "{{email}}": ["larspind@gmail.com"], "{{link:308}}": ["http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient"], "{{confirm_url}}": [""], "{{ref}}": ["[REF]"]}}|
       @field = Mail::UnstructuredField.new("X-SMTPAPI", string)
       string = string.dup.force_encoding('UTF-8')
-      result = "X-SMTPAPI: =?UTF-8?Q?{=22unique=5Fargs=22:_{=22mailing=5Fid=22:147,=22a?=\r\n =?UTF-8?Q?ccount=5Fid=22:2},_=22to=22:_[=22larspind@gmail.com=22],_=22categ?=\r\n =?UTF-8?Q?ory=22:_=22mailing=22,_=22filters=22:_{=22domainkeys=22:_{=22sett?=\r\n =?UTF-8?Q?ings=22:_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:_{=22{{op?=\r\n =?UTF-8?Q?en=5Fimage=5Furl}}=22:_[=22http://betaling.larspind.local/O?=\r\n =?UTF-8?Q?/token/147/Mailing::FakeRecipient=22],_=22{{name}}=22:_[=22[FIRST?=\r\n =?UTF-8?Q?_NAME]=22],_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at?=\r\n =?UTF-8?Q?_st=C3=A5_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF-8?Q?_=22{{unsubscribe=5Furl}}=22:_[=22http://betaling.larspind.?=\r\n =?UTF-8?Q?local/U/token/147/Mailing::FakeRecipient=22],_=22{{email}}=22:?=\r\n =?UTF-8?Q?_[=22larspind@gmail.com=22],_=22{{link:308}}=22:_[=22http://beta?=\r\n =?UTF-8?Q?ling.larspind.local/L/308/0/Mailing::FakeRecipient=22],_=22{{con?=\r\n =?UTF-8?Q?firm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:_[=22[REF]=22]}}?=\r\n"
+      result = "X-SMTPAPI: =?UTF-8?Q?{=22unique=5Fargs=22:?=\r\n =?UTF-8?Q?_{=22mailing=5Fid=22:147,=22account=5Fid=22:2},_=22to=22:?=\r\n =?UTF-8?Q?_[=22larspind@gmail.com=22],_=22category=22:_=22mailing=22,?=\r\n =?UTF-8?Q?_=22filters=22:_{=22domainkeys=22:_{=22settings=22:?=\r\n =?UTF-8?Q?_{=22domain=22:1,=22enable=22:1}}},_=22sub=22:?=\r\n =?UTF-8?Q?_{=22{{open=5Fimage=5Furl}}=22:?=\r\n =?UTF-8?Q?_[=22http://betaling.larspind.local/O/token/147/Mailing::FakeRecipient=22]?=\r\n =?UTF-8?Q?,_=22{{name}}=22:_[=22[FIRST_NAME]=22],?=\r\n =?UTF-8?Q?_=22{{signup=5Freminder}}=22:_[=22=28her_kommer_til_at_st=C3=A5?=\r\n =?UTF-8?Q?_hvorn=C3=A5r_folk_har_skrevet_sig_op_...=29=22],?=\r\n =?UTF-8?Q?_=22{{unsubscribe=5Furl}}=22:?=\r\n =?UTF-8?Q?_[=22http://betaling.larspind.local/U/token/147/Mailing::FakeRecipient=22]?=\r\n =?UTF-8?Q?,_=22{{email}}=22:_[=22larspind@gmail.com=22],?=\r\n =?UTF-8?Q?_=22{{link:308}}=22:?=\r\n =?UTF-8?Q?_[=22http://betaling.larspind.local/L/308/0/Mailing::FakeRecipient=22],?=\r\n =?UTF-8?Q?_=22{{confirm=5Furl}}=22:_[=22=22],_=22{{ref}}=22:?=\r\n =?UTF-8?Q?_[=22[REF]=22]}}?=\r\n"
       expect(@field.encoded).to eq result
       expect(@field.decoded).to eq string
+    end
+
+    it "should fold an ASCII-only subject with more than 998 characters and no white space" do
+      value = "ThisIsASubjectHeaderMessageThatIsGoingToBeMoreThan998CharactersLong." * 20
+      @field = Mail::UnstructuredField.new("Subject", value)
+      lines = @field.encoded.split("\r\n\s")
+      lines.each { |line| expect(line.length).to be < 998 }
+    end
+
+    it "should fold a Japanese subject with more than 998 characters long and no white space" do
+      value = "これは非常に長い日本語のSubjectです。空白はありません。" * 5
+      @field = Mail::UnstructuredField.new("Subject", value)
+      lines = @field.encoded.split("\r\n\s")
+      lines.each { |line| expect(line.length).to be < 998 }
+    end
+
+    it "should fold full of emoji subject that is going to be more than 998 bytes unfolded" do
+      value = "😄" * 90
+      @field = Mail::UnstructuredField.new("Subject", value)
+      lines = @field.encoded.split("\r\n\s")
+      lines.each { |line| expect(line.length).to be < 998 }
     end
 
     it "should fold properly with continuous spaces around the linebreak" do
