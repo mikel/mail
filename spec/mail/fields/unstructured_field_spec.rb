@@ -113,9 +113,14 @@ describe Mail::UnstructuredField do
 
   describe "folding" do
 
-    it "should not fold itself if it is 78 chracters long" do
-      @field = Mail::UnstructuredField.new("Subject", "This is a subject header message that is _exactly_ 78 characters....")
-      expect(@field.encoded).to eq "Subject: This is a subject header message that is _exactly_ 78 characters....\r\n"
+    it "should not fold itself if it is 78 characters long" do
+      subject = "This is a subject header message that is _exactly_ 78 characters....."
+      expected = "Subject: #{subject}\r\n"
+      expect(expected.length).to eq 80 # including CRLF
+      @field = Mail::UnstructuredField.new("Subject", subject)
+      encoded = @field.encoded
+      expect(encoded).to eq expected
+      expect(encoded.length).to eq 80 # including CRLF
     end
 
     it "should fold itself if it is 79 chracters long" do
