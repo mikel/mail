@@ -99,31 +99,35 @@ module Mail
     end
 
     def fold(prepend = 0) # :nodoc:
+      #  prepend is the length to allow for the header prefix on the first line (e.g. 'Subject: ')
       encoding       = normalized_encoding
+      encoding_overhead = "=?#{encoding}?Q??=".length
+      # The encoded string goes here      ^ (between the ??)
+      max_safe_word = 78 - encoding_overhead - 10 # allow for encoding overhead + prefix
       decoded_string = decoded.to_s
-      should_encode  = !decoded_string.ascii_only?
+      words = decoded_string.split(/[ \t]/)
+      should_encode  = !decoded_string.ascii_only? || words.any? {|word| word.length > max_safe_word}
       if should_encode
+        max_safe_re = Regexp.new(".{#{max_safe_word}}|.+$")
         first = true
-        words = decoded_string.split(/[ \t]/).map do |word|
+        words = words.map do |word|
           if first
             first = !first
           else
             word = " #{word}"
           end
-          if !word.ascii_only?
-            word
+          if word.ascii_only?
+            word.scan(max_safe_re)
           else
             word.scan(/.{7}|.+$/)
           end
         end.flatten
-      else
-        words = decoded_string.split(/[ \t]/)
       end
 
       folded_lines   = []
       while !words.empty?
         limit = 78 - prepend
-        limit = limit - 7 - encoding.length if should_encode
+        limit = limit - encoding_overhead if should_encode
         line = String.new
         first_word = true
         while !words.empty?
