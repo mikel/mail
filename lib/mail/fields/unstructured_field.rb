@@ -102,6 +102,11 @@ module Mail
       encoding       = normalized_encoding
       decoded_string = decoded.to_s
       should_encode  = !decoded_string.ascii_only?
+      # If a header with only ASCII characters exceeds 998 characters without whitespace,
+      # it can be safely folded by encoding it.
+      if !should_encode && decoded_string.split(/[ \t]/).any? { |word| word.length > 900 }
+        should_encode = true
+      end
       if should_encode
         first = true
         words = decoded_string.split(/[ \t]/).map do |word|
@@ -110,11 +115,9 @@ module Mail
           else
             word = " #{word}"
           end
-          if !word.ascii_only?
-            word
-          else
-            word.scan(/.{7}|.+$/)
-          end
+          # A UTF-8 character can take up to 4 bytes, which becomes 12 bytes when encoded with QP.
+          # 70 characters is safe for the 998-byte limit.
+          word.scan(/.{1,70}/)
         end.flatten
       else
         words = decoded_string.split(/[ \t]/)
@@ -140,9 +143,6 @@ module Mail
           word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit
           # Unless this is the first word, in which case we're going to add it anyway
-          # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
-          # (The fix, it seems, would be to use encoded-word encoding on it, because that way you can break it across multiple lines and
-          # the linebreak will be ignored)
           break if !line.empty? && (line.length + word.length + 1 > limit)
           # Remove the word from the queue ...
           words.shift
