@@ -98,6 +98,14 @@ module Mail
       result.join("\r\n\s")
     end
 
+    # folding strategy:
+    # The line is split into words separated by space or tab.
+    # If the line contains any non-ascii characters, or any words are expected to be too long to fit,
+    # then they are additionally split, and the line is marked for encoding
+    # 
+    # The list of individual words is then used to fill up the output lines without overflowing.
+    # This is not always guaranteed to work, because there is a wide variation in the number of
+    # characters that are needed to encode a given character.
     def fold(prepend = 0) # :nodoc:
       #  prepend is the length to allow for the header prefix on the first line (e.g. 'Subject: ')
       encoding       = normalized_encoding
@@ -144,9 +152,6 @@ module Mail
           word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit
           # Unless this is the first word, in which case we're going to add it anyway
-          # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
-          # (The fix, it seems, would be to use encoded-word encoding on it, because that way you can break it across multiple lines and
-          # the linebreak will be ignored)
           break if !line.empty? && (line.length + word.length + 1 > limit)
           # Remove the word from the queue ...
           words.shift
@@ -160,7 +165,7 @@ module Mail
           # ... add it in encoded form to the current line
           line << word
         end
-        # Encode the line if necessary
+        # Mark the line as encoded if necessary
         line = "=?#{encoding}?Q?#{line}?=" if should_encode
         # Add the line to the output and reset the prepend
         folded_lines << line
