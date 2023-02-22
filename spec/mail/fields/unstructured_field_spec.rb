@@ -178,6 +178,7 @@ RSpec.describe Mail::UnstructuredField do
       value = "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
       expect(value.length).to be > 78 - "Subject: ".length
       @field = Mail::UnstructuredField.new("Subject", value)
+      expect(@field.decoded).to eq value
       lines = @field.encoded.split("\r\n")
       lines.each { |line| expect(line.length).to be <= 78 }
     end
@@ -185,6 +186,7 @@ RSpec.describe Mail::UnstructuredField do
     it "should fold an ASCII-only subject with more than 998 characters and no white space" do
       value = "ThisIsASubjectHeaderMessageThatIsGoingToBeMoreThan998CharactersLong." * 20
       @field = Mail::UnstructuredField.new("Subject", value)
+      expect(@field.decoded).to eq value
       lines = @field.encoded.split("\r\n")
       lines.each { |line| expect(line.length).to be <= 78 }
     end
@@ -193,16 +195,18 @@ RSpec.describe Mail::UnstructuredField do
     it "should fold a Japanese subject with more than 998 characters long and no white space" do
       value = "これは非常に長い日本語のSubjectです。空白はありません。" * 1
       @field = Mail::UnstructuredField.new("Subject", value)
+      expect(@field.decoded).to eq value
       lines = @field.encoded.split("\r\n")
-      lines.each { |line| expect(line.length).to be <= 90 }
+      lines.each { |line| expect(line.length).to be <= 78 }
     end
 
     # TODO: tweak unstructured_field to always generate lines of at most 78 chars
     it "should fold full of emoji subject that is going to be more than 998 bytes unfolded" do
       value = "😄" * 90
       @field = Mail::UnstructuredField.new("Subject", value)
+      expect(@field.decoded).to eq value
       lines = @field.encoded.split("\r\n")
-      lines.each { |line| expect(line.length).to be < 110 }
+      lines.each { |line| expect(line.length).to be <= 78 }
     end
 
   end
@@ -216,9 +220,13 @@ RSpec.describe Mail::UnstructuredField do
   end
 
   describe "iso-2022-jp Subject" do
-    it "should encoded with ISO-2022-JP encoding" do
-      @field = Mail::UnstructuredField.new("Subject", "あいうえお")
+    it "should be encoded with ISO-2022-JP encoding" do
+      value = "あいうえお"
+      @field = Mail::UnstructuredField.new("Subject", value)
       @field.charset = 'iso-2022-jp'
+      expect(@field.decoded).to eq value
+      lines = @field.encoded.split("\r\n")
+      lines.each { |line| expect(line.length).to be <= 78 }
       expect(@field.encoded).to eq "Subject: =?ISO-2022-JP?Q?=1B$B$=22$$$&$=28$*=1B=28B?=\r\n"
     end
   end
