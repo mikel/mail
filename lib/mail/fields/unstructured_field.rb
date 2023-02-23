@@ -112,7 +112,7 @@ module Mail
       encoding       = normalized_encoding
       encoding_overhead = "=?#{encoding}?Q??=".length
       # The encoded string goes here      ^ (between the ??)
-      max_safe_word = 78 - encoding_overhead - 10 # allow for encoding overhead + prefix
+      max_safe_word = 78 - encoding_overhead - prepend # allow for encoding overhead + prefix
       decoded_string = decoded.to_s
       words = decoded_string.split(/[ \t]/)
       should_encode  = !decoded_string.ascii_only? || words.any? {|word| word.length > max_safe_word}
