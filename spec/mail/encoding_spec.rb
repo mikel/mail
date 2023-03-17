@@ -206,6 +206,7 @@ RSpec.describe "mail encoding" do
       "latin2" => Encoding::ISO_8859_2,
       "ISO_8859-1" => Encoding::ISO_8859_1,
       "cp-850" => Encoding::CP850,
+      "MS950" => Encoding::CP950,
       "" => Encoding::BINARY
     }.each do |from, to|
       it "should support #{from}" do
