@@ -165,7 +165,7 @@ module Mail
   end
   
   # Reads in an email message from an already open file and instantiates it as a new Mail::Message
-  #   (this method facilitates reading from STDIN -- you don't have to save STDIN to a file first.
+  #   (this method facilitates reading from STDIN -- you don't have to save STDIN to a file first)
   def self.readio(io)
     self.new(io.read)
   end
