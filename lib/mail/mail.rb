@@ -163,10 +163,16 @@ module Mail
   def self.all(*args, &block)
     retriever_method.all(*args, &block)
   end
+  
+  # Reads in an email message from an already open file and instantiates it as a new Mail::Message
+  #   (this method facilitates reading from STDIN -- you don't have to save STDIN to a file first.
+  def self.readio(io)
+    self.new(io.read)
+  end
 
   # Reads in an email message from a path and instantiates it as a new Mail::Message
   def self.read(filename)
-    self.new(File.open(filename, 'rb') { |f| f.read })
+    self.readio(File.open(filename, 'rb'))
   end
 
   # Delete all emails from the default retriever
