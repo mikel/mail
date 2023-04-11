@@ -932,4 +932,35 @@ RSpec.describe Mail::Encodings do
       expect(Mail::Utilities.pick_encoding("ISO-Foo")).to eq Encoding::BINARY
     end
   end
+
+  describe "IDNA encoding" do
+    after do
+      Mail::Encodings.instance_variable_set(:@idna_supported, nil)
+    end
+
+    it "should report on IDNA support" do
+      expect(Mail::Encodings.idna_supported?).to be !ENV.key?('SKIP_SIMPLEIDN')
+    end
+
+    it "should encode a string correctly" do
+      skip "simpleidn gem not installed" unless Mail::Encodings.idna_supported?
+
+      raw = 'tést.example.com'
+      encoded = 'xn--tst-bma.example.com'
+      expect(Mail::Encodings.idna_encode(raw)).to eq encoded
+    end
+
+    it "should raise on non-ASCII string if simpleidn gem is missing" do
+      Mail::Encodings.instance_variable_set(:@idna_supported, false)
+      raw = 'tést.example.com'
+      expect {Mail::Encodings.idna_encode(raw)}.to raise_error("Must install simpleidn gem")
+    end
+
+    it "should not raise on ASCII string if simpleidn gem is missing" do
+      Mail::Encodings.instance_variable_set(:@idna_supported, false)
+      raw = 'example.com'
+      encoded = Mail::Encodings.idna_encode(raw)
+      expect(encoded).to eq raw
+    end
+  end
 end

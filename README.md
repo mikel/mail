@@ -129,6 +129,10 @@ Installation is fairly simple, I host mail on rubygems, so you can just do:
 
     # gem install mail
 
+If you need support for email addresses with non-ASCII domains (IDNs), and your mail server lacks native support for these, you can install this additional optional dependency:
+
+    # gem install simpleidn
+
 ## Encodings
 
 If you didn't know, handling encodings in Emails is not as straight forward as you

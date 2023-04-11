@@ -91,9 +91,14 @@ class MockSMTP
     @@starttls = test.starttls?
 
     @@deliveries = []
+    @@capabilities = []
   end
 
   reset
+
+  def self.capabilities=(capabilities)
+    @@capabilities = capabilities
+  end
 
   def self.deliveries
     @@deliveries
@@ -105,10 +110,6 @@ class MockSMTP
 
   def self.starttls
     @@starttls
-  end
-
-  def initialize
-    self.class.reset
   end
 
   def sendmail(mail, from, to)
@@ -149,10 +150,14 @@ class MockSMTP
     @@starttls = :auto
     context
   end
+
   def disable_starttls
     @@starttls = false
   end
 
+  def capable?(capability)
+    @@capabilities.include?(capability)
+  end
 end
 
 class MockPopMail

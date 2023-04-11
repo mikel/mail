@@ -26,6 +26,12 @@ RSpec.describe Mail::Address do
       end
     end
 
+    it "should allow us to instantiate an empty address object and call address_idna" do
+      [nil, '', ' '].each do |input|
+        expect(Mail::Address.new(input).address_idna).to be_nil
+      end
+    end
+
     it "should allow us to instantiate an empty address object and call local" do
       [nil, '', ' '].each do |input|
         expect(Mail::Address.new(input).local).to be_nil
@@ -35,6 +41,12 @@ RSpec.describe Mail::Address do
     it "should allow us to instantiate an empty address object and call domain" do
       [nil, '', ' '].each do |input|
         expect(Mail::Address.new(input).domain).to be_nil
+      end
+    end
+
+    it "should allow us to instantiate an empty address object and call domain_idna" do
+      [nil, '', ' '].each do |input|
+        expect(Mail::Address.new(input).domain_idna).to be_nil
       end
     end
 
@@ -119,7 +131,18 @@ RSpec.describe Mail::Address do
       expect(a.domain).to eq result
     end
 
-    it "should give back the formated address" do
+    it "should give back the IDNA-encoded domain" do
+      parse_text = 'Mikel Lindsaar <test@lindsäär.net>'
+      result     = 'xn--lindsr-fuaa.net'
+      a          = Mail::Address.new(parse_text)
+      if Mail::Encodings.idna_supported?
+        expect(a.domain_idna).to eq result
+      else
+        expect {a.domain_idna}.to raise_error("Must install simpleidn gem")
+      end
+    end
+
+    it "should give back the formatted address" do
       parse_text = 'Mikel Lindsaar <test@lindsaar.net>'
       result     = 'Mikel Lindsaar <test@lindsaar.net>'
       a          = Mail::Address.new(parse_text)

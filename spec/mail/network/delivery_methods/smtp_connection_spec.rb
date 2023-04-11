@@ -9,6 +9,8 @@ RSpec.describe "SMTP Delivery Method" do
       smtp = Net::SMTP.start('127.0.0.1', 25)
       delivery_method :smtp_connection, :connection => smtp
     end
+
+    MockSMTP.reset
   end
 
   after(:each) do

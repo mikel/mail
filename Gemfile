@@ -13,5 +13,6 @@ end
 gem 'jruby-openssl', :platforms => :jruby
 
 gem 'mini_mime'
+gem 'simpleidn' unless ENV.key?('SKIP_SIMPLEIDN')
 
 gem 'byebug', :platforms => :mri

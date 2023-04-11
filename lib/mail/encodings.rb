@@ -310,5 +310,22 @@ module Mail
 
       yield Utilities.string_byteslice(str, offset, chunksize)
     end
+
+    def Encodings.idna_supported?
+      return @idna_supported unless @idna_supported.nil?
+      @idna_supported ||= begin
+        require 'simpleidn'
+        true
+      rescue LoadError => e
+        false
+      end
+    end
+
+    def Encodings.idna_encode(str)
+      return str if str.ascii_only?
+      raise 'Must install simpleidn gem' unless Encodings.idna_supported?
+
+      SimpleIDN.to_ascii(str)
+    end
   end
 end
