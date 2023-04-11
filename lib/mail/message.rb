@@ -2073,11 +2073,7 @@ module Mail
 
     def add_boundary
       unless body.boundary && boundary
-        unless header['content-type']
-          _charset = charset
-          header['content-type'] = 'multipart/mixed'
-          header['content-type'].parameters[:charset] = _charset
-        end
+        header['content-type'] = 'multipart/mixed' unless header['content-type']
         header['content-type'].parameters[:boundary] = ContentTypeField.generate_boundary
         body.boundary = boundary
       end
