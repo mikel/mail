@@ -22,7 +22,7 @@ module Mail
   #                              :user_name            => '<username>',
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
-  #                              :enable_starttls_auto => true  }
+  #                              :enable_starttls      => :auto  }
   #   end
   #
   # === Sending via GMail
@@ -34,8 +34,16 @@ module Mail
   #                              :user_name            => '<username>',
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
-  #                              :enable_starttls_auto => true  }
+  #                              :enable_starttls      => :auto  }
   #   end
+  #
+  # === Configuring TLS/SSL and STARTTLS
+  #
+  # A few remarks:
+  # - when enabling `tls` (or `ssl`), setting (truthy values for) either `enable_starttls` or `enable_starttls_auto` will raise an ArgumentError as TLS and STARTTLS are mutually exclusive.
+  # - to configure STARTTLS, use the `enable_starttls`-flag (instead of a combination of `enable_starttls` and `enable_starttls_auto`). Acceptable values are `:always`, `:auto` and `false`.
+  # - when providing a truthy value for `enable_starttls`, the `enable_starttls_auto`-flag will be ignored.
+  # - when none of `tls`, `ssl`, `enable_starttls` or `enable_starttls_auto` is set, the fallback will be `enable_starttls` `:auto`.
   #
   # === Certificate verification
   #
@@ -112,6 +120,8 @@ module Mail
 
       # Yields one of `:always`, `:auto` or `false` based on `enable_starttls` and `enable_starttls_auto` flags.
       # Yields `false` when `smtp_tls?`.
+      # Else defaults to `:auto` when neither `enable_starttls*` flag is provided.
+      # Providing a truthy value for `enable_starttls` will ignore `enable_starttls_auto`.
       def smtp_starttls
         return false if smtp_tls?
 
@@ -137,7 +147,7 @@ module Mail
       end
 
       def smtp_tls?
-        setting_provided?(:tls) && settings[:tls] || setting_provided?(:ssl) && settings[:ssl]
+        (setting_provided?(:tls) && settings[:tls]) || (setting_provided?(:ssl) && settings[:ssl])
       end
 
       def start_smtp_session(&block)
