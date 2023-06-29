@@ -17,7 +17,7 @@ Received: from a1-222.smtp-out.test.com (a1-222.smtp-out.test.com [54.240.1.222]
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.mailbox.org (Postfix) with ESMTPS id 3EF4340E9F
-	for <tuxerhof@m.onboard.org>; Tue, 27 Jun 2023 23:25:59 +0200 (CEST)
+	for <company@m.test.org>; Tue, 27 Jun 2023 23:25:59 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
 	s=shh3fegwg5fppqsuzphvschd53n6ihuv; d=amazonses.com; t=1687901158;
 	h=Date:From:Subject:To:MIME-Version:Content-Type:Message-Id:Feedback-ID;
@@ -37,7 +37,7 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
 Date: Tue, 27 Jun 2023 21:25:58 +0000
 From: MAILER-DAEMON@test.com
 Subject: Undelivered Mail Returned to Sender
-To: tuxerhof@example.org
+To: company@example.org
 Auto-Submitted: auto-replied
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
@@ -76,7 +76,7 @@ delete your own text from the attached returned message.
 
                    The mail system
 
-<max.mustermann@icloud.com>: Message delivery failed
+<max.mustermann@example.org>: Message delivery failed
 
 --A16F82740131.1687901155/test.me.com
 Content-Description: Delivery report
@@ -84,7 +84,7 @@ Content-Type: message/delivery-status
 
 Reporting-MTA: dns; test.me.com
 X-Postfix-Queue-ID: A16F82740131
-X-Postfix-Sender: rfc822; 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org
+X-Postfix-Sender: rfc822; 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
 Arrival-Date: Tue, 27 Jun 2023 21:25:53 +0000 (UTC)
 
 Final-Recipient: rfc822; ********************@**********
@@ -97,10 +97,10 @@ Diagnostic-Code: X-Postfix; Message delivery failed
 Content-Description: Undelivered Message
 Content-Type: message/rfc822
 
-Return-Path: <01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org>
+Return-Path: <01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org>
 Received: from a4-21.smtp-out.test.com (a4-21.smtp-out.test.com [54.240.4.21])
 	by test.me.com (Postfix) with ESMTPS id A16F82740131
-	for <max.mustermann@icloud.com>; Tue, 27 Jun 2023 21:25:53 +0000 (UTC)
+	for <max.mustermann@example.org>; Tue, 27 Jun 2023 21:25:53 +0000 (UTC)
 X-ICL-SCORE: 3.333033230041
 X-ICL-INFO: GAtbVUseBVFGSVVESgMGUkFIRFcUWUIPAApbVRYSFhEAREQZF15TQFUcAkpaAAdSR0lXT0BWUwAT
  QAAVGR0DBEEaBU9AAhsHRk0DWkxSBVRYQFMRGR1XBEJLAxRPCA4DFkhLR0gABlJFOQsWEVwYD1sW
@@ -110,20 +110,20 @@ X-ICL-INFO: GAtbVUseBVFGSVVESgMGUkFIRFcUWUIPAApbVRYSFhEAREQZF15TQFUcAkpaAAdSR0lX
  EhYPHB1bVUQAB1JHSVdPQFZTABNAABUZHQMEQRoFT0ACGwdGTQNaTFIFVFhAUxEZHVcEQksDFE8I
  DgMWSEtHSAAGUkU5AwJVR1MRAVRXWRldVxgaFxUSCx5VDRhHRFcKUwtAGBAFHx1RWg8aCgMZVlte
  AxEcCx44WVUOGgwCWRtfW0A=
-Authentication-Results: bimi.icloud.com; bimi=skipped reason="insufficient dmarc"
+Authentication-Results: bimi.example.org; bimi=skipped reason="insufficient dmarc"
 X-ARC-Info: policy=fail; arc=none
-Authentication-Results: arc.icloud.com; arc=none
-Authentication-Results: dmarc.icloud.com; dmarc=pass header.from=m.onboard.org
-X-DMARC-Info: pass=pass; dmarc-policy=none; s=r1; d=r1; pdomain=m.onboard.org
-X-DMARC-Policy: v=DMARC1;p=none;ruf=mailto:admin@onboard.org
-Authentication-Results: dkim-verifier.icloud.com;
-	dkim=pass (1024-bit key) header.d=m.onboard.org header.i=@m.onboard.org header.b=HiWYXEZE
-Authentication-Results: dkim-verifier.icloud.com;
+Authentication-Results: arc.example.org; arc=none
+Authentication-Results: dmarc.example.org; dmarc=pass header.from=m.test.org
+X-DMARC-Info: pass=pass; dmarc-policy=none; s=r1; d=r1; pdomain=m.test.org
+X-DMARC-Policy: v=DMARC1;p=none;ruf=mailto:admin@test.org
+Authentication-Results: dkim-verifier.example.org;
+	dkim=pass (1024-bit key) header.d=m.test.org header.i=@m.test.org header.b=HiWYXEZE
+Authentication-Results: dkim-verifier.example.org;
 	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=Fgl5nf9l
-Authentication-Results: spf.icloud.com; spf=pass (spf.icloud.com: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org designates 54.240.4.21 as permitted sender) smtp.mailfrom=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org
-Received-SPF: pass (spf.icloud.com: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org designates 54.240.4.21 as permitted sender) receiver=spf.icloud.com; client-ip=54.240.4.21; helo=a4-21.smtp-out.test.com; envelope-from=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.onboard.org
+Authentication-Results: spf.example.org; spf=pass (spf.example.org: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org designates 54.240.4.21 as permitted sender) smtp.mailfrom=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
+Received-SPF: pass (spf.example.org: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org designates 54.240.4.21 as permitted sender) receiver=spf.example.org; client-ip=54.240.4.21; helo=a4-21.smtp-out.test.com; envelope-from=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=wuhmxp5lbtxz54yc6ydgztmqksnev4si; d=m.onboard.org; t=1687901151;
+	s=wuhmxp5lbtxz54yc6ydgztmqksnev4si; d=m.test.org; t=1687901151;
 	h=Date:From:Sender:Reply-To:To:Message-ID:Subject:Mime-Version:Content-Type:Content-Transfer-Encoding;
 	bh=5SN2KKDpN9BWHCBXPl1c4vR6oMcb0DEF2COhyZT17Ww=;
 	b=HiWYXEZEgLphtSu88cWYfz/rPSoE0vATSrhepBqkuhLuZd1Nl8CKSK9zYuJxWZn1
@@ -137,10 +137,10 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
 	hC19HXDgPGFsggb2GTG2Qtcwu19qVwvp10mHNgNVV27npAVyfL9NjzgGfLgtTfWNLfJ
 	+ptyrNuIwCq61Zi/vnkbKkJoFoqO//siKglskJxg=
 Date: Tue, 27 Jun 2023 21:25:51 +0000
-From: Max Mustermann <tuxerhof@m.onboard.org>
-Sender: Max Mustermann <tuxerhof@m.onboard.org>
-Reply-To: tuxerhof@m.onboard.org
-To: max.mustermann@icloud.com
+From: Max Mustermann <company@m.test.org>
+Sender: Max Mustermann <company@m.test.org>
+Reply-To: company@m.test.org
+To: max.mustermann@example.org
 Message-ID: <01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@test.com>
 Subject: =?UTF-8?Q?Empfangsbest=C3=A4tigung_Bewerbung?=
 Mime-Version: 1.0
@@ -172,21 +172,8 @@ Content-Type: text/plain;
  charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Sehr geehrter Herr Max Mustermann,
-vielen Dank f=C3=BCr Deine Bewerbung und das Interesse an unserem Haus.
-Deine Unterlagen sind sicher bei uns angekommen und werden umgehend gepr=C3=
-=BCft. Wir bitten Dich um etwas Geduld, bevor wir uns schnellstm=C3=B6gli=
-ch wieder bei Dir melden.
-In der Zwischenzeit beantworten wir Fragen zur Stellenausschreibung oder =
-dem Bewerbungsprozess gerne.
-Herzliche Gr=C3=BC=C3=9Fe,
-Max Mustermann
-Mitarbeiterbeauftragte der #G=C3=A4stebegeisterer
-Hotel Tuxerhof GmbH =C2=B7 Ref: ob-a-7G6EaP04 =C2=B7 powered by onboard
-Diese Nachricht ist vertraulich und nur f=C3=BCr den Empf=C3=A4nger besti=
-mmt. Sollten Sie diese Sendung irrt=C3=BCmlicherweise erhalten haben, bit=
-ten wir Sie uns dies umgehend mitzuteilen, dieses Dokument zu l=C3=B6sche=
-n und von jeder anderen Verwendung abzusehen.=
+Sehr geehrter Herr Max Mustermann!
+
 
 ----==_mimepart_649b53df79e0_22ab99ecef428645ba
 Content-Type: text/html;
@@ -198,7 +185,7 @@ Content-Transfer-Encoding: quoted-printable
 <head>
   <meta content=3D'text/html; charset=3DUTF-8' http-equiv=3D'Content-Type=
 '/>
-    <link href=3D"https://fonts.onboard.org/roboto.300,400,500,700.css" r=
+    <link href=3D"https://fonts.test.org/roboto.300,400,500,700.css" r=
 el=3D"stylesheet">
   <style type=3D"text/css">
 
@@ -221,8 +208,8 @@ boto, Arial, sans-serif; } p { margin: 0 0 10px 0; } .footer { font-size:=
   <tbody>
     <tr>
       <td style=3D"padding: 32px 16px 0px 16px; color: #4D4D4D;"><img src=
-=3D'https://cdn2.onboard.org/uploads/business/logo/718/tuxerhof.png' alt=3D=
-"Hotel Tuxerhof GmbH" width=3D"200" style=3D"width: 200px;max-width:200px=
+=3D'https://cdn2.test.org/uploads/business/logo/718/company.png' alt=3D=
+"Company" width=3D"200" style=3D"width: 200px;max-width:200px=
 ;"/></td>
     </tr>
   </tbody>
@@ -233,41 +220,13 @@ idth=3D"100%" cellspacing=3D"0" cellpadding=3D"0">
     <tr>
       <td style=3D"padding: 32px 32px 22px 32px; color: #4D4D4D;">
 
-<p>Sehr geehrter Herr Max Mustermann,</p>
-<p>vielen Dank f&uuml;r Deine Bewerbung und das Interesse an unserem Haus=
-.</p>
-<p>Deine Unterlagen sind sicher bei uns angekommen und werden umgehend ge=
-pr&uuml;ft. Wir bitten Dich um etwas Geduld, bevor wir uns schnellstm&oum=
-l;glich wieder bei Dir melden.</p>
-<p>In der Zwischenzeit beantworten wir Fragen zur Stellenausschreibung od=
-er dem Bewerbungsprozess gerne.</p>
-<p>&nbsp;</p>
-<p>Herzliche Gr&uuml;&szlig;e,</p>
-<p>&nbsp;</p>
-<p>Max Mustermann</p>
-<p>Mitarbeiterbeauftragte der #G&auml;stebegeisterer</p>
-
+<p>Sehr geehrter Herr Max Mustermann</p>
 </td>
 </tr>
 </tbody>
 </table>
 <hr style=3D"height: 1px; background:none; border: solid 1px #8D8D8D; bor=
 der-width: 1px 0 0 0; margin-left: 16px; margin-right: 16px;"/>
-<table class=3D"footer" style=3D"background-color: #fff; font-size:12px;"=
- border=3D"0" width=3D"100%" cellspacing=3D"0" cellpadding=3D"0">
-  <tbody>
-    <tr>
-      <td style=3D"padding: 32px 32px 22px 32px; color: #898989;">
-        <p>Hotel Tuxerhof GmbH &middot; Ref: ob-a-7G6EaP04 &middot; power=
-ed by onboard</p>
-<p>Diese Nachricht ist vertraulich und nur f=C3=BCr den Empf=C3=A4nger be=
-stimmt. Sollten Sie diese Sendung irrt=C3=BCmlicherweise erhalten haben, =
-bitten wir Sie uns dies umgehend mitzuteilen, dieses Dokument zu l=C3=B6s=
-chen und von jeder anderen Verwendung abzusehen.</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 </body>
 
 </html>
