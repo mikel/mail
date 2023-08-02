@@ -110,10 +110,12 @@ module Mail
           else
             word = " #{word}"
           end
-          if !word.ascii_only?
-            word
-          else
+          if word.ascii_only? || word.respond_to?(:encoding) || (RUBY_VERSION < '1.9' && encoding == normalized_kcode)
             word.scan(/.{7}|.+$/)
+          else
+            # This seems to be a multibyte string,
+            # but we're not able to split it correctly at a char boundary.
+            word
           end
         end.flatten
       else
@@ -184,6 +186,12 @@ module Mail
 
     def normalized_encoding
       charset.to_s.upcase.gsub('_', '-')
+    end
+
+    def normalized_kcode
+      encoding = $KCODE
+      encoding = 'UTF-8' if encoding == 'UTF8'
+      encoding
     end
   end
 end
