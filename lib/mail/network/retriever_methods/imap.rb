@@ -164,9 +164,13 @@ module Mail
           raise ArgumentError, ":enable_starttls and :enable_ssl are mutually exclusive. Set :enable_ssl if you're on an IMAPS connection. Set :enable_starttls if you're on an IMAP connection and using STARTTLS for secure TLS upgrade."
         end
 
-        imap = Net::IMAP.new(settings[:address], settings[:port], settings[:enable_ssl], nil, false)
+        ssl      = settings[:enable_ssl]
+        starttls = settings[:enable_starttls]
+        ssl      &&= Hash.try_convert(ssl)      || {}
+        starttls &&= Hash.try_convert(starttls) || {}
 
-        imap.starttls if settings[:enable_starttls]
+        imap = Net::IMAP.new(settings[:address], port: settings[:port], ssl: ssl)
+        imap.starttls(starttls) if starttls
 
         if settings[:authentication].nil?
           imap.login(settings[:user_name], settings[:password])
