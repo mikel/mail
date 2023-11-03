@@ -42,14 +42,6 @@ module Mail
         end
     end
 
-    def attempt_to_clean
-      # Sanitize the value, handle special cases
-      Mail::ContentTypeElement.new(sanitize(value))
-    rescue Mail::Field::ParseError
-      # All else fails, just get the MIME media type
-      Mail::ContentTypeElement.new(get_mime_type(value))
-    end
-
     def main_type
       @main_type ||= element.main_type
     end
@@ -102,6 +94,14 @@ module Mail
     end
 
     private
+
+    def attempt_to_clean
+      # Sanitize the value, handle special cases
+      Mail::ContentTypeElement.new(sanitize(value))
+    rescue Mail::Field::ParseError
+      # All else fails, just get the MIME media type
+      Mail::ContentTypeElement.new(get_mime_type(value))
+    end
 
     def method_missing(name, *args, &block)
       if name.to_s =~ /(\w+)=/

@@ -109,5 +109,11 @@ RSpec.describe Mail::ContentDispositionField do
       c = Mail::ContentDispositionField.new(string)
       expect(c.filename).to eq "Eelanalüüsi päring.jpg"
     end
+
+    it "should accept with whitespace around equal sign" do
+      string = %q{attachment; name = mikel.jpg}
+      c = Mail::ContentDispositionField.new(string)
+      expect(c.filename).to eq 'mikel.jpg'
+    end
   end
 end
