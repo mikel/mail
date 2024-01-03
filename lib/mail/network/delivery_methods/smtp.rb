@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'mail/smtp_envelope'
+require 'mail/utilities'
 
 module Mail
   # == Sending Email with SMTP
@@ -22,7 +23,7 @@ module Mail
   #                              :user_name            => '<username>',
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
-  #                              :enable_starttls_auto => true  }
+  #                              :enable_starttls      => :auto  }
   #   end
   #
   # === Sending via GMail
@@ -34,8 +35,21 @@ module Mail
   #                              :user_name            => '<username>',
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
-  #                              :enable_starttls_auto => true  }
+  #                              :enable_starttls      => :auto  }
+  #
+  #     # ...or using the url-attribute (note the trailing 's' in the scheme
+  #     # to set `tls`, also note the URL-encoded userinfo):
+  #     delivery_method :smtp,
+  #        { :url => 'smtps://user%40gmail.com:app-password@smtp.gmail.com' }
   #   end
+  #
+  # === Sending via Fastmail
+  #
+  #   Mail.defaults do
+  #     delivery_method :smtp,
+  #       { :url => 'smtps://user%40fastmail.fm:app-pw@smtp.fastmail.com' }
+  #   end
+  #
   #
   # === Certificate verification
   #
@@ -74,6 +88,84 @@ module Mail
   #
   #   mail.deliver!
   class SMTP
+    class UrlResolver
+
+      DEFAULTS = {
+        "smtp" => Hash.new({
+          :port => 587,
+          :tls => false,
+          :enable_starttls => :always
+        }).merge({
+          "localhost" => {
+            :port => 25,
+            :tls => false,
+            :enable_starttls => false
+          },
+          "127.0.0.1" => {
+            :port => 25,
+            :tls => false,
+            :enable_starttls => false
+          }}),
+        "smtps" => Hash.new({
+          :port => 465,
+          :tls => true,
+          :enable_starttls => false
+        })
+      }
+
+      def initialize(url)
+        @uri = url.is_a?(URI) ? url : uri_parser.parse(url)
+        unless DEFAULTS.has_key?(@uri.scheme)
+          raise ArgumentError, "#{url} is not a valid SMTP-url. Required format: smtp(s)://host?domain=sender.org"
+        end
+        @query = uri.query
+      end
+
+      def to_hash
+        config = raw_config
+        config.map { |key, value| config[key] = uri_parser.unescape(value) if value.is_a? String }
+        config
+      end
+
+      private
+        attr_reader :uri
+
+        def raw_config
+          scheme_defaults.merge(query_hash).merge({
+              :address              => uri.host,
+              :port                 => uri.port,
+              :user_name            => uri.user,
+              :password             => uri.password
+          }.delete_if {|_key, value| Utilities.blank?(value) })
+        end
+
+        def uri_parser
+          Utilities.uri_parser
+        end
+
+        def query_hash
+          @query_hash = begin
+            result = Hash[(@query || "").split("&").map { |pair| k,v = pair.split("="); [k.to_sym, v] }]
+
+            result[:open_timeout] &&= result[:open_timeout].to_i
+            result[:read_timeout] &&= result[:read_timeout].to_i
+            result[:enable_starttls] &&= begin
+              case result[:enable_starttls]
+              when "always", "auto" then result[:enable_starttls].to_sym
+              else
+                result[:enable_starttls] != "false"
+              end
+            end
+            result[:enable_starttls_auto] &&= result[:enable_starttls_auto] != 'false'
+            result
+          end
+        end
+
+        def scheme_defaults
+          DEFAULTS[uri.scheme][uri.host]
+        end
+    end
+
     attr_accessor :settings
 
     DEFAULTS = {
@@ -92,8 +184,13 @@ module Mail
       :read_timeout         => 5
     }
 
-    def initialize(values)
-      self.settings = DEFAULTS.merge(values)
+    def initialize(config)
+      settings = DEFAULTS.merge(config)
+
+      if config.has_key?(:url)
+        settings = settings.merge(UrlResolver.new(config.delete(:url)).to_hash)
+      end
+      self.settings = settings
     end
 
     def deliver!(mail)
@@ -112,11 +209,12 @@ module Mail
 
       # Yields one of `:always`, `:auto` or `false` based on `enable_starttls` and `enable_starttls_auto` flags.
       # Yields `false` when `smtp_tls?`.
+      # Ignores `enable_starttls_auto` when `enable_starttls` is `:always` or `:auto`.
       def smtp_starttls
         return false if smtp_tls?
 
         if setting_provided?(:enable_starttls) && settings[:enable_starttls]
-          # enable_starttls: provided and truthy
+          # enable_starttls: truthy
           case settings[:enable_starttls]
           when :auto then :auto
           when :always then :always
@@ -129,8 +227,8 @@ module Mail
             settings[:enable_starttls_auto] ? :auto : false
           else
             # enable_starttls_auto: not provided
-            # enable_starttls: when provided then false
-            # use :auto when neither enable_starttls* provided
+            # enable_starttls: false when provided
+            # use :auto as fallback when neither enable_starttls* provided
             setting_provided?(:enable_starttls) ? false : :auto
           end
         end

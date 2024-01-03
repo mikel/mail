@@ -11,6 +11,72 @@ RSpec.describe "SMTP Delivery Method" do
     Mail.defaults { delivery_method :smtp, {} }
   end
 
+  describe 'settings via url' do
+    def smtp_delivery_settings_for_url(url, options = {})
+      Mail.defaults { delivery_method :smtp, {:url => url}.merge(options) }
+
+      Mail.delivery_method.settings
+    end
+
+    it 'provides smtp defaults for localhost' do
+      expect(smtp_delivery_settings_for_url('smtp://localhost')).to \
+        include(:port                 => 25,
+                :tls                  => false,
+                :enable_starttls      => false)
+    end
+
+    it 'provides smtp defaults for non-localhost' do
+      expect(smtp_delivery_settings_for_url('smtp://gmail.com')).to \
+        include(:port                 => 587,
+                :enable_starttls      => :always)
+    end
+
+    it 'provides smtps defaults' do
+      expect(smtp_delivery_settings_for_url('smtps://gmail.com')).to \
+        include(:port                 => 465,
+                :tls                  => true,
+                :enable_starttls      => false)
+    end
+
+    it 'parses the url correctly and coerces where needed' do
+      url = 'smtp://mailer.org:12345?domain=sender.org&authentication=login&openssl_verify_mode=peer&open_timeout=1&read_timeout=2&enable_starttls=always&enable_starttls_auto=true'
+      expect(smtp_delivery_settings_for_url(url)).to \
+        include(:address              => 'mailer.org',
+                :port                 => 12345,
+                :domain               => 'sender.org',
+                :authentication       => 'login',
+                :openssl_verify_mode  => 'peer',
+                :tls                  => false,
+                :open_timeout         => 1,
+                :read_timeout         => 2,
+                :enable_starttls      => :always,
+                :enable_starttls_auto => true)
+    end
+
+    it 'gives precedence to attributes from the url' do
+      config = {:address => 'ignored', :domain => 'ignored'}
+      expect(smtp_delivery_settings_for_url('smtp://user:pw@real-host?domain=real-domain.org', config)).not_to \
+        include(config)
+    end
+
+    it 'unescapes credentials' do
+      expect(smtp_delivery_settings_for_url('smtps://user%40host:pw-with-%2F@mailer.org')).to \
+        include(:user_name => 'user@host',
+                :password => 'pw-with-/')
+    end
+
+    it 'accepts an URI' do
+      expect(smtp_delivery_settings_for_url(URI.parse('smtp://host?enable_starttls=auto'))).to \
+        include(:address => 'host', :enable_starttls => :auto)
+    end
+
+    it 'should raise an error for url without smtp(s) scheme' do
+      expect {
+        smtp_delivery_settings_for_url('foo://host')
+      }.to raise_error(/is not a valid SMTP-url/)
+    end
+  end
+
   describe "general usage" do
     it "should send emails from given settings" do
 

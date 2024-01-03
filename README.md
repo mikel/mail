@@ -278,6 +278,8 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
+#### Sending via SMTP
+
 Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher))
 ```ruby
 
@@ -286,6 +288,43 @@ Mail.defaults do
 end
 ```
 
+A url is also accepted:
+```ruby
+Mail.defaults do
+  # The following (note the URL-encoded userinfo)...:
+  delivery_method :smtp, url: 'smtp://user%40gmail.com:app-password@smtp.gmail.com'
+
+  # ...would be equivalent to:
+  delivery_method :smtp, { :address              => 'smtp.gmail.com',
+                           :port                 => 587,
+                           :user_name            => 'user@gmail.com',
+                           :password             => 'app-password',
+                           :tls                  => false,
+                           :enable_starttls      => :always }
+
+  # Provide additional settings or overrides via the query string of the url:
+  delivery_method :smtp, url: '<above-url>?enable_starttls=auto&authentication=login'
+
+  # For localhost (or 127.0.0.1) it assumes no tls, nor starttls.
+  # So the following would work using [mailcatcher](https://github.com/sj26/mailcatcher):
+  delivery_method :smtp, url: 'smtp://127.0.0.1:1025'
+
+  # Scheme 'smtps' enables `tls` and uses port 465:
+  delivery_method :smtp, url: 'smtps://user%40gmail.com:app-password@smtp.gmail.com'
+
+  # Attributes provided via the url take precedence over other provided attributes.
+  # So in the following example, `address` will be set to 'smtp.gmail.com',
+  # and `authentication` will be set to 'login':
+  delivery_method :smtp, url: 'smtps://user%40gmail.com:app-password@smtp.gmail.com',
+                         address: 'ignored.org',
+                         authentication: 'login'
+
+  # Typically you would provide the url via an environment variable:
+  delivery_method :smtp, url: ENV["MY_APP_SMTP_URL"]
+end
+```
+
+#### Sending via Exim
 
 Exim requires its own delivery manager, and can be used like so:
 
@@ -294,6 +333,8 @@ mail.delivery_method :exim, :location => "/usr/bin/exim"
 
 mail.deliver
 ```
+
+#### Logging
 
 Mail may be "delivered" to a logfile, too, for development and testing:
 
