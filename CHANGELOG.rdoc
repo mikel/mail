@@ -11,6 +11,7 @@ Features:
 
 * Updated README to improve around sending multipart mail @kapfenho
 * Add delivery_interceptors method to Mail class to fetch registered interceptors @ghousemohamed
+* `Mail::ContentTypeField` now supports setting a `boundary_generator`, allowing custom boundary creation behavior @dugancathal
 
 Code Improvements:
 
@@ -19,6 +20,7 @@ Code Improvements:
 * Configure RSpec's zero-monkey patching mode @olleolleolle
 * Added support for JRuby 9.4 @mikel
 * Prefer `__dir__` @olleolleolle
+* Remove `=` from default mime boundary in `Mail::ContentTypeField` @dugancathal
 
 Bug Fixes:
 
