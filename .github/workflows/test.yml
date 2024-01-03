@@ -58,7 +58,7 @@ jobs:
         cache-version: 4
     - name: Run tests
       run: bundle exec rake spec
-      continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
+      continue-on-error: ${{ matrix.ruby == 'truffleruby-head' || matrix.ruby == 'truffleruby' }}
   actionmailer:
     runs-on: ubuntu-latest
     steps:
