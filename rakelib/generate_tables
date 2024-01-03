@@ -4,7 +4,7 @@
 # Usage:
 #   ruby tasks/generate_tables
 # The Unicode version downloaded is determined by the UNICODE_VERSION lib/mail/multibye/unicode.rb
-require './lib/mail/multibyte/unicode'
+require_relative '../lib/mail/multibyte/unicode'
 
 require 'open-uri'
 require 'tmpdir'

@@ -1,4 +1,4 @@
-require './lib/mail/version'
+require_relative 'lib/mail/version'
 
 Gem::Specification.new do |s|
   s.name        = "mail"
