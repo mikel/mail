@@ -688,7 +688,6 @@ begin
         end
 
         begin
-          testEof = false
           _slen, _trans, _keys, _inds, _acts, _nacts = nil
           _goto_level = 0
           _resume = 10
@@ -832,9 +831,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    date_s = p
                   end
                 when 7
                   begin

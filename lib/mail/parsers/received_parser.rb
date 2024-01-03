@@ -7511,7 +7511,6 @@ begin
         end
 
         begin
-          testEof = false
           _slen, _trans, _keys, _inds, _acts, _nacts = nil
           _goto_level = 0
           _resume = 10
@@ -7857,9 +7856,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    date_s = p
-                  end
                 when 1
                   begin
                     received_tokens_s = p
@@ -8055,8 +8051,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
                 when 114
                   begin
                   end
@@ -8088,10 +8082,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
                 when 2
                   begin
                     received_tokens_s = p
@@ -8104,10 +8094,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
                   end
                 when 37
                   begin
@@ -8212,10 +8198,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
                 when 88
                   begin
                   end
@@ -8310,12 +8292,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 103
                   begin
                     begin
@@ -8326,12 +8302,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 115
                   begin
                     begin
@@ -8341,12 +8311,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
                   end
                 when 44
                   begin
@@ -8416,12 +8380,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 109
                   begin
                   end
@@ -8434,12 +8392,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 123
                   begin
                   end
@@ -8451,12 +8403,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
                   end
                 when 113
                   begin
@@ -8538,12 +8484,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 34
                   begin
                   end
@@ -8564,14 +8504,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
                   end
                 when 40
                   begin
@@ -8611,14 +8543,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 27
                   begin
                   end
@@ -8644,14 +8568,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 35
                   begin
                     begin
@@ -8662,16 +8578,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 12
                   begin
                     begin
@@ -8681,16 +8587,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
                   end
                 when 42
                   begin
@@ -8704,16 +8600,6 @@ begin
                       next
                     end
                   end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
                 when 28
                   begin
                     begin
@@ -8723,18 +8609,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
-                  end
-                  begin
                   end
                 end
               end

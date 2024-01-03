@@ -31984,7 +31984,6 @@ begin
         end
 
         begin
-          testEof = false
           _slen, _trans, _keys, _inds, _acts, _nacts = nil
           _goto_level = 0
           _resume = 10
@@ -32453,9 +32452,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    phrase_e = p - 1
-                  end
                 when 14
                   begin
                     if address
@@ -32614,9 +32610,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    phrase_e = p - 1
-                  end
                 when 65
                   begin
                     group_name_s = p
@@ -32649,9 +32642,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    obs_domain_list_s = p
                   end
                 when 38
                   begin
@@ -32739,12 +32729,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    phrase_e = p - 1
-                  end
-                  begin
-                    domain_s = p
-                  end
                 when 31
                   begin
                     begin
@@ -32754,12 +32738,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    phrase_e = p - 1
-                  end
-                  begin
-                    local_dot_atom_pre_comment_e = p - 1
                   end
                 when 40
                   begin
@@ -32821,9 +32799,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    local_dot_atom_s = p
-                  end
                 when 36
                   begin
                     local_dot_atom_pre_comment_e = p - 1
@@ -32862,15 +32837,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    address_s = p
-                  end
-                  begin
-                    phrase_s = p
-                  end
-                  begin
-                    local_dot_atom_s = p
-                  end
                 when 64
                   begin
                     group_name_s = p
@@ -32886,12 +32852,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    address_s = p
-                  end
-                  begin
-                    local_dot_atom_s = p
                   end
                 end
               end
