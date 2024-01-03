@@ -4845,7 +4845,6 @@ begin
         end
 
         begin
-          testEof = false
           _slen, _trans, _keys, _inds, _acts, _nacts = nil
           _goto_level = 0
           _resume = 10
@@ -5107,11 +5106,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    id = chars(data, msg_id_s, p - 1)
-                    id = $1 if id =~ /.*<(.*)>.*/
-                    message_ids.message_ids << id
                   end
                 end
               end

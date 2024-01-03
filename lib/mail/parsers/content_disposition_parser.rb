@@ -583,7 +583,6 @@ begin
         end
 
         begin
-          testEof = false
           _slen, _trans, _keys, _inds, _acts, _nacts = nil
           _goto_level = 0
           _resume = 10
@@ -791,18 +790,6 @@ begin
                       next
                     end
                   end
-                  begin
-                    if param_attr.nil?
-                      raise Mail::Field::ParseError.new(Mail::ContentDispositionElement, data, "no attribute for value")
-                    end
-
-                    # Use quoted string value if one exists, otherwise use parameter value
-                    value = qstr || chars(data, param_val_s, p - 1)
-
-                    content_disposition.parameters << {param_attr => value}
-                    param_attr = nil
-                    qstr = nil
-                  end
                 when 21
                   begin
                   end
@@ -814,18 +801,6 @@ begin
                       _goto_level = _again
                       next
                     end
-                  end
-                  begin
-                    if param_attr.nil?
-                      raise Mail::Field::ParseError.new(Mail::ContentDispositionElement, data, "no attribute for value")
-                    end
-
-                    # Use quoted string value if one exists, otherwise use parameter value
-                    value = qstr || chars(data, param_val_s, p - 1)
-
-                    content_disposition.parameters << {param_attr => value}
-                    param_attr = nil
-                    qstr = nil
                   end
                 end
               end
