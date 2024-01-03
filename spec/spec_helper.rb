@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require File.expand_path('../environment', __FILE__)
+
+require_relative 'environment'
 
 unless defined?(MAIL_ROOT)
   $stderr.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
@@ -17,7 +18,7 @@ unless defined?(MAIL_SPEC_SUITE_RUNNING)
 end
 
 require 'rspec'
-require File.join(File.dirname(__FILE__), 'matchers', 'break_down_to')
+require_relative 'matchers/break_down_to'
 
 require 'mail'
 
