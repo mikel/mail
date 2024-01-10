@@ -82,6 +82,13 @@ RSpec.describe Mail::AddressList do
       a = Mail::AddressList.new(parse_text)
       expect(a.addresses.first.comments).to eq result
     end
+
+    it "should handle names not quoted correctly" do
+      parse_text = "John Doe, Example INC <john.doe@example.com>"
+      a = Mail::AddressList.new(parse_text)
+      expect(a.addresses.first.address).to eq "john.doe@example.com"
+      expect(a.addresses.first.display_name).to eq "John Doe, Example INC"
+    end
   end
 
   describe "functionality" do

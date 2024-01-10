@@ -56,7 +56,7 @@
                 obs_angle_addr;
 
   # 3.4. Address Specification
-  display_name = phrase;
+  display_name = (phrase | phrase_lists);
   name_addr = display_name? %(end_addr,2) angle_addr;
   mailbox = (name_addr | addr_spec_no_angle_brackets) >address_s %address_e;
   obs_mbox_list = (CFWS? ",")* mailbox ("," (mailbox | CFWS)?)*;
