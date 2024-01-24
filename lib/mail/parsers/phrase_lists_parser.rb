@@ -699,11 +699,9 @@ begin
         end
 
         begin
-          testEof = false
-          _slen, _trans, _keys, _inds, _acts, _nacts = nil
+          _slen, _trans, _keys, _inds = nil
           _goto_level = 0
           _resume = 10
-          _eof_trans = 15
           _again = 20
           _test_eof = 30
           _out = 40
