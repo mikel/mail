@@ -1918,7 +1918,7 @@ module Mail
     # Returns true if this part is an attachment,
     # false otherwise.
     def attachment?
-      !!find_attachment
+      !!find_attachment_name || inline_image?
     end
 
     # Returns the attachment data if there is any
@@ -1928,7 +1928,7 @@ module Mail
 
     # Returns the filename of the attachment
     def filename
-      find_attachment
+      find_attachment_name
     end
 
     def all_parts
@@ -2124,7 +2124,7 @@ module Mail
     end
 
     # Returns the filename of the attachment (if it exists) or returns nil
-    def find_attachment
+    def find_attachment_name
       content_type_name = header[:content_type].filename rescue nil
       content_disp_name = header[:content_disposition].filename rescue nil
       content_loc_name  = header[:content_location].location rescue nil
@@ -2140,6 +2140,14 @@ module Mail
       end
       filename = Mail::Encodings.decode_encode(filename, :decode) if filename rescue filename
       filename
+    end
+
+    def inline_image?
+     image? && inline?
+    end
+
+    def image?
+      header[:content_type] && header[:content_type].main_type == "image"
     end
 
     def do_delivery
