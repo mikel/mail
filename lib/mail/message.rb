@@ -1778,7 +1778,7 @@ module Mail
     private_constant :MULTIPART_CONVERSION_CONTENT_FIELDS if respond_to?(:private_constant)
 
     def convert_to_multipart
-      text_part = Mail::Part.new(:body => body.decoded)
+      text_part = Mail::Part.new(:content_type => 'text/plain;', :body => body.decoded)
 
       MULTIPART_CONVERSION_CONTENT_FIELDS.each do |field_name|
         if value = send(field_name)

@@ -1507,6 +1507,28 @@ RSpec.describe Mail::Message do
         end
       end
 
+      describe "add_file sets content_type from attachment" do
+        it "should work if set before body" do
+          m = Mail.new
+          m.add_file :filename=>'a.txt', :content=>'b'
+          m.body 'c'
+          expect(m.parts.first.content_type).to match(/text\/plain/)
+          expect(m.parts.first.body.encoded).to eq('b')
+          expect(m.parts.last.content_type).to match(/text\/plain/)
+          expect(m.parts.last.body.encoded).to eq('c')
+        end
+
+        it "should work if set after body" do
+          m = Mail.new
+          m.body 'c'
+          m.add_file :filename=>'a.txt', :content=>'b'
+          expect(m.parts.first.content_type).to match(/text\/plain/)
+          expect(m.parts.first.body.encoded).to eq('c')
+          expect(m.parts.last.content_type).to match(/text\/plain/)
+          expect(m.parts.last.body.encoded).to eq('b')
+        end
+      end
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do
