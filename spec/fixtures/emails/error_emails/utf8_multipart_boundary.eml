@@ -1,0 +1,7 @@
+Content-Type: multipart/alternative; boundary="bad-char-µ"
+
+--bad-char-µ
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hello, world!
