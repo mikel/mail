@@ -464,7 +464,7 @@ module Mail
     #  message.errors.size #=> 1
     #  message.errors.first[0] #=> "Content-Transfer-Encoding"
     #  message.errors.first[1] #=> "weirdo"
-    #  message.errors.first[3] #=> <The original error message exception>
+    #  message.errors.first[2] #=> <The original error message exception>
     #
     # This is a good first defence on detecting spam by the way.  Some spammers send
     # invalid emails to try and get email parsers to give up parsing them.
