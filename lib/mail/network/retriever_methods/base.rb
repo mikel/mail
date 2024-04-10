@@ -17,7 +17,7 @@ module Mail
       options[:count] ||= 1
       find(options, &block)
     end
-    
+
     # Get the most recent received email(s)
     #
     # Possible options:
@@ -30,7 +30,7 @@ module Mail
       options[:count] ||= 1
       find(options, &block)
     end
-    
+
     # Get all emails.
     #
     # Possible options:
@@ -42,7 +42,7 @@ module Mail
       find(options, &block)
     end
 
-    # Find emails in the mailbox, and then deletes them. Without any options, the 
+    # Find emails in the mailbox, and then deletes them. Without any options, the
     # five last received emails are returned.
     #
     # Possible options:
@@ -56,8 +56,8 @@ module Mail
     def find_and_delete(options = nil, &block)
       options = options ? Hash[options] : {}
       options[:delete_after_find] ||= true
-      find(options, &block)      
-    end 
+      find(options, &block)
+    end
 
   end
 
