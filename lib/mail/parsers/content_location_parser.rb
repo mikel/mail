@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 require "mail/utilities"
 require "mail/parser_tools"
@@ -589,7 +588,7 @@ begin
         return content_location if Mail::Utilities.blank?(data)
 
         # Parser state
-        disp_type_s = param_attr_s = param_attr = qstr_s = qstr = param_val_s = nil
+        qstr_s = qstr = param_val_s = nil
 
         # 5.1 Variables Used by Ragel
         p = 0
@@ -631,10 +630,10 @@ begin
               _trans = if (_slen > 0 &&
                            _trans_keys[_keys] <= _wide &&
                            _wide <= _trans_keys[_keys + 1])
-                         _indicies[_inds + _wide - _trans_keys[_keys]]
-                       else
-                         _indicies[_inds + _slen]
-                       end
+                  _indicies[_inds + _wide - _trans_keys[_keys]]
+                else
+                  _indicies[_inds + _slen]
+                end
               cs = _trans_targs[_trans]
               if _trans_actions[_trans] != 0
                 case _trans_actions[_trans]
@@ -807,6 +806,10 @@ begin
               break
             end
           end
+        end
+
+        if false
+          testEof
         end
 
         if p != eof || cs < 32

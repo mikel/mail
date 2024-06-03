@@ -54,7 +54,7 @@ module Mail::Parsers
       return content_location if Mail::Utilities.blank?(data)
 
       # Parser state
-      disp_type_s = param_attr_s = param_attr = qstr_s = qstr = param_val_s = nil
+      qstr_s = qstr = param_val_s = nil
 
       # 5.1 Variables Used by Ragel
       p = 0
@@ -63,6 +63,10 @@ module Mail::Parsers
 
       %%write init;
       %%write exec;
+
+      if false
+        testEof
+      end
 
       if p != eof || cs < %%{ write first_final; }%%
         raise Mail::Field::IncompleteParseError.new(Mail::ContentLocationElement, data, p)
