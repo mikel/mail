@@ -75,7 +75,10 @@ module Mail
 
       start do |imap|
         options[:read_only] ? imap.examine(options[:mailbox]) : imap.select(options[:mailbox])
+
         uids = imap.uid_search(options[:keys], options[:search_charset])
+          .to_a # older net-imap may return nil, newer may return ESearchResult struct
+          .sort # RFC3501 does _not_ require UIDs to be returned in order
         uids.reverse! if options[:what].to_sym == :last
         uids = uids.first(options[:count]) if options[:count].is_a?(Integer)
         uids.reverse! if (options[:what].to_sym == :last && options[:order].to_sym == :asc) ||
