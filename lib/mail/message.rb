@@ -339,37 +339,29 @@ module Mail
       end
     end
 
-    # Two emails are the same if they have the same fields and body contents. One
-    # gotcha here is that Mail will insert Message-IDs when calling encoded, so doing
-    # mail1.encoded == mail2.encoded is most probably not going to return what you think
-    # as the assigned Message-IDs by Mail (if not already defined as the same) will ensure
-    # that the two objects are unique, and this comparison will ALWAYS return false.
+    # Two emails are the same if they have the same fields and body contents.
     #
-    # So the == operator has been defined like so:  Two messages are the same if they have
-    # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
-    # different Message-ID value, then they are false.
+    # Note that Mail will provide Message-ID and Date (if necessary) when calling encoded, so
+    # mail1 == mail2 does not imply mail1.encoded == mail2.encoded
+    # unless both Date and Message-Id have been provided.
     #
-    # Note that Mail creates Date and Mime-Type fields if they don't exist.
-    # The Date field is derived from the current time, so this needs to be allowed for in comparisons.
-    # (Mime-type does not depend on dynamic data, so cannot affect equality)
-    #
-    # So, in practice the == operator works like this:
+    # The == operator works like this:
     #
     #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
-    #  m1 == m2 #=> true
+    #  m1 == m2 #=> true; however encoded versions will not be equal
     #
     #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
-    #  m1 == m2 #=> true
+    #  m1 == m2 #=> false
     #
     #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Subject: Hello\r\n\r\nHello")
-    #  m1 == m2 #=> true
+    #  m1 == m2 #=> false
     #
     #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
-    #  m1 == m2 #=> true
+    #  m1 == m2 #=> true; however encoded versions will not be equal if the time stamp changes
     #
     #  m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
     #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
@@ -378,14 +370,8 @@ module Mail
       return false unless other.respond_to?(:encoded)
 
       stamp = Mail::CommonDateField.normalize_datetime('')
-      # Note: must always dup the inputs so they are not altered by encoded
-      if self.message_id && other.message_id
-        dup.tap { |m| m.date ||= stamp }.encoded ==
-          other.dup.tap { |m| m.date ||= stamp }.encoded
-      else
-        dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded ==
-          other.dup.tap { |m| m.message_id = '<temp@test>'; m.date ||= stamp }.encoded
-      end
+      dup.tap { |m| m.message_id ||= '<temp@test>'; m.date ||= stamp }.encoded ==
+        other.dup.tap { |m| m.message_id ||= '<temp@test>'; m.date ||= stamp }.encoded
     end
 
     def initialize_copy(original)

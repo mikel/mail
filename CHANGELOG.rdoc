@@ -24,6 +24,7 @@ Bug Fixes:
 
 * Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
 * Regression: Adding a part should not reset the mail's charset to nil @railsbob
+* == operator is now transitive; a==b and b==c implies a==c
 
 Performance:
 
