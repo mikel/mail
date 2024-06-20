@@ -283,11 +283,11 @@ RSpec.describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
-    it "should not fold a long string that has no spaces" do
+    it "should fold a long string that has no spaces if it can" do
       original = "ВосстановлениеВосстановлениеВашегопароля"
-      if original.respond_to?(:force_encoding)
-        original = original.dup.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
+      if RUBY_VERSION >= '1.9' || $KCODE == 'UTF8'
+        original = original.dup.force_encoding('UTF-8') if original.respond_to?(:force_encoding)
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD?=\r\n =?UTF-8?Q?=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5?=\r\n =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD?=\r\n =?UTF-8?Q?=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5?=\r\n =?UTF-8?Q?=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF?=\r\n =?UTF-8?Q?=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       else
         result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       end
@@ -302,7 +302,11 @@ RSpec.describe Mail::Encodings do
       if original.respond_to?(:force_encoding)
         original = original.dup.force_encoding('UTF-8')
       end
-      result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n =?UTF-8?Q?_This_is_a_NUT=3F=3F=3F=3F=3FZ=5F=5Fstring_that=3D=3D_could?=\r\n =?UTF-8?Q?_=28break=29_anything?=\r\n"
+      if RUBY_VERSION >= '1.9' || $KCODE == 'UTF8'
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD?=\r\n =?UTF-8?Q?=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5?=\r\n =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD?=\r\n =?UTF-8?Q?=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5?=\r\n =?UTF-8?Q?=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF?=\r\n =?UTF-8?Q?=D0=B0=D1=80=D0=BE=D0=BB=D1=8F_This_is_a_NUT=3F=3F=3F?=\r\n =?UTF-8?Q?=3F=3FZ=5F=5Fstring_that=3D=3D_could_=28break=29_anything?=\r\n"
+      else
+        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n =?UTF-8?Q?_This_is_a_NUT=3F=3F=3F=3F=3FZ=5F=5Fstring_that=3D=3D_could?=\r\n =?UTF-8?Q?_=28break=29_anything?=\r\n"
+      end
       mail = Mail.new
       mail.subject = original
       expect(mail[:subject].decoded).to eq original
