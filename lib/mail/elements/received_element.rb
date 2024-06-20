@@ -1,6 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/parsers/received_parser'
+Mail.require_silently 'mail/parsers/received_parser'
 require 'mail/utilities'
 require 'date'
 
