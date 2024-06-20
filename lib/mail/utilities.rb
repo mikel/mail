@@ -306,10 +306,10 @@ module Mail
     end
 
     class BestEffortCharsetEncoder
-      def encode(string, charset)
+      def encode(string, charset, raise_utf7_exceptions = false)
         case charset
         when /utf-?7/i
-          Mail::Utilities.decode_utf7(string)
+          Mail::Utilities.decode_utf7(string, raise_utf7_exceptions)
         else
           string.force_encoding(pick_encoding(charset))
         end
@@ -396,10 +396,20 @@ module Mail
       end.force_encoding(Encoding::ASCII_8BIT)
     end
 
-    def Utilities.decode_utf7(utf7)
+    # Note: UTF-7 is an obscure encoding, and it's not clear that it's
+    # even valid for email bodies (the case in which we need
+    # raise_utf7_exceptions=false.)  If we remove support for UTF-7 in
+    # email bodies, we can also remove the argument here.
+    def Utilities.decode_utf7(utf7, raise_utf7_exceptions)
       utf7.gsub(/&([^-]+)?-/n) do
         if $1
-          ($1.tr(",", "/") + "===").unpack1("m").encode(Encoding::UTF_8, Encoding::UTF_16BE)
+          utf_16be = ($1.tr(",", "/") + "===").unpack("m")[0].force_encoding(Encoding::UTF_16BE)
+          if raise_utf7_exceptions
+            # special case - in B encoding, raise exceptions on conversion errors
+            utf_16be.encode(Encoding::UTF_8)
+          else
+            transcode_to_scrubbed_utf8(utf_16be)
+          end
         else
           "&"
         end
@@ -416,7 +426,7 @@ module Mail
       if match
         charset = match[1]
         str = Utilities.decode_base64(match[2])
-        str = charset_encoder.encode(str, charset)
+        str = charset_encoder.encode(str, charset, true)
       end
       transcode_to_scrubbed_utf8(str)
     rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError

@@ -401,6 +401,16 @@ RSpec.describe Mail::Message do
       expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
     end
 
+    it "should parse utf-7 email without raising exceptions" do
+      mail = read_fixture('emails', 'multi_charset', 'utf7.eml')
+      expect(mail.decoded.chomp).to eq "Valid: 是 Invalid: �"
+    end
+
+    it "should parse quoted-printable email without raising exceptions" do
+      mail = read_fixture('emails', 'multi_charset', 'quoted-printable.eml')
+      expect(mail.decoded.chomp).to eq "Valid: 是 Invalid: �"
+    end
+
     if '1.9+'.respond_to?(:encoding)
       it "should be able to normalize CRLFs on non-UTF8 encodings" do
         File.open(fixture_path('emails', 'multi_charset', 'japanese_shift_jis.eml'), 'rb') do |io|
