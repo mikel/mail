@@ -100,9 +100,15 @@ module Mail
             end
 
             imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find] && new_message.is_marked_for_delete?
+            if options[:move_to]
+              imap.uid_copy(uid, options[:move_to]) if options[:move_to]
+              imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED])              
+            end
             break unless options[:uid].nil?
           end
-          imap.expunge if options[:delete_after_find]
+          if options[:delete_after_find] || options[:move_to_done]
+            imap.expunge
+          end
         else
           emails = []
           uids.each do |uid|
@@ -110,9 +116,15 @@ module Mail
             fetchdata = imap.uid_fetch(uid, ['RFC822'])[0]
             emails << Mail.new(fetchdata.attr['RFC822'])
             imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED]) if options[:delete_after_find]
+            if options[:move_to]
+              imap.uid_copy(uid, options[:move_to])
+              imap.uid_store(uid, "+FLAGS", [Net::IMAP::DELETED])              
+            end
             break unless options[:uid].nil?
           end
-          imap.expunge if options[:delete_after_find]
+          if options[:delete_after_find] || options[:move_to]
+            imap.expunge 
+          end
           emails.size == 1 && options[:count] == 1 ? emails.first : emails
         end
       end
