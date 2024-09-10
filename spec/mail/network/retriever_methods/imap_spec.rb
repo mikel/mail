@@ -318,5 +318,18 @@ RSpec.describe "IMAP Retriever" do
     end
   end
 
+
+  describe "UTF8=ACCEPT support" do
+    before(:each) do
+      @imap = MockIMAP.new
+      allow(MockIMAP).to receive(:new).and_return(@imap)
+      allow(@imap).to receive(:capable?).with("ENABLE").and_return(true)
+    end
+    it "should enable UTF8=ACCEPT" do
+      expect(@imap).to receive(:enable).with(:utf8)
+      messages = Mail.find
+    end
+  end
+
 end
 
