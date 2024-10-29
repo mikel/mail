@@ -165,7 +165,11 @@ module Mail
     end
 
     def uri_parser
-      @uri_parser ||= URI.const_defined?(:DEFAULT_PARSER) ? URI::DEFAULT_PARSER : URI
+      @uri_parser ||= if URI.const_defined?(:DEFAULT_PARSER)
+                        defined?(URI::RFC2396_PARSER) ? URI::RFC2396_PARSER : URI::DEFAULT_PARSER
+                      else
+                        URI
+                      end
     end
 
     # Matches two objects with their to_s values case insensitively
@@ -464,7 +468,7 @@ module Mail
     end
 
     def Utilities.uri_parser
-      URI::DEFAULT_PARSER
+      defined?(URI::RFC2396_PARSER) ? URI::RFC2396_PARSER : URI::DEFAULT_PARSER
     end
 
     # Pick a Ruby encoding corresponding to the message charset. Most
