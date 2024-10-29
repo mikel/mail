@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 2.5"
 
+  s.add_dependency('logger')
   s.add_dependency('mini_mime', '>= 0.1.1')
   s.add_dependency('net-smtp')
   s.add_dependency('net-imap')
