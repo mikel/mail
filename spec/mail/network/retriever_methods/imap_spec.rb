@@ -269,6 +269,27 @@ RSpec.describe "IMAP Retriever" do
     end
   end
 
+  describe "Implicit SSL" do
+    before do
+      allow(Net::IMAP).to receive(:new).and_call_original
+    end
+
+    it "calls Net::IMAP.new new with ssl keyword arg" do
+      Mail.find
+      expect(Net::IMAP).to have_received(:new)
+        .with("localhost", port: 993, ssl: {})
+    end
+
+    it "passes enable_ssl params to ssl keyword" do
+      Mail.defaults do
+        retriever_method :imap, port: 993, enable_ssl: {ca_file: "etc.ca"}
+      end
+      Mail.find
+      expect(Net::IMAP).to have_received(:new)
+        .with("localhost", port: 993, ssl: {ca_file: "etc.ca"})
+    end
+  end
+
   describe "STARTTLS" do
     before do
       @imap = MockIMAP.new
@@ -280,7 +301,16 @@ RSpec.describe "IMAP Retriever" do
         retriever_method :imap, :enable_starttls => true
       end
 
-      expect(@imap).to receive(:starttls)
+      expect(@imap).to receive(:starttls).with({})
+      Mail.find
+    end
+
+    it "passes params to starttls" do
+      Mail.defaults do
+        retriever_method :imap, enable_starttls: {attr1: :val1, attr2: "v2"}
+      end
+
+      expect(@imap).to receive(:starttls).with({attr1: :val1, attr2: "v2"})
       Mail.find
     end
 
