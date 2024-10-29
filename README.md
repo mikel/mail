@@ -49,14 +49,12 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 Mail is tested against:
 
-* Ruby: 2.5
-* Ruby: 2.6
 * Ruby: 2.7
 * Ruby: 3.0
 * Ruby: 3.1
 * Ruby: 3.2
-* JRuby: 9.2
-* JRuby: 9.3
+* Ruby: 3.3
+* Ruby: head
 * JRuby: 9.4
 * JRuby: stable
 * JRuby: head
