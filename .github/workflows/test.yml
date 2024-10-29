@@ -16,10 +16,6 @@ jobs:
       fail-fast: false
       matrix:
        include:
-         - ruby: 2.5
-           timeout: 5
-         - ruby: 2.6
-           timeout: 5
          - ruby: 2.7
            timeout: 5
          - ruby: '3.0'
@@ -30,19 +26,17 @@ jobs:
            timeout: 5
          - ruby: 3.3
            timeout: 5
+         - ruby: head
+           timeout: 5
          - ruby: truffleruby
            timeout: 50
          - ruby: truffleruby-head
            timeout: 50
+         - ruby: jruby-9.4
+           timeout: 5
          - ruby: jruby
            timeout: 5
          - ruby: jruby-head
-           timeout: 5
-         - ruby: jruby-9.4
-           timeout: 5
-         - ruby: jruby-9.3
-           timeout: 5
-         - ruby: jruby-9.2
            timeout: 5
     steps:
     - name: Installing libyaml-dev
