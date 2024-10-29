@@ -1,3 +1,7 @@
+require 'rake/clean' # run `rake clobber` to remove generated files
+
+RAGEL_PARSERS = FileList['lib/mail/parsers/*_parser.rl']
+
 # RFC 6532 extensions rely on RFC 3629 UTF-8 chars
 rule 'lib/mail/parsers/rfc5234_abnf_core_rules.rl' => 'lib/mail/parsers/rfc3629_utf8.rl'
 
@@ -20,16 +24,18 @@ end
 rule %r|_parser\.dot\z| => '%X.rl' do |t|
   sh "ragel -s -V -o #{t.name} #{t.source}"
 end
+CLOBBER.concat(RAGEL_PARSERS.ext('.dot'))
 
 rule %r|_parser\.svg\z| => '%X.dot' do |t|
   sh "dot -v -Tsvg -Goverlap=scale -o #{t.name} #{t.source}"
 end
+CLOBBER.concat(RAGEL_PARSERS.ext('.svg'))
 
 desc "Generate Ruby parsers from Ragel definitions"
 namespace :ragel do
-  ragel_parsers = FileList['lib/mail/parsers/*_parser.rl']
-  task :generate => ragel_parsers.ext('.rb')
-  task :svg => ragel_parsers.ext('.svg')
+  task :generate => RAGEL_PARSERS.ext('.rb')
+  task :svg => RAGEL_PARSERS.ext('.svg')
 end
+CLOBBER.concat(RAGEL_PARSERS.ext('.rb'))
 
 task :ragel => 'ragel:generate'
