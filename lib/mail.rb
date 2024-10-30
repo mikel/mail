@@ -36,6 +36,13 @@ module Mail # :doc:
     @@autoloads.each { |_,path| require(path) }
   end
 
+  def self.require_silently(file) # :nodoc:
+    before, $-w = $-w, false
+    require(file)
+  ensure
+    $-w = before
+  end
+
   # Autoload mail send and receive classes.
   require 'mail/network'
 
