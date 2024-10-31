@@ -661,6 +661,11 @@ RSpec.describe Mail::ContentTypeField do
       expect(c.encoded).to eq result
     end
 
+    it "should accept with whitespace around equal sign" do
+      string = %q{application/octet-stream; filename = mikel.jpg}
+      c = Mail::ContentTypeField.new(string)
+      expect(c.filename).to eq 'mikel.jpg'
+    end
   end
 
   describe "handling badly formated content-type fields" do
