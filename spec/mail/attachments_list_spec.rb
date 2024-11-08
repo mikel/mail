@@ -229,6 +229,11 @@ RSpec.describe "reading emails with attachments" do
       expect(mail.attachments[0].filename).to eq 'api.rb'
     end
 
+    it "should not need filename for inline attachments" do
+      mail = read_fixture('emails/attachment_emails/attachment_missing_filename.eml')
+      expect(mail.attachments.length).to eq 1
+    end
+
     it "should decode an attachment" do
       mail = read_fixture('emails/attachment_emails/attachment_pdf.eml')
       expect(mail.attachments[0].decoded.length).to eq 1026

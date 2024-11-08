@@ -1507,6 +1507,41 @@ RSpec.describe Mail::Message do
         end
       end
 
+      describe "attachment?" do
+        context "with content location" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_content_location.eml')
+          end
+
+          it "returns true using the content location filename" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
+        end
+
+        context "with content type filename" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_with_filename.eml')
+          end
+
+          it "returns true using the content type filename" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
+        end
+
+        context "without content location or filename" do
+          subject do
+            read_fixture('emails', 'attachment_emails', 'attachment_missing_filename.eml')
+          end
+
+          it "returns true for the inline attachment" do
+            expect(subject.parts[0].attachment?).to eq(false)
+            expect(subject.parts[1].attachment?).to eq(true)
+          end
+        end
+      end
+
       describe "content-transfer-encoding" do
 
         it "should use 7bit for only US-ASCII chars" do
