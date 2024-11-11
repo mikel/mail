@@ -66,5 +66,11 @@ RSpec.describe Mail::DateField do
       field = Mail::DateField.new("12 Aug 2009 30:00:02 GMT")
       expect(field.date_time).to be_nil
     end
+
+    it "should handle too long invalid date" do
+      # field = Mail::DateField.new("12 Aug 2009 30:00:02 GMT")
+      field = Mail::DateField.new("Wed, 23                              Jan 2019                                               30:51:32                                                -0500")
+      expect(field.date_time).to be_nil
+    end
   end
 end
