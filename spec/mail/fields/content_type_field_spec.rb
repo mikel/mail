@@ -180,14 +180,21 @@ RSpec.describe Mail::ContentTypeField do
   end
 
   describe "class methods" do
+    def with_generator(generator)
+      old, Mail::ContentTypeField.boundary_generator = Mail::ContentTypeField.boundary_generator, generator
+      yield
+    ensure
+      Mail::ContentTypeField.boundary_generator = old
+    end
+
     it "should give back an initialized instance with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/mixed')
-      expect(boundary.encoded).to match(%r{Content-Type: multipart/mixed;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n})
+      expect(boundary.encoded).to match(%r{Content-Type: multipart/mixed;\r\n\sboundary=--_mimepart_[\w]+_[\w]+\r\n})
     end
 
     it "should give back an initialized instance with different type with a unique boundary" do
       boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
-      expect(boundary.encoded).to match(%r{Content-Type: multipart/alternative;\r\n\sboundary="--==_mimepart_[\w]+_[\w]+"\r\n})
+      expect(boundary.encoded).to match(%r{Content-Type: multipart/alternative;\r\n\sboundary=--_mimepart_[\w]+_[\w]+\r\n})
     end
 
     it "should give unique boundaries" do
@@ -198,6 +205,12 @@ RSpec.describe Mail::ContentTypeField do
       end
     end
 
+    it "should allow configuring a boundary generator" do
+      with_generator(-> { 'arbitrary-boundary' }) do
+        boundary = Mail::ContentTypeField.with_boundary('multipart/alternative')
+        expect(boundary.encoded).to match(%r{Content-Type: multipart/alternative;\r\n\sboundary=--arbitrary-boundary})
+      end
+    end
   end
 
   describe "Testing a bunch of email Content-Type fields" do
