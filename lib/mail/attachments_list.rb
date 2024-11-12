@@ -105,5 +105,11 @@ module Mail
       @mime_type && @mime_type.content_type
     end
 
+    # Recursively calls #[]= to merge a hash of attachments
+    def merge!(hash)
+      hash.each do |key, value|
+        self[key] = value
+      end
+    end
   end
 end
