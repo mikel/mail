@@ -319,6 +319,10 @@ class MockIMAP
     @@marked_for_deletion = []
   end
 
+  def capable?(name)
+    false
+  end
+
   def self.mailbox; @@mailbox end    # test only
   def self.readonly?; @@readonly end # test only
 

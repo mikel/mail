@@ -179,6 +179,8 @@ module Mail
           imap.authenticate(settings[:authentication], settings[:user_name], settings[:password])
         end
 
+        imap.enable :utf8 if imap.capable?("ENABLE")
+
         yield imap
       ensure
         if defined?(imap) && imap && !imap.disconnected?
