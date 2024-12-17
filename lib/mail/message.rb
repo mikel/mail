@@ -1918,7 +1918,7 @@ module Mail
     # Returns true if this part is an attachment,
     # false otherwise.
     def attachment?
-      !!find_attachment
+      !!(content_disposition == "attachment" || find_attachment)
     end
 
     # Returns the attachment data if there is any

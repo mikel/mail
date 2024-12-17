@@ -279,6 +279,12 @@ RSpec.describe "reading emails with attachments" do
       expect(mail.attachments.first.filename).to eq "ciële.txt"
     end
 
+    it "should decode an attachment without a filename" do
+      mail = read_fixture('emails/attachment_emails/attachment_without_a_filename.eml')
+      expect(mail.attachments.length).to eq 1
+      expect(mail.attachments.first.filename).to eq nil
+    end
+
     it "should find attachments inside parts with content-type message/rfc822" do
       mail = read_fixture('emails/attachment_emails/attachment_message_rfc822.eml')
       expect(mail.attachments.length).to eq 2
