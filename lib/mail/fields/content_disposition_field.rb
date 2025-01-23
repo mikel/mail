@@ -14,7 +14,13 @@ module Mail
     end
 
     def element
-      @element ||= Mail::ContentDispositionElement.new(value)
+      @element ||=
+        begin
+          Mail::ContentDispositionElement.new(value)
+        rescue Mail::Field::ParseError
+          # Sanitize the value, handle special cases
+          Mail::ContentDispositionElement.new(sanitize(value))
+        end
     end
 
     def disposition_type
@@ -39,6 +45,15 @@ module Mail
     def decoded
       p = "; #{parameters.decoded}" if parameters.length > 0
       "#{disposition_type}#{p}"
+    end
+
+    private
+
+    def sanitize(val)
+      val.
+        gsub(/\s*=\s*/,'='). # remove whitespaces around equal sign
+        gsub(/[; ]+/, '; '). # use '; ' as a separator (or EOL)
+        gsub(/;\s*$/,'') # remove trailing to keep examples below
     end
   end
 end
