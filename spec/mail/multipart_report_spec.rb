@@ -71,6 +71,10 @@ RSpec.describe "multipart/report emails" do
         expect(@mail.final_recipient).to eq 'RFC822; fraser@oooooooo.com.au'
       end
 
+      it "should not give a original recipient" do
+        expect(@mail.original_recipient).to be_nil
+      end
+
       it "should give an error code" do
         expect(@mail.error_status).to eq '4.2.2'
       end
@@ -123,6 +127,32 @@ RSpec.describe "multipart/report emails" do
       end
     end
 
+    describe "original_recipient" do
+
+      before(:each) do
+        @mail = read_fixture('emails', 'multipart_report_emails', 'original_recipient.eml')
+      end
+
+      it "should say action 'failed'" do
+        expect(@mail.action).to eq 'failed'
+      end
+
+      it "should give a final recipient" do
+        expect(@mail.final_recipient).to eq 'rfc822; ********************@**********'
+      end
+
+      it "should give a original recipient" do
+        expect(@mail.original_recipient).to eq 'rfc822;max.mustermann@example.org'
+      end
+
+      it "should give an error code" do
+        expect(@mail.error_status).to eq '5.2.0'
+      end
+
+      it "should give a diagostic code" do
+        expect(@mail.diagnostic_code).to eq 'X-Postfix; Message delivery failed'
+      end
+    end
   end
 
 end

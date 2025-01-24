@@ -1,0 +1,236 @@
+Return-Path: <>
+Received: from test.test.de ([2001:67c:2050:104:0:1:25:1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	by test.test.de with LMTPS
+	id CNd6I+xTm2TC9QEAR2uTIA
+	(envelope-from <>); Tue, 27 Jun 2023 23:26:04 +0200
+Received: from mx1.mailbox.org ([2001:67c:2050:104:0:1:25:1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	by director-02.test.de with LMTPS
+	id uPBwIuxTm2SfsAEAlp8NpQ
+	(envelope-from <>); Tue, 27 Jun 2023 23:26:04 +0200
+Authentication-Results: spamfilter02.test.de (amavisd-new);
+	dkim=pass (1024-bit key) header.d=amazonses.com header.b=XNPmMR4L;
+	dkim=fail (2048-bit key) reason="fail (message has been altered)"
+	header.d=me.com header.b=WM8td8JG
+Received: from a1-222.smtp-out.test.com (a1-222.smtp-out.test.com [54.240.1.222])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.mailbox.org (Postfix) with ESMTPS id 3EF4340E9F
+	for <company@m.test.org>; Tue, 27 Jun 2023 23:25:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=shh3fegwg5fppqsuzphvschd53n6ihuv; d=amazonses.com; t=1687901158;
+	h=Date:From:Subject:To:MIME-Version:Content-Type:Message-Id:Feedback-ID;
+	bh=5oFVzFg9AMUAs5medOqC5E7VCFhD//l/HyRqKtjZbwg=;
+	b=XNPmMR4L4xTJvjqwMG+nbtVVJdJTT21+UxSmeSFu6yHJZACwnaksKXLpT80QUlit
+	4kinn2Y2qdv3ilLCuD/LN/evHoRCRjKEQ0AnsYmyncO9REMN/B72wr/OCSzP3VneFj5
+	pMkMGxCFllme13uBlgBjcLFQFzxb/fC4mADY3Wes=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+	t=1687901156; bh=hPCa8uKovgbIYLO5j5ETt8iwaKC3nV2BWPHo8MAHpyU=;
+	h=Date:From:Subject:To:MIME-Version:Content-Type:Message-Id;
+	b=WM8td8JGD+WqmYOnexCUURrqtTA+HtbZwM8PkpyMXtZXoUK220vleJWmNW0tuei6s
+	 J+Mk8tQWMMEC3aX5cuO3/uXQ2ryHMBA8BVhS/alWNEuCu6BYGyiZxuL3I4aqKkx3i0
+	 uY02pBiMAqBmkcQpxDqqTt4orWasobxtD24FDzDm+O499NrX/iyP0fLbm9zGw4mWk+
+	 cDv/YZ1t15L4lQsVR8Nc61/HT5GEff5n6C2plsFgclaUuYJBwJ8efTzpNrf3kf1DaY
+	 vg79zxYu9o5tKv7wRPOO6zr2QVkGcN+XNnjGIgszYRhgGZGogPlhb3DKFjOauA0B9S
+	 vXfpsQEZpbJUw==
+Date: Tue, 27 Jun 2023 21:25:58 +0000
+From: MAILER-DAEMON@test.com
+Subject: Undelivered Mail Returned to Sender
+To: company@example.org
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="A16F82740131.1687901155/test.me.com"
+Message-ID: <01020188febfbbf8-3c137af1-926b-4d95-9b6d-cb8f8cbbeb09-000000@test.com>
+ =?UTF-8?Q?2903e8d5c8f:6.0.138,18.0.572,17.0.605.474.0000000_definitions?=
+ =?UTF-8?Q?=3D2020-02-14=5F11:2020-02-14=5F02,2020-02-14=5F11,2020-01-23?=
+ =?UTF-8?Q?=5F02_signatures=3D0?=
+X-Proofpoint-Spam-Details: rule=notspam policy=de
+X-Proofpoint-ORIG-GUID: kBugs8aA71OnBg4ophtqEj4BdExztBpb
+X-Proofpoint-GUID: kBugs8aA71OnBg4ophtqEj4BdExztBpb
+X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=fault score=0 bulkscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=461 clxscore=1030 adultscore=0 ndrscore=0 suspectscore=0
+ adjustscore=0 mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2306270195
+Feedback-ID: 1.eu-west-1.0pfipXcwfD+EDqIDx/wxaiLX5lpJCKjcUYBsIJh4b/Q=:AmazonSES
+X-SES-Outgoing: 2023.06.27-54.240.1.222
+X-MBO-SPAM-Probability:
+X-Rspamd-Queue-Id: 3EF4340E9F
+X-Rspamd-Score: -10.84 / 15.00 / 15.00
+
+This is a MIME-encapsulated message.
+--A16F82740131.1687901155/test.me.com
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host test.me.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<max.mustermann@example.org>: Message delivery failed
+
+--A16F82740131.1687901155/test.me.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; test.me.com
+X-Postfix-Queue-ID: A16F82740131
+X-Postfix-Sender: rfc822; 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
+Arrival-Date: Tue, 27 Jun 2023 21:25:53 +0000 (UTC)
+
+Final-Recipient: rfc822; ********************@**********
+Original-Recipient: rfc822;max.mustermann@example.org
+Action: failed
+Status: 5.2.0
+Diagnostic-Code: X-Postfix; Message delivery failed
+
+--A16F82740131.1687901155/test.me.com
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Return-Path: <01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org>
+Received: from a4-21.smtp-out.test.com (a4-21.smtp-out.test.com [54.240.4.21])
+	by test.me.com (Postfix) with ESMTPS id A16F82740131
+	for <max.mustermann@example.org>; Tue, 27 Jun 2023 21:25:53 +0000 (UTC)
+X-ICL-SCORE: 3.333033230041
+X-ICL-INFO: GAtbVUseBVFGSVVESgMGUkFIRFcUWUIPAApbVRYSFhEAREQZF15TQFUcAkpaAAdSR0lXT0BWUwAT
+ QAAVGR0DBEEaBU9AAhsHRk0DWkxSBVRYQFMRGR1XBEJLAxRPCA4DFkhLR0gABlJFOQsWEVwYD1sW
+ CBUXUUQGWxYUEFoQUAZIWwtZF15UDRQLAlkXQlFAVQoPB0USA1ZbS1JHVgQYUERbRh8dXFlfVxhS
+ WkoBGBEYDRZaF0VCTBAMSwAdQ0JPRFcHGhlKWQwGHBVZG19bQFUJEgVFEldWWEtXWQtdQhJYFhMD
+ VlVDTwIcFQNVARgDGBgcGBZDUxFbGgkaWhBSBkhbC1kXXlQNFAsCWRdCUU4UFAcNF15FBwZXBRgV
+ EhYPHB1bVUQAB1JHSVdPQFZTABNAABUZHQMEQRoFT0ACGwdGTQNaTFIFVFhAUxEZHVcEQksDFE8I
+ DgMWSEtHSAAGUkU5AwJVR1MRAVRXWRldVxgaFxUSCx5VDRhHRFcKUwtAGBAFHx1RWg8aCgMZVlte
+ AxEcCx44WVUOGgwCWRtfW0A=
+Authentication-Results: bimi.example.org; bimi=skipped reason="insufficient dmarc"
+X-ARC-Info: policy=fail; arc=none
+Authentication-Results: arc.example.org; arc=none
+Authentication-Results: dmarc.example.org; dmarc=pass header.from=m.test.org
+X-DMARC-Info: pass=pass; dmarc-policy=none; s=r1; d=r1; pdomain=m.test.org
+X-DMARC-Policy: v=DMARC1;p=none;ruf=mailto:admin@test.org
+Authentication-Results: dkim-verifier.example.org;
+	dkim=pass (1024-bit key) header.d=m.test.org header.i=@m.test.org header.b=HiWYXEZE
+Authentication-Results: dkim-verifier.example.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=Fgl5nf9l
+Authentication-Results: spf.example.org; spf=pass (spf.example.org: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org designates 54.240.4.21 as permitted sender) smtp.mailfrom=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
+Received-SPF: pass (spf.example.org: domain of 01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org designates 54.240.4.21 as permitted sender) receiver=spf.example.org; client-ip=54.240.4.21; helo=a4-21.smtp-out.test.com; envelope-from=01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@mail.m.test.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=wuhmxp5lbtxz54yc6ydgztmqksnev4si; d=m.test.org; t=1687901151;
+	h=Date:From:Sender:Reply-To:To:Message-ID:Subject:Mime-Version:Content-Type:Content-Transfer-Encoding;
+	bh=5SN2KKDpN9BWHCBXPl1c4vR6oMcb0DEF2COhyZT17Ww=;
+	b=HiWYXEZEgLphtSu88cWYfz/rPSoE0vATSrhepBqkuhLuZd1Nl8CKSK9zYuJxWZn1
+	5kn2FEoPCV24syJdQ6ddifbP9gDzUZP6TQrJlmqe9mMhdNSbx7wf1ro5/OHgOSzoRgM
+	TVrCRfp8qk5FqIep7peW670e6MrYTvMZmFWVU5wk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=shh3fegwg5fppqsuzphvschd53n6ihuv; d=amazonses.com; t=1687901151;
+	h=Date:From:Sender:Reply-To:To:Message-ID:Subject:Mime-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=5SN2KKDpN9BWHCBXPl1c4vR6oMcb0DEF2COhyZT17Ww=;
+	b=Fgl5nf9lc4jwkcP20peDtTzPoyksr77668tBJ1IoO8joPCMSKnOH0hKFtrtm74ry
+	hC19HXDgPGFsggb2GTG2Qtcwu19qVwvp10mHNgNVV27npAVyfL9NjzgGfLgtTfWNLfJ
+	+ptyrNuIwCq61Zi/vnkbKkJoFoqO//siKglskJxg=
+Date: Tue, 27 Jun 2023 21:25:51 +0000
+From: Max Mustermann <company@m.test.org>
+Sender: Max Mustermann <company@m.test.org>
+Reply-To: company@m.test.org
+To: max.mustermann@example.org
+Message-ID: <01020188febf9fba-5f4cc882-e34e-4b36-95fa-af72ec788ac1-000000@test.com>
+Subject: =?UTF-8?Q?Empfangsbest=C3=A4tigung_Bewerbung?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_649b53df79e0_22ab99ecef428645ba";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: 1.eu-west-1.g+ygEoeqoDJ2CzTX6Jq7OQMfEZcIZO9YwzMI+gomw+E=:AmazonSES
+X-SES-Outgoing: 2023.06.27-54.240.4.21
+X-MANTSH: 1TEIXR1geGFoaGkNHB1tfQEQaExsfGxkaGxEKTEMXGxoEGxsYBBIcBB8fEBseGh8
+ aEQpMWRcbGxIRCllEF2sTTn97GWZ6BVlTEQpZTRdkRURPEQpZSRcacRsGGncGGxIGGgYaBhsaG
+ gYacRoQGncGGgYaBhoGGgYaBhpxGhAadwYaEQpZXhdsbHkRCkNOF01eXWEbbmh8eVNLB215SUB
+ YQVlDQGBkZgd9f3lGc0NbEQpYXBcZBBoEHxoFGxoaBB0bBBscGgQTGBAbHhofGhEKXlkXSBp6Q
+ hMRCk1cFx4aHREKTFoXaG1Na2sRCkxGF01rEQpDWhcfHgQYHhoEHgQYGxEKQl4XGxEKQlwXGxE
+ KQksXbRxDHWBrZ0RPUkMRCkJJF2R6aEkFfkBbUBNNEQpCRRduc2MbE11selJ8ZxEKQk4XZHpoS
+ QV+QFtQE00RCkJMF2BdbW8cZkdfY0toEQpCbBdmTB9BBVt7TgVOYBEKQkAXZ2loWmMfaWgaZBI
+ RCkJYF2lDGUhwTFMbRntzEQpNXhcHGxEKWlgXGxEKcGgXb2Zye05bcxxCW20QBxkaEQpwaBdle
+ kwaQ1xBb3JEHRAHGRoRCnBoF29vUmBzSWVlE3BnEAcZGhEKcGgXZUd7BU0YWlBIbwEQBxkaEQp
+ waBdneQESa2lkWFJ+GxAHGRoRCnB9F3pgcntfZ1kBWUNAEAcZGhEKcH0XZH59Qx9eS0YcGmAQB
+ xkaEQpwfxdsbGlcZGsZf0ceaxAHGRoRCnBfF2lLSGISfVhlXE1zEAcZGhEKcF8XYER8Hk1FQX5
+ ATxwQBxkaEQpwbBdpYm1ebRluGmxBbBAHGRoRCm1+FwcbEQpYTRdLEQ==
+X-CLX-Shades: None
+X-Proofpoint-GUID: gtwK1DBVSya-GScjrksijJNL-WUSlYiq
+X-Proofpoint-ORIG-GUID: gtwK1DBVSya-GScjrksijJNL-WUSlYiq
+
+
+----==_mimepart_649b53df79e0_22ab99ecef428645ba
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Sehr geehrter Herr Max Mustermann!
+
+
+----==_mimepart_649b53df79e0_22ab99ecef428645ba
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content=3D'text/html; charset=3DUTF-8' http-equiv=3D'Content-Type=
+'/>
+    <link href=3D"https://fonts.test.org/roboto.300,400,500,700.css" r=
+el=3D"stylesheet">
+  <style type=3D"text/css">
+
+    a,
+    a:hover,
+    a:visited {
+      color: #782327;
+    }
+
+    body { margin: 0; padding: 0; background-color: #fff; font-family: Ro=
+boto, Arial, sans-serif; } p { margin: 0 0 10px 0; } .footer { font-size:=
+ 12px; } .footer a { color: #898989; } h3 { margin: 0 0 10px 0; font-size=
+: 16px; font-weight: 500; }
+
+  </style>
+</head>
+<body class=3D"">
+  <table class=3D"content" style=3D"background-color: #fff;" border=3D"0"=
+ width=3D"100%" cellspacing=3D"0" cellpadding=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"padding: 32px 16px 0px 16px; color: #4D4D4D;"><img src=
+=3D'https://cdn2.test.org/uploads/business/logo/718/company.png' alt=3D=
+"Company" width=3D"200" style=3D"width: 200px;max-width:200px=
+;"/></td>
+    </tr>
+  </tbody>
+</table>
+<table class=3D"content" style=3D"background-color: #fff;" border=3D"0" w=
+idth=3D"100%" cellspacing=3D"0" cellpadding=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"padding: 32px 32px 22px 32px; color: #4D4D4D;">
+
+<p>Sehr geehrter Herr Max Mustermann</p>
+</td>
+</tr>
+</tbody>
+</table>
+<hr style=3D"height: 1px; background:none; border: solid 1px #8D8D8D; bor=
+der-width: 1px 0 0 0; margin-left: 16px; margin-right: 16px;"/>
+</body>
+
+</html>
+
+----==_mimepart_649b53df79e0_22ab99ecef428645ba--
+
+--A16F82740131.1687901155/test.me.com--
