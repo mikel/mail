@@ -2,26 +2,24 @@ require 'mail/utilities'
 
 module Mail
   class CommonDateField < NamedStructuredField #:nodoc:
-    def self.singular?
-      true
-    end
-
-    def self.normalize_datetime(string)
-      if Utilities.blank?(string)
-        datetime = ::DateTime.now
-      else
-        stripped = string.to_s.gsub(/\(.*?\)/, '').squeeze(' ')
-        begin
-          datetime = ::DateTime.parse(stripped)
-        rescue ArgumentError => e
-          raise unless 'invalid date' == e.message
-        end
+    class << self
+      def singular?
+        true
       end
 
-      if datetime
-        datetime.strftime('%a, %d %b %Y %H:%M:%S %z')
-      else
-        string
+      def normalize_datetime(string)
+        if Utilities.blank?(string)
+          datetime = ::DateTime.now
+        else
+          stripped = string.to_s.gsub(/\(.*?\)/, '').squeeze(' ')
+          datetime = Utilities.parse_date_time(stripped)
+        end
+
+        if datetime
+          datetime.strftime('%a, %d %b %Y %H:%M:%S %z')
+        else
+          string
+        end
       end
     end
 
@@ -31,9 +29,7 @@ module Mail
 
     # Returns a date time object of the parsed date
     def date_time
-      ::DateTime.parse("#{element.date_string} #{element.time_string}")
-    rescue ArgumentError => e
-      raise e unless e.message == 'invalid date'
+      Utilities.parse_date_time("#{element.date_string} #{element.time_string}")
     end
 
     def default
