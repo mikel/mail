@@ -1,6 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'mail/parsers/content_location_parser'
+Mail.require_silently 'mail/parsers/content_location_parser'
 
 module Mail
   class ContentLocationElement #:nodoc:
