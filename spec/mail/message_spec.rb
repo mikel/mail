@@ -1719,11 +1719,6 @@ RSpec.describe Mail::Message do
   describe "helper methods" do
 
     describe "==" do
-      before(:each) do
-        # Ensure specs don't randomly fail due to messages being generated 1 second apart
-        time = DateTime.now
-        expect(DateTime).to receive(:now).at_least(:once).and_return(time)
-      end
 
       it "should be implemented" do
         expect { Mail.new == Mail.new }.not_to raise_error
@@ -1738,19 +1733,19 @@ RSpec.describe Mail::Message do
         expect(m2[:message_id]).to be_nil
       end
 
-      it "should ignore the message id value if self has a nil message id" do
+      it "should not ignore the message id value if self has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
-        expect(m1).to eq m2
+        expect(m1).not_to eq m2
         # confirm there are no side-effects in the comparison
         expect(m1[:message_id]).to be_nil
         expect(m2[:message_id].value).to eq '<1234@test.lindsaar.net>'
       end
 
-      it "should ignore the message id value if other has a nil message id" do
+      it "should not ignore the message id value if other has a nil message id" do
         m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1234@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello there")
         m2 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello there")
-        expect(m1).to eq m2
+        expect(m1).not_to eq m2
         # confirm there are no side-effects in the comparison
         expect(m1[:message_id].value).to eq '<1234@test.lindsaar.net>'
         expect(m2[:message_id]).to be_nil
@@ -1763,6 +1758,15 @@ RSpec.describe Mail::Message do
         # confirm there are no side-effects in the comparison
         expect(m1.message_id).to eq '4321@test.lindsaar.net'
         expect(m2.message_id).to eq '1234@test.lindsaar.net'
+      end
+
+      it "should be transitive" do
+        m1 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <1@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
+        m2 = Mail.new("To: mikel@test.lindsaar.net\r\nMessage-ID: <2@test.lindsaar.net>\r\nSubject: Yo!\r\n\r\nHello")
+        m3 = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Yo!\r\n\r\nHello")
+        if m1 == m3 && m2 == m3
+          expect(m1).to eq m2 # Check transitivity
+        end
       end
     end
 
