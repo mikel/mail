@@ -10,40 +10,39 @@ on:
 jobs:
   ruby:
     name: ${{ matrix.ruby }} (timeout ${{ matrix.timeout }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: ${{ matrix.timeout }}
     strategy:
       fail-fast: false
       matrix:
        include:
-         - ruby: 2.5
-           timeout: 5
-         - ruby: 2.6
-           timeout: 5
-         - ruby: 2.7
-           timeout: 5
-         - ruby: '3.0'
-           timeout: 5
          - ruby: 3.1
            timeout: 5
+           os: ubuntu-latest
          - ruby: 3.2
            timeout: 5
+           os: ubuntu-latest
          - ruby: 3.3
            timeout: 5
+           os: ubuntu-latest
+         - ruby: ruby
+           timeout: 5
+           os: ubuntu-latest
+         - ruby: head
+           timeout: 5
+           os: ubuntu-latest
          - ruby: truffleruby
            timeout: 50
+           os: ubuntu-latest
          - ruby: truffleruby-head
            timeout: 50
+           os: ubuntu-latest
          - ruby: jruby
            timeout: 5
+           os: ubuntu-22.04
          - ruby: jruby-head
            timeout: 5
-         - ruby: jruby-9.4
-           timeout: 5
-         - ruby: jruby-9.3
-           timeout: 5
-         - ruby: jruby-9.2
-           timeout: 5
+           os: ubuntu-22.04
     steps:
     - name: Installing libyaml-dev
       run: |
