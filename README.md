@@ -49,19 +49,9 @@ our documentation, add new features—up to you! Thank you for pitching in.
 
 Mail is tested against:
 
-* Ruby: 2.5
-* Ruby: 2.6
-* Ruby: 2.7
-* Ruby: 3.0
-* Ruby: 3.1
-* Ruby: 3.2
-* JRuby: 9.2
-* JRuby: 9.3
-* JRuby: 9.4
-* JRuby: stable
-* JRuby: head
-* Truffleruby: stable
-* Truffleruby: head
+* Ruby: 3.1, 3.2, 3.3, stable, head
+* JRuby: stable, head
+* Truffleruby: stable, head
 
 As new versions of Ruby are released, Mail will be compatible with support for the "preview" and all "normal maintenance", "security maintenance" and the two most recent "end of life" versions listed at the [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/) page.  Pull requests to assist in adding support for new preview releases are more than welcome.
 
