@@ -1,4 +1,4 @@
-# encoding: utf-8
+lib/mail/utilities.rbb# encoding: utf-8
 # frozen_string_literal: true
 require 'mail/constants'
 require 'socket'
@@ -290,7 +290,7 @@ module Mail
       elsif value.kind_of?(String)
         value !~ /\S/
       elsif value.kind_of?(Array)
-        value.compact.size >= 1
+        value.compact.size >= 1 && value.any? { |value| blank?(value) }
       else
         value.respond_to?(:empty?) ? value.empty? : !value
       end
