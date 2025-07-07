@@ -289,6 +289,8 @@ module Mail
         true
       elsif value.kind_of?(String)
         value !~ /\S/
+      elsif value.kind_of?(Array)
+        value.compact.size >= 1
       else
         value.respond_to?(:empty?) ? value.empty? : !value
       end
