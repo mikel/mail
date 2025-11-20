@@ -166,7 +166,7 @@ RSpec.describe Mail::ContentTypeField do
       expect(c.parameters).to eql({"charset" => 'US-ASCII', "format" => 'flowed'})
     end
 
-    it "should return boundry parameters" do
+    it "should return boundary parameters" do
       c = Mail::ContentTypeField.new('multipart/mixed; boundary=Apple-Mail-13-196941151')
       expect(c.parameters).to eql({"boundary" => 'Apple-Mail-13-196941151'})
     end
