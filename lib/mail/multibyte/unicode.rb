@@ -172,7 +172,7 @@ module Mail
             ncp << (HANGUL_TBASE + tindex) unless tindex == 0
             decomposed.concat ncp
           # if the codepoint is decomposable in with the current decomposition type
-          elsif (ncp = database.codepoints[cp].decomp_mapping) and (!database.codepoints[cp].decomp_type || type == :compatability)
+          elsif (ncp = database.codepoints[cp].decomp_mapping) and (!database.codepoints[cp].decomp_type || type == :compatibility)
             decomposed.concat decompose_codepoints(type, ncp.dup)
           else
             decomposed << cp
@@ -307,9 +307,9 @@ module Mail
         when :c
           compose_codepoints(reorder_characters(decompose_codepoints(:canonical, codepoints)))
         when :kd
-          reorder_characters(decompose_codepoints(:compatability, codepoints))
+          reorder_characters(decompose_codepoints(:compatibility, codepoints))
         when :kc
-          compose_codepoints(reorder_characters(decompose_codepoints(:compatability, codepoints)))
+          compose_codepoints(reorder_characters(decompose_codepoints(:compatibility, codepoints)))
         else
           raise ArgumentError, "#{form} is not a valid normalization variant", caller
         end.pack('U*')
