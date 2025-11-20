@@ -663,7 +663,7 @@ RSpec.describe Mail::ContentTypeField do
 
   end
 
-  describe "handling badly formated content-type fields" do
+  describe "handling badly formatted content-type fields" do
 
     it "should handle missing sub-type on a text content type" do
       c = Mail::ContentTypeField.new('text')
