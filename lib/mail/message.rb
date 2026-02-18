@@ -228,6 +228,7 @@ module Mail
     # This setting is ignored by mail (though still available as a flag) if you
     # define a delivery_handler
     attr_accessor :raise_delivery_errors
+    attr_reader :response
 
     def self.default_charset; @@default_charset; end
     def self.default_charset=(charset); @@default_charset = charset; end
@@ -2145,7 +2146,7 @@ module Mail
     def do_delivery
       begin
         if perform_deliveries
-          delivery_method.deliver!(self)
+          @response = delivery_method.deliver!(self)
         end
       rescue => e # Net::SMTP errors or sendmail pipe errors
         raise e if raise_delivery_errors
