@@ -532,4 +532,56 @@ RSpec.describe "Utilities Module" do
       expect(decoded).to eq "a"
     end
   end
+
+  describe '.q_value_decode' do
+    it 'handles Q-encoded strings' do
+      decoded = Mail::Utilities.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
+
+      expect(decoded).to eq "This is あ string"
+    end
+
+    it 'handles Q-encoded strings with multiple encoded words' do
+      decoded = Mail::Utilities.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?= unencoded =?UTF-8?Q?part?=")
+
+      expect(decoded).to eq "This is あ string unencoded part"
+    end
+
+    it 'handles Q-encoded strings with complex format' do
+      decoded = Mail::Utilities.q_value_decode('From: "Vardenis Pavardenis" =?utf-8?Q?agent?=@example.com')
+
+      expect(decoded).to eq('From: "Vardenis Pavardenis" agent@example.com')
+    end
+
+    it 'tries to decode the string even when format is incorrect' do
+      decoded = Mail::Utilities.q_value_decode('=?utf-8?Q?agent?Q?spoof=40example.org?=@example.com')
+
+      expect(decoded).to eq('agent?Q?spoof@example.org@example.com')
+    end
+  end
+
+  describe '.b_value_decode' do
+    it 'handles B-encoded strings' do
+      decoded = Mail::Utilities.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n=?=")
+
+      expect(decoded).to eq "This is あ string"
+    end
+
+    it 'handles B-encoded strings with multiple encoded words' do
+      decoded = Mail::Utilities.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n=?= unencoded =?UTF-8?B?cGFydA==?=")
+
+      expect(decoded).to eq "This is あ string unencoded part"
+    end
+
+    it 'handles B-encoded strings with complex format' do
+      decoded = Mail::Utilities.b_value_decode('From: "Vardenis Pavardenis" =?utf-8?B?YWdlbnQ=?=@example.com')
+
+      expect(decoded).to eq('From: "Vardenis Pavardenis" agent@example.com')
+    end
+
+    it 'tries to decode the string even when format is incorrect' do
+      decoded = Mail::Utilities.q_value_decode('=?utf-8?B?YWdlbnQ=?B?c3Bvb2ZAZXhhbXBsZS5vcmc=?=@example.com')
+
+      expect(decoded).to eq('=?utf-8?B?YWdlbnQ=?B?c3Bvb2ZAZXhhbXBsZS5vcmc=?=@example.com')
+    end
+  end
 end

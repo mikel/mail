@@ -106,7 +106,6 @@ RSpec.describe Mail::AddressList do
       expect(list.addresses.length).to eq 2
     end
 
-
     it "should create an address instance for each address returned" do
       list = Mail::AddressList.new('sam@me.com, my_group: mikel@me.com, bob@you.com;')
       list.addresses.each do |address|
@@ -119,6 +118,11 @@ RSpec.describe Mail::AddressList do
       expect(list.group_names).to eq ["my_group"]
     end
 
+    it 'should handle wrongly Q encoded email addresses' do
+      q_encoded = '"John Doe" <=?UTF-8?Q?spoof?Q?agent?=@example.com>'
+      list = Mail::AddressList.new(q_encoded)
+      expect(list.addresses.first.address).to eq 'spoof?Q?agent@example.com'
+    end
   end
 
 end

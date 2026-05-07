@@ -416,16 +416,28 @@ module Mail
     end
 
     def Utilities.b_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
-      if match
-        charset = match[1]
-        str = Utilities.decode_base64(match[2])
-        str = charset_encoder.encode(str, charset)
+      # match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
+      # match = str.match(/=\?([^?]+)\?[Bb]\?([^?]+)\?=/m)
+      # if match
+      #   charset = match[1]
+      #   str = Utilities.decode_base64(match[2])
+      #   str = charset_encoder.encode(str, charset)
+      # end
+
+      b_decoded = str.gsub(/=\?([^?]+)\?[Bb]\?([^?]*)\?=/m) do |match|
+        charset = $1
+
+        string = Utilities.decode_base64($2)
+
+        begin
+          charset_encoder.encode(string, charset)
+        rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError
+          warn "WARNING: Encoding conversion failed #{$!}"
+          string.dup.force_encoding(Encoding::UTF_8)
+        end
       end
-      transcode_to_scrubbed_utf8(str)
-    rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError, Encoding::InvalidByteSequenceError
-      warn "WARNING: Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+
+      transcode_to_scrubbed_utf8(b_decoded)
     end
 
     def Utilities.q_value_encode(str, encoding = nil)
@@ -434,22 +446,28 @@ module Mail
     end
 
     def Utilities.q_value_decode(str)
-      match = str.match(/\=\?(.+)?\?[Qq]\?(.*)\?\=/m)
-      if match
-        charset = match[1]
-        string = match[2].gsub(/_/, '=20')
-        # Remove trailing = if it exists in a Q encoding
-        string = string.sub(/\=$/, '')
-        str = Encodings::QuotedPrintable.decode(string)
-        str = charset_encoder.encode(str, charset)
+      q_decoded = str.gsub(/=\?([^?]+)\?[Qq]\?((?:[^?]|\?(?!\=))*)\?=/m) do |_match|
+        charset = $1
+        string  = $2
+          .gsub(/_/, '=20')
+          .sub(/\=$/, '') # Remove trailing = if it exists in a Q encoding
+
+        unquoted_printable = Encodings::QuotedPrintable.decode(string)
+        decoded = begin
+                    charset_encoder.encode(unquoted_printable, charset)
+                  rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
+                    warn "WARNING: Encoding conversion failed #{$!}"
+                    unquoted_printable.dup.force_encoding(Encoding::UTF_8)
+                  end
+
         # We assume that binary strings hold utf-8 directly to work around
         # jruby/jruby#829 which subtly changes String#encode semantics.
-        str.force_encoding(Encoding::UTF_8) if str.encoding == Encoding::ASCII_8BIT
+        decoded.force_encoding(Encoding::UTF_8) if decoded.encoding == Encoding::ASCII_8BIT
+
+        decoded
       end
-      transcode_to_scrubbed_utf8(str)
-    rescue Encoding::UndefinedConversionError, ArgumentError, Encoding::ConverterNotFoundError
-      warn "WARNING: Encoding conversion failed #{$!}"
-      str.dup.force_encoding(Encoding::UTF_8)
+
+      transcode_to_scrubbed_utf8(q_decoded)
     end
 
     def Utilities.param_decode(str, encoding)
