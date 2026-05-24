@@ -1570,6 +1570,10 @@ module Mail
       delivery_status_part and delivery_status_part.final_recipient
     end
 
+    def original_recipient
+      delivery_status_part and delivery_status_part.original_recipient
+    end
+
     def error_status
       delivery_status_part and delivery_status_part.error_status
     end
