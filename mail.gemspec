@@ -29,4 +29,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rufo')
 
   s.files = Dir.glob(%w[ README.md MIT-LICENSE lib/**/* ])
+
+  s.metadata["bug_tracker_uri"] = "#{s.homepage}/issues"
+  s.metadata["changelog_uri"] = "#{s.homepage}/releases"
+  s.metadata["documentation_uri"] = "https://rubydoc.info/gems/#{s.name}/#{s.version}"
+  s.metadata["homepage_uri"] = s.homepage
+  s.metadata["source_code_uri"] = "#{s.homepage}/src/tag/v#{s.version}"
 end
