@@ -151,7 +151,25 @@ module Mail
       end
 
       def start_smtp_session(&block)
-        build_smtp_session.start(settings[:domain], settings[:user_name], settings[:password], settings[:authentication], &block)
+        if RUBY_VERSION >= '3.0'
+          build_smtp_session.start(
+            settings[:domain],
+            settings[:user_name],
+            settings[:password],
+            settings[:authentication],
+            tls_hostname: settings[:tls_hostname],
+            tls_verify: settings[:tls_verify],
+            &block
+          )
+        else
+          build_smtp_session.start(
+            settings[:domain],
+            settings[:user_name],
+            settings[:password],
+            settings[:authentication],
+            &block
+          )
+        end
       end
 
       def build_smtp_session
