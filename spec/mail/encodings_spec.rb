@@ -283,18 +283,20 @@ RSpec.describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
-    it "should not fold a long string that has no spaces" do
+    it "should fold a long non-ascii string that has no spaces" do
       original = "ВосстановлениеВосстановлениеВашегопароля"
       if original.respond_to?(:force_encoding)
         original = original.dup.force_encoding('UTF-8')
-        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
-      else
-        result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       end
+      result = "Subject: =?UTF-8?Q?=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=BE=D1=81=D1=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5=D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE=D0=BF=D0=B0=D1=80=D0=BE=D0=BB=D1=8F?=\r\n"
       mail = Mail.new
       mail.subject = original
       expect(mail[:subject].decoded).to eq original
-      expect(mail[:subject].encoded).to eq result
+      encoded = mail[:subject].encoded
+      # check lines are not too long
+      encoded.split("\r\n").each { |line| expect(line.length).to be <= 78 }
+      # check expected contents, ignoring folding
+      expect(encoded.gsub("?=\r\n =?UTF-8?Q?", '')).to eq result
     end
 
     it "should round trip a complex string properly" do
@@ -306,13 +308,27 @@ RSpec.describe Mail::Encodings do
       mail = Mail.new
       mail.subject = original
       expect(mail[:subject].decoded).to eq original
-      expect(mail[:subject].encoded).to eq result
+      encoded = mail[:subject].encoded
+      # check lines are not too long
+      encoded.split("\r\n").each { |line| expect(line.length).to be <= 78 }
+      # check expected contents, ignoring folding
+      expect(encoded.gsub("?=\r\n =?UTF-8?Q?", '')).to eq result.gsub("?=\r\n =?UTF-8?Q?", '')
+
       mail = Mail.new(mail.encoded)
       expect(mail[:subject].decoded).to eq original
-      expect(mail[:subject].encoded).to eq result
+      encoded = mail[:subject].encoded
+      # check lines are not too long
+      encoded.split("\r\n").each { |line| expect(line.length).to be <= 78 }
+      # check expected contents, ignoring folding
+      expect(encoded.gsub("?=\r\n =?UTF-8?Q?", '')).to eq result.gsub("?=\r\n =?UTF-8?Q?", '')
+
       mail = Mail.new(mail.encoded)
       expect(mail[:subject].decoded).to eq original
-      expect(mail[:subject].encoded).to eq result
+      encoded = mail[:subject].encoded
+      # check lines are not too long
+      encoded.split("\r\n").each { |line| expect(line.length).to be <= 78 }
+      # check expected contents, ignoring folding
+      expect(encoded.gsub("?=\r\n =?UTF-8?Q?", '')).to eq result.gsub("?=\r\n =?UTF-8?Q?", '')
     end
 
     it "should round trip another complex string (koi-8)" do

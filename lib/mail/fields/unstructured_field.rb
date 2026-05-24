@@ -98,36 +98,51 @@ module Mail
       result.join("\r\n\s")
     end
 
+    # folding strategy:
+    # The line is split into words separated by space or tab.
+    # If the line contains any non-ascii characters, or any words are expected to be too long to fit,
+    # then they are additionally split, and the line is marked for encoding
+    # 
+    # The list of individual words is then used to fill up the output lines without overflowing.
+    # This is not always guaranteed to work, because there is a wide variation in the number of
+    # characters that are needed to encode a given character. If the resulting line would be too
+    # long, divide the original word into two chunks and add the pieces separately.
     def fold(prepend = 0) # :nodoc:
+      #  prepend is the length to allow for the header prefix on the first line (e.g. 'Subject: ')
       encoding       = normalized_encoding
+      encoding_overhead = "=?#{encoding}?Q??=".length
+      # The encoded string goes here      ^ (between the ??)
+      max_safe_word = 78 - encoding_overhead - prepend # allow for encoding overhead + prefix
       decoded_string = decoded.to_s
-      should_encode  = !decoded_string.ascii_only?
+      words = decoded_string.split(/[ \t]/)
+      should_encode  = !decoded_string.ascii_only? || words.any? {|word| word.length > max_safe_word}
+      encoding_overhead = 0 unless should_encode
       if should_encode
+        max_safe_re = Regexp.new(".{#{max_safe_word}}|.+$")
         first = true
-        words = decoded_string.split(/[ \t]/).map do |word|
+        words = words.map do |word|
           if first
             first = !first
           else
             word = " #{word}"
           end
-          if !word.ascii_only?
-            word
+          if word.ascii_only?
+            word.scan(max_safe_re)
           else
             word.scan(/.{7}|.+$/)
           end
         end.flatten
-      else
-        words = decoded_string.split(/[ \t]/)
       end
 
       folded_lines   = []
       while !words.empty?
-        limit = 78 - prepend
-        limit = limit - 7 - encoding.length if should_encode
+        limit = 78 - prepend - encoding_overhead
         line = String.new
         first_word = true
         while !words.empty?
           break unless word = words.first.dup
+
+          original_word = word # in case we need to try again
 
           # Convert on 1.9+ only since we aren't sure of the current
           # charset encoding on 1.8. We'd need to track internal/external
@@ -140,23 +155,32 @@ module Mail
           word = encode_crlf(word)
           # Skip to next line if we're going to go past the limit
           # Unless this is the first word, in which case we're going to add it anyway
-          # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
-          # (The fix, it seems, would be to use encoded-word encoding on it, because that way you can break it across multiple lines and
-          # the linebreak will be ignored)
-          break if !line.empty? && (line.length + word.length + 1 > limit)
+          break if !line.empty? && (line.length + word.length >= limit)
           # Remove the word from the queue ...
           words.shift
           # Add word separator
           if first_word
             first_word = false
           else
-            line << " " if !should_encode
+            line << " " unless should_encode
           end
 
           # ... add it in encoded form to the current line
+          #  but first check if we have overflowed
+          # should only happen for the first word on a line
+          if should_encode && (line.length + word.length > limit)
+            word, remain = original_word.scan(/.{3}|.+$/) # roughly half the original split
+            words.unshift remain # put the unused bit back
+            # re-encode shorter word
+            if charset && word.respond_to?(:encoding)
+              word = Encodings.transcode_charset(word, word.encoding, charset)
+            end
+            word = encode(word)
+            word = encode_crlf(word)  
+          end
           line << word
         end
-        # Encode the line if necessary
+        # Mark the line as encoded if necessary
         line = "=?#{encoding}?Q?#{line}?=" if should_encode
         # Add the line to the output and reset the prepend
         folded_lines << line
