@@ -55,4 +55,13 @@ RSpec.describe Mail::ReceivedField do
     expect(t.date_time).to eq nil
     expect(t.formatted_date).to eq nil
   end
+
+  it "should handle too long invalid date" do
+    t = Mail::ReceivedField.new("mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>; Mon, (envelope-from <g-3851351679-7322-354668012-1559235622088@bounce.news.mapp.com (g-3851351679-7322-354668012-1559235622088@bounce.news.mapp.com)>) 29 Jul 2013 23:12:46 +0900")
+
+    expect(t.name).to eq "Received"
+    expect(t.info).to eq "mail.example.com (192.168.1.1) by mail.example.com with (esmtp) id (qid)  for <foo@example.com>"
+    expect(t.date_time).to eq nil
+    expect(t.formatted_date).to eq nil
+  end
 end

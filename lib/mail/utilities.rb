@@ -226,6 +226,21 @@ module Mail
       str.to_s.downcase.tr(Constants::HYPHEN, Constants::UNDERSCORE)
     end
 
+    # Parses a string into a DateTime object, returning nil
+    # if the string provided is not a valid date or if its
+    # size exceeds Ruby's default input length limit for
+    # parsing dates
+    #
+    # Example:
+    #
+    #  DateTime.parse("2022-12-07 20:57:43 +0100") #=> <DateTime: 2022-12-07T20:57:43+01:00 ((2459921j,71863s,0n),+3600s,2299161j)>
+    #  DateTime.parse("invalid") #=> nil
+    def parse_date_time(string)
+      ::DateTime.parse(string)
+    rescue ArgumentError => e
+      raise unless e.message =~ /\A(invalid date|string length \(\d+\) exceeds the limit \d+)\z/
+    end
+
     def map_lines( str, &block )
       str.each_line.map(&block)
     end
