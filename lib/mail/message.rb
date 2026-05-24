@@ -1423,12 +1423,12 @@ module Mail
     end
 
     def has_content_type?
-      tmp = header[:content_type].main_type rescue nil
+      tmp = header[:content_type] && header[:content_type].main_type
       !!tmp
     end
 
     def has_charset?
-      tmp = header[:content_type].parameters rescue nil
+      tmp = header[:content_type] && header[:content_type].parameters
       !!(has_content_type? && tmp && tmp['charset'])
     end
 
@@ -1497,7 +1497,7 @@ module Mail
 
     # Returns the MIME media type of part we are on, this is taken from the content-type header
     def mime_type
-      has_content_type? ? header[:content_type].string : nil rescue nil
+      has_content_type? ? header[:content_type].string : nil
     end
 
     # Returns the character set defined in the content type field
@@ -1518,17 +1518,17 @@ module Mail
 
     # Returns the main content type
     def main_type
-      has_content_type? ? header[:content_type].main_type : nil rescue nil
+      has_content_type? ? header[:content_type].main_type : nil
     end
 
     # Returns the sub content type
     def sub_type
-      has_content_type? ? header[:content_type].sub_type : nil rescue nil
+      has_content_type? ? header[:content_type].sub_type : nil
     end
 
     # Returns the content type parameters
     def content_type_parameters
-      has_content_type? ? header[:content_type].parameters : nil rescue nil
+      has_content_type? ? header[:content_type].parameters : nil
     end
 
     # Returns true if the message is multipart
