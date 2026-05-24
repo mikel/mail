@@ -530,6 +530,10 @@ module Mail
       when 'latin2'
         Encoding::ISO_8859_2
 
+      # Microsoft-specific alias for CP950 (Traditional Chinese)
+      when 'ms950'
+        Encoding::CP950
+
       else
         charset
       end
