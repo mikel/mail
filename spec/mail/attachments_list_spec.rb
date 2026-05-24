@@ -40,6 +40,14 @@ RSpec.describe "Attachments" do
       expect(Mail::Utilities.blank?(@mail.attachments)).not_to eq true
       expect(Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode)).to eq 'てすと.txt'
     end
+
+    it "should accept multiple files with the same filename" do
+      @mail.attachments['test.png'] = @test_png
+      @mail.attachments['test.png'] = @test_png
+      expect(@mail.attachments.count).to eq 2
+      expect(Mail::Encodings.decode_encode(@mail.attachments[0].filename, :decode)).to eq 'test.png'
+      expect(Mail::Encodings.decode_encode(@mail.attachments[1].filename, :decode)).to eq 'test.png'
+    end
   end
 
   describe "from a supplied Hash" do
