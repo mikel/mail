@@ -23,9 +23,7 @@ module Mail
     end
 
     def to=(addr)
-      if Utilities.blank?(addr)
-        raise ArgumentError, "SMTP To address may not be blank: #{addr.inspect}"
-      end
+      blank_check(addr)
 
       @to = Array(addr).map do |addr|
         validate_addr 'To', addr
@@ -42,7 +40,15 @@ module Mail
 
 
     private
+      def blank_check(addr)
+        if Utilities.blank?(addr)
+          raise ArgumentError, "SMTP To address may not be blank: #{addr.inspect}"
+        end
+      end
+    
       def validate_addr(addr_name, addr)
+        blank_check(addr)
+
         if addr.bytesize > MAX_ADDRESS_BYTESIZE
           raise ArgumentError, "SMTP #{addr_name} address may not exceed #{MAX_ADDRESS_BYTESIZE} bytes: #{addr.inspect}"
         end
