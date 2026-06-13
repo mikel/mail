@@ -84,6 +84,12 @@ RSpec.describe Mail::Body do
       expect(body.encoded).to eq "This has \r\n various \r\n new \r\n lines"
     end
 
+    it "should use crlf line endings for 8bit non-ascii bodies" do
+      body = Mail::Body.new("Caf\xC3\xA9\nSecond line\n".dup.force_encoding('UTF-8'))
+      body.encoding = '8bit'
+      expect(body.encoded).to eq "Caf\xC3\xA9\r\nSecond line\r\n".dup.force_encoding('UTF-8')
+    end
+
   end
 
   describe "decoding" do
