@@ -25,11 +25,11 @@ module Mail
 
     private
       def datetime_for(received)
-        ::DateTime.parse("#{received.date} #{received.time}")
-      rescue ArgumentError => e
-        raise e unless e.message == 'invalid date'
-        warn "WARNING: Invalid date field for received element (#{received.date} #{received.time}): #{e.class}: #{e.message}"
-        nil
+        Utilities.parse_date_time("#{received.date} #{received.time}").tap do |datetime|
+          unless datetime
+            warn "WARNING: Invalid date field for received element (#{received.date} #{received.time})"
+          end
+        end
       end
   end
 end
