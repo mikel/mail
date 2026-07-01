@@ -416,14 +416,6 @@ module Mail
     end
 
     def Utilities.b_value_decode(str)
-      # match = str.match(/\=\?(.+)?\?[Bb]\?(.*)\?\=/m)
-      # match = str.match(/=\?([^?]+)\?[Bb]\?([^?]+)\?=/m)
-      # if match
-      #   charset = match[1]
-      #   str = Utilities.decode_base64(match[2])
-      #   str = charset_encoder.encode(str, charset)
-      # end
-
       b_decoded = str.gsub(/=\?([^?]+)\?[Bb]\?([^?]*)\?=/m) do |match|
         charset = $1
 
