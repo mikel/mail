@@ -681,6 +681,20 @@ RSpec.describe Mail::Address do
                                          :raw          => '"Mikel \"quotes\" (and comments) Lindsaar" (comment1)<test(comment2)@lindsaar.net(comment3)>'})
       end
 
+      it 'should handle display names with backslashes' do
+        address = Mail::Address.new('"User\\Name" <user@example.com>')
+        expect(address).to break_down_to({
+          :name         => 'User\\Name',
+          :display_name => 'User\\Name',
+          :address      => 'user@example.com',
+          :comments     => nil,
+          :domain       => 'example.com',
+          :local        => 'user',
+          :format       => '"User\\\\Name" <user@example.com>',
+          :raw          => '"User\\Name" <user@example.com>'
+        })
+      end
+
       it "should expose group" do
         struct = Mail::Parsers::AddressListsParser::AddressStruct.new(nil, nil, nil, nil, nil, nil, "GROUP", nil)
         address = Mail::Address.new(struct)
