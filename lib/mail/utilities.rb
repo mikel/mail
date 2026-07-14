@@ -146,7 +146,7 @@ module Mail
       end
     end
 
-    # Escape parenthesies in a string
+    # Escape parentheses in a string
     #
     # Example:
     #

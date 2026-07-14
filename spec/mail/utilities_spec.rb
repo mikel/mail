@@ -107,7 +107,7 @@ RSpec.describe "Utilities Module" do
     end
   end
 
-  describe "escaping parenthesies" do
+  describe "escaping parentheses" do
     it "should escape parens" do
       test = 'This is not (escaped)'
       result = 'This is not \(escaped\)'
