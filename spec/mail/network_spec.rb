@@ -281,6 +281,20 @@ RSpec.describe "Mail" do
         @message.perform_deliveries = false
         expect { @message.deliver }.not_to change(Mail::TestMailer.deliveries, :size)
       end
+
+      it "should capture the delivery response when perform_deliveries is true" do
+        delivery_agent = MyDeliveryMethod.new
+        allow(@message).to receive(:delivery_method).and_return(delivery_agent)
+        allow(delivery_agent).to receive(:deliver!).and_return("smtp_response")
+        @message.deliver
+        expect(@message.response).to eq("smtp_response")
+      end
+
+      it "should not capture a delivery response when perform_deliveries is false" do
+        @message.perform_deliveries = false
+        @message.deliver
+        expect(@message.response).to be_nil
+      end
     end
 
     describe "observers" do
