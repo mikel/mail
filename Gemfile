@@ -15,3 +15,6 @@ gem 'jruby-openssl', :platforms => :jruby
 gem 'mini_mime'
 
 gem 'byebug', :platforms => :mri
+
+# rbs (rdoc's dependency) fails to build on JRuby
+gem 'rdoc', :platforms => :mri

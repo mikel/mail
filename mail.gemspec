@@ -26,7 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '> 0.8.7')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-benchmark')
-  s.add_development_dependency('rdoc')
   s.add_development_dependency('rufo')
 
   s.files = Dir.glob(%w[ README.md MIT-LICENSE lib/**/* ])
