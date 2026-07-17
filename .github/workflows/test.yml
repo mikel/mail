@@ -32,6 +32,8 @@ jobs:
            timeout: 5
          - ruby: 3.4
            timeout: 5
+         - ruby: 4.0
+           timeout: 5
          - ruby: truffleruby
            timeout: 50
          - ruby: truffleruby-head
