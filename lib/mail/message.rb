@@ -1918,7 +1918,8 @@ module Mail
     # Returns true if this part is an attachment,
     # false otherwise.
     def attachment?
-      !!find_attachment
+      disposition = header[:content_disposition].respond_to?(:disposition_type) ? header[:content_disposition].disposition_type : nil
+      !!(disposition == "attachment" || find_attachment)
     end
 
     # Returns the attachment data if there is any
