@@ -278,14 +278,56 @@ mail.delivery_method :sendmail
 mail.deliver
 ```
 
-Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher))
-```ruby
+#### Sending via SMTP
 
+Sending via smtp (for example to [mailcatcher](https://github.com/sj26/mailcatcher)):
+```ruby
 Mail.defaults do
   delivery_method :smtp, address: "localhost", port: 1025
 end
 ```
 
+A url is also accepted:
+```ruby
+Mail.defaults do
+  # The following (note the URL-encoded userinfo)...:
+  delivery_method :smtp, url: 'smtp://user%40gmail.com:app-password@smtp.gmail.com'
+
+  # ...would be equivalent to:
+  delivery_method :smtp, { :address              => 'smtp.gmail.com',
+                           :port                 => 587,
+                           :user_name            => 'user@gmail.com',
+                           :password             => 'app-password',
+                           :tls                  => false,
+                           :enable_starttls      => :always }
+
+  # Settings from the url take precedence in case of clashes. Otherwise all unique values are combined:
+  delivery_method :smtp, {
+    url: 'smtps://smtp.gmail.com?domain=foo.org',
+    address: 'bar.com',    # <-- ignored
+    # Added:
+    user_name: 'user@gmail.com',
+    password: credentials.dig(:smtp, :password)
+  }
+
+  # Provide additional settings or overrides via the query string of the url:
+  delivery_method :smtp, url: '<above-url>?domain=foo.org&authentication=login'
+
+  # Note that the authentication can also be passed as part of the scheme:
+  delivery_method :smtp, url: 'smtps+login://smtp.gmail.com?domain=foo.org'
+
+  # For localhost (or 127.0.0.1) it assumes no tls, nor starttls.
+  # So the following would work using [mailcatcher](https://github.com/sj26/mailcatcher):
+  delivery_method :smtp, url: 'smtp://127.0.0.1:1025'
+
+  # Scheme 'smtps' enables `tls` and uses port 465:
+  delivery_method :smtp, url: 'smtps://user%40gmail.com:app-password@smtp.gmail.com'
+
+  # See Mail::SMTP::UrlResolver::DEFAULTS for the defaults used for various schemes and addresses.
+end
+```
+
+#### Sending via Exim
 
 Exim requires its own delivery manager, and can be used like so:
 
@@ -294,6 +336,8 @@ mail.delivery_method :exim, :location => "/usr/bin/exim"
 
 mail.deliver
 ```
+
+#### Logging
 
 Mail may be "delivered" to a logfile, too, for development and testing:
 

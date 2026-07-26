@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'mail/smtp_envelope'
+require 'mail/utilities'
 
 module Mail
   # == Sending Email with SMTP
@@ -35,6 +36,37 @@ module Mail
   #                              :password             => '<password>',
   #                              :authentication       => 'plain',
   #                              :enable_starttls      => :auto  }
+  #
+  #     # ...or using the url-attribute (note the trailing 's' in the scheme
+  #     # to set `tls`, also note the URL-encoded userinfo):
+  #     delivery_method :smtp,
+  #        { :url => 'smtps://user%40gmail.com:app-password@smtp.gmail.com' }
+  #   end
+  #
+  # See {Mail::SMTP::UrlResolver::DEFAULTS} what defaults are applied for certain schemes.  
+  # The scheme can also contain the authentication-type, e.g. `smtps+cram-md5://...`.
+  #
+  # === Sending via Fastmail
+  #
+  #   Mail.defaults do
+  #     delivery_method :smtp,
+  #       { :url => 'smtps://user%40fastmail.fm:app-pw@smtp.fastmail.com' }
+  #
+  #     # Settings from the url take precedence:
+  #     delivery_method :smtp, {
+  #       url: 'smtps://smtp.fastmail.com?domain=foo.org',
+  #       domain: 'domain.org',            # <-- ignored
+  #       user_name: 'user@fastmail.fm',
+  #       password: credentials.dig(:smtp, :password)
+  #     }
+  #   end
+  #
+  # === Local development
+  #
+  # Using {https://github.com/sj26/mailcatcher mailcatcher}:
+  #
+  #   Mail.defaults do
+  #     delivery_method :smtp, url: 'smtp://127.0.0.1:1025'
   #   end
   #
   # === Configuring TLS/SSL and STARTTLS
@@ -82,6 +114,97 @@ module Mail
   #
   #   mail.deliver!
   class SMTP
+    class UrlResolver
+
+      DEFAULTS = {
+        "smtp" => Hash.new({
+          :port => 587,
+          :tls => false,
+          :enable_starttls => :always
+        }).merge({
+          "localhost" => {
+            :port => 25,
+            :tls => false,
+            :enable_starttls => false
+          },
+          "127.0.0.1" => {
+            :port => 25,
+            :tls => false,
+            :enable_starttls => false
+          }}),
+        "smtps" => Hash.new({
+          :port => 465,
+          :tls => true,
+          :enable_starttls => false
+        })
+      }
+
+      def initialize(url)
+        @uri = url.is_a?(URI) ? url : uri_parser.parse(url)
+        unless @uri.scheme && DEFAULTS.has_key?(uri_scheme)
+          raise ArgumentError, "#{url} is not a valid SMTP-url. Required format: smtp(s)://host?domain=sender.org"
+        end
+        @query = uri.query
+      end
+
+      def to_hash
+        config = raw_config
+        config.map { |key, value| config[key] = uri_parser.unescape(value) if value.is_a? String }
+        config
+      end
+
+      private
+        attr_reader :uri
+
+        def raw_config
+          scheme_defaults.merge(query_hash).merge({
+              :address              => uri.host,
+              :port                 => uri.port,
+              :user_name            => uri.user,
+              :password             => uri.password,
+              :authentication       => uri_scheme_authentication
+          }.delete_if {|_key, value| Utilities.blank?(value) })
+        end
+
+        def uri_parser
+          Utilities.uri_parser
+        end
+
+        def uri_scheme_and_authentication
+          (uri.scheme.split("+") + [ nil ]).take(2)
+        end
+
+        def uri_scheme
+          uri_scheme_and_authentication.first
+        end
+
+        def uri_scheme_authentication
+          uri_scheme_and_authentication.last
+        end
+
+        def query_hash
+          @query_hash = begin
+            result = Hash[(@query || "").split("&").map { |pair| k,v = pair.split("="); [k.to_sym, v] }]
+
+            result[:open_timeout] &&= result[:open_timeout].to_i
+            result[:read_timeout] &&= result[:read_timeout].to_i
+            result[:enable_starttls] &&= begin
+              case result[:enable_starttls]
+              when "always", "auto" then result[:enable_starttls].to_sym
+              else
+                result[:enable_starttls] != "false"
+              end
+            end
+            result[:enable_starttls_auto] &&= result[:enable_starttls_auto] != 'false'
+            result
+          end
+        end
+
+        def scheme_defaults
+          DEFAULTS[uri_scheme][uri.host]
+        end
+    end
+
     attr_accessor :settings
 
     DEFAULTS = {
@@ -100,8 +223,13 @@ module Mail
       :read_timeout         => 5
     }
 
-    def initialize(values)
-      self.settings = DEFAULTS.merge(values)
+    def initialize(config)
+      settings = DEFAULTS.merge(config)
+
+      if config[:url]
+        settings = settings.merge(UrlResolver.new(config.delete(:url)).to_hash)
+      end
+      self.settings = settings
     end
 
     def deliver!(mail)
@@ -126,7 +254,7 @@ module Mail
         return false if smtp_tls?
 
         if setting_provided?(:enable_starttls) && settings[:enable_starttls]
-          # enable_starttls: provided and truthy
+          # enable_starttls: truthy
           case settings[:enable_starttls]
           when :auto then :auto
           when :always then :always
@@ -139,8 +267,8 @@ module Mail
             settings[:enable_starttls_auto] ? :auto : false
           else
             # enable_starttls_auto: not provided
-            # enable_starttls: when provided then false
-            # use :auto when neither enable_starttls* provided
+            # enable_starttls: false when provided
+            # use :auto as fallback when neither enable_starttls* provided
             setting_provided?(:enable_starttls) ? false : :auto
           end
         end
