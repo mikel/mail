@@ -133,7 +133,15 @@ module Mail
           when *Q_VALUES then q_value_decode(string)
           end
         end
-      end.join("")
+      end
+
+      if lines.each_slice(2).all? { |x, y| Encoding.compatible?(x, y) }
+        lines.join("")
+      else
+        lines.map do |line|
+          line.encode("UTF-8", invalid: :replace, undef: :replace, replace: "�")
+        end.join("")
+      end
     end
 
     # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
