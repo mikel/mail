@@ -70,6 +70,10 @@ module Mail
       get_return_values('final-recipient')
     end
 
+    def original_recipient
+      get_return_values('original-recipient')
+    end
+
     def error_status
       get_return_values('status')
     end
