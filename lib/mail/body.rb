@@ -269,13 +269,20 @@ module Mail
 
     # split parts by boundary, ignore first part if empty, append final part when closing boundary was missing
     def extract_parts
+      clean_boundary = boundary || ""
+      if raw_source.encoding == Encoding::ASCII_8BIT &&
+         clean_boundary.encoding == Encoding::UTF_8
+        clean_boundary.force_encoding(Encoding::ASCII_8BIT)
+      end
+      clean_boundary = Regexp.escape(boundary || "")
+
       parts_regex = /
         (?:                    # non-capturing group
           \A                |  # start of string OR
           \r?\n                # line break with optional CR
          )
         (
-          --#{Regexp.escape(boundary || "")}  # boundary delimiter
+          --#{clean_boundary}  # boundary delimiter
           (?:--)?                             # with non-capturing optional closing
         )
         (?=\s*$)                              # lookahead matching zero or more spaces followed by line-ending

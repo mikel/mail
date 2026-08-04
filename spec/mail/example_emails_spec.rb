@@ -392,5 +392,10 @@ RSpec.describe "Test emails" do
         expect(mail.encoded).to include("Subject: =?UTF-8?Q?Forma=E7=E3o_FrenetikPolis:_Mega_Campanha_Final?=\r\n =?UTF-8?Q?_Ver=E3o_|_Cursos_de_Setembro?=")
       end
     end
+
+    it 'does not fail on UTF-8 in multipart boundary' do
+      mail = read_fixture('emails', 'error_emails', 'utf8_multipart_boundary.eml')
+      expect(mail.parts.length).to eq(1)
+    end
   end
 end
