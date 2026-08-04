@@ -249,13 +249,14 @@ module Mail
     #  mail.deliver
     def deliver
       inform_interceptors
-      if delivery_handler
+      response = if delivery_handler
         delivery_handler.deliver_mail(self) { do_delivery }
       else
         do_delivery
       end
       inform_observers
-      self
+      
+      response
     end
 
     # This method bypasses checking perform_deliveries and raise_delivery_errors,
