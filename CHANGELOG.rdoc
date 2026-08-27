@@ -22,6 +22,8 @@ Code Improvements:
 
 Bug Fixes:
 
+* Wrap multibyte split results without removed String extensions @OskarEichler
+
 * Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
 * Regression: Adding a part should not reset the mail's charset to nil @railsbob
 

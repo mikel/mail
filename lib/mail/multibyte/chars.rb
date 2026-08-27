@@ -89,7 +89,7 @@ module Mail #:nodoc:
       # Example:
       #   Mail::Multibyte.mb_chars('Café périferôl').split(/é/).map { |part| part.upcase.to_s } # => ["CAF", " P", "RIFERÔL"]
       def split(*args)
-        @wrapped_string.split(*args).map { |i| i.mb_chars }
+        @wrapped_string.split(*args).map { |i| chars(i) }
       end
 
       # Like <tt>String#[]=</tt>, except instead of byte offsets you specify character offsets.
