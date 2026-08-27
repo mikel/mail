@@ -27,6 +27,8 @@ Bug Fixes:
 
 Performance:
 
+* Compile the MIME parameter matcher once per lookup @OskarEichler
+
 * reduce object allocations by replacing =~ and Regexp#match by Regexp#match? @ahorek
 * reduce object allocations by replacing String#unpack[0] by String#unpack1 @ahorek
 

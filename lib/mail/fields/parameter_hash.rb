@@ -14,12 +14,12 @@ module Mail
   # Parameters are defined in RFC2045. Split keys are in RFC2231.
   class ParameterHash < IndifferentHash #:nodoc:
     def [](key_name)
-      key_pattern = Regexp.escape(key_name.to_s)
+      key_pattern = /^#{Regexp.escape(key_name.to_s)}(\*|$)/i
       pairs = []
       exact = nil
 
       each do |k,v|
-        if k =~ /^#{key_pattern}(\*|$)/i
+        if k =~ key_pattern
           if $1 == Constants::ASTERISK
             pairs << [k, v]
           else
