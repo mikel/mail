@@ -201,7 +201,7 @@ module Mail
     #  constantize("hello-there") #=> "HelloThere"
     #  constantize("hello-there-mate") #=> "HelloThereMate"
     def constantize( str )
-      str.to_s.split(/[-_]/).map { |v| v.capitalize }.to_s
+      str.to_s.split(/[-_]/).map { |v| v.capitalize }.join
     end
 
     # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
