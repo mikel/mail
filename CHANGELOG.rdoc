@@ -22,6 +22,8 @@ Code Improvements:
 
 Bug Fixes:
 
+* Join capitalized components in Utilities.constantize @OskarEichler
+
 * Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
 * Regression: Adding a part should not reset the mail's charset to nil @railsbob
 
