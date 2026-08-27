@@ -58,7 +58,7 @@ module Mail
 
     def initialize_copy(original)
       super
-      @fields = @fields.dup
+      @fields = fields.dup
       @fields.map!(&:dup)
     end
 
@@ -103,7 +103,7 @@ module Mail
     end
 
     def errors
-      @fields.map(&:errors).flatten(1)
+      fields.map(&:errors).flatten(1)
     end
 
     #  3.6. Field definitions
