@@ -273,12 +273,8 @@ module Mail #:nodoc:
           return nil if byte_offset.nil?
           return 0   if @wrapped_string == ''
 
-          if @wrapped_string.respond_to?(:force_encoding)
-            @wrapped_string = @wrapped_string.dup.force_encoding(Encoding::ASCII_8BIT)
-          end
-
           begin
-            @wrapped_string[0...byte_offset].unpack('U*').length
+            @wrapped_string.byteslice(0...byte_offset).unpack('U*').length
           rescue ArgumentError
             byte_offset -= 1
             retry
