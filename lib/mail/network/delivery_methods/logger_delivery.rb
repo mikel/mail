@@ -1,4 +1,5 @@
 require 'mail/smtp_envelope'
+require 'logger'
 
 module Mail
   class LoggerDelivery
@@ -16,7 +17,6 @@ module Mail
 
     private
       def default_logger
-        require 'logger'
         ::Logger.new($stdout)
       end
 
