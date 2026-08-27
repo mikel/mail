@@ -131,7 +131,8 @@ module Mail
 
       def do_encode
         return '' if Utilities.blank?(value)
-        address_array = element.addresses.reject { |a| encoded_group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
+        group_addresses = encoded_group_addresses
+        address_array = element.addresses.reject { |a| group_addresses.include?(a.encoded) }.compact.map { |a| a.encoded }
         address_text  = address_array.join(", \r\n\s")
         group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.encoded }.join(", \r\n\s")};" }
         group_text  = group_array.join(" \r\n\s")
@@ -141,7 +142,8 @@ module Mail
 
       def do_decode
         return nil if Utilities.blank?(value)
-        address_array = element.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
+        group_addresses = decoded_group_addresses
+        address_array = element.addresses.reject { |a| group_addresses.include?(a.decoded) }.map { |a| a.decoded }
         address_text  = address_array.join(", ")
         group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
         group_text  = group_array.join(" ")

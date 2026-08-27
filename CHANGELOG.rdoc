@@ -27,6 +27,8 @@ Bug Fixes:
 
 Performance:
 
+* Reuse group address serialization within each field rendering @OskarEichler
+
 * reduce object allocations by replacing =~ and Regexp#match by Regexp#match? @ahorek
 * reduce object allocations by replacing String#unpack[0] by String#unpack1 @ahorek
 
