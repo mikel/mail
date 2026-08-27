@@ -35,7 +35,7 @@ module Mail
       if index_value.is_a?(Integer)
         self.fetch(index_value)
       else
-        self.select { |a| a.filename == index_value }.first
+        self.find { |a| a.filename == index_value }
       end
     end
 
