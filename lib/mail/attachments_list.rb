@@ -46,6 +46,7 @@ module Mail
                          :content_disposition => "#{@content_disposition_type}; filename=\"#{encoded_name}\"" }
 
       if value.is_a?(Hash)
+        value = value.dup
         if path = value.delete(:filename)
           value[:content] ||= File.open(path, 'rb') { |f| f.read }
         end
@@ -77,7 +78,7 @@ module Mail
 
       if hash[:body].respond_to? :force_encoding and hash[:body].respond_to? :valid_encoding?
         if not hash[:body].valid_encoding? and default_values[:content_transfer_encoding].casecmp('binary').zero?
-          hash[:body] = hash[:body].dup if hash[:body].frozen?
+          hash[:body] = hash[:body].dup
           hash[:body].force_encoding("BINARY")
         end
       end
