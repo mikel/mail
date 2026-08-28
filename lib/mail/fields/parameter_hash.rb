@@ -31,7 +31,7 @@ module Mail
       if pairs.empty? # Just dealing with a single value pair
         super(exact || key_name)
       else # Dealing with a multiple value pair or a single encoded value pair
-        string = pairs.sort_by { |key, _| key[/\*(\d+)\*?\z/, 1].to_i }.map { |v| v.last }.join('')
+        string = pairs.sort_by { |key, _| key[/\*(\d+)\*?\z/, 1]&.to_i || 0 }.map { |v| v.last }.join('')
         if mt = string.match(/([\w\-]+)?'(\w\w)?'(.*)/)
           string = mt[3]
           encoding = mt[1]
