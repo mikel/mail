@@ -287,7 +287,13 @@ module Mail
         final_separator = parts[-2][1]
         parts << [""] if final_separator != "--#{boundary}--"
       end
-      parts.map(&:first)
+
+      # The CRLF that terminates a boundary delimiter line (RFC 2046: "dash-boundary
+      # transport-padding CRLF") is left dangling at the head of the content that
+      # follows, since the regex above only looks ahead at it without consuming it.
+      # Strip that one delimiter-owned line break so raw_source for each part after
+      # the first starts at its actual content, not the boundary's own line ending.
+      parts.map(&:first).each_with_index.map { |part, index| index > 0 ? part.sub(/\A\r?\n/, '') : part }
     end
 
     def crlf_boundary

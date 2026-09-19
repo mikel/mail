@@ -24,6 +24,7 @@ Bug Fixes:
 
 * Regression: Preserve message-level charset when adding parts (related to Rails ActionMailer) @shields
 * Regression: Adding a part should not reset the mail's charset to nil @railsbob
+* Multipart::Body#extract_parts left the boundary delimiter's own trailing CRLF at the head of each subsequent part's raw_source instead of the part's actual content (RFC 2046 "dash-boundary transport-padding CRLF")
 
 Performance:
 

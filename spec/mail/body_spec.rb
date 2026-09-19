@@ -160,6 +160,15 @@ RSpec.describe Mail::Body do
       assert_split_into(multipart_body, "this is some text", "", 1)
     end
 
+    it "should not leave the boundary's own line break at the head of each part's raw_source" do
+      multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
+      body = Mail::Body.new(multipart_body)
+      body.split!('----=_Part_2192_32400445')
+
+      expect(body.parts[0].raw_source).to eq "Content-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n"
+      expect(body.parts[1].raw_source).to eq "Content-Type: text/html\r\n\r\n<p>This is HTML</p>"
+    end
+
     it "should keep the preamble text as its own preamble" do
       multipart_body = "this is some text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/plain; charset=ISO-8859-1\r\n\r\nThis is a plain text\r\n\r\n------=_Part_2192_32400445\r\nContent-Type: text/html\r\n\r\n<p>This is HTML</p>\r\n------=_Part_2192_32400445--\r\n"
       body = Mail::Body.new(multipart_body)
