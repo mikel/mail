@@ -77,6 +77,20 @@ RSpec.describe Mail::Header do
       expect { header.charset }.not_to raise_error
     end
 
+    it "should not set a charset parameter on a multipart content-type" do
+      header = Mail::Header.new
+      header['content-type'] = 'multipart/alternative; boundary="--==_mimepart_1"'
+      header.charset = 'UTF-8'
+      expect(header[:content_type].parameters).not_to have_key('charset')
+    end
+
+    it "should remove an existing charset parameter when content-type becomes multipart" do
+      header = Mail::Header.new
+      header['content-type'] = 'multipart/alternative; boundary="--==_mimepart_1"; charset=UTF-8'
+      header.charset = 'UTF-8'
+      expect(header[:content_type].parameters).not_to have_key('charset')
+    end
+
     it "should be Enumerable" do
       header = Mail::Header.new("To: James Random\r\nFrom: Santa Claus\r\n")
       expect(header.find {|f| f.responsible_for?('From') }).to be_a(Mail::Field)

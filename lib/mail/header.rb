@@ -169,7 +169,8 @@ module Mail
     def charset=(val)
       params = self[:content_type].parameters rescue nil
       if params
-        if val
+        multipart = self[:content_type].main_type =~ /^multipart$/i rescue nil
+        if val && !multipart
           params[:charset] = val
         else
           params.delete(:charset)
