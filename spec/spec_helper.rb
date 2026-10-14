@@ -84,7 +84,7 @@ end
 
 # Original mockup from ActionMailer
 class MockSMTP
-  attr_accessor :open_timeout, :read_timeout
+  attr_accessor :open_timeout, :read_timeout, :tls_hostname
 
   def self.reset
     test = Net::SMTP.unstubbed_new('example.com')

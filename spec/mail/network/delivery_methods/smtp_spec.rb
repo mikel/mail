@@ -269,6 +269,50 @@ RSpec.describe "SMTP Delivery Method" do
     end
   end
 
+  describe "configuring tls_hostname" do
+    it "passes tls_hostname through to the underlying SMTP session" do
+      expect_any_instance_of(MockSMTP).to receive(:tls_hostname=).with('example.org')
+
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :tls_hostname => 'example.org' }
+      end
+
+      message.deliver!
+    end
+
+    it "does not call tls_hostname= when not configured" do
+      expect_any_instance_of(MockSMTP).to_not receive(:tls_hostname=)
+
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+      end
+
+      message.deliver!
+    end
+
+    it "does not raise when the underlying SMTP session does not support tls_hostname=" do
+      smtp_without_tls_hostname = Class.new(MockSMTP) { undef_method(:tls_hostname=) }.new
+      allow(Net::SMTP).to receive(:new).and_return(smtp_without_tls_hostname)
+
+      message = Mail.new do
+        from 'mikel@test.lindsaar.net'
+        to 'ada@test.lindsaar.net'
+        subject 'Re: No way!'
+        body 'Yeah sure'
+        delivery_method :smtp, { :tls_hostname => 'example.org' }
+      end
+
+      expect { message.deliver! }.not_to raise_error
+    end
+  end
+
   describe "SMTP Envelope" do
 
     it "uses the envelope From and To addresses" do

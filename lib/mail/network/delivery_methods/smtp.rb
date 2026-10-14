@@ -178,6 +178,10 @@ module Mail
 
           smtp.open_timeout = settings[:open_timeout] if settings[:open_timeout]
           smtp.read_timeout = settings[:read_timeout] if settings[:read_timeout]
+
+          if settings[:tls_hostname] && smtp.respond_to?(:tls_hostname=)
+            smtp.tls_hostname = settings[:tls_hostname]
+          end
         end
       end
 

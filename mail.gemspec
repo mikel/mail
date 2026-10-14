@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency('net-imap')
   s.add_dependency('net-pop')
 
+  s.add_development_dependency('benchmark')
   s.add_development_dependency('bundler', '>= 1.0.3')
   s.add_development_dependency('rake', '> 0.8.7')
   s.add_development_dependency('rspec', '~> 3.0')
