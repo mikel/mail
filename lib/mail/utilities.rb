@@ -299,26 +299,64 @@ module Mail
     end
 
     class StrictCharsetEncoder
+      # "€" and "�" in GB18030, spelled as bytes so that loading the gem does
+      # not depend on a transcoder being available.
+      GB18030_EURO_SIGN = "\xA2\xE3".b.force_encoding(Encoding::GB18030).freeze
+      GB18030_REPLACEMENT_CHAR = "\x84\x31\xA4\x37".b.force_encoding(Encoding::GB18030).freeze
+      private_constant :GB18030_EURO_SIGN, :GB18030_REPLACEMENT_CHAR
+
       def encode(string, charset)
         case charset
         when /utf-?7/i
           Mail::Utilities.decode_utf7(string)
         else
-          string.force_encoding(Mail::Utilities.pick_encoding(charset))
+          encoding = pick_encoding(charset)
+          string.force_encoding(encoding)
+          encoding == Encoding::GB18030 ? scrub_cp936(string) : string
+        end
+      end
+
+      private
+
+      def pick_encoding(charset)
+        encoding = Mail::Utilities.pick_encoding(charset)
+
+        # GB2312 and GBK are subsets of GB18030. Mail labelled as GB2312 is
+        # commonly code page 936 (GBK, Microsoft's extension of it, as sent by
+        # Outlook), and mail labelled as GBK may carry GB18030 four-byte
+        # sequences, both of which Ruby's strict encodings reject, so read
+        # them all as GB18030.
+        case encoding
+        when Encoding::GB2312, Encoding::GBK
+          Encoding::GB18030
+        else
+          encoding
+        end
+      end
+
+      # Outlook sends code page 936 (GBK) labelled as GB2312, which writes the
+      # euro sign as the single byte 0x80. GB18030 rejects that byte, so read
+      # it as the euro sign, like the WHATWG gb18030 decoder does, and replace
+      # every other invalid sequence with U+FFFD. This applies to any charset
+      # that pick_encoding resolves to GB18030, not only GB2312. Returns the
+      # given string untouched when it is valid, and a scrubbed copy otherwise,
+      # so that the caller's bytes are never rewritten.
+      def scrub_cp936(string)
+        return string if string.valid_encoding?
+
+        string.scrub do |bytes|
+          if bytes.bytesize == 1 && bytes.getbyte(0) == 0x80
+            GB18030_EURO_SIGN
+          else
+            GB18030_REPLACEMENT_CHAR
+          end
         end
       end
     end
 
-    class BestEffortCharsetEncoder
-      def encode(string, charset)
-        case charset
-        when /utf-?7/i
-          Mail::Utilities.decode_utf7(string)
-        else
-          string.force_encoding(pick_encoding(charset))
-        end
-      end
-
+    # Also reads charsets Ruby lacks as similar ones it has, which may decode
+    # some characters wrongly.
+    class BestEffortCharsetEncoder < StrictCharsetEncoder
       private
 
       def pick_encoding(charset)
@@ -330,7 +368,7 @@ module Mail
         else
           charset
         end
-        Mail::Utilities.pick_encoding(charset)
+        super(charset)
       end
     end
 
@@ -484,9 +522,12 @@ module Mail
     # Pick a Ruby encoding corresponding to the message charset. Most
     # charsets have a Ruby encoding, but some need manual aliasing here.
     #
+    # Returns the encoding the charset names, so that it can be used in both
+    # directions. Fixups for labels that lie about their content belong in the
+    # charset encoders' pick_encoding instead.
+    #
     # TODO: add this as a test somewhere:
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
-    #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def Utilities.pick_encoding(charset)
       charset = charset.to_s
       encoding = case charset.downcase
@@ -506,6 +547,21 @@ module Mail
       # UTF-8, UTF-32BE and alike
       when /^utf[\-_]?(\d{1,2})?(\w{1,2})$/
         "UTF-#{$1}#{$2}".gsub(/\A(UTF-(?:16|32))\z/, '\\1BE')
+
+      # GB2312 (Chinese charset) spellings and IANA aliases Ruby does not know.
+      # The pattern accepts the MIME name (gb2312), the IANA name (gb_2312-80)
+      # and the spellings in between seen in the wild.
+      when /^gb[-_]?2312([-_]?80)?$/, 'csgb2312', 'chinese', 'iso-ir-58', 'csiso58gb231280'
+        Encoding::GB2312
+
+      # GB18030 spellings Ruby does not know
+      when /^gb[-_]?18030([-_]\d{4})?$/
+        Encoding::GB18030
+
+      # Aliases of GBK (code page 936) Ruby does not know. Listed before the
+      # Windows-* rewrite below so that it does not swallow windows-936.
+      when 'csgbk', 'cp-936', 'ms936', 'windows-936', 'windows936', 'x-gbk'
+        Encoding::GBK
 
       # Windows-1252 and alike
       when /^windows-?(.*)$/
@@ -529,10 +585,6 @@ module Mail
       # Wrongly written Shift_JIS (Japanese)
       when 'shift-jis'
         Encoding::Shift_JIS
-
-      # GB2312 (Chinese charset) is a subset of GB18030 (its replacement)
-      when 'gb2312'
-        Encoding::GB18030
 
       when 'cp-850'
         Encoding::CP850

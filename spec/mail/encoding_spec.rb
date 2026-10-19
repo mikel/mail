@@ -206,12 +206,39 @@ RSpec.describe "mail encoding" do
       "latin2" => Encoding::ISO_8859_2,
       "ISO_8859-1" => Encoding::ISO_8859_1,
       "cp-850" => Encoding::CP850,
+      "GB_2312-80" => Encoding::GB2312,
+      "gb_2312" => Encoding::GB2312,
+      "gb-2312" => Encoding::GB2312,
+      "gb2312-80" => Encoding::GB2312,
+      "gb_2312_80" => Encoding::GB2312,
+      "gb231280" => Encoding::GB2312,
+      "csGB2312" => Encoding::GB2312,
+      "chinese" => Encoding::GB2312,
+      "iso-ir-58" => Encoding::GB2312,
+      "csISO58GB231280" => Encoding::GB2312,
+      "gb-18030" => Encoding::GB18030,
+      "gb_18030" => Encoding::GB18030,
+      "gb18030-2000" => Encoding::GB18030,
+      "gb18030-2005" => Encoding::GB18030,
+      "csGBK" => Encoding::GBK,
+      "cp-936" => Encoding::GBK,
+      "ms936" => Encoding::GBK,
+      "windows-936" => Encoding::GBK,
+      "windows936" => Encoding::GBK,
+      "x-gbk" => Encoding::GBK,
       "" => Encoding::BINARY
     }.each do |from, to|
       it "should support #{from}" do
         expect { ::Encoding.find(from) }.to raise_error(ArgumentError)
         expect(Mail::Utilities.pick_encoding(from)).to eq(to)
       end
+    end
+
+    it "should name the encoding of every Ruby charset" do
+      mismatches = Encoding.list.reject(&:dummy?).reject do |encoding|
+        Mail::Utilities.pick_encoding(encoding.to_s) == encoding
+      end
+      expect(mismatches).to be_empty
     end
   end
 end
