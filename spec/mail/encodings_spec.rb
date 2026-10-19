@@ -212,6 +212,61 @@ RSpec.describe Mail::Encodings do
         expect(Mail::Encodings.value_decode(string)).to eq("開")
       end
 
+      it "should decode code page 936 encoded string identified as GB2312" do
+        string = '=?gb2312?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 – 请确认")
+      end
+
+      it "should decode GB18030 euro sign and four-byte sequences identified as GB2312" do
+        string = '=?gb2312?B?sai82yCi4zEsMjAwIJQ5/DY=?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 😀")
+      end
+
+      it "should replace invalid bytes in string identified as GB2312" do
+        string = '=?gb2312?B?sai824E=?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价�")
+      end
+
+      it "should decode code page 936 euro sign followed by a multibyte character identified as GB2312" do
+        string = '=?gb2312?B?sai82yCAx+s=?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €请")
+      end
+
+      it "should decode consecutive code page 936 euro signs identified as GB2312" do
+        string = '=?gb2312?B?gIA=?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("€€")
+      end
+
+      it "should decode code page 936 encoded string identified by a GB2312 alias" do
+        string = '=?GB_2312-80?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 – 请确认")
+      end
+
+      it "should decode code page 936 encoded string identified by a misspelled GB2312" do
+        string = '=?gb_2312?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 – 请确认")
+      end
+
+      it "should decode code page 936 encoded string identified as EUC-CN" do
+        string = '=?EUC-CN?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 – 请确认")
+      end
+
+      it "should decode code page 936 encoded string identified as Windows-936" do
+        string = '=?windows-936?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200 – 请确认")
+      end
+
+      it "should decode GB18030 four-byte sequences identified as GBK" do
+        string = '=?gbk?B?sai82yCUOfw2?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 😀")
+      end
+
+      it "should decode Q-encoded code page 936 euro sign identified as GB2312" do
+        string = '=?gb2312?Q?=B1=A8=BC=DB_=801,200?='.dup.force_encoding('us-ascii')
+        expect(Mail::Encodings.value_decode(string)).to eq("报价 €1,200")
+      end
+
       it "should decode an invalid utf-7 byte sequence" do
         string = "=?utf-7?B?aVBhZHMsIE1hY0Jvb2tzLCAmIG1vcmUgdXAgdG8gOTArQUNVLSBPZmY=?="
         result = "iPads, MacBooks, & more up to 90+ACU- Off"
@@ -874,6 +929,44 @@ RSpec.describe Mail::Encodings do
       with_encoder Mail::Utilities::BestEffortCharsetEncoder.new do
         expect(Mail::Encodings.value_decode("=?windows-1258?Q?SV=3A_Spr=F8sm=E5l_om_tilbod?=")).to eq "SV: Sprøsmål om tilbod"
       end
+    end
+
+    %w[gb2312 gb18030 gbk cp936].each do |charset|
+      it "can convert the code page 936 euro sign identified as #{charset} strictly" do
+        with_encoder Mail::Utilities::StrictCharsetEncoder.new do
+          expect(Mail::Encodings.value_decode("=?#{charset}?B?sai82yCAMSwyMDAgqEMgx+vIt8jP?=")).to eq "报价 €1,200 – 请确认"
+        end
+      end
+    end
+
+    it "can convert GB18030 euro sign and four-byte sequences identified as GB2312 strictly" do
+      with_encoder Mail::Utilities::StrictCharsetEncoder.new do
+        expect(Mail::Encodings.value_decode("=?gb2312?B?sai82yCi4zEsMjAwIJQ5/DY=?=")).to eq "报价 €1,200 😀"
+      end
+    end
+
+    it "can convert GB18030 four-byte sequences identified as GBK strictly" do
+      with_encoder Mail::Utilities::StrictCharsetEncoder.new do
+        expect(Mail::Encodings.value_decode("=?gbk?B?sai82yCUOfw2?=")).to eq "报价 😀"
+      end
+    end
+
+    it "can convert GB18030 four-byte sequences identified as GBK with best effort" do
+      with_encoder Mail::Utilities::BestEffortCharsetEncoder.new do
+        expect(Mail::Encodings.value_decode("=?gbk?B?sai82yCUOfw2?=")).to eq "报价 😀"
+      end
+    end
+
+    it "leaves the given bytes untouched when reading code page 936 with best effort" do
+      string = "\xB1\xA8\x80\x81".b
+      decoded = Mail::Utilities::BestEffortCharsetEncoder.new.encode(string, 'gb2312')
+      expect(decoded.encode(Encoding::UTF_8)).to eq "报€�"
+      expect(string.bytes).to eq [0xB1, 0xA8, 0x80, 0x81]
+    end
+
+    it "returns the given string when it is valid code page 936" do
+      string = "\xB1\xA8".b
+      expect(Mail::Utilities::BestEffortCharsetEncoder.new.encode(string, 'gb2312')).to equal string
     end
   end
 

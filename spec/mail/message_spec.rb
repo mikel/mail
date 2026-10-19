@@ -401,6 +401,16 @@ RSpec.describe Mail::Message do
       expect(raw_message.encoding).to eq original_encoding if raw_message.respond_to?(:encoding)
     end
 
+    it "should parse code page 936 sources labelled as GB2312" do
+      mail = Mail.new("Content-Type: text/plain; charset=gb2312\r\nContent-Transfer-Encoding: base64\r\n\r\nsai82yCAMSwyMDAgqEMgx+vIt8jP\r\n")
+      expect(mail.decoded).to eq "报价 €1,200 – 请确认"
+    end
+
+    it "should parse the code page 936 euro sign in sources labelled as GB18030" do
+      mail = Mail.new("Content-Type: text/plain; charset=gb18030\r\nContent-Transfer-Encoding: base64\r\n\r\nsai82yCAMSwyMDAgqEMgx+vIt8jP\r\n")
+      expect(mail.decoded).to eq "报价 €1,200 – 请确认"
+    end
+
     if '1.9+'.respond_to?(:encoding)
       it "should be able to normalize CRLFs on non-UTF8 encodings" do
         File.open(fixture_path('emails', 'multi_charset', 'japanese_shift_jis.eml'), 'rb') do |io|
