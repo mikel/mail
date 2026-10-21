@@ -14,7 +14,7 @@ module Mail
         begin
           datetime = ::DateTime.parse(stripped)
         rescue ArgumentError => e
-          raise unless 'invalid date' == e.message
+          raise unless 'invalid date' == e.message || e.message.include?('exceeds the limit')
         end
       end
 
