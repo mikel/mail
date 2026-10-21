@@ -66,5 +66,14 @@ RSpec.describe Mail::DateField do
       field = Mail::DateField.new("12 Aug 2009 30:00:02 GMT")
       expect(field.date_time).to be_nil
     end
+
+    it "should keep the raw value when the date exceeds the DateTime.parse length limit" do
+      date = "Wed, 21 Oct 2026 11:34:40 +0200\r\n From: Sender <sender@example.com>\r\n Reply-To: sender@example.com\r\n Message-ID: <#{'a' * 64}@example.com>\r\n MIME-Version: 1.0"
+      mail = Mail.new("Date: #{date}\r\nFrom: from@example.com\r\nSubject: Inquiry\r\n\r\nBody")
+
+      expect(mail[:date].value).to eq date
+      expect(mail[:date].errors).not_to be_empty
+      expect(mail.subject).to eq "Inquiry"
+    end
   end
 end
