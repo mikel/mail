@@ -1931,8 +1931,18 @@ module Mail
       find_attachment
     end
 
+    # Returns all parts of the message, flattening nested multiparts into a
+    # single pre-order list.
     def all_parts
-      parts.map { |p| [p, p.all_parts] }.flatten
+      result = []
+      stack  = parts.reverse
+      until stack.empty?
+        part = stack.pop
+        result << part
+        children = part.parts
+        stack.concat(children.reverse) unless children.empty?
+      end
+      result
     end
 
     def find_first_mime_type(mt)
