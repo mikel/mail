@@ -29,6 +29,7 @@ Performance:
 
 * reduce object allocations by replacing =~ and Regexp#match by Regexp#match? @ahorek
 * reduce object allocations by replacing String#unpack[0] by String#unpack1 @ahorek
+* reduce object allocations in 8bit transfer-encoding negotiation and Message#find_attachment @krzyczak
 
 
 Please check [2-8-stable](https://github.com/mikel/mail/blob/2-8-stable/CHANGELOG.rdoc) for previous changes.

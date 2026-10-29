@@ -2125,9 +2125,9 @@ module Mail
 
     # Returns the filename of the attachment (if it exists) or returns nil
     def find_attachment
-      content_type_name = header[:content_type].filename rescue nil
-      content_disp_name = header[:content_disposition].filename rescue nil
-      content_loc_name  = header[:content_location].location rescue nil
+      content_type_name = header[:content_type]&.filename rescue nil
+      content_disp_name = header[:content_disposition]&.filename rescue nil
+      content_loc_name  = header[:content_location]&.location rescue nil
       case
       when content_disposition && content_disp_name
         filename = content_disp_name

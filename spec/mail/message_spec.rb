@@ -2076,6 +2076,13 @@ RSpec.describe Mail::Message do
       expect { mail.attachment? }.not_to raise_error
     end
 
+    it "doesn't raise internally for headers the message lacks" do
+      mail = Mail.new(body: "Hello")
+      raised = []
+      TracePoint.new(:raise) { |tp| raised << tp.raised_exception }.enable { mail.attachment? }
+      expect(raised).to be_empty
+    end
+
   end
 
   describe "without_attachments!" do
