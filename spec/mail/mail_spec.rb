@@ -1,6 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'spec_helper'
+require 'open3'
+require 'rbconfig'
 
 RSpec.describe "mail" do
   
@@ -71,6 +73,35 @@ RSpec.describe "mail" do
       expect(Mail.delivery_interceptors).to eq [InterceptorAgentTwo]
     end
 
+  end
+
+  describe "loading the retrievers" do
+    # The spec helper loads net/imap and net/pop, so check in a new process.
+    def run_ruby(script)
+      lib = File.expand_path('../../lib', __dir__)
+      out, err, status = Open3.capture3(RbConfig.ruby, '-I', lib, '-e', script)
+      expect(status).to be_success, err
+      out
+    end
+
+    it "doesn't load net/imap or net/pop when eager loading" do
+      out = run_ruby(<<-SCRIPT)
+        require 'mail'
+        Mail.eager_autoload!
+        print [Mail::IMAP, Mail::POP3, defined?(Net::IMAP), defined?(Net::POP3)].inspect
+      SCRIPT
+      expect(out).to eq '[Mail::IMAP, Mail::POP3, nil, nil]'
+    end
+
+    it "loads net/imap and net/pop when a retriever is created" do
+      out = run_ruby(<<-SCRIPT)
+        require 'mail'
+        Mail::IMAP.new({})
+        Mail::POP3.new({})
+        print [defined?(Net::IMAP), defined?(Net::POP3)].inspect
+      SCRIPT
+      expect(out).to eq '["constant", "constant"]'
+    end
   end
 
 end

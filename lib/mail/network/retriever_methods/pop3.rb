@@ -33,9 +33,9 @@ module Mail
   #   #=> Returns the first 10 emails in ascending order
   #
   class POP3 < Retriever
-    require 'net/pop' unless defined?(Net::POP)
-
     def initialize(values)
+      require 'net/pop' unless defined?(Net::POP)
+
       self.settings = { :address              => "localhost",
                         :port                 => 110,
                         :user_name            => nil,
