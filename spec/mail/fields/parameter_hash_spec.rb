@@ -89,4 +89,11 @@ RSpec.describe Mail::ParameterHash do
     expect(hash.encoded).to eq %Q{value*0*=us-ascii'en'This%20is%20even%20more%20;\r\n\svalue*1*=%2A%2A%2Afun%2A%2A%2A%20;\r\n\svalue*2="isn't it"}
   end
 
+  it "should quote empty parameter value when encoding and decoding" do
+    hash = Mail::ParameterHash.new
+    hash['name'] = ''
+    expect(hash.encoded).to eq 'name=""'
+    expect(hash.decoded).to eq 'name=""'
+  end
+
 end

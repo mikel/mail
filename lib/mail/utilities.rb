@@ -36,7 +36,7 @@ module Mail
 
     # Returns true if the string supplied is free from characters not allowed as a TOKEN
     def token_safe?( str )
-      not Constants::TOKEN_UNSAFE === str
+      !str.empty? && !(Constants::TOKEN_UNSAFE === str)
     end
 
     # If the string supplied has TOKEN unsafe characters in it, will return the string quoted
