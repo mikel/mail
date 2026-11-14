@@ -634,10 +634,12 @@ RSpec.describe Mail::ContentTypeField do
       string = %q{application/octet-stream; filename=""}
       c = Mail::ContentTypeField.new(string)
       expect(c.filename).to eq ''
+      expect(c.encoded).to eq "Content-Type: application/octet-stream;\r\n filename=\"\"\r\n"
 
       string = %q{application/octet-stream; name=""}
       c = Mail::ContentTypeField.new(string)
       expect(c.filename).to eq ''
+      expect(c.encoded).to eq "Content-Type: application/octet-stream;\r\n name=\"\"\r\n"
     end
 
     it "should locate an encoded name as a filename" do

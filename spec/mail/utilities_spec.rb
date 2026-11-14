@@ -17,9 +17,14 @@ RSpec.describe "Utilities Module" do
         expect(token_safe?('?=abc')).to be_falsey
       end
 
+      it "should return false if a string is empty" do
+        expect(token_safe?('')).to be_falsey
+      end
+
       it "should work with mb_chars" do
         expect(token_safe?(Mail::Multibyte.mb_chars('.abc'))).to be_truthy
         expect(token_safe?(Mail::Multibyte.mb_chars('?=abc'))).to be_falsey
+        expect(token_safe?(Mail::Multibyte.mb_chars(''))).to be_falsey
       end
     end
 
@@ -32,9 +37,14 @@ RSpec.describe "Utilities Module" do
         expect(quote_token('?=abc')).to eq '"?=abc"'
       end
 
+      it "should quote an empty string" do
+        expect(quote_token('')).to eq '""'
+      end
+
       it "should work with mb_chars" do
         expect(quote_token(Mail::Multibyte.mb_chars('.abc'))).to eq '.abc'
         expect(quote_token(Mail::Multibyte.mb_chars('?=abc'))).to eq '"?=abc"'
+        expect(quote_token(Mail::Multibyte.mb_chars(''))).to eq '""'
       end
     end
 
