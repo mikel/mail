@@ -101,6 +101,47 @@ RSpec.describe "SMTP Delivery Method" do
     end
   end
 
+  describe "tls hostname" do
+    it "passes :tls_hostname to the SMTP session" do
+      smtp = MockSMTP.new
+      allow(Net::SMTP).to receive(:new).and_return(smtp)
+
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587,
+                               :tls => true, :tls_hostname => 'mail.example.com'
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      mail.deliver!
+
+      expect(smtp.tls_hostname).to eq 'mail.example.com'
+    end
+
+    it "leaves the SMTP session hostname alone when :tls_hostname is not set" do
+      smtp = MockSMTP.new
+      allow(Net::SMTP).to receive(:new).and_return(smtp)
+
+      Mail.defaults do
+        delivery_method :smtp, :address => 'smtp.mockup.com', :port => 587, :tls => true
+      end
+
+      mail = Mail.deliver do
+        from    'roger@moore.com'
+        to      'marcel@amont.com'
+        subject 'invalid RFC2822'
+      end
+
+      mail.deliver!
+
+      expect(smtp.tls_hostname).to be_nil
+    end
+  end
+
   describe "enabling ssl" do
     def redefine_verify_none(new_value)
       OpenSSL::SSL.send(:remove_const, :VERIFY_NONE)
